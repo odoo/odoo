@@ -98,7 +98,7 @@ class configmanager(object):
         self.has_ssl = check_ssl()
 
         self._LOGLEVELS = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x))
-                          for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'DEBUG_RPC', 'DEBUG_SQL', 'NOTSET')])
+                          for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'DEBUG_RPC', 'DEBUG_SQL', 'DEBUG_RPC_ANSWER','NOTSET')])
 
         version = "%s %s" % (release.description, release.version)
         self.parser = parser = optparse.OptionParser(version=version)
@@ -221,9 +221,6 @@ class configmanager(object):
 
         security = optparse.OptionGroup(parser, 'Security-related options')
         security.add_option('--no-database-list', action="store_false", dest='list_db', help="disable the ability to return the list of databases")
-        security.add_option('--enable-code-actions', action='store_true',
-                            dest='server_actions_allow_code', default=False,
-                            help='Enables server actions of state "code". Warning, this is a security risk.')
         parser.add_option_group(security)
 
     def parse_config(self):
@@ -287,7 +284,7 @@ class configmanager(object):
         keys = [
             'language', 'translate_out', 'translate_in', 'debug_mode', 'smtp_ssl',
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
-            'list_db', 'server_actions_allow_code', 'xmlrpcs',
+            'list_db', 'xmlrpcs',
             'test_file', 'test_disable', 'test_commit', 'test_report_directory'
         ]
 

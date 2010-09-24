@@ -31,7 +31,6 @@ class ir_property(osv.osv):
 
     def _models_field_get(self, cr, uid, field_key, field_value, context=None):
         get = attrgetter(field_key, field_value)
-
         obj = self.pool.get('ir.model.fields')
         ids = obj.search(cr, uid, [('view_load','=',1)], context=context)
         res = set()
@@ -40,19 +39,19 @@ class ir_property(osv.osv):
         return res
 
     def _models_get(self, cr, uid, context=None):
-        return self._models_field_get(cr, uid, 'model', 'name', context)
+        return self._models_field_get(cr, uid, 'model', 'model_id.name', context)
 
     def _models_get2(self, cr, uid, context=None):
         return self._models_field_get(cr, uid, 'relation', 'relation', context)
 
 
     _columns = {
-        'name': fields.char('Name', size=128),
+        'name': fields.char('Name', size=128, select=1),
 
         'res_id': fields.reference('Resource', selection=_models_get, size=128,
-                                   help="If not set, act as default property"),
-        'company_id': fields.many2one('res.company', 'Company'),
-        'fields_id': fields.many2one('ir.model.fields', 'Fields', ondelete='cascade', required=True),
+                                   help="If not set, acts as a default value for new resources", select=1),
+        'company_id': fields.many2one('res.company', 'Company', select=1),
+        'fields_id': fields.many2one('ir.model.fields', 'Field', ondelete='cascade', required=True, select=1),
 
         'value_float' : fields.float('Value'),
         'value_integer' : fields.integer_big('Value'), # will contain (int, bigint)
@@ -135,15 +134,7 @@ class ir_property(osv.osv):
     def create(self, cr, uid, values, context=None):
         return super(ir_property, self).create(cr, uid, self._update_values(cr, uid, None, values), context=context)
 
-    def get_by_id(self, cr, uid, record_ids, context=None):
-        if isinstance(record_ids, (int, long)):
-            record_ids = [record_ids]
-
-        if not record_ids:
-            return False
-
-        record = self.browse(cr, uid, record_ids[0], context=context)
-
+    def get_by_record(self, cr, uid, record, context=None):
         if record.type in ('char', 'text'):
             return record.value_text
         elif record.type == 'float':
@@ -162,7 +153,6 @@ class ir_property(osv.osv):
             if not record.value_datetime:
                 return False
             return time.strftime('%Y-%m-%d', time.strptime(record.value_datetime, '%Y-%m-%d %H:%M:%S'))
-
         return False
 
     def get(self, cr, uid, name, model, res_id=False, context={}):
@@ -170,7 +160,9 @@ class ir_property(osv.osv):
         if domain is not None:
             domain = [('res_id', '=', res_id)] + domain
             nid = self.search(cr, uid, domain, context=context)
-            return self.get_by_id(cr, uid, nid, context=context)
+            if not nid: return False
+            record = self.browse(cr, uid, nid[0], context=context)
+            return self.get_by_record(cr, uid, record, context=context)
         return False
 
     def _get_domain_default(self, cr, uid, prop_name, model, context=None):

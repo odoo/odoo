@@ -6,7 +6,7 @@
             <field name="model">res.request</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Requests">
+                <tree string="Requests" colors="blue:state in ('draft');gray:state in ('closed')">
                     <field name="create_date"/>
                     <field name="act_from"/>
                     <field name="act_to"/>
@@ -87,7 +87,7 @@
 	                </group>
                 </search>
             </field>
-        </record>    
+        </record>
         <record id="res_request_calendar_view" model="ir.ui.view">
             <field name="name">res.request.calendar</field>
             <field name="model">res.request</field>
@@ -109,7 +109,7 @@
             <field name="context">{"search_default_act_to":uid}</field>
         </record>
         <menuitem action="res_request-act" id="menu_res_request_act" parent="base.next_id_4" sequence="1"/>
-        
+
         <record id="res_request_link-view" model="ir.ui.view">
             <field name="name">res.request.link.form</field>
             <field name="model">res.request.link</field>
@@ -144,7 +144,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="res_request_link-act" model="ir.actions.act_window">
             <field name="name">References Link</field>
             <field name="type">ir.actions.act_window</field>
@@ -154,8 +154,8 @@
             <field name="search_view_id" ref="res_request_link_search_view"/>
         </record>
         <menuitem action="res_request_link-act" id="menu_res_request_link_act" parent="base.next_id_4" sequence="4"/>
-        
-        
+
+
         <record id="res_request_history_tree-view" model="ir.ui.view">
             <field name="name">res.request.history.tree</field>
             <field name="model">res.request.history</field>
@@ -169,7 +169,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="res_request_history_form-view" model="ir.ui.view">
             <field name="name">res.request.history.form</field>
             <field name="model">res.request.history</field>

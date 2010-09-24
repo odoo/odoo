@@ -3,27 +3,24 @@
     <data>
 
         <record id="view_base_language_install" model="ir.ui.view">
-            <field name="name">Install Language</field>
+            <field name="name">Load Official Translation</field>
             <field name="model">base.language.install</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="System Upgrade">
-            <group colspan="2" col="4">
-                <separator string="System Upgrade" colspan="6"/>
-                <newline/>
-                <label align="0.0" string="Choose a language to install:" colspan="4"/>
-                <field name="lang" colspan="4"/>
-                <label align="0.0" string="Note that this operation may take a few minutes." colspan="4"/>
-                <separator string="" colspan="6"/>
-                <button special="cancel" string="Close" icon="gtk-cancel"/>
-                <button name="lang_install" string="Start installation" type="object" icon="gtk-ok"/>
-            </group>
-           </form>
+                <form string="Load Official Translation">
+                    <separator string="Load an Official Translation" colspan="4"/>
+                    <group colspan="4"><field name="lang"/></group>
+                    <label string="" colspan="4"/>
+                    <label string="Please be patient, as this operation may take a few minutes..." colspan="4"/>
+                    <separator string="" colspan="4"/>
+                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    <button name="lang_install" string="Load" type="object" icon="gtk-ok"/>
+                </form>
            </field>
         </record>
 
         <record id="action_view_base_language_install" model="ir.actions.act_window">
-            <field name="name">Install Language</field>
+            <field name="name">Load Official Translation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.language.install</field>
             <field name="view_type">form</field>
@@ -38,23 +35,21 @@
         parent="menu_translation"/>
 
         <record id="view_base_language_install_msg" model="ir.ui.view">
-            <field name="name">Install Language Message</field>
+            <field name="name">Official Translation Loaded</field>
             <field name="model">base.module.import.msg</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Language file loaded.">
-                <group colspan="2" col="4">
-                    <separator string="Installation Done" colspan="4"/>
-                    <label align="0.0" string="The selected language has been successfully installed.\nYou must change the preferences of the user and open a new menu to view changes." colspan="4"/>
-                    <separator string="" colspan="4"/>
-                    <button special="cancel" string="OK" icon="gtk-ok"/>
-                </group>
+            <form string="Official Translation Loaded">
+                <separator string="Official Translation Loaded" colspan="4"/>
+                <label string="The selected language has been successfully installed.\nYou must change the preferences of the user and open a new menu to view the changes." colspan="4"/>
+                <separator string="" colspan="4"/>
+                <button special="cancel" string="OK" icon="gtk-ok"/>
             </form>
             </field>
         </record>
 
         <record id="action_view_base_language_install_msg" model="ir.actions.act_window">
-            <field name="name">Install Language Message</field>
+            <field name="name">Official Translation Loaded</field>
             <field name="res_model">base.module.import.msg</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>

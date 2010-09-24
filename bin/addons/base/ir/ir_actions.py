@@ -512,14 +512,21 @@ class actions_server(osv.osv):
 
         return obj
 
-    def merge_message(self, cr, uid, keystr, action, context):
+    def merge_message(self, cr, uid, keystr, action, context=None):
+        if context is None:
+            context = {}
         logger = netsvc.Logger()
         def merge(match):
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id)
             exp = str(match.group()[2:-2]).strip()
-            result = eval(exp, {'object':obj, 'context': context,'time':time})
+            result = eval(exp,
+                          {
+                            'object': obj,
+                            'context': dict(context), # copy context to prevent side-effects of eval
+                            'time': time,
+                          })
             if result in (None, False):
                 return str("--------")
             return tools.ustr(result)
@@ -536,13 +543,16 @@ class actions_server(osv.osv):
     #   False : Finnished correctly
     #   ACTION_ID : Action to launch
 
-    def run(self, cr, uid, ids, context={}):
+    # FIXME: refactor all the eval() calls in run()!
+    def run(self, cr, uid, ids, context=None):
         logger = netsvc.Logger()
+        if context is None:
+            context = {}
         for action in self.browse(cr, uid, ids, context):
             obj_pool = self.pool.get(action.model_id.model)
             obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
             cxt = {
-                'context':context,
+                'context': dict(context), # copy context to prevent side-effects of eval
                 'object': obj,
                 'time':time,
                 'cr': cr,
@@ -560,26 +570,19 @@ class actions_server(osv.osv):
                     .read(cr, uid, action.action_id.id, context=context)
 
             if action.state=='code':
-                if config['server_actions_allow_code']:
-                    localdict = {
-                        'self': self.pool.get(action.model_id.model),
-                        'context': context,
-                        'time': time,
-                        'ids': ids,
-                        'cr': cr,
-                        'uid': uid,
-                        'object':obj,
-                        'obj': obj,
-                        }
-                    eval(action.code, localdict, mode="exec")
-                    if 'action' in localdict:
-                        return localdict['action']
-                else:
-                    netsvc.Logger().notifyChannel(
-                        self._name, netsvc.LOG_ERROR,
-                        "%s is a `code` server action, but "
-                        "it isn't allowed in this configuration.\n\n"
-                        "See server options to enable it"%action)
+                localdict = {
+                    'self': self.pool.get(action.model_id.model),
+                    'context': dict(context), # copy context to prevent side-effects of eval
+                    'time': time,
+                    'ids': ids,
+                    'cr': cr,
+                    'uid': uid,
+                    'object':obj,
+                    'obj': obj,
+                }
+                eval(action.code, localdict, mode="exec", nocopy=True) # nocopy allows to return 'action'
+                if 'action' in localdict:
+                    return localdict['action']
 
             if action.state == 'email':
                 user = config['email_from']
@@ -631,9 +634,9 @@ class actions_server(osv.osv):
                 obj_pool = self.pool.get(action.model_id.model)
                 obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
                 cxt = {
-                    'context':context,
+                    'context': dict(context), # copy context to prevent side-effects of eval
                     'object': obj,
-                    'time':time,
+                    'time': time,
                     'cr': cr,
                     'pool' : self.pool,
                     'uid' : uid
@@ -651,7 +654,11 @@ class actions_server(osv.osv):
                     if exp.type == 'equation':
                         obj_pool = self.pool.get(action.model_id.model)
                         obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        cxt = {'context':context, 'object': obj, 'time':time}
+                        cxt = {
+                            'context': dict(context), # copy context to prevent side-effects of eval
+                            'object': obj,
+                            'time': time,
+                        }
                         expr = eval(euq, cxt)
                     else:
                         expr = exp.value
@@ -687,7 +694,12 @@ class actions_server(osv.osv):
                     if exp.type == 'equation':
                         obj_pool = self.pool.get(action.model_id.model)
                         obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        expr = eval(euq, {'context':context, 'object': obj, 'time':time})
+                        expr = eval(euq,
+                                    {
+                                        'context': dict(context), # copy context to prevent side-effects of eval
+                                        'object': obj,
+                                        'time': time,
+                                    })
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
@@ -706,7 +718,12 @@ class actions_server(osv.osv):
                     if exp.type == 'equation':
                         obj_pool = self.pool.get(action.model_id.model)
                         obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        expr = eval(euq, {'context':context, 'object': obj, 'time':time})
+                        expr = eval(euq,
+                                    {
+                                        'context': dict(context), # copy context to prevent side-effects of eval
+                                        'object': obj,
+                                        'time': time,
+                                    })
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
@@ -736,7 +753,7 @@ act_window_close()
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done'),
                ('skip','Skipped'),
-               ('cancel','Cancel')]
+               ('cancel','Cancelled')]
 
 class ir_actions_todo(osv.osv):
     _name = 'ir.actions.todo'
@@ -752,9 +769,9 @@ class ir_actions_todo(osv.osv):
         'note':fields.text('Text', translate=True),
     }
     _defaults={
-        'state': lambda *a: 'open',
-        'sequence': lambda *a: 10,
-        'restart': lambda *a: 'always',
+        'state': 'open',
+        'sequence': 10,
+        'restart': 'onskip',
     }
     _order="sequence,id"
 
