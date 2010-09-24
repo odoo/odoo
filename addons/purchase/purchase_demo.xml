@@ -41,9 +41,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">450</field>
             <field name="product_qty">2</field>
-            <field name="product_uom_qty">3</field>
-            <field name="product_uos_qty">3</field>
-            <field name="type">make_to_stock</field>
         </record>
         
         <record id="line3_purchase" model="purchase.order.line">
@@ -54,7 +51,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">900</field>
             <field name="product_qty">1</field>
-            <field name="type">make_to_stock</field>
         </record>
         
         <workflow action="purchase_confirm" model="purchase.order" ref="order_purchase2"/>
