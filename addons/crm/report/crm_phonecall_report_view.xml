@@ -89,14 +89,17 @@
 
                            <separator orientation="vertical" />
                         <filter icon="terp-check"
-                            string="To Do"
-                            domain="[('state','in',('draft','open'))]"/>
+                            string="Todo"
+                            domain="[('state','in',('draft','open'))]"
+                            help="Phone calls which are in draft and open state"/>
                         <filter icon="gtk-media-pause"
-                            string="Pending"
-                            domain="[('state','=','pending')]"/>
-                        <filter icon="terp-dialog-close"
-                            string="Done"
-                            domain="[('state','=','done')]"/>
+                            string="Not Held"
+                            domain="[('state','=','pending')]"
+                            help="Phone calls which are in pending state"/>
+                        <filter icon="terp-camera_test"
+                            string="Held"
+                            domain="[('state','=','done')]"
+                            help="Phone calls which are in closed state"/>
                       <separator orientation="vertical" />
                         <field name="section_id" string="Sales Team"
                             default="context.get('section_id', False)"
