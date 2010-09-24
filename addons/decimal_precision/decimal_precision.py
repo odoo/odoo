@@ -45,12 +45,12 @@ class decimal_precision(osv.osv):
         return res and res[0] or 2
 
     def write(self, cr, uid, ids, data, *args, **argv):
-        self.precision_get.clear_cache(cr.dbname)
         res = super(decimal_precision, self).write(cr, uid, ids, data, *args, **argv)
         for obj in self.pool.obj_list():
             for colname,col in self.pool.get(obj)._columns.items():
                 if isinstance(col, fields.float):
                     col.digits_change(cr)
+        self.precision_get.clear_cache(cr.dbname)
         return res
 
 decimal_precision()
