@@ -20,7 +20,7 @@
 ##############################################################################
 import datetime
 
-from osv import osv,fields
+from osv import osv, fields
 from tools.translate import _
 
 def strToDate(dt):
@@ -245,6 +245,7 @@ class crossovered_budget_lines(osv.osv):
         'theoritical_amount':fields.function(_theo, method=True, string='Theoritical Amount', type='float', digits=(16,2)),
         'percentage':fields.function(_perc, method=True, string='Percentage', type='float'),
     }
+
 crossovered_budget_lines()
 
 class account_analytic_account(osv.osv):
@@ -258,4 +259,3 @@ class account_analytic_account(osv.osv):
 account_analytic_account()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
