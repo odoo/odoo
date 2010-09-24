@@ -50,6 +50,7 @@ class account_entries_report(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
+        'product_uom_id': fields.many2one('product.uom', 'Product UOM', readonly=True),
         'move_state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'State', readonly=True),
         'move_line_state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True),
         'reconcile_id': fields.many2one('account.move.reconcile', readonly=True),
@@ -73,7 +74,7 @@ class account_entries_report(osv.osv):
     }
 
     _order = 'date desc'
-    
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
         for arg in args:
@@ -90,7 +91,7 @@ class account_entries_report(osv.osv):
                 args.remove(a)
         return super(account_entries_report, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
             context=context, count=count)
-    
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
         todel=[]
         for arg in domain:
@@ -108,7 +109,7 @@ class account_entries_report(osv.osv):
             if a in domain:
                 domain.remove(a)
         return super(account_entries_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context)
-    
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')
         cr.execute("""
@@ -127,6 +128,7 @@ class account_entries_report(osv.osv):
                 to_char(am.date, 'YYYY-MM-DD') as day,
                 l.partner_id as partner_id,
                 l.product_id as product_id,
+                l.product_uom_id as product_uom_id,
                 am.company_id as company_id,
                 am.journal_id as journal_id,
                 p.fiscalyear_id as fiscalyear_id,
