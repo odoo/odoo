@@ -492,7 +492,10 @@ class node_dir(node_database):
         self.write_date = dirr and (dirr.write_date or dirr.create_date) or False
         self.content_length = 0
         self.unixperms = 040750
-        self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        try:
+            self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        except Exception:
+            self.uuser = 'nobody'
         self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
         self.uidperms = dirr.get_dir_permissions()
         if dctx:
@@ -687,7 +690,10 @@ class node_res_dir(node_class):
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
         self.unixperms = 040750
-        self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        try:
+            self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        except Exception:
+            self.uuser = 'nobody'
         self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
         self.uidperms = dirr.get_dir_permissions()
         self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
@@ -1069,7 +1075,10 @@ class node_file(node_class):
             elif not parent.check_perms('w'):
                 self.uidperms = 4
     
-        self.uuser = (fil.user_id and fil.user_id.login) or 'nobody'
+        try:
+            self.uuser = (fil.user_id and fil.user_id.login) or 'nobody'
+        except Exception:
+            self.uuser = 'nobody'
         self.ugroup = mkdosname(fil.company_id and fil.company_id.name, default='nogroup')
 
         # This only propagates the problem to get_data. Better
