@@ -81,7 +81,12 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
 
     def setup(self):
         self.davpath = '/'+config.get_misc('webdav','vdir','webdav')
-        self.baseuri = "http://%s:%d/"% (self.server.server_name, self.server.server_port)
+        addr, port = self.server.server_name, self.server.server_port
+        try:
+            addr, port = self.request.getsockname()
+        except Exception, e:
+            self.log_error("Cannot calculate own address:" , e)
+        self.baseuri = "http://%s:%d/"% (addr, port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
 
     def copymove(self, CLASS):
