@@ -44,6 +44,7 @@ class document_ftp_configuration(osv.osv_memory):
         # Update the action for FTP browse.
         aid = data_pool._get_id(cr, uid, 'document_ftp', 'action_document_browse')
         aid = data_pool.browse(cr, uid, aid, context=context).res_id
-        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost:8021')+'/'})
+        self.pool.get('ir.actions.url').write(cr, uid, [aid], 
+                {'url': 'ftp://'+(conf.host or 'localhost:8021')+'/' + cr.dbname+'/'})
 
 document_ftp_configuration()
