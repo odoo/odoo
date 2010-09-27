@@ -361,11 +361,12 @@ class many2many_domain(fields.many2many):
         for i in ids:
             res[i] = []
         valid_move_ids = move_obj.search(cr, user, self._domain) # move ids relative to domain argument
-        cr.execute("SELECT production_id, move_id from mrp_production_move_ids where production_id in %s and move_id in %s",
-            [tuple(ids), tuple(valid_move_ids)])
-        related_move_map = cr.fetchall()
-        related_move_dict = dict((k, list(set([v[1] for v in itr]))) for k, itr in groupby(related_move_map, itemgetter(0)))
-        res.update(related_move_dict)
+        if valid_move_ids:
+            cr.execute("SELECT production_id, move_id from mrp_production_move_ids where production_id in %s and move_id in %s",
+                [tuple(ids), tuple(valid_move_ids)])
+            related_move_map = cr.fetchall()
+            related_move_dict = dict((k, list(set([v[1] for v in itr]))) for k, itr in groupby(related_move_map, itemgetter(0)))
+            res.update(related_move_dict)
 
         return res
 
