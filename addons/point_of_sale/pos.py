@@ -1022,15 +1022,16 @@ class pos_order_line(osv.osv):
     def _amount_line_ttc(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0.0)
         account_tax_obj = self.pool.get('account.tax')
+        prices = self.price_by_product_multi(cr, uid, ids)
         for line in self.browse(cr, uid, ids):
             tax_amount = 0.0
             taxes = [t for t in line.product_id.taxes_id]
-	    if line.qty == 0.0:
-		continue
+            if line.qty == 0.0:
+                continue
             computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
             for tax in computed_taxes:
                 tax_amount += tax['amount']
-            price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
+            price = prices[line.id]
             if line.discount!=0.0:
                 res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
             else:
@@ -1041,12 +1042,68 @@ class pos_order_line(osv.osv):
     def _amount_line(self, cr, uid, ids, field_name, arg, context):
         res = {}
 
+        prices = self.price_by_product_multi(cr, uid, ids)
         for line in self.browse(cr, uid, ids):
-            price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
+            price = prices[line.id]
             if line.discount!=0.0:
                 res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
             else:
                 res[line.id]=line.price_unit*line.qty
+        return res
+
+    def price_by_product_multi(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+
+        res = {}.fromkeys(ids, 0.0)
+
+        lines = self.browse(cr, uid, ids, context=context)
+        # product_map:
+        # {10, 1): {'qty': 5, 'uom_id': 1, 'partner_id': 512},
+        #  (22, 3): {'qty': 10, 'uom_id': 2, 'partner_id', 35},
+        # }
+        # key = (product_id, pricelist_id)
+        product_map = dict([((line.product_id.id, line.order_id.pricelist_id.id), {
+                                    'qty': line.qty,
+                                    'uom_id': line.product_id.uom_po_id.id,
+                                    'partner_id': line.order_id.partner_id.id,
+                                })
+                                for line
+                                    in lines])
+
+        price_get_multi_res = self.pool.get('product.pricelist').price_get_multi(cr, uid, product_map)
+
+        for line in lines:
+            pricelist = line.order_id.pricelist_id.id
+            product_id = line.product_id
+            qty = line.qty or 0
+            partner_id = line.order_id.partner_id.id or False
+
+            if not product_id:
+                res[line.id] = 0.0
+                continue
+            if not pricelist:
+                raise osv.except_osv(_('No Pricelist !'),
+                    _('You have to select a pricelist in the sale form !\n' \
+                    'Please set one before choosing a product.'))
+
+            uom_id = product_id.uom_po_id.id
+
+            #old_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id.id, qty or 1.0, partner_id, {'uom': uom_id})[pricelist]
+            #print "prod_id: %s, pricelist: %s, price: %s" % (product_id.id, pricelist, price)
+            price = price_get_multi_res[line.product_id.id][pricelist]
+            #print "prod_id: %s, pricelist: %s, price2: %s" % (product_id.id, pricelist, price2)
+
+            #if old_price != price:
+            #    raise Exception('old_price != price')
+
+            unit_price = price or product_id.list_price
+            res[line.id] = unit_price
+            if unit_price is False:
+                raise osv.except_osv(_('No valid pricelist line found !'),
+                    _("Couldn't find a pricelist line matching this product" \
+                    " and quantity.\nYou have to change either the product," \
+                    " the quantity or the pricelist."))
         return res
 
     def price_by_product(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
@@ -1057,7 +1114,7 @@ class pos_order_line(osv.osv):
                 _('You have to select a pricelist in the sale form !\n' \
                 'Please set one before choosing a product.'))
         p_obj = self.pool.get('product.product').browse(cr,uid,[product_id])[0]
-        uom_id=p_obj.uom_po_id.id
+        uom_id = p_obj.uom_po_id.id
         price = self.pool.get('product.pricelist').price_get(cr, uid,
             [pricelist], product_id, qty or 1.0, partner_id,{'uom': uom_id})[pricelist]
         unit_price=price or p_obj.list_price
