@@ -20,9 +20,10 @@
 #
 ##############################################################################
 
-from osv import osv, fields
 import time
 from mx import DateTime
+
+from osv import osv, fields
 from decimal import Decimal
 from tools.translate import _
 import decimal_precision as dp
