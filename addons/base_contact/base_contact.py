@@ -61,7 +61,7 @@ class res_partner_contact(osv.osv):
         'function': fields.related('job_ids', 'function', type='char', \
                                  string='Main Function'),
         'job_id': fields.function(_main_job, method=True, type='many2one',\
-                                 relation='res.partner.job', string='Main Job'),
+                                 relation='res.partner.job', string='Main Job', store=True),
         'email': fields.char('E-Mail', size=240),
         'comment': fields.text('Notes', translate=True),
         'photo': fields.binary('Image'),
@@ -151,10 +151,15 @@ class res_partner_job(osv.osv):
         if not len(ids):
             return []
         res = []
-        for r in self.browse(cr, uid, ids):
-            funct = r.function and (", " + r.function) or ""
-            res.append((r.id, self.pool.get('res.partner.contact').name_get(cr, uid, \
-                                    [r.contact_id.id])[0][1] + funct))
+
+        jobs = self.browse(cr, uid, ids)
+        contact_ids = [rec.contact_id.id for rec in jobs]
+        contact_names = dict(self.pool.get('res.partner.contact').name_get(cr, uid, contact_ids, context=context))
+
+        for r in jobs:
+            function_name = r.function
+            funct = function_name and (", " + function_name) or ""
+            res.append((r.id, contact_names.get(r.contact_id.id, '') + funct))
         return res
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
