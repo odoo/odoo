@@ -44,7 +44,6 @@
         'ir/ir.xml',
         'ir/workflow/workflow_view.xml',
         'module/module_view.xml',
-        'module/module_web_view.xml',
         'module/module_data.xml',
         'module/module_report.xml',
         'module/wizard/base_module_import_view.xml',
