@@ -75,7 +75,21 @@
                       <field name="user_id" />
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                        <field name="general_account_id"/>
+                        <field name="to_invoice" widget="selection"/>
+                        <separator orientation="vertical"/>
+                        <field name="product_id"/>
+                        <separator orientation="vertical"/>
+                        <field name="department_id" widget="selection"/>
+                        <separator orientation="vertical"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="date_to"/>
+                        <field name="date_from"/>
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By...">
                         <filter string="User" name="User_id" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
                         <separator orientation="vertical"/>
@@ -93,20 +107,6 @@
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Group by day of date"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Group by month of date"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of date"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                        <field name="general_account_id"/>
-                        <field name="to_invoice" widget="selection"/>
-                        <separator orientation="vertical"/>
-                        <field name="product_id"/>
-                        <separator orientation="vertical"/>
-                        <field name="department_id" widget="selection"/>
-                        <separator orientation="vertical"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <newline/>
-                        <field name="date_to"/>
-                        <field name="date_from"/>
                     </group>
                 </search>
             </field>
