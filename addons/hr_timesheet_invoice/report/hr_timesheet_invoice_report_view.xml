@@ -60,7 +60,7 @@
                               domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                               help="Timesheet lines during last 7 days"/>
                       <separator orientation="vertical"/>
-              <field name="user_id" widget="selection">
+                      <field name="user_id" widget="selection">
                           <filter icon="terp-personal"
                               string="Non Assigned timesheets to users"
                               help="Non Assigned timesheets to users"
@@ -69,7 +69,13 @@
                       <field name="account_id"/>
                         <field name="product_id"/>
                     </group>
-                    <group expand="0" string="Group By...">
+                    <newline/>
+                    <group expand="0" string="Extended Filters..." colspan="10" col="12">
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
+                        <field name="invoice_id" widget="selection"/>
+                    </group>
+                    <group expand="1" string="Group By...">
                         <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
@@ -79,12 +85,6 @@
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'name'}"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." colspan="10" col="12">
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <field name="invoice_id" widget="selection"/>
                     </group>
                 </search>
             </field>
