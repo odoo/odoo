@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
+from osv import fields, osv
 from crm import crm
 
 class crm_fundraising(crm.crm_case, osv.osv):

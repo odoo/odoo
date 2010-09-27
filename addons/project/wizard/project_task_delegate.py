@@ -48,9 +48,6 @@ class project_task_delegate(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         task_pool = self.pool.get('project.task')
         task = task_pool.browse(cr, uid, record_id, context=context)
-        project = task.project_id
-        manager = project.user_id or False
-        partner = task.partner_id or task.project_id.partner_id
 
         if 'name' in fields:
             if task.name.startswith(_('CHECK: ')):

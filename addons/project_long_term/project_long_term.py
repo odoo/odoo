@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-import time
-from datetime import date, datetime, timedelta
+from datetime import datetime
 from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task
@@ -292,16 +291,11 @@ class project_phase(osv.osv):
             # Create a new project for each phase
             def Project():
                 start = start_date
-                minimum_time_unit = 1
-                resource = phase_resource_obj
                 # If project has working calendar then that
                 # else the default one would be considered
                 if calendar_id:
-                    working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
-                    vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id))
-
-                def phase():
-                    effort = duration
+                    resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
+                    resource_pool.compute_vacation(cr, uid, calendar_id)
 
             project = Task.BalancedProject(Project)
             s_date = project.phase.start.to_datetime()
@@ -340,7 +334,6 @@ class project_phase(osv.osv):
         Schedule the tasks according to resource available and priority.
         """
         task_pool = self.pool.get('project.task')
-        resource_pool = self.pool.get('resource.resource')
         if context is None:
             context = {}
         resources_list = self.generate_resources(cr, uid, ids, context=context)
@@ -432,9 +425,7 @@ class project(osv.osv):
         """
         if type(ids) in (long, int,):
             ids = [ids]
-        user_pool = self.pool.get('res.users')
         task_pool = self.pool.get('project.task')
-        resource_pool = self.pool.get('resource.resource')
         if context is None:
             context = {}
         
@@ -493,7 +484,7 @@ class project_task(osv.osv):
         if context is None:
             context = {}
         user_pool = self.pool.get('res.users')
-        project_pool = self.pool.get('project.project')
+        resource_pool = self.pool.get('resource.resource')
         priority_dict = {'0': 1000, '1': 800, '2': 500, '3': 300, '4': 100}
         # Create dynamic no of tasks with the resource specified
         def create_tasks(task_number, eff, priorty=500, obj=False):
@@ -501,28 +492,23 @@ class project_task(osv.osv):
                 """
                 task is a dynamic method!
                 """
-                effort = eff
                 if obj:
                     resource = obj
-                priority = priorty
             task.__doc__ = "TaskNO%d" %task_number
             task.__name__ = "task%d" %task_number
             return task
 
         # Create a 'Faces' project with all the tasks and resources
         def Project():
-            title = "Project"
-            start = datetime.strftime(datetime.strptime(start_date, "%Y-%m-%d"), "%Y-%m-%d %H:%M")
             try:
                 resource = reduce(operator.or_, resources)
             except:
                 raise osv.except_osv(_('Error'), _('Should have Resources Allocation or Project Members!'))
-            minimum_time_unit = 1
+
             if calendar_id:            # If project has working calendar
-                working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
-                vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context))
+                resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
+                resource_pool.compute_vacation(cr, uid, calendar_id, context=context)
             # Dynamic creation of tasks
-            task_number = 0
             for openobect_task in self.browse(cr, uid, ids, context=context):
                 hours = str(openobect_task.planned_hours )+ 'H'
                 if openobect_task.priority in priority_dict.keys():
@@ -556,5 +542,7 @@ class project_task(osv.osv):
 
             loop_no += 1
         return True
+
 project_task()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

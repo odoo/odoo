@@ -22,15 +22,8 @@
 import sys
 
 from osv import fields, osv
-import ir
 import tools
 from tools.translate import _
-
-try:
-    from lxml import etree
-except ImportError:
-    sys.stderr.write("ERROR: Import lxml module\n")
-    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
 
 class project_gtd_context(osv.osv):
     _name = "project.gtd.context"
