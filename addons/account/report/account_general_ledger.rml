@@ -244,9 +244,9 @@
           <td><para style="P3b">Ref</para></td>
           <td><para style="P3b">Move</para></td>
           <td><para style="P3b">Entry Label</para></td>
-          <td><para style="P9b">Debit<font size="7.0">([[ company.currency_id.code]])</font></para></td>
-          <td><para style="P9b">Crebit<font size="7.0">([[ company.currency_id.code]])</font></para></td>
-          <td><para style="P9b">Balance<font size="7.0">([[ company.currency_id.code]])</font></para></td>
+          <td><para style="P9b">Debit</para></td>
+          <td><para style="P9b">Crebit</para></td>
+          <td><para style="P9b">Balance</para></td>
         </tr>
      </blockTable>
       <section>
@@ -256,10 +256,10 @@
           <td>
           <blockTable colWidths="245.0,92.5,66.5,64.5,71.5" style="Table5">
       <tr>
-        <td><para style="Standard">[[ o.code or '']] [[ o.name or '']]</para></td>
+        <td><para style="Standard"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code or '']] [[ o.name or '']]</para></td>
         <td><para style="Standard"></para></td>
-        <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o)) ]] [[ company.currency_id.symbol ]]</u></para></td>
-        <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o)) ]] [[ company.currency_id.symbol ]]</u></para></td>
+        <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o)) ]]</u></para></td>
+        <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o)) ]] </u></para></td>
         <td><para style="P9b"><u>[[ formatLang(sum_balance_account(o)) ]] [[ company.currency_id.symbol ]]</u></para></td>
       </tr>
       </blockTable>
@@ -278,8 +278,8 @@
         <td><para style="P3">[[ line['lref'] or '']]</para></td>
         <td><para style="P3">[[ line['move'] or '']]</para></td>
         <td><para style="P3">[[ line['lname'] or '' ]]</para></td>
-        <td><para style="P4">[[ formatLang(line['debit']) ]] [[ company.currency_id.symbol ]]</para></td>
-        <td><para style="P4">[[ formatLang(line['credit']) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="P4">[[ formatLang(line['debit']) ]]</para></td>
+        <td><para style="P4">[[ formatLang(line['credit']) ]]</para></td>
         <td><para style="P4">[[ formatLang(line['progress']) ]] [[ company.currency_id.symbol ]]</para></td>
      </tr>
     </blockTable>
@@ -294,9 +294,9 @@
           <td><para style="P3b">Ref</para></td>
           <td><para style="P3b">Move</para></td>
           <td><para style="P3b">Entry Label</para></td>
-          <td><para style="P9b">Debit<font size="7.0">([[ company.currency_id.code]])</font></para></td>
-          <td><para style="P9b">Credit<font size="7.0">([[ company.currency_id.code]])</font></para></td>
-          <td><para style="P9b">Balance<font size="7.0">([[ company.currency_id.code]])</font></para></td>
+          <td><para style="P9b">Debit</para></td>
+          <td><para style="P9b">Credit</para></td>
+          <td><para style="P9b">Balance</para></td>
           <td><para style="P9b">Currency</para></td>
         </tr>
      </blockTable>
@@ -307,10 +307,10 @@
           <td>
           <blockTable colWidths="230.00,74.0,55.5,60.5,60.5,65.5" style="Table5">
               <tr>
-                <td><para style="Standard">[[ o.code or '' ]] [[ o.name or '' ]]</para></td>
+                <td><para style="Standard"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code or '' ]] [[ o.name or '' ]]</para></td>
                 <td><para style="Standard"></para></td>
-                <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o)) ]] [[ company.currency_id.symbol ]]</u></para></td>
-                <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o)) ]] [[ company.currency_id.symbol ]]</u></para></td>
+                <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o)) ]]</u></para></td>
+                <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o)) ]]</u></para></td>
                 <td><para style="P9b"><u>[[formatLang(sum_balance_account(o)) ]] [[ company.currency_id.symbol ]]</u></para></td>
                <td><para style="P9b"><u>[[ o.currency_id and sum_currency_amount_account(o) +o.currency_id.symbol or '' ]]</u></para></td>
               </tr>
@@ -331,8 +331,8 @@
        <td><para style="P3">[[ line['lref'] or '']]</para></td>
        <td><para style="P3">[[ line['move'] or '' ]]</para></td>
        <td><para style="P3">[[ line['lname'] or '' ]]</para></td>
-       <td><para style="P4">[[ formatLang(line['debit']) ]] [[ company.currency_id.symbol ]]</para></td>
-       <td><para style="P4">[[ formatLang(line['credit']) ]] [[ company.currency_id.symbol ]]</para></td>
+       <td><para style="P4">[[ formatLang(line['debit']) ]]</para></td>
+       <td><para style="P4">[[ formatLang(line['credit']) ]]</para></td>
        <td><para style="P4">[[ formatLang(line['progress']) ]] [[ company.currency_id.symbol ]]</para></td>
        <td><para style="P4">[[  formatLang(line['amount_currency'] or '') ]] [[ line['currency_code'] or '']]</para></td>
      </tr>

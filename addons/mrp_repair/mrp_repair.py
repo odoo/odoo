@@ -272,7 +272,6 @@ class mrp_repair(osv.osv):
         @param product_id: Product id from current record.
         @return: Dictionary of values.
         """
-        prodlot_obj = self.pool.get('stock.production.lot')
         move_obj = self.pool.get('stock.move')
         data = {}
         data['value'] = {
@@ -503,7 +502,7 @@ class mrp_repair(osv.osv):
         return True
 
     def wkf_repair_done(self, cr, uid, ids, *args):
-        res = self.action_repair_done(cr, uid, ids)
+        self.action_repair_done(cr, uid, ids)
         return True
 
     def action_repair_done(self, cr, uid, ids, context=None):

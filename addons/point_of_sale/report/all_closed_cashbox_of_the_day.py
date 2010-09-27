@@ -125,10 +125,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         return lst
 
     def _get_net_total(self,user):
-        lst = []
         res={}
-        total_ending_bal = 0.0
-        total_starting_bal = 0.0
         sql = """select sum(absl.amount) as net_total from account_bank_statement as abs
                     LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
                     where abs.state IN ('confirm','open') and abs.user_id = %d

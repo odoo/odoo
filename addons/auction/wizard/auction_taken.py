@@ -19,12 +19,6 @@
 #
 ##############################################################################
 from osv import fields, osv
-from tools.translate import _
-import netsvc
-import pooler
-import time
-import tools
-import wizard
 
 class auction_taken(osv.osv_memory):
     """

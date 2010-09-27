@@ -21,8 +21,6 @@
 
 import time
 from report import report_sxw
-from osv import osv
-import pooler
 
 class order(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
