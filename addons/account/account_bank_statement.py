@@ -71,12 +71,10 @@ class account_bank_statement(osv.osv):
         journal_pool = self.pool.get('account.journal')
         journal_type = context.get('journal_type', False)
         journal_id = False
-
         if journal_type:
             ids = journal_pool.search(cr, uid, [('type', '=', journal_type)])
             if ids:
                 journal_id = ids[0]
-
         return journal_id
 
     def _default_balance_start(self, cr, uid, context={}):
@@ -152,7 +150,7 @@ class account_bank_statement(osv.osv):
         'name': fields.char('Name', size=64, required=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself', states={'confirm': [('readonly', True)]}),
         'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
-            states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'bank')]),
+            readonly=True, states={'draft':[('readonly',False)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True,
             states={'confirm':[('readonly', True)]}),
         'balance_start': fields.float('Starting Balance', digits_compute=dp.get_precision('Account'),

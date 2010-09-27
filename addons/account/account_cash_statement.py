@@ -203,8 +203,19 @@ class account_cash_statement(osv.osv):
             res.append((0,0,dct))
         return res
 
+    def _default_journal_id(self, cr, uid, context={}):
+        journal_pool = self.pool.get('account.journal')
+        journal_type = context.get('journal_type', False)
+        journal_id = False
+        if journal_type:
+            ids = journal_pool.search(cr, uid, [('type', '=', journal_type)])
+            if ids:
+                journal_id = ids[0]
+        
+        return journal_id
+
     _columns = {
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'draft': [('readonly', False)]}, readonly=True, domain=[('type', '=', 'cash')]),
+        'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
         'state': fields.selection(
             [('draft', 'Draft'),
@@ -224,6 +235,7 @@ class account_cash_statement(osv.osv):
         'date': lambda *a:time.strftime("%Y-%m-%d %H:%M:%S"),
         'user_id': lambda self, cr, uid, context=None: uid,
         'starting_details_ids':_get_cash_open_box_lines,
+        'journal_id': _default_journal_id,
         'ending_details_ids':_get_default_cash_close_box_lines
      }
 
