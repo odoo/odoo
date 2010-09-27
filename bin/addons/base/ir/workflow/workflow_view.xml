@@ -15,9 +15,11 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Workflow">
-          <field name="name"/>
-          <field name="osv"/>
-          <field name="on_create"/>
+        	<group col="6" colspan="4" >
+          		<field name="name"/>
+          		<field name="osv"/>
+          		<field name="on_create"/>
+          	</group>
           <separator colspan="4" string="Activities"/>
           <field colspan="4" name="activities" nolabel="1"/>
         </form>
@@ -92,10 +94,12 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Activity">
-          <field name="name"/>
-          <field name="wkf_id"/>
-          <group colspan="4" col="7">
-            <field name="kind" colspan="4"/>
+        	<group col="6" colspan="4">
+            	<field name="name"/>
+            	<field name="wkf_id"/>
+            	<field name="kind"/>
+            </group>
+          <group  colspan="2">
             <field name="flow_start"/>
             <field name="flow_stop"/>
           </group>
@@ -166,11 +170,20 @@
       <field name="type">search</field>
       <field name="arch" type="xml">
         <search string="Workflow Activity">
+          <filter icon="terp-camera_test" string="Flow Start"
+            domain="[('flow_start', '=',True)]" />
+          <filter icon="terp-gtk-stop" string="Flow Stop"
+            domain="[('flow_stop', '=',True)]" />
+          <separator orientation="vertical"/>
           <field name="name"/>
           <field name="wkf_id"/>
           <field name="kind"/>
           <field name="action_id"/>
           <field name="action"/>
+          <newline/>
+	          <group expand="0" string="Group By...">
+        	      <filter string="Workflow" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'wkf_id'}"/>
+    	      </group>
         </search>
       </field>
     </record>
@@ -197,13 +210,15 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Transition">
-          <field name="act_from"/>
-          <field name="act_to"/>
-          <field colspan="4" name="condition"/>
-          <field name="signal"/>
-          <field name="role_id"/>
-          <field name="trigger_model"/>
-          <field name="trigger_expr_id"/>
+        	<group col="6" colspan ="4">
+            	<field name="act_from"/>
+            	<field name="act_to"/>
+            	<field name="signal"/>
+            	<field name="condition"/>
+            	<field name="trigger_model"/>
+          	    <field name="trigger_expr_id"/>
+            	<field name="role_id"/>
+            </group>
         </form>
       </field>
     </record>
@@ -229,6 +244,7 @@
         <search string="Transition">
           <field name="act_from"/>
           <field name="act_to"/>
+          <field name="signal"/>
           <field name="condition"/>
         </search>
       </field>
