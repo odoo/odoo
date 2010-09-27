@@ -28,7 +28,6 @@ from itertools import groupby
 from tools.misc import flatten
 from tools.translate import _
 from osv import fields, osv
-from tools import email_send as email
 
 
 class project_task_type(osv.osv):
@@ -245,7 +244,6 @@ class project(osv.osv):
         if context is None:
             context = {}
 
-        task_obj = self.pool.get('project.task')
         proj = self.browse(cr, uid, id, context=context)
         default = default or {}
         context['active_test'] = False
@@ -261,7 +259,6 @@ class project(osv.osv):
             context = {}
         project_obj = self.pool.get('project.project')
         data_obj = self.pool.get('ir.model.data')
-        task_obj = self.pool.get('project.task')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
             parent_id = context.get('parent_id', False)
@@ -279,8 +276,7 @@ class project(osv.osv):
                                     'date':new_date_end,
                                     'parent_id':parent_id}, context=context)
             result.append(new_id)
-            cr.execute('select id from project_task where project_id=%s', (proj.id,))
-            res = cr.fetchall()
+
             child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
             parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
             if child_ids:
@@ -320,7 +316,7 @@ class project(osv.osv):
             if child_ids:
                 self.setActive(cr, uid, child_ids, value, context=None)
         return True
-
+    
 project()
 
 class users(osv.osv):

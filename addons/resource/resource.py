@@ -20,13 +20,12 @@
 ##############################################################################
 
 from datetime import datetime, timedelta
-import time
 import math
 from faces import *
 from new import classobj
 from osv import fields, osv
 from tools.translate import _
-import tools
+
 class resource_calendar(osv.osv):
     _name = "resource.calendar"
     _description = "Resource Calendar"
@@ -63,7 +62,6 @@ class resource_calendar(osv.osv):
         dt_leave = self._get_leaves(cr, uid, id, resource)
         dt_leave.reverse()
         todo = hours
-        cycle = 0
         result = []
         maxrecur = 100
         current_hour = dt_from.hour
@@ -100,7 +98,6 @@ class resource_calendar(osv.osv):
             return [(dt_from, dt_from + timedelta(hours=td))]
         dt_leave = self._get_leaves(cr, uid, id, resource)
         todo = hours
-        cycle = 0
         result = []
         maxrecur = 100
         current_hour = dt_from.hour
@@ -131,7 +128,6 @@ class resource_calendar(osv.osv):
         return result
 
     def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
-        result = []
         if not id:
             return 0.0
         dt_leave = self._get_leaves(cr, uid, id, resource)

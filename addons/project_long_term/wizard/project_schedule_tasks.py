@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-import datetime
-from tools.translate import _
 from osv import fields, osv
+
 class project_schedule_task(osv.osv_memory):
     _name = "project.schedule.tasks"
     _description = 'project.schedule.tasks'
