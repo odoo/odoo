@@ -107,6 +107,17 @@
                       <field name="partner_id" />
                     </group>
                     <newline/>
+                    <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                        <field name="type_id" widget="selection"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_start"/>
+                        <field name="date_deadline"/>
+                        <field name="date_end"/>
+                        <separator orientation="vertical"/>
+                        <field name="priority"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="12">
                         <filter string="Project" name="project" icon="terp-folder-blue" context="{'group_by':'project_id'}"/>
                         <filter string="Assigned to" name="User" icon="terp-personal" context="{'group_by':'user_id'}" />
@@ -121,17 +132,6 @@
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
-                    </group>
-                    <newline/>
-	                <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
-	                    <field name="type_id" widget="selection"/>
-	                    <separator orientation="vertical"/>
-                        <field name="date_start"/>
-                        <field name="date_deadline"/>
-                        <field name="date_end"/>
-	                    <separator orientation="vertical"/>
-	                    <field name="priority"/>
-	                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </search>
             </field>
