@@ -619,7 +619,7 @@ class pos_order(osv.osv):
         pricelist = values['pricelist_id'] and values['pricelist_id'][0]
         product = values['partner_id'] and values['partner_id'][0]
 
-        price = line_obj.price_by_product_OLD(cr, uid, [],
+        price = line_obj.price_by_product(cr, uid, [],
                 pricelist, product_id, qty, product)
 
         order_line_id = line_obj.create(cr, uid, {
@@ -1015,7 +1015,7 @@ class pos_order_line(osv.osv):
     def _get_amount(self, cr, uid, ids, field_name, arg, context):
         res = {}
         for line in self.browse(cr, uid, ids):
-            price = self.price_by_product_OLD(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
+            price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
             res[line.id]=price
         return res
 
@@ -1025,12 +1025,12 @@ class pos_order_line(osv.osv):
         for line in self.browse(cr, uid, ids):
             tax_amount = 0.0
             taxes = [t for t in line.product_id.taxes_id]
-            if line.qty == 0.0:
-                continue
+	    if line.qty == 0.0:
+		continue
             computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
             for tax in computed_taxes:
                 tax_amount += tax['amount']
-            price = self.price_by_product_OLD(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
+            price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
             if line.discount!=0.0:
                 res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
             else:
@@ -1041,49 +1041,15 @@ class pos_order_line(osv.osv):
     def _amount_line(self, cr, uid, ids, field_name, arg, context):
         res = {}
 
-        prices = self.price_by_product_NEW(cr, uid, ids)
         for line in self.browse(cr, uid, ids):
-            price = prices[line.id]
+            price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
             if line.discount!=0.0:
                 res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
             else:
                 res[line.id]=line.price_unit*line.qty
         return res
 
-    def price_by_product_NEW(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-
-        res = {}.fromkeys(ids, 0.0)
-        return res
-
-        for line in self.browse(cr, uid, ids):
-            pricelist = line.order_id.pricelist_id.id
-            product_id = line.product_id
-            qty = line.qty or 0
-            partner_id = line.order_id.partner_id.id or False
-
-            if not product_id:
-                res[line.id] = 0.0
-                continue
-            if not pricelist:
-                raise osv.except_osv(_('No Pricelist !'),
-                    _('You have to select a pricelist in the sale form !\n' \
-                    'Please set one before choosing a product.'))
-
-            uom_id = product_id.uom_po_id.id
-
-            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id.id, qty or 1.0, partner_id, {'uom': uom_id})[pricelist]
-            unit_price = price or product_id.list_price
-            res[line.id] = unit_price
-            if unit_price is False:
-                raise osv.except_osv(_('No valid pricelist line found !'),
-                    _("Couldn't find a pricelist line matching this product" \
-                    " and quantity.\nYou have to change either the product," \
-                    " the quantity or the pricelist."))
-        return res
-
-    def price_by_product_OLD(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
+    def price_by_product(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
         if not product_id:
             return 0.0
         if not pricelist:
@@ -1091,7 +1057,7 @@ class pos_order_line(osv.osv):
                 _('You have to select a pricelist in the sale form !\n' \
                 'Please set one before choosing a product.'))
         p_obj = self.pool.get('product.product').browse(cr,uid,[product_id])[0]
-        uom_id = p_obj.uom_po_id.id
+        uom_id=p_obj.uom_po_id.id
         price = self.pool.get('product.pricelist').price_get(cr, uid,
             [pricelist], product_id, qty or 1.0, partner_id,{'uom': uom_id})[pricelist]
         unit_price=price or p_obj.list_price
@@ -1103,14 +1069,14 @@ class pos_order_line(osv.osv):
         return unit_price
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
-        price = self.price_by_product_OLD(cr, uid, ids, pricelist, product_id, qty, partner_id)
+        price = self.price_by_product(cr, uid, ids, pricelist, product_id, qty, partner_id)
         self.write(cr,uid,ids,{'price_unit':price})
         pos_stot = (price * qty)
         return {'value': {'price_unit': price,'price_subtotal_incl': pos_stot}}
 
     def onchange_subtotal(self, cr, uid, ids, discount, price, pricelist,qty,partner_id, product_id,*a):
         prod_obj = self.pool.get('product.product')
-        price_f = self.price_by_product_OLD(cr, uid, ids, pricelist, product_id, qty, partner_id)
+        price_f = self.price_by_product(cr, uid, ids, pricelist, product_id, qty, partner_id)
         prod_id=''
         if product_id:
             prod_id=prod_obj.browse(cr,uid,product_id).disc_controle
@@ -1213,7 +1179,7 @@ class pos_order_line(osv.osv):
         # search price product
         product =product_obj.read(cr, uid, product_id)
         product_name = product[0]['name']
-        price = self.price_by_product_OLD(cr, uid, 0, pricelist_id[0]['pricelist_id'][0], product_id[0], 1)
+        price = self.price_by_product(cr, uid, 0, pricelist_id[0]['pricelist_id'][0], product_id[0], 1)
 
         order_line_ids = self.search(cr, uid, [('name','=',product_name),('order_id','=',order)])
         if order_line_ids:
