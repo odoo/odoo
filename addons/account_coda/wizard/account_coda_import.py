@@ -63,6 +63,7 @@ class account_coda_import(osv.osv_memory):
         bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
         voucher_obj = self.pool.get('account.voucher')
+        voucher_line_obj = self.pool.get('account.voucher.line')
         account_coda_obj = self.pool.get('account.coda')
         mod_obj = self.pool.get('ir.model.data')
 
