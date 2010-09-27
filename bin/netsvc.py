@@ -348,11 +348,19 @@ class Agent(object):
                 current_thread.dbname = dbname   # hack hack
                 cls._logger.notifyChannel('timers', LOG_DEBUG, "Run %s.%s(*%r, **%r)" % (function.im_class.__name__, function.func_name, args, kwargs))
                 delattr(current_thread, 'dbname')
-                threading.Thread(target=function, args=args, kwargs=kwargs).start()
+                task_thread = threading.Thread(target=function, name='netsvc.Agent.task', args=args, kwargs=kwargs)
+                # force non-daemon task threads (the runner thread must be daemon, and this property is inherited by default)
+                task_thread.setDaemon(False)
+                task_thread.start()
                 time.sleep(1)
             time.sleep(60)
 
-threading.Thread(target=Agent.runner).start()
+agent_runner = threading.Thread(target=Agent.runner, name="netsvc.Agent.runner")
+# the agent runner is a typical daemon thread, that will never quit and must be
+# terminated when the main process exits - with no consequence (the processing
+# threads it spawns are not marked daemon)
+agent_runner.setDaemon(True)
+agent_runner.start()
 
 
 import traceback

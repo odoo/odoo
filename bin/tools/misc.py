@@ -419,6 +419,13 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
         :return: True if the mail was delivered successfully to the smtp,
                  else False (+ exception logged)
     """
+    class WriteToLogger(object):
+        def __init__(self):
+            self.logger = netsvc.Logger()
+
+        def write(self, s):
+            self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
+
     if openobject_id:
         message['Message-Id'] = generate_tracking_message_id(openobject_id)
 
@@ -533,13 +540,6 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             Encoders.encode_base64(part)
             part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
             msg.attach(part)
-
-    class WriteToLogger(object):
-        def __init__(self):
-            self.logger = netsvc.Logger()
-
-        def write(self, s):
-            self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
 
     return _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, openobject_id=openobject_id, ssl=ssl, debug=debug)
 
@@ -1406,5 +1406,24 @@ def upload_data(email, data, type='SURVEY'):
     a = upload_data_thread(email, data, type)
     a.start()
     return True
+
+
+# port of python 2.6's attrgetter with support for dotted notation 
+def resolve_attr(obj, attr):
+    for name in attr.split("."):
+        obj = getattr(obj, name)
+    return obj
+
+def attrgetter(*items):
+    if len(items) == 1:
+        attr = items[0]
+        def g(obj):
+            return resolve_attr(obj, attr)
+    else:
+        def g(obj):
+            return tuple(resolve_attr(obj, attr) for attr in items)
+    return g
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

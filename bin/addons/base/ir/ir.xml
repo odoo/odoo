@@ -1906,8 +1906,10 @@
                 <tree editable="bottom" string="Config Wizard Steps">
                     <field name="sequence"/>
                     <field name="action_id"/>
+                    <field name="restart"/>
                     <field name="state" readonly="1"/>
-                    <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
+                    <button name="action_open" states="cancel,skip,done" string="Set as todo" type="object" icon="gtk-convert"/>
+                    <button name="action_launch" states="open" string="Launch this wizard" type="object" icon="gtk-execute"/>
                 </tree>
             </field>
         </record>
@@ -1927,10 +1929,8 @@
                     <field name="groups_id" nolabel="1" colspan="4"/>
                     <group colspan="4" col="4">
                         <field name="state" colspan="2" readonly="1"/>
-                        <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
-                        <button name="action_open" states="cancel,skip,done"
-                            string="Set as Todo" type="object"
-                            icon="gtk-convert"/>
+                        <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch this wizard"/>
+                        <button name="action_open" states="cancel,skip,done" string="Set as todo" type="object" icon="gtk-convert"/>
                     </group>
                 </form>
             </field>
