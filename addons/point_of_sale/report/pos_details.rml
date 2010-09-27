@@ -119,6 +119,7 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
+    <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="6.0" leading="8" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -154,7 +155,13 @@
     <images/>
   </stylesheet>
   <story>
+    <para style="terp_header_Centre">
+      <font color="white"> </font>
+    </para>
     <para style="terp_header_Centre">Details of Sales</para>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
     <blockTable colWidths="161.0,161.0,161.0" style="Table1">
       <tr>
         <td>
@@ -196,16 +203,16 @@
           <para style="terp_tblheader_Details">Product</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Price</para>
+          <para style="terp_tblheader_Details_Right">Price ([[ company.currency_id.code ]])</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Qty</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Disc</para>
+          <para style="terp_tblheader_Details_Right">Disc ([[ company.currency_id.code ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Invoiced</para>
+          <para style="terp_tblheader_Details_Centre">Invoiced ([[ company.currency_id.code ]])</para>
         </td>
       </tr>
     </blockTable>
@@ -213,7 +220,7 @@
       <tr>
         <td>
           <para style="terp_default_9">[[ pos_sales_details(data['form'],user) and '' or removeParentNode('blockTable') ]]</para>
-          <para style="terp_default_9">[[ repeatIn(pos_sales_details(data['form'],user), 'line_ids') ]] [[ formatLang(line_ids['date_order'],date_time = True) ]]</para>
+          <para style="terp_default_9">[[ repeatIn(pos_sales_details(data['form'],user), 'line_ids') ]] [[ formatLang(line_ids['date_order'],date = True) ]]</para>
         </td>
         <td>
           <para style="terp_default_9">[[ line_ids['pos_name'] ]]</para>
@@ -222,13 +229,13 @@
           <para style="terp_default_9">[[ line_ids['name'] ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(line_ids['price_unit']) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(line_ids['price_unit']) ]][[ company.currency_id.symbol ]]</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(line_ids['discount']) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(line_ids['discount']) ]][[ company.currency_id.symbol ]]</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ getinvoice(line_ids['invoice_id'],user) or removeParentNode('font') ]]</para>
@@ -254,7 +261,7 @@
           <para style="terp_default_9"><font face="Helvetica" size="6.0">[[ repeatIn(gettaxamount(data['form'],user), 'p') ]]</font><font face="Helvetica" size="6.0"/>[[ p['name'] or removeParentNode('tr') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(p['amount']) or removeParentNode('font') ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(p['amount']) or removeParentNode('font') ]][[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -274,7 +281,7 @@
           <para style="terp_default_9"><font face="Helvetica" size="6.0">[[ repeatIn(getpayments(data['form'],user), 'p') ]] </font>[[ p['name'] or removeParentNode('tr') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(p['sum']) or removeParentNode('tr') ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(p['sum']) or removeParentNode('tr') ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -305,7 +312,7 @@
           <para style="terp_default_Bold_9">Sales total</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(getsalestotal2(data['form'],user)) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(getsalestotal2(data['form'],user)) ]][[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -321,7 +328,7 @@
           <para style="terp_default_Bold_9">Total invoiced</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(getsuminvoice2(data['form'],user)) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(getsuminvoice2(data['form'],user)) ]][[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -329,7 +336,7 @@
           <para style="terp_default_Bold_9">Total discount</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(getsumdisc(objects)) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(getsumdisc(objects)) ]][[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -337,7 +344,7 @@
           <para style="terp_default_Bold_9">Total paid</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(getpaidtotal2(data['form'],user)) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(getpaidtotal2(data['form'],user)) ]][[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -345,7 +352,7 @@
           <para style="terp_default_Bold_9">Total of the day</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(gettotalofthaday(data['form'])) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(gettotalofthaday(data['form'])) ]][[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>

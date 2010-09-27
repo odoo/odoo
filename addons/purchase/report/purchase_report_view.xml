@@ -78,6 +78,20 @@
                 <field name="product_id"/>
                 </group>
                 <newline/>
+                <group expand="0" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
+                    <field name="user_id"/>
+                    <field name="validator"/>
+                    <separator orientation="vertical"/>
+                    <field name="location_id"/>
+                    <field name="warehouse_id" widget="selection"/>
+                    <separator orientation="vertical"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <newline/>
+                    <field name="date"/>
+                    <field name="date_approve"/>
+                    <field name="expected_date"/>
+                </group>
+                <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Supplier" name="group_partner_id" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Product" name="group_product_id" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
@@ -95,20 +109,6 @@
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'name'}"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
-                    <field name="user_id"/>
-                    <field name="validator"/>
-                    <separator orientation="vertical"/>
-                    <field name="location_id"/>
-                    <field name="warehouse_id" widget="selection"/>
-                    <separator orientation="vertical"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="date"/>
-                    <field name="date_approve"/>
-                    <field name="expected_date"/>
                 </group>
             </search>
         </field>

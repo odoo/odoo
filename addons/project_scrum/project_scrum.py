@@ -18,14 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 from mx import DateTime
-
-import netsvc
-from osv import fields, osv, orm
-import re
-import tools
+from osv import fields, osv
 from tools.translate import _
+import re
+import time
+import tools
+
 
 class project_scrum_project(osv.osv):
     _inherit = 'project.project'
@@ -162,10 +161,11 @@ class project_scrum_product_backlog(osv.osv):
             args=[]
         if not context:
             context={}
-        match = re.match('^S\(([0-9]+)\)$', name)
-        if match:
-            ids = self.search(cr, uid, [('sprint_id','=', int(match.group(1)))], limit=limit, context=context)
-            return self.name_get(cr, uid, ids, context=context)
+        if name:
+            match = re.match('^S\(([0-9]+)\)$', name)
+            if match:
+                ids = self.search(cr, uid, [('sprint_id','=', int(match.group(1)))], limit=limit, context=context)
+                return self.name_get(cr, uid, ids, context=context)
         return super(project_scrum_product_backlog, self).name_search(cr, uid, name, args, operator,context, limit=limit)
 
     def _compute(self, cr, uid, ids, fields, arg, context=None):
@@ -318,7 +318,8 @@ class project_scrum_meeting(osv.osv):
         'question_today': fields.text('Tasks for today'),
         'question_blocks': fields.text('Blocks encountered'),
         'question_backlog': fields.text('Backlog Accurate'),
-        'task_ids': fields.many2many('project.task', 'meeting_task_rel', 'metting_id', 'task_id', 'Tasks')
+        'task_ids': fields.many2many('project.task', 'meeting_task_rel', 'metting_id', 'task_id', 'Tasks'),
+        'user_id': fields.related('sprint_id', 'scrum_master_id', type='many2one', relation='res.users', string='Responsible', readonly=True),
     }
     #
     # TODO: Find the right sprint thanks to users and date
@@ -331,7 +332,6 @@ class project_scrum_meeting(osv.osv):
         if context is None:
             context = {}
         meeting_id = self.browse(cr, uid, ids)[0]
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
             res = self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
             if not res:

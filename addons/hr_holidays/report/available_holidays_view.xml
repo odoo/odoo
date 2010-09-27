@@ -35,6 +35,7 @@
                     <field name="max_leave" operator="+"/>
                     <field name="taken_leaves" operator="+"/>
                     <field name="remaining_leave" operator="+"/>
+               		<field name="month" group = "True" operator="+" invisible="1"/>
                     <field group="True" name="holiday_status_id"/>
                 </graph>
             </field>
@@ -57,24 +58,24 @@
 		                <separator orientation="vertical"/>
                     <field name="employee_id"/>
 		            </group>
-		            <newline/>
-	                <group expand="0" string="Group By..." colspan="10" col="12">
-	                    <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
-	                    <filter icon="terp-personal" string="Employee"
-                          name="user" context="{'group_by':'employee_id'}"
-	                        help="Leaves by employee"/>
-                        <separator orientation="vertical"/>
-	                    <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'holiday_status_id'}"/>
-	                    <separator orientation="vertical"/>
-	                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
-	                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
-	                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
-	                </group>
 	                <newline/>
 	                <group expand="0" string="Extended Filters..." colspan="10" col="12">
-                    <field name="holiday_status_id" widget="selection"/>
-                	<field name="department_id" widget="selection"/>
+	                    <field name="holiday_status_id" widget="selection"/>
+	                	<field name="department_id" widget="selection"/>
 	                </group>
+	                <newline/>
+                    <group expand="1" string="Group By..." colspan="10" col="12">
+                        <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
+                        <filter icon="terp-personal" string="Employee"
+                          name="user" context="{'group_by':'employee_id'}"
+                          help="Leaves by employee"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'holiday_status_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
+                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                    </group>
 	            </search>
 	        </field>
 	    </record>

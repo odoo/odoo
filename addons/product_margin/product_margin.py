@@ -36,11 +36,11 @@ class product_product(osv.osv):
             date_to = context.get('date_to', time.strftime('%Y-12-31'))
             invoice_state = context.get('invoice_state', 'open_paid')
             if 'date_from' in field_names:
-            	res[val.id]['date_from']=date_from
+                res[val.id]['date_from']=date_from
             if 'date_to' in field_names:
                 res[val.id]['date_to']=date_to
             if 'invoice_state' in field_names:
-            	res[val.id]['invoice_state']=invoice_state
+                res[val.id]['invoice_state']=invoice_state
             invoice_types = ()
             states = ()
             if invoice_state=='paid':
