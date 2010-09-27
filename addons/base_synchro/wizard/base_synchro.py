@@ -226,7 +226,6 @@ class wizard_cost_account_synchro(wizard.interface):
             if object.action=='b':
                 time.sleep(1)
                 dt = time.strftime('%Y-%m-%d %H:%M:%S')
-                print "dateeeeeeeeeee=========",date
             pool.get('base.synchro.obj').write(cr, uid, [object.id], {'synchronize_date': dt})
             cr.commit()
         end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
