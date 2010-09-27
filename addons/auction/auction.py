@@ -18,15 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from mx import DateTime
 from osv import fields, osv, orm
-from tools import config
 from tools.translate import _
-import ir
 import netsvc
-import os
 import time
-import tools
 
 #----------------------------------------------------------
 # Auction Artists
@@ -70,29 +65,24 @@ class auction_dates(osv.osv):
         name = [(r['id'], '['+r['auction1']+'] '+ r['name']) for r in reads]
         return name
     
-    def _get_buyer_invoice(self, cr, uid, ids, name, arg, context={}):
+    def _get_invoice(self, cr, uid, ids, name, arg, context={}):
         lots_obj = self.pool.get('auction.lots')
         result = {}
         for data in self.browse(cr, uid, ids):
-            inv_ids = []
-            lots_ids = lots_obj.search(cr, uid, [('auction_id','=',data.id),('ach_inv_id','!=',False)])
+            buyer_inv_ids = []
+            seller_inv_ids = []
+            result[data.id] = {
+                'seller_invoice_history': buyer_inv_ids,
+                'buyer_invoice_history': seller_inv_ids,
+            }
+            lots_ids = lots_obj.search(cr, uid, [('auction_id','=',data.id)])
             for lot in lots_obj.browse(cr, uid, lots_ids):
                 if lot.ach_inv_id:
-                    inv_ids.append(lot.ach_inv_id.id)
-            result[data.id] = inv_ids
-        return result
-    
-    def _get_seller_invoice(self, cr, uid, ids, name, arg, context={}):
-        lots_obj = self.pool.get('auction.lots')
-        lots_ids = lots_obj.search(cr, uid, [('auction_id','in',ids)])
-        result = {}
-        for data in self.browse(cr, uid, ids):
-            inv_ids = []
-            lots_ids = lots_obj.search(cr, uid, [('auction_id','=',data.id),('sel_inv_id','!=',False)])
-            for lot in lots_obj.browse(cr, uid, lots_ids):
+                    buyer_inv_ids.append(lot.ach_inv_id.id)
                 if lot.sel_inv_id:
-                    inv_ids.append(lot.sel_inv_id.id)
-            result[data.id] = inv_ids
+                    seller_inv_ids.append(lot.sel_inv_id.id)
+            result[data.id]['seller_invoice_history'] = seller_inv_ids
+            result[data.id]['buyer_invoice_history'] = buyer_inv_ids
         return result
 
     _columns = {
@@ -111,8 +101,8 @@ class auction_dates(osv.osv):
         'state': fields.selection((('draft', 'Draft'), ('closed', 'Closed')), 'State', select=1, readonly=True,
                                   help='When auction starts the state is \'Draft\'.\n At the end of auction, the state becomes \'Closed\'.'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
-        'buyer_invoice_history': fields.function(_get_buyer_invoice, relation='account.invoice', method=True, string="Buyer Invoice", type='many2many'),
-        'seller_invoice_history': fields.function(_get_seller_invoice, relation='account.invoice', method=True, string="Seller Invoice", type='many2many'),
+        'buyer_invoice_history': fields.function(_get_invoice, relation='account.invoice', method=True, string="Buyer Invoice", type='many2many', multi=True),
+        'seller_invoice_history': fields.function(_get_invoice, relation='account.invoice', method=True, string="Seller Invoice", type='many2many', multi=True),
     }
 
     _defaults = {
@@ -134,9 +124,9 @@ class auction_dates(osv.osv):
             context={}
         lots_obj = self.pool.get('auction.lots')
         lots_ids = lots_obj.search(cr, uid, [('auction_id', 'in', ids), ('state', '=', 'draft'), ('obj_price', '>', 0)])
-        new_buyer_invoice = lots_obj.lots_invoice(cr, uid, lots_ids, {}, None)
+        lots_obj.lots_invoice(cr, uid, lots_ids, {}, None)
         lots_ids2 = lots_obj.search(cr, uid, [('auction_id', 'in', ids), ('obj_price', '>', 0)])
-        new_seller_invoice = lots_obj.seller_trans_create(cr, uid, lots_ids2, {})
+        lots_obj.seller_trans_create(cr, uid, lots_ids2, {})
         self.write(cr, uid, ids, {'state': 'closed'}) #close the auction
         return True
 
@@ -289,7 +279,6 @@ class auction_lots(osv.osv):
         lots = self.browse(cr, uid, ids, context)
         pt_tax = self.pool.get('account.tax')
         for lot in lots:
-            total_tax = 0.0
             taxes = []
             for name in fields:
                 res[lot.id] = {name: False}
@@ -350,7 +339,6 @@ class auction_lots(osv.osv):
                                     ('account_id', '=', lot.auction_id.account_analytic_id.id),
                                     ('journal_id', '<>', lot.auction_id.journal_id.id),
                                     ('journal_id', '<>', lot.auction_id.journal_seller_id.id)])
-                        indir_cost = lot.bord_vnd_id.specific_cost_ids
                         for r in lot.bord_vnd_id.specific_cost_ids:
                             som += r.amount
                         for line in account_analytic_line_obj.browse(cr, uid, line_ids, context=context):
@@ -609,7 +597,6 @@ class auction_lots(osv.osv):
                 raise orm.except_orm(_('Missed buyer !'), _('The object "%s" has no buyer assigned.') % (lot.name,))
             else:
                 partner_ref =lot.ach_uid.id
-                lot_name = lot.obj_num
                 res = res_obj.address_get(cr, uid, [partner_ref], ['contact', 'invoice'])
                 contact_addr_id = res['contact']
                 invoice_addr_id = res['invoice']
@@ -663,16 +650,12 @@ class auction_lots(osv.osv):
         inv_line_obj = self.pool.get('account.invoice.line')
         wf_service = netsvc.LocalService('workflow')
         for lot in self.browse(cr, uid, ids, context):
-            partner_id = lot.bord_vnd_id.partner_id.id
             if not lot.auction_id.id:
                 continue
-            lot_name = lot.obj_num
             if lot.bord_vnd_id.id in invoices:
                 inv_id = invoices[lot.bord_vnd_id.id]
             else:
                 res = partner_obj.address_get(cr, uid, [lot.bord_vnd_id.partner_id.id], ['contact', 'invoice'])
-                contact_addr_id = res['contact']
-                invoice_addr_id = res['invoice']
                 inv = {
                     'name': 'Auction:' +lot.name,
                     'journal_id': lot.auction_id.journal_seller_id.id,
@@ -721,7 +704,6 @@ class auction_lots(osv.osv):
 
             RETURN: id of generated invoice
         """
-        dt = time.strftime('%Y-%m-%d')
         inv_ref = self.pool.get('account.invoice')
         res_obj = self.pool.get('res.partner')
         inv_line_obj = self.pool.get('account.invoice.line')
@@ -738,8 +720,6 @@ class auction_lots(osv.osv):
                 add = res_obj.read(cr, uid, [lot.ach_uid.id], ['address'])[0]['address']
                 if not len(add):
                     raise orm.except_orm(_('Missed Address !'), _('The Buyer has no Invoice Address.'))
-                price = lot.obj_price or 0.0
-                lot_name =lot.obj_num
                 inv = {
                     'name':lot.auction_id.name or '',
                     'reference': lot.ach_login,

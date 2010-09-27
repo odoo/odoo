@@ -332,6 +332,7 @@ class account_invoice(osv.osv):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        journal_obj = self.pool.get('account.journal')
         if context.get('active_model','') in ['res.partner']:
             partner = self.pool.get(context['active_model']).read(cr,uid,context['active_ids'],['supplier','customer'])[0]
             if not view_type:
@@ -343,10 +344,10 @@ class account_invoice(osv.osv):
                 else:
                     view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name','=','account.invoice.form')])[0]
         res = super(account_invoice,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        type = context.get('journal_type', 'sale')
         for field in res['fields']:
-            type = context.get('journal_type', 'sale')
             if field == 'journal_id':
-                journal_select = self.pool.get('account.journal')._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
+                journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
         return res
 
@@ -836,7 +837,7 @@ class account_invoice(osv.osv):
                         total_percent += line.value_amount
                 total_fixed = (total_fixed * 100) / inv.amount_total
                 if (total_fixed + total_percent) > 100:
-                    raise osv.except_osv(_('Error !'), _("You cannot create an invoice !\nAs you have defined payment term and so the total of invoice should be greater than the computed amount for journal entries using payment term"))
+                    raise osv.except_osv(_('Error !'), _("Cannot create the invoice !\nThe payment term defined gives a computed amount greater than the total invoiced amount."))
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)

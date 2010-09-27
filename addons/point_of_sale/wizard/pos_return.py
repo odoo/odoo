@@ -240,7 +240,6 @@ class add_product(osv.osv_memory):
         data = data and data[0] or False
         if active_id:
             order_obj = self.pool.get('pos.order')
-            lines_obj = self.pool.get('pos.order.line')
             picking_obj = self.pool.get('stock.picking')
             stock_move_obj = self.pool.get('stock.move')
             property_obj= self.pool.get("ir.property")

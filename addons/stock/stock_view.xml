@@ -1598,6 +1598,14 @@
                         <field name="date_planned"/>
                     </group>
                     <newline/>
+                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
+                            <field name="origin"/>
+                            <field name="picking_id"/>
+                            <field name="prodlot_id"/>
+                            <field name="tracking_id"/>
+                            <field name="state"/>
+                    </group>
+                    <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
                         <filter string="Product" name="by_product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Picking" name="groupby_picking_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'picking_id'}"/>
@@ -1611,14 +1619,6 @@
                         <separator orientation="vertical"/>
                         <filter string="Creation" name="groupby_date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                         <filter string="Expected" name="groupby_date_planned" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
-                            <field name="origin"/>
-                            <field name="picking_id"/>
-                            <field name="prodlot_id"/>
-                            <field name="tracking_id"/>
-                            <field name="state"/>
                     </group>
                 </search>
             </field>

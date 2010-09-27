@@ -47,12 +47,14 @@ class account_statement_from_invoice_lines(osv.osv_memory):
         statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
         currency_obj = self.pool.get('res.currency')
-        statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
+        voucher_obj = self.pool.get('account.voucher')
+        voucher_line_obj = self.pool.get('account.voucher.line')
         line_date = time.strftime('%Y-%m-%d')
         statement = statement_obj.browse(cr, uid, statement_id, context=context)
 
         # for each selected move lines
         for line in line_obj.browse(cr, uid, line_ids, context=context):
+            voucher_res = {}
             ctx = context.copy()
             #  take the date for computation of currency => use payment date
             ctx['date'] = line_date
@@ -69,10 +71,29 @@ class account_statement_from_invoice_lines(osv.osv_memory):
             elif (line.invoice and line.invoice.currency_id.id <> statement.currency.id):
                 amount = currency_obj.compute(cr, uid, line.invoice.currency_id.id,
                     statement.currency.id, amount, context=ctx)
+            
+            voucher_res = { 'type':(amount < 0 and 'payment' or 'receipt') ,
+                            'name': line.name, 
+                            'partner_id': line.partner_id.id,
+                            'journal_id': statement.journal_id.id,
+                            'account_id': line.account_id.id,
+                            'company_id':statement.company_id.id,
+                            'currency_id':statement.currency.id,
+                            'date':line.date,
+                            'amount':abs(amount),
+                            'period_id':statement.period_id.id}
+            voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'))
+            voucher_line_dict =  False
+            if result['value']['line_ids']:
+                for line_dict in result['value']['line_ids']:
+                    move_line = line_obj.browse(cr, uid, line_dict['move_line_id'], context)
+                    if line.move_id.id == move_line.move_id.id:
+                        voucher_line_dict = line_dict
 
-            reconcile_id = statement_reconcile_obj.create(cr, uid, {
-                'line_ids': [(6, 0, [line.id])]
-                }, context=context)
+            if voucher_line_dict:
+                voucher_line_dict.update({'voucher_id':voucher_id})
+                voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
             if line.journal_id.type == 'sale':
                 type = 'customer'
             elif line.journal_id.type == 'purchase':
@@ -87,7 +108,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'account_id': line.account_id.id,
                 'statement_id': statement_id,
                 'ref': line.ref,
-                'reconcile_id': reconcile_id,
+                'voucher_id': voucher_id,
                 'date': time.strftime('%Y-%m-%d'), #time.strftime('%Y-%m-%d'), #line.date_maturity or,
             }, context=context)
         return {}

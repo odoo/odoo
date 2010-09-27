@@ -20,6 +20,8 @@
 ##############################################################################
 
 import time
+from lxml import etree
+
 import netsvc
 from osv import fields
 from osv import osv
@@ -61,6 +63,8 @@ class account_voucher(osv.osv):
             return context.get('search_default_journal_id')
         
         ttype = context.get('type', 'bank')
+        if ttype in ('payment', 'receipt'):
+            ttype = 'bank'
         res = journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
         return res and res[0] or False
 
@@ -92,21 +96,35 @@ class account_voucher(osv.osv):
             if journal.currency:
                 currency_id = journal.currency.id
         return False
-    
+
     def _get_partner(self, cr, uid, context={}):
         return context.get('partner_id', False)
-    
+
     def _get_reference(self, cr, uid, context={}):
         return context.get('reference', False)
-    
+
     def _get_narration(self, cr, uid, context={}):
         return context.get('narration', False)
-       
- 
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        return [(r['id'], (str(r['amount']) or '')) for r in self.read(cr, uid, ids, ['amount'], context, load='_classic_write')]
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        res = super(account_voucher,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        doc = etree.XML(res['arch'])
+        nodes = doc.xpath("//field[@name='partner_id']")
+        if context.get('type', 'sale') in ('purchase', 'payment'):
+            for node in nodes:
+                node.set('domain', "[('supplier', '=', True)]")
+            res['arch'] = etree.tostring(doc)
+        return res
+
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _order = "date desc, id desc"
-    _rec_name = 'number'
+#    _rec_name = 'number'
     _columns = {
         'type':fields.selection([
             ('sale','Sale'),
@@ -141,7 +159,7 @@ class account_voucher(osv.osv):
         'amount': fields.float('Total', digits=(16, 2), required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_amount':fields.float('Tax Amount', digits=(14,2), readonly=True, states={'draft':[('readonly',False)]}),
         'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Transaction reference number."),
-        'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
+        'number': fields.char('Number', size=32, readonly=True,),
         'move_id':fields.many2one('account.move', 'Account Entry'),
         'move_ids': fields.related('move_id','line_id', type='one2many', relation='account.move.line', string='Journal Items', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', change_default=1, readonly=True, states={'draft':[('readonly',False)]}),
@@ -162,10 +180,10 @@ class account_voucher(osv.osv):
         'reference': _get_reference,
         'narration':_get_narration,
         'type':_get_type,
-        'state': lambda *a: 'draft',
-        'pay_now':lambda *a: 'pay_later',
-        'name': lambda *a: '',
-        'date' : lambda *a: time.strftime('%Y-%m-%d'),
+        'state': 'draft',
+        'pay_now': 'pay_later',
+        'name': '',
+        'date' : time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
         'tax_id': _get_tax,
     }
@@ -529,7 +547,7 @@ class account_voucher(osv.osv):
         return {'value':res}
 
     def action_move_line_create(self, cr, uid, ids, context=None):
-    
+        
         def _get_payment_term_lines(term_id, amount):
             term_pool = self.pool.get('account.payment.term')
             if term_id and amount:
@@ -546,9 +564,8 @@ class account_voucher(osv.osv):
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
-
-            if 'force_name' in context and context['force_name']: 
-                name = context['force_name']
+            if inv.number: 
+                name = inv.number
             elif inv.journal_id.sequence_id:
                 name = self.pool.get('ir.sequence').get_id(cr, uid, inv.journal_id.sequence_id.id)
             else:
@@ -648,7 +665,7 @@ class account_voucher(osv.osv):
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
                     rec_list_ids.append(rec_ids)
-            
+
             if not self.pool.get('res.currency').is_zero(cr, uid, inv.currency_id, line_total):
                 diff = line_total
                 move_line = {
@@ -671,7 +688,8 @@ class account_voucher(osv.osv):
 
             self.write(cr, uid, [inv.id], {
                 'move_id': move_id,
-                'state':'posted'
+                'state': 'posted',
+                'number': name,
             })
             move_pool.post(cr, uid, [move_id], context={})
             for rec_ids in rec_list_ids:
@@ -819,10 +837,9 @@ class account_bank_statement(osv.osv):
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, next_number, context=None):
         st_line = self.pool.get('account.bank.statement.line').browse(cr, uid, st_line_id, context=context)
         if st_line.voucher_id:
-            res = self.pool.get('account.voucher').proforma_voucher(cr, uid, [st_line.voucher_id.id], context={'force_name': next_number})
-            #force refresh of the cache
-            #st_line = self.pool.get('account.bank.statement.line').browse(cr, uid, st_line.id, context=context)
-            
+            self.pool.get('account.voucher').write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'account.voucher', st_line.voucher_id.id, 'proforma_voucher', cr)
             return self.pool.get('account.move.line').write(cr, uid, [x.id for x in st_line.voucher_id.move_ids], {'statement_id': st_line.statement_id.id}, context=context) 
         return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line, company_currency_id, next_number, context=context)
 
@@ -855,5 +872,13 @@ class account_bank_statement_line(osv.osv):
         'voucher_id': fields.many2one('account.voucher', 'Payment'),
 
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        statement_line = self.browse(cr, uid, ids, context)
+        unlink_ids = []
+        for st_line in statement_line:
+            unlink_ids.append(st_line.voucher_id.id)
+        self.pool.get('account.voucher').unlink(cr, uid, unlink_ids, context=context)
+        return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 
 account_bank_statement_line()
