@@ -351,7 +351,7 @@ This is useful for CRM leads for example"),
             if sub_model_object_field:
                 copy_val += "." + sub_model_object_field
             if null_value:
-                copy_val += " or '" + null_value + "'"
+                copy_val += " or '''%s'''" % null_value
             if model_object_field:
                 copy_val += "}"
         elif template_language == 'django':
@@ -360,7 +360,7 @@ This is useful for CRM leads for example"),
             if sub_model_object_field:
                 copy_val += "." + sub_model_object_field
             if null_value:
-                copy_val = copy_val + '|default:"' + null_value + '"'  
+                copy_val = copy_val + "|default:'''%s'''" % null_value
             copy_val = copy_val + "}}"        
         return copy_val 
             
