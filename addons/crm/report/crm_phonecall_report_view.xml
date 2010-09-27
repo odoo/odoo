@@ -89,14 +89,17 @@
 
                            <separator orientation="vertical" />
                         <filter icon="terp-check"
-                            string="To Do"
-                            domain="[('state','in',('draft','open'))]"/>
+                            string="Todo"
+                            domain="[('state','in',('draft','open'))]"
+                            help="Phone calls which are in draft and open state"/>
                         <filter icon="gtk-media-pause"
-                            string="Pending"
-                            domain="[('state','=','pending')]"/>
-                        <filter icon="terp-dialog-close"
-                            string="Done"
-                            domain="[('state','=','done')]"/>
+                            string="Not Held"
+                            domain="[('state','=','pending')]"
+                            help="Phone calls which are in pending state"/>
+                        <filter icon="terp-camera_test"
+                            string="Held"
+                            domain="[('state','=','done')]"
+                            help="Phone calls which are in closed state"/>
                       <separator orientation="vertical" />
                         <field name="section_id" string="Sales Team"
                             default="context.get('section_id', False)"
@@ -121,7 +124,6 @@
                             context="{'group_by':'section_id'}" />
                         
                         <separator orientation="vertical" />
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Type" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'categ_id'}" />
@@ -145,7 +147,6 @@
                    <group  expand="0" string="Extended Filters..."  groups="base.group_extended">
                       <field name="partner_id"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                         <field string="Type" name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                         <separator orientation="vertical"/>
                         <field name="company_id" groups="base.group_multi_company"/>

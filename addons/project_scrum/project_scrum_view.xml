@@ -245,7 +245,39 @@
                             </group>
                         </page>
                         <page string="Daily Meetings">
-                            <field colspan="4" name="meeting_ids" nolabel="1" widget="one2many_list"/>
+                            <field colspan="4" name="meeting_ids" nolabel="1" widget="one2many_list">
+                                <form string="Scrum Sprint">
+                                    <group colspan="4" col="6">
+                                            <field name="date"/>
+                                            <field name="user_id"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Scrum Meeting">
+                                            <separator colspan="4" string="What did you do since the last meeting?"/>
+                                            <field colspan="4" name="question_yesterday" nolabel="1"/>
+                                            <separator colspan="4" string="What do you plan to do till the next meeting?"/>
+                                            <field colspan="4" name="question_today" nolabel="1"/>
+                                            <separator colspan="4" string="Are there anything blocking you?"/>
+                                            <field colspan="4" name="question_blocks" nolabel="1"/>
+                                            <separator colspan="4" string=""/>
+                							<button name="button_send_to_master" type="object" string="Send to Scrum Master" icon="gtk-ok"/>
+                                            <button name="button_send_product_owner" type="object" string="Send to Product Owner" icon="gtk-ok"/>
+                                        </page>
+                                        <page string="Optional Info">
+                                            <separator colspan="4" string="Are your Sprint Backlog estimate accurate ?"/>
+                                            <field colspan="4" name="question_backlog" nolabel="1"/>
+                                        </page>
+                                        <page string="Links">
+                                            <separator colspan="4" string="Tasks"/>
+                                            <field colspan="4" name="task_ids" nolabel="1" domain="[('sprint_id','=',sprint_id)]"/>
+                                        </page>
+                                </notebook>
+                            </form>
+                            <tree string="Scrum Meeting">
+                                <field name="date"/>
+                                <field name="user_id"/>
+                            </tree>
+                            </field>
                         </page>
                         <page string="Review">
                             <field colspan="4" name="review" nolabel="1"/>
@@ -319,10 +351,11 @@
             <field name="model">project.scrum.meeting</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Scrum Sprint">
+                <tree string="Scrum Meeting">
                     <field name="date"/>
                     <field name="sprint_id"/>
                     <field name="project_id"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
@@ -331,11 +364,11 @@
             <field name="model">project.scrum.meeting</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Scrum Sprint">
+                <form string="Scrum Meeting">
                     <group colspan="4" col="6">
                         <field name="date"/>
                         <field name="sprint_id" domain="[('state', '=', 'open')]"/>
-                        <field name="responsible_id"/>
+                        <field name="user_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">
