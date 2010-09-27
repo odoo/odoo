@@ -58,7 +58,7 @@
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_testtender0}
 - 
-  I launch he scheduler to compute all procurements, and specify all requisitions orders.
+  I launch the scheduler to compute all procurements, and specify all requisitions orders.
 - 
   !python {model: procurement.order.compute.all}: |
     proc_obj = self.pool.get('procurement.order')

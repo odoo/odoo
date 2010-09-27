@@ -26,7 +26,7 @@
     'category': 'Generic Modules/Human Resources',
     'description': """
     Add all information on the employee form to manage contracts:
-    * Martial status,
+    * Marital status,
     * Security number,
     * Place of birth, birth date, ...
     You can assign several contracts per employee.
