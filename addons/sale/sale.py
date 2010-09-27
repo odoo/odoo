@@ -468,7 +468,8 @@ class sale_order(osv.osv):
             lines = []
             for line in o.order_line:
                 if line.invoiced:
-                    raise osv.except_osv(_('Error !'), _('The Sale Order already has some lines invoiced. You should continue the billing process by line.'))
+                    #raise osv.except_osv(_('Error !'), _('The Sale Order already has some lines invoiced. You should continue the billing process by line.'))
+                    continue
                 elif (line.state in states):
                     lines.append(line.id)
             created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
