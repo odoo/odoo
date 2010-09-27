@@ -24,6 +24,7 @@
         "version":"0.1",
         "author":"Tiny",
         "category":"Generic Modules/Base",
+        "description": """Synchronization with all objects.""",
         "depends":["base"],
         "demo_xml":[],
         "update_xml":[ "wizard/base_synchro_view.xml",

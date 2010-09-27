@@ -42,7 +42,7 @@ class base_synchro_server(osv.osv):
 base_synchro_server()
 
 class base_synchro_obj(osv.osv):
-    '''Class to store the operations done by wizart'''
+    '''Class to store the operations done by wizard'''
     _name = "base.synchro.obj"
     _description = "Register Class"
     _columns = {
