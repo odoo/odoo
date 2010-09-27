@@ -62,6 +62,7 @@ class account_coda_import(osv.osv_memory):
         move_line_obj = self.pool.get('account.move.line')
         bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
+        voucher_obj = self.pool.get('account.voucher')
         account_coda_obj = self.pool.get('account.coda')
         mod_obj = self.pool.get('ir.model.data')
 
@@ -202,17 +203,44 @@ class account_coda_import(osv.osv_memory):
                     'state': 'draft',
                     'name': statement['name'],
                 })
-                lines=statement["bank_statement_line"]
+                lines = statement["bank_statement_line"]
                 for value in lines:
-                    line=lines[value]
-                    reconcile_id = False
-                    if line['toreconcile']:
+                    line = lines[value]
+                    voucher_id = False
+                    if line['toreconcile']: # Fix me
                         name = line['name'][:3] + '/' + line['name'][3:7] + '/' + line['name'][7:]
                         rec_id = pool.get('account.move.line').search(cr, uid, [('name', '=', name), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
                         if rec_id:
-                            reconcile_id = statement_reconcile_obj.create(cr, uid, {
-                                'line_ids': [(6, 0, rec_id)]
-                                }, context=context)
+                            voucher_res = { 'type':(line['amount'] < 0 and 'payment' or 'receipt') ,
+                            'name': line['name'],#line.name,
+                            'partner_id': line['partner_id'] ,#line.partner_id.id,
+                            'journal_id': statement['journal_id'], #statement.journal_id.id,
+                            'account_id': line['account_id'],#line.account_id.id,
+                            'company_id': statement['company_id'],#statement.company_id.id,
+                            'currency_id': statement['currency'],#statement.currency.id,
+                            'date': line['date'], #line.date,
+                            'amount':abs(line['amount']),
+                            'period_id':statement['period_id'] or period,# statement.period_id.id
+                            }
+                            voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
+
+                            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'))
+                            voucher_line_dict =  False
+                            if result['value']['line_ids']:
+                                for line_dict in result['value']['line_ids']:
+                                    move_line = line_obj.browse(cr, uid, line_dict['move_line_id'], context)
+                                    if line.move_id.id == move_line.move_id.id:
+                                        voucher_line_dict = line_dict
+
+                            if voucher_line_dict:
+                                voucher_line_dict.update({'voucher_id':voucher_id})
+                                voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
+
+#                            reconcile_id = statement_reconcile_obj.create(cr, uid, {
+#                                'line_ids': [(6, 0, rec_id)]
+#                                }, context=context)
+#
+
                             mv = pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
                             if mv.partner_id:
                                 line['partner_id'] = mv.partner_id.id
@@ -230,7 +258,7 @@ class account_coda_import(osv.osv_memory):
                                'partner_id':line['partner_id'] or 0,
                                'account_id':line['account_id'],
                                'statement_id': bk_st_id,
-                               'reconcile_id': reconcile_id,
+                               'voucher_id': voucher_id,
                                'note':str_not1,
                                'ref':line['ref'],
                                })
