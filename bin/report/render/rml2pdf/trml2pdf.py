@@ -42,11 +42,15 @@ class PageCount(platypus.Flowable):
     def draw(self):
         self.canv.beginForm("pageCount")
         self.canv.setFont("Helvetica", utils.unit_get(str(8)))
-        self.canv.drawString(0, 0, str(self.canv.getPageNumber()))
+        if '_pageCount' in dir(self.canv):
+            self.canv.drawString(0, 0, str(self.canv._pageCount))
+        else:
+            self.canv.drawString(0, 0, str(self.canv.getPageNumber()))
         self.canv.endForm()
 
 class PageReset(platypus.Flowable):
     def draw(self):
+        self.canv._pageCount = self.canv.getPageNumber()
         self.canv._pageNumber = 0
 
 class _rml_styles(object,):
@@ -810,8 +814,7 @@ class _rml_template(object):
                 fis.append(platypus.PageBreak())
             fis += r.render(node_story)
             # Reset Page Number with new story tag
-            if self.localcontext.has_key('active_ids') and len(self.localcontext.get('active_ids')) > 1:
-                fis.append(PageReset())
+            fis.append(PageReset())
             story_cnt += 1
         if self.localcontext:
             fis.append(PageCount())
