@@ -655,7 +655,6 @@ class auction_lots(osv.osv):
             if lot.bord_vnd_id.id in invoices:
                 inv_id = invoices[lot.bord_vnd_id.id]
             else:
-                res = partner_obj.address_get(cr, uid, [lot.bord_vnd_id.partner_id.id], ['contact', 'invoice'])
                 inv = {
                     'name': 'Auction:' +lot.name,
                     'journal_id': lot.auction_id.journal_seller_id.id,

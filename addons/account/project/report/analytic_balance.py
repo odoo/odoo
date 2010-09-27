@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import pooler
 import time
 from report import report_sxw
 
@@ -43,7 +42,6 @@ class account_analytic_balance(report_sxw.rml_parse):
         self.acc_sum_list = []# maintains a list of all ids
 
     def get_children(self, ids):
-        ids2 = []
         read_data = self.pool.get('account.analytic.account').read(self.cr, self.uid, ids,['child_ids','code','complete_name','balance'])
         for data in read_data:
             if (data['id'] not in self.acc_ids):
@@ -54,7 +52,7 @@ class account_analytic_balance(report_sxw.rml_parse):
                     self.acc_ids.append(data['id'])
                     self.read_data.append(data)
                     if data['child_ids']:
-                        res = self.get_children(data['child_ids'])
+                        self.get_children(data['child_ids'])
         return True
 
 
