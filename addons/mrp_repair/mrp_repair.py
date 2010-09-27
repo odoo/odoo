@@ -428,7 +428,7 @@ class mrp_repair(osv.osv):
                             raise osv.except_osv(_('Warning !'), _('No product defined on Fees!'))
                         
                         if fee.product_id.property_account_income:
-                            account_id = fee.product_id.property_account_income
+                            account_id = fee.product_id.property_account_income.id
                         elif fee.product_id.categ_id.property_account_income_categ:
                             account_id = fee.product_id.categ_id.property_account_income_categ.id
                         else:

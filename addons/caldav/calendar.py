@@ -453,7 +453,7 @@ class CalDAV(object):
                             else:
                                 for key1, val1 in self.ical_get(field, 'mapping').items():
                                     if val1 == data[map_field]:
-                                        vevent.add(field).value = key1
+                                        vevent.add(field).value = key1.upper()
         return vevent
 
     def check_import(self, cr, uid, vals, context=None):

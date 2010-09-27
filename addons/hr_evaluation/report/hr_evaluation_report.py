@@ -29,6 +29,9 @@ class hr_evaluation_report(osv.osv):
     _rec_name = 'date'
     _columns = {
         'create_date': fields.date('Create Date', readonly=True),
+        'delay_date':fields.float('Delay to Start', digits=(16,2),readonly=True),
+        'overpass_delay':fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
+        'progress_bar' : fields.float("Progress"),
         'day': fields.char('Day', size=128, readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
         'request_id': fields.many2one('survey.request', 'Request_id', readonly=True),
@@ -73,7 +76,10 @@ class hr_evaluation_report(osv.osv):
                      to_char(s.create_date, 'YYYY') as year,
                      to_char(s.create_date, 'MM') as month,
                      count(l.*) as nbr,
-                     s.state
+                     s.state,
+                     s.progress as progress_bar,
+                     avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(3600*24) as  delay_date,
+                     avg(extract('epoch' from age(s.date,CURRENT_DATE)))/(3600*24) as overpass_delay
                      from
                  hr_evaluation_interview l
                 LEFT JOIN
@@ -90,6 +96,7 @@ class hr_evaluation_report(osv.osv):
                      s.date_close,
                      l.request_id,
                      s.rating,
+                     s.progress,
                      s.plan_id
             )
         """)

@@ -251,7 +251,7 @@ class project(osv.osv):
         context['active_test'] = False
         default['state'] = 'open'
         if not default.get('name', False):
-            default['name'] = proj.name+_(' (copy)')
+            default['name'] = proj.name + _(' (copy)')
         res = super(project, self).copy(cr, uid, id, default, context)
 
         return res
@@ -393,6 +393,8 @@ class task(osv.osv):
         if not default.get('remaining_hours', False):
             default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
+        if not default.get('name', False):
+            default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     def _check_dates(self, cr, uid, ids, context=None):
@@ -401,7 +403,7 @@ class task(osv.osv):
              if task['date_start'] > task['date_end']:
                  return False
         return True
-    
+
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -415,7 +417,7 @@ class task(osv.osv):
         'active': fields.function(_is_template, method=True, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', size=128, required=True),
         'description': fields.text('Description'),
-        'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
+        'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Priority'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage',),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
@@ -425,8 +427,7 @@ class task(osv.osv):
         'date_start': fields.datetime('Starting Date'),
         'date_end': fields.datetime('Ending Date'),
         'date_deadline': fields.date('Deadline'),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='cascade',
-            help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
@@ -457,15 +458,15 @@ class task(osv.osv):
     }
 
     _order = "sequence, priority, date_start, id"
-    
+
     def _check_recursion(self, cr, uid, ids):
         obj_task = self.browse(cr, uid, ids[0])
         parent_ids = [x.id for x in obj_task.parent_ids]
         children_ids = [x.id for x in obj_task.child_ids]
-        
+
         if (obj_task.id in children_ids) or (obj_task.id in parent_ids):
             return False
-        
+
         while(ids):
             cr.execute('SELECT DISTINCT task_id '\
                        'FROM project_task_parent_rel '\
@@ -518,6 +519,26 @@ class task(osv.osv):
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
         return res
 
+    def action_close(self, cr, uid, ids, context=None):
+        # This action open wizard to send email to partner or project manager after close task.
+        project_id = len(ids) and ids[0] or False
+        if not project_id: return False
+        task = self.browse(cr, uid, project_id, context=context)
+        project = task.project_id
+        res = self.do_close(cr, uid, [project_id], context=context) 
+        if project.warn_manager or project.warn_customer:
+           return {
+                'name': _('Send Email after close task'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'project.task.close',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy': True,
+                'context': {'active_id': task.id}
+           } 
+        return res
+
     def do_close(self, cr, uid, ids, context=None):
         """
         Close Task
@@ -539,7 +560,7 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
-                
+
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
                     reopen = True

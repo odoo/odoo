@@ -103,7 +103,12 @@ class node_calendar_collection(nodes.node_dir):
 class node_calendar(nodes.node_class):
     our_type = 'collection'
     DAV_PROPS = {
-            "http://calendarserver.org/ns/" : ('getctag',),
+            "DAV:": ('principal-collection-set'),
+            "http://cal.me.com/_namespace/" : ('user-state'),
+            "http://calendarserver.org/ns/" : (
+                    'dropbox-home-URL',
+                    'notification-URL',
+                    'getctag',),
             'http://groupdav.org/': ('resourcetype',),
             "urn:ietf:params:xml:ns:caldav" : (
                     'calendar-description',
@@ -114,6 +119,7 @@ class node_calendar(nodes.node_class):
                     'schedule-outbox-URL',)}
     DAV_M_NS = {
            "DAV:" : '_get_dav',
+           "http://cal.me.com/_namespace/": '_get_dav', 
            'http://groupdav.org/': '_get_gdav',
            "http://calendarserver.org/ns/" : '_get_dav',
            "urn:ietf:params:xml:ns:caldav" : '_get_caldav'}
@@ -133,6 +139,35 @@ class node_calendar(nodes.node_class):
     def _get_dav_getctag(self, cr):
         result = self._get_ttag(cr) + ':' + str(time.time())
         return str(result)
+
+    def _get_dav_dropbox_home_URL(self, cr):
+        import xml.dom.minidom
+        import urllib
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
+        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
+        res = '%s/%s' %(calendar.collection_id.name, calendar.name)
+        url = urllib.quote('/%s/%s' % (cr.dbname, res))
+        return url
+    
+    def _get_dav_notification_URL(self, cr):
+        import xml.dom.minidom
+        import urllib
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
+        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
+        res = '%s/%s' %(calendar.collection_id.name, calendar.name)
+        url = urllib.quote('/%s/%s' % (cr.dbname, res))
+        return url
+
+    def _get_dav_user_state(self, cr):
+        #TODO
+        return True
+
 
     def get_dav_resourcetype(self, cr):
         res = [ ('collection', 'DAV:'),
@@ -258,6 +293,86 @@ class node_calendar(nodes.node_class):
     def rmcol(self, cr):
         return False
 
+    
+    def _get_caldav_calendar_data(self, cr):
+        res = []
+        for child in self.children(cr):
+            res.append(child._get_caldav_calendar_data(cr))
+        return res
+
+    def _get_caldav_calendar_description(self, cr):
+        uid = self.context.uid
+        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
+        return calendar.description
+
+    def _get_dav_principal_collection_set(self, uri):
+        import urllib
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
+        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
+        res = '%s/%s' %(calendar.collection_id.name, calendar.name)
+        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
+        href = doc.documentElement
+        href.tagName = 'D:href'
+        huri = doc.createTextNode(urllib.quote('/%s/%s' % (cr.dbname, res)))
+        href.appendChild(huri)
+        return href
+
+    def _get_caldav_calendar_home_set(self, cr):
+        import xml.dom.minidom
+        import urllib
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
+
+        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
+        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
+        huri = doc.createTextNode(urllib.quote('/%s/%s' % (cr.dbname, calendar.collection_id.name)))
+        href = doc.documentElement
+        href.tagName = 'D:href'
+        href.appendChild(huri)
+        return href
+
+    def _get_caldav_calendar_user_address_set(self, cr):
+        import xml.dom.minidom
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        user_obj = self.context._dirobj.pool.get('res.users')
+        user = user_obj.browse(cr, uid, uid, context=ctx)
+        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
+        href = doc.documentElement
+        href.tagName = 'D:href'
+        huri = doc.createTextNode('MAILTO:' + str(user.email) or str(user.name))
+        href.appendChild(huri)
+        return href
+
+    def _get_caldav_schedule_outbox_URL(self, cr):
+        return self._get_caldav_schedule_inbox_URL(cr)
+
+    def _get_caldav_schedule_inbox_URL(self, cr):
+        import xml.dom.minidom
+        import urllib
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
+        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
+        res = '%s/%s' %(calendar.collection_id.name, calendar.name)
+        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
+        href = doc.documentElement
+        href.tagName = 'D:href'
+        huri = doc.createTextNode(urllib.quote('/%s/%s' % (cr.dbname, res)))
+        href.appendChild(huri)
+        return href
+
 
 class res_node_calendar(nodes.node_class):
     our_type = 'file'
@@ -309,6 +424,9 @@ class res_node_calendar(nodes.node_class):
         context.update({'model': self.model, 'res_id':self.res_id})
         res = calendar_obj.export_cal(cr, uid, [self.calendar_id], context=context)
         return res
+  
+    def _get_caldav_calendar_data(self, cr):
+        return self.get_data(cr)
 
     def get_data_len(self, cr, fil_obj = None):
         return self.content_length
@@ -327,67 +445,6 @@ class res_node_calendar(nodes.node_class):
             res = '%d' % (self.calendar_id)
         return res
 
-    def _get_caldav_calendar_data(self, cr):
-        return self.get_data(cr)
-
-
-    def _get_caldav_calendar_description(self, cr):
-        uid = self.context.uid
-        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
-        return calendar.description
-
-
-    def _get_caldav_calendar_home_set(self, cr):
-        import xml.dom.minidom
-        import urllib
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
-
-        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
-        huri = doc.createTextNode(urllib.quote('/%s/%s' % (cr.dbname, calendar.collection_id.name)))
-        href = doc.documentElement
-        href.tagName = 'D:href'
-        href.appendChild(huri)
-        return href
-
-    def _get_caldav_calendar_user_address_set(self, cr):
-        import xml.dom.minidom
-        dirobj = self.context._dirobj
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        user_obj = self.context._dirobj.pool.get('res.users')
-        user = user_obj.browse(cr, uid, uid, context=ctx)
-        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
-        href = doc.documentElement
-        href.tagName = 'D:href'
-        huri = doc.createTextNode('MAILTO:' + user.email)
-        href.appendChild(huri)
-        return href
-
-
-    def _get_caldav_schedule_inbox_URL(self, cr):
-        import xml.dom.minidom
-        import urllib
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
-        res = '%s/%s' %(calendar.name, calendar.collection_id.name)
-        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
-        href = doc.documentElement
-        href.tagName = 'D:href'
-        huri = doc.createTextNode(urllib.quote('/%s/%s' % (cr.dbname, res)))
-        href.appendChild(huri)
-        return href
-
 
     def rm(self, cr):
         uid = self.context.uid
@@ -401,7 +458,6 @@ class res_node_calendar(nodes.node_class):
 
         return res
 
-    def _get_caldav_schedule_outbox_URL(self, cr):
-        return self._get_caldav_schedule_inbox_URL(cr)
+   
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4

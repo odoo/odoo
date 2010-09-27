@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <!-- Root Menus -->
-        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll"/>
+        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" groups="base.group_system,group_hr_payroll" sequence="9"/>
         <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_system"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
@@ -84,12 +84,6 @@
             <field name="view_id" ref="hr_passport_tree"/>
             <field name="search_view_id" ref="view_hr_passport_filter"/>
         </record>
-        <menuitem id="passport_configure" parent="hr.menu_hr_configuration" name="Passport"/>
-        <menuitem
-            id="menu_action_hr_passport_tree"
-            action="action_hr_passport_tree"
-            parent="passport_configure"
-        />
         <!-- End Passport Views -->
 
         <!-- Employee View -->
@@ -98,7 +92,35 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Notes" position="before">
+            <data>
+                <xpath expr="/form/notebook/page[@string='Personal Information']" position="after">
+                    <page string="Miscellaneous">
+                        <group colspan="2" col="2">
+                            <separator string="Personal Info" colspan="2"/>
+                            <field name="otherid" select="1"/>
+                            <field name="bank_account_id"/>
+                            <field name="place_of_birth"/>
+                            <field name="children"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <separator string="Job Info" colspan="2"/>
+                            <field name="manager" select="1"/>
+                            <field name="vehicle" select="1"/>
+                            <field name="vehicle_distance" select="1"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="ESI Information"/>
+                            <field name="esi_account" string="Account"/>
+                            <field name="hospital_id" string="Hospital"/>
+                            <field name="medic_exam" select="1" string="Medical Examination"/>
+                            <field name="esp_account" select="1"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="Providend Fund"/>
+                            <field name="pf_account" string="Account"/>
+                            <field name="pg_joining" string="Join Date"/>
+                        </group>
+                    </page>
                     <page string="Contracts">
                         <field colspan="4" mode="form,tree" name="contract_ids" nolabel="1">
                             <tree string="Contracts">
@@ -153,33 +175,8 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Miscellaneous">
-                        <group colspan="2" col="2">
-                            <separator string="Personal Info" colspan="2"/>
-                            <field name="pan_no" select="1"/>
-                            <field name="bank_account_id"/>
-                            <field name="place_of_birth"/>
-                            <field name="children"/>
-                        </group>
-                        <group colspan="2" col="2">
-                            <separator string="Job Info" colspan="2"/>
-                            <field name="manager" select="1"/>
-                            <field name="vehicle" select="1"/>
-                            <field name="vehicle_distance" select="1"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="ESI Information"/>
-                            <field name="esi_account" string="Account"/>
-                            <field name="hospital_id" string="Hospital"/>
-                            <field name="medic_exam" select="1" string="Medical Examination"/>
-                            <field name="esp_account" select="1"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="Providend Fund"/>
-                            <field name="pf_account" string="Account"/>
-                            <field name="pg_joining" string="Join Date"/>
-                        </group>
-                    </page>
+                </xpath>
+                <xpath expr="/form/notebook/page[@string='Notes']" position="before">
                     <page string="Salary Structure">
                         <field name="line_ids" nolabel="1" colspan="4" string="Salary Structure">
                             <tree string="Salary Structure" editable="bottom">
@@ -202,7 +199,8 @@
                         <field name="analytic_account" groups="base.group_extended"/>
                         <field name="slip_ids" colspan="4" nolabel="1"/>
                     </page>
-                </page>
+                </xpath>
+            </data>
             </field>
         </record>
 
@@ -212,13 +210,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="otherid" position="after">
+                <field name="identification_id" position="after">
                     <field name="passport_id"/>
                 </field>
             </field>
         </record>
         <!-- End Employee View -->
-
         <!-- Contract View -->
         <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
@@ -228,7 +225,7 @@
                 <form string="Contract">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
-                        <field name="employee_id" select="1"/>
+                        <field name="employee_id" select="1" on_change="on_change_employee_id(employee_id)"/>
                         <field name="job_id"/>
                         <field name="wage"/>
                         <field name="wage_type_id" widget="selection"/>
@@ -242,6 +239,9 @@
                                 <field name="date_end" select="1"/>
                                 <field name="working_hours"/>
                                 <field name="working_days_per_week" select="1"/>
+                                <separator colspan="2" string="Trial Period"/>
+                                <field name="trial_date_start" />
+                                <field name="trial_date_end" />
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Advantages"/>

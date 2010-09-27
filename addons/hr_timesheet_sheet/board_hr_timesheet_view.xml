@@ -52,7 +52,7 @@
         <record id="board_hr_timesheet_form" model="ir.ui.view">
             <field name="name">board.hr.timesheet.form</field>
             <field name="model">board.board</field>
-            <field name="inherit_id" ref="hr.board_hr_form"/>
+            <field name="inherit_id" ref="hr.board_hr_manager_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="/form/hpaned/child2" position="inside">
@@ -77,5 +77,31 @@
                 </tree>
             </field>
         </record>
+        <record id="action_week_attendance_graph" model="ir.actions.act_window">
+            <field name="name">My Total Attendances By Week</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="view_id" ref="hr_timesheet_sheet.view_hr_timesheet_sheet_graph"/>
+        </record>
+        <record id="board_hr_week_attendace_form" model="ir.ui.view">
+            <field name="name">board.hr.timesheet.sheet.form</field>
+            <field name="model">board.board</field>
+            <field name="inherit_id" ref="hr.board_hr_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/hpaned/child2" position="inside">
+                    <action colspan="4" height="220" name="%(action_week_attendance_graph)d" string="My Total Attendance By Week" />
+                </xpath>
+            </field>
+        </record>
+        <menuitem
+            action="hr.open_board_hr_manager"
+            icon="terp-graph"
+            id="base.menu_hr_manager"
+            parent="base.menu_hr_dasboard"
+            groups = "base.group_hr_manager"
+            sequence="5"/>
     </data>
 </openerp>
