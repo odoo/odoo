@@ -1051,6 +1051,38 @@ class pos_order_line(osv.osv):
                 res[line.id]=line.price_unit*line.qty
         return res
 
+    def _amount_line_all(self, cr, uid, ids, field_names, arg, context):
+        res = dict([(i, {}) for i in ids])
+
+        account_tax_obj = self.pool.get('account.tax')
+
+        prices = self.price_by_product_multi(cr, uid, ids)
+        for line in self.browse(cr, uid, ids):
+            for f in field_names:
+                if f == 'price_subtotal':
+                    price = prices[line.id]
+                    if line.discount != 0.0:
+                        res[line.id][f] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
+                    else:
+                        res[line.id][f] = line.price_unit * line.qty
+                elif f == 'price_subtotal_incl':
+                    tax_amount = 0.0
+                    taxes = [t for t in line.product_id.taxes_id]
+                    if line.qty == 0.0:
+                        continue
+                    computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
+                    for tax in computed_taxes:
+                        tax_amount += tax['amount']
+                    price = prices[line.id]
+                    if line.discount!=0.0:
+                        res[line.id][f] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
+                    else:
+                        res[line.id][f] = line.price_unit * line.qty
+                    res[line.id][f] += tax_amount
+        print ids
+        print res
+        return res
+
     def price_by_product_multi(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -1177,13 +1209,13 @@ class pos_order_line(osv.osv):
                 return {'value': {'notice':'Minimum Discount','price_ded':price*discount*0.01 or 0.0  }}
         else :
             return {'value': {'notice':'No Discount', 'price_ded':price*discount*0.01 or 0.0}}
-        
+
     def onchange_qty(self, cr, uid, ids, discount, qty, price, context=None):
         subtotal = qty * price
         if discount:
             subtotal = subtotal - (subtotal * discount / 100)
         return {'value': {'price_subtotal_incl': subtotal}}
-    
+
     _columns = {
         'name': fields.char('Line Description', size=512),
         'company_id':fields.many2one('res.company', 'Company', required=True),
@@ -1194,8 +1226,8 @@ class pos_order_line(osv.osv):
         'price_ded': fields.float('Discount(Amount)',digits_compute=dp.get_precision('Point Of Sale')),
         'qty': fields.float('Quantity'),
         'qty_rfd': fields.float('Refunded Quantity'),
-        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal w/o Tax'),
-        'price_subtotal_incl': fields.function(_amount_line_ttc, method=True, string='Subtotal'),
+        'price_subtotal': fields.function(_amount_line_all, method=True, multi='pos_order_line_amount', string='Subtotal w/o Tax'),
+        'price_subtotal_incl': fields.function(_amount_line_all, method=True, multi='pos_order_line_amount', string='Subtotal'),
         'discount': fields.float('Discount (%)', digits=(16, 2)),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
