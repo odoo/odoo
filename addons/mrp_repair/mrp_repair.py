@@ -19,12 +19,10 @@
 #
 ##############################################################################
 
-import time
 from osv import fields,osv
 import netsvc
 import mx.DateTime
-from mx.DateTime import RelativeDateTime, today, DateTime, localtime
-from tools import config
+from mx.DateTime import RelativeDateTime, today
 from tools.translate import _
 import decimal_precision as dp
 
@@ -95,6 +93,16 @@ class mrp_repair(osv.osv):
             cur = repair.pricelist_id.currency_id
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res
+    
+    def _get_default_address(self, cr, uid, ids, field_name, arg, context):
+        res = {}
+        partner_obj = self.pool.get('res.partner')
+        for data in self.browse(cr, uid, ids):
+            adr_id = False
+            if data.partner_id:
+                adr_id = partner_obj.address_get(cr, uid, [data.partner_id.id], ['default'])['default']
+            res[data.id] = adr_id
+        return res
 
     def _get_lines(self, cr, uid, ids, context=None):
         if context is None:
@@ -109,6 +117,7 @@ class mrp_repair(osv.osv):
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'partner_id' : fields.many2one('res.partner', 'Partner', select=True, help='This field allow you to choose the parner that will be invoiced and delivered'),
         'address_id': fields.many2one('res.partner.address', 'Delivery Address', domain="[('partner_id','=',partner_id)]"),
+        'default_address_id': fields.function(_get_default_address, method=True, type="many2one", relation="res.partner.address"),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, domain="[('product_id','=',product_id)]"),
         'state': fields.selection([
             ('draft','Quotation'),
@@ -263,7 +272,6 @@ class mrp_repair(osv.osv):
         @param product_id: Product id from current record.
         @return: Dictionary of values.
         """
-        prodlot_obj = self.pool.get('stock.production.lot')
         move_obj = self.pool.get('stock.move')
         data = {}
         data['value'] = {
@@ -275,7 +283,6 @@ class mrp_repair(osv.osv):
 
         if not lot:
             return data
-        lot_info = prodlot_obj.browse(cr, uid, lot)
         move_ids = move_obj.search(cr, uid, [('prodlot_id', '=', lot)])
 
         if not len(move_ids):
@@ -328,7 +335,6 @@ class mrp_repair(osv.osv):
         """ Cancels repair order.
         @return: True
         """
-        ok=True
         mrp_line_obj = self.pool.get('mrp.repair.line')
         for repair in self.browse(cr, uid, ids):
             mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'})
@@ -496,7 +502,7 @@ class mrp_repair(osv.osv):
         return True
 
     def wkf_repair_done(self, cr, uid, ids, *args):
-        res = self.action_repair_done(cr, uid, ids)
+        self.action_repair_done(cr, uid, ids)
         return True
 
     def action_repair_done(self, cr, uid, ids, context=None):
@@ -509,7 +515,6 @@ class mrp_repair(osv.osv):
         repair_line_obj = self.pool.get('mrp.repair.line')
         seq_obj = self.pool.get('ir.sequence')
         pick_obj = self.pool.get('stock.picking')
-        company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for repair in self.browse(cr, uid, ids, context=context):
             for move in repair.operations:
                 move_id = move_obj.create(cr, uid, {
