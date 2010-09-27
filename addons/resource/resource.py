@@ -22,10 +22,11 @@
 from datetime import datetime, timedelta
 import time
 import math
-
+from faces import *
+from new import classobj
 from osv import fields, osv
 from tools.translate import _
-
+import tools
 class resource_calendar(osv.osv):
     _name = "resource.calendar"
     _description = "Resource Calendar"
@@ -187,6 +188,14 @@ class resource_calendar_attendance(osv.osv):
     _order = 'dayofweek, hour_from'
 resource_calendar_attendance()
 
+def convert_timeformat(time_string):
+    split_list = str(time_string).split('.')
+    hour_part = split_list[0]
+    mins_part = split_list[1]
+    round_mins = int(round(float(mins_part) * 60,-2))
+    converted_string = hour_part + ':' + str(round_mins)[0:2]
+    return converted_string
+
 class resource_resource(osv.osv):
     _name = "resource.resource"
     _description = "Resource Detail"
@@ -207,17 +216,118 @@ class resource_resource(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', context=context)
     }
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name', False):
+            default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
+        return super(resource_resource, self).copy(cr, uid, id, default, context)
+
+    def generate_resources(self, cr, uid, user_ids, calendar_id, context=None):
+        """
+        Return a list of  Resource Class objects for the resources allocated to the phase.
+        """
         if context is None:
             context = {}
+        resource_objs = []
+        user_pool = self.pool.get('res.users')
+        for user in user_pool.browse(cr, uid, user_ids, context=context):
+            resource_ids = self.search(cr, uid, [('user_id', '=', user.id)], context=context)
+            #assert len(resource_ids) < 1, "User should not has more than one resources"
+            leaves = []
+            resource_eff = 1.0
+            if resource_ids:
+                resource_id = resource_ids[0]    
+                resource = self.browse(cr, uid, resource_id, context=context)
+                resource_eff = resource.time_efficiency
+                resource_cal = resource.calendar_id.id
+                if resource_cal:
+                    leaves = self.compute_vacation(cr, uid, calendar_id, resource.id, resource_cal, context=context)
+            resource_objs.append(classobj(str(user.name), (Resource,),{
+                                             '__doc__': user.name,
+                                             '__name__': user.name,
+                                             'vacation': tuple(leaves),
+                                             'efficiency': resource_eff,
+                                          }))
+        return resource_objs
 
-        if context.get('project_id',False):
-            project_pool = self.pool.get('project.project')
-            project_rec = project_pool.browse(cr, uid, context['project_id'])
-            user_ids = [user_id.id for user_id in project_rec.members]
-            args.append(('user_id','in',user_ids))
+    def compute_vacation(self, cr, uid, calendar_id, resource_id=False, resource_calendar=False, context=None):
+        """
+        Compute the vacation from the working calendar of the resource.
+        @param calendar_id : working calendar of the project
+        @param resource_id : resource working on phase/task
+        @param resource_calendar : working calendar of the resource
+        """
+        if context is None:
+            context = {}
+        resource_calendar_leaves_pool = self.pool.get('resource.calendar.leaves')
+        leave_list = []
+        if resource_id:
+            leave_ids = resource_calendar_leaves_pool.search(cr, uid, ['|', ('calendar_id', '=', calendar_id),
+                                                                       ('calendar_id', '=', resource_calendar),
+                                                                       ('resource_id', '=', resource_id)
+                                                                      ], context=context)
+        else:
+            leave_ids = resource_calendar_leaves_pool.search(cr, uid, [('calendar_id', '=', calendar_id),
+                                                                      ('resource_id', '=', False)
+                                                                      ], context=context)
+        leaves = resource_calendar_leaves_pool.read(cr, uid, leave_ids, ['date_from', 'date_to'], context=context)
+        for i in range(len(leaves)):
+            dt_start = datetime.datetime.strptime(leaves[i]['date_from'], '%Y-%m-%d %H:%M:%S')
+            dt_end = datetime.datetime.strptime(leaves[i]['date_to'], '%Y-%m-%d %H:%M:%S')
+            no = dt_end - dt_start
+            [leave_list.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
+            leave_list.sort()
+        return leave_list
 
-        return super(resource_resource, self).search(cr, uid, args, offset, limit, order, context, count)
+    def compute_working_calendar(cr, uid, calendar_id, context=None):
+        """
+        Change the format of working calendar from 'Openerp' format to bring it into 'Faces' format.
+        @param calendar_id : working calendar of the project
+        """
+        if context is None:
+            context = {}
+        resource_attendance_pool = self.pool.get('resource.calendar.attendance')
+        time_range = "8:00-8:00"
+        non_working = ""
+        week_days = {"0": "mon", "1": "tue", "2": "wed","3": "thu", "4": "fri", "5": "sat", "6": "sun"}
+        wk_days = {}
+        wk_time = {}
+        wktime_list = []
+        wktime_cal = []
+        week_ids = resource_attendance_pool.search(cr, uid, [('calendar_id', '=', calendar_id)], context=context)
+        weeks = resource_attendance_pool.read(cr, uid, week_ids, ['dayofweek', 'hour_from', 'hour_to'], context=context)
+        # Convert time formats into appropriate format required
+        # and create a list like [('mon', '8:00-12:00'), ('mon', '13:00-18:00')]
+        for week in weeks:
+            res_str = ""
+            if week_days.has_key(week['dayofweek']):
+                day = week_days[week['dayofweek']]
+                wk_days[week['dayofweek']] = week_days[week['dayofweek']]
+            hour_from_str = convert_timeformat(cr, uid, week['hour_from'])
+            hour_to_str = convert_timeformat(cr, uid, week['hour_to'])
+            res_str = hour_from_str + '-' + hour_to_str
+            wktime_list.append((day, res_str))
+        # Convert into format like [('mon', '8:00-12:00', '13:00-18:00')]
+        for item in wktime_list:
+            if wk_time.has_key(item[0]):
+                wk_time[item[0]].append(item[1])
+            else:
+                wk_time[item[0]] = [item[0]]
+                wk_time[item[0]].append(item[1])
+        for k,v in wk_time.items():
+            wktime_cal.append(tuple(v))
+        # Add for the non-working days like: [('sat, sun', '8:00-8:00')]
+        for k, v in wk_days.items():
+            if week_days.has_key(k):
+                week_days.pop(k)
+        for v in week_days.itervalues():
+            non_working += v + ','
+        if non_working:
+            wktime_cal.append((non_working[:-1], time_range))
+        return wktime_cal
+
 resource_resource()
 
 class resource_calendar_leaves(osv.osv):

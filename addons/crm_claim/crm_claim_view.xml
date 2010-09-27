@@ -35,21 +35,6 @@
          <menuitem action="crm_claim_stage_act" name="Stages"
                 id="menu_crm_claim_stage_act" parent="menu_config_claim" />
 
-        <!-- Claim Resource Type -->
-
-        <record id="crm_claim_resource_act" model="ir.actions.act_window">
-            <field name="name">Claim Resource Type</field>
-            <field name="res_model">crm.case.resource.type</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-            <field name="context">{'object_id':'crm.claim'}</field>
-        </record>
-
-         <menuitem action="crm_claim_resource_act" name="Resource Type"
-                id="menu_crm_claim_type_act"
-                parent="menu_config_claim" />
-
         <!-- Claims    -->
 
         <record model="ir.ui.view" id="crm_case_claims_tree_view">
@@ -57,7 +42,7 @@
             <field name="model">crm.claim</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Claims" colors="blue:state=='pending';black:state=='open';gray:state in ('close', 'cancel')">
+                <tree string="Claims" colors="blue:state=='pending';black:state=='open';gray:state in ('close', 'cancel');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="user_id" />
@@ -168,7 +153,7 @@
                                     <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                                 </group>
                                 <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-                                    <tree string="Communication history">
+                                    <tree string="History">
                                         <field name="display_text" string="History Information"/>
                                         <button
                                             string="Reply"
@@ -176,7 +161,7 @@
                                             context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
                                             icon="terp-mail-replied" type="action" attrs="{'invisible': [('history', '!=', True)]}" />
                                     </tree>
-                                    <form string="Communication history">
+                                    <form string="History">
                                         <group col="4" colspan="4">
                                             <field name="email_from"/>
                                             <field name="date"/>
@@ -205,7 +190,7 @@
                                         </notebook>
                                     </form>
                                 </field>
-                                <button string="Add New Note"
+                                <button string="Add Internal Note"
                                     name="%(crm.action_crm_add_note)d"
                                     context="{'model': 'crm.lead' }"
                                     icon="terp-document-new" type="action" />
@@ -269,7 +254,7 @@
                 <search string="Search Claims">
                    <filter icon="terp-check" string="Current" name="current"
                        domain="[('state','in',('draft', 'open'))]"
-                       separator="1" help="Current Claims" default="1"
+                       separator="1" help="Draft and Open Claims" default="1"
                    />
                    <filter icon="terp-camera_test"
                        string="In Progress"
@@ -330,6 +315,7 @@
             context="{'default_partner_id': active_id}"
             id="act_claim_partner"
             name="Report a Claim"
+            view_mode="form,tree"
             res_model="crm.claim"
             src_model="res.partner"/>
 
@@ -339,6 +325,7 @@
             context="{'default_partner_address_id': active_id}"
             id="act_claim_partner_address"
             name="Report a Claim"
+            view_mode="form,tree"
             res_model="crm.claim"
             src_model="res.partner.address"/>
 
