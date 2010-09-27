@@ -331,37 +331,34 @@ This is useful for CRM leads for example"),
         default.update({'name':new_name})
         return super(email_template, self).copy(cr, uid, id, default, context)
     
-    def compute_pl(self,
-                   model_object_field,
-                   sub_model_object_field,
-                   null_value, template_language='mako'):
+    def compute_pl(self, field_name, sub_field_name, null_value, template_language='mako'):
         """
-        Returns the expression based on data provided
-        @param model_object_field: First level field
-        @param sub_model_object_field: Second level drilled down field (M2O)
-        @param null_value: What has to be returned if the value is empty
-        @param template_language: The language used for templating
+        Returns a template expression based on data provided
+        @param field_name: field name
+        @param sub_field_name: sub field name (M2O)
+        @param null_value: default value if the target value is empty
+        @param template_language: name of template engine
         @return: computed expression
         """
-        #Configure for MAKO
-        copy_val = ''
+
+        expression = ''
         if template_language == 'mako':
-            if model_object_field:
-                copy_val = "${object." + model_object_field
-                if sub_model_object_field:
-                    copy_val += "." + sub_model_object_field
+            if field_name:
+                expression = "${object." + field_name
+                if sub_field_name:
+                    expression += "." + sub_field_name
                 if null_value:
-                    copy_val += " or '''%s'''" % null_value
-                copy_val += "}"
+                    expression += " or '''%s'''" % null_value
+                expression += "}"
         elif template_language == 'django':
-            if model_object_field:
-                copy_val = "{{object." + model_object_field
-                if sub_model_object_field:
-                    copy_val += "." + sub_model_object_field
+            if field_name:
+                expression = "{{object." + field_name
+                if sub_field_name:
+                    expression += "." + sub_field_name
                 if null_value:
-                    copy_val = copy_val + "|default:'''%s'''" % null_value
-                copy_val = copy_val + "}}"        
-        return copy_val 
+                    expression += "|default: '''%s'''" % null_value  
+                expression += "}}"
+        return expression 
             
     def onchange_model_object_field(self, cr, uid, ids, model_object_field, template_language, context=None):
         if not model_object_field:
