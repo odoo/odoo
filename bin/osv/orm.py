@@ -548,11 +548,10 @@ class orm_template(object):
             else:
                 return False
 
-
         lines = []
         data = map(lambda x: '', range(len(fields)))
-        done = []
         for fpos in range(len(fields)):
+            done = []
             f = fields[fpos]
             if f:
                 r = row
