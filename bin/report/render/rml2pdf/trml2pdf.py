@@ -42,11 +42,12 @@ class PageCount(platypus.Flowable):
     def draw(self):
         self.canv.beginForm("pageCount")
         self.canv.setFont("Helvetica", utils.unit_get(str(8)))
-        self.canv.drawString(0, 0, str(self.canv.getPageNumber()))
+        self.canv.drawString(0, 0, str(self.canv._pageCount))
         self.canv.endForm()
 
 class PageReset(platypus.Flowable):
     def draw(self):
+        self.canv._pageCount = self.canv.getPageNumber()
         self.canv._pageNumber = 0
 
 class _rml_styles(object,):
@@ -261,7 +262,7 @@ class _rml_canvas(object):
             if n.tag == 'pageNumber':
                 rc += str(self.canvas.getPageNumber())
             rc += utils._process_text(self, n.tail)
-        return rc
+        return rc.replace(' ','').replace('\n','')
 
     def _drawString(self, node):
         v = utils.attr_get(node, ['x','y'])
