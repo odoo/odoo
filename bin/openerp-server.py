@@ -182,8 +182,9 @@ def handler(signum, frame):
 
 def dumpstacks(signum, frame):
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
-
-    id2name = dict([(th.ident, th.name) for th in threading.enumerate()])
+    # modified for python 2.5 compatibility
+    thread_map = dict(threading._active, **threading._limbo)
+    id2name = dict([(threadId, thread.getName()) for threadId, thread in thread_map.items()])
     code = []
     for threadId, stack in sys._current_frames().items():
         code.append("\n# Thread: %s(%d)" % (id2name[threadId], threadId))
@@ -191,7 +192,6 @@ def dumpstacks(signum, frame):
             code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
             if line:
                 code.append("  %s" % (line.strip()))
-
     logging.getLogger('dumpstacks').info("\n".join(code))
 
 for signum in SIGNALS:
@@ -214,7 +214,7 @@ def quit():
     # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
     # threading.Thread.join() should not mask signals (at least in python 2.5)
     for thread in threading.enumerate():
-        if thread != threading.currentThread() and not thread.daemon:
+        if thread != threading.currentThread() and not thread.isDaemon():
             while thread.isAlive():
                 # need a busyloop here as thread.join() masks signals
                 # and would present the forced shutdown
