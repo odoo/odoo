@@ -118,7 +118,22 @@
                			</field>
                    </group>
                    <newline/>
-                   <group  expand="0" string="Group By...">
+                   <group  expand="0" string="Extended Filters..." groups="base.group_extended">
+                         <filter icon="terp-dialog-close"
+                            string="Done"
+                            domain="[('state','=','done')]"/>
+
+                        <filter icon="gtk-cancel"
+                            string="Cancel"
+                            domain="[('state','=','cancel')]"/>
+
+                        <group>
+                            <separator orientation="vertical"/>
+                            <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
+                         </group>
+                   </group>
+                   <newline/>
+                   <group  expand="1" string="Group By...">
                         <filter string="User" name="User" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
 
@@ -146,23 +161,7 @@
 
                         <filter string="Year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'name'}" />
-
                   </group>
-                   <newline/>
-                   <group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                         <filter icon="terp-dialog-close"
-                    		string="Done"
-                    		domain="[('state','=','done')]"/>
-
-                    	<filter icon="gtk-cancel"
-                    		string="Cancel"
-                    		domain="[('state','=','cancel')]"/>
-
-                    	<group>
-		            	    <separator orientation="vertical"/>
-			                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
-			             </group>
-                   </group>
                </search>
             </field>
         </record>
