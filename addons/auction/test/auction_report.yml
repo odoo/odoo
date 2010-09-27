@@ -44,7 +44,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'auction-deposit_seller_report.'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on Auction, we will print a Catalog List Report
+  In order to test the PDF reports defined on Auction, we will print a Catalogue List Report
 -
   !python {model: auction.dates}: |
     import netsvc, tools, os
@@ -62,7 +62,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'auction-buyer_form_report.'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on Auction, we will print Bids Phones Details Report
+  In order to test the PDF reports defined on Auction, we will print a report of Bids Phones Details
 -
   !python {model: auction.lots}: |
     import netsvc, tools, os
@@ -71,7 +71,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'auction-bids_phones_details_report.'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on a Auction, we will print an Auction Total Report
+  In order to test the PDF reports defined on Auction, we will print an Auction Total Report
 - 
   !python {model: auction.lots}: |
     import netsvc, tools, os
@@ -80,7 +80,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'auction-auction_total_report.'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on a Auction, we will print an Auction Result Report
+  In order to test the PDF reports defined on Auction, we will print an Auction Result Report
 - 
   !python {model: auction.lots}: |
     import netsvc, tools, os
@@ -89,7 +89,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'auction-auction_result_report.'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on a Auction, we will print an Auction Lot Report
+  In order to test the PDF reports defined on Auction, we will print an Auction Lot Report
 - 
   !python {model: auction.lots}: |
     import netsvc, tools, os
@@ -98,7 +98,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'auction-auction_lot_report.'+format), 'wb+').write(data)        
 
 -
-  In order to test the PDF reports defined on a Auction, we will print an Auction Buyer List Report
+  In order to test the PDF reports defined on Auction, we will print an Auction Buyer List Report
 - 
   !python {model: auction.lots}: |
     import netsvc, tools, os
@@ -107,7 +107,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'auction-buyer_list_report.'+format), 'wb+').write(data)        
 
 -
-  In order to test the PDF reports defined on a Auction, we will print a Auction Flagey Hussier Report
+  In order to test the PDF reports defined on Auction, we will print an Auction Flagey Hussier Report
 - 
   !python {model: auction.lots}: |
     import netsvc, tools, os
@@ -116,7 +116,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'auction-flagey_hussier_report.'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on a Auction, we will print an Auction Seller Form Report
+  In order to test the PDF reports defined on Auction, we will print an Auction Seller Form Report
 - 
   !python {model: auction.lots}: |
     import netsvc, tools, os
@@ -124,7 +124,7 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'auction-seller_form_report.'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on a Auction, we will print Buyer Result Report
+  In order to test the PDF reports defined on Auction, we will a print Buyer Result Report
 - 
   !python {model: auction.lots}: |
     import netsvc, tools, os
@@ -132,7 +132,7 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'auction-buyer_result_report.'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on a Auction, we will print Catelog Report
+  In order to test the PDF reports defined on Auction, we will print a Catalogue Report
 - 
   !python {model: auction.lots}: |
     import netsvc, tools, os
