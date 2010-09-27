@@ -26,9 +26,9 @@
     "author": "OpenERP SA & Axelor",
     "category": "Generic Modules/Human Resources",
     "website": "http://www.openerp.com",
-    "description": """Human Ressources: Holidays tracking and workflow
+    "description": """Human Resources: Holidays tracking and workflow
 
-    This module allows you to manage leaves and leaves requests.
+    This module allows you to manage leaves and leaves' requests.
     Implements a dashboard for human resource management that includes.
         * My Leaves
         * My Expenses
