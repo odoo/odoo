@@ -27,7 +27,7 @@
     'description': """Allow the user to work tax included prices.
 Especially useful for b2c businesses.
 
-This module implement the modification on the invoice form.
+This module implements the modification on the invoice form.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
