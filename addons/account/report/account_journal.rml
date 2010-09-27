@@ -253,9 +253,9 @@
         <td><para style="P10">A/c No.</para></td>
         <td><para style="P10a">Partner</para></td>
         <td><para style="P10a">Move - Entry label</para></td>
-        <td><para style="P10b">Debit([[ company.currency_id.code]])</para></td>
-        <td><para style="P10b">Credit([[ company.currency_id.code]])</para></td>
-        <td><para style="P10b">Balance([[ company.currency_id.code]])</para></td>
+        <td><para style="P10b">Debit</para></td>
+        <td><para style="P10b">Credit</para></td>
+        <td><para style="P10b">Balance</para></td>
       </tr>
        <tr>
         <td><para style="P11">[[o.period_id.name ]]</para></td>
@@ -263,8 +263,8 @@
         <td><para style="P11"><font color="white"></font></para></td>
         <td><para style="P11"><font color="white"></font></para></td>
         <td><para style="P11"><font color="white"></font></para></td>
-        <td><para style="P12"><u>[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id)) ]] [[ company.currency_id.symbol ]]</u></para></td>
-        <td><para style="P12"><u>[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]] [[ company.currency_id.symbol ]]</u></para></td>
+        <td><para style="P12"><u>[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id)) ]]</u></para></td>
+        <td><para style="P12"><u>[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]] </u></para></td>
         <td> <para style="P12"><u>[[ formatLang((sum_credit(o.period_id.id, o.journal_id.id) - sum_debit(o.period_id.id, o.journal_id.id))) ]] [[ company.currency_id.symbol ]]</u></para></td>
       </tr>
       <para style="Standard"><font color="white">[[lines(o.period_id.id, o.journal_id.id) or removeParentNode('story') ]]</font></para>
@@ -274,8 +274,8 @@
         <td><para style="terp_default_Centre_8">[[ line.account_id.code ]]</para></td>
         <td><para style="terp_default_8">[[ line.partner_id and line.partner_id.name ]]</para></td>
         <td><para style="terp_default_8">[[ line.move_id.name ]] - [[ line.name ]]</para></td>
-        <td><para style="P8">[[ formatLang(line.debit) ]] [[ company.currency_id.symbol ]]</para></td>
-        <td><para style="P8">[[ formatLang(line.credit) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="P8">[[ formatLang(line.debit) ]]</para></td>
+        <td><para style="P8">[[ formatLang(line.credit) ]]</para></td>
         <td><para style="P8">[[ formatLang(line.credit - line.debit) ]] [[ company.currency_id.symbol ]]</para></td>
       </tr>
     </blockTable>
@@ -288,9 +288,9 @@
         <td><para style="P10">A/c No.</para></td>
         <td><para style="P10a">Partner</para></td>
         <td><para style="P10a">Move - Entry label</para></td>
-        <td><para style="P10b">Debit<font size="8.0">([[ company.currency_id.code]])</font></para></td>
-        <td><para style="P10b">Credit<font size="8.0">([[ company.currency_id.code]])</font></para></td>
-   		<td><para style="P10b">Balance<font size="8.0">([[ company.currency_id.code]])</font></para></td>
+        <td><para style="P10b">Debit</para></td>
+        <td><para style="P10b">Credit</para></td>
+   		<td><para style="P10b">Balance</para></td>
 		<td><para style="P10b">Currency</para></td>
       </tr>
        <tr>
@@ -299,8 +299,8 @@
         <td><para style="P11"><font color="white"></font></para></td>
         <td><para style="P11"><font color="white"></font></para></td>
         <td><para style="P11"><font color="white"></font></para></td>
-        <td><para style="P12"><u>[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id)) ]] [[ company.currency_id.symbol ]]</u></para></td>
-        <td><para style="P12"><u>[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]] [[ company.currency_id.symbol ]]</u></para></td>
+        <td><para style="P12"><u>[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id)) ]]</u></para></td>
+        <td><para style="P12"><u>[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]]</u></para></td>
 		<td> <para style="P12"><u>[[ formatLang((sum_debit(o.period_id.id, o.journal_id.id) - sum_credit(o.period_id.id, o.journal_id.id))) ]] [[ company.currency_id.symbol ]]</u></para></td>
       </tr>
        <para style="Standard"><font color="white">[[lines(o.period_id.id, o.journal_id.id) or removeParentNode('story') ]]</font></para>
@@ -310,8 +310,8 @@
         <td><para style="terp_default_Centre_8">[[ line.account_id.code ]]</para></td>
         <td><para style="terp_default_8">[[ line.partner_id and line.partner_id.name ]]</para></td>
         <td><para style="terp_default_8">[[ line.move_id.name ]] - [[ line.name ]]</para></td>
-        <td><para style="P8">[[ formatLang(line.debit) ]] [[ company.currency_id.symbol ]]</para></td>
-        <td><para style="P8">[[ formatLang(line.credit) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="P8">[[ formatLang(line.debit) ]]</para></td>
+        <td><para style="P8">[[ formatLang(line.credit) ]]</para></td>
         <td><para style="P8">[[ formatLang(line.credit - line.debit) ]] [[ company.currency_id.symbol ]]</para></td>
 		<td><para style="P8">[[ line.currency_id  and formatLang(line.amount_currency) or '' ]] [[ line.currency_id.symbol or '']]</para></td>
 

@@ -639,6 +639,7 @@ class account_move_line(osv.osv):
                     AND l.state <> 'draft'
                     GROUP BY l.partner_id
                 ) AS s ON (p.id = s.partner_id)
+                WHERE debit > 0 AND credit > 0
                 ORDER BY p.last_reconciliation_date LIMIT 1 OFFSET %s""", (offset,)
             )
         return cr.fetchone()
@@ -799,8 +800,8 @@ class account_move_line(osv.osv):
             wf_service.trg_trigger(uid, 'account.move.line', id, cr)
 
         if lines and lines[0]:
-            partner_id = lines[0].partner_id.id
-            if context and context.get('stop_reconcile', False):
+            partner_id = lines[0].partner_id and lines[0].partner_id.id or False
+            if partner_id and context and context.get('stop_reconcile', False):
                 self.pool.get('res.partner').write(cr, uid, [partner_id], {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')})
         return r_id
 
@@ -946,7 +947,7 @@ class account_move_line(osv.osv):
 
             if field in ('amount_currency', 'currency_id'):
                 attrs.append('on_change="onchange_currency(account_id, amount_currency,currency_id, date, journal_id)"')
-                attrs.append("attrs='{'readonly':[('state','=','valid')]}'")
+                attrs.append('''attrs="{'readonly':[('state','=','valid')]}"''')
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')

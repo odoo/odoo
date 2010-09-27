@@ -62,7 +62,7 @@
                             <field colspan="4" name="name"/>
                             <field colspan="4" name="origin" groups="base.group_extended"/>
                             <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)" groups="base.group_user"/>
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="base.group_extended"/>
+                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <newline/>
                             <field name="price_subtotal"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
@@ -178,7 +178,7 @@
                                     <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
                                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
                                     <field name="invoice_line_tax_id" view_mode="2" context="{'type':parent.type}" domain="[('parent_id','=',False)]"/>
-                                    <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="base.group_extended"/>
+                                    <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
                                      <!-- Removed if subtotal is set -->
@@ -357,7 +357,7 @@
                    <group col="10" colspan="4">
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                         <filter icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
-                        <filter icon="terp-camera_test" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Invoices"/>
+                        <filter icon="terp-camera_test" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
                         <separator orientation="vertical"/>
                         <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>

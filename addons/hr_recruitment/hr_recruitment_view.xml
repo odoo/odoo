@@ -6,11 +6,6 @@
             name="Recruitment"
             parent="hr.menu_hr_configuration"
             sequence="2"/>
-        <menuitem
-            id="menu_hr_config_applicant"
-            name="Applicant"
-            parent="menu_hr_recruitment_recruitment"
-            sequence="2"/>
 
     # ------------------------------------------------------
     # Job Categories
@@ -35,7 +30,6 @@
         <field name="context">{}</field>
     </record>
 
-    <menuitem action="hr_job_stage_act" id="menu_hr_job_stage_act" name="Stages" parent="menu_hr_config_applicant"/>
 
     # ------------------------------------------------------
     # Jobs
@@ -83,8 +77,8 @@
                         <field name="name" string="Subject"/>
                         <field name="partner_name"/>
                         <field name="job_id" on_change="onchange_job(job_id)"/>
-                        <button string="Schedule a Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
-                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
+                        <button string="Schedule a Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
+                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="gtk-index"/>
                     <newline/>
                     <field name="department_id" widget="selection"/>
                     <group colspan="2" col="4">
@@ -106,7 +100,7 @@
                             <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
                             <button string="Create Partner"
                                     name="%(action_hr_recruitment_partner_create)d"
-                                    icon="terp-mail-replied" type="action" attrs="{'readonly':[('partner_id','!=',False)]}"/>
+                                    icon="gtk-index" type="action" attrs="{'readonly':[('partner_id','!=',False)]}"/>
                             <newline/>
                             <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="3"/>
                             <field name="email_from" colspan="3"/>
