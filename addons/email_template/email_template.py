@@ -348,20 +348,19 @@ This is useful for CRM leads for example"),
         if template_language == 'mako':
             if model_object_field:
                 copy_val = "${object." + model_object_field
-            if sub_model_object_field:
-                copy_val += "." + sub_model_object_field
-            if null_value:
-                copy_val += " or '''%s'''" % null_value
-            if model_object_field:
+                if sub_model_object_field:
+                    copy_val += "." + sub_model_object_field
+                if null_value:
+                    copy_val += " or '''%s'''" % null_value
                 copy_val += "}"
         elif template_language == 'django':
             if model_object_field:
                 copy_val = "{{object." + model_object_field
-            if sub_model_object_field:
-                copy_val += "." + sub_model_object_field
-            if null_value:
-                copy_val = copy_val + "|default:'''%s'''" % null_value
-            copy_val = copy_val + "}}"        
+                if sub_model_object_field:
+                    copy_val += "." + sub_model_object_field
+                if null_value:
+                    copy_val = copy_val + "|default:'''%s'''" % null_value
+                copy_val = copy_val + "}}"        
         return copy_val 
             
     def onchange_model_object_field(self, cr, uid, ids, model_object_field, template_language, context=None):
