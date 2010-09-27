@@ -847,8 +847,6 @@ class stock_picking(osv.osv):
 
     def test_cancel(self, cr, uid, ids, context={}):
         for pick in self.browse(cr, uid, ids, context=context):
-            if not pick.move_lines:
-                return False
             for move in pick.move_lines:
                 if move.state not in ('cancel',):
                     return False
