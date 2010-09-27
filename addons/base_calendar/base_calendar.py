@@ -1531,8 +1531,12 @@ true, it will allow you to hide the event alarm information without removing it.
         result = []
         if fields and 'date' not in fields:
             fields.append('date')
+
+        real_ids = [item2 for item1, item2 in select]
+        event_values = dict([(res['id'], res) for res in super(calendar_event, self).read(cr, uid, real_ids, fields=fields, context=context, load=load)])
+
         for base_calendar_id, real_id in select:
-            res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
+            res = event_values[real_id]
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
