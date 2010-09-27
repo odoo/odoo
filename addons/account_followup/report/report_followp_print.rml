@@ -142,13 +142,13 @@
           <para style="terp_tblheader_Details_Right">Currency</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Due<font face="Helvetica" size="8.0">([[ company.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details_Right">Due</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Paid<font face="Helvetica" size="8.0">([[ company.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details_Right">Paid</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Maturity<font face="Helvetica" size="8.0">([[ company.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details_Right">Maturity</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Li.</para>
@@ -175,10 +175,10 @@
             <para style="terp_default_Right_9">[[ formatLang(line['amount_currency'] )]] [[ line['amount_currency'] and line['currency_id'][1] or '' ]] </para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['debit']) ]] [[ company.currency_id.symbol ]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(line['debit']) ]] </para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['credit']) ]] [[ company.currency_id.symbol ]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(line['credit']) ]] </para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ (line['date_maturity'] &lt; time.strftime('%Y-%m-%d')) and formatLang(line['debit'] -line['credit']) or formatLang(0.0) ]] [[ company.currency_id.symbol ]]</para>
@@ -197,13 +197,13 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Sub-Total<font face="Helvetica" size="8.0">([[ company.currency_id.code ]])</font>: </para>
+          <para style="terp_tblheader_Details">Sub-Total: </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['debit'], getLines(o), 0.00)) ]] [[ company.currency_id.symbol ]] </para>
+          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['debit'], getLines(o), 0.00)) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['credit'], getLines(o), 0.00)) ]] [[ company.currency_id.symbol ]] </para>
+          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['credit'], getLines(o), 0.00)) ]]/para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang(reduce(lambda x,y: x+(y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0)) ]] [[ company.currency_id.symbol ]]</para>
@@ -221,7 +221,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Balance<font face="Helvetica" size="8.0">([[ company.currency_id.code ]])</font>: </para>
+          <para style="terp_tblheader_Details">Balance: </para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x,y: x+(y['debit'] - y['credit']), getLines(o), 0.00))) ]] [[ company.currency_id.symbol]] </para>

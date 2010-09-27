@@ -140,10 +140,10 @@
           <para style="terp_tblheader_General_Right">Disc(%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right">Unit Price</para>
+          <para style="terp_tblheader_General_Right">Unit Price ([[ company.currency_id.code ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right">Total</para>
+          <para style="terp_tblheader_General_Right">Total ([[ company.currency_id.code ]])</para>
         </td>
       </tr>
     </blockTable>
@@ -161,10 +161,10 @@
             <para style="terp_default_Right_9">[[ formatLang(line_ids['discount']) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['price_unit']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['price_unit']) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['total']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['total']) ]] [[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -190,7 +190,7 @@
           <para style="terp_tblheader_General_Right">Total</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(pos_payment_date_total(data['form'])) or removeParentNode('blockTable')]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(pos_payment_date_total(data['form'])) or removeParentNode('blockTable')]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
