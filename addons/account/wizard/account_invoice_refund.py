@@ -45,7 +45,7 @@ class account_invoice_refund(osv.osv_memory):
             context = {}
         journal = obj_journal.search(cr, uid, [('type', '=', 'sale_refund')])
         if context.get('type', False):
-            if context['type'] == 'in_invoice':
+            if context['type'] in ('in_invoice', 'in_refund'):
                 journal = obj_journal.search(cr, uid, [('type', '=', 'purchase_refund')])
         return journal and journal[0] or False
 
@@ -54,6 +54,20 @@ class account_invoice_refund(osv.osv_memory):
         'journal_id': _get_journal,
         'filter_refund': 'modify',
     }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        journal_obj = self.pool.get('account.journal')
+        res = super(account_invoice_refund,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        type = context.get('journal_type', 'sale_refund')
+        if type in ('sale', 'sale_refund'):
+            type = 'sale_refund'
+        else:
+            type = 'purchase_refund'
+        for field in res['fields']:
+            if field == 'journal_id':
+                journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
+                res['fields'][field]['selection'] = journal_select
+        return res
 
     def compute_refund(self, cr, uid, ids, mode='refund', context=None):
         """

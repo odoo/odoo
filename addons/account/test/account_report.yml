@@ -94,27 +94,6 @@
        file(os.path.join(tools.config['test_report_directory'], 'account-aged_partner_balance.'+format), 'wb+').write(data)
 
 -
-  Print the Compare Account Balance Report in Normal mode
--
-  !python {model: account.account}: |
-    import netsvc, tools, os, time
-    data_dict = {'model': 'account.account', 'form': {'id':ref('account.bal'),'chart_account_id':ref('account.chart0'),'select_account': False,'format_perc':0,'show_columns' :0, 'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear': [ref('account.data_fiscalyear')] ,'target_move': 'all','periods': [],'context':{'state':'all'}}}
-    (data, format) = netsvc.LocalService('report.account.balance.account.balance').create(cr, uid, [ref('account.bal'),ref('account.gpf')], data_dict, {'periods': []})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-compare-account_balance.'+format), 'wb+').write(data)
-
--
-  Print the Compare Account Balance Report in Landscape mode
--
-  !python {model: account.account}: |
-    import netsvc, tools, os, time
-    data_dict = {'model': 'account.account', 'form': {'id':ref('account.bal'),'chart_account_id':ref('account.chart0'),'select_account': False,'format_perc':0,'show_columns' :0, 'compare_pattern': 'none','account_choice': 'moves','landscape':1,'period_manner': 'actual','fiscalyear': [ref('account.data_fiscalyear')] ,'target_move': 'all','periods': [],'context':{'state':'all'}}}
-    (data, format) = netsvc.LocalService('report.account.account.balance.landscape').create(cr, uid, [ref('account.bal'),ref('account.gpf')], data_dict, {'periods': []})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-compare-account_balance-landscape.'+format), 'wb+').write(data)
-
- 
--
   Print the Account Balance Sheet in Horizontal mode
 -
   !python {model: account.account}: |
