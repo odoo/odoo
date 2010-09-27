@@ -59,7 +59,13 @@
                             </group>
                         </page>
                         <page string="Members">
-                            <field colspan="4" name="members" nolabel="1"/>
+                            <field colspan="4" name="members" nolabel="1">
+                                <tree string="Members">
+                                    <field name="name"/>
+                                    <field name="user_email"/>
+                                    <field name="address_id"/>
+                                </tree>
+                            </field>
                         </page>
                         <page groups="base.group_extended" string="Partner Info">
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
