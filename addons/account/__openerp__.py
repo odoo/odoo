@@ -32,7 +32,7 @@
     Customer and Supplier Invoices
     Bank statements
     Reconciliation process by partner
-    Creates a dashboards for accountants that includes:
+    Creates a dashboard for accountants that includes:
     * List of uninvoiced quotations
     * Graph of aged receivables
     * Graph of aged incomes
