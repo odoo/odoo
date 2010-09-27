@@ -65,10 +65,10 @@ class account_payment_term(osv.osv):
     }
     _order = "name"
 
-    def compute(self, cr, uid, id, value, date_ref=False, context={}):
+    def compute(self, cr, uid, id, value, date_ref=False, context=None):
         if not date_ref:
             date_ref = datetime.now().strftime('%Y-%m-%d')
-        pt = self.browse(cr, uid, id, context)
+        pt = self.browse(cr, uid, id, context=context)
         amount = value
         result = []
         for line in pt.line_ids:
@@ -125,7 +125,7 @@ class account_payment_term_line(osv.osv):
     }
     _order = "sequence"
 
-    def _check_percent(self, cr, uid, ids, context={}):
+    def _check_percent(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids[0])
         if obj.value == 'procent' and ( obj.value_amount < 0.0 or obj.value_amount > 1.0):
             return False
@@ -168,10 +168,10 @@ class account_account_type(osv.osv):
 
 account_account_type()
 
-def _code_get(self, cr, uid, context={}):
+def _code_get(self, cr, uid, context=None):
     acc_type_obj = self.pool.get('account.account.type')
     ids = acc_type_obj.search(cr, uid, [])
-    res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context)
+    res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context=context)
     return [(r['code'], r['name']) for r in res]
 
 #----------------------------------------------------------
@@ -464,10 +464,10 @@ class account_account(osv.osv):
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['name', 'code'], context)
+        reads = self.read(cr, uid, ids, ['name', 'code'], context=context)
         res = []
         for record in reads:
             name = record['name']
@@ -476,7 +476,7 @@ class account_account(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def copy(self, cr, uid, id, default={}, context={}, done_list=[], local=False):
+    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
         if not default:
@@ -563,16 +563,17 @@ account_journal_view()
 
 
 class account_journal_column(osv.osv):
-    def _col_get(self, cr, user, context={}):
+
+    def _col_get(self, cr, user, context=None):
         result = []
         cols = self.pool.get('account.move.line')._columns
         for col in cols:
             if col in ('period_id', 'journal_id'):
                 continue
-
             result.append( (col, cols[col].string) )
         result.sort()
         return result
+
     _name = "account.journal.column"
     _description = "Journal Column"
     _columns = {
@@ -630,7 +631,7 @@ class account_journal(osv.osv):
                 raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
-    def create_sequence(self, cr, uid, vals, context={}):
+    def create_sequence(self, cr, uid, vals, context=None):
         """
         Create new entry sequence for every new Joural
         @param cr: cursor to database
@@ -672,12 +673,12 @@ class account_journal(osv.osv):
         }
         return seq_pool.create(cr, uid, seq)
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         if not 'sequence_id' in vals or not vals['sequence_id']:
             vals.update({'sequence_id' : self.create_sequence(cr, uid, vals, context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
         """
         Returns a list of tupples containing id, name.
         result format : {[(id, name), (id, name), ...]}
