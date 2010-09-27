@@ -114,7 +114,12 @@
                          <field name="user_id" widget="selection"/>
                    </group>
                    <newline/>
-                  <group expand="0" string="Group By...">
+                   <group expand="0" string="Extended Filters..."  groups="base.group_extended">
+                        <filter string="Priority" icon="terp-rating-rated"
+                            domain="[]" context="{'group_by':'priority'}" />
+                   </group>
+                   <newline/>
+                   <group expand="1" string="Group By...">
                         <filter string="User" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}"
                             default="1" />
@@ -141,15 +146,7 @@
 
                         <filter string="Year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'name'}" />
-
                   </group>
-                    <newline/>
-                   <group expand="0" string="Extended Filters..."  groups="base.group_extended">
-                        <filter string="Priority" icon="terp-rating-rated"
-                            domain="[]" context="{'group_by':'priority'}" />
-                   </group>
-
-
                </search>
             </field>
         </record>

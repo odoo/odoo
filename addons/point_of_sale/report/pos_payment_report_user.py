@@ -53,7 +53,7 @@ class pos_payment_report_user(report_sxw.rml_parse):
                          "and po.state='paid' and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date " \
                          "and po.user_id IN %s",(tuple(ids),))
         res=self.cr.fetchone()
-        res = res and res[0] or None
+        res = res and res[0] or 0.0
 
         return res
 
