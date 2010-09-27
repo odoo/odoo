@@ -223,7 +223,7 @@ class account_coda_import(osv.osv_memory):
                     str_not1 = ''
                     if line.has_key('contry_name') and line.has_key('cntry_number'):
                         str_not1="Partner name:%s \n Partner Account Number:%s \n Communication:%s \n Value Date:%s \n Entry Date:%s \n"%(line["contry_name"], line["cntry_number"], line["free_comm"]+line['extra_note'], line["val_date"][0], line["entry_date"][0])
-                    id=bank_statement_line_obj.create(cr, uid, {
+                    id = bank_statement_line_obj.create(cr, uid, {
                                'name':line['name'],
                                'date': line['date'],
                                'amount': line['amount'],
@@ -235,7 +235,7 @@ class account_coda_import(osv.osv_memory):
                                'ref':line['ref'],
                                })
 
-                str_not= "\n \n Account Number: %s \n Account Holder Name: %s " %(statement["acc_number"], statement["acc_holder"])
+                str_not = "\n \n Account Number: %s \n Account Holder Name: %s " %(statement["acc_number"], statement["acc_holder"])
                 std_log += "\nStatement : %s , Date  : %s, Starting Balance :  %.2f , Ending Balance : %.2f \n"\
                           %(statement['name'], statement['date'], float(statement["balance_start"]), float(statement["balance_end_real"]))
                 bkst_list.append(bk_st_id)
@@ -267,7 +267,7 @@ class account_coda_import(osv.osv_memory):
             'date': time.strftime("%Y-%m-%d"),
             'user_id': uid,
         })
-        test=''
+        test = ''
         test = str_log1 + std_log + err_log
         self.write(cr, uid, ids, {'note': test}, context=context)
         extraction = { 'statment_ids': bkst_list}
@@ -291,6 +291,7 @@ class account_coda_import(osv.osv_memory):
     def action_open_window(self, cr, uid, data, context=None):
         if not context:
             cotext = {}
+
         return {
             'domain':"[('id','in',%s)]"%(context.get('statment_ids', False)),
             'name': 'Statement',
@@ -299,7 +300,7 @@ class account_coda_import(osv.osv_memory):
             'res_model': 'account.bank.statement',
             'view_id': False,
             'type': 'ir.actions.act_window',
-        }
+    }
 
 account_coda_import()
 
