@@ -179,7 +179,7 @@ class crm_case(object):
             if not stage_record.section_id:
                 section_id = False # only select stages without section
 
-        domain = [('object_id.model', '=', self._name), ('section_id', '=', section_id)]
+        domain = [('object_id.model', '=', self._name), '|', ('section_id', '=', section_id),('section_id','=',False)]
         if 'force_domain' in context and context['force_domain']:
             domain += context['force_domain']
         sid = stage_obj.search(cr, uid, domain, context=context)

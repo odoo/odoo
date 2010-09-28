@@ -56,7 +56,7 @@
                     <field name="section_id" widget="selection" />
                     <field name="user_id" />
                     <field name="stage_id"
-                        domain="[('section_id','=',section_id), ('object_id.model', '=', 'crm.lead')]" />
+                        domain="[('section_id','=',section_id), ('section_id','=',False), ('object_id.model', '=', 'crm.lead')]" />
                     <group col="2" colspan="1">
                         <button name="stage_previous" string="Previous"
                             states="open,pending,draft" type="object"
