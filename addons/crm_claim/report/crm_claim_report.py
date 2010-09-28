@@ -71,9 +71,7 @@ class crm_claim_report(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-        'type_id': fields.many2one('crm.case.resource.type', 'Claim Type',\
-                         domain="[('section_id','=',section_id),\
-                         ('object_id.model', '=', 'crm.claim')]"),
+        'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
         'date_closed': fields.date('Closed', readonly=True), 
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
     }
