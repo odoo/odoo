@@ -624,7 +624,7 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="%(action_partial_picking)d" states="confirmed,assigned" string="Approve" type="action" icon="gtk-go-forward" help="Approve Picking"/>
+                    <button name="%(action_partial_picking)d" states="confirmed,assigned" string="Approve Picking" type="action" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -813,8 +813,8 @@
                     <field name="min_date"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="%(action_partial_picking)d" states="assigned" string="Approve" type="action" icon="gtk-go-forward" help="Approve Delivery"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the delivery.    Do you want to continue?"/>
+                    <button name="%(action_partial_picking)d" states="assigned" type="action" icon="gtk-go-forward" string="Approve Delivery"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" confirm="This operation will cancel the delivery.    Do you want to continue?"/>
                 </tree>
             </field>
         </record>
@@ -927,7 +927,7 @@
                                         <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
-                                        <button name="action_cancel" states="assigned" string="_Cancel" type="object" icon="gtk-cancel"/>
+                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
                                     </group>
                                 </form>
                             </field>
@@ -1038,7 +1038,7 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="%(action_partial_picking)d" states="assigned" string="Approve" type="action" icon="gtk-go-forward" help="Approve Picking"/>
+                    <button name="%(action_partial_picking)d" states="assigned" string="Approve Picking" type="action" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1147,7 +1147,7 @@
                                         <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
-                                        <button name="action_cancel" states="assigned" string="_Cancel" type="object" icon="gtk-cancel"/>
+                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
                                     </group>
                                 </form>
                             </field>
@@ -1254,8 +1254,8 @@
                     <field name="invoice_state" groups="base.group_extended"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="%(action_partial_picking)d" states="assigned" string="Approve" type="action" icon="gtk-ok" help="Receive products"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
+                    <button name="%(action_partial_picking)d" states="assigned" string="Receive products" type="action" icon="gtk-ok"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
                 </tree>
             </field>
         </record>
@@ -1549,7 +1549,7 @@
                     <field name="date"/>
                     <field name="date_expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
+                    <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-ok"/>
                 </tree>
             </field>
         </record>
