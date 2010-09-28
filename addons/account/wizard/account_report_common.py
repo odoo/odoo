@@ -121,7 +121,7 @@ class account_common_report(osv.osv_memory):
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
                 raise osv.except_osv(_('Error'),_('Select a starting and an ending period'))
-            company_id = period_obj.browse(cr, uid, data['form']['period_from'], context=context).company_id
+            company_id = period_obj.browse(cr, uid, data['form']['period_from'], context=context).company_id.id
             result['periods'] = period_obj.build_ctx_periods(cr, uid, data['form']['period_from'], data['form']['period_to'])
             first_period = self.pool.get('account.period').search(cr, uid, [('company_id', '=', company_id)], order='date_start', limit=1)[0]
             result_initial_bal['periods'] = period_obj.build_ctx_periods(cr, uid, first_period, data['form']['period_from'])
