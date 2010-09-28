@@ -19,12 +19,6 @@
 #
 ##############################################################################
 from osv import fields, osv
-from tools.translate import _
-import netsvc
-import pooler
-import time
-import tools
-import wizard
 
 class auction_taken(osv.osv_memory):
     """
@@ -53,7 +47,7 @@ class auction_taken(osv.osv_memory):
           lot_obj = self.pool.get('auction.lots')
           for current in self.browse(cr, uid, ids, context):
               for lot in current.lot_ids:
-                  lot_obj.write(cr, uid, lot.id, {'state':'taken_away'})
+                  lot_obj.write(cr, uid, lot.id, {'state':'taken_away', 'ach_emp': True})
               return {'lot_ids': []}
 
 auction_taken()

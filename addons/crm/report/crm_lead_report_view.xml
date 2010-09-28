@@ -109,8 +109,23 @@
                         </field>
                    </group>
                    <newline/>
-                   <group  expand="1" string="Group By...">
-                        <filter string="Salesman" name="user" icon="terp-personal"
+                  <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                      <field name="partner_id"/>
+                      <separator orientation="vertical"/>
+                      <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]" />
+                      <field name="categ_id" widget="selection"/>
+                      <field name="type_id" widget="selection"/>
+                      <field name="channel_id" widget="selection"/>
+                      <separator orientation="vertical"/>
+                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                      <newline/>
+                      <field name="creation_date"/>
+                      <field name="opening_date"/>
+                      <field name="date_closed"/>
+                  </group>
+                   <newline/>
+                   <group expand="1" string="Group By...">
+                        <filter string="User" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
@@ -141,21 +156,6 @@
                             domain="[]" context="{'group_by':'month'}" help="Month in which lead/opportunity is created"/>
                         <filter string="Year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'name'}" help="Year in which lead/opportunity is created"/>
-                  </group>
-                  <newline/>
-                  <group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                      <field name="partner_id"/>
-                      <separator orientation="vertical"/>
-                      <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]" />
-                      <field name="categ_id" widget="selection"/>
-                      <field name="type_id" widget="selection"/>
-                      <field name="channel_id" widget="selection"/>
-                      <separator orientation="vertical"/>
-                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                      <newline/>
-                      <field name="creation_date"/>
-                      <field name="opening_date"/>
-                      <field name="date_closed"/>
                   </group>
                </search>
             </field>
@@ -204,7 +204,7 @@
             <field name="view_type">form</field>
             <field name="context">{'search_default_filter_lead': 1, 'search_default_lead':1, "search_default_user":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">tree,graph</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('type', '=', 'lead')]</field>
             <field name="help">Leads Analysis allows you to consult different informations relative to CRM. Check for treatments delays, number of responses given and emails send. You can sort out your leads analysis on different groups to get fine grained analysis.</field>
         </record>
 
@@ -228,7 +228,7 @@
             <field name="view_type">form</field>
             <field name="context">{"search_default_filter_opportunity":1, "search_default_opportunity": 1, "search_default_user":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">tree,graph</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('type', '=', 'opportunity')]</field>
             <field name="help">Opportunities Analysis menu gives you an instant access to your opportunities like expected revenue, planned cost, overpassed deadline or the number of exchanges by opportunity.</field>
         </record>
 

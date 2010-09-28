@@ -25,7 +25,7 @@ class hr_evaluation_reminder(osv.osv_memory):
     _name = "hr.evaluation.reminder"
     _description = "Sends Reminders to employess to fill the evaluations"
     _columns = {
-        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Evaluations', required=True)
+        'evaluation_id': fields.many2one('hr.evaluation.interview', 'Interview', required=True)
     }
 
     def send_mail(self, cr, uid, ids, context=None):

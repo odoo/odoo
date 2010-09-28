@@ -44,7 +44,6 @@ class project_issue_report(osv.osv):
             @param context: A standard dictionary for contextual values """
 
         res = {}
-        avg_ans = 0.0
 
         for report in self.browse(cr, uid, ids, context):
             res[report.id]= {

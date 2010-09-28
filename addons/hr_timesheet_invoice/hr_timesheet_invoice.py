@@ -82,7 +82,7 @@ class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing'),
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', help="It allows to set the discount while making invoice"),
     }
 
     def unlink(self, cursor, user, ids, context=None):

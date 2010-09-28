@@ -38,7 +38,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_main" name="Payment" parent="account.menu_finance" sequence="6"/>
+        <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="6"/>
 
         <record id="view_payment_mode_tree" model="ir.ui.view">
             <field name="name">payment.mode.tree</field>
@@ -88,7 +88,7 @@
                       <field name="date_scheduled" select="1" attrs="{'readonly':[('date_prefered','!=','fixed')]}" />
                       <button colspan="2" name="%(action_create_payment_order)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
                     </group>
-                    <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1">
+                    <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1" default_get="{'order_id': active_id}" >
                         <form string="Payment Line">
                             <notebook>
                                 <page string="Payment">
@@ -203,7 +203,7 @@
             <field name="search_view_id" ref="view_payment_order_search"/>
         </record>
 
-        <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="account_payment.menu_main" sequence="3"/>
+        <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="menu_main_payment" sequence="3"/>
 
         <record id="action_payment_order_tree_new" model="ir.actions.act_window">
             <field name="name">New Payment Order</field>

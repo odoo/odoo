@@ -116,6 +116,7 @@ class account_followup_print_all(osv.osv_memory):
                 "AND (l.state<>'draft') "\
                 "AND (l.partner_id is NOT NULL) "\
                 "AND (a.active) "\
+                "AND (l.debit > 0) "\
             "ORDER BY l.date")
         move_lines = cr.fetchall()
         old = None

@@ -19,15 +19,14 @@
 #
 ##############################################################################
 
-import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-
-import netsvc
 from osv import fields, osv
-from tools import config
 from tools.translate import _
 import decimal_precision as dp
+import netsvc
+import time
+
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -468,7 +467,8 @@ class sale_order(osv.osv):
             lines = []
             for line in o.order_line:
                 if line.invoiced:
-                    raise osv.except_osv(_('Error !'), _('The Sale Order already has some lines invoiced. You should continue the billing process by line.'))
+                    #raise osv.except_osv(_('Error !'), _('The Sale Order already has some lines invoiced. You should continue the billing process by line.'))
+                    continue
                 elif (line.state in states):
                     lines.append(line.id)
             created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
@@ -532,7 +532,6 @@ class sale_order(osv.osv):
     def action_cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        ok = True
         sale_order_line_obj = self.pool.get('sale.order.line')
         for sale in self.browse(cr, uid, ids, context=context):
             for pick in sale.picking_ids:
@@ -561,7 +560,6 @@ class sale_order(osv.osv):
         return True
 
     def action_wait(self, cr, uid, ids, *args):
-        product_obj = self.pool.get('product.product')
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
@@ -636,7 +634,6 @@ class sale_order(osv.osv):
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     location_id = order.shop_id.warehouse_id.lot_stock_id.id
                     if not picking_id:
-                        loc_dest_id = order.partner_id.property_stock_customer.id
                         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
                         picking_id = self.pool.get('stock.picking').create(cr, uid, {
                             'name': pick_name,
@@ -1043,7 +1040,6 @@ class sale_order_line(osv.osv):
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         if update_tax: #The quantity only have changed
             result['delay'] = (product_obj.sale_delay or 0.0)
-            partner = partner_obj.browse(cr, uid, partner_id)
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
             result.update({'type': product_obj.procure_method})
 

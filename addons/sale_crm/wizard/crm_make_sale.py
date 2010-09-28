@@ -73,7 +73,6 @@ class crm_make_sale(osv.osv_memory):
         if not context:
             context = {}
 
-        mod_obj = self.pool.get('ir.model.data')
         case_obj = self.pool.get('crm.lead')
         sale_obj = self.pool.get('sale.order')
         partner_obj = self.pool.get('res.partner')

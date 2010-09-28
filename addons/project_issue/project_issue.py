@@ -19,20 +19,14 @@
 #
 ##############################################################################
 
-import base64
-import os
-import re
-import time
-from datetime import datetime, timedelta
-import binascii
-import collections
-
-import tools
 from crm import crm
-from osv import fields,osv,orm
-from osv.orm import except_orm
+from datetime import datetime
+from osv import fields,osv
 from tools.translate import _
+import binascii
+import time
 import tools
+
 
 class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"

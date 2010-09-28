@@ -1088,8 +1088,6 @@ class stock_picking(osv.osv):
         @return: True or False
         """
         for pick in self.browse(cr, uid, ids, context=context):
-            if not pick.move_lines:
-                return False
             for move in pick.move_lines:
                 if move.state not in ('cancel',):
                     return False
