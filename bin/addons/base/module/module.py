@@ -72,6 +72,7 @@ module_category()
 class module(osv.osv):
     _name = "ir.module.module"
     _description = "Module"
+    __logger = logging.getLogger('base.' + _name)
 
     def get_module_info(self, name):
         info = {}
@@ -498,6 +499,9 @@ class module(osv.osv):
         modules = self.browse(cr, uid,
             self.search(cr, uid, [('name', 'in', names)], context=context),
                               context=context)
+        if not modules: return []
+        self.__logger.info('Sending web content of modules %s '
+                           'to web client', names)
         return [
             {'name': module.name,
              'depends': [dep.name for dep in module.dependencies_id
