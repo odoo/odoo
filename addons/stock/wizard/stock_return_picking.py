@@ -109,7 +109,7 @@ class stock_return_picking(osv.osv_memory):
             arch_lst=['<?xml version="1.0"?>', '<form string="%s">' % _('Return lines'), '<label string="%s" colspan="4"/>' % _('Provide the quantities of the returned products.')]
             for m in [line for line in pick.move_lines]:
                 quantity = m.product_qty
-                if m.state=='done' and quantity > return_history[m.id] and (quantity - return_history[m.id])>0:
+                if m.state=='done' and quantity > return_history[m.id]:
                     arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
                     res['fields']['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True} 
                     res.setdefault('returns', []).append(m.id)
