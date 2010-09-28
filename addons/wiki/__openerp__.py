@@ -49,5 +49,6 @@ keep track for the wiki groups, pages, and history
     'installable': True,
     'active': False,
     'certificate': '0086363630317',
+    'web': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

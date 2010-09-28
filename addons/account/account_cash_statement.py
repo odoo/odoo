@@ -20,7 +20,6 @@
 #
 ##############################################################################
 import time
-from mx import DateTime
 
 from osv import osv, fields
 from decimal import Decimal
