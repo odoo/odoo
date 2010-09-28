@@ -192,6 +192,17 @@ class account_cash_statement(osv.osv):
             res.append(dct)
         return res
 
+    def _get_cash_close_box_lines(self, cr, uid, context={}):
+        res = []
+        curr = [1, 2, 5, 10, 20, 50, 100, 500]
+        for rs in curr:
+            dct = {
+                'pieces':rs,
+                'number':0
+            }
+            res.append((0,0,dct))
+        return res
+
     def _get_cash_open_close_box_lines(self, cr, uid, context={}):
         res = {}
         start_l = []
