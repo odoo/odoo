@@ -110,7 +110,7 @@
                            help="My team" />
                         </field>   
                           <field name="user_id" string="Salesman" select="1">
-                            <filter icon="terp-crm" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
+                            <filter icon="terp-crm" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                            </field>
                    </group>
                    <newline/>
@@ -128,9 +128,9 @@
                    </group>
                    <newline/>
                    <group expand="1" string="Group By...">
-                        <filter string="User" name="User" icon="terp-personal"
+                        <filter string="Salesman" name="Salesman" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
-                       <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}" />
+                       <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"

@@ -114,7 +114,7 @@
                         help="My company"/>
                         </field>
                          <field name="user_id" string="Salesman">
-                         <filter icon="terp-personal+" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
+                         <filter icon="terp-personal+" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                          </field>
                    </group>
                    <newline/>
@@ -124,13 +124,13 @@
                    </group>
                    <newline/>
                    <group expand="1" string="Group By...">
-                        <filter string="User" icon="terp-personal"
+                        <filter string="Salesman" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}"
                             default="1" />
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
                             context="{'group_by':'section_id'}" />
-                        <filter string="Partner" icon="terp-personal"
+                        <filter string="Partner" icon="terp-partnerl"
                             domain="[]"
                             context="{'group_by':'partner_id'}" />
                             
