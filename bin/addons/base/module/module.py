@@ -173,12 +173,14 @@ class module(osv.osv):
         'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
+        'web': fields.boolean('Has a web component', readonly=True),
     }
 
     _defaults = {
         'state': lambda *a: 'uninstalled',
         'demo': lambda *a: False,
         'license': lambda *a: 'AGPL-3',
+        'web': False,
     }
     _order = 'name'
 
@@ -332,6 +334,7 @@ class module(osv.osv):
             'website': terp.get('website', ''),
             'license': terp.get('license', 'GPL-2'),
             'certificate': terp.get('certificate') or None,
+            'web': terp.get('web') or False,
         }
 
     # update the list of available packages
@@ -470,6 +473,39 @@ class module(osv.osv):
                     logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
+    def list_web(self, cr, uid, context=False):
+        """ list_web(cr, uid, context) -> [module_name]
+        Lists all the currently installed modules with a web component.
+
+        Returns a list of addon names.
+        """
+        return [
+            module['name']
+            for module in self.browse(cr, uid,
+                self.search(cr, uid,
+                    [('web', '=', True),
+                     ('state', 'in', ['installed','to upgrade','to remove'])],
+                    context=context),
+                context=context)]
+    def get_web(self, cr, uid, names, context=False):
+        """ get_web(cr, uid, [module_name], context) -> [{name, depends, content}]
+
+        Returns the web content of all the named addons.
+
+        The toplevel directory of the zipped content is called 'web',
+        its final naming has to be managed by the client
+        """
+        modules = self.browse(cr, uid,
+            self.search(cr, uid, [('name', 'in', names)], context=context),
+                              context=context)
+        return [
+            {'name': module.name,
+             'depends': [dep.name for dep in module.dependencies_id],
+             'content': addons.zip_directory(
+                 addons.get_module_resource(module.name, 'web'))}
+            for module in modules
+        ]
+
 module()
 
 class module_dependency(osv.osv):
@@ -501,5 +537,3 @@ class module_dependency(osv.osv):
             ], string='State', readonly=True, select=True),
     }
 module_dependency()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
