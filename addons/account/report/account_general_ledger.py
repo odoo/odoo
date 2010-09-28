@@ -44,6 +44,15 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         self.init_balance = data['form']['initial_balance']
         self.display_account = data['form']['display_account']
         self.target_move = data['form'].get('target_move', 'all')
+        ctx = self.context.copy()
+        ctx['fiscalyear'] = data['form']['fiscalyear_id']
+        if data['form']['filter'] == 'filter_period':
+            ctx['periods'] = data['form']['periods']
+        elif data['form']['filter'] == 'filter_date':
+            ctx['date_from'] = data['form']['date_from']
+            ctx['date_to'] =  data['form']['date_to']
+        ctx['state'] = data['form']['target_move']
+        self.context.update(ctx)
         if (data['model'] == 'ir.ui.menu'):
             new_ids = [data['form']['chart_account_id']]
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
@@ -93,7 +102,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
     def get_children_accounts(self, account):
         res = []
         ids_acc = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, account.id)
-        for child_account in self.pool.get('account.account').browse(self.cr, self.uid, ids_acc):
+        for child_account in self.pool.get('account.account').browse(self.cr, self.uid, ids_acc, context=self.context):
             sql = """
                 SELECT count(id)
                 FROM account_move_line AS l
@@ -203,6 +212,8 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         return res
 
     def _sum_debit_account(self, account):
+        if account.type == 'view':
+            return account.debit
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted','']
@@ -227,6 +238,8 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         return sum_debit
 
     def _sum_credit_account(self, account):
+        if account.type == 'view':
+            return account.credit
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted','']
@@ -251,6 +264,8 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         return sum_credit
 
     def _sum_balance_account(self, account):
+        if account.type == 'view':
+            return account.balance
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted','']

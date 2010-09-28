@@ -25,6 +25,10 @@ from report import report_sxw
 
 class pos_details_summary(report_sxw.rml_parse):
 
+    def get_company(self,objects):
+        comp=[obj.company_id.name for obj in objects]
+        return '%s' % (comp[0])
+
     def _get_qty_total(self, objects):
         #code for the sum of qty_total
         return reduce(lambda acc, object:
@@ -122,6 +126,7 @@ class pos_details_summary(report_sxw.rml_parse):
             'gettaxamount': self._get_tax_amount,
             'getsalestotal': self._get_sales_total,
             'getperiod': self._get_period,
+            'getcompany':self.get_company
         })
 
 report_sxw.report_sxw('report.pos.details_summary',

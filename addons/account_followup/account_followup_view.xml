@@ -144,7 +144,7 @@
             src_model=""
             view="account_move_line_partner_tree"/>
 
-        <menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/>
+      <!--<menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/> -->
 
         <act_window
             domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]"
@@ -154,7 +154,7 @@
             src_model=""
             view="account_move_line_partner_tree"/>
 
-        <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/>
+      <!-- <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/> -->
 
         <record model="ir.ui.view" id="view_company_inherit_followup_form">
             <field name="name">res.company.followup.form.inherit</field>

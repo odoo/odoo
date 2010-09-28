@@ -19,7 +19,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Context">
-                <field name="name"/>
+                <field name="name" select="1"/>
                 <field name="sequence"/>
             </form>
         </field>
@@ -53,7 +53,7 @@
         <field name="arch" type="xml">
             <form string="Timeboxes">
                 <separator string="Timebox Definition" colspan="4"/>
-                <field name="name"/>
+                <field name="name" select="1"/>
                 <field name="sequence"/>
                 <field name="icon"/>
             </form>

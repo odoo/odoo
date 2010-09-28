@@ -19,15 +19,14 @@
 #
 ##############################################################################
 
-import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-
-import netsvc
 from osv import fields, osv
-from tools import config
 from tools.translate import _
 import decimal_precision as dp
+import netsvc
+import time
+
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -247,7 +246,7 @@ class sale_order(osv.osv):
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
         'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Picking', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
-        'shipped': fields.boolean('Picked', readonly=True, help="It indicates that a picking has been done. It will be set to True if the ordered quantities are available and the picking is done. If the ordered quantities are not available it generates a Purchase/Manufacturing order. Unless its Picking and Purchase/Manufacturing order are not in the done state it wont be set to True"),
+        'shipped': fields.boolean('Picked', readonly=True, help="It indicates that a picking has been done. It will be set to True if the ordered quantities are available and the picking is done. If the ordered quantities are not available Procurement generates a Purchase/Manufacturing order. Unless its Picking and Purchase/Manufacturing order are not in the done state it wont be set to True"),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
@@ -273,10 +272,10 @@ class sale_order(osv.osv):
             },
             multi='sums', help="The total amount"),
 
-        'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
+        'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you want your invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'company_id': fields.many2one('res.company','Company')
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
@@ -468,7 +467,8 @@ class sale_order(osv.osv):
             lines = []
             for line in o.order_line:
                 if line.invoiced:
-                    raise osv.except_osv(_('Error !'), _('The Sale Order already has some lines invoiced. You should continue the billing process by line.'))
+                    #raise osv.except_osv(_('Error !'), _('The Sale Order already has some lines invoiced. You should continue the billing process by line.'))
+                    continue
                 elif (line.state in states):
                     lines.append(line.id)
             created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
@@ -532,7 +532,6 @@ class sale_order(osv.osv):
     def action_cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        ok = True
         sale_order_line_obj = self.pool.get('sale.order.line')
         for sale in self.browse(cr, uid, ids, context=context):
             for pick in sale.picking_ids:
@@ -561,7 +560,6 @@ class sale_order(osv.osv):
         return True
 
     def action_wait(self, cr, uid, ids, *args):
-        product_obj = self.pool.get('product.product')
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
@@ -636,7 +634,6 @@ class sale_order(osv.osv):
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     location_id = order.shop_id.warehouse_id.lot_stock_id.id
                     if not picking_id:
-                        loc_dest_id = order.partner_id.property_stock_customer.id
                         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
                         picking_id = self.pool.get('stock.picking').create(cr, uid, {
                             'name': pick_name,
@@ -1043,7 +1040,6 @@ class sale_order_line(osv.osv):
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         if update_tax: #The quantity only have changed
             result['delay'] = (product_obj.sale_delay or 0.0)
-            partner = partner_obj.browse(cr, uid, partner_id)
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
             result.update({'type': product_obj.procure_method})
 
@@ -1154,7 +1150,7 @@ class sale_config_picking_policy(osv.osv_memory):
         'picking_policy': fields.selection([
             ('direct', 'Direct Delivery'),
             ('one', 'All at Once')
-        ], 'Picking Default Policy', required=True),
+        ], 'Picking Default Policy', required=True, help="The Shipping Policy is used to synchronise invoices and delivery operations."),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),

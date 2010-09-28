@@ -8,9 +8,9 @@
 		            <field name="inherit_id" ref="project.view_task_form2"/>
 		            <field name="arch" type="xml">
 		                <xpath expr="/form/notebook/page[@string='Extra Info']" position="before">
-		                    <page string="Communication History">
+		                    <page string="History">
 	                        	<field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-			                        <tree string="Communication history">
+			                        <tree string="History">
 			                            <field name="display_text" string="History Information"/>
 			                        </tree>
 			                        <form string="History">

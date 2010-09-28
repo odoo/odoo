@@ -44,6 +44,7 @@
         'hr_installer.xml',
         'hr_data.xml',
         'board_hr_view.xml',
+        'board_hr_manager_view.xml',
         ],
     'demo_xml': [
         'hr_demo.xml',

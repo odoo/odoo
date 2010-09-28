@@ -61,12 +61,12 @@ class hr_expense_expense(osv.osv):
     _name = "hr.expense.expense"
     _description = "Expense"
     _columns = {
-        'name': fields.char('Expense Sheet', size=128, required=True),
+        'name': fields.char('Description', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),
         'ref': fields.char('Reference', size=32),
         'date': fields.date('Date'),
         'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is invoiced"),
-        'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True),
+        'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Confirmation Date', help = "Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."),
         'date_valid': fields.date('Validation Date', help = "Date of the acceptation of the sheet expense. It's filled when the button Accept is pressed."),
@@ -81,11 +81,11 @@ class hr_expense_expense(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'state': fields.selection([
             ('draft', 'Draft'),
-            ('confirm', 'Waiting confirmation'),
-            ('accepted', 'Accepted'),
+            ('confirm', 'Waiting Approval'),
+            ('accepted', 'Approved'),
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed'),
-            ('cancelled', 'Cancelled')],
+            ('cancelled', 'Refused')],
             'State', readonly=True, help='When the expense request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Confirmation\'.\
             \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
     }

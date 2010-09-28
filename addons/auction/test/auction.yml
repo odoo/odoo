@@ -25,12 +25,12 @@
     name: Vincent van Gogh
  
 - 
-  I modifying a expenses journal record for analytic journal. 
+  I am modifying an expenses journal record for analytic journal. 
 - 
   !record {model: account.journal, id: account.expenses_journal}:
     analytic_journal_id: account.exp
 - 
-  I modifying a sales journal record for analytic journal. 
+  I am modifying a sales journal record for analytic journal. 
 - 
   !record {model: account.journal, id: account.sales_journal}:
     analytic_journal_id: account.cose_journal_sale    
@@ -49,7 +49,7 @@
     name: Mr. Pinakin
 
 -      
-  I'm creating new Buyer "Mr. Patel" with him email "info@myinfobid.com".
+  I'm creating new Buyer "Mr. Patel" with his email "info@myinfobid.com".
 - 
   !record {model: res.partner, id: res_partner_mrpatel0}:
     address:
@@ -62,7 +62,7 @@
     name: Mr. Patel
         
 -      
-  I'm creating new Buyer "Mr. Johnson" with him email "info@mrkjohnson.com".
+  I'm creating new Buyer "Mr. Johnson" with his email "info@mrkjohnson.com".
 - 
   !record {model: res.partner, id: res_partner_mrkjohnson0}:
     address:
@@ -76,7 +76,7 @@
     name: Mr. Mark Johnson
         
 -      
-  I'm creating new Buyer "Mr. Rahi" with him email "info@poalrahi.com".
+  I'm creating new Buyer "Mr. Rahi" with his email "info@poalrahi.com".
 - 
   !record {model: res.partner, id: res_partner_poalrahi0}:
     address:
@@ -90,7 +90,7 @@
         
     
 -
-  I create Account tax with 0.03 amount to give Buyer "3%" Commision.
+  I create an Account tax with 0.03 amount to give Buyer "3%" Commission.
 - 
   !record {model: account.tax, id: account_tax_buyer0}:
     amount: 0.029999999999999999
@@ -102,7 +102,7 @@
     type: percent
     type_tax_use: all
 -
-  I create Account tax with 0.04 amount to give seller "4%" commision.
+  I create another Account tax with 0.04 amount to give seller "4%" commission.
 - 
   !record {model: account.tax, id: account_tax_sellercosts0}:
     amount: 0.040000000000000001
@@ -116,7 +116,7 @@
                   
 -
   Now I want to associate an object with the auction so for that I create an auction "Antique furniture exhibition" which
-  start from 1 Aug to 31 Aug with Seller Commition 4%, buyer commition 3%.
+  start from 1 Aug to 31 Aug with Seller Commission 4%, buyer commission 3%.
 -
   !record {model: auction.dates, id: auction_dates_antiquefurnitureexhibition0}:
     acc_expense: account.a_pay
@@ -165,7 +165,7 @@
     state: draft
     vnd_lim: 5000.0
 -
-  I create a bid for an object "wooden-chair" which is to be auctioned in Antique furniture exhibition bided by Mr.Patel.
+  I create a bid for an object "wooden-chair" which is to be auctioned in Antique furniture exhibition bid by Mr.Patel.
 -
   !record {model: auction.bid, id: auction_bid_bid0}:
     auction_id: auction_dates_antiquefurnitureexhibition0
@@ -182,7 +182,7 @@
     price: 3100.0
 
 -
-  I create another bid for an object "wooden-chair" bided by a Mr.poalrahi
+  I create another bid for an object "wooden-chair" bid by a Mr.poalrahi
 -  
   !record {model: auction.bid, id: auction_bid_bid1}:
     auction_id: auction_dates_antiquefurnitureexhibition0
@@ -199,7 +199,7 @@
     price: 3200.0
  
 -
-  I create another bid for an object "wooden-chair" bided by a Mr.Johnson
+  I create another bid for an object "wooden-chair" bid by a Mr.Johnson
 -  
   !record {model: auction.bid, id: auction_bid_bid2}:
     auction_id: auction_dates_antiquefurnitureexhibition0
@@ -215,9 +215,9 @@
     lot_id: auction.auction_lots_woodenchair0
     price: 4000.0
 -
-  Mr. MarkJohnson bid are selected as Finallist Bid with 4000 Euro
+  Mr. MarkJohnson bid are selected as the Finalist Bid with 4000 Euro
 -
-  I check that buyer price and seller price gets bind with the value
+  I check that buyer price and seller price gets bound with the value
 -
   !python {model: auction.lots}: |
     from tools.translate import _
@@ -254,13 +254,13 @@
     number: 2010/003
     objects: 1
 -
-  Then I click on the "Create Invoices" button.
+  I click on the "Create Invoices" button.
 -
   !python {model: auction.lots.make.invoice.buyer}: |
     self.makeInvoices(cr, uid, [ref("auction_lots_make_invoice_buyer_0")], {"active_model": "auction.lots", "active_ids": [ref("auction_lots_woodenchair0")],
       "active_id": ref("auction_lots_woodenchair0"), })
 -
-  I check that a "Buyer Invoice" field gets bind with the value.
+  I check that a "Buyer Invoice" field gets bound with the value.
 -
   !python {model: auction.lots}: |
     from tools.translate import _
@@ -289,7 +289,7 @@
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
     assert(auc_id.state == 'sold'), _('State not changed!')
 -
-  Then I click on the Taken Away button.
+  I click on the Taken Away button.
 -
   !python {model: auction.lots}: |
     self.button_taken_away(cr, uid, [ref("auction_lots_woodenchair0")], {"lang":
@@ -307,7 +307,7 @@
   !record {model: auction.lots.auction.move, id: auction_lots_auction_move_0}:
     auction_id: auction.auction_date_2
 - 
-  Then I click on the "Move to Auction date" button.
+  I click on the "Move to Auction date" button.
 - 
   !python {model: auction.lots.auction.move}: |
     self.auction_move_set(cr, uid, [ref("auction_lots_auction_move_0")], {"lang":

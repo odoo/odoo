@@ -71,18 +71,22 @@ class account_analytic_line(osv.osv):
 
     # Compute the cost based on the price type define into company
     # property_valuation_price_type property
-    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,company_id,
+    def on_change_unit_amount(self, cr, uid, id, prod_id, quantity, company_id,
             unit=False, journal_id=False, context=None):
         if context==None:
             context={}
-        uom_obj = self.pool.get('product.uom')
+        if not journal_id or not prod_id:
+            return {}
         product_obj = self.pool.get('product.product')
-        company_obj=self.pool.get('res.company')
-        analytic_journal_obj=self.pool.get('account.analytic.journal')
-        product_price_type_obj = self.pool.get('product.price.type')
-        if  prod_id:
-            result = 0.0
-            prod = product_obj.browse(cr, uid, prod_id)
+        analytic_journal_obj =self.pool.get('account.analytic.journal')
+        j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
+        prod = product_obj.browse(cr, uid, prod_id)
+        if not company_id:
+            company_id = j_id.company_id.id
+        result = 0.0
+        is_purchase = False
+        
+        if j_id.type == 'purchase':
             a = prod.product_tmpl_id.property_account_expense.id
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id
@@ -91,8 +95,22 @@ class account_analytic_line(osv.osv):
                         _('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d)') % \
                                 (prod.name, prod.id,))
-            if not company_id:
-                company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
+            amount_unit = prod.price_get('standard_price', context)[prod.id]
+            is_purchase = True
+
+        else:
+            a = prod.product_tmpl_id.property_account_income.id
+            if not a:
+                a = prod.categ_id.property_account_income_categ.id
+            if not a:
+                raise osv.except_osv(_('Error !'),
+                        _('There is no income account defined ' \
+                                'for this product: "%s" (id:%d)') % \
+                                (prod.name, prod_id,))
+            amount_unit = prod.price_get('list_price', context)[prod_id]
+
+        if not company_id:
+            company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
             flag = False
             # Compute based on pricetype
             product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context)
@@ -116,8 +134,8 @@ class account_analytic_line(osv.osv):
             return {'value': {
                 'amount': result,
                 'general_account_id': a,
-                }}
-        return {}
+            }
+        }
 
     def view_header_get(self, cr, user, view_id, view_type, context):
         if context.get('account_id', False):

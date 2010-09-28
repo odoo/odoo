@@ -32,7 +32,6 @@ import account_aged_partner_balance
 import tax_report
 import account_tax_code
 import account_balance_landscape
-import compare_account_balance
 import account_invoice_report
 import account_report
 import account_entries_report

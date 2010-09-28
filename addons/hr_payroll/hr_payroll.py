@@ -136,7 +136,8 @@ class hr_contract(osv.osv):
 
     _columns = {
         'permit_no':fields.char('Work Permit No', size=256, required=False, readonly=False),
-        'passport_id':fields.many2one('hr.passport', 'Passport', required=False),
+#        'passport_id':fields.many2one('hr.passport', 'Passport', required=False),
+        'passport_id':fields.char('Passport',size=64, required=False),
         'visa_no':fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
         'struct_id' : fields.many2one('hr.payroll.structure', 'Salary Structure'),
@@ -145,6 +146,14 @@ class hr_contract(osv.osv):
     _defaults = {
         'working_days_per_week': lambda *a: 5,
     }
+
+    def on_change_employee_id(self, cr, uid, ids, employee_id):
+        v = {}
+        passport = self.pool.get('hr.employee').browse(cr, uid, employee_id).passport_id
+        if passport:
+            v['passport_id'] = passport
+        return {'value': v}
+
 hr_contract()
 
 class payroll_register(osv.osv):
@@ -293,7 +302,7 @@ class payroll_register(osv.osv):
 
                 pline = {
                     'advice_id':pid,
-                    'name':slip.employee_id.otherid,
+                    'name':slip.employee_id.identification_id,
                     'employee_id':slip.employee_id.id,
                     'amount':slip.other_pay + slip.net,
                     'bysal':slip.net
@@ -423,7 +432,7 @@ class payroll_advice_line(osv.osv):
             sids = slip_pool.search(cr, uid, [('paid','=',False),('state','=','confirm'),('date','>=',dates[0]), ('employee_id','=',employee_id), ('date','<=',dates[1])], context=context)
             if sids:
                 slip = slip_pool.browse(cr, uid, sids[0], context=context)
-                vals['name'] = slip.employee_id.otherid
+                vals['name'] = slip.employee_id.identification_id
                 vals['amount'] = slip.net + slip.other_pay
                 vals['bysal'] = slip.net
         return {
@@ -1306,13 +1315,13 @@ class hr_employee(osv.osv):
     _description = 'Employee'
 
     _columns = {
-        'pan_no':fields.char('PAN No', size=64, required=False, readonly=False),
+#        'pan_no':fields.char('PAN No', size=64, required=False, readonly=False),
         'esp_account':fields.char('EPS Account', size=64, required=False, readonly=False, help="EPS Account"),
         'pf_account':fields.char('PF Account', size=64, required=False, readonly=False, help="Providend Fund Account"),
         'pg_joining': fields.date('PF Join Date'),
         'esi_account':fields.char('ESI Account', size=64, required=False, readonly=False, help="ESI Account"),
         'hospital_id':fields.many2one('res.partner.address', 'ESI Hospital', required=False),
-        'passport_id':fields.many2one('hr.passport', 'Passport', required=False),
+        'passport_id':fields.char('Passport', size=64),
         'otherid':fields.char('Other Id', size=64, required=False),
         'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account', required=False, readonly=False),
         'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),

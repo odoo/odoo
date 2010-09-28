@@ -19,11 +19,9 @@
 #
 ##############################################################################
 
-import time
-
 from osv import fields, osv
+import tools
 from tools.translate import _
-from tools import email_send as email
 
 class project_task_close(osv.osv_memory):
     """
@@ -47,7 +45,6 @@ class project_task_close(osv.osv_memory):
             context = {}
         record_id = context and context.get('active_id', False) or False
         task_pool = self.pool.get('project.task')
-        project_pool = self.pool.get('project.project')
                 
         res = super(project_task_close, self).default_get(cr, uid, fields, context=context)
         task = task_pool.browse(cr, uid, record_id, context=context)
@@ -56,24 +53,18 @@ class project_task_close(osv.osv_memory):
         partner = task.partner_id or task.project_id.partner_id
         
         if 'description' in fields:
-            res.update({'description': task.description})
+            res.update({'description': task.description or False})
         if 'manager_warn' in fields:
-            res.update({'manager_warn': project.warn_manager})
+            res.update({'manager_warn': project.warn_manager or False})
         if 'partner_warn' in fields:
-            res.update({'partner_warn': project.warn_customer})
+            res.update({'partner_warn': project.warn_customer or False})
         if 'manager_email' in fields:
             res.update({'manager_email': manager and manager.user_email or False})
         if partner and len(partner.address) and 'partner_email' in fields:
             res.update({'partner_email': partner.address[0].email})
         return res
 
-    def done(self, cr, uid, ids, context=None):
-        task_pool = self.pool.get('project.task')
-        task_id = context.get('active_id', False)
-        res = task_pool.do_close(cr, uid, [task_id], context=context)
-        return res
-
-    def confirm(self, cr, uid, ids, context=None):
+    def send(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         
@@ -83,42 +74,41 @@ class project_task_close(osv.osv_memory):
             return {}
         task = task_pool.browse(cr, uid, task_id, context=context)
         for data in self.browse(cr, uid, ids, context=context):
-            res = task_pool.do_close(cr, uid, [task.id], context=context)
-            if res:
-                # Send Warn Message by Email to Manager and Customer
-                if data.manager_warn and not data.manager_email:
-                    raise osv.except_osv(_('Error'), _("Please specify the email address of Project Manager."))
+            # Send Warn Message by Email to Manager and Customer
+            if data.manager_warn and not data.manager_email:
+                raise osv.except_osv(_('Error'), _("Please specify the email address of Project Manager."))
 
-                elif data.partner_warn and not data.partner_email:
-                    raise osv.except_osv(_('Error'), _("Please specify the email address of Customer."))
+            elif data.partner_warn and not data.partner_email:
+                raise osv.except_osv(_('Error'), _("Please specify the email address of Customer."))
 
-                elif data.manager_warn or data.partner_warn:
-                    project = task.project_id
-                    subject = _("Task '%s' Closed") % task.name
-                    if task.user_id and task.user_id.address_id and task.user_id.address_id.email:
-                        from_adr = task.user_id.address_id.email
-                        signature = task.user_id.signature
-                    else:
-                        raise osv.except_osv(_('Error'), _("Couldn't send mail because your email address is not configured!"))
-                    val = {
-                            'name': task.name,
-                            'user_id': task.user_id.name,
-                            'task_id': "%d/%d" % (project.id, task.id),
-                            'date_start': task.date_start,
-                            'date_end': task.date_end,
-                            'state': task.state
-                    }
+            elif data.manager_warn or data.partner_warn:
+                project = task.project_id
+                subject = _("Task '%s' Closed") % task.name
+                if task.user_id and task.user_id.address_id and task.user_id.address_id.email:
+                    from_adr = task.user_id.address_id.email
+                    signature = task.user_id.signature
+                else:
+                    raise osv.except_osv(_('Error'), _("Couldn't send mail because your email address is not configured!"))
+                val = {
+                        'name': task.name,
+                        'user_id': task.user_id.name,
+                        'task_id': "%d/%d" % (project.id, task.id),
+                        'date_start': task.date_start,
+                        'date_end': task.date_end,
+                        'state': task.state
+                }
 
-                    header = (project.warn_header or '') % val
-                    footer = (project.warn_footer or '') % val
-                    body = u'%s\n%s\n%s\n\n-- \n%s' % (header, description, footer, signature)
-                    if data.manager_warn and data.manager_email:
-                        to_adr.append(data.manager_email)
-                    if data.partner_warn and data.partner_email:
-                        to_adr.append(data.partner_email)
-                    mail_id = email(from_adr, to_adr, subject, tools.ustr(body), email_bcc=[from_adr])
-                    if not mail_id:
-                        raise osv.except_osv(_('Error'), _("Couldn't send mail! Check the email ids and smtp configuration settings"))
+                to_adr = []
+                header = (project.warn_header or '') % val
+                footer = (project.warn_footer or '') % val
+                body = u'%s\n%s\n%s\n\n-- \n%s' % (header, task.description, footer, signature)
+                if data.manager_warn and data.manager_email:
+                    to_adr.append(data.manager_email)
+                if data.partner_warn and data.partner_email:
+                    to_adr.append(data.partner_email)
+                mail_id = tools.email_send(from_adr, to_adr, subject, tools.ustr(body), email_bcc=[from_adr])
+                if not mail_id:
+                    raise osv.except_osv(_('Error'), _("Couldn't send mail! Check the email ids and smtp configuration settings"))
         return {}
 
 project_task_close()

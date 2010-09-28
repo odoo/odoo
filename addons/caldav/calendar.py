@@ -293,7 +293,6 @@ class CalDAV(object):
 
         att_data = []
         exdates = []
-        _server_tzinfo = pytz.timezone(tools.get_server_timezone())
 
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
@@ -453,7 +452,7 @@ class CalDAV(object):
                             else:
                                 for key1, val1 in self.ical_get(field, 'mapping').items():
                                     if val1 == data[map_field]:
-                                        vevent.add(field).value = key1
+                                        vevent.add(field).value = key1.upper()
         return vevent
 
     def check_import(self, cr, uid, vals, context=None):
@@ -521,7 +520,7 @@ class CalDAV(object):
             ical = vobject.iCalendar()
             self.create_ics(cr, uid, datas, vobj, ical, context=context)
             return ical
-        except Exception, e:
+        except:
             raise  # osv.except_osv(('Error !'), (str(e)))
 
     def import_cal(self, cr, uid, content, data_id=None, context=None):
@@ -654,7 +653,7 @@ class Calendar(CalDAV, osv.osv):
             data_id = self.search(cr, uid, [])[0]
         cal = self.browse(cr, uid, data_id, context=context)
         cal_children = {}
-        count = 0
+
         for line in cal.line_ids:
             cal_children[line.name] = line.object_id.model
         objs = []
