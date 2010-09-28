@@ -18,14 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 from mx import DateTime
-
-import netsvc
-from osv import fields, osv, orm
-import re
-import tools
+from osv import fields, osv
 from tools.translate import _
+import re
+import time
+import tools
+
 
 class project_scrum_project(osv.osv):
     _inherit = 'project.project'
@@ -333,7 +332,6 @@ class project_scrum_meeting(osv.osv):
         if context is None:
             context = {}
         meeting_id = self.browse(cr, uid, ids)[0]
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
             res = self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
             if not res:

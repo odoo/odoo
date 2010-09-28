@@ -646,7 +646,6 @@ class auction_lots(osv.osv):
         if not context:
             context={}
         inv_ref=self.pool.get('account.invoice')
-        partner_obj = self.pool.get('res.partner')
         inv_line_obj = self.pool.get('account.invoice.line')
         wf_service = netsvc.LocalService('workflow')
         for lot in self.browse(cr, uid, ids, context):
@@ -655,7 +654,6 @@ class auction_lots(osv.osv):
             if lot.bord_vnd_id.id in invoices:
                 inv_id = invoices[lot.bord_vnd_id.id]
             else:
-                res = partner_obj.address_get(cr, uid, [lot.bord_vnd_id.partner_id.id], ['contact', 'invoice'])
                 inv = {
                     'name': 'Auction:' +lot.name,
                     'journal_id': lot.auction_id.journal_seller_id.id,

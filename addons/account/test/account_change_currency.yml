@@ -50,7 +50,7 @@
   !assert {model: account.invoice, id: account_invoice_currency}:
     - state == 'proforma2'
 -
-  I can't change the currency of invoice when it is not in draft state so i change the state to cancel
+  I can't change the currency of invoice when it is not in draft state so I change the state to cancel
 -
   !workflow {model: account.invoice, action: invoice_cancel, ref: account_invoice_currency}
 -

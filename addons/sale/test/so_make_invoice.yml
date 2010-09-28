@@ -183,7 +183,7 @@
     for id in inv:
         wf_service.trg_validate(uid, 'account.invoice',id,'invoice_open', cr)
 -
-  I assign an analytic jounal to the bank journal
+  I assign an analytic journal to the bank journal
 - 
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale
@@ -200,7 +200,7 @@
         ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
         name='tst')
 -
-  I verify the invoice is in Paid sate 
+  I verify the invoice is in Paid state 
 -
   !python {model: account.invoice}: |
     invoice_id = self.search(cr, uid, [('origin','=','Test_SO004|Test_SO003|'),('state','=','paid')])

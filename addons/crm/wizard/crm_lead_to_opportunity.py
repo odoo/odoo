@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from mx.DateTime import now
 from osv import osv, fields
 from tools.translate import _
 
@@ -70,8 +69,6 @@ class crm_lead2opportunity(osv.osv_memory):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
         lead = lead_obj.browse(cr, uid, record_id, context=context)
-        model_ids = model_obj.search(cr, uid, [('model', '=', 'crm.lead')])
-
 
         for this in self.browse(cr, uid, ids, context=context):
             vals ={
@@ -144,7 +141,6 @@ Leads Could not convert into Opportunity"))
         @return : default values of fields.
         """
         lead_obj = self.pool.get('crm.lead')
-        rec_ids = context and context.get('active_ids', [])
         data = context and context.get('active_ids', []) or []
         res = super(crm_lead2opportunity, self).default_get(cr, uid, fields, context=context)
         for lead in lead_obj.browse(cr, uid, data, context=context):
@@ -181,7 +177,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
-        rec_ids = context and context.get('active_ids', [])
         partner_id = False
 
         data = context and context.get('active_ids', []) or []
@@ -219,7 +214,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         partner_ids = self._create_partner(cr, uid, ids, context)
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
         value = {}
         data_obj = self.pool.get('ir.model.data')
         data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_action')

@@ -19,11 +19,7 @@
 #
 ##############################################################################
 
-import datetime
-
-from tools.translate import _
 from osv import osv, fields
-
 
 class project_compute_tasks(osv.osv_memory):
     _name = 'project.compute.tasks'

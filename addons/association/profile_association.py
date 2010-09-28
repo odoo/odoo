@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-import pooler
 
 class profile_association_config_install_modules_wizard(osv.osv_memory):
     _name='profile.association.config.install_modules_wizard'
