@@ -9,7 +9,7 @@
             <field name="model">crm.fundraising.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree colors="blue:state in ('draft');black:state in ('open','pending');gray:state in ('done','cancel') " string="Fundraising">
+            	<tree string="Fundraising">
 	              	<field name="name" invisible="1"/>
 					<field name="month" invisible="1"/>
 					<field name="section_id" invisible="1"/>
@@ -17,6 +17,7 @@
     				<field name="company_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                 	<field name="nbr" string='#Fundraising' sum="#Fundraising"/>
+                	<field name="planned_cost"  sum='Planned Costs'/>
                     <field name="amount_revenue"  sum='Est.Revenue'/>
                     <field name="probability" avg='Avg. Probability' widget="progressbar"/>
                     <field name="amount_revenue_prob" sum='Est. Rev*Prob.'/>
@@ -24,6 +25,7 @@
                     <field name="state" invisible="1"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="day" invisible="1"/>
+                    <field name="type_id" invisible="1"/>
                </tree>
             </field>
 
@@ -74,14 +76,17 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="8">
-                   		<filter string="This Year" icon="terp-go-year"
-                   			domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+                   		<filter string="  Year  " icon="terp-go-year"
+                   			domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
+                   			help="Funds raised in current year"/>
 
-                       <filter string="This Month" icon="terp-go-month" name="This Month"
-                    	   domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                       <filter string="   Month   " icon="terp-go-month" name="This Month"
+                    	   domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                    	   help="Funds raised in current month"/>
 
-                       <filter icon="terp-go-week" string="7 Days" separator="1"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+                       <filter icon="terp-go-month" string="    Month-1    " separator="1"
+                            domain="[('create_date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                            help="Funds raised in last month"/>
 
                    		<separator orientation="vertical" />
                         <filter icon="terp-document-new"
@@ -95,25 +100,24 @@
                     		domain="[('state','=','pending')]"/>
 
                    		<separator orientation="vertical" />
-                   		<field name="section_id"
+                   		<field name="section_id" string="Sales Team"
                    			default="context.get('section_id', False)"
-                   			widget="selection"
                    			context="{'invisible_section': False}">
 
                    			<filter icon="terp-personal+"
                    				context="{'invisible_section': False}"
                    				domain="[('section_id.user_id','=',uid)]"
-                   				help="My section" />
+                   				help="My team" />
 
                    		</field>
-                   		<field name="company_id" widget="selection">
+                   		<field name="company_id">
                            <filter icon="terp-go-home"
                         context="{'invisible_section': False}"
                         domain="[('section_id.user_id.company_id','=',uid)]"
                         help="My company"/>
                         </field>
 
-                      	<field name="user_id" select="1" widget="selection">
+                      	<field name="user_id" select="1" string="Salesman">
 	            			<filter icon="terp-personal+" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
                			</field>
                    </group>
@@ -137,27 +141,31 @@
                         <filter string="User" name="User" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
 
-                        <filter string="Company" icon="terp-go-home"
-                            domain="[]"
-                            context="{'group_by':'company_id'}" />
-
-                        <filter string="Section" icon="terp-personal+"
+                        <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
                             context="{'group_by':'section_id'}" />
 
                         <separator orientation="vertical" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize"
+                         <filter string="State" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />
-
                         <filter string="Category" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'categ_id'}" />
-
+                        <filter string="Payment Mode" help="Payment Mode"
+                            icon="terp-dolar" domain="[]"
+                            context="{'group_by':'type_id'}" />
+                        <separator orientation="vertical" />
+                        <filter string="Company" icon="terp-go-home"
+                            domain="[]"
+                            context="{'group_by':'company_id'}" />
+                            
                         <separator orientation="vertical" />
                         <filter string="Day" icon="terp-go-today"
-                            domain="[]" context="{'group_by':'day'}"/>
+                            domain="[]" context="{'group_by':'day'}"
+                            help="Date of fundraising"/>
 
                         <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}" />
+                            domain="[]" context="{'group_by':'month'}" 
+                            help="Month of fundraising"/>
 
                         <filter string="Year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'name'}" />
@@ -169,7 +177,7 @@
 <!-- Fundraising by user and section Action -->
 
         <record id="action_report_crm_fundraising" model="ir.actions.act_window">
-            <field name="name">Fundraising</field>
+            <field name="name">Fundraising Analysis</field>
             <field name="res_model">crm.fundraising.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>

@@ -34,7 +34,7 @@ class hr_evaluation_plan(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Evaluation Phases'),
         'month_first': fields.integer('First Evaluation After'),
-        'month_next': fields.integer('Next Evaluation After'),
+        'month_next': fields.integer('After the Date of Start'),
         'active': fields.boolean('Active')
     }
     _defaults = {
@@ -67,10 +67,10 @@ class hr_evaluation_plan_phase(osv.osv):
         'send_anonymous_employee': fields.boolean('Anonymous Summary',
             help="Send an anonymous summary to the employee"),
         'wait': fields.boolean('Wait Previous Phases',
-            help="Check this box if you want to wait that all preceeding phases " +
+            help="Check this box if you want to wait that all preceding phases " +
               "are finished before launching this phase."),
         'mail_feature': fields.boolean('Send mail for this phase', help="Check this box if you want to send mail to employees"+
-                                       "coming under this phase"),
+                                       " coming under this phase"),
         'mail_body': fields.text('Email'),
         'email_subject':fields.text('char')
     }
@@ -161,13 +161,13 @@ class hr_evaluation(osv.osv):
             ('2','Meet expectations'),
             ('3','Exceeds expectations'),
             ('4','Significantly exceeds expectations'),
-        ], "Overall Rating", help="This is the overall rating on that summarize the evaluation"),
+        ], "Appreciation", help="This is the appreciation on that summarize the evaluation"),
         'survey_request_ids': fields.one2many('hr.evaluation.interview','evaluation_id','Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
             ('draft','Draft'),
             ('wait','Plan In Progress'),
-            ('progress','Final Validation'),
+            ('progress','Waiting Appreciation'),
             ('done','Done'),
             ('cancel','Cancelled'),
         ], 'State', required=True, readonly=True),
@@ -220,8 +220,8 @@ class hr_evaluation(osv.osv):
                 elif phase.action == "self":
                     childs = [evaluation.employee_id]
                 for child in childs:
-                    if not child.user_id:
-                        continue
+#                    if not child.user_id:
+#                        continue
 
                     int_id = hr_eval_inter_obj.create(cr, uid, {
                         'evaluation_id': evaluation.id,
@@ -284,6 +284,7 @@ survey_request()
 class hr_evaluation_interview(osv.osv):
     _name = 'hr.evaluation.interview'
     _inherits = {'survey.request': 'request_id'}
+    _rec_name = 'request_id'
     _description = 'Evaluation Interview'
     _columns = {
         'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade', required=True),
@@ -293,7 +294,19 @@ class hr_evaluation_interview(osv.osv):
     _defaults = {
         'is_evaluation': True,
     }
-
+    
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not len(ids):
+            return []
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            name = record.request_id.survey_id.title
+            res.append((record['id'], name))
+        return res
+    
     def survey_req_waiting_answer(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
