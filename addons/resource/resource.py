@@ -270,10 +270,10 @@ class resource_resource(osv.osv):
                                                                       ], context=context)
         leaves = resource_calendar_leaves_pool.read(cr, uid, leave_ids, ['date_from', 'date_to'], context=context)
         for i in range(len(leaves)):
-            dt_start = datetime.datetime.strptime(leaves[i]['date_from'], '%Y-%m-%d %H:%M:%S')
-            dt_end = datetime.datetime.strptime(leaves[i]['date_to'], '%Y-%m-%d %H:%M:%S')
+            dt_start = datetime.strptime(leaves[i]['date_from'], '%Y-%m-%d %H:%M:%S')
+            dt_end = datetime.strptime(leaves[i]['date_to'], '%Y-%m-%d %H:%M:%S')
             no = dt_end - dt_start
-            [leave_list.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
+            [leave_list.append((dt_start + timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
             leave_list.sort()
         return leave_list
 
