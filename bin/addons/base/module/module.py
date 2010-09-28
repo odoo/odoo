@@ -500,7 +500,11 @@ class module(osv.osv):
                               context=context)
         return [
             {'name': module.name,
-             'depends': [dep.name for dep in module.dependencies_id],
+             'depends': [dep.name for dep in module.dependencies_id
+                         if self.search(cr, uid, [
+                             ('name', '=', dep.name),
+                             ('web', '=', True)
+                             ], context=context)],
              'content': addons.zip_directory(
                  addons.get_module_resource(module.name, 'web'))}
             for module in modules
