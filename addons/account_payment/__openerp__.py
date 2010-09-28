@@ -49,7 +49,7 @@
     ],
     'demo_xml': ['account_payment_demo.xml'],
     'test': [
-             'test/account_payment.yml'
+             'test/account_payment.yml',
              'test/account_payment_report.yml'
     ],
     'installable': True,
