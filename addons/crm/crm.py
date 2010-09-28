@@ -580,10 +580,8 @@ crm_case_section()
 
 class crm_case_categ(osv.osv):
     """ Category of Case """
-
     _name = "crm.case.categ"
-    _description = "Category of case"
-
+    _description = "Category of Case"
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
