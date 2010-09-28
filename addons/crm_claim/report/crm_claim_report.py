@@ -100,7 +100,7 @@ class crm_claim_report(osv.osv):
                     c.categ_id,
                     count(*) as nbr,
                     c.priority as priority,
-                    c.type_id as type_id,
+                    c.type_action as type_action,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected
@@ -109,7 +109,7 @@ class crm_claim_report(osv.osv):
                 group by to_char(c.date, 'YYYY'), to_char(c.date, 'MM'),to_char(c.date, 'YYYY-MM-DD'),\
                         c.state, c.user_id,c.section_id, c.stage_id,\
                         c.categ_id,c.partner_id,c.company_id,c.create_date,
-                        c.priority,c.type_id,c.date_deadline,c.date_closed
+                        c.priority,c.type_action,c.date_deadline,c.date_closed
             )""")
 
 crm_claim_report()
