@@ -21,7 +21,7 @@
                 <tree string="Budgetary Position">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -69,7 +69,7 @@
                 <form string="Budgetary Position">
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
-                    <field name="company_id"  groups="base.group_multi_company"/>
+                    <field name="company_id"  groups="base.group_multi_company" widget="selection"/>
                     <notebook colspan="4">
                         <page string="Accounts">
                             <field name="account_ids" colspan="4" nolabel="1"/>
@@ -122,6 +122,7 @@
                             <field name="validating_user_id" readonly="True" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="date_from" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="date_to" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="crossovered_budget_line" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
                                 <tree string="Budget Lines">
                                     <field name="analytic_account_id" groups="base.group_extended"/>
@@ -141,6 +142,7 @@
                                     <field name="date_to"/>
                                     <field name="paid_date" select="1"/>
                                     <field name="planned_amount" select="1"/>
+                                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                 </form>
                             </field>
                             <field name="state" select="1"/>
@@ -166,6 +168,7 @@
                     <field name="code" colspan="1"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <field name="creating_user_id"/>
                     <field name="state"/>
                 </tree>
@@ -238,6 +241,7 @@
                     <field name="practical_amount" select="1"/>
                     <field name="theoritical_amount"/>
                     <field name="percentage"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </form>
             </field>
         </record>

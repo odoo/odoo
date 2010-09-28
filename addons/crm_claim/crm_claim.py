@@ -46,10 +46,8 @@ class crm_claim(crm.crm_case, osv.osv):
         'ref' : fields.reference('Reference', selection=crm._links_get, size=128), 
         'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128), 
         'canal_id': fields.many2one('res.partner.canal', 'Channel', \
-                     help="The channels represent the different communication"\
-                      "modes available with the customer." \
-                     " With each commercial opportunity, you can indicate the"\
-                      "canall which is this opportunity source."), 
+                     help="The channels represent the different communication \
+ modes available with the customer."), 
         'planned_revenue': fields.float('Planned Revenue'), 
         'planned_cost': fields.float('Planned Costs'), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \

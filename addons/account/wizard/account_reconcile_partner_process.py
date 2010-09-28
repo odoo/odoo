@@ -28,14 +28,18 @@ class account_partner_reconcile_process(osv.osv_memory):
     _description = 'Reconcilation Process partner by partner'
 
     def _get_to_reconcile(self, cr, uid, context=None):
-        cr.execute(
-                "SELECT l.partner_id " \
-                "FROM account_move_line AS l LEFT JOIN res_partner p ON (p.id = l.partner_id) " \
-                "WHERE l.reconcile_id IS NULL " \
-                "AND (%s >  to_char(p.last_reconciliation_date, 'YYYY-MM-DD') " \
-                    "OR  p.last_reconciliation_date IS NULL ) " \
-                "AND l.state <> 'draft' " \
-                "GROUP BY l.partner_id ",(time.strftime('%Y-%m-%d'),)
+        cr.execute("""
+                  SELECT p_id FROM (SELECT l.partner_id as p_id, SUM(l.debit) AS debit, SUM(l.credit) AS credit 
+                                    FROM account_move_line AS l LEFT JOIN account_account a ON (l.account_id = a.id) 
+                                                                LEFT JOIN res_partner p ON (p.id = l.partner_id) 
+                                    WHERE a.reconcile = 't' 
+                                    AND l.reconcile_id IS NULL 
+                                    AND  (%s >  to_char(p.last_reconciliation_date, 'YYYY-MM-DD') OR  p.last_reconciliation_date IS NULL ) 
+                                    AND  l.state <> 'draft' 
+                                    GROUP BY l.partner_id) AS tmp 
+                              WHERE debit > 0 
+                              AND credit > 0
+                """,(time.strftime('%Y-%m-%d'),)
         )
         return len(map(lambda x: x[0], cr.fetchall())) - 1
 
@@ -57,7 +61,7 @@ class account_partner_reconcile_process(osv.osv_memory):
         return partner[0]
 
     def data_get(self, cr, uid, to_reconcile, today_reconciled, context=None):
-        return {'progress': (100 / float(to_reconcile + today_reconciled)) * today_reconciled}
+        return {'progress': (100 / (float(to_reconcile + today_reconciled) or 1.0)) * today_reconciled}
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(account_partner_reconcile_process, self).default_get(cr, uid, fields, context=context)

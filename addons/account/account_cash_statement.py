@@ -20,9 +20,10 @@
 #
 ##############################################################################
 
-from osv import osv, fields
 import time
 from mx import DateTime
+
+from osv import osv, fields
 from decimal import Decimal
 from tools.translate import _
 import decimal_precision as dp
@@ -204,7 +205,6 @@ class account_cash_statement(osv.osv):
         return res
 
     _columns = {
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'draft': [('readonly', False)]}, readonly=True, domain=[('type', '=', 'cash')]),
         'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
         'state': fields.selection(
             [('draft', 'Draft'),
@@ -291,7 +291,10 @@ class account_cash_statement(osv.osv):
         res = super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context=context)
         return res
 
-    def _equal_balance(self, cr, uid, ids, statement, context={}):
+    def _equal_balance(self, cr, uid, cash_id, context=None):
+        statement = self.browse(cr, uid, cash_id, context=context)
+        self.write(cr, uid, [cash_id], {'balance_end_real': statement.balance_end})
+        statement.balance_end_real = statement.balance_end
         if statement.balance_end != statement.balance_end_cash:
             return False
         else:
@@ -320,26 +323,6 @@ class account_cash_statement(osv.osv):
                 'name': number
             })
 
-#        cr.execute("select id from account_bank_statement where journal_id=%s and user_id=%s and state=%s order by id desc limit 1", (statement.journal_id.id, uid, 'confirm'))
-#        rs = cr.fetchone()
-#        rs = rs and rs[0] or None
-#        if rs:
-#            if len(statement.starting_details_ids) > 0:
-#                sid = []
-#                for line in statement.starting_details_ids:
-#                    sid.append(line.id)
-#                cash_pool.unlink(cr, uid, sid)
-#
-#            statement = statement_pool.browse(cr, uid, rs)
-#            balance_start = statement.balance_end_real or 0.0
-#            open_ids = cash_pool.search(cr, uid, [('ending_id','=',statement.id)])
-#            for sid in open_ids:
-#                default = {
-#                    'ending_id': False,
-#                    'starting_id':ids[0]
-#                }
-#                cash_pool.copy(cr, uid, sid, default)
-
         vals.update({
             'date':time.strftime("%Y-%m-%d %H:%M:%S"),
             'state':'open',
@@ -349,204 +332,31 @@ class account_cash_statement(osv.osv):
         self.write(cr, uid, ids, vals)
         return True
 
-    def button_confirm_cash(self, cr, uid, ids, context={}):
+    def balance_check(self, cr, uid, cash_id, journal_type='bank', context=None):
+        if journal_type == 'bank':
+            return super(account_cash_statement, self).balance_check(cr, uid, cash_id, journal_type, context)
+        if not self._equal_balance(cr, uid, cash_id, context):
+            raise osv.except_osv(_('Error !'), _('CashBox Balance is not matching with Calculated Balance !'))
+        return True
 
-        """ Check the starting and ending detail of  statement
-        @return: True
-        """
-        done = []
-        res_currency_obj = self.pool.get('res.currency')
-        res_users_obj = self.pool.get('res.users')
-        account_move_obj = self.pool.get('account.move')
-        account_move_line_obj = self.pool.get('account.move.line')
-        account_analytic_line_obj = self.pool.get('account.analytic.line')
-        account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-
-        company_currency_id = res_users_obj.browse(cr, uid, uid, context=context).company_id.currency_id.id
-
-        for st in self.browse(cr, uid, ids, context):
-
-            self.write(cr, uid, [st.id], {'balance_end_real':st.balance_end})
-            st.balance_end_real = st.balance_end
-
-            if not st.state == 'open':
-                continue
-
-            if not self._equal_balance(cr, uid, ids, st, context):
-                raise osv.except_osv(_('Error !'), _('CashBox Balance is not matching with Calculated Balance !'))
-
-            if (not st.journal_id.default_credit_account_id) \
-                    or (not st.journal_id.default_debit_account_id):
-                raise osv.except_osv(_('Configuration Error !'),
-                        _('Please verify that an account is defined in the journal.'))
-
-            for line in st.move_line_ids:
-                if line.state <> 'valid':
-                    raise osv.except_osv(_('Error !'),
-                            _('The account entries lines are not in valid state.'))
-            # for bank.statement.lines
-            # In line we get reconcile_id on bank.ste.rec.
-            # in bank stat.rec we get line_new_ids on bank.stat.rec.line
-            for move in st.line_ids:
-                if move.analytic_account_id:
-                    if not st.journal_id.analytic_journal_id:
-                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (st.journal_id.name,))
-
-                context.update({'date':move.date})
-                move_id = account_move_obj.create(cr, uid, {
-                    'journal_id': st.journal_id.id,
-                    'period_id': st.period_id.id,
-                    'date': move.date,
-                }, context=context)
-                account_bank_statement_line_obj.write(cr, uid, [move.id], {
-                    'move_ids': [(4,move_id, False)]
-                })
-                if not move.amount:
-                    continue
-
-                torec = []
-                if move.amount >= 0:
-                    account_id = st.journal_id.default_credit_account_id.id
-                else:
-                    account_id = st.journal_id.default_debit_account_id.id
-                acc_cur = ((move.amount<=0) and st.journal_id.default_debit_account_id) or move.account_id
-                amount = res_currency_obj.compute(cr, uid, st.currency.id,
-                        company_currency_id, move.amount, context=context,
-                        account=acc_cur)
-                if move.reconcile_id and move.reconcile_id.line_new_ids:
-                    for newline in move.reconcile_id.line_new_ids:
-                        amount += newline.amount
-
-                val = {
-                    'name': move.name,
-                    'date': move.date,
-                    'ref': move.ref,
-                    'move_id': move_id,
-                    'partner_id': ((move.partner_id) and move.partner_id.id) or False,
-                    'account_id': (move.account_id) and move.account_id.id,
-                    'credit': ((amount>0) and amount) or 0.0,
-                    'debit': ((amount<0) and -amount) or 0.0,
-                    'statement_id': st.id,
-                    'journal_id': st.journal_id.id,
-                    'period_id': st.period_id.id,
-                    'currency_id': st.currency.id,
-                    'analytic_account_id': move.analytic_account_id and move.analytic_account_id.id or False
-                }
-
-                amount = res_currency_obj.compute(cr, uid, st.currency.id,
-                        company_currency_id, move.amount, context=context,
-                        account=acc_cur)
-                if st.currency.id <> company_currency_id:
-                    amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                                st.currency.id, amount, context=context,
-                                account=acc_cur)
-                    val['amount_currency'] = -amount_cur
-
-                if move.account_id and move.account_id.currency_id and move.account_id.currency_id.id <> company_currency_id:
-                    val['currency_id'] = move.account_id.currency_id.id
-                    if company_currency_id==move.account_id.currency_id.id:
-                        amount_cur = move.amount
-                    else:
-                        amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                                move.account_id.currency_id.id, amount, context=context,
-                                account=acc_cur)
-                    val['amount_currency'] = amount_cur
-                move_line_id = account_move_line_obj.create(cr, uid, val , context=context)
-                torec.append(move_line_id)
-
-#                if move.analytic_account_id:
-#                    anal_val = {}
-#                    amt = (val['credit'] or  0.0) - (val['debit'] or 0.0)
-#                    anal_val = {
-#                        'name': val['name'],
-#                        'ref': val['ref'],
-#                        'date': val['date'],
-#                        'amount': amt,
-#                        'account_id': val['analytic_account_id'],
-#                        'currency_id': val['currency_id'],
-#                        'general_account_id': val['account_id'],
-#                        'journal_id': st.journal_id.analytic_journal_id.id,
-#                        'period_id': val['period_id'],
-#                        'user_id': uid,
-#                        'move_id': move_line_id
-#                                }
-#                    if val.get('amount_currency', False):
-#                        anal_val['amount_currency'] = val['amount_currency']
-#                    account_analytic_line_obj.create(cr, uid, anal_val, context=context)
-
-                if move.reconcile_id and move.reconcile_id.line_new_ids:
-                    for newline in move.reconcile_id.line_new_ids:
-                        account_move_line_obj.create(cr, uid, {
-                            'name': newline.name or move.name,
-                            'date': move.date,
-                            'ref': move.ref,
-                            'move_id': move_id,
-                            'partner_id': ((move.partner_id) and move.partner_id.id) or False,
-                            'account_id': (newline.account_id) and newline.account_id.id,
-                            'debit': newline.amount>0 and newline.amount or 0.0,
-                            'credit': newline.amount<0 and -newline.amount or 0.0,
-                            'statement_id': st.id,
-                            'journal_id': st.journal_id.id,
-                            'period_id': st.period_id.id,
-                            'analytic_account_id':newline.analytic_id and newline.analytic_id.id or False,
-
-                        }, context=context)
-
-                # Fill the secondary amount/currency
-                # if currency is not the same than the company
-                amount_currency = False
-                currency_id = False
-                if st.currency.id <> company_currency_id:
-                    amount_currency = move.amount
-                    currency_id = st.currency.id
-                account_move_line_obj.create(cr, uid, {
-                    'name': move.name,
-                    'date': move.date,
-                    'ref': move.ref,
-                    'move_id': move_id,
-                    'partner_id': ((move.partner_id) and move.partner_id.id) or False,
-                    'account_id': account_id,
-                    'credit': ((amount < 0) and -amount) or 0.0,
-                    'debit': ((amount > 0) and amount) or 0.0,
-                    'statement_id': st.id,
-                    'journal_id': st.journal_id.id,
-                    'period_id': st.period_id.id,
-                    'amount_currency': amount_currency,
-                    'currency_id': currency_id,
-                    }, context=context)
-
-                for line in account_move_line_obj.browse(cr, uid, [x.id for x in
-                        account_move_obj.browse(cr, uid, move_id,
-                            context=context).line_id],
-                        context=context):
-                    if line.state <> 'valid':
-                        raise osv.except_osv(_('Error !'),
-                                _('Journal Item "%s" is not valid') % line.name)
-
-                if move.reconcile_id and move.reconcile_id.line_ids:
-                    torec += map(lambda x: x.id, move.reconcile_id.line_ids)
-
-                    if abs(move.reconcile_amount-move.amount)<0.0001:
-
-                        writeoff_acc_id = False
-                        #There should only be one write-off account!
-                        for entry in move.reconcile_id.line_new_ids:
-                            writeoff_acc_id = entry.account_id.id
-                            break
-
-                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
-                    else:
-                        account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
-                move_name = st.name + ' - ' + str(move.sequence)
-                account_move_obj.write(cr, uid, [move_id], {'state':'posted', 'name': move_name})
-            done.append(st.id)
-
+    def statement_close(self, cr, uid, ids, journal_type='bank', context=None):
+        if journal_type == 'bank':
+            return super(account_cash_statement, self).statement_close(cr, uid, ids, journal_type, context)
         vals = {
             'state':'confirm',
             'closing_date':time.strftime("%Y-%m-%d %H:%M:%S")
         }
-        self.write(cr, uid, done, vals, context=context)
-        return True
+        return self.write(cr, uid, ids, vals, context=context)
+
+    def check_status_condition(self, cr, uid, state, journal_type='bank'):
+        if journal_type == 'bank':
+            return super(account_cash_statement, self).check_status_condition(cr, uid, state, journal_type)
+        return state=='open'
+
+    def button_confirm_cash(self, cr, uid, ids, context=None):
+        super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
+        return self.write(cr, uid, ids, {'closing_date':time.strftime("%Y-%m-%d %H:%M:%S")}, context=context)
+
 
     def button_cancel(self, cr, uid, ids, context={}):
         done = []
@@ -560,4 +370,3 @@ class account_cash_statement(osv.osv):
         return True
 
 account_cash_statement()
-

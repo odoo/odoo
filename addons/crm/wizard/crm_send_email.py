@@ -131,8 +131,8 @@ class crm_send_new_email(osv.osv_memory):
                 x_headers=x_headers
             )
 
-            if not flag:
-                raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
+#            if not flag:
+#                raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
 
             msg_dict = {'new': 'Send', 'reply': 'Reply', 'forward': 'Forward'}
             case_pool.history(cr, uid, [case], _(msg_dict[context.get('mail', 'new')]), history=True, \

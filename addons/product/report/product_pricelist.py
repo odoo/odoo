@@ -87,9 +87,12 @@ class product_pricelist(report_sxw.rml_parse):
             pro_ids.append(product.id)
             if product.categ_id.id not in cat_ids:
                 cat_ids.append(product.categ_id.id)
-        cats = pool.get('product.category').read(self.cr, self.uid, cat_ids, ['name'])
+
+        cats = pool.get('product.category').name_get(self.cr, self.uid, cat_ids)
+        if not cats:
+            return res
         for cat in cats:
-            product_ids=pool.get('product.product').search(self.cr, self.uid, [('id','in',pro_ids),('categ_id','=',cat['id'])])
+            product_ids=pool.get('product.product').search(self.cr, self.uid, [('id','in',pro_ids),('categ_id','=',cat[0])])
             products = []
             for product in pool.get('product.product').read(self.cr, self.uid, product_ids, ['name','code']):
                 val = {
@@ -105,7 +108,7 @@ class product_pricelist(report_sxw.rml_parse):
                         val['qty'+str(i)]=self._get_price(self.pricelist, product['id'], qty)
                     i += 1
                 products.append(val)
-            res.append({'name':cat['name'],'products': products})
+            res.append({'name':cat[1],'products': products})
         return res
 
     def _get_price(self,pricelist_id, product_id,qty):

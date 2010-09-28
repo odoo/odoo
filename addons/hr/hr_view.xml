@@ -83,7 +83,7 @@
                 <tree string="Employees">
                     <field name="name"/>
                     <field name="work_phone"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="work_email" invisible="1"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
@@ -114,7 +114,7 @@
                     <separator orientation="vertical" />
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                    <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
+                    <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
              </field>

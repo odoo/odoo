@@ -20,7 +20,7 @@
 ##############################################################################
 import datetime
 
-from osv import osv,fields
+from osv import osv, fields
 from tools.translate import _
 
 def strToDate(dt):
@@ -113,12 +113,14 @@ class crossovered_budget(osv.osv):
         'date_from': fields.date('Start Date', required=True, states={'done':[('readonly',True)]}),
         'date_to': fields.date('End Date', required=True, states={'done':[('readonly',True)]}),
         'state' : fields.selection([('draft','Draft'),('confirm','Confirmed'),('validate','Validated'),('done','Done'),('cancel', 'Cancelled')], 'Status', select=True, required=True, readonly=True),
-        'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'crossovered_budget_id', 'Budget Lines', states={'done':[('readonly',True)]} ),
+        'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'crossovered_budget_id', 'Budget Lines', states={'done':[('readonly',True)]}),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
     _defaults = {
         'state': 'draft',
         'creating_user_id': lambda self,cr,uid,context: uid,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', context=c)
     }
 
     def budget_confirm(self, cr, uid, ids, *args):
@@ -244,7 +246,9 @@ class crossovered_budget_lines(osv.osv):
         'practical_amount':fields.function(_prac, method=True, string='Practical Amount', type='float', digits=(16,2)),
         'theoritical_amount':fields.function(_theo, method=True, string='Theoritical Amount', type='float', digits=(16,2)),
         'percentage':fields.function(_perc, method=True, string='Percentage', type='float'),
+        'company_id': fields.related('crossovered_budget_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
+
 crossovered_budget_lines()
 
 class account_analytic_account(osv.osv):
@@ -258,4 +262,3 @@ class account_analytic_account(osv.osv):
 account_analytic_account()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

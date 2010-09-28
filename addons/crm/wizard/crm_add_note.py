@@ -9,7 +9,7 @@ AVAILABLE_STATES = crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')]
 class crm_add_note(osv.osv_memory):
     """Adds a new note to the case."""
     _name = 'crm.add.note'
-    _description = "Add New Note"
+    _description = "Add Internal Note"
 
     _columns = {
         'body': fields.text('Note Body', required=True),

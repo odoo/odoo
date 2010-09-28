@@ -73,6 +73,20 @@
                         <field name="partner_id"/>
                    </group>
                    <newline/>
+                	<group expand="0" string="Extended Filters..." groups="base.group_extended">
+                      <field name="product_id"/>
+                      <separator orientation="vertical"/>
+                      <field name="type"/>
+	                    <field name="invoice_state"/>
+                      <separator orientation="vertical"/>
+                      <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+	                    <newline/>
+	                    <field name="order_date"/>
+	                    <field name="date_done"/>
+                      <field name="min_date"/>
+                      <field name="max_date"/>
+                	</group>
+                   <newline/>
                    <group expand="1" string="Group By...">
                         <filter string="Partner" name="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
@@ -89,21 +103,6 @@
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}"/>
                         <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}"/>
                     </group>
-                    <newline/>
-                	<group expand="0" string="Extended Filters..." groups="base.group_extended">
-                      <field name="product_id"/>
-                      <separator orientation="vertical"/>
-                      <field name="type"/>
-	                    <field name="invoice_state"/>
-                      <separator orientation="vertical"/>
-                      <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-	                    <newline/>
-	                    <field name="order_date"/>
-	                    <field name="date_done"/>
-                      <field name="min_date"/>
-                      <field name="max_date"/>
-                	</group>
-
                </search>
             </field>
         </record>

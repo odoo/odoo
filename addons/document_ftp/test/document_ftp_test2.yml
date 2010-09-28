@@ -48,7 +48,7 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         assert te.get_ftp_fulldata(ftp, "test.txt") == 'abcd'
 -
-    I append the string 'defgh' into "test.txt"
+    I append the string 'defgh' to "test.txt"
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
