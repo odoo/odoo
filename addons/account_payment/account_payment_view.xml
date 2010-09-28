@@ -88,7 +88,7 @@
                       <field name="date_scheduled" select="1" attrs="{'readonly':[('date_prefered','!=','fixed')]}" />
                       <button colspan="2" name="%(action_create_payment_order)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
                     </group>
-                    <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1">
+                    <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1" default_get="{'order_id': active_id}" >
                         <form string="Payment Line">
                             <notebook>
                                 <page string="Payment">

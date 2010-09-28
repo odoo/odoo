@@ -95,8 +95,8 @@
                     <field name="code"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="fiscalyear_id"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="fiscalyear_id" widget="selection"/>
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
                     <field name="state"/>
@@ -510,15 +510,12 @@
                     <group col="7" colspan="4">
                         <field name="name" select="1"/>
                         <field name="date" select="1" on_change="onchange_date(date)"/>
-                        <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1"/>
+                        <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
                         <newline/>
                         <field name="period_id"/>
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
                         <field name="currency" invisible="1"/>
-                        <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoices" type="action" icon="gtk-execute"
-                            attrs="{'invisible':[('state','=','confirm')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Transaction" name="statement_line_ids">
@@ -531,7 +528,7 @@
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency, {'amount': amount})"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="base.group_extended"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines">
@@ -540,7 +537,7 @@
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency, {'amount': amount})"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="base.group_extended" />
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
                                     <field name="ref"/>
                                     <field name="sequence" readonly="0"/>
@@ -579,9 +576,6 @@
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
                         <field name="currency" invisible="1"/>
-                        <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoices" type="action" icon="gtk-execute"
-                            attrs="{'invisible':[('state','=','confirm')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Entries">
@@ -642,7 +636,7 @@
         </record>
 
         <menuitem string="Bank Statements" action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="menu_finance_bank_and_cash" sequence="7"/>
-        <menuitem name="Statements Reconciliation" action="action_bank_statement_periodic_tree" id="menu_menu_Bank_process" parent="menu_finance_periodical_processing_bank" sequence="7"/>
+        <menuitem name="Statements Reconciliation" action="action_bank_statement_periodic_tree" id="menu_menu_Bank_process" parent="account.menu_account_pp_statements" sequence="7"/>
 
 
         <record id="action_bank_statement_draft_tree" model="ir.actions.act_window">
@@ -846,28 +840,33 @@
                 <form string="Account Tax">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="description" select="1"/>
-                        <field name="active"/>
                         <field name="tax_group" select="1"/>
                         <field name="type"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="active"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Tax Definition">
-                            <field name="applicable_type"/>
-                            <field name="amount" attrs="{'readonly':[('type','=','none'),('type','=','code')]}"/>
-                            <field groups="base.group_extended" name="include_base_amount"/>
-                            <field groups="base.group_extended" name="domain"/>
-                            <newline/>
+                        <page string="Tax Definition" >
+                            <group col="2" colspan="2">
+	                            <separator colspan="2" string=""/>
+	                             <field name="applicable_type"/>
+	                             <field name="type_tax_use"/>
+	                             <field groups="base.group_extended" name="domain"/>
+	                             <field groups="base.group_extended" name="sequence"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                 <separator colspan="2" string=""/>
+                                 <field name="amount" attrs="{'readonly':[('type','in',('none', 'code'))]}"/>
+                                 <field groups="base.group_extended" name="child_depend"/>
+                                 <field groups="base.group_extended" name="price_include"/>
+                                 <field groups="base.group_extended" name="include_base_amount"/>
+                            </group>
                             <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <label colspan="2" nolabel="1" string="Keep empty to use the income account"/>
                             <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
-                            <field groups="base.group_extended" name="child_depend"/>
-                            <field groups="base.group_extended" name="sequence"/>
-                            <field groups="base.group_extended" name="price_include"/>
-                            <field name="type_tax_use"/>
-                            <newline/>
+                            <separator colspan="4" string="Child Taxes"/>
                             <field colspan="4" groups="base.group_extended" name="child_ids" nolabel="1"/>
                         </page>
                         <page string="Tax Declaration">
@@ -890,8 +889,8 @@
                             <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
                         </page>
                     </notebook>
-                </form>
-            </field>
+                </form>            
+              </field>
         </record>
         <record id="action_tax_form" model="ir.actions.act_window">
             <field name="name">Taxes</field>
@@ -2489,7 +2488,7 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="company_id" select="1" groups="base.group_multi_company"/>
-                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash')]" select="1" />
+                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash')]" select="1" widget="selection"/>
                         <field name="user_id" select="1" readonly="1"/>
                         <field name="period_id" select="1"/>
                         <field name="currency" invisible="1"/>

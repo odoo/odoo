@@ -118,7 +118,7 @@
     for invoice in invoice_ids:
       wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
 -
-  Assign analytic jounal into bank journal
+  Assign analytic journal into bank journal
 - 
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale

@@ -65,10 +65,10 @@ class account_payment_term(osv.osv):
     }
     _order = "name"
 
-    def compute(self, cr, uid, id, value, date_ref=False, context={}):
+    def compute(self, cr, uid, id, value, date_ref=False, context=None):
         if not date_ref:
             date_ref = datetime.now().strftime('%Y-%m-%d')
-        pt = self.browse(cr, uid, id, context)
+        pt = self.browse(cr, uid, id, context=context)
         amount = value
         result = []
         for line in pt.line_ids:
@@ -125,7 +125,7 @@ class account_payment_term_line(osv.osv):
     }
     _order = "sequence"
 
-    def _check_percent(self, cr, uid, ids, context={}):
+    def _check_percent(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids[0])
         if obj.value == 'procent' and ( obj.value_amount < 0.0 or obj.value_amount > 1.0):
             return False
@@ -156,21 +156,22 @@ class account_account_type(osv.osv):
             ('expense','Profit & Loss (Expense Accounts)'),
             ('asset','Balance Sheet (Assets Accounts)'),
             ('liability','Balance Sheet (Liability Accounts)')
-        ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
+        ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)", required=True),
         'note': fields.text('Description'),
     }
     _defaults = {
         'close_method': 'none',
         'sign': 1,
+        'report_type': 'none',
     }
     _order = "code"
 
 account_account_type()
 
-def _code_get(self, cr, uid, context={}):
+def _code_get(self, cr, uid, context=None):
     acc_type_obj = self.pool.get('account.account.type')
     ids = acc_type_obj.search(cr, uid, [])
-    res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context)
+    res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context=context)
     return [(r['code'], r['name']) for r in res]
 
 #----------------------------------------------------------
@@ -463,10 +464,10 @@ class account_account(osv.osv):
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['name', 'code'], context)
+        reads = self.read(cr, uid, ids, ['name', 'code'], context=context)
         res = []
         for record in reads:
             name = record['name']
@@ -475,7 +476,7 @@ class account_account(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def copy(self, cr, uid, id, default={}, context={}, done_list=[], local=False):
+    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
         if not default:
@@ -562,16 +563,17 @@ account_journal_view()
 
 
 class account_journal_column(osv.osv):
-    def _col_get(self, cr, user, context={}):
+
+    def _col_get(self, cr, user, context=None):
         result = []
         cols = self.pool.get('account.move.line')._columns
         for col in cols:
             if col in ('period_id', 'journal_id'):
                 continue
-
             result.append( (col, cols[col].string) )
         result.sort()
         return result
+
     _name = "account.journal.column"
     _description = "Journal Column"
     _columns = {
@@ -629,7 +631,7 @@ class account_journal(osv.osv):
                 raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
-    def create_sequence(self, cr, uid, vals, context={}):
+    def create_sequence(self, cr, uid, vals, context=None):
         """
         Create new entry sequence for every new Joural
         @param cr: cursor to database
@@ -671,12 +673,12 @@ class account_journal(osv.osv):
         }
         return seq_pool.create(cr, uid, seq)
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         if not 'sequence_id' in vals or not vals['sequence_id']:
             vals.update({'sequence_id' : self.create_sequence(cr, uid, vals, context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
         """
         Returns a list of tupples containing id, name.
         result format : {[(id, name), (id, name), ...]}
@@ -1701,6 +1703,11 @@ class account_tax(osv.osv):
         ids = self.search(cr, user, args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('type', False) and vals['type'] in ('none', 'code'):
+            vals.update({'amount': 0.0})
+        return super(account_tax, self).write(cr, uid, ids, vals, context=context)
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         journal_pool = self.pool.get('account.journal')
 
@@ -1996,32 +2003,34 @@ class account_model(osv.osv):
     _columns = {
         'name': fields.char('Model Name', size=64, required=True, help="This is a model for recurring accounting entries"),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries'),
         'legend' :fields.text('Legend', readonly=True, size=100),
     }
 
     _defaults = {
         'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
-    def generate(self, cr, uid, ids, datas={}, context={}):
+    def generate(self, cr, uid, ids, datas={}, context=None):
         move_ids = []
         entry = {}
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         pt_obj = self.pool.get('account.payment.term')
 
-        if datas.get('date', False):
-            context.update({'date':datas['date']})
-        period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
+        if context is None:
+            context = {}
 
+        if datas.get('date', False):
+            context.update({'date': datas['date']})
+
+        period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
         if not period_id:
             raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
         period_id = period_id[0]
 
         for model in self.browse(cr, uid, ids, context):
-            entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%d')}
+            entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%Y-%m')}
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
                 'period_id': period_id,
@@ -2069,7 +2078,9 @@ class account_model(osv.osv):
                 c = context.copy()
                 c.update({'journal_id': model.journal_id.id,'period_id': period_id})
                 account_move_line_obj.create(cr, uid, val, context=c)
+
         return move_ids
+
 account_model()
 
 class account_model_line(osv.osv):
@@ -2541,6 +2552,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
         data_pool = self.pool.get('ir.model.data')
+        analytic_journal_obj = self.pool.get('account.analytic.journal')
 
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
@@ -2666,11 +2678,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['view_id'] = view_id
 
         #Sales Journal
+        analitical_sale_ids = analytic_journal_obj.search(cr,uid,[('type','=','sale')])
+        analitical_journal_sale = analitical_sale_ids and analitical_sale_ids[0] or False
+
         vals_journal['name'] = _('Sales Journal')
         vals_journal['type'] = 'sale'
         vals_journal['code'] = _('SAJ')
         vals_journal['sequence_id'] = seq_id_sale
         vals_journal['company_id'] =  company_id
+        vals_journal['analytic_journal_id'] = analitical_journal_sale
 
         if obj_multi.chart_template_id.property_account_receivable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
@@ -2679,12 +2695,16 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Purchase Journal
+        analitical_purchase_ids = analytic_journal_obj.search(cr,uid,[('type','=','purchase')])
+        analitical_journal_purchase = analitical_purchase_ids and analitical_purchase_ids[0] or False
+
         vals_journal['name'] = _('Purchase Journal')
         vals_journal['type'] = 'purchase'
         vals_journal['code'] = _('EXJ')
         vals_journal['sequence_id'] = seq_id_purchase
         vals_journal['view_id'] = view_id
         vals_journal['company_id'] =  company_id
+        vals_journal['analytic_journal_id'] = analitical_journal_purchase
 
         if obj_multi.chart_template_id.property_account_payable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
@@ -2732,11 +2752,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 seq_id = obj_sequence.create(cr,uid,vals_seq)
 
             #create the bank journal
+            analitical_bank_ids = analytic_journal_obj.search(cr,uid,[('type','=','situation')])
+            analitical_journal_bank = analitical_bank_ids and analitical_bank_ids[0] or False
+
             vals_journal['name']= vals['name']
             vals_journal['code']= _('BNK') + str(current_num)
             vals_journal['sequence_id'] = seq_id
             vals_journal['type'] = 'cash'
             vals_journal['company_id'] =  company_id
+            vals_journal['analytic_journal_id'] = analitical_journal_bank
 
             if line.currency_id:
                 vals_journal['view_id'] = view_id_cur
@@ -2745,8 +2769,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 vals_journal['view_id'] = view_id_cash
             vals_journal['default_credit_account_id'] = acc_cash_id
             vals_journal['default_debit_account_id'] = acc_cash_id
-            obj_journal.create(cr,uid,vals_journal)
-
+            obj_journal.create(cr, uid, vals_journal)
             current_num += 1
 
         #create the properties
@@ -2811,14 +2834,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     }
                     obj_ac_fp.create(cr, uid, vals_acc)
 
-        #fially inactive the demo chart of accounts
-        data_id = data_pool.search(cr, uid, [('model','=','account.account'), ('name','=','chart0')])
-        if data_id:
-            data = data_pool.browse(cr, uid, data_id[0])
-            account_id = data.res_id
-            acc_ids = obj_acc._get_children_and_consol(cr, uid, [account_id])
-            if acc_ids:
-                cr.execute("update account_account set active='f' where id in " + str(tuple(acc_ids)))
 wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):

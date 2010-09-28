@@ -28,6 +28,7 @@ class hr_timesheet_report(osv.osv):
     _auto = False
     _columns = {
         'year': fields.char('Year',size=64,required=False, readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
@@ -50,6 +51,7 @@ class hr_timesheet_report(osv.osv):
                 select
                     min(t.id) as id,
                     l.date as date,
+                    to_char(l.date, 'YYYY-MM-DD') as day,
                     to_char(l.date,'YYYY') as year,
                     to_char(l.date,'MM') as month,
                     sum(l.amount) as cost,

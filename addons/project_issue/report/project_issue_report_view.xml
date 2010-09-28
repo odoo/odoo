@@ -54,14 +54,16 @@
             <field name="arch" type="xml">
 				<search string="Search">
                   <group col="16" colspan="8">
-                   		<filter string="365 Days" icon="terp-go-year"
-                   			domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+                   		<filter string="Year" icon="terp-go-year" help="Current Year"
+                        domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
+                        />                   			
 
-                       <filter string="30 Days" icon="terp-go-month" name="This Month"
-                    	   domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-
-                       <filter icon="terp-go-week" string="7 Days" separator="1"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+                       <filter string="Month" icon="terp-go-month" name="This Month"
+                        domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"                    	   
+                        />
+                       <filter icon="terp-go-week" string="Month-1" separator="1" help="Previous Month"
+                            domain="[('create_date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                        />
 
                    		<separator orientation="vertical" />
                         <filter  icon="terp-camera_test"
@@ -76,6 +78,7 @@
 
                    		<separator orientation="vertical" />
                    		<field name="section_id"
+                   			string="Sale Team	"
                    			default="context.get('section_id', False)"
                    			widget="selection"
                    			context="{'invisible_section': False}">
@@ -83,69 +86,67 @@
                    			<filter icon="terp-crm"
                    				context="{'invisible_section': False}"
                    				domain="[('section_id.user_id','=',uid)]"
-                   				help="My section" />
+                   				help="My Sale Team" />
 
                    		</field>
                   			<field name="project_id"/>
                       	<field name="user_id"  select="1" widget="selection"/>
                    </group>
                    <newline/>
+                   <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                       <field name="partner_id"/>
+                       <field name="assigned_to" widget="selection"/>
+                       <separator orientation="vertical"/>
+                       <field name="priority" />
+                       <separator orientation="vertical"/>
+                       <field name="type_id" widget="selection" />
+                       <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                       <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
+                       <separator orientation="vertical"/>
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                       <newline/>
+                       <field name="creation_date"/>
+                       <field name="opening_date"/>
+                       <field name="date_closed" string="Date Closed"/>
+                   </group>
+                   <newline/>
                    <group  expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="Project"  name="project" icon="terp-folder-blue" context="{'group_by':'project_id'}" />
-                        <filter string="Task"  icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'task_id'}"/>
-                        <separator orientation="vertical" />
-                        <filter name="User" string="Responsible" icon="terp-personal"
+                   		<filter name="User" string="Responsible" icon="terp-personal"
                         domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Assigned to" name="Responsible" icon="terp-personal"
                         domain="[]" context="{'group_by':'assigned_to'}" />
-                       <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}" />
-                        <separator orientation="vertical" />
-                        <filter string="Section" icon="terp-sale"
+                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
+						<separator orientation="vertical" />
+						<filter string="Sale Team" icon="terp-personal+"
                         	domain="[]"
                         	context="{'group_by':'section_id'}" />
+						<separator orientation="vertical" />
+                        <filter string="Project"  name="project" icon="terp-folder-blue" context="{'group_by':'project_id'}" />
+                        <filter string="Task"  icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'task_id'}"/>
+                        <separator orientation="vertical" />
                         <filter string="Category" icon="terp-stock_symbol-selection"
                         	domain="[]" context="{'group_by':'categ_id'}" />
-                        <separator orientation="vertical" />
                         <filter string="Version"  icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
+						<separator orientation="vertical" />
+						<filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize"
                         	domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical"/>
                         <filter string="Company" icon="terp-go-home"
                         	domain="[]"
                         	context="{'group_by':'company_id'}" />
-
                         <separator orientation="vertical" />
                         <filter string="Day" icon="terp-go-today"
-                        	domain="[]" context="{'group_by':'day'}"/>
+                        	domain="[]" context="{'group_by':'day'}" help="Current Day"/>
 
                         <filter string="Month" icon="terp-go-month"
-                        	domain="[]" context="{'group_by':'month'}" />
+                        	domain="[]" context="{'group_by':'month'}" help="Current Month"/>
 
                         <filter string="Year" icon="terp-go-year"
-                        	domain="[]" context="{'group_by':'name'}" />
+                        	domain="[]" context="{'group_by':'name'}" help="Current Year"/>
 
                   </group>
-                   <newline/>
-                   <group  expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
-                    		<field name="partner_id"/>
-                    		<field name="assigned_to" widget="selection"/>
-                    		<separator orientation="vertical"/>
-                    		<field name="priority" />
-                    		<separator orientation="vertical"/>
-                    		<field name="type_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                    		<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                    		<field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
-                    		<separator orientation="vertical"/>
-                   		<field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    		<newline/>
-                            <field name="creation_date"/>
-                            <field name="opening_date"/>
-                            <field name="date_closed" string="Date Closed"/>
-                        </group>
                </search>
             </field>
         </record>
