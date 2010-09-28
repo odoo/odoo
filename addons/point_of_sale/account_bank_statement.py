@@ -20,12 +20,8 @@
 #
 ##############################################################################
 
-import time
 from osv import osv
 from osv import fields
-from mx import DateTime
-from decimal import Decimal
-from tools.translate import _
 
 class account_journal(osv.osv):
 
