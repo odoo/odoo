@@ -268,7 +268,7 @@ class account_installer(osv.osv_memory):
                 vals_journal['name']= _('Bank Journal ')
                 vals_journal['code']= _('BNK')
                 vals_journal['sequence_id'] = seq_id
-                vals_journal['type'] = 'cash'
+                vals_journal['type'] = 'bank'
                 vals_journal['analytic_journal_id'] = analitical_journal_bank
                 if vals.get('currency_id', False):
                     vals_journal['view_id'] = view_id_cur
