@@ -788,8 +788,12 @@
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'address_id'}"/>
+                        <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical" />
                         <filter string="Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Journal" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
                     </group>
                 </search>
             </field>
@@ -974,8 +978,12 @@
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="10">
                         <filter string="Partner" icon="terp-personal" domain="[]"  context="{'group_by':'partner_id'}"/>
+                        <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical" />
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Journal" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'stock_journal_id'}" groups="base.group_extended"/>
                     </group>
                 </search>
             </field>
@@ -1190,9 +1198,13 @@
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical" />
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Journal" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
                     </group>
                 </search>
             </field>
@@ -1402,6 +1414,8 @@
                         <separator orientation="vertical" />
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Journal" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
                     </group>
                 </search>
             </field>
@@ -1455,9 +1469,13 @@
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Journal" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'stock_journal_id'}" groups="base.group_extended"/>
                     </group>
                 </search>
             </field>
