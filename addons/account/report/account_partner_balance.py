@@ -22,7 +22,7 @@
 import time
 import re
 import copy
-
+from tools.translate import _
 from report import report_sxw
 from common_report_header import common_report_header
 
@@ -39,14 +39,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             'sum_debit': self._sum_debit,
             'sum_credit': self._sum_credit,
             'sum_litige': self._sum_litige,
-            'sum_sdebit': self._sum_sdebit,
-            'sum_scredit': self._sum_scredit,
-            'solde_debit': self._solde_balance_debit,
-            'solde_credit': self._solde_balance_credit,
-            'get_currency': self._get_currency,
-            'comma_me' : self.comma_me,
             'get_fiscalyear': self._get_fiscalyear,
-            'get_periods':self.get_periods,
             'get_journal': self._get_journal,
             'get_filter': self._get_filter,
             'get_account': self._get_account,
@@ -60,41 +53,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
     #
     # Date Management
     #
-
-    def get_periods(self, form):
-        result = ''
-        if form.has_key('periods') and form['periods']:
-            period_ids = form['periods']
-            per_ids = self.pool.get('account.period').browse(self.cr, self.uid, form['periods'])
-            for r in per_ids:
-                if r == per_ids[len(per_ids)-1]:
-                    result += r.name + ". "
-                else:
-                    result += r.name + ", "
-        else:
-            fy_obj = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear'])
-            res = fy_obj.period_ids
-            len_res = len(res)
-            for r in res:
-                if r == res[len_res-1]:
-                    result += r.name + ". "
-                else:
-                    result += r.name + ", "
-        return str(result and result[:-1]) or 'ALL'
-
-    def comma_me(self, amount):
-        if type(amount) is float :
-            amount = str('%.2f'%amount)
-        else :
-            amount = str(amount)
-        if (amount == '0'):
-             return ' '
-        orig = amount
-        new = re.sub("^(-?\d+)(\d{3})", "\g<1>'\g<2>", amount)
-        if orig == new:
-            return new
-        else:
-            return self.comma_me(new)
 
     def set_context(self, objects, data, ids, report_type=None):
         ## Compute Code
@@ -221,7 +179,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
         for rec in full_account:
             if not rec.get('name', False):
-                rec.update({'name': 'Unknown Partner'})
+                rec.update({'name': _('Unknown Partner')})
                 
         ## We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
@@ -257,12 +215,12 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 new_header['ref'] = ''
                 new_header['name'] = r['account_name']
                 new_header['code'] = r['code']
-                new_header['debit'] = r['credit'] #tot_credit
-                new_header['credit'] = r['debit'] #tot_debit
+                new_header['debit'] = r['debit'] 
+                new_header['credit'] = r['credit'] 
                 new_header['scredit'] = tot_scredit
                 new_header['sdebit'] = tot_sdebit
                 new_header['enlitige'] = tot_enlitige
-                new_header['balance'] = float(tot_sdebit) - float(tot_scredit)
+                new_header['balance'] = r['debit'] - r['credit']
                 new_header['type'] = 3
                 ##
                 completearray.append(new_header)
@@ -436,71 +394,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 #                        (tuple(self.account_ids), ))
 #            temp_res += float(self.cr.fetchone()[0] or 0.0)
         return temp_res
-
-    def _sum_sdebit(self):
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted']
-
-        if not self.ids:
-            return 0.0
-        result_tmp = 0.0
-        a = 0.0
-        self.cr.execute(
-            "SELECT CASE WHEN sum(debit) > sum(credit) " \
-                    "THEN sum(debit) - sum(credit) " \
-                    "ELSE 0 " \
-                "END " \
-            "FROM account_move_line AS l " \
-            "JOIN account_move am ON (am.id = l.move_id)" \
-            "WHERE l.account_id IN %s" \
-                "AND am.state IN %s" \
-                "AND " + self.query + " " \
-            "GROUP BY l.partner_id",
-            (tuple(self.account_ids), tuple(move_state),))
-        a = self.cr.fetchone()[0]
-
-        if self.cr.fetchone() != None:
-            result_tmp = result_tmp + (a or 0.0)
-        else:
-            result_tmp = 0.0
-        return result_tmp
-
-    def _sum_scredit(self):
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted']
-
-        if not self.ids:
-            return 0.0
-        result_tmp = 0.0
-        a = 0.0
-        self.cr.execute(
-            "SELECT CASE WHEN sum(debit) < sum(credit) " \
-                    "THEN sum(credit) - sum(debit) " \
-                    "ELSE 0 " \
-                "END " \
-            "FROM account_move_line AS l " \
-            "WHERE l.account_id IN %s" \
-             "JOIN account_move am ON (am.id = l.move_id)" \
-             "AND am.state IN %s" \
-            "AND " + self.query + " " \
-            "GROUP BY l.partner_id",
-            (tuple(self.account_ids), tuple(move_state), ))
-        a = self.cr.fetchone()[0] or 0.0
-        if self.cr.fetchone() != None:
-            result_tmp = result_tmp + (a or 0.0)
-        else:
-            result_tmp = 0.0
-        return result_tmp
-
-    def _solde_balance_debit(self):
-        debit, credit = self._sum_debit(), self._sum_credit()
-        return debit > credit and debit - credit
-
-    def _solde_balance_credit(self):
-        debit, credit = self._sum_debit(), self._sum_credit()
-        return credit > debit and credit - debit
 
     def _get_partners(self):
         if self.result_selection == 'customer':
