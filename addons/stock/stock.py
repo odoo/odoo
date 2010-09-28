@@ -642,7 +642,7 @@ class stock_picking(osv.osv):
                  "* Done: has been processed, can't be modified or cancelled anymore\n"\
                  "* Cancelled: has been cancelled, can't be confirmed anymore"),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 method=True, store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed. Will be set to date of actual processing if not specified."),
+                 method=True, store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed"),
         'date': fields.datetime('Order Date', help="Date of Order", select=True),
         'date_done': fields.datetime('Date Done', help="Date of Completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
@@ -1116,6 +1116,8 @@ class stock_picking(osv.osv):
                           delivery moves with product_id, product_qty, uom
         @return: Dictionary of values
         """
+        import pdb
+        #pdb.set_trace()
         if context is None:
             context = {}
         else:
@@ -1124,7 +1126,6 @@ class stock_picking(osv.osv):
         move_obj = self.pool.get('stock.move')
         product_obj = self.pool.get('product.product')
         currency_obj = self.pool.get('res.currency')
-        users_obj = self.pool.get('res.users')
         uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
         sequence_obj = self.pool.get('ir.sequence')
@@ -1137,6 +1138,7 @@ class stock_picking(osv.osv):
             new_moves = []
             complete, too_many, too_few = [], [], []
             move_product_qty = {}
+            prodlot_ids = {}
             for move in pick.move_lines:
                 if move.state in ('done', 'cancel'):
                     continue
@@ -1147,7 +1149,8 @@ class stock_picking(osv.osv):
                 product_uom = partial_data.get('product_uom',False)
                 product_price = partial_data.get('product_price',0.0)
                 product_currency = partial_data.get('product_currency',False)
-                prodlot_id = partial_data.get('prodlot_id',False)
+                prodlot_id = partial_data.get('prodlot_id')
+                prodlot_ids[move.id] = prodlot_id
                 if move.product_qty == product_qty:
                     complete.append(move)
                 elif move.product_qty > product_qty:
@@ -1156,17 +1159,12 @@ class stock_picking(osv.osv):
                     too_many.append(move)
 
                 # Average price computation
-                # FIXME: we should not use the company of the user to determine the currency of the 
-                # product valuation field, we should use the company to which the destination location
-                # belongs! 
                 if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
                     product = product_obj.browse(cr, uid, move.product_id.id)
-                    user = users_obj.browse(cr, uid, uid)
                     move_currency_id = move.company_id.currency_id.id
                     context['currency_id'] = move_currency_id
                     qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
-                    pricetype ='standard_price'
-                    if pricetype and qty > 0:
+                    if qty > 0:
                         new_price = currency_obj.compute(cr, uid, product_currency,
                                 move_currency_id, product_price)
                         new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
@@ -1175,12 +1173,12 @@ class stock_picking(osv.osv):
                             new_std_price = new_price
                         else:
                             # Get the standard price
-                            amount_unit = product.price_get(pricetype, context)[product.id]
+                            amount_unit = product.price_get('standard_price', context)[product.id]
                             new_std_price = ((amount_unit * product.qty_available)\
                                 + (new_price * qty))/(product.qty_available + qty)
 
                         # Write the field according to price type field
-                        product_obj.write(cr, uid, [product.id], {pricetype.field: new_std_price})
+                        product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price})
 
                         # Record the values that were chosen in the wizard, so they can be
                         # used for inventory valuation if real-time valuation is enabled.
@@ -1191,8 +1189,8 @@ class stock_picking(osv.osv):
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
-                if not new_picking:
 
+                if not new_picking:
                     new_picking = self.copy(cr, uid, pick.id,
                             {
                                 'name': sequence_obj.get(cr, uid, 'stock.picking.%s'%(pick.type)),
@@ -1200,48 +1198,48 @@ class stock_picking(osv.osv):
                                 'state':'draft',
                             })
                 if product_qty != 0:
-
-                    new_obj = move_obj.copy(cr, uid, move.id,
-                        {
+                    defaults = {
                             'product_qty' : product_qty,
                             'product_uos_qty': product_qty, #TODO: put correct uos_qty
                             'picking_id' : new_picking,
                             'state': 'assigned',
                             'move_dest_id': False,
                             'price_unit': move.price_unit,
-                        })
+                    }
+                    prodlot_id = prodlot_ids[move.id]
+                    if prodlot_id:
+                        defaults.update(prodlot_id=prodlot_id)
+                    new_obj = move_obj.copy(cr, uid, move.id, defaults)
 
                 move_obj.write(cr, uid, [move.id],
                         {
                             'product_qty' : move.product_qty - product_qty,
                             'product_uos_qty':move.product_qty - product_qty, #TODO: put correct uos_qty
-
                         })
 
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
-                for move in too_many:
-                    product_qty = move_product_qty[move.id]
-                    move_obj.write(cr, uid, [move.id],
-                            {
-                                'product_qty' : product_qty,
-                                'product_uos_qty': product_qty, #TODO: put correct uos_qty
-                                'picking_id': new_picking,
-                            })
-            else:
-                for move in too_many:
-                    product_qty = move_product_qty[move.id]
-                    move_obj.write(cr, uid, [move.id],
-                            {
-                                'product_qty': product_qty,
-                                'product_uos_qty': product_qty #TODO: put correct uos_qty
-                            })
+                for move in complete:
+                    if prodlot_ids.get(move.id):
+                        move_obj.write(cr, uid, move.id, {'prodlot_id': prodlot_ids[move.id]})
+            for move in too_many:
+                product_qty = move_product_qty[move.id]
+                defaults = {
+                    'product_qty' : product_qty,
+                    'product_uos_qty': product_qty, #TODO: put correct uos_qty
+                }
+                prodlot_id = prodlot_ids.get(move.id)
+                if prodlot_ids.get(move.id):
+                    defaults.update(prodlot_id=prodlot_id)
+                if new_picking:
+                    defaults.update(picking_id=new_picking)
+                move_obj.write(cr, uid, [move.id], defaults)
+
 
             # At first we confirm the new picking (if necessary)
             if new_picking:
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
-            # Then we finish the good picking
-            if new_picking:
+                # Then we finish the good picking
                 self.write(cr, uid, [pick.id], {'backorder_id': new_picking})
                 self.action_move(cr, uid, [new_picking])
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_done', cr)
@@ -1459,8 +1457,8 @@ class stock_move(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'date': fields.datetime('Date', required=True, help="Scheduled date for the movement of the products or real date if the move is done.", readonly=True),
-        'date_expected': fields.datetime('Date Expected', required=True, help="Scheduled date for the movement of the products"),
+        'date': fields.datetime('Date', required=True, help="Move date: scheduled date until move is done, then date of actual move processing", readonly=True),
+        'date_expected': fields.datetime('Scheduled Date', required=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')]),
 
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
@@ -2259,11 +2257,12 @@ class stock_move(osv.osv):
                           like partner_id, address_id, delivery_date, delivery
                           moves with product_id, product_qty, uom
         """
+        import pdb
+        #pdb.set_trace()
         res = {}
         picking_obj = self.pool.get('stock.picking')
         product_obj = self.pool.get('product.product')
         currency_obj = self.pool.get('res.currency')
-        users_obj = self.pool.get('res.users')
         uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
         sequence_obj = self.pool.get('ir.sequence')
@@ -2278,6 +2277,7 @@ class stock_move(osv.osv):
 
         complete, too_many, too_few = [], [], []
         move_product_qty = {}
+        prodlot_ids = {}
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('done', 'cancel'):
                 continue
@@ -2288,7 +2288,7 @@ class stock_move(osv.osv):
             product_uom = partial_data.get('product_uom',False)
             product_price = partial_data.get('product_price',0.0)
             product_currency = partial_data.get('product_currency',False)
-            prodlot_id = partial_data.get('prodlot_id',False)
+            prodlot_ids[move.id] = partial_data.get('prodlot_id')
             if move.product_qty == product_qty:
                 complete.append(move)
             elif move.product_qty > product_qty:
@@ -2297,17 +2297,14 @@ class stock_move(osv.osv):
                 too_many.append(move)
 
             # Average price computation
-            # FIXME: we should not use the company of the user to determine the currency of the 
-            # product valuation field, we should use the company to which the destination location
-            # belongs! 
             if (move.picking_id.type == 'in') and (move.product_id.cost_method == 'average'):
                 product = product_obj.browse(cr, uid, move.product_id.id)
-                user = users_obj.browse(cr, uid, uid)
-                context['currency_id'] = move.company_id.currency_id.id
+                move_currency_id = move.company_id.currency_id.id
+                context['currency_id'] = move_currency_id
                 qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
                 if qty > 0:
                     new_price = currency_obj.compute(cr, uid, product_currency,
-                            user.company_id.currency_id.id, product_price)
+                            move_currency_id, product_price)
                     new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
                             product.uom_id.id)
                     if product.qty_available <= 0:
@@ -2330,15 +2327,18 @@ class stock_move(osv.osv):
         for move in too_few:
             product_qty = move_product_qty[move.id]
             if product_qty != 0:
-                new_move = self.copy(cr, uid, move.id,
-                    {
-                        'product_qty' : product_qty,
-                        'product_uos_qty': product_qty,
-                        'picking_id' : move.picking_id.id,
-                        'state': 'assigned',
-                        'move_dest_id': False,
-                        'price_unit': move.price_unit,
-                    })
+                defaults = {
+                            'product_qty' : product_qty,
+                            'product_uos_qty': product_qty,
+                            'picking_id' : move.picking_id.id,
+                            'state': 'assigned',
+                            'move_dest_id': False,
+                            'price_unit': move.price_unit,
+                            }
+                prodlot_id = prodlot_ids[move.id]
+                if prodlot_id:
+                    defaults.update(prodlot_id=prodlot_id)
+                new_move = self.copy(cr, uid, move.id, defaults)
                 complete.append(self.browse(cr, uid, new_move))
             self.write(cr, uid, move.id,
                     {
@@ -2356,8 +2356,8 @@ class stock_move(osv.osv):
             complete.append(move)
 
         for move in complete:
-            if prodlot_id:
-                self.write(cr, uid, [move.id],{'prodlot_id': prodlot_id,})                
+            if prodlot_ids.get(move.id):
+                self.write(cr, uid, [move.id],{'prodlot_id': prodlot_ids.get(move.id)})
             self.action_done(cr, uid, [move.id], context=context)
             if  move.picking_id.id :
                 # TOCHECK : Done picking if all moves are done
@@ -2371,11 +2371,7 @@ class stock_move(osv.osv):
                     picking_obj.action_move(cr, uid, [move.picking_id.id])
                     wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
 
-        ref = {}
-        done_move_ids = []
-        for move in complete:
-            done_move_ids.append(move.id)
-        return done_move_ids
+        return [move.id for move in complete]
 
 stock_move()
 
