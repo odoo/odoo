@@ -302,6 +302,7 @@ CREATE TABLE ir_module_module (
     certificate character varying(64),
     description text,
     demo boolean default False,
+    web boolean DEFAULT FALSE,
     primary key(id)
 );
 ALTER TABLE ir_module_module add constraint name_uniq unique (name);

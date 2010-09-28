@@ -72,6 +72,7 @@ module_category()
 class module(osv.osv):
     _name = "ir.module.module"
     _description = "Module"
+    __logger = logging.getLogger('base.' + _name)
 
     def get_module_info(self, name):
         info = {}
@@ -151,8 +152,6 @@ class module(osv.osv):
         'url': fields.char('URL', size=128, readonly=True),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
-        'web_dependencies_id': fields.one2many('ir.module.web.dependency',
-            'module_id', 'Web Dependencies', readonly=True),
         'state': fields.selection([
             ('uninstallable','Not Installable'),
             ('uninstalled','Not Installed'),
@@ -175,12 +174,14 @@ class module(osv.osv):
         'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
+        'web': fields.boolean('Has a web component', readonly=True),
     }
 
     _defaults = {
         'state': lambda *a: 'uninstalled',
         'demo': lambda *a: False,
         'license': lambda *a: 'AGPL-3',
+        'web': False,
     }
     _order = 'name'
 
@@ -245,12 +246,6 @@ class module(osv.osv):
                     od = self.browse(cr, uid, ids2)[0]
                     mdemo = od.demo or mdemo
             
-            for web_mod in module.web_dependencies_id:
-                if web_mod.state == 'unknown':
-                    raise orm.except_orm(_('Error'), _("You try to install the module '%s' that depends on the module:'%s'.\nBut this module is not available in your system.") % (module.name, dep.name,))
-                ids2 = self.pool.get('ir.module.web').search(cr, uid, [('module','=',web_mod.name)])
-                self.pool.get('ir.module.web').button_install(cr, uid, ids2)
-                
             terp = self.get_module_info(module.name)
             try:
                 self._check_external_dependencies(terp)
@@ -340,6 +335,7 @@ class module(osv.osv):
             'website': terp.get('website', ''),
             'license': terp.get('license', 'GPL-2'),
             'certificate': terp.get('certificate') or None,
+            'web': terp.get('web') or False,
         }
 
     # update the list of available packages
@@ -373,7 +369,6 @@ class module(osv.osv):
                 id = self.create(cr, uid, dict(name=mod_name, state='uninstalled', **values))
                 res[1] += 1
             self._update_dependencies(cr, uid, id, terp.get('depends', []))
-            self._update_web_dependencies(cr, uid, id, terp.get('web_depends', []))
             self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
 
         return res
@@ -416,18 +411,6 @@ class module(osv.osv):
     def _update_dependencies(self, cr, uid, id, depends=[]):
         for d in depends:
             cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
-
-    def _update_web_dependencies(self, cr, uid, id, depends=[]):
-        web_module_pool = self.pool.get('ir.module.web')
-        res = False
-        
-        for d in depends:
-            ids = web_module_pool.search(cr, uid, [('module','=',d)])
-            if len(ids) > 0:
-                cr.execute("Select id from ir_module_web_dependency where module_id=%s and web_module_id=%s and name=%s", (id, ids[0], d))
-                res = cr.fetchone()
-                if not res:
-                    cr.execute('INSERT INTO ir_module_web_dependency (module_id, web_module_id, name) values (%s, %s, %s)', (id, ids[0], d))
 
     def _update_category(self, cr, uid, id, category='Uncategorized'):
         categs = category.split('/')
@@ -491,40 +474,47 @@ class module(osv.osv):
                     logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
+    def list_web(self, cr, uid, context=False):
+        """ list_web(cr, uid, context) -> [module_name]
+        Lists all the currently installed modules with a web component.
+
+        Returns a list of addon names.
+        """
+        return [
+            module['name']
+            for module in self.browse(cr, uid,
+                self.search(cr, uid,
+                    [('web', '=', True),
+                     ('state', 'in', ['installed','to upgrade','to remove'])],
+                    context=context),
+                context=context)]
+    def get_web(self, cr, uid, names, context=False):
+        """ get_web(cr, uid, [module_name], context) -> [{name, depends, content}]
+
+        Returns the web content of all the named addons.
+
+        The toplevel directory of the zipped content is called 'web',
+        its final naming has to be managed by the client
+        """
+        modules = self.browse(cr, uid,
+            self.search(cr, uid, [('name', 'in', names)], context=context),
+                              context=context)
+        if not modules: return []
+        self.__logger.info('Sending web content of modules %s '
+                           'to web client', names)
+        return [
+            {'name': module.name,
+             'depends': [dep.name for dep in module.dependencies_id
+                         if self.search(cr, uid, [
+                             ('name', '=', dep.name),
+                             ('web', '=', True)
+                             ], context=context)],
+             'content': addons.zip_directory(
+                 addons.get_module_resource(module.name, 'web'))}
+            for module in modules
+        ]
+
 module()
-
-class web_module_dependency(osv.osv):
-    _name = "ir.module.web.dependency"
-    _description = "Web Module dependency"
-    
-    def _state(self, cr, uid, ids, name, args, context={}):
-        result = {}
-        mod_obj = self.pool.get('ir.module.web')
-        for md in self.browse(cr, uid, ids):
-            ids = mod_obj.search(cr, uid, [('module', '=', md.name)])
-            if ids:
-                result[md.id] = mod_obj.read(cr, uid, [ids[0]], ['state'])[0]['state']
-            else:
-                result[md.id] = 'unknown'
-        return result
-
-    
-    _columns = {
-        'name': fields.char('Name',  size=128, select=True),
-        'module_id': fields.many2one('ir.module.module', 'Module', select=True, ondelete='cascade'),
-        'web_module_id': fields.many2one('ir.module.web', 'Web Module', select=True, ondelete='cascade'),
-        'state': fields.function(_state, method=True, type='selection', selection=[
-            ('uninstallable','Uninstallable'),
-            ('uninstalled','Not Installed'),
-            ('installed','Installed'),
-            ('to upgrade','To be upgraded'),
-            ('to remove','To be removed'),
-            ('to install','To be installed'),
-            ('unknown', 'Unknown'),
-            ], string='State', readonly=True, select=True),
-    }
-
-web_module_dependency()
 
 class module_dependency(osv.osv):
     _name = "ir.module.module.dependency"
@@ -555,5 +545,3 @@ class module_dependency(osv.osv):
             ], string='State', readonly=True, select=True),
     }
 module_dependency()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
