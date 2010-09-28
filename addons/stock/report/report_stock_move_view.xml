@@ -31,8 +31,8 @@
                 <field name="product_qty_in" sum="Total incoming quantity" />
                 <field name="product_qty_out" sum="Total outgoing quantity"/>
                 <field name="value"  sum="Total value"/>
-                <field name="day_diff"/>
                 <field name="day_diff1"/>
+                <field name="day_diff"/>
                 <field name="day_diff2"/>
            </tree>
         </field>
@@ -141,7 +141,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id"  ref="view_stock_search"/>
-        <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1, 'search_default_month':1, 'search_default_group_type':1, 'search_default_group_categ_id':1,'group_by':[], 'group_by_no_leaf':1,}</field>
+        <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,}</field>
     </record>
     <menuitem action="action_stock_move_report" id="menu_action_stock_move_report" parent="next_id_61" sequence="3"/>
 
@@ -215,7 +215,7 @@
                     <field name="date"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Group By..." >
+                <group expand="1" string="Group By..." >
                     <filter string="Partner" name="group_partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
                     <filter name="group_product_uom" string="Product UOM" icon="terp-accessories-archiver" context="{'group_by':'product_uom'}"/>
@@ -238,7 +238,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id"  eval="False"/>
-        <field name="context">{'contact_display': 'partner', 'search_default_real':1, 'search_default_location_type_internal':1,'search_default_group_product':1,'search_default_group_location':1,'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="context">{'contact_display': 'partner', 'search_default_real':1, 'search_default_location_type_internal':1,'search_default_group_product':1,'group_by':[], 'group_by_no_leaf':1}</field>
     </record>
     <menuitem action="action_stock_inventory_report" id="menu_action_stock_inventory_report" parent="next_id_61" sequence="4" groups="base.group_system,base.group_user"/>
 

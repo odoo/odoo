@@ -44,23 +44,22 @@ class report_stock_move(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', readonly=True, select=True, help="Location where the system will stock the finished products."),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True),
         'product_qty':fields.integer('Quantity',readonly=True),
-        'categ_id': fields.many2one('product.category', 'Product Category', ),                
+        'categ_id': fields.many2one('product.category', 'Product Category', ),
         'product_qty_in':fields.integer('In Qty',readonly=True),
         'product_qty_out':fields.integer('Out Qty',readonly=True),
         'value' : fields.float('Total Value', required=True),
-        'day_diff2':fields.float('Delay (Days)',readonly=True,  digits_compute=dp.get_precision('Product UoM'), group_operator="avg"),
-        'day_diff1':fields.float('Planned (Days)',readonly=True, digits_compute=dp.get_precision('Product UoM'), group_operator="avg"),
-        'day_diff':fields.float('Real (Days)',readonly=True,  digits_compute=dp.get_precision('Product UoM'), group_operator="avg"),
-        'stock_journal': fields.many2one('stock.journal','Stock Journal', select=True),        
+        'day_diff2':fields.float('Lag (Days)',readonly=True,  digits_compute=dp.get_precision('Shipping Delay'), group_operator="avg"),
+        'day_diff1':fields.float('Planned Lead Time (Days)',readonly=True, digits_compute=dp.get_precision('Shipping Delay'), group_operator="avg"),
+        'day_diff':fields.float('Execution Lead Time (Days)',readonly=True,  digits_compute=dp.get_precision('Shipping Delay'), group_operator="avg"),
+        'stock_journal': fields.many2one('stock.journal','Stock Journal', select=True),
     }
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_move')
         cr.execute("""
-            create or replace view report_stock_move as (
-                select
+            CREATE OR REPLACE view report_stock_move AS (
+                SELECT
                         min(sm_id) as id,
-                        sum(value) as value,
                         al.dp as date,
                         al.curr_year as year,
                         al.curr_month as month,
@@ -81,13 +80,25 @@ class report_stock_move(osv.osv):
                         al.product_uom as product_uom,
                         al.categ_id as categ_id,
                         coalesce(al.type, 'other') as type,
-                        al.stock_journal as stock_journal
+                        al.stock_journal as stock_journal,
+                        sum(al.in_value - al.out_value) as value
                     FROM (SELECT
-
                         CASE WHEN sp.type in ('out','delivery') THEN
-                            sum(sm.product_qty) END AS out_qty,
+                            sum(sm.product_qty * pu.factor)
+                            ELSE 0.0
+                            END AS out_qty,
                         CASE WHEN sp.type in ('in') THEN
-                            sum(sm.product_qty)  END AS in_qty,
+                            sum(sm.product_qty * pu.factor)
+                            ELSE 0.0
+                            END AS in_qty,
+                        CASE WHEN sp.type in ('out','delivery') THEN
+                            sum(sm.product_qty * pu.factor) * pt.standard_price
+                            ELSE 0.0
+                            END AS out_value,
+                        CASE WHEN sp.type in ('in') THEN
+                            sum(sm.product_qty * pu.factor) * pt.standard_price
+                            ELSE 0.0
+                            END AS in_value,
                         min(sm.id) as sm_id,
                         sm.date as dp,
                         to_char(date_trunc('day',sm.date), 'YYYY') as curr_year,
@@ -98,8 +109,7 @@ class report_stock_move(osv.osv):
                         avg(date(sm.date)-date(sm.date_expected)) as curr_day_diff2,
                         sm.location_id as location_id,
                         sm.location_dest_id as location_dest_id,
-                        sum(sm.product_qty) as product_qty ,
-                        (pt.standard_price *pu.factor* sum(sm.product_qty)) as value,
+                        sum(sm.product_qty) as product_qty,
                         pt.categ_id as categ_id ,
                         sm.address_id as address_id,
                         sm.product_id as product_id,
@@ -108,23 +118,23 @@ class report_stock_move(osv.osv):
                             sm.state as state,
                             sm.product_uom as product_uom,
                             sp.type as type,
-                            sp.stock_journal_id as stock_journal
-                    from
+                            sp.stock_journal_id AS stock_journal
+                    FROM
                         stock_move sm
-                        left join stock_picking sp on (sm.picking_id=sp.id)
-                        left join product_product pp on (sm.product_id=pp.id)
-                        left join product_uom pu on (sm.product_uom=pu.id)
-                        left join product_template pt on (pp.product_tmpl_id=pt.id)
-                        left join stock_location sl on (sm.location_id = sl.id)
+                        LEFT JOIN stock_picking sp ON (sm.picking_id=sp.id)
+                        LEFT JOIN product_product pp ON (sm.product_id=pp.id)
+                        LEFT JOIN product_uom pu ON (sm.product_uom=pu.id)
+                        LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+                        LEFT JOIN stock_location sl ON (sm.location_id = sl.id)
 
-                    group by
+                    GROUP BY
                         sm.id,sp.type, sm.date,sm.address_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
                         sm.product_id,pt.standard_price, sm.picking_id, sm.product_qty,
                         sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id,pu.factor,pt.categ_id, sp.stock_journal_id)
-                    as al
+                    AS al
 
-                    group by
+                    GROUP BY
                         al.out_qty,al.in_qty,al.curr_year,al.curr_month,
                         al.curr_day,al.curr_day_diff,al.curr_day_diff1,al.curr_day_diff2,al.dp,al.location_id,al.location_dest_id,
                         al.address_id,al.product_id,al.state,al.product_uom,
@@ -157,42 +167,42 @@ class report_stock_inventory(osv.osv):
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_inventory')
         cr.execute("""
-create or replace view report_stock_inventory as (
-    (select
+CREATE OR REPLACE view report_stock_inventory AS (
+    (SELECT
         min(m.id) as id, m.date as date,
         m.address_id as partner_id, m.location_id as location_id,
         m.product_id as product_id,  m.product_uom as product_uom,l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
-        sum(-m.product_qty*u.factor)::decimal as product_qty,
-        sum(-pt.standard_price * m.product_qty * u.factor)::decimal as value
-    from
+        coalesce(sum(-m.product_qty * u.factor)::decimal, 0.0) as product_qty,
+        coalesce(sum(-pt.standard_price * m.product_qty * u.factor)::decimal, 0.0) as value
+    FROM
         stock_move m
-            left join stock_picking p on (m.picking_id=p.id)
-                left join product_product pp on (m.product_id=pp.id)
-                    left join product_template pt on (pp.product_tmpl_id=pt.id)
-            left join product_uom u on (m.product_uom=u.id)
-                left join stock_location l on (m.location_id=l.id)
-    group by
+            LEFT JOIN stock_picking p ON (m.picking_id=p.id)
+                LEFT JOIN product_product pp ON (m.product_id=pp.id)
+                    LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+            LEFT JOIN product_uom u ON (m.product_uom=u.id)
+                LEFT JOIN stock_location l ON (m.location_id=l.id)
+    GROUP BY
         m.id, m.product_id, m.address_id, m.location_id, m.prodlot_id,
         m.date, m.state, l.usage, m.company_id,m.product_uom
-) union all (
-    select
+) UNION ALL (
+    SELECT
         -m.id as id, m.date as date,
         m.address_id as partner_id, m.location_dest_id as location_id,
         m.product_id as product_id, m.product_uom as product_uom, l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
-        sum(m.product_qty*u.factor)::decimal as product_qty,
-        sum(pt.standard_price * m.product_qty * u.factor)::decimal as value
-    from
+        coalesce(sum(m.product_qty*u.factor)::decimal, 0.0) as product_qty,
+        coalesce(sum(pt.standard_price * m.product_qty * u.factor)::decimal, 0.0) as value
+    FROM
         stock_move m
-            left join stock_picking p on (m.picking_id=p.id)
-                left join product_product pp on (m.product_id=pp.id)
-                    left join product_template pt on (pp.product_tmpl_id=pt.id)
-            left join product_uom u on (m.product_uom=u.id)
-                left join stock_location l on (m.location_dest_id=l.id)
-    group by
+            LEFT JOIN stock_picking p ON (m.picking_id=p.id)
+                LEFT JOIN product_product pp ON (m.product_id=pp.id)
+                    LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+            LEFT JOIN product_uom u ON (m.product_uom=u.id)
+                LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
+    GROUP BY
         m.id, m.product_id, m.product_uom , m.address_id, m.location_id, m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, m.company_id
     )
