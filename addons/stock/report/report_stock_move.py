@@ -28,7 +28,7 @@ class report_stock_move(osv.osv):
     _description = "Moves Statistics"
     _auto = False
     _columns = {
-        'date_planned': fields.date('Date', readonly=True),
+        'date_planned': fields.date('Date Planned', readonly=True ),
         'year': fields.char('Year', size=4, readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),

@@ -81,7 +81,7 @@
       "tz": False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
       "active_id": ref("auction_lots_painting0")})
 -
-  I check that the buyer field gets bind with the value.
+  I check that the buyer field gets bound with the value.
 -
  !python {model: auction.lots}: |
     from tools.translate import _
@@ -89,7 +89,7 @@
     assert(auc_id.ach_uid), _('Buyer not assigned!')
 
 -
-  I create statement lines for an object's payment by using the "Pay objects of the buyer" wizard
+  I create statement lines for the payment of an object using the "Pay objects of the buyer" wizard
 -
   I create a bank statement.
 -
@@ -113,7 +113,7 @@
     statement_id3: account_bank_statement_st0
     total: 4000.0
 -
-  Then I click "Pay" button.
+  I click "Pay" button.
 -
   !python {model: auction.pay.buy}: |
     self.pay_and_reconcile(cr, uid, [ref("auction_pay_buy_0")], {"lang": "en_US", "tz":
@@ -135,14 +135,14 @@
     number: 2010/002
     objects: 1
 -
-  Then I click on the "Create Invoices" button.
+  I click on the "Create Invoices" button.
 -
   !python {model: auction.lots.make.invoice}: |
     self.makeInvoices(cr, uid, [ref("auction_lots_make_invoice_0")], {"lang": "en_US",
       "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
       "tz": False, "active_id": ref("auction_lots_painting0"),})
 -
-  I check that a "Seller Invoice" field gets bind with the value.
+  I check that a "Seller Invoice" field gets bound with the value.
 -
   !python {model: auction.lots}: |
     from tools.translate import _
@@ -157,14 +157,14 @@
     number: 2010/003
     objects: 1
 -
-  Then I click on the "Create Invoices" button.
+  I click on the "Create Invoices" button.
 -
   !python {model: auction.lots.make.invoice.buyer}: |
     self.makeInvoices(cr, uid, [ref("auction_lots_make_invoice_buyer_0")], {"lang":
       "en_US", "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
       "tz": False, "active_id": ref("auction_lots_painting0"), })
 -
-  I check that a "Buyer Invoice" field gets bind with the value.
+  I check that a "Buyer Invoice" field gets bound with the value.
 -
   !python {model: auction.lots}: |
     from tools.translate import _
@@ -176,7 +176,7 @@
   !record {model: auction.lots.auction.move, id: auction_lots_auction_move_0}:
     auction_id: auction.auction_date_2
 - 
-  Then I click on the "Move to Auction date" button.
+  I click on the "Move to Auction date" button.
 - 
   !python {model: auction.lots.auction.move}: |
     self.auction_move_set(cr, uid, [ref("auction_lots_auction_move_0")], {"lang":

@@ -28,7 +28,7 @@
     "author" : "Tiny",
     "description": """Email Integrated Document
     * Email based Document submission
-    * user based document subission
+    * user based document submission
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

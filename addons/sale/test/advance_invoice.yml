@@ -124,7 +124,7 @@
     invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
     assert invoice_id, "Invoice is not in the open state"
 -
-  I assign an analytic jounal to the bank journal
+  I assign an analytic journal to the bank journal
 - 
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale

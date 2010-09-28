@@ -50,12 +50,22 @@ class crm_helpdesk_report(osv.osv):
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
-        'delay_close': fields.char('Delay to close', size=20, readonly=True),
+        'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'date_deadline': fields.date('Deadline'),
         'priority': fields.selection([('5', 'Lowest'), ('4', 'Low'), \
                     ('3', 'Normal'), ('2', 'High'), ('1', 'Highest')], 'Priority'),
+        'canal_id': fields.many2one('res.partner.canal', 'Channel'), 
+        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+                            domain="[('section_id','=',section_id),\
+                            ('object_id.model', '=', 'crm.helpdesk')]"),
+        'planned_cost': fields.float('Planned Costs'),
+        'create_date': fields.date('Creation Date' , readonly=True),
+        'date_closed': fields.date('Close Date', readonly=True),
+        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
+        'day': fields.char('Day', size=128, readonly=True),
+        'email': fields.integer('# Emails', size=128, readonly=True),
     }
 
     def init(self, cr):
@@ -70,8 +80,11 @@ class crm_helpdesk_report(osv.osv):
             create or replace view crm_helpdesk_report as (
                 select
                     min(c.id) as id,
-                    to_char(c.create_date, 'YYYY') as name,
-                    to_char(c.create_date, 'MM') as month,
+                    to_char(c.date, 'YYYY') as name,
+                    to_char(c.date, 'MM') as month,
+                    to_char(c.date, 'YYYY-MM-DD') as day,
+                    to_char(c.create_date, 'YYYY-MM-DD') as create_date,
+                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
                     c.state,
                     c.user_id,
                     c.section_id,
@@ -79,13 +92,19 @@ class crm_helpdesk_report(osv.osv):
                     c.company_id,
                     c.priority,
                     c.date_deadline,
+                    c.categ_id,
+                    c.canal_id,
+                    c.planned_cost,
                     count(*) as nbr,
-                    to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
+                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
+                    (SELECT count(id) FROM mailgate_message WHERE model='crm.helpdesk' AND res_id=c.id AND history=True) AS email,
+                    abs(avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24)) as delay_expected
                 from
                     crm_helpdesk c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
+                group by to_char(c.date, 'YYYY'), to_char(c.date, 'MM'),to_char(c.date, 'YYYY-MM-DD'),\
                      c.state, c.user_id,c.section_id,c.priority,\
-                      c.partner_id,c.company_id,c.date_deadline
+                     c.partner_id,c.company_id,c.date_deadline,c.create_date,c.date,c.date_closed,\
+                     c.categ_id,c.canal_id,c.planned_cost,c.id
             )""")
 
 crm_helpdesk_report()

@@ -24,11 +24,29 @@ from osv import fields, osv
 import netsvc
 import pooler
 from osv.orm import browse_record, browse_null
+from tools.translate import _
 
 class purchase_order_group(osv.osv_memory):
     _name = "purchase.order.group"
     _description = "Purchase Order Merge"
-
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
+                        context=None, toolbar=False, submenu=False):
+        """ 
+         Changes the view dynamically
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param context: A standard dictionary 
+         @return: New arch of view.
+        """
+        if not context:
+            context={}
+        res = super(purchase_order_group, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        if context.get('active_model','') == 'purchase.order' and len(context['active_ids']) < 2:
+            raise osv.except_osv(_('Warning'),
+            _('Please select multiple order to merge in the list view.'))
+        return res
     def merge_orders(self, cr, uid, ids, context):
         """
              To merge similar type of purchase orders.

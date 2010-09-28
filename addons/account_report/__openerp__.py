@@ -27,7 +27,7 @@
     'description': """Financial and accounting reporting
     Fiscal statements
     Indicators
-    Add a dashboards for accountant that include  Indicators reporting.
+    Adds a dashboard for accountant that include  Indicators reporting.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

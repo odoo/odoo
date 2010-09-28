@@ -26,7 +26,7 @@
     'description': """Generic Payroll system Integrated with Accountings
     * Expanse Encoding
     * Payment Encoding
-    * Comany Contribution Managemet
+    * Company Contribution Management
     """,
     'author':'OpenERP SA/Axelor',
     'website':'http://www.openerp.com',
