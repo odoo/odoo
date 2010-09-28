@@ -27,7 +27,7 @@ import pooler
 class decimal_precision(osv.osv):
     _name = 'decimal.precision'
     _columns = {
-        'name': fields.char('Usage', size=50, required=True),
+        'name': fields.char('Usage', size=50, select=True, required=True),
         'digits': fields.integer('Digits', required=True),
     }
     _defaults = {
