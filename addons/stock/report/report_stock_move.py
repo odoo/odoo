@@ -153,7 +153,7 @@ class report_stock_inventory(osv.osv):
         'date': fields.datetime('Date', readonly=True),
         'partner_id':fields.many2one('res.partner.address', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
-        'product_uom':fields.many2one('product.uom', 'Product UOM', readonly=True),
+        'product_categ_id':fields.many2one('product.category', 'Product Category', readonly=True),
         'location_id': fields.many2one('stock.location', 'Location', readonly=True),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
@@ -171,7 +171,7 @@ CREATE OR REPLACE view report_stock_inventory AS (
     (SELECT
         min(m.id) as id, m.date as date,
         m.address_id as partner_id, m.location_id as location_id,
-        m.product_id as product_id,  m.product_uom as product_uom,l.usage as location_type,
+        m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
         coalesce(sum(-m.product_qty * u.factor)::decimal, 0.0) as product_qty,
@@ -179,18 +179,18 @@ CREATE OR REPLACE view report_stock_inventory AS (
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
-                LEFT JOIN product_product pp ON (m.product_id=pp.id)
-                    LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+            LEFT JOIN product_product pp ON (m.product_id=pp.id)
+                LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
-                LEFT JOIN stock_location l ON (m.location_id=l.id)
+            LEFT JOIN stock_location l ON (m.location_id=l.id)
     GROUP BY
-        m.id, m.product_id, m.address_id, m.location_id, m.prodlot_id,
-        m.date, m.state, l.usage, m.company_id,m.product_uom
+        m.id, m.product_id, m.product_uom, pt.categ_id, m.address_id, m.location_id,  m.location_dest_id,
+        m.prodlot_id, m.date, m.state, l.usage, m.company_id
 ) UNION ALL (
     SELECT
         -m.id as id, m.date as date,
         m.address_id as partner_id, m.location_dest_id as location_id,
-        m.product_id as product_id, m.product_uom as product_uom, l.usage as location_type,
+        m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
         coalesce(sum(m.product_qty*u.factor)::decimal, 0.0) as product_qty,
@@ -198,12 +198,12 @@ CREATE OR REPLACE view report_stock_inventory AS (
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
-                LEFT JOIN product_product pp ON (m.product_id=pp.id)
-                    LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+            LEFT JOIN product_product pp ON (m.product_id=pp.id)
+                LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
-                LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
+            LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
     GROUP BY
-        m.id, m.product_id, m.product_uom , m.address_id, m.location_id, m.location_dest_id,
+        m.id, m.product_id, m.product_uom, pt.categ_id, m.address_id, m.location_id, m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, m.company_id
     )
 );
