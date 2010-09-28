@@ -474,7 +474,7 @@ class module(osv.osv):
                     logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
-    def list_web(self, cr, uid, context=False):
+    def list_web(self, cr, uid, context=None):
         """ list_web(cr, uid, context) -> [module_name]
         Lists all the currently installed modules with a web component.
 
@@ -488,7 +488,17 @@ class module(osv.osv):
                      ('state', 'in', ['installed','to upgrade','to remove'])],
                     context=context),
                 context=context)]
-    def get_web(self, cr, uid, names, context=False):
+    def _web_dependencies(self, cr, uid, module, context=None):
+        for dependency in module.dependencies_id:
+            (parent,) = self.browse(cr, uid, self.search(cr, uid,
+                [('name', '=', dependency.name)], context=context),
+                                 context=context)
+            if parent.web:
+                yield parent.name
+            else:
+                self._web_dependencies(
+                    cr, uid, parent, context=context)
+    def get_web(self, cr, uid, names, context=None):
         """ get_web(cr, uid, [module_name], context) -> [{name, depends, content}]
 
         Returns the web content of all the named addons.
@@ -504,11 +514,8 @@ class module(osv.osv):
                            'to web client', names)
         return [
             {'name': module.name,
-             'depends': [dep.name for dep in module.dependencies_id
-                         if self.search(cr, uid, [
-                             ('name', '=', dep.name),
-                             ('web', '=', True)
-                             ], context=context)],
+             'depends': list(self._web_dependencies(
+                 cr, uid, module, context=context)),
              'content': addons.zip_directory(
                  addons.get_module_resource(module.name, 'web'))}
             for module in modules
