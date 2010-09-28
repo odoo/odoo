@@ -73,6 +73,7 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
+    <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -183,10 +184,10 @@
             <para style="terp_default_Right_9">[[taxes(l)]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.qty) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.qty) ]] [[l.product_id.uom_id.name]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]][[o.pricelist_id.currency_id. symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(l.discount) ]]</para>
@@ -220,7 +221,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">Net Total </para>
+          <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang(o.amount_total) ]] [[o.pricelist_id.currency_id.symbol ]]</para>
@@ -248,7 +249,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">Taxes</para>
+          <para style="terp_default_9">Taxes :</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]] [[o.pricelist_id.currency_id. symbol ]]</para>
@@ -276,7 +277,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">Total</para>
+          <para style="P1">Total :</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang(o.amount_total + o.amount_tax) ]] [[o.pricelist_id.currency_id. symbol ]]</para>

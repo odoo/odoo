@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
-    This module gives the administrator the right
+    This module gives the administrator the rights
     to track every user operation on all the objects
     of the system.
 
