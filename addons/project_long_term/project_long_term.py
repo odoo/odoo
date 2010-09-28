@@ -277,7 +277,6 @@ class project_phase(osv.osv):
             context = {}
         resource_pool = self.pool.get('resource.resource')
         uom_pool = self.pool.get('product.uom')
-        phase_resource = False
         if context is None:
            context = {}
         default_uom_id = self._get_default_uom_id(cr, uid)
@@ -290,9 +289,6 @@ class project_phase(osv.osv):
             duration = str(avg_hours) + 'H'
             # Create a new project for each phase
             def Project():
-                start = start_date
-                minimum_time_unit = 1
-                resource = phase_resource_obj
                 # If project has working calendar then that
                 # else the default one would be considered
                 if calendar_id:
