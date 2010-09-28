@@ -1459,8 +1459,8 @@ class stock_move(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'date': fields.datetime('Date ', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
-        'date_expected': fields.datetime('Date Expected', readonly=True,required=True, help="Scheduled date for the movement of the products"),
+        'date': fields.datetime('Date', required=True, help="Scheduled date for the movement of the products or real date if the move is done.", readonly=True),
+        'date_expected': fields.datetime('Date Expected', required=True, help="Scheduled date for the movement of the products"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')]),
 
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
@@ -1547,9 +1547,9 @@ class stock_move(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         if uid != 1:
+            frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
             for move in self.browse(cr, uid, ids):
                 if move.state == 'done':
-                    frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
                     if frozen_fields.intersection(vals):
                         raise osv.except_osv(_('Operation forbidden'),
                                              _('Quantities, UoMs, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator)'))
@@ -2305,8 +2305,7 @@ class stock_move(osv.osv):
                 user = users_obj.browse(cr, uid, uid)
                 context['currency_id'] = move.company_id.currency_id.id
                 qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
-                pricetype = 'standard_price'
-                if pricetype and qty > 0:
+                if qty > 0:
                     new_price = currency_obj.compute(cr, uid, product_currency,
                             user.company_id.currency_id.id, product_price)
                     new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
@@ -2315,11 +2314,11 @@ class stock_move(osv.osv):
                         new_std_price = new_price
                     else:
                         # Get the standard price
-                        amount_unit = product.price_get(pricetype, context)[product.id]
+                        amount_unit = product.price_get('standard_price', context)[product.id]
                         new_std_price = ((amount_unit * product.qty_available)\
                             + (new_price * qty))/(product.qty_available + qty)
 
-                    product_obj.write(cr, uid, [product.id],{pricetype: new_std_price})
+                    product_obj.write(cr, uid, [product.id],{'standard_price': new_std_price})
 
                     # Record the values that were chosen in the wizard, so they can be
                     # used for inventory valuation if real-time valuation is enabled.
