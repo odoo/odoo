@@ -151,11 +151,13 @@ class account_followup_print_all(osv.osv_memory):
                 if date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                     if partner_id not in partner_list:
                         partner_list.append(partner_id)
-                    to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
+                        to_update[partner_id] = {}
+                    to_update[partner_id].update({id: fups[followup_line_id][1],})
             elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                 if partner_id not in partner_list:
                     partner_list.append(partner_id)
-                to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
+                    to_update[partner_id] = {}
+                to_update[partner_id].update({id: fups[followup_line_id][1],})
 
         return {'partner_ids': partner_list, 'to_update': to_update}
 
@@ -253,7 +255,7 @@ class account_followup_print_all(osv.osv_memory):
             context.update({'summary': '\n\n\nE-Mail has not been sent to any partner. If you want to send it, please tick send email confirmation on wizard.'})
 
         return {
-            'name': _('Follwoup Summary'),
+            'name': _('Followup Summary'),
             'view_type': 'form',
             'context': context,
             'view_mode': 'tree,form',
@@ -264,22 +266,24 @@ class account_followup_print_all(osv.osv_memory):
             'nodestroy': True
                     }
 
+    def _update_partners(self, cr, uid, data, context):
+        to_update = data['to_update']
+        date = 'date' in context and context['date'] or time.strftime("%Y-%m-%d")
+        for partner_id in data['partner_ids']:
+            if to_update.has_key(partner_id):
+                for aml_id, aml_level in to_update[partner_id].items():
+                    cr.execute(
+                        "UPDATE account_move_line "\
+                        "SET followup_line_id=%s, followup_date=%s "\
+                        "WHERE id = %s", (aml_level, date, int(aml_id),))
+        return {}
+
     def do_print(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [])[0]
-        res = self._get_partners_followp(cr, uid, ids, context)['to_update']
-        to_update = res
-        data['followup_id'] = 'followup_id' in context and context['followup_id'] or False
-        date = 'date' in context and context['date'] or data['date']
-        for id in to_update.keys():
-            if to_update[id]['partner_id'] in data['partner_ids']:
-                cr.execute(
-                    "UPDATE account_move_line "\
-                    "SET followup_line_id=%s, followup_date=%s "\
-                    "WHERE id=%s",
-                    (to_update[id]['level'],
-                    date, int(id),))
+        res = self._get_partners_followp(cr, uid, ids, context)
+        self._update_partners(cr, uid, res, context=context)
 
         datas = {
              'ids': [],
