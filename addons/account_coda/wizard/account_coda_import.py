@@ -242,7 +242,7 @@ class account_coda_import(osv.osv_memory):
     #                                }, context=context)
     #
     
-                                mv = pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
+                                mv = self.pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
                                 if mv.partner_id:
                                     line['partner_id'] = mv.partner_id.id
                                     if line['amount'] < 0 :
