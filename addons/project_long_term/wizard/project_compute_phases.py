@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import datetime
 from tools.translate import _
 from osv import fields, osv
 
@@ -38,7 +37,6 @@ class project_compute_phases(osv.osv_memory):
     }
 
     def check_selection(self, cr, uid, ids, context=None):
-        data_select = self.read(cr, uid, ids, ['target_project'])[0]
         return self.compute_date(cr, uid, ids, context=context)
 
     

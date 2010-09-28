@@ -54,21 +54,23 @@
         <field name="arch" type="xml">
             <search string="Moves Analysis">
                 <group>
+                <filter icon="terp-go-year" string="  Year  "
+                domain="[('date_planned','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_planned','&gt;=',time.strftime('%%Y-01-01'))]"
+                help="Current year"/>
+                <filter icon="terp-go-month" string="   Month   "
+                name="month"
+                domain="[('date_planned','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_planned','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                help="Current month"/>
                 <filter icon="terp-go-month"
-                    name="month"
-                    string="This Month"
-                    domain="[('month','=',time.strftime('%%m'))]"
-                    help="Stock Moves of this month"/>
-                <filter icon="terp-go-today"
-                    string="Today"
-                    separator="1"
-                    domain="[('date_planned','=', time.strftime('%%Y-%%m-%%d'))]"
-                    help="Stock Moves of today"/>
+                 string="    Month-1    "
+                 separator="1"
+                 domain="[('date_planned','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date_planned','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                 help="Last month"/>                    
                 <separator orientation="vertical"/>
 
                 <filter string="Done"
                     name="done"
-                    icon="terp-dialog-close"
+                    icon="terp-check"
                     domain="[('state','=','done')]"
                     help = "Completed Stock-Moves"/>
                 <filter string="Todo"
@@ -97,19 +99,22 @@
                 <newline/>
                 <group expand="1" string="Group By...">
                     <filter name="group_partner" string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
+                    <separator orientation="vertical"/>
                     <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                    <separator orientation="vertical"/>
                     <filter name="group_picking" string="Packing" icon="terp-accessories-archiver" context="{'group_by':'picking_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Type" name="group_type" icon="terp-gtk-jump-to-rtl" context="{'group_by':'type'}"/>
                     <filter string="Source Location" name="src_location" icon="terp-gtk-jump-to-rtl" context="{'group_by':'location_id'}"/>
                     <filter string="Dest. Location" name="dest_location" icon="terp-gtk-jump-to-ltr"  context="{'group_by':'location_dest_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Type" name="group_type" icon="terp-gtk-jump-to-rtl" context="{'group_by':'type'}" help="Shipping type specify, goods coming in or going out"/>
                     <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Company" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
-                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-go-month" context="{'group_by':'date_planned'}"/>
-                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Day Planned"/>
+                    <filter string="Month" icon="terp-go-month" context="{'group_by':'date_planned'}" help="Month Planned"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"  help="Year Planned"/>
                 </group>
             </search>
         </field>

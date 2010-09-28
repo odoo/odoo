@@ -20,7 +20,6 @@
 #
 ##############################################################################
 import time
-from mx import DateTime
 
 from osv import osv, fields
 from decimal import Decimal
@@ -192,7 +191,7 @@ class account_cash_statement(osv.osv):
             res.append(dct)
         return res
 
-    def _get_cash_close_box_lines(self, cr, ids, uid, context={}):
+    def _get_cash_close_box_lines(self, cr, uid, context={}):
         res = []
         curr = [1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
@@ -201,6 +200,20 @@ class account_cash_statement(osv.osv):
                 'number':0
             }
             res.append((0,0,dct))
+        return res
+
+    def _get_cash_open_close_box_lines(self, cr, uid, context={}):
+        res = {}
+        start_l = []
+        end_l = []
+        starting_details = self._get_cash_open_box_lines(cr, uid, context)
+        ending_details = self._get_default_cash_close_box_lines(cr, uid, context)
+        for start in starting_details:
+            start_l.append((0,0,start))
+        for end in ending_details:
+            end_l.append((0,0,end))
+        res['start'] = start_l
+        res['end'] = end_l
         return res
 
     _columns = {
@@ -234,11 +247,12 @@ class account_cash_statement(osv.osv):
         open_jrnl = self.search(cr, uid, sql)
         if open_jrnl:
             raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
-
+        
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id']).type == 'cash':
-            lines = end_lines = self._get_cash_close_box_lines(cr, uid, [], context)
+            open_close = self._get_cash_open_close_box_lines(cr, uid, context)
             vals.update({
-                'ending_details_ids':lines
+                'ending_details_ids':open_close['start'],
+                'starting_details_ids':open_close['end']
             })
         else:
             vals.update({

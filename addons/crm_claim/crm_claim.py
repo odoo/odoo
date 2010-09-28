@@ -54,9 +54,8 @@ class crm_claim(crm.crm_case, osv.osv):
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.claim')]"), 
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
-        'type_id': fields.many2one('crm.case.resource.type', 'Claim Type', \
-                         domain="[('section_id','=',section_id),\
-                         ('object_id.model', '=', 'crm.claim')]"), 
+        'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
+                         domain="[('section_id','=',section_id)]"), 
         'user_id': fields.many2one('res.users', 'Responsible'), 
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help="Sales team to which Case belongs to."\

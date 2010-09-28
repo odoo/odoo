@@ -68,7 +68,7 @@
     inv_brw = self.browse(cr, uid, invoice_id)[0]
     assert inv_brw.move_id, "Journal Entries has not been created"
 -
-  Assign analytic jounal into bank journal
+  Assign analytic journal into bank journal
 - 
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale

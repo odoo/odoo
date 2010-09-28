@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-import time
-from datetime import date, datetime, timedelta
+from datetime import datetime
 from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task
