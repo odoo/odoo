@@ -20,8 +20,9 @@
 ##############################################################################
 
 import time
-from report import report_sxw
 import datetime
+
+from report import report_sxw
 import operator
 
 class budget_report(report_sxw.rml_parse):
@@ -64,8 +65,8 @@ class budget_report(report_sxw.rml_parse):
             achievements = float(self.cr.fetchone()[0])
             res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
         return res
+
 report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml',parser=budget_report, header="internal")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
