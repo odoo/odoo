@@ -37,8 +37,6 @@ class mail_gateway_document(osv.osv_memory):
         result = []
         document_id = context.get('active_id', False)
         mailgate_obj = self.pool.get('mailgate.message')
-        mod_obj = self.pool.get('ir.model.data')
-        act_obj = self.pool.get('ir.actions.act_window')
         mailgate_data = mailgate_obj.browse(cr, uid, document_id)
         model = mailgate_data.model
         res_id = mailgate_data.res_id
