@@ -25,8 +25,6 @@ from osv import fields, osv
 from mx import DateTime
 from tools.translate import _
 from decimal import Decimal
-import tools
-import re
 import decimal_precision as dp
 
 class pos_config_journal(osv.osv):
@@ -114,9 +112,6 @@ class pos_order(osv.osv):
         @return: Dictionary of values """
 
         res = {}
-        pay_obj = self.pool.get('account.bank.statement')
-        stat_obj_line = self.pool.get('account.bank.statement.line')
-        tot =0.0
         val=None
         for order in self.browse(cr, uid, ids):
             cr.execute("select date_payment from pos_order where id=%d"%(order.id))
@@ -138,8 +133,6 @@ class pos_order(osv.osv):
         @return: Dictionary of values """
 
         res = {}
-        pay_obj = self.pool.get('pos.payment')
-        tot =0.0
         val=None
         for order in self.browse(cr, uid, ids):
             cr.execute("select date_validation from pos_order where id=%d"%(order.id))
@@ -215,7 +208,6 @@ class pos_order(osv.osv):
         """ To get  Shop  for this order"
         @return: Shop id  """
 
-        company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         res = self.pool.get('sale.shop').search(cr, uid, [])
         if res:
             return res[0]
@@ -242,8 +234,6 @@ class pos_order(osv.osv):
         """ Changed the Validation state of order
         @return: State  """
 
-        flag=False
-        res_company = self.pool.get('res.company')
         res_obj = self.pool.get('res.users')
         company_disc=self.browse(cr,uid,ids)
         if not company_disc:
@@ -540,7 +530,7 @@ class pos_order(osv.osv):
         res_obj = self.pool.get('res.company')
         try:
             part_company=res_obj.browse(cr,uid,uid) and res_obj.browse(cr,uid,uid).parent_id and res_obj.browse(cr,uid,uid).parent_id.id or None
-        except Exception, e:
+        except Exception:
             raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
         if part_company:
             raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
@@ -559,12 +549,10 @@ class pos_order(osv.osv):
 
         """Create a new payment for the order"""
 
-        res_obj = self.pool.get('res.company')
         statement_obj= self.pool.get('account.bank.statement')        
         statementl_obj = self.pool.get('account.bank.statement.line')
         prod_obj = self.pool.get('product.product')
         property_obj=self.pool.get('ir.property')
-        flag=''
         curr_c=self.pool.get('res.users').browse(cr, uid, uid).company_id
         curr_company=curr_c.id
         order = self.browse(cr, uid, order_id, context)
@@ -600,7 +588,7 @@ class pos_order(osv.osv):
         args['statement_id']= statement_id
         args['pos_statement_id']= order_id
         args['journal_id']= data['journal']
-        statement_line_id = statementl_obj.create(cr, uid, args)
+        statementl_obj.create(cr, uid, args)
         ids_new.append(statement_id)
 
         wf_service = netsvc.LocalService("workflow")
@@ -661,14 +649,12 @@ class pos_order(osv.osv):
     def action_invoice(self, cr, uid, ids, context=None):
         """Create a invoice of order  """
 
-        res_obj = self.pool.get('res.company')
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj= self.pool.get('product.product')
         inv_ids = []
 
         for order in self.pool.get('pos.order').browse(cr, uid, ids, context):
-            curr_c = order.user_salesman_id.company_id
             if order.invoice_id:
                 inv_ids.append(order.invoice_id.id)
                 continue
@@ -894,21 +880,12 @@ class pos_order(osv.osv):
                 raise  osv.except_osv(_('Error !'),
                     _('There is no receivable account defined for this journal:'\
                     ' "%s" (id:%d)') % (order.sale_journal.name, order.sale_journal.id, ))
-            am=0.0
             for payment in order.statement_ids:
-                am+=payment.amount
-
-                if am > 0:
-                    payment_account = \
-                        payment.statement_id.journal_id.default_debit_account_id.id
-                else:
-                    payment_account = \
-                        payment.statement_id.journal_id.default_credit_account_id.id
 
                 # Create one entry for the payment
                 if payment.is_acc:
                     continue
-                payment_move_id = account_move_obj.create(cr, uid, {
+                account_move_obj.create(cr, uid, {
                     'journal_id': payment.statement_id.journal_id.id,
                     'period_id': period,
                 }, context=context)
@@ -1042,9 +1019,8 @@ class pos_order_line(osv.osv):
     def _amount_line(self, cr, uid, ids, field_name, arg, context):
         res = {}
 
-        prices = self.price_by_product_multi(cr, uid, ids)
+        self.price_by_product_multi(cr, uid, ids)
         for line in self.browse(cr, uid, ids):
-            price = prices[line.id]
             if line.discount!=0.0:
                 res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
             else:
@@ -1056,11 +1032,10 @@ class pos_order_line(osv.osv):
 
         account_tax_obj = self.pool.get('account.tax')
 
-        prices = self.price_by_product_multi(cr, uid, ids)
+        self.price_by_product_multi(cr, uid, ids)
         for line in self.browse(cr, uid, ids):
             for f in field_names:
                 if f == 'price_subtotal':
-                    price = prices[line.id]
                     if line.discount != 0.0:
                         res[line.id][f] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
                     else:
@@ -1073,7 +1048,6 @@ class pos_order_line(osv.osv):
                     computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
                     for tax in computed_taxes:
                         tax_amount += tax['amount']
-                    price = prices[line.id]
                     if line.discount!=0.0:
                         res[line.id][f] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
                     else:
@@ -1097,8 +1071,6 @@ class pos_order_line(osv.osv):
         for line in lines:
             pricelist = line.order_id.pricelist_id.id
             product_id = line.product_id
-            qty = line.qty or 0
-            partner_id = line.order_id.partner_id.id or False
 
             if not product_id:
                 res[line.id] = 0.0
@@ -1107,8 +1079,6 @@ class pos_order_line(osv.osv):
                 raise osv.except_osv(_('No Pricelist !'),
                     _('You have to select a pricelist in the sale form !\n' \
                     'Please set one before choosing a product.'))
-
-            uom_id = product_id.uom_po_id.id
 
             #old_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id.id, qty or 1.0, partner_id, {'uom': uom_id})[pricelist]
             #print "prod_id: %s, pricelist: %s, price: %s" % (product_id.id, pricelist, price)
@@ -1170,9 +1140,7 @@ class pos_order_line(osv.osv):
         return {'value': {'price_subtotal_incl':sub_total_discount}}
 
     def onchange_ded(self, cr, uid,ids, val_ded,price_u,*a):
-        pos_order = self.pool.get('pos.order.line')
         res_obj = self.pool.get('res.users')
-        res_company = self.pool.get('res.company')
         comp = res_obj.browse(cr,uid,uid).company_id.company_discount or 0.0
         val=0.0
         if val_ded and price_u:
@@ -1184,7 +1152,6 @@ class pos_order_line(osv.osv):
     def onchange_discount(self, cr, uid,ids, discount,price,*a):
         pos_order = self.pool.get('pos.order.line')
         res_obj = self.pool.get('res.users')
-        res_company = self.pool.get('res.company')
         company_disc = pos_order.browse(cr,uid,ids)
         if discount:
             if not company_disc:
@@ -1282,7 +1249,7 @@ class pos_order_line(osv.osv):
             }
             line_id = self.write(cr, uid, order_line_id, vals)
             if not line_id:
-                raise wizard.except_wizard(_('Error'), _('Modify line failed !'))
+                raise osv.except_osv(_('Error'), _('Modify line failed !'))
             line_id = order_line_id
 
         price_line = float(qty)*float(price)
