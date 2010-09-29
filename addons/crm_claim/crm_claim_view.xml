@@ -42,7 +42,7 @@
             <field name="model">crm.claim</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Claims" colors="blue:state=='pending';black:state=='open';gray:state in ('close', 'cancel');red:date_deadline and (date_deadline &lt; current_date)">
+                <tree string="Claims" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('close', 'cancel');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="user_id" />
