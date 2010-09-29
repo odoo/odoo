@@ -120,11 +120,12 @@ class crm_lead(crm_case, osv.osv):
 
         # Lead fields
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
+            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.project.bug')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
             domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
         'channel_id': fields.many2one('res.partner.canal', 'Channel'),
 
+        'contact_name': fields.char('Contact Name', size=64), 
         'partner_name': fields.char("Partner Name", size=64),
         'optin': fields.boolean('Opt-In'),
         'optout': fields.boolean('Opt-Out'),

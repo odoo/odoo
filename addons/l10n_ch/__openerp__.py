@@ -75,6 +75,7 @@ TODO :
         "base_vat",
         "base_iban",
         "account_payment",
+        "account_voucher",
     ],
     "init_xml" : [
         "dta_data.xml",

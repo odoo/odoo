@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import datetime
 
 from osv import osv, fields
@@ -42,7 +43,7 @@ class account_budget_post(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', context=c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', context=c)
     }
     _order = "name"
 
@@ -62,8 +63,8 @@ class account_budget_post(osv.osv):
 account_budget_post()
 
 class account_budget_post_dotation(osv.osv):
-    def _tot_planned(self, cr, uid, ids,name,args,context):
-        res={}
+    def _tot_planned(self, cr, uid, ids, name, args, context):
+        res = {}
         for line in self.browse(cr, uid, ids):
             if line.period_id:
                 obj_period=self.pool.get('account.period').browse(cr, uid, line.period_id.id)
@@ -75,7 +76,6 @@ class account_budget_post_dotation(osv.osv):
                         OR (date_to  >=%s and date_to <= %s) OR (date_from  < %s  and date_to > %s)"
                 cr.execute(query,(budget_id,obj_period.date_start,obj_period.date_stop,obj_period.date_start,obj_period.date_stop,obj_period.date_start,obj_period.date_stop,))
                 res1=cr.fetchall()
-
                 tot_planned=0.00
                 for record in res1:
                     obj_lines = self.pool.get('crossovered.budget.lines').browse(cr, uid, record[0])
@@ -84,9 +84,9 @@ class account_budget_post_dotation(osv.osv):
                     count_days = strToDate(obj_lines.date_to) - strToDate(obj_lines.date_from)
                     total_days_of_rec = count_days.days +1
                     tot_planned += obj_lines.planned_amount/total_days_of_rec* days_in_period
-                res[line.id]=tot_planned
+                res[line.id] = tot_planned
             else:
-                res[line.id]=0.00
+                res[line.id] = 0.00
         return res
 
     _name = 'account.budget.post.dotation'
@@ -143,7 +143,6 @@ class crossovered_budget(osv.osv):
         return True
 
     def budget_cancel(self, cr, uid, ids, *args):
-
         self.write(cr, uid, ids, {
             'state':'cancel'
         })
@@ -165,7 +164,6 @@ class crossovered_budget_lines(osv.osv):
             acc_ids = [x.id for x in line.general_budget_id.account_ids]
             if not acc_ids:
                 raise osv.except_osv(_('Error!'),_("The General Budget '%s' has no Accounts!") % str(line.general_budget_id.name))
-
             date_to = line.date_to
             date_from = line.date_from
             if context.has_key('wizard_date_from'):
@@ -185,7 +183,6 @@ class crossovered_budget_lines(osv.osv):
         res={}
         for line in self.browse(cr, uid, ids):
             res[line.id]=self._prac_amt(cr, uid, [line.id], context=context)[line.id]
-
         return res
 
     def _theo_amt(self, cr, uid, ids,context={}):
@@ -233,7 +230,8 @@ class crossovered_budget_lines(osv.osv):
             else:
                 res[line.id]=0.00
         return res
-    _name="crossovered.budget.lines"
+
+    _name = "crossovered.budget.lines"
     _description = "Budget Line"
     _columns = {
         'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
@@ -252,7 +250,6 @@ class crossovered_budget_lines(osv.osv):
 crossovered_budget_lines()
 
 class account_analytic_account(osv.osv):
-    _name = 'account.analytic.account'
     _inherit = 'account.analytic.account'
 
     _columns = {

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-08 09:03+0000\n"
+"PO-Revision-Date: 2010-09-09 07:22+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-09 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -30,11 +30,6 @@ msgstr "所有假期申请"
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
 msgstr "在动作定义中使用了无效的模快名。"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,remaining_leaves:0
-msgid "Remaining Leaves"
-msgstr "剩余休假"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
@@ -63,7 +58,6 @@ msgstr "休息日摘要"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: view:hr.holidays.per.user:0
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
 msgstr "员工假期"
@@ -74,8 +68,6 @@ msgid "Set to Draft"
 msgstr "设为草稿"
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
-#: field:hr.holidays.per.user,holiday_ids:0
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidays0
 msgid "Holidays"
@@ -141,14 +133,12 @@ msgstr "我的假期申请"
 
 #. module: hr_holidays
 #: field:hr.holidays,notes:0
-#: field:hr.holidays.per.user,notes:0
 msgid "Notes"
 msgstr "备注"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status:0
 #: field:hr.holidays.log,holiday_status:0
-#: field:hr.holidays.per.user,holiday_status:0
 msgid "Holiday's Status"
 msgstr "假期状态"
 
@@ -191,11 +181,6 @@ msgstr "假期状态"
 #: field:hr.holidays,date_to:0
 msgid "Vacation end day"
 msgstr "假期结束日期"
-
-#. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "Holidays Allowed"
-msgstr "假期已批准"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_legaldeclaration0
@@ -254,7 +239,6 @@ msgstr "每年可得到的假期编码"
 #. module: hr_holidays
 #: field:hr.holidays,employee_id:0
 #: field:hr.holidays.log,employee_id:0
-#: field:hr.holidays.per.user,employee_id:0
 msgid "Employee"
 msgstr "员工"
 
@@ -290,7 +274,6 @@ msgstr "我的假期申请草稿"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: view:hr.holidays.per.user:0
 msgid "Number of Days"
 msgstr "天数"
 
@@ -343,7 +326,6 @@ msgid "Number of Days in this Holiday Request"
 msgstr "申请的假期天数"
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
 #: model:ir.actions.act_window,name:hr_holidays.action_holidays_per_user
 #: model:ir.ui.menu,name:hr_holidays.menu_open_holidays_per_user
 msgid "Holidays Per Employee"
@@ -480,11 +462,6 @@ msgid "My Draft Holidays Requests"
 msgstr "我的假期申请草稿"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,max_leaves:0
-msgid "Maximum Leaves Allowed"
-msgstr "最大休假允许"
-
-#. module: hr_holidays
 #: field:hr.holidays,state:0
 msgid "Status"
 msgstr "状态"
@@ -510,11 +487,6 @@ msgid "Both Validated and Confirmed"
 msgstr "批准和确认"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,leaves_taken:0
-msgid "Leaves Already Taken"
-msgstr "休假已得到"
-
-#. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "holidays."
 msgstr "假期"
@@ -523,11 +495,6 @@ msgstr "假期"
 #: selection:hr.holidays,state:0
 msgid "draft"
 msgstr "草稿"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,user_id:0
-msgid "User"
-msgstr "用户"
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_employeedeclaration0
@@ -555,7 +522,6 @@ msgid "Holiday manager"
 msgstr "假期管理"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,active:0
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "有效"
@@ -584,11 +550,6 @@ msgstr "假期申请等待批准"
 #: view:hr.holidays:0
 msgid "General"
 msgstr "通用"
-
-#. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "General Information"
-msgstr "一般信息"
 
 #. module: hr_holidays
 #: view:hr.holidays:0

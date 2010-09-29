@@ -13,7 +13,8 @@
         groups="base.group_extended"
         />
 
-    <act_window
+    <!-- TO CONFIRM: This is fine -->
+    <!-- act_window
             id="act_crm_phonecall_crm_meeting_new"
             name="Meetings"
             res_model="crm.meeting"
@@ -21,7 +22,7 @@
             view_mode="tree,form,calendar,"
             context="{'default_duration': 4.0, 'default_phonecall_id': active_id}"
             domain="[('phonecall_id', '=', active_id)]"
-            view_type="form"/>
+            view_type="form"/-->
 
 <!-- PHONE CALLS (menu)  -->
 
@@ -31,7 +32,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="context">{"search_default_user_id":uid}</field>
+        <field name="context">{"search_default_user_id":uid, 'search_default_section_id':section_id}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
     </record>
 
@@ -105,7 +106,7 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone2'))+')]'"/>
-        <field name="context" eval="'{\'default_state\':\'open\', \'search_default_current\':1, \'default_categ_id\': ' + str(ref('categ_phone2')) +'}'"/>
+        <field name="context" eval="'{\'search_default_section_id\':section_id, \'default_state\':\'open\', \'search_default_current\':1, \'default_categ_id\': ' + str(ref('categ_phone2')) +'}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
         <field name="help">The Outbound menu open a search view in editable mode, so you can easily modify or plan a new call. Actions buttons allows you to to make you call status evolved for a better follow up of your planned calls. During calls, convert your lead into an opportunity, plan a meeting or canceled it.</field>
     </record>

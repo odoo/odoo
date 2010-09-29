@@ -26,7 +26,7 @@
     Enable the VAT Number for the partner. Check the validity of that VAT Number.
 
     This module follows the methods stated at http://sima-pc.com/nif.php for
-    checking the validity of VAT Number assinged to partners in European countries.
+    checking the validity of VAT Number assigned to partners in European countries.
     """,
     'author': 'OpenERP SA',
     'depends': ['account'],

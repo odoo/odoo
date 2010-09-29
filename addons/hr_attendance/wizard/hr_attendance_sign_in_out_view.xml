@@ -15,8 +15,8 @@
                     <separator colspan="4"/>
                     <group colspan="4" col="6">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-go-back" string="Sign in" name="si_check" type="object"/>
-                        <button icon="gtk-go-forward" string="Sign out" name="so_check" type="object"/>
+                        <button icon="terp-gtk-jump-to-ltr" string="Sign in" name="si_check" type="object"/>
+                        <button icon="terp-gtk-jump-to-rtl" string="Sign out" name="so_check" type="object"/>
                    </group>
                </form>
             </field>
@@ -47,7 +47,7 @@
         </record>
 
         <menuitem action="action_hr_attendance_sigh_in_out" id="menu_hr_attendance_sigh_in_out"
-            parent="menu_hr_time_tracking" sequence="4" groups="base.group_hr_manager,base.group_hr_user,base.group_hr_attendance"/>
+            parent="menu_hr_attendance" sequence="4" groups="base.group_hr_manager,base.group_hr_user,base.group_hr_attendance"/>
 
        <record id="view_hr_attendance_so_ask" model="ir.ui.view">
             <field name="name">hr.sign.in.out.ask.form</field>

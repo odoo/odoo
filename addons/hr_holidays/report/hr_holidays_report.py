@@ -29,6 +29,7 @@ class hr_holidays_report(osv.osv):
     _rec_name = 'date'
     _columns = {
         'date': fields.date('Date', readonly=True),
+        'delay_approve': fields.float('Delay to Approve', digits=(16,2),readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'day': fields.char('Day', size=15, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
@@ -68,7 +69,8 @@ class hr_holidays_report(osv.osv):
                      to_char(s.create_date, 'YYYY-MM-DD') as day,
                      s.holiday_status_id,
                      s.department_id,
-                     s.state
+                     s.state,
+                     avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(3600*24) as  delay_approve                     
                      from
                  hr_holidays s
                  WHERE type='remove'

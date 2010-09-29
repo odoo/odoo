@@ -49,7 +49,7 @@
         </record>
 
         <record id="action_hr_contract_wage_type" model="ir.actions.act_window">
-            <field name="name">Contract Wage Type</field>
+            <field name="name">Wage Type</field>
             <field name="res_model">hr.contract.wage.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -58,7 +58,7 @@
         </record>
 
         <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_management" sequence="5" groups="base.group_system"/>
-        <menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56"/>
+        <menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56" sequence="7"/>
 
         <record id="hr_contract_wage_type_period_view_form" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.period.view.form</field>
@@ -101,7 +101,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Notes" position="before">
+                <page string="Personal Information" position="after">
                     <page string="Miscellaneous">
                         <group colspan="2" col="2">
                         <separator string="Personal Info" colspan="2"/>
@@ -133,7 +133,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="department_id" position="after">
+                <field name="parent_id" position="after">
                     <field name="contract_id"/>
                 </field>
             </field>
@@ -154,8 +154,11 @@
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
-                    <filter string="Wage Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'wage_type_id'}"/>
+                    <filter string="Contract Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
                     <filter string="Working Schedule" icon="terp-personal+" domain="[]" context="{'group_by':'working_hours'}"/>
+                    <filter string="Current" icon="terp-stock_symbol-selection" 
+                            domain="[('date_end','&gt;=', time.strftime('%%Y-%%m-%%d'))]" 
+                            context="{'group_by':'date_end'}"/>                    
                    </group>
                </search>
             </field>
@@ -182,7 +185,10 @@
                         <field name="date_start" />
                         <field name="date_end" />
                         <field name="working_hours"/>
-                        </group>
+                        <separator colspan="2" string="Trial Period"/> 
+                        <field name="trial_date_start" />
+                        <field name="trial_date_end" />
+                        </group>                 
                         <group col="2" colspan="2">
                         <separator colspan="2" string="Advantages"/>
                         <field name="advantages_net"/>
@@ -205,13 +211,14 @@
                 <tree string="Contracts">
                     <field name="name"/>
                     <field name="employee_id"/>
+                    <field name="type_id"/>
                     <field name="job_id"/>
                     <field name="department_id"/>
+                    <field name="working_hours"/>                    
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <field name="working_hours"/>
-                    <field name="wage_type_id"/>
-                    <field name="wage"/>
+                    <field name="wage_type_id" invisible="1"/>
+                    <field name="wage" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -268,8 +275,8 @@
             <field name="search_view_id" ref="hr_contract_type_view_search"/>
         </record>
 
-        <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="next_id_56"/>
-        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4"/>
+        <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="next_id_56" sequence="6"/>
+        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4" groups="base.group_system,base.group_hr_manager,base.group_hr_contract"/>
 
         <!-- Contracts Button on Employee Form -->
         <act_window domain="[('employee_id', '=', active_id)]" id="act_hr_employee_2_hr_contract" name="Contracts" res_model="hr.contract" src_model="hr.employee"/>

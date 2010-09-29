@@ -37,24 +37,6 @@
             id="menu_crm_fundraising_stage_act"
             parent="menu_config_fundrising" />
 
-
-        <!-- Fund Resource Type Form View -->
-
-        <record id="crm_fundraising_resource_act" model="ir.actions.act_window">
-            <field name="name">Fundraising Resource Type</field>
-            <field name="res_model">crm.case.resource.type</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
-            <field name="context">{'object_id':'crm.fundraising'}</field>
-        </record>
-
-       <menuitem action="crm_fundraising_resource_act"
-            groups="base.group_extended" name="Resource Type"
-            id="menu_crm_fundraising_resource_act"
-            parent="menu_config_fundrising" />
-
-
         <!-- Fund Raising Tree View -->
 
         <record model="ir.ui.view" id="crm_case_tree_view_fund">
@@ -63,7 +45,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Funds Tree"
-                    colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                    colors="blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="name" string="Fund Description" />
                     <field name="categ_id" />
                     <field name="type_id" string="Payment Mode" />
@@ -159,7 +141,7 @@
                                 <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                             </group>
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-                                <tree string="Communication history">
+                                <tree string="History">
                                     <field name="display_text" string="History Information"/>
                                     <field name="history" invisible="1"/>
                                     <button
@@ -168,7 +150,7 @@
                                         context="{'mail':'reply', 'model': 'crm.fundraising', 'include_original' : True}"
                                         icon="terp-mail-replied" type="action" />
                                 </tree>
-                                <form string="Communication history">
+                                <form string="History">
                                     <group col="4" colspan="4">
                                         <field name="email_from"/>
                                         <field name="date"/>
@@ -197,7 +179,7 @@
                                     </notebook>
                                 </form>
                             </field>
-                             <button string="Add New Note"
+                             <button string="Add Internal Note"
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
@@ -298,7 +280,7 @@
                         </group>
                         <newline/>
                         <group expand="0" string="Group By...">
-                            <filter string="Partner" icon="terp-personal"
+                            <filter string="Partner" icon="terp-partner"
                                 domain="[]"
                                 context="{'group_by':'partner_id'}" />
                             <filter string="Responsible" icon="terp-personal"

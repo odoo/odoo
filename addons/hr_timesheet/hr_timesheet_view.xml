@@ -16,8 +16,8 @@
                     <field name="date" on_change="on_change_date(date)"/>
                     <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id"/>
                     <field name="name"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" sum="Total time"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" required="1" domain="[('type','=','service')]"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" sum="Total time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                     <field name="amount" sum="Total cost"/>
                     <field name="general_account_id"/>
@@ -67,16 +67,22 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group col='8' colspan='4'>
-                        <filter icon="terp-personal+"
-                                domain="[('user_id','=',uid)]"
-                                string="My Working Hours" name="my" default="1"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
                         <separator orientation="vertical"/>
                         <field name="user_id"/>
                         <field name="account_id" select="1" widget="selection"/>
+                        <field name="product_id" select="1"/>
                         <field name="date" select="1"/>
                     </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Anlytic account" icon="terp-folder-green" domain="[]" context="{'group_by':'account_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>                        
+                    </group>                     
                 </search>
             </field>
 
@@ -113,7 +119,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Notes" position="before">
+                <page string="Categories" position="after">
                     <page string="Timesheets">
                         <field name="product_id" domain="[('type','=','service')]"/>
                         <field name="journal_id"/>

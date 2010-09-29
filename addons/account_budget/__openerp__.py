@@ -26,7 +26,7 @@
     'category': 'Generic Modules/Accounting',
     'description': """This module allows accountants to manage analytic and crossovered budgets.
 
-Once the Master Budgets and the Budgets defined (in Financial
+Once the Master Budgets and the Budgets are defined (in Financial
 Management/Budgets/), the Project Managers can set the planned amount on each
 Analytic Account.
 

@@ -2,7 +2,6 @@
   Create a project 'World Bank's Project'
 - 
   !record {model: project.project, id: project_project_worldbanksproject0}:
-    company_id: base.main_company
     name: "World Bank's Project"
     priority: 4
     
@@ -15,7 +14,6 @@
     name: "Defining Client's Basic Idea of Project"
     product_uom: product.uom_day
     project_id: project_project_worldbanksproject0
-    state: draft
     
     
 - 
@@ -27,7 +25,6 @@
     name: Establishing Project Feasibility
     product_uom: product.uom_day
     project_id: project_project_worldbanksproject0
-    state: draft
 
 - 
   Create project phase 'Preparation of Engineering Designs'
@@ -38,7 +35,6 @@
     name: Preparation of Engineering Designs
     product_uom: product.uom_hour
     project_id: project_project_worldbanksproject0
-    state: draft
     
     
 - 
@@ -50,7 +46,6 @@
     name: Procurement of Works and Goods
     product_uom: product.uom_hour
     project_id: project_project_worldbanksproject0
-    state: draft
     
     
 - 
@@ -62,7 +57,6 @@
     name: Project Construction
     product_uom: product.uom_hour
     project_id: project_project_worldbanksproject0
-    state: draft
     
     
 - 
@@ -74,7 +68,6 @@
     name: Project Completion
     product_uom: product.uom_hour
     project_id: project_project_worldbanksproject0
-    state: draft
 
 - 
   Set previous phase for phase 'Establishing Project Feasibility'
@@ -125,11 +118,8 @@
 - 
   Schedule project phases
 - 
-  !python {model: project.compute.phases}: |
-    self.check_selection(cr, uid, [ref("project_compute_phases_0")], {"lang": "en_US",
-      "project_id": False, "tz": False, "active_model": "ir.ui.menu", "department_id":
-      False, "section_id": False, "record_id": 279, "active_ids": [ref("project_long_term.menu_compute_phase")],
-      "active_id": ref("project_long_term.menu_compute_phase"), })
+  !python {model: project.project}: |
+    self.schedule_phases(cr, uid, ref("project_project_worldbanksproject0"))
       
 -
   Check if phases scheduled, check that either of phase's start_date, end_date and user_id is not null

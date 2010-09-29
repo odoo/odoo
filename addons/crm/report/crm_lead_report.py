@@ -45,7 +45,6 @@ class crm_lead_report(osv.osv):
             @param context: A standard dictionary for contextual values """
 
         res = {}
-        state_perc = 0.0
         avg_ans = 0.0
 
         for case in self.browse(cr, uid, ids, context):
@@ -101,9 +100,9 @@ class crm_lead_report(osv.osv):
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
-                         domain="[('section_id','=',section_id)]" , readonly=True),
+                         domain="['|',('section_id','=',False),('section_id','=',section_id)]" , readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                         domain="[('section_id','=',section_id),\
+                         domain="['|',('section_id','=',False),('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'opening_date': fields.date('Opening Date', readonly=True),
@@ -156,7 +155,7 @@ class crm_lead_report(osv.osv):
                     (SELECT count(id) FROM mailgate_message WHERE model='crm.lead' AND res_id=c.id AND history=True) AS email,
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
-                    extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected,
+                    abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 FROM
                     crm_lead c
