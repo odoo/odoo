@@ -68,6 +68,16 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale- pos details report'+format), 'wb+').write(data)
 -
+  I create a record for Bank Statement.
+-
+  !record {model: account.bank.statement, id: account_bank_statement_st0}:
+    name: St.05/19
+    balance_end_real: 0.0
+    date: '2010-05-19'
+    journal_id: account.bank_journal
+    period_id: account.period_5
+    state: 'draft'
+-
   In order to test the PDF reports defined on a Point Of Sale, we will print a Account Statement Report
 - 
   !python {model: account.bank.statement}: |
