@@ -1765,12 +1765,7 @@ var listLoginHandler = {
 			setUserId(login.data);
             module_install();
             alert('Successfully Login To OpenERP.');
-            if (check_module_install(5) == false){
-                alert("Please install the thunderbird module on your '" + getDbName() +"' database and try again !");
-            }
-			else{
-                window.close();
-            }
+            window.close();
 		}
 		else{
 			alert("Login Failed");
