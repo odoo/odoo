@@ -44,6 +44,7 @@
                         <newline/>
                         <separator colspan="4" string="Message"/>
                      	<field name="message" colspan="4" nolabel="1"/>
+                     	<field name="date"/>
                      </group>
                 </form>
             </field>
@@ -67,12 +68,13 @@
            <field name="model">project.messages</field>
            <field name="type">search</field>
            <field name="arch" type="xml">
-               <search string="Communication Messages">
+               <search string="Porject Messages">
                		<group>
                			<field name="project_id"/>
                         <field name="from_id"/>
                         <field name="to_id"/>
                         <field name="message"/>
+                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                		</group>
                		<newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">
@@ -86,7 +88,7 @@
         </record>
 
        	<record id="messages_form" model="ir.actions.act_window">
-            <field name="name">Communication Messages</field>
+            <field name="name">Project Messages</field>
             <field name="res_model">project.messages</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_project_messages_search"/>

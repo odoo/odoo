@@ -364,7 +364,7 @@ class task(osv.osv):
 
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
-            res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
+            res[task.id]['delay_hours'] = res[task.id]['total_hours'] - res[task.id]['effective_hours']
             res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
                 res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
@@ -647,7 +647,7 @@ class task(osv.osv):
             'name': newname,
         }, context)
         if delegate_data['state'] == 'pending':
-            self.do_pending(cr, uid, [task.id], context)
+            self.do_open(cr, uid, [task.id], context)
         else:
             self.do_close(cr, uid, [task.id], context)
         user_pool = self.pool.get('res.users')

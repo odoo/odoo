@@ -35,6 +35,7 @@ class messages(osv.osv):
         'project_id': fields.many2one('project.project', 'Project',
                                      required=True, ondelete="CASCADE"),
         'message': fields.text('Message', required=True),
+        'date': fields.datetime('Date'),
     }
     
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):

@@ -141,7 +141,7 @@ class project_issue(crm.crm_case, osv.osv):
                 else:
                     res[issue.id][field] = abs(float(duration))
         return res
-
+    
     _columns = {
         'id': fields.integer('ID'),
         'name': fields.char('Name', size=128, required=True),
@@ -193,6 +193,7 @@ class project_issue(crm.crm_case, osv.osv):
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'progress': fields.related('task_id', 'progress', string='Progress (%)',group_operator="avg", store=True),
     }
 
     def _get_project(self, cr, uid, context):
@@ -245,6 +246,7 @@ class project_issue(crm.crm_case, osv.osv):
 
             vals = {
                 'task_id': new_task_id,
+                'state':'open'
             }
             case_obj.write(cr, uid, [bug.id], vals)
 
@@ -286,6 +288,15 @@ class project_issue(crm.crm_case, osv.osv):
         if not stage.on_change:
             return {'value':{}}
         return {'value':{}}
+    
+    def onchange_task_id(self, cr, uid, ids, task_id, context=None):
+        if context is None:
+            context = {}
+        result = {}    
+        if not task_id:
+            return {'value':{}}
+        task = self.pool.get('project.task').browse(cr, uid, task_id, context)
+        return {'value':{'assigned_to': task.user_id.id,}}
 
     def case_escalate(self, cr, uid, ids, *args):
         """Escalates case to top level
@@ -405,6 +416,17 @@ class project_issue(crm.crm_case, osv.osv):
             @param **args: Return Dictionary of Keyword Value
         """
         return True
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not context:
+            context={}
+        issue = self.read(cr, uid, id, ['name'], context=context)
+        if not default:
+            default = {}
+        default = default.copy()
+        default['name'] = issue['name'] + _(' (copy)')
+        return super(project_issue, self).copy(cr, uid, id, default=default,
+                context=context)
 
 project_issue()
 
