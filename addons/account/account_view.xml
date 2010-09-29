@@ -810,7 +810,6 @@
                     <field name="name"/>
                     <field name="price_include" groups="base.group_extended"/>
                     <field name="description"/>
-                    <field name="tax_group" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -821,15 +820,12 @@
             <field name="arch" type="xml">
                 <search string="Search Taxes">
                     <group col="10" colspan="4">
-                        <filter icon="terp-folder-blue" string="Vat Taxes" domain="[('tax_group','=','vat')]" help="Vat Taxes"/>
-                        <filter icon="terp-folder-yellow" string="Other Taxes" domain="[('tax_group','=','other')]" help="Other Taxes"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="description"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Tax Group" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'tax_group'}"/>
                     </group>
                 </search>
             </field>
@@ -843,52 +839,47 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="description" select="1"/>
-                        <field name="tax_group" select="1"/>
-                        <field name="type"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+	                <field name="type_tax_use"/>
+                        <field name="price_include"/>
                         <field name="active"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Tax Definition" >
-                            <group col="2" colspan="2">
-	                            <separator colspan="2" string=""/>
-	                             <field name="applicable_type"/>
-	                             <field name="type_tax_use"/>
-	                             <field groups="base.group_extended" name="domain"/>
-	                             <field groups="base.group_extended" name="sequence"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                 <separator colspan="2" string=""/>
-                                 <field name="amount" attrs="{'readonly':[('type','in',('none', 'code'))]}"/>
-                                 <field groups="base.group_extended" name="child_depend"/>
-                                 <field groups="base.group_extended" name="price_include"/>
-                                 <field groups="base.group_extended" name="include_base_amount"/>
-                            </group>
-                            <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <label colspan="2" nolabel="1" string="Keep empty to use the income account"/>
-                            <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
-                            <separator colspan="4" string="Child Taxes"/>
-                            <field colspan="4" groups="base.group_extended" name="child_ids" nolabel="1"/>
-                        </page>
-                        <page string="Tax Declaration">
-                            <separator colspan="4" string="Invoices"/>
-                            <field name="base_code_id"/>
-                            <field name="base_sign"/>
-                            <field name="tax_code_id"/>
-                            <field name="tax_sign"/>
-
-                            <separator colspan="4" string="Credit Notes"/>
-                            <field name="ref_base_code_id"/>
-                            <field name="ref_base_sign"/>
-                            <field name="ref_tax_code_id"/>
-                            <field name="ref_tax_sign"/>
+                          <group colspan="4" col="4">
+                                  <field name="type"/>
+                                  <field name="amount" attrs="{'readonly':[('type','in',('none', 'code', 'balance'))]}"/>
+                                  <separator colspan="4" string="Accounting Information"/>
+                                  <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                  <label colspan="2" nolabel="1" string="Keep empty to use the income account"/>
+                                  <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                  <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
+                                  <separator colspan="4" string="Tax Declaration: Invoices"/>
+                                  <field name="base_code_id"/>
+                                  <field name="base_sign"/>
+                                  <field name="tax_code_id"/>
+                                  <field name="tax_sign"/>
+                                  <separator colspan="4" string="Tax Declaration: Credit Notes"/>
+                                  <field name="ref_base_code_id"/>
+                                  <field name="ref_base_sign"/>
+                                  <field name="ref_tax_code_id"/>
+                                  <field name="ref_tax_sign"/>
+                                  <separator groups="base.group_extended" colspan="4" string="Children Definition"/>
+                                  <field groups="base.group_extended" name="child_depend"/>
+                                  <field groups="base.group_extended" name="sequence"/>
+                                  <field groups="base.group_extended" name="include_base_amount"/>
+                                  <separator groups="base.group_extended" colspan="4" string="Child Taxes"/>
+                                  <field groups="base.group_extended" colspan="4" name="child_ids" nolabel="1"/>
+                          </group>
                         </page>
                         <page groups="base.group_extended" string="Special Computation">
-                            <separator colspan="4" string="Compute Code (if type=code)"/>
-                            <field colspan="4" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
+                            <separator colspan="4" string="Applicability Options"/>
+	                    <field name="applicable_type"/>
+	                    <field name="domain"/>
                             <separator colspan="4" string="Applicable Code (if type=code)"/>
                             <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
+                            <separator colspan="4" string="Compute Code (if type=code)"/>
+                            <field colspan="4" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
                         </page>
                     </notebook>
                 </form>
@@ -2188,7 +2179,6 @@
                         <field name="description"/>
                         <newline/>
                         <field name="chart_template_id"/>
-                        <field name="tax_group"/>
                         <field name="type"/>
                         <field name="type_tax_use"/>
                     </group>
@@ -2252,8 +2242,6 @@
                         <filter icon="terp-sale" string="Sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
                         <filter icon="terp-purchase" string="Purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-folder-blue" string="Vat Taxes" domain="[('tax_group','=','vat')]" help="Vat Taxes"/>
-                        <filter icon="terp-folder-yellow" string="Other Taxes" domain="[('tax_group','=','other')]" help="Other Taxes"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="description"/>
