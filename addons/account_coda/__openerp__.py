@@ -28,7 +28,7 @@
     Module provides functionality to import
     bank statements from coda files.
     """,
-    "depends"   : ["account"],
+    "depends"   : ["account_voucher"],
     "demo_xml"  : [],
     "init_xml"  : [],
     "update_xml": ["security/ir.model.access.csv",
