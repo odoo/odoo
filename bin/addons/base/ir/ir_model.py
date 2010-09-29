@@ -63,6 +63,7 @@ class ir_model(osv.osv):
         is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
         return [('id', 'in', [id for id in is_osv_mem if bool(is_osv_mem[id]) == value])]
 
+
     _columns = {
         'name': fields.char('Object Name', size=64, translate=True, required=True),
         'model': fields.char('Object', size=64, required=True, select=1),

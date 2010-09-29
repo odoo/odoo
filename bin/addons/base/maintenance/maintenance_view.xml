@@ -23,10 +23,11 @@
             <field name="arch" type="xml">
                 <form string="Maintenance Contract">
                     <separator string="Information" colspan="4"/>
-                    <field name="name"/>
-                    <newline/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
+                    <group col="6" colspan="4">
+	                    <field name="name"/>
+	                    <field name="date_start"/>
+	                    <field name="date_stop"/>
+	                </group>
                     <separator string="Covered Modules" colspan="4"/>
                     <field name="module_ids" nolabel="1" colspan="4">
                         <tree string="Covered Modules">
@@ -89,8 +90,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Add Maintenance Contract" col="2">
-                    <image name="gtk-dialog-info" />
-                    <group col="1">
+                        <group col="1">
                         <separator string="Add Maintenance Contract" />
                         <group states="draft">
                             <field name="name" width="250" />
