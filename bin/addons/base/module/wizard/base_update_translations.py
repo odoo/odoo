@@ -50,6 +50,12 @@ class base_update_translations(osv.osv_memory):
         buf.close()
         return {'type': 'ir.actions.act_window_close'}
 
+    def default_get(self, cr, uid, fields, context=None):
+        lang_obj = self.pool.get('res.lang')
+        record_id = context and context.get('active_id', False) or False
+        lang=lang_obj.browse(cr,uid,record_id).code
+        return {'lang':lang}
+
     _name = 'base.update.translations'
     _columns = {
         'lang': fields.selection(_get_languages, 'Language', required=True),

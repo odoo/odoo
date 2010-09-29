@@ -92,7 +92,7 @@ class base_module_update_open(osv.osv_memory):
         """
         res = {
             'domain': str([]),
-            'name': 'Module List',
+            'name': 'Modules',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'ir.module.module',

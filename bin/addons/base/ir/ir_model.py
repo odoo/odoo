@@ -142,103 +142,6 @@ class ir_model(osv.osv):
         x_custom_model._rec_name = x_name
 ir_model()
 
-
-class ir_model_grid(osv.osv):
-    _name = 'ir.model.grid'
-    _table = 'ir_model'
-    _inherit = 'ir.model'
-    _description = "Objects Security Grid"
-
-    def create(self, cr, uid, vals, context=None):
-        raise osv.except_osv('Error !', 'You cannot add an entry to this view !')
-
-    def unlink(self, *args, **argv):
-        raise osv.except_osv('Error !', 'You cannot delete an entry of this view !')
-
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = super(osv.osv, self).read(cr, uid, ids, fields, context, load)
-        allgr = self.pool.get('res.groups').search(cr, uid, [], context=context)
-        acc_obj = self.pool.get('ir.model.access')
-
-        if not isinstance(result,list):
-            result=[result]
-
-        for res in result:
-            rules = acc_obj.search(cr, uid, [('model_id', '=', res['id'])])
-            rules_br = acc_obj.browse(cr, uid, rules, context=context)
-            for g in allgr:
-                res['group_'+str(g)] = ''
-            for rule in rules_br:
-                perm_list = []
-                if rule.perm_read:
-                    perm_list.append('r')
-                if rule.perm_write:
-                    perm_list.append('w')
-                if rule.perm_create:
-                    perm_list.append('c')
-                if rule.perm_unlink:
-                    perm_list.append('u')
-                perms = ",".join(perm_list)
-                if rule.group_id:
-                    res['group_%d'%rule.group_id.id] = perms
-                else:
-                    res['group_0'] = perms
-        return result
-
-    #
-    # This function do not write fields from ir.model because
-    # access rights may be different for managing models and
-    # access rights
-    #
-    def write(self, cr, uid, ids, vals, context=None):
-        vals_new = vals.copy()
-        acc_obj = self.pool.get('ir.model.access')
-        for grid in self.browse(cr, uid, ids, context=context):
-            model_id = grid.id
-            perms_rel = ['read','write','create','unlink']
-            for val in vals:
-                if not val[:6]=='group_':
-                    continue
-                group_id = int(val[6:]) or False
-                rules = acc_obj.search(cr, uid, [('model_id', '=', model_id),('group_id', '=', group_id)])
-                if not rules:
-                    rules = [acc_obj.create(cr, uid, {
-                        'name': grid.name,
-                        'model_id':model_id,
-                        'group_id':group_id
-                    }) ]
-                vals2 = dict(map(lambda x: ('perm_'+x, x[0] in (vals[val] or '')), perms_rel))
-                acc_obj.write(cr, uid, rules, vals2, context=context)
-        return True
-
-    def fields_get(self, cr, uid, fields=None, context=None):
-        result = super(ir_model_grid, self).fields_get(cr, uid, fields, context)
-        groups = self.pool.get('res.groups').search(cr, uid, [])
-        groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
-        result['group_0'] = {'string': 'All Users','type': 'char','size': 7}
-        for group in groups_br:
-            result['group_%d'%group.id] = {'string': '%s'%group.name,'type': 'char','size': 7}
-        return result
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
-        result = super(ir_model_grid, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
-        groups = self.pool.get('res.groups').search(cr, uid, [])
-        groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
-        cols = ['model', 'name']
-        xml = '''<?xml version="1.0"?>
-<%s editable="bottom">
-    <field name="name" select="1" readonly="1" required="1"/>
-    <field name="model" select="1" readonly="1" required="1"/>
-    <field name="group_0"/>
-    ''' % (view_type,)
-        for group in groups_br:
-            xml += '''<field name="group_%d"/>''' % (group.id, )
-        xml += '''</%s>''' % (view_type,)
-        result['arch'] = xml
-        result['fields'] = self.fields_get(cr, uid, cols, context)
-        return result
-ir_model_grid()
-
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
     _description = "Fields"
@@ -327,7 +230,7 @@ class ir_model_access(osv.osv):
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
         'perm_create': fields.boolean('Create Access'),
-        'perm_unlink': fields.boolean('Delete Permission'),
+        'perm_unlink': fields.boolean('Delete Access'),
     }
 
     def check_groups(self, cr, uid, group):

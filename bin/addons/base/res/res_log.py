@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-import tools 
+import tools
 
 class res_log(osv.osv_memory):
     _name = 'res.log'
@@ -29,7 +29,8 @@ class res_log(osv.osv_memory):
         'user_id': fields.many2one('res.users','User', required=True),
         'res_model': fields.char('Object', size=128),
         'res_id': fields.integer('Object ID'),
-        'secondary': fields.boolean('Secondary Log', help='Do not display this log if it belongs to the same object the user is working on')
+        'secondary': fields.boolean('Secondary Log', help='Do not display this log if it belongs to the same object the user is working on'),
+        'create_date': fields.datetime('Created Date', readonly=True),
     }
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid

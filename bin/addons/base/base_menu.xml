@@ -13,14 +13,13 @@
         <menuitem id="menu_custom_action" name="Actions" parent="base.menu_custom" groups="base.group_extended" sequence="20"/>
         <menuitem id="menu_config" name="Configuration" parent="base.menu_administration" sequence="1"/>
         <menuitem id="menu_translation" name="Translations" parent="base.menu_administration" sequence="4"/>
-        <menuitem id="menu_translation_app" name="Application Terms" parent="base.menu_translation" sequence="4"/>
+        <menuitem id="menu_translation_app" name="Application Terms" parent="base.menu_translation" sequence="4" groups="base.group_extended"/>
         <menuitem id="menu_translation_export" name="Import / Export"
-            groups="base.group_extended"
-            parent="base.menu_translation" sequence="4"/>
+            groups="base.group_extended" parent="base.menu_translation" sequence="3"/>
         <menuitem id="menu_users" name="Users" parent="base.menu_administration" sequence="6"/>
         <menuitem id="menu_security" name="Security" parent="base.menu_administration" sequence="8"
             groups="base.group_extended"/>
-        <menuitem id="menu_management" name="Modules Management" parent="base.menu_administration" sequence="10"
+        <menuitem id="menu_management" name="Modules" parent="base.menu_administration" sequence="10"
             groups="base.group_extended"/>
         <menuitem icon="terp-graph" id="reporting_menu" name="Reporting" sequence="45"
             groups="group_extended"/>

@@ -23,6 +23,7 @@
                 <tree string="Logs">
                     <field name="name"/>
                     <field name="user_id"/>
+                    <field name="create_date"/>
                 </tree>
             </field>
         </record>
@@ -32,11 +33,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Logs">
-                    <group colspan="4" col="6">
-                        <field name="name" colspan="4"/>
+                 <field name="name" colspan="3"/>
+                 <newline/>
+                    <group colspan="4" col="8">
                         <field name="user_id" />
                         <field name="res_model"/>
                         <field name="res_id"/>
+                        <field name="create_date" colspan="1"/>
                     </group>
                 </form>
             </field>
