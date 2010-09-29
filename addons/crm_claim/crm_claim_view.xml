@@ -117,8 +117,7 @@
                                     </group>
                                     <field name="categ_id" select="1" widget="selection"
                                     domain="[('object_id.model', '=', 'crm.claim')]" />
-                                    <field name="type_id" string="Type of Action" select="1"
-                                    domain="[('object_id.model', '=', 'crm.claim')]" />
+                                    <field name="type_action" select="1"/>
                                     <field name="priority"/>
                                 </group>
                                 <separator colspan="4" string="References"/>

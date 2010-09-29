@@ -145,8 +145,6 @@ msgid "Error ! The duration of the Period(s) is/are invalid. "
 msgstr "Алдаа! Мөчлөгийн үргэжлэх хугацаа буруу байна. "
 
 #. module: account
-#: view:account.bank.statement.reconcile:0
-#: field:account.bank.statement.reconcile,line_ids:0
 #: field:account.move,line_id:0
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -230,7 +228,6 @@ msgstr "Давтан гүйлгээнүүд"
 #. module: account
 #: field:account.analytic.line,amount:0
 #: field:account.bank.statement.line,amount:0
-#: field:account.bank.statement.reconcile.line,amount:0
 #: rml:account.invoice:0
 #: field:account.invoice.tax,amount:0
 #: field:account.move,amount:0
@@ -381,11 +378,6 @@ msgstr ""
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
 msgstr "Алдаа! Та цикл хэлбэрийн аналитик данс үүсгэх боломжгүй."
-
-#. module: account
-#: field:account.bank.statement.reconcile,total_entry:0
-msgid "Total entries"
-msgstr "Нийт бичлэг"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -1087,11 +1079,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: field:account.bank.statement.reconcile,total_new:0
-msgid "Total write-off"
-msgstr "Нийт цуцалгаа"
-
-#. module: account
 #: view:account.tax.template:0
 msgid "Compute Code for Taxes included prices"
 msgstr "Үндсэн үнэд шингэсэн татварыг тооцоолох програмчлалын код"
@@ -1461,8 +1448,6 @@ msgstr ""
 "Татварын дүнг орлогын дансанд бичих бол татварын дансыг хоосон орхино"
 
 #. module: account
-#: view:account.bank.statement.reconcile:0
-#: field:account.bank.statement.reconcile,line_new_ids:0
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
 msgid "Write-Off"
@@ -2037,7 +2022,6 @@ msgstr ""
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
-#: field:account.bank.statement.reconcile,partner_id:0
 #: rml:account.general.ledger:0
 #: field:account.invoice,partner_id:0
 #: field:account.move,partner_id:0
@@ -2110,8 +2094,6 @@ msgstr ""
 #: field:account.analytic.account,company_currency_id:0
 #: field:account.bank.accounts.wizard,currency_id:0
 #: field:account.bank.statement,currency:0
-#: field:account.bank.statement.reconcile,total_currency:0
-#: field:account.bank.statement.reconcile,total_second_currency:0
 #: rml:account.general.ledger:0
 #: field:account.invoice,currency_id:0
 #: field:account.journal,currency:0
@@ -2304,7 +2286,6 @@ msgstr "Татварын зарлалтын суурь данс."
 #: field:account.analytic.line,date:0
 #: field:account.bank.statement,date:0
 #: field:account.bank.statement.line,date:0
-#: field:account.bank.statement.reconcile,name:0
 #: rml:account.general.ledger:0
 #: selection:account.general.ledger.report,checktype,sortbydate:0
 #: rml:account.journal.period.print:0
@@ -2494,11 +2475,6 @@ msgstr ""
 #: model:process.transition,name:account.process_transition_supplierentriesreconcile0
 msgid "Entries Reconcile"
 msgstr "Гүйлгээнүүдийн тулгалт"
-
-#. module: account
-#: help:account.bank.statement.reconcile,total_second_amount:0
-msgid "The amount in the currency of the journal"
-msgstr "Журналын валютаар тооцсон дүн"
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,landscape:0
@@ -2867,8 +2843,6 @@ msgstr "Шинэ худалдан авагчийн нэхэмжлэл"
 #: field:account.account,reconcile:0
 #: wizard_button:account.automatic.reconcile,init,reconcile:0
 #: field:account.bank.statement.line,reconcile_id:0
-#: view:account.bank.statement.reconcile:0
-#: field:account.bank.statement.reconcile.line,line_id:0
 #: field:account.move.line,reconcile_id:0
 #: wizard_button:account.move.line.reconcile,addendum,reconcile:0
 #: wizard_button:account.move.line.reconcile,init_full,reconcile:0
@@ -3178,7 +3152,6 @@ msgstr ""
 #: wizard_field:account.account.balance.report,account_selection,Account_list:0
 #: wizard_field:account.automatic.reconcile,init,writeoff_acc_id:0
 #: field:account.bank.statement.line,account_id:0
-#: field:account.bank.statement.reconcile.line,account_id:0
 #: field:account.invoice,account_id:0
 #: field:account.invoice.line,account_id:0
 #: field:account.journal,account_control_ids:0
@@ -4141,11 +4114,6 @@ msgid "Separated Journal Sequences"
 msgstr "Журналын дугаарлалтыг салгах"
 
 #. module: account
-#: help:account.bank.statement.reconcile,total_second_currency:0
-msgid "The currency of the journal"
-msgstr "Журналын валют"
-
-#. module: account
 #: view:account.journal.column:0
 #: model:ir.model,name:account.model_account_journal_column
 msgid "Journal Column"
@@ -4826,7 +4794,6 @@ msgid "Open for unreconciliation"
 msgstr "Тулгагдаагүй бичилтийг нээх"
 
 #. module: account
-#: field:account.bank.statement.reconcile,statement_line:0
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr ""
@@ -4923,12 +4890,6 @@ msgid ""
 msgstr ""
 "Энэ талбарын тусламжтайгаар татварыг сонгож хэрэглэх дэлгэцүүдаас хамаарч "
 "ялгаатай татварын жагсаалтууд гарах боломжтой."
-
-#. module: account
-#: field:account.bank.statement.reconcile,total_amount:0
-#: field:account.bank.statement.reconcile,total_second_amount:0
-msgid "Payment amount"
-msgstr ""
 
 #. module: account
 #: view:account.analytic.account:0
@@ -5430,7 +5391,6 @@ msgstr ""
 
 #. module: account
 #: view:account.bank.statement:0
-#: view:account.bank.statement.reconcile:0
 #: view:account.subscription:0
 msgid "Compute"
 msgstr "Тооцоолох"
@@ -5494,7 +5454,6 @@ msgstr "Ерөнхий журнал"
 #: rml:account.analytic.account.cost_ledger:0
 #: rml:account.analytic.account.inverted.balance:0
 #: field:account.bank.statement,balance_end:0
-#: field:account.bank.statement.reconcile,total_balance:0
 #: rml:account.general.ledger:0
 #: field:account.move.line,balance:0
 #: rml:account.partner.balance:0
@@ -5683,7 +5642,6 @@ msgstr ""
 #: view:account.analytic.account:0
 #: field:account.analytic.account,description:0
 #: field:account.analytic.line,name:0
-#: field:account.bank.statement.reconcile.line,name:0
 #: rml:account.invoice:0
 #: field:account.invoice,name:0
 #: field:account.invoice.line,name:0
