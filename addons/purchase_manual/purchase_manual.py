@@ -57,7 +57,6 @@ purchase_order_line()
 class purchase_order(osv.osv):
     _inherit='purchase.order'
     def action_invoice_create(self, cr, uid, ids, context={}):
-        print 'Invoice Create'
         res = super(purchase_order, self).action_invoice_create(cr, uid, ids, context)
         for po in self.browse(cr, uid, ids, context):
             todo = []
@@ -75,4 +74,9 @@ class purchase_order(osv.osv):
                     todo.append(line.id)
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         return res
+    _columns = {
+        'name': fields.char('Order SDER', size=64, required=True, select=True,
+readonly=True)
+        
+                }
 purchase_order()
