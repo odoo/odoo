@@ -67,7 +67,7 @@
             <field name="arch" type="xml">
                 <form string="Expenses Sheet">
                     <group colspan="4" col="6">
-                        <field name="employee_id"/>
+                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="name" select="1"/>
                         <field name="ref" groups="base.group_extended"/>
                         <field name="date" select="1"/>
