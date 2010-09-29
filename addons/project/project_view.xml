@@ -107,11 +107,12 @@
                    <group col='15' colspan='4'>
                        <filter icon="terp-check" string="Current" name="Current" domain="[('state', 'in',('open','pending'))]" help="Open and Pending Projects" default="1"/>
                        <separator orientation="vertical"/>
-                       <filter icon="terp-personal" string="Manager" name="Manager" domain="[('user_id', '=', uid)]" help="Projects in which I am a manager."/>
                        <filter icon="terp-personal+" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member." default="1"/>
                        <separator orientation="vertical"/>
                        <field name="name" string="Project Name"/>
-                       <field name="user_id" string="Project Manager" default="1"/>
+                       <field name="user_id" string="Project Manager" default="1">
+                            <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manage" icon="terp-personal"/>
+                       </field> 
                        <field name="partner_id" string="Partner"/>
                    </group>
                    <newline />

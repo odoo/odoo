@@ -1,5 +1,5 @@
 import time
-import mx.DateTime
+from datetime import datetime
 from report import report_sxw
 from tools import amount_to_text_en
 
@@ -56,7 +56,7 @@ class report_payroll_register(report_sxw.rml_parse):
         return self.net
         
     def get_month(self, indate):
-        new_date = mx.DateTime.strptime(indate, '%Y-%m-%d')
+        new_date = datetime.strptime(indate, '%Y-%m-%d')
         out_date = new_date.strftime('%B')+'-'+new_date.strftime('%Y')
         return out_date
 
