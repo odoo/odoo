@@ -966,6 +966,41 @@ function module_install()
     xmlRpcClient.asyncCall(listinstallmodulehandler,null,'execute',[ strDbName,struid,strpass,strobj,strmethod, strvalue],6);
 }
 
+var listSearchwebdocumentHandler = {
+	onResult: function(client, context, result) {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+        var sendername = getSenderEmail();
+		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
+		var count = arrIdList.Count();
+		for (i = 0; i < count; i++) {
+			var strlResult = arrIdList.QueryElementAt(i, Components.interfaces.nsISupportsArray);
+            var strlSearchResult = strlResult.QueryElementAt(0, Components.interfaces.nsISupportsCString);
+            var strlSearchResultValue = strlResult.QueryElementAt(1, Components.interfaces.nsISupportsCString);
+           }
+           if(strlSearchResult=="email" && strlSearchResultValue!=''){
+                 setSenderEmail(strlSearchResultValue);
+                 var t = getSenderEmail();
+                  open_document();} 
+    
+            if(strlSearchResult=="email" && strlSearchResultValue==''){
+                alert("Contact is not available.");
+            } 
+
+            if(strlSearchResult=="res_id"){
+                 setResourceId(strlSearchResultValue);
+                 var t = getResourceId();}
+	},
+	onFault: function (client, ctxt, fault) {
+
+	},
+
+	onError: function (client, ctxt, status, errorMsg) {
+
+	}
+
+}
+
+
 
 var listSearchContactHandler = {
 	onResult: function(client, context, result) {
@@ -1036,6 +1071,7 @@ var listSearchContactHandler = {
 	}
 
 }
+
 var listSearchContactdetailHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -1275,6 +1311,31 @@ function searchCheckbox()
 	var arrofarr = dictcreation(strname,checkboxlist);
 	xmlRpcClient.asyncCall(listSearchCheckboxHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,arrofarr ],6);
 }
+
+function searchdocument()
+{
+	var branchobj = getPref();
+	setServerService('xmlrpc/object');
+	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+	arrFinalList = [];
+	var xmlRpcClient = getXmlRpc();
+	var cmbSearchList = document.getElementById('listSearchBox');
+	var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strDbName.data = branchobj.getCharPref("serverdbname");
+	var struid = xmlRpcClient.createType(xmlRpcClient.INT,{});
+	struid.data = branchobj.getIntPref('userid');
+	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strpass.data = branchobj.getCharPref("password");
+    var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strobj.data = 'thunderbird.partner';
+	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strmethod.data = 'search_contact';
+	var strname = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strname.data = getSenderEmail();
+  	
+	xmlRpcClient.asyncCall(listSearchwebdocumentHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strname ],6);
+}
+
 
 function searchContact()
 {
