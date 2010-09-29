@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+        <record id="view_mail_gateway_document" model="ir.ui.view">
+            <field name="name">Open Document</field>
+            <field name="model">mail.gateway.document</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+              <form string="Open Document">
+                    <label string="" colspan="2" />
+                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    <button name="open_document" string="Open Document" type="object" icon="gtk-ok"/>
+             </form>
+            </field>
+        </record>
+
+        <record id="action_view_mail_gateway_document" model="ir.actions.act_window">
+            <field name="name">Open Document</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mail.gateway.document</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <act_window id="action_view_mail_gateway_document_window"
+            name="Open Document"
+            res_model="mail.gateway.document"
+            src_model="mailgate.message"
+            view_mode="form"
+            target="new"
+            view_type="form"
+            key2="client_action_multi"/>
+
+    </data>
+</openerp>
