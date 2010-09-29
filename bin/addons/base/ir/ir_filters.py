@@ -42,7 +42,7 @@ class ir_filters(osv.osv):
         'user_id':fields.many2one('res.users', 'User', help='False means for every user'),
         'domain': fields.text('Domain Value', required=True),
         'context': fields.text('Context Value', required=True),
-        'model_id': fields.selection(_list_all_models, 'Model', required=True),
+        'model_id': fields.selection(_list_all_models, 'Object', required=True),
     }
 
 ir_filters()

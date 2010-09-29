@@ -36,7 +36,7 @@ class actions(osv.osv):
     _table = 'ir_actions'
     _columns = {
         'name': fields.char('Action Name', required=True, size=64),
-        'type': fields.char('Action Type', required=True, size=32),
+        'type': fields.char('Action Type', required=True, size=32,readonly=True),
         'usage': fields.char('Action Usage', size=32),
     }
     _defaults = {
