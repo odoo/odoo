@@ -31,11 +31,7 @@
 ##############################################################################
 
 import re
-import os
-import sys
-import shutil
 import time
-from datetime import datetime
 
 from report import report_sxw
 from tools import mod10r
@@ -74,7 +70,7 @@ class account_invoice_bvr(report_sxw.rml_parse):
         date_formatted=''
         print date_to_format
         if date_to_format:
-            date_formatted = strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
+            date_formatted = time.strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
 
     def comma_me(self,amount):
