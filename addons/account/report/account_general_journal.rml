@@ -343,11 +343,11 @@
         </tr>
       </blockTable>
       <section>
-      <para style="Standard"><font color="white">[[lines(o.id) and removeParentNode('para') or removeParentNode('section') ]]</font></para>
+      <para style="Standard">[[ repeatIn(lines(o.id),'line')]]</para>
       <blockTable colWidths="100.0,125.0,90.0,100.0,100.0" style="Table_Journal_Detail">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
-            <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(lines(o.id),'line')]]</font> [[ line['code'] ]]</para>
+            <para style="terp_default_9">[[ line['code'] ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ line['name'] ]]</para>
@@ -365,10 +365,10 @@
       </blockTable>
       </section>
 	  <section>
+	  <para style="Standard">[[ repeatIn(lines(o.id),'line')]]</para>
       <blockTable colWidths="100.0,100.0,73.0,80.0,80.0,80.0" style="Table_Journal_Detail">[[ display_currency(data)  or removeParentNode('blockTable') ]]
-            <para style="Standard"><font color="white">[[lines(o.id) and removeParentNode('para') or removeParentNode('section') ]]</font></para>
         <tr>
-          <td><para style="terp_default_9"><font>[[ repeatIn(lines(o.id),'line')]]</font> [[ line['code'] ]]</para></td>
+          <td><para style="terp_default_9">[[ line['code'] ]]</para></td>
           <td><para style="terp_default_9">[[ line['name'] ]]</para></td>
           <td><para style="terp_default_Right_9">[[ formatLang(line['debit'] )]]</para></td>
           <td><para style="terp_default_Right_9">[[ formatLang(line['credit']) ]]</para></td>

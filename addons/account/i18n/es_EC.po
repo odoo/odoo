@@ -146,8 +146,6 @@ msgid "Error ! The duration of the Period(s) is/are invalid. "
 msgstr "¡Error! La duración del periodo o periodos es inválida. "
 
 #. module: account
-#: view:account.bank.statement.reconcile:0
-#: field:account.bank.statement.reconcile,line_ids:0
 #: field:account.move,line_id:0
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -234,7 +232,6 @@ msgstr "Asientos recurrentes"
 #. module: account
 #: field:account.analytic.line,amount:0
 #: field:account.bank.statement.line,amount:0
-#: field:account.bank.statement.reconcile.line,amount:0
 #: rml:account.invoice:0
 #: field:account.invoice.tax,amount:0
 #: field:account.move,amount:0
@@ -390,11 +387,6 @@ msgstr "Descripción en facturas"
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
 msgstr "¡Error! No puede crear cuentas analíticas recursivas."
-
-#. module: account
-#: field:account.bank.statement.reconcile,total_entry:0
-msgid "Total entries"
-msgstr "Total asientos"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -1106,11 +1098,6 @@ msgstr ""
 "menor a mayor secuencia."
 
 #. module: account
-#: field:account.bank.statement.reconcile,total_new:0
-msgid "Total write-off"
-msgstr "Desajuste total"
-
-#. module: account
 #: view:account.tax.template:0
 msgid "Compute Code for Taxes included prices"
 msgstr "Código para el cálculo de precios con impuestos incluidos"
@@ -1483,8 +1470,6 @@ msgid "Keep empty to use the income account"
 msgstr "Dejarlo vacío para usar la cuenta de ingresos"
 
 #. module: account
-#: view:account.bank.statement.reconcile:0
-#: field:account.bank.statement.reconcile,line_new_ids:0
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
 msgid "Write-Off"
@@ -2061,7 +2046,6 @@ msgstr ""
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
-#: field:account.bank.statement.reconcile,partner_id:0
 #: rml:account.general.ledger:0
 #: field:account.invoice,partner_id:0
 #: field:account.move,partner_id:0
@@ -2136,8 +2120,6 @@ msgstr "Anterior"
 #: field:account.analytic.account,company_currency_id:0
 #: field:account.bank.accounts.wizard,currency_id:0
 #: field:account.bank.statement,currency:0
-#: field:account.bank.statement.reconcile,total_currency:0
-#: field:account.bank.statement.reconcile,total_second_currency:0
 #: rml:account.general.ledger:0
 #: field:account.invoice,currency_id:0
 #: field:account.journal,currency:0
@@ -2334,7 +2316,6 @@ msgstr "La cuenta base de la declaración de impuestos."
 #: field:account.analytic.line,date:0
 #: field:account.bank.statement,date:0
 #: field:account.bank.statement.line,date:0
-#: field:account.bank.statement.reconcile,name:0
 #: rml:account.general.ledger:0
 #: selection:account.general.ledger.report,checktype,sortbydate:0
 #: rml:account.journal.period.print:0
@@ -2525,11 +2506,6 @@ msgstr "Información adicional"
 #: model:process.transition,name:account.process_transition_supplierentriesreconcile0
 msgid "Entries Reconcile"
 msgstr "Asientos conciliados"
-
-#. module: account
-#: help:account.bank.statement.reconcile,total_second_amount:0
-msgid "The amount in the currency of the journal"
-msgstr "El importe en la divisa del diario."
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,landscape:0
@@ -2896,8 +2872,6 @@ msgstr "Nueva factura de cliente"
 #: field:account.account,reconcile:0
 #: wizard_button:account.automatic.reconcile,init,reconcile:0
 #: field:account.bank.statement.line,reconcile_id:0
-#: view:account.bank.statement.reconcile:0
-#: field:account.bank.statement.reconcile.line,line_id:0
 #: field:account.move.line,reconcile_id:0
 #: wizard_button:account.move.line.reconcile,addendum,reconcile:0
 #: wizard_button:account.move.line.reconcile,init_full,reconcile:0
@@ -3210,7 +3184,6 @@ msgstr "account.move.line.select"
 #: wizard_field:account.account.balance.report,account_selection,Account_list:0
 #: wizard_field:account.automatic.reconcile,init,writeoff_acc_id:0
 #: field:account.bank.statement.line,account_id:0
-#: field:account.bank.statement.reconcile.line,account_id:0
 #: field:account.invoice,account_id:0
 #: field:account.invoice.line,account_id:0
 #: field:account.journal,account_control_ids:0
@@ -4184,11 +4157,6 @@ msgid "Separated Journal Sequences"
 msgstr "Secuencias de diarios separadas"
 
 #. module: account
-#: help:account.bank.statement.reconcile,total_second_currency:0
-msgid "The currency of the journal"
-msgstr ""
-
-#. module: account
 #: view:account.journal.column:0
 #: model:ir.model,name:account.model_account_journal_column
 msgid "Journal Column"
@@ -4854,12 +4822,6 @@ msgid "Open for unreconciliation"
 msgstr ""
 
 #. module: account
-#: field:account.bank.statement.reconcile,statement_line:0
-#: model:ir.model,name:account.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr ""
-
-#. module: account
 #: wizard_button:account.automatic.reconcile,reconcile,end:0
 msgid "OK"
 msgstr ""
@@ -4888,6 +4850,11 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.account_analytic_account_analytic_check
 #: model:ir.actions.wizard,name:account.account_analytic_account_analytic_check_report
 msgid "Analytic Check"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_account_bank_statement_line
+msgid "Bank Statement Line"
 msgstr ""
 
 #. module: account
@@ -4948,12 +4915,6 @@ msgstr ""
 msgid ""
 "This field is only used if you develop your own module allowing developers "
 "to create specific taxes in a custom domain."
-msgstr ""
-
-#. module: account
-#: field:account.bank.statement.reconcile,total_amount:0
-#: field:account.bank.statement.reconcile,total_second_amount:0
-msgid "Payment amount"
 msgstr ""
 
 #. module: account
@@ -5450,7 +5411,6 @@ msgstr ""
 
 #. module: account
 #: view:account.bank.statement:0
-#: view:account.bank.statement.reconcile:0
 #: view:account.subscription:0
 msgid "Compute"
 msgstr ""
@@ -5514,7 +5474,6 @@ msgstr ""
 #: rml:account.analytic.account.cost_ledger:0
 #: rml:account.analytic.account.inverted.balance:0
 #: field:account.bank.statement,balance_end:0
-#: field:account.bank.statement.reconcile,total_balance:0
 #: rml:account.general.ledger:0
 #: field:account.move.line,balance:0
 #: rml:account.partner.balance:0
@@ -5701,7 +5660,6 @@ msgstr ""
 #: view:account.analytic.account:0
 #: field:account.analytic.account,description:0
 #: field:account.analytic.line,name:0
-#: field:account.bank.statement.reconcile.line,name:0
 #: rml:account.invoice:0
 #: field:account.invoice,name:0
 #: field:account.invoice.line,name:0
