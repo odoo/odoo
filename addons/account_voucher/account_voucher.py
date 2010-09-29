@@ -852,17 +852,18 @@ class account_bank_statement_line(osv.osv):
     def _amount_reconciled(self, cursor, user, ids, name, args, context=None):
         if not ids:
             return {}
+
         res_currency_obj = self.pool.get('res.currency')
         res = {}
         company_currency_id = False
-
         for line in self.browse(cursor, user, ids, context=context):
-            if not company_currency_id:
-                company_currency_id = line.company_id.id
+#            if not company_currency_id:
+#                company_currency_id = line.company_id.id
             if line.voucher_id:
-                res[line.id] = res_currency_obj.compute(cursor, user,
-                        company_currency_id, line.statement_id.currency.id,
-                        line.voucher_id.amount, context=context)
+                res[line.id] = line.voucher_id.amount#
+#                        res_currency_obj.compute(cursor, user,
+#                        company_currency_id, line.statement_id.currency.id,
+#                        line.voucher_id.amount, context=context)
             else:
                 res[line.id] = 0.0
         return res
