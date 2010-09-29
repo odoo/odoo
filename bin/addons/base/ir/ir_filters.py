@@ -38,17 +38,14 @@ class ir_filters(osv.osv):
         return my_acts
     
     def create_or_replace(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        is_filter_exist = False
+        filter_id = None
         for filter in self.get_filters(cr, uid, vals['model_id']):
             if filter['name'].lower() == vals['name'].lower():
-                is_filter_exist = filter['id']
+                filter_id = filter['id']
                 break
-        if is_filter_exist:
-             return super(ir_filters, self).write(cr, uid, is_filter_exist, vals, context)
-        else:
-             return super(ir_filters, self).create(cr, uid, vals, context)
+        if filter_id:
+            return self.write(cr, uid, filter_id, vals, context)
+        return self.create(cr, uid, vals, context)
 
 
     _columns = {
@@ -58,6 +55,11 @@ class ir_filters(osv.osv):
         'context': fields.text('Context Value', required=True),
         'model_id': fields.selection(_list_all_models, 'Model', required=True),
     }
+    
+    _sql_constraints = [
+        ('name_model_uid_uniq', 'UNIQUE(name, model_id, user_id)', 'Filter name must be unique!'),
+    ]
+
 
 ir_filters()
 
