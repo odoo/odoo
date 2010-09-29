@@ -209,16 +209,6 @@ class act_window(osv.osv):
                 res[act.id] = str(form_arch)
         return res
 
-    def _get_help_status(self, cr, uid, ids, name, arg, context={}):
-        activate_tips = self.pool.get('res.users').browse(cr, uid, uid).menu_tips
-        if activate_tips:
-            cr.execute(""" SELECT action.id,
-                         CASE WHEN r.uid IS NULL THEN True ELSE False END
-                         AS help_status FROM ir_act_window action
-                         LEFT JOIN ir_act_window_user_rel r ON
-                         (action.id = r.act_id AND (r.uid IS NULL or r.uid= %s)) WHERE action.id = ANY(%s)""",(uid,ids,))
-            return dict(cr.fetchall())
-
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
@@ -252,8 +242,6 @@ class act_window(osv.osv):
         'menus': fields.char('Menus', size=4096),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.'),
-        'display_help':fields.function(_get_help_status, type='boolean', method=True, string='Display Help',
-            help='It gives the status if the help message has to be displayed or not when a user performs an action')
 
     }
     _defaults = {
@@ -266,12 +254,7 @@ class act_window(osv.osv):
         'auto_refresh': lambda *a: 0,
         'auto_search':lambda *a: True
     }
-    def _auto_init(self, cr, context={}):
-        super(act_window, self)._auto_init(cr, context)
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_action_uid_index\'')
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX act_window_action_uid_index ON ir_act_window_user_rel (act_id, uid)')
-            cr.commit()
+
 act_window()
 
 class act_window_view(osv.osv):

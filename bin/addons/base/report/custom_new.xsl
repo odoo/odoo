@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
-	<xsl:import href="../../base/report/custom_default.xsl"/>
-	<xsl:import href="../../base/report/custom_rml.xsl"/>
+	<xsl:import href="../../base/report/custom_default_printscreen.xsl"/>
+	<xsl:import href="../../base/report/custom_rml_printscreen.xsl"/>
 	<xsl:template match="/">
 		<xsl:call-template name="rml">
 			<xsl:with-param name="pageSize" select="report/config/PageSize"/>
