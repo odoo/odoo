@@ -257,7 +257,7 @@ class mrp_production(osv.osv):
         """
         dt_end = DateTime.now()
         for po in self.browse(cr, uid, ids, context=context):
-            dt_end = DateTime.strptime(po.date_start or po.date_planned, '%Y-%m-%d %H:%M:%S')
+            dt_end = DateTime.strptime(po.date_planned, '%Y-%m-%d %H:%M:%S')
             if not po.date_start:
                 self.write(cr, uid, [po.id], {
                     'date_start': po.date_planned
@@ -271,7 +271,7 @@ class mrp_production(osv.osv):
                     del context['__last_update']
                 if (wc.date_planned < dt.strftime('%Y-%m-%d %H:%M:%S')) or mini:
                     self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id],  {
-                        'date_planned':dt.strftime('%Y-%m-%d %H:%M:%S')
+                        'date_planned': dt.strftime('%Y-%m-%d %H:%M:%S')
                     }, context=context, update=False)
                     i = self.pool.get('resource.calendar').interval_get(
                         cr,

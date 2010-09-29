@@ -999,7 +999,7 @@ class pos_order_line(osv.osv):
     def _amount_line_ttc(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0.0)
         account_tax_obj = self.pool.get('account.tax')
-        prices = self.price_by_product_multi(cr, uid, ids)
+        self.price_by_product_multi(cr, uid, ids)
         for line in self.browse(cr, uid, ids):
             tax_amount = 0.0
             taxes = [t for t in line.product_id.taxes_id]
@@ -1008,7 +1008,6 @@ class pos_order_line(osv.osv):
             computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
             for tax in computed_taxes:
                 tax_amount += tax['amount']
-            price = prices[line.id]
             if line.discount!=0.0:
                 res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
             else:
