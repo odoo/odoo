@@ -72,6 +72,16 @@ class res_partner_contact(osv.osv):
             addr += (r.get('first_name', '') or '')
             res.append((r['id'], addr))
         return res
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=None):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        if name:
+            ids = self.search(cr, uid, ['|',('name', operator, name),('first_name', operator, name)] + args, limit=limit, context=context or {})
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context or {})
+        return self.name_get(cr, uid, ids, context=context)
 res_partner_contact()
 
 class res_partner_address(osv.osv):
@@ -109,29 +119,6 @@ class res_partner_job(osv.osv):
         for r in self.browse(cr, uid, ids):
             funct = r.function_id and (", " + r.function_id.name) or ""
             res.append((r.id, self.pool.get('res.partner.contact').name_get(cr, uid, [r.contact_id.id])[0][1] + funct))
-        return res
-
-    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        job_ids = []
-        for arg in args:
-            if arg[0] == 'address_id':
-                self._order = 'sequence_partner'
-            elif arg[0] == 'contact_id':
-                self._order = 'sequence_contact'
-
-                contact_obj = self.pool.get('res.partner.contact')
-                search_arg = ['|', ('first_name', 'ilike', arg[2]), ('name', 'ilike', arg[2])]
-                contact_ids = contact_obj.search(cr, user, search_arg, offset=offset, limit=limit, order=order, context=context, count=count)
-                if not contact_ids:
-                    continue
-                contacts = contact_obj.browse(cr, user, contact_ids, context=context)
-                for contact in contacts:
-                    job_ids.extend([item.id for item in contact.job_ids])
-
-        res = super(res_partner_job,self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
-        if job_ids:
-            res = list(set(res + job_ids))
-
         return res
 
     _name = 'res.partner.job'
