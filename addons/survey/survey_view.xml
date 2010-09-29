@@ -25,9 +25,10 @@
                     <field name="title" select="1"/>
                     <group col="6" colspan="6">
                         <field name="responsible_id"/>
+                        <field name="id" invisible="1"/>
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
                             string="Test Survey" type="action" icon="gtk-new"
-                            context="{'active':True,'survey_id': active_id}"/>
+                            context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
                             string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
