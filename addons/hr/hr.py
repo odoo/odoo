@@ -138,10 +138,14 @@ class hr_employee(osv.osv):
         return {'value':{}}
 
     def onchange_department(self, cr, uid, ids, department_id, context=None):
-        manager = self.pool.get('hr.department').browse(cr, uid, department_id).manager_id.id
-        return {'value': {'parent_id':manager or False}}
+        if not department_id:
+            return {'value':{'parent_id': False}}
+        manager = self.pool.get('hr.department').browse(cr, uid, department_id).manager_id
+        return {'value': {'parent_id':manager and manager.id or False}}
 
     def onchange_user(self, cr, uid, ids, user_id, context=None):
+        if not user_id:
+            return {'value':{'work_email': False}}
         mail = self.pool.get('res.users').browse(cr,uid,user_id)
         return {'value': {'work_email':mail.user_email}}          
         
