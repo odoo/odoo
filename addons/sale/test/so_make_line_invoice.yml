@@ -41,15 +41,20 @@
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so3}
 -
-  I click on the "Create Invoice" button of sale order line
+  I click on the "Make Invoice" button of sale order line
+-
+  !record {model: sale.order.line.make.invoice, id: sale_order_line_make_invoice_0}:
+    {}
+-
+  I click on the "Create Invoice" button of wizard
 - 
-  !python {model: sale.order.line}: |
+  !python {model: sale.order.line.make.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
     sol = so.order_line[0] 
-    self.create_sale_order_line_invoice(cr, uid, [sol.id], {"lang": "en_US",
-      "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("sale.menu_invoicing_sales_order_lines")],
-      "search_default_uninvoiced": 1, "active_id": ref("sale.menu_invoicing_sales_order_lines"),
+    self.make_invoices(cr, uid, [ref("sale_order_line_make_invoice_0")], {"lang": "en_US",
+      "tz": False, "active_model": "sale.order.line", "active_ids": [sol.id],
+      "search_default_uninvoiced": 1, "active_id": sol.id,
       })
 -
   I verify that "Invoiced" has been set to True.
@@ -84,7 +89,7 @@
     invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
     assert invoice_id, "Invoice is not in the open state"
 -
-  I assign an analytic jounal to the bank journal
+  I assign an analytic journal to the bank journal
 - 
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale
@@ -115,17 +120,20 @@
     sale_id=self.browse(cr, uid, ref("sale_order_so3"))
     assert(sale_id.invoiced == True), "Paid has not been set to true"
 -
-  I click on the "Create Invoice" button of sale order and verify that it gives a warning message
+  I create an invoice for another sale order line. I click on the "Make Invoice" button of sale order line
 -
-  I create an invoice for another sale order line. I click on the "Create Invoice" button of sale order line
-- 
-  !python {model: sale.order.line}: |
+  !record {model: sale.order.line.make.invoice, id: sale_order_line_make_invoice_1}:
+    {} 
+-
+  I click on the "Create Invoice" button of wizard
+-
+  !python {model: sale.order.line.make.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
     sol = so.order_line[1]    
-    self.create_sale_order_line_invoice(cr, uid, [sol.id], {"lang": "en_US",
-      "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("sale.menu_invoicing_sales_order_lines")],
-      "search_default_uninvoiced": 1, "active_id": ref("sale.menu_invoicing_sales_order_lines"),
+    self.make_invoices(cr, uid, [ref("sale_order_line_make_invoice_1")], {"lang": "en_US",
+      "tz": False, "active_model": "sale.order.line", "active_ids": [sol.id],
+      "search_default_uninvoiced": 1, "active_id": sol.id,
       })
 -
   I verify that invoice for sale order line has been created.
@@ -166,7 +174,7 @@
     invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
     assert invoice_id, "Invoice is not in the open state"
 -
-  Assign analytic jounal into bank journal
+  Assign analytic journal into bank journal
 - 
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale

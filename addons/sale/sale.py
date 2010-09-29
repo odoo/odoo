@@ -841,13 +841,6 @@ class sale_order_line(osv.osv):
         'product_packaging': False
     }
 
-    def create_sale_order_line_invoice(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        context.update({'active_ids' : ids,'active_id' : ids})
-        self.pool.get('sale.order.line.make.invoice').make_invoices(cr, uid, ids, context=context)
-        return True
-
     def invoice_line_create(self, cr, uid, ids, context=None):
         if context is None:
             context = {}

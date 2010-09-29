@@ -157,10 +157,10 @@
                                                 <field name="invoiced"/>
                                                 <group attrs="{'invisible':[('invoiced','=',True)]}">
                                                 <button colspan="1"
-                                                    name="create_sale_order_line_invoice"
+                                                    name="%(action_view_sale_order_line_make_invoice)d"
                                                     states="confirmed"
-                                                    string="Create Invoice"
-                                                    type="object"
+                                                    string="Make Invoices"
+                                                    type="action"
                                                     icon="terp-document-new" />
                                                  </group>
                                             </group>
@@ -403,9 +403,9 @@ to your configuration: from the sales order, from the pickings, etc.
                             <field name="state"/>
                             <group col="3" colspan="2">
                                 <button colspan="1"
-                                  name="create_sale_order_line_invoice"
-                                  string="Create Invoice"
-                                  type="object"
+                                  name="%(action_view_sale_order_line_make_invoice)d"
+                                  string="Make Invoice"
+                                  type="action"
                                   icon="terp-document-new"
                                   attrs="{'invisible': ['|',('state', 'in', ('draft','cancel')),('invoiced', '=', 1)]}"/>
                                 <button name="button_cancel"

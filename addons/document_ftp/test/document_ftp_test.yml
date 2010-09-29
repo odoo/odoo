@@ -1,7 +1,7 @@
 -   |
-    In order to test the document_ftp module in OpenERP, I will try different operation on the FTP interface, and check their impacts on OpenERP's documents and vice-versa.
+    In order to test the document_ftp module in OpenERP, I will try different operations on the FTP interface and check their impacts on OpenERP's documents and vice-versa.
 -
-    In order to test behaviour of resource Directory I will make one resource Directory "Labels" in OpenERP having type "Other Resources" and Directory mapped to object "Partner"
+    In order to test the behaviour of resource Directory, I will make one resource Directory "Labels" in OpenERP having type "Other Resources" and Directory mapped to object "Partner"
 -
     !record {model: 'document.directory', id: dir_label}:
         name : "Labels"
@@ -25,20 +25,20 @@
         storage_id : document.storage_default
         type : directory
 -
-    I am create a one Document name "Document" and select "File" as its Directory,
+    I am create one Document name "Document" and select "File" as its Directory,
 -
-    When I am creating the record then "Resource Title" is filled automatic  with "Document".
+    When I am creating the record, "Resource Title" is filled automatic with "Document".
 -
     !record {model: 'ir.attachment', id: document_1}:
         name : "Document"
         parent_id : directory_file
 -
-    In order to connect FTP server and set "File" path.
-    I create one directory "New" in "File" directory from FTP and check its effect in OpenERP
+    In order to connect FTP server and set "File" path,
+    I create one directory "New" in "File" directory from FTP and check its effect in OpenERP.
 -
     Also Rename the directory name "New" to "New Directory".
 -
-    Remove directory "New Directory" and  remove file "Document".
+    Remove directory "New Directory" and remove file "Document".
 -
     !python {model: ir.attachment}: |
         from ftplib import FTP
@@ -64,10 +64,10 @@
     In order to check directory created from FTP is working perfectly
 -
     Now I will test the same for Resource directory which is mapped with OpenERP object. 
-    When you open this directory from FTP clients, it displays each records of mapped resource object as directory.
+    When you open this directory from FTP clients, it displays each record of mapped resource object as directory.
 -
     Now I test FTP client and Open the "Labels" Directory to check Resource Directory in FTP.
-    I can see that all Label of OpenERP are shown as children of "Labels" in FTP client as Directories
+    I can see that all Labels of OpenERP are shown as children of "Labels" in FTP client as Directories.
 -
     !python {model: ir.attachment}: |
         from ftplib import FTP
