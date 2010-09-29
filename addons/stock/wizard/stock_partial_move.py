@@ -104,8 +104,8 @@ class stock_partial_move(osv.osv_memory):
                     <field name="move%s_product_id" nolabel="1"/>
                     <field name="move%s_product_qty" string="Qty" />
                     <field name="move%s_product_uom" nolabel="1" />
-                    <field name="move%s_prodlot_id" groups="base.group_extended" />                    
-                """%(m.id, m.id, m.id,m.id)
+                    <field name="move%s_prodlot_id" domain="[('product_id','=',move%s_product_id)]"  groups="base.group_extended" />                    
+                """%(m.id, m.id, m.id,m.id,m.id)
                 if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
                     _moves_fields.update({
                         'move%s_product_price'%(m.id) : {
