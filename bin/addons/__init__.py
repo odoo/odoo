@@ -203,14 +203,14 @@ def get_module_filetree(module, dir='.'):
 
     return tree
 
-def get_module_as_zip_from_module_directory(module_directory, b64enc=True, src=True):
-    """Compress a module directory
+def zip_directory(directory, b64enc=True, src=True):
+    """Compress a directory
 
-    @param module_directory: The module directory
+    @param directory: The directory to compress
     @param base64enc: if True the function will encode the zip file with base64
     @param src: Integrate the source files
 
-    @return: a stream to store in a file-like object
+    @return: a string containing the zip file
     """
 
     RE_exclude = re.compile('(?:^\..+\.swp$)|(?:\.py[oc]$)|(?:\.bak$)|(?:\.~.~$)', re.I)
@@ -225,16 +225,16 @@ def get_module_as_zip_from_module_directory(module_directory, b64enc=True, src=T
 
     archname = StringIO()
     archive = PyZipFile(archname, "w", ZIP_DEFLATED)
-    archive.writepy(module_directory)
-    _zippy(archive, module_directory, src=src)
+    archive.writepy(directory)
+    _zippy(archive, directory, src=src)
     archive.close()
-    val = archname.getvalue()
+    archive_data = archname.getvalue()
     archname.close()
 
     if b64enc:
-        val = base64.encodestring(val)
+        return base64.encodestring(archive_data)
 
-    return val
+    return archive_data
 
 def get_module_as_zip(modulename, b64enc=True, src=True):
     """Generate a module as zip file with the source or not and can do a base64 encoding
@@ -256,7 +256,7 @@ def get_module_as_zip(modulename, b64enc=True, src=True):
         if b64enc:
             val = base64.encodestring(val)
     else:
-        val = get_module_as_zip_from_module_directory(ap, b64enc, src)
+        val = zip_directory(ap, b64enc, src)
 
     return val
 
