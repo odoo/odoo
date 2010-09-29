@@ -914,7 +914,7 @@ class orm_template(object):
                 nbrmax = max(nbrmax, max2)
                 warning = warning + w2
                 reduce(lambda x, y: x and y, newrow)
-                row[field] = (reduce(lambda x, y: x or y, newrow.values()) and \
+                row[field] = newrow and (reduce(lambda x, y: x or y, newrow.values()) and \
                         [(0, 0, newrow)]) or []
                 i = max2
                 while (position+i) < len(datas):
@@ -929,7 +929,7 @@ class orm_template(object):
                     (newrow, max2, w2, translate2, data_id2, data_res_id2) = process_liness(
                             self, datas, prefix+[field], current_module, relation_obj._name, newfd, position+i)
                     warning = warning + w2
-                    if reduce(lambda x, y: x or y, newrow.values()):
+                    if newrow and reduce(lambda x, y: x or y, newrow.values()):
                         row[field].append((0, 0, newrow))
                     i += max2
                     nbrmax = max(nbrmax, i)
