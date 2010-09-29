@@ -393,7 +393,11 @@ class account_voucher(osv.osv):
         else:
             total_credit = price or 0.0
             account_type = 'receivable'
-        ids = move_line_pool.search(cr, uid, [('account_id.type','=', account_type), ('reconcile_id','=', False), ('partner_id','=',partner_id)], context=context)
+
+        if not context.get('move_line_ids', False):
+            ids = move_line_pool.search(cr, uid, [('account_id.type','=', account_type), ('reconcile_id','=', False), ('partner_id','=',partner_id)], context=context)
+        else:
+            ids = context['move_line_ids']
         ids.reverse()
         moves = move_line_pool.browse(cr, uid, ids)
 
