@@ -10,7 +10,7 @@ import tools
 from tools.translate import _
 from report.render import render
 from report.interface import report_int
-
+import addons
 class external_pdf(render):
 
     def __init__(self, pdf):
@@ -46,7 +46,7 @@ class report_custom(report_int):
             result['info_address'] = partner.address[0].street
             result['info_address2'] = (partner.address[0].zip or '') + ' ' + (partner.address[0].city or '')
         try:
-            tools.pdf_utils.fill_pdf(tools.config['addons_path']+'/l10n_lu/wizard/2008_DECL_F_M10.pdf', '/tmp/output.pdf', result)
+            tools.pdf_utils.fill_pdf(addons.get_module_resource('l10n_lu','wizard', '2008_DECL_F_M10.pdf'), '/tmp/output.pdf', result)
             self.obj = external_pdf(file('/tmp/output.pdf').read())
             self.obj.render()
             return (self.obj.pdf, 'pdf')

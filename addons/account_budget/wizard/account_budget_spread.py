@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import netsvc
+
 from osv import fields, osv
 import decimal_precision as dp
 
@@ -29,7 +29,7 @@ class account_budget_spread(osv.osv_memory):
     _columns = {
         'fiscalyear': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
-        }
+    }
 
     def check_spread(self, cr, uid, ids, context=None):
         if context is None:

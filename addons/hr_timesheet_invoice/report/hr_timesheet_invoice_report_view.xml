@@ -395,13 +395,34 @@
             <field name="search_view_id" ref="view_timesheet_account_search"/>
         </record>
 
-        <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_report_timesheet_user" name="Timesheets per day" res_model="report_timesheet.user" src_model="res.users"/>
+        <act_window 
+        context="{'search_default_user_id': [active_id]}"
+        id="act_res_users_2_report_timesheet_user" 
+        name="Timesheets per day" 
+        res_model="report_timesheet.user" 
+        src_model="res.users"/>
+        
 
-        <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_report_timehsheet_account" name="Timesheets per account" res_model="report_timesheet.account" src_model="res.users"/>
+        <act_window 
+        context="{'search_default_user_id': [active_id]}"
+        id="act_res_users_2_report_timehsheet_account" 
+        name="Timesheets per account" 
+        res_model="report_timesheet.account" 
+        src_model="res.users"/>
 
-        <act_window domain="[('account_id', '=', active_id)]" id="act_account_analytic_account_2_report_timehsheet_account" name="Timesheets" res_model="report_timesheet.account" src_model="account.analytic.account"/>
+        <act_window 
+        context="{'search_default_account_id': [active_id]}"
+        id="act_account_analytic_account_2_report_timehsheet_account" 
+        name="Timesheets" 
+        res_model="report_timesheet.account" 
+        src_model="account.analytic.account"/>
 
-        <act_window domain="[('manager_id', '=', active_id)]" id="act_res_users_2_report_timesheet_invoice" name="Costs to invoice" res_model="report_timesheet.invoice" src_model="res.users"/>
+        <act_window 
+        context="{'search_default_manager_id': [active_id]}"
+        id="act_res_users_2_report_timesheet_invoice" 
+        name="Costs to invoice" 
+        res_model="report_timesheet.invoice" 
+        src_model="res.users"/>
 
 
         <!-- Random Timesheet  -->

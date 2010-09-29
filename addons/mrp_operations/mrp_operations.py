@@ -39,6 +39,15 @@ class stock_move(osv.osv):
     _columns = {
         'move_dest_id_lines': fields.one2many('stock.move','move_dest_id', 'Children Moves')
     }
+    
+    def copy(self, cr, uid, id, default=None, context={}):
+        if default is None:
+            default = {}
+        default.update({
+            'move_dest_id_lines': [],
+        })
+        return super(stock_move, self).copy(cr, uid, id, default, context)
+    
 stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
@@ -53,26 +62,30 @@ class mrp_production_workcenter_line(osv.osv):
             else:
                 res[op.id]=False
         return res
-    
+
     def _get_date_end(self, cr, uid, ids, field_name, arg, context):
         """ Finds ending date.
         @return: Dictionary of values.
         """
+        ops = self.browse(cr, uid, ids, context=context)
+        date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops]
+        intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
+
         res = {}
-        for op in self.browse(cr, uid, ids, context=context):
+        for op in ops:
             res[op.id] = False
             if op.date_planned:
                 d = DateTime.strptime(op.date_planned,'%Y-%m-%d %H:%M:%S')
-                i = self.pool.get('resource.calendar').interval_get(cr, uid, op.workcenter_id.calendar_id.id or False, d, op.hour or 0.0)
+                i = intervals[(op.date_planned, op.hour, op.workcenter_id.calendar_id.id)]
                 if i:
                     res[op.id] = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
                 else:
                     res[op.id] = op.date_planned
         return res
-    
+
     _inherit = 'mrp.production.workcenter.line'
     _order = "sequence, date_planned"
-    
+
     _columns = {
        'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Cancelled'),('done','Finished')],'State', readonly=True,
                                  help="* When a work order is created it is set in 'Draft' state.\n" \

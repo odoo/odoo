@@ -1369,9 +1369,9 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
-                        <filter icon="terp-stock_effects-object-colorize" name="state" string="State" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical" />
                         <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'address_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter icon="terp-stock_effects-object-colorize" name="state" string="State" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
@@ -1767,9 +1767,9 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Supplier" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
@@ -1851,8 +1851,7 @@
             src_model="stock.location"/>
 
         <act_window
-            context="{'location': active_id, 'search_default_done': 1}"
-            domain="[('product_id','=',active_id)]"
+            context="{'location': active_id, 'search_default_done': 1,'search_default_product_id': [active_id]}"
             id="act_product_stock_move_open"
             name="Stock Moves"
             res_model="stock.move"
@@ -1866,8 +1865,8 @@
             src_model="stock.move"/>
 
         <act_window
-            context="{'location': active_id, 'search_default_future': 1}"
-            domain="[('product_id','=',active_id),('state','in',('waiting','confirmed','assigned'))]"
+            context="{'location': active_id, 'search_default_future': 1,'search_default_product_id': [active_id]}"
+            domain="[('state','in',('waiting','confirmed','assigned'))]"
             id="act_product_stock_move_futur_open"
             name="Future Stock Moves"
             res_model="stock.move"

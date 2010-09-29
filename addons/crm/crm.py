@@ -20,8 +20,6 @@
 ##############################################################################
 
 import time
-from datetime import datetime
-from datetime import timedelta
 import base64
 import tools
 from osv import fields
@@ -181,7 +179,7 @@ class crm_case(object):
             if not stage_record.section_id:
                 section_id = False # only select stages without section
 
-        domain = [('object_id.model', '=', self._name), ('section_id', '=', section_id)]
+        domain = [('object_id.model', '=', self._name), '|', ('section_id', '=', section_id),('section_id','=',False)]
         if 'force_domain' in context and context['force_domain']:
             domain += context['force_domain']
         sid = stage_obj.search(cr, uid, domain, context=context)
@@ -431,7 +429,7 @@ class crm_case(object):
 
                 # Send an email
                 subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
-                flag = tools.email_send(
+                tools.email_send(
                     src,
                     [dest],
                     subject, 
@@ -582,10 +580,8 @@ crm_case_section()
 
 class crm_case_categ(osv.osv):
     """ Category of Case """
-
     _name = "crm.case.categ"
-    _description = "Category of case"
-
+    _description = "Category of Case"
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),

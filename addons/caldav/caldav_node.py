@@ -19,10 +19,6 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-from tools.translate import _
-import pooler
-import tools
 import time
 from document import nodes
 import StringIO
@@ -141,7 +137,6 @@ class node_calendar(nodes.node_class):
         return str(result)
 
     def _get_dav_dropbox_home_URL(self, cr):
-        import xml.dom.minidom
         import urllib
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -153,7 +148,6 @@ class node_calendar(nodes.node_class):
         return url
     
     def _get_dav_notification_URL(self, cr):
-        import xml.dom.minidom
         import urllib
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -308,7 +302,8 @@ class node_calendar(nodes.node_class):
         calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
         return calendar.description
 
-    def _get_dav_principal_collection_set(self, uri):
+    def _get_dav_principal_collection_set(self, cr):
+        import xml
         import urllib
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -341,7 +336,6 @@ class node_calendar(nodes.node_class):
 
     def _get_caldav_calendar_user_address_set(self, cr):
         import xml.dom.minidom
-        dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
@@ -410,7 +404,6 @@ class res_node_calendar(nodes.node_class):
         self.res_id = res_id
 
     def open(self, cr, mode=False):
-        uid = self.context.uid
         if self.type in ('collection','database'):
             return False
         s = StringIO.StringIO(self.get_data(cr))

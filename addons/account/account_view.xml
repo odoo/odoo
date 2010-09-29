@@ -433,7 +433,7 @@
         <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="account_account_menu"/>
 
         <record id="view_account_bank_statement_filter" model="ir.ui.view">
-            <field name="name">account.bank.statement.select</field>
+            <field name="name">account.cash.statement.select</field>
             <field name="model">account.bank.statement</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -444,7 +444,7 @@
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="name"/>
-                        <field name="journal_id" widget='selection'/>
+                        <field name="journal_id" widget='selection' domain="[('type', '=', 'cash')]" />
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -489,7 +489,7 @@
                         <field name="name"/>
                         <field name="date"/>
                         <field name="period_id"/>
-                        <field name="journal_id" widget="selection"/>
+                        <field name="journal_id" widget="selection" domain="[('type', '=', 'bank')]" />
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -600,6 +600,7 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
             <field name="context">{'journal_type':'bank'}</field>
+            <field name="search_view_id" ref="view_bank_statement_search"/>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
             <field name="sequence" eval="1"/>
@@ -620,6 +621,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+            <field name="search_view_id" ref="view_bank_statement_search"/>
             <field name="context">{'journal_type':'bank'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_periodic_tree_bank">
@@ -1412,10 +1414,9 @@
         </record>
 
         <act_window
-            domain="[('move_id','=',active_id)]"
             id="act_account_move_to_account_move_line_open"
             name="Journal Items"
-            context="{'move_id':active_id}"
+            context="{'search_default_move_id':[active_id]}"
             res_model="account.move.line"
             src_model="account.move"/>
 
@@ -1506,6 +1507,7 @@
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
+            <field name="search_view_id" ref="view_bank_statement_search"/>
             <field name="view_id" ref="view_bank_statement_reconcile_form"/>
         </record>
 

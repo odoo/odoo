@@ -19,20 +19,26 @@
 #
 ##############################################################################
 
-import base64
-import os
-import re
-import time
-from datetime import datetime, timedelta
-import binascii
-import collections
-
-import tools
 from crm import crm
-from osv import fields,osv,orm
-from osv.orm import except_orm
+from datetime import datetime
+from osv import fields,osv
 from tools.translate import _
+import binascii
+import time
 import tools
+
+
+class project_issue_version(osv.osv):
+    _name = "project.issue.version"
+    _order = "name desc"
+    _columns = {
+        'name': fields.char('Version Number', size=32, required=True),
+        'active': fields.boolean('Active', required=False),
+    }
+    _defaults = {
+        'active': 1,
+    }
+project_issue_version()
 
 class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
@@ -167,7 +173,7 @@ class project_issue(crm.crm_case, osv.osv):
                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Severity'),
-        'type_id': fields.many2one('crm.case.resource.type', 'Version', domain="[('object_id.model', '=', 'project.issue')]"),
+        'version_id': fields.many2one('project.issue.version', 'Version'),
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),

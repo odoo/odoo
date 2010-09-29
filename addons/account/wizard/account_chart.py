@@ -44,14 +44,6 @@ class account_chart(osv.osv_memory):
         fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1 )
         return fiscalyears and fiscalyears[0] or False
 
-    def _build_periods(self, cr, uid, period_from, period_to):
-        period_obj = self.pool.get('account.period')
-        period_date_start = period_obj.read(cr, uid, period_from, ['date_start'])['date_start']
-        period_date_stop = period_obj.read(cr, uid, period_to, ['date_stop'])['date_stop']
-        if period_date_start > period_date_stop:
-            raise osv.except_osv(_('Error'),_('Start period should be smaller then End period'))
-        return period_obj.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop)])
-
     def onchange_fiscalyear(self, cr, uid, ids, fiscalyear_id=False, context=None):
         res = {}
         res['value'] = {}
@@ -95,9 +87,9 @@ class account_chart(osv.osv_memory):
         result = mod_obj._get_id(cr, uid, 'account', 'action_account_tree')
         id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
-        result['periods'] = []
+        result['periods'] = [] 
         if data['period_from'] and data['period_to']:
-            result['periods'] = self._build_periods(cr, uid, data['period_from'], data['period_to'])
+            result['periods'] = self.pool.get('account.period').build_ctx_periods(cr, uid, data['period_from'], data['period_to'])
         result['context'] = str({'fiscalyear': data['fiscalyear'], 'periods': result['periods'], \
                                     'state': data['target_move']})
         if data['fiscalyear']:

@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import datetime
 
 from osv import osv, fields
@@ -42,18 +43,19 @@ class account_budget_post(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', context=c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', context=c)
     }
     _order = "name"
 
     def spread(self, cr, uid, ids, fiscalyear_id=False, amount=0.0):
         dobj = self.pool.get('account.budget.post.dotation')
+        obj_fiscalyear = self.pool.get('account.fiscalyear')
         for o in self.browse(cr, uid, ids):
             # delete dotations for this post
             dobj.unlink(cr, uid, dobj.search(cr, uid, [('post_id','=',o.id)]))
 
             # create one dotation per period in the fiscal year, and spread the total amount/quantity over those dotations
-            fy = self.pool.get('account.fiscalyear').browse(cr, uid, [fiscalyear_id])[0]
+            fy = obj_fiscalyear.browse(cr, uid, [fiscalyear_id])[0]
             num = len(fy.period_ids)
             for p in fy.period_ids:
                 dobj.create(cr, uid, {'post_id': o.id, 'period_id': p.id, 'amount': amount/num})
@@ -62,31 +64,31 @@ class account_budget_post(osv.osv):
 account_budget_post()
 
 class account_budget_post_dotation(osv.osv):
-    def _tot_planned(self, cr, uid, ids,name,args,context):
-        res={}
+    def _tot_planned(self, cr, uid, ids, name, args, context):
+        obj_budget_lines = self.pool.get('crossovered.budget.lines')
+        res = {}
         for line in self.browse(cr, uid, ids):
             if line.period_id:
-                obj_period=self.pool.get('account.period').browse(cr, uid, line.period_id.id)
+                obj_period = self.pool.get('account.period').browse(cr, uid, line.period_id.id)
 
-                total_days=strToDate(obj_period.date_stop) - strToDate(obj_period.date_start)
-                budget_id=line.post_id and line.post_id.id or False
-                query="select id from crossovered_budget_lines where \
-                        general_budget_id= %s AND (date_from  >=%s and date_from <= %s ) \
-                        OR (date_to  >=%s and date_to <= %s) OR (date_from  < %s  and date_to > %s)"
-                cr.execute(query,(budget_id,obj_period.date_start,obj_period.date_stop,obj_period.date_start,obj_period.date_stop,obj_period.date_start,obj_period.date_stop,))
-                res1=cr.fetchall()
-
-                tot_planned=0.00
+                total_days = strToDate(obj_period.date_stop) - strToDate(obj_period.date_start)
+                budget_id = line.post_id and line.post_id.id or False
+                query="SELECT id FROM crossovered_budget_lines WHERE \
+                        general_budget_id= %s AND (date_from  >=%s AND date_from <= %s ) \
+                        OR (date_to  >=%s AND date_to <= %s) OR (date_from  < %s  AND date_to > %s)"
+                cr.execute(query, (budget_id, obj_period.date_start, obj_period.date_stop, obj_period.date_start, obj_period.date_stop, obj_period.date_start, obj_period.date_stop,))
+                res1 = cr.fetchall()
+                tot_planned = 0.00
                 for record in res1:
-                    obj_lines = self.pool.get('crossovered.budget.lines').browse(cr, uid, record[0])
-                    count_days = min(strToDate(obj_period.date_stop),strToDate(obj_lines.date_to)) - max(strToDate(obj_period.date_start), strToDate(obj_lines.date_from))
-                    days_in_period = count_days.days +1
+                    obj_lines = obj_budget_lines.browse(cr, uid, record[0])
+                    count_days = min(strToDate(obj_period.date_stop), strToDate(obj_lines.date_to)) - max(strToDate(obj_period.date_start), strToDate(obj_lines.date_from))
+                    days_in_period = count_days.days + 1
                     count_days = strToDate(obj_lines.date_to) - strToDate(obj_lines.date_from)
-                    total_days_of_rec = count_days.days +1
-                    tot_planned += obj_lines.planned_amount/total_days_of_rec* days_in_period
-                res[line.id]=tot_planned
+                    total_days_of_rec = count_days.days + 1
+                    tot_planned += obj_lines.planned_amount / total_days_of_rec * days_in_period
+                res[line.id] = tot_planned
             else:
-                res[line.id]=0.00
+                res[line.id] = 0.00
         return res
 
     _name = 'account.budget.post.dotation'
@@ -96,7 +98,7 @@ class account_budget_post_dotation(osv.osv):
         'post_id': fields.many2one('account.budget.post', 'Item', select=True),
         'period_id': fields.many2one('account.period', 'Period'),
         'amount': fields.float('Amount', digits=(16,2)),
-        'tot_planned':fields.function(_tot_planned, method=True, string='Total Planned Amount', type='float', store=True),
+        'tot_planned': fields.function(_tot_planned, method=True, string='Total Planned Amount', type='float', store=True),
     }
 
 account_budget_post_dotation()
@@ -119,39 +121,38 @@ class crossovered_budget(osv.osv):
 
     _defaults = {
         'state': 'draft',
-        'creating_user_id': lambda self,cr,uid,context: uid,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', context=c)
+        'creating_user_id': lambda self, cr, uid, context: uid,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', context=c)
     }
 
     def budget_confirm(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
-            'state':'confirm'
+            'state': 'confirm'
         })
         return True
 
     def budget_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
-            'state':'draft'
+            'state': 'draft'
         })
         return True
 
     def budget_validate(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
-            'state':'validate',
+            'state': 'validate',
             'validating_user_id': uid,
         })
         return True
 
     def budget_cancel(self, cr, uid, ids, *args):
-
         self.write(cr, uid, ids, {
-            'state':'cancel'
+            'state': 'cancel'
         })
         return True
 
     def budget_done(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
-            'state':'done'
+            'state': 'done'
         })
         return True
 
@@ -159,21 +160,20 @@ crossovered_budget()
 
 class crossovered_budget_lines(osv.osv):
 
-    def _prac_amt(self, cr, uid, ids,context={}):
+    def _prac_amt(self, cr, uid, ids, context={}):
         res = {}
         for line in self.browse(cr, uid, ids):
             acc_ids = [x.id for x in line.general_budget_id.account_ids]
             if not acc_ids:
                 raise osv.except_osv(_('Error!'),_("The General Budget '%s' has no Accounts!") % str(line.general_budget_id.name))
-
             date_to = line.date_to
             date_from = line.date_from
             if context.has_key('wizard_date_from'):
                 date_from = context['wizard_date_from']
             if context.has_key('wizard_date_to'):
                 date_to = context['wizard_date_to']
-            cr.execute("select sum(amount) from account_analytic_line where account_id=%s and (date "
-                       "between to_date(%s,'yyyy-mm-dd') and to_date(%s,'yyyy-mm-dd')) and "
+            cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id=%s AND (date "
+                       "between to_date(%s,'yyyy-mm-dd') AND to_date(%s,'yyyy-mm-dd')) AND "
                        "general_account_id=ANY(%s)", (line.analytic_account_id.id, date_from, date_to,acc_ids,))
             result = cr.fetchone()[0]
             if result is None:
@@ -184,14 +184,13 @@ class crossovered_budget_lines(osv.osv):
     def _prac(self, cr, uid, ids, name, args, context):
         res={}
         for line in self.browse(cr, uid, ids):
-            res[line.id]=self._prac_amt(cr, uid, [line.id], context=context)[line.id]
-
+            res[line.id] = self._prac_amt(cr, uid, [line.id], context=context)[line.id]
         return res
 
-    def _theo_amt(self, cr, uid, ids,context={}):
+    def _theo_amt(self, cr, uid, ids, context={}):
         res = {}
         for line in self.browse(cr, uid, ids):
-            today=datetime.datetime.today()
+            today = datetime.datetime.today()
             date_to = today.strftime("%Y-%m-%d")
             date_from = line.date_from
             if context.has_key('wizard_date_from'):
@@ -200,40 +199,40 @@ class crossovered_budget_lines(osv.osv):
                 date_to = context['wizard_date_to']
 
             if line.paid_date:
-                if strToDate(line.date_to)<=strToDate(line.paid_date):
-                    theo_amt=0.00
+                if strToDate(line.date_to) <= strToDate(line.paid_date):
+                    theo_amt = 0.00
                 else:
-                    theo_amt=line.planned_amount
+                    theo_amt = line.planned_amount
             else:
-                total=strToDate(line.date_to) - strToDate(line.date_from)
+                total = strToDate(line.date_to) - strToDate(line.date_from)
                 elapsed = min(strToDate(line.date_to),strToDate(date_to)) - max(strToDate(line.date_from),strToDate(date_from))
                 if strToDate(date_to) < strToDate(line.date_from):
                     elapsed = strToDate(date_to) - strToDate(date_to)
 
                 if total.days:
-                    theo_amt = float(elapsed.days/float(total.days))*line.planned_amount
+                    theo_amt = float(elapsed.days / float(total.days)) * line.planned_amount
                 else:
                     theo_amt = line.planned_amount
 
-            res[line.id]=theo_amt
+            res[line.id] = theo_amt
         return res
 
     def _theo(self, cr, uid, ids, name, args, context):
-        res={}
+        res = {}
         for line in self.browse(cr, uid, ids):
-            res[line.id]=self._theo_amt(cr, uid, [line.id], context=context)[line.id]
-
+            res[line.id] = self._theo_amt(cr, uid, [line.id], context=context)[line.id]
         return res
 
     def _perc(self, cr, uid, ids, name, args, context):
         res = {}
         for line in self.browse(cr, uid, ids):
-            if line.theoritical_amount<>0.00:
-                res[line.id]=float(line.practical_amount or 0.0 / line.theoritical_amount)*100
+            if line.theoritical_amount <> 0.00:
+                res[line.id] = float(line.practical_amount or 0.0 / line.theoritical_amount) * 100
             else:
-                res[line.id]=0.00
+                res[line.id] = 0.00
         return res
-    _name="crossovered.budget.lines"
+
+    _name = "crossovered.budget.lines"
     _description = "Budget Line"
     _columns = {
         'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
@@ -242,17 +241,16 @@ class crossovered_budget_lines(osv.osv):
         'date_from': fields.date('Start Date', required=True),
         'date_to': fields.date('End Date', required=True),
         'paid_date': fields.date('Paid Date'),
-        'planned_amount':fields.float('Planned Amount', required=True, digits=(16,2)),
-        'practical_amount':fields.function(_prac, method=True, string='Practical Amount', type='float', digits=(16,2)),
-        'theoritical_amount':fields.function(_theo, method=True, string='Theoritical Amount', type='float', digits=(16,2)),
-        'percentage':fields.function(_perc, method=True, string='Percentage', type='float'),
+        'planned_amount': fields.float('Planned Amount', required=True, digits=(16,2)),
+        'practical_amount': fields.function(_prac, method=True, string='Practical Amount', type='float', digits=(16,2)),
+        'theoritical_amount': fields.function(_theo, method=True, string='Theoritical Amount', type='float', digits=(16,2)),
+        'percentage': fields.function(_perc, method=True, string='Percentage', type='float'),
         'company_id': fields.related('crossovered_budget_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
 crossovered_budget_lines()
 
 class account_analytic_account(osv.osv):
-    _name = 'account.analytic.account'
     _inherit = 'account.analytic.account'
 
     _columns = {

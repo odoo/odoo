@@ -765,7 +765,7 @@
     <menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6"/>
 
     <act_window name="Deposit slip"
-        domain="[('partner_id', '=', active_id)]"
+        context="{'search_default_partner_id': [active_id]}"
         res_model="auction.deposit"
         src_model="res.partner"
         id="act_auction_lot_open_deposit"/>
