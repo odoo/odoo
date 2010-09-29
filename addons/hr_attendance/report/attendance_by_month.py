@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from mx import DateTime
-from mx.DateTime import now
 import time
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import datetime
 import netsvc
 import pooler
@@ -31,7 +31,7 @@ from report.interface import toxml
 
 from report import report_sxw
 
-one_day = DateTime.RelativeDateTime(days=1)
+one_day = relativedelta(days=1)
 month2name = [0, 'January', 'February', 'March', 'April', 'May', 'Jun', 'July', 'August', 'September', 'October', 'November', 'December']
 
 #def hour2str(h):
@@ -57,7 +57,7 @@ class report_custom(report_rml):
         obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
         if context is None:
             context = {}
-        month = DateTime.DateTime(datas['form']['year'], datas['form']['month'], 1)
+        month = datetime(datas['form']['year'], datas['form']['month'], 1)
         emp_ids = context.get('active_ids', [])
         user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
         if emp_ids:
@@ -89,7 +89,7 @@ class report_custom(report_rml):
                         attendences.append({'name': tomor.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
                     # sum up the attendances' durations
                     for att in attendences:
-                        dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
+                        dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if att['action'] == 'sign_out':
                             wh += (dt - ldt).hours
                         ldt = dt

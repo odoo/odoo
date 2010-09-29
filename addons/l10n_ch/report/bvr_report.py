@@ -35,7 +35,7 @@ import os
 import sys
 import shutil
 import time
-from mx.DateTime import *
+from datetime import datetime
 
 from report import report_sxw
 from tools import mod10r

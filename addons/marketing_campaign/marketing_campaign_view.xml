@@ -446,18 +446,20 @@
         view_type="form"
         view_mode="tree,form"
         id="act_marketing_campaing_segment_opened"
-        domain="[('campaign_id','=',active_id)]"
+        context="{'search_default_campaign_id': [active_id]}"
     />
 
     <!-- Campaign Followups -->
-    <act_window domain="[('campaign_id', '=', active_id)]"
+    <act_window
+        context="{'search_default_campaign_id': [active_id]}"
         id="act_marketing_campaing_followup"
         name="Campaign Follow-up" res_model="marketing.campaign.workitem"
         src_model="marketing.campaign" view_mode="tree,form"
         view_type="form" />
 
     <!-- Campaign Statistics -->
-    <act_window domain="[('campaign_id', '=', active_id)]"
+    <act_window 
+        context="{'search_default_campaign_id': [active_id]}"
         id="act_marketing_campaing_stat"
         name="Campaign Statistics" res_model="campaign.analysis"
         src_model="marketing.campaign" view_mode="tree,form"
