@@ -23,7 +23,6 @@ from osv import fields, osv
 from datetime import datetime
 import crm
 import time
-import mx.DateTime
 from tools.translate import _
 from crm import crm_case
 import binascii
@@ -84,12 +83,12 @@ class crm_lead(crm_case, osv.osv):
                         new_dates = cal_obj.interval_get(cr,
                             uid,
                             lead.section_id.resource_calendar_id and lead.section_id.resource_calendar_id.id or False,
-                            mx.DateTime.strptime(lead.create_date, '%Y-%m-%d %H:%M:%S'),
+                            datetime.strptime(lead.create_date, '%Y-%m-%d %H:%M:%S'),
                             duration,
                             resource=resource_id
                         )
                         no_days = []
-                        date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
+                        date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
                         for in_time, out_time in new_dates:
                             if in_time.date not in no_days:
                                 no_days.append(in_time.date)

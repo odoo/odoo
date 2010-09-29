@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-import datetime
-from mx.DateTime import *
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from lxml import etree
 
 from osv import osv, fields
@@ -69,26 +69,26 @@ class account_aged_trial_balance(osv.osv_memory):
         if not data['form']['date_from']:
             raise osv.except_osv(_('UserError'), _('Enter a Start date !'))
 
-        start = datetime.date.fromtimestamp(time.mktime(time.strptime(data['form']['date_from'], "%Y-%m-%d")))
-        start = DateTime(int(start.year), int(start.month), int(start.day))
+        start = datetime.strptime(data['form']['date_from'], "%Y-%m-%d")
+        
         if data['form']['direction_selection'] == 'past':
             for i in range(5)[::-1]:
-                stop = start - RelativeDateTime(days=period_length)
+                stop = start - relativedelta(days=period_length)
                 res[str(i)] = {
                     'name': (i!=0 and (str((5-(i+1)) * period_length) + '-' + str((5-i) * period_length)) or ('+'+str(4 * period_length))),
                     'stop': start.strftime('%Y-%m-%d'),
                     'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
                 }
-                start = stop - RelativeDateTime(days=1)
+                start = stop - relativedelta(days=1)
         else:
             for i in range(5):
-                stop = start + RelativeDateTime(days=period_length)
+                stop = start + relativedelta(days=period_length)
                 res[str(5-(i+1))] = {
                     'name' : (i!=4 and str((i) * period_length)+'-' + str((i+1) * period_length) or ('+'+str(4 * period_length))),
                     'start': start.strftime('%Y-%m-%d'),
                     'stop': (i!=4 and stop.strftime('%Y-%m-%d') or False),
                 }
-                start = stop + RelativeDateTime(days=1)
+                start = stop + relativedelta(days=1)
         data['form'].update(res)
 
         return {
