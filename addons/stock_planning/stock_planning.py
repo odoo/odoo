@@ -558,7 +558,7 @@ class stock_planning(osv.osv):
             start_date_current_period = start_date_current_period or current_date_beginning
             
             day = datetime.strptime(start_date_current_period, '%Y-%m-%d %H:%M:%S')
-            dbefore = datetime.datetime(day.year, day.month, day.day) - one_minute
+            dbefore = datetime(day.year, day.month, day.day) - one_minute
             date_for_start = dbefore.strftime('%Y-%m-%d %H:%M:%S')   # one day before current period
             already_out = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='out', done=True, context=context),
             already_in = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='in', done=True, context=context),
