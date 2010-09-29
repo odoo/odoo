@@ -164,6 +164,6 @@
   I see that stock moves of Wood and Nails including Wooden Table are done now.
 -
   !python {model: stock.move}: |
-    move_ids = self.search(cr, uid, [('product_id','in',[ref("product_product_woodenchair0"),ref("product_product_woodentable0"),ref("product_product_wood0"),ref("product_product_nails0")])])
+    move_ids = self.search(cr, uid, [('product_id','in',[ref("product_product_woodentable0"),ref("product_product_wood0"),ref("product_product_nails0")])])
     moves = self.browse(cr, uid, move_ids)
     assert all(move.state == 'done' for move in moves), 'Moves are not done!'
