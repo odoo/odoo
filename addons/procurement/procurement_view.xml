@@ -24,6 +24,21 @@
                 </tree>
             </field>
         </record>
+         <record id="procurement_tree_view_board" model="ir.ui.view">
+            <field name="name">procurement.order.tree.board</field>
+            <field name="model">procurement.order</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
+                    <field name="date_planned" widget="date"/>
+                    <field name="origin"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom" string="UOM"/>
+                    <field name="message"/>
+                </tree>
+            </field>
+        </record>
         <record id="procurement_form_view" model="ir.ui.view">
             <field name="name">procurement.order.form</field>
             <field name="model">procurement.order</field>
