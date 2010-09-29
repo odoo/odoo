@@ -889,7 +889,7 @@
                             <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
                         </page>
                     </notebook>
-                </form>            
+                </form>
               </field>
         </record>
         <record id="action_tax_form" model="ir.actions.act_window">
@@ -1447,7 +1447,7 @@
         <menuitem id="menu_finance_charts" name="Charts" parent="account.menu_finance" sequence="4"/>
 
         <record id="view_bank_statement_reconcile_form" model="ir.ui.view">
-            <field name="name">account.bank.statement.reconcile.form</field>
+            <field name="name">account.bank.statement.form</field>
             <field name="model">account.bank.statement</field>
             <field eval="30" name="priority"/>
             <field name="type">form</field>

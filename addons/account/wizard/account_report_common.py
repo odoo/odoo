@@ -103,14 +103,6 @@ class account_common_report(osv.osv_memory):
             'chart_account_id': _get_account,
     }
 
-    def _build_periods(self, cr, uid, period_from, period_to):
-        period_obj = self.pool.get('account.period')
-        period_date_start = period_obj.read(cr, uid, period_from, ['date_start'])['date_start']
-        period_date_stop = period_obj.read(cr, uid, period_to, ['date_stop'])['date_stop']
-        if period_date_start > period_date_stop:
-            raise osv.except_osv(_('Error'),_('Start period should be smaller then End period'))
-        return period_obj.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop)])
-
     def _build_contexts(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
@@ -129,9 +121,10 @@ class account_common_report(osv.osv_memory):
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
                 raise osv.except_osv(_('Error'),_('Select a starting and an ending period'))
-            result['periods'] = self._build_periods(cr, uid, data['form']['period_from'], data['form']['period_to'])
-            first_period = self.pool.get('account.period').search(cr, uid, [], order='date_start', limit=1)[0]
-            result_initial_bal['periods'] = self._build_periods(cr, uid, first_period, data['form']['period_from'])
+            company_id = period_obj.browse(cr, uid, data['form']['period_from'], context=context).company_id.id
+            result['periods'] = period_obj.build_ctx_periods(cr, uid, data['form']['period_from'], data['form']['period_to'])
+            first_period = self.pool.get('account.period').search(cr, uid, [('company_id', '=', company_id)], order='date_start', limit=1)[0]
+            result_initial_bal['periods'] = period_obj.build_ctx_periods(cr, uid, first_period, data['form']['period_from'])
         else:
             if data['form']['fiscalyear_id']:
                 fiscal_date_start = fiscal_obj.browse(cr, uid, [data['form']['fiscalyear_id']], context=context)[0].date_start

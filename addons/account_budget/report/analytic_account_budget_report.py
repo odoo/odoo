@@ -20,9 +20,10 @@
 ##############################################################################
 
 import time
+import datetime
+
 import pooler
 from report import report_sxw
-import datetime
 
 class analytic_account_budget_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -33,7 +34,6 @@ class analytic_account_budget_report(report_sxw.rml_parse):
             'time': time,
         })
         self.context=context
-
 
     def funct(self,object,form,ids={}, done=None, level=1):
 
@@ -181,5 +181,5 @@ class analytic_account_budget_report(report_sxw.rml_parse):
         return result
 
 report_sxw.report_sxw('report.account.analytic.account.budget', 'account.analytic.account', 'addons/account_budget/report/analytic_account_budget_report.rml',parser=analytic_account_budget_report,header='internal')
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

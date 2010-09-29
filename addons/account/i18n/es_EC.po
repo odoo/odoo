@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-20 21:45+0000\n"
+"PO-Revision-Date: 2010-09-18 22:37+0000\n"
 "Last-Translator: Cristian Salamea (GnuThink) <ovnicraft@gmail.com>\n"
 "Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-21 03:57+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -635,7 +635,7 @@ msgstr "(dejarlo vacío para abrir la situación actual)"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Mapping"
-msgstr ""
+msgstr "Posiciones fiscales contables"
 
 #. module: account
 #: field:account.analytic.account,contact_id:0
@@ -1033,7 +1033,7 @@ msgstr "Total neto:"
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
 msgid "Fiscal Mapping"
-msgstr ""
+msgstr "Tipos de Contribuyente"
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -1055,7 +1055,7 @@ msgstr "Hijos"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Mapping"
-msgstr ""
+msgstr "Impuestos por tipo de contribuyente"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2_new
@@ -1144,7 +1144,7 @@ msgstr "Nueva cuenta analítica"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Mapping Templates"
-msgstr ""
+msgstr "Plantillas de Mapeo de Impuestos"
 
 #. module: account
 #: rml:account.invoice:0
@@ -1176,7 +1176,7 @@ msgstr "El importe expresado en otra divisa opcional."
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Mapping Template"
-msgstr ""
+msgstr "Plantilla de Tipos de Contribuyente"
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -1248,7 +1248,7 @@ msgstr "Moneda de la compañía"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr ""
+msgstr "Plantillas de Mapeo de Cuentas"
 
 #. module: account
 #: field:account.analytic.account,parent_id:0
@@ -1831,9 +1831,11 @@ msgstr "Siguiente"
 #. module: account
 #: help:res.partner,property_account_position:0
 msgid ""
-"The fiscal mapping will determine taxes and the accounts used for the partner."
+"The fiscal mapping will determine taxes and the accounts used for the "
+"partner."
 msgstr ""
-""
+"El tipo de contribuyente determinara impuestos y cuentas usadas por el "
+"partner"
 
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
@@ -4117,7 +4119,7 @@ msgstr "Subtotal sin imp."
 #. module: account
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Ref. factura"
 
 #. module: account
 #: field:account.analytic.line,general_account_id:0
@@ -4145,17 +4147,19 @@ msgid ""
 "You can check this box to mark the entry line as a litigation with the "
 "associated partner"
 msgstr ""
+"Marque esta opción para señalar el apunte en desacuerdo con la empresa "
+"asociada"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr ""
+msgstr "Facturas de Cliente"
 
 #. module: account
 #: field:res.partner,debit_limit:0
 msgid "Payable Limit"
-msgstr ""
+msgstr "Límite a pagar"
 
 #. module: account
 #: wizard_field:account.account.balance.report,checktype,state:0
@@ -4163,7 +4167,7 @@ msgstr ""
 #: wizard_field:account.partner.balance.report,init,state:0
 #: wizard_field:account.third_party_ledger.report,init,state:0
 msgid "Date/Period Filter"
-msgstr ""
+msgstr "Filtrar por fecha/período"
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -4171,12 +4175,12 @@ msgstr ""
 #: selection:account.bank.statement.line,type:0
 #: selection:account.journal,type:0
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #. module: account
 #: rml:account.general.journal:0
 msgid "Credit Trans."
-msgstr ""
+msgstr "Trans. haber"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,seq_journal:0
@@ -4186,13 +4190,13 @@ msgstr "Secuencias de diarios separadas"
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_currency:0
 msgid "The currency of the journal"
-msgstr ""
+msgstr "Moneda del diario"
 
 #. module: account
 #: view:account.journal.column:0
 #: model:ir.model,name:account.model_account_journal_column
 msgid "Journal Column"
-msgstr ""
+msgstr "Columna diario"
 
 #. module: account
 #: selection:account.fiscalyear,state:0
@@ -4201,7 +4205,7 @@ msgstr ""
 #: selection:account.period,state:0
 #: selection:account.subscription,state:0
 msgid "Done"
-msgstr ""
+msgstr "Realizado"
 
 #. module: account
 #: wizard_field:account.account.balance.report,checktype,periods:0
