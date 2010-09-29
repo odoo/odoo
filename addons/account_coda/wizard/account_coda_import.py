@@ -48,7 +48,7 @@ class account_coda_import(osv.osv_memory):
             'journal_id': fields.many2one('account.journal', 'Bank Journal', required=True),
             'def_payable': fields.many2one('account.account', 'Default Payable Account', domain=[('type', '=', 'payable')], required=True, help= 'Set here the payable account that will be used, by default, if the partner is not found'),
             'def_receivable': fields.many2one('account.account', 'Default Receivable Account', domain=[('type', '=', 'receivable')], required=True, help= 'Set here the receivable account that will be used, by default, if the partner is not found',),
-            'awaiting_account': fields.many2one('account.account', 'Default Account for Unrecognized Movement', required=True, help= 'Set here the default account that will be used, if the partner is found but does not have the bank account , or if he is domiciled',),
+            'awaiting_account': fields.many2one('account.account', 'Default Account for Unrecognized Movement', domain=[('type', '=', 'liquidity')], required=True, help= 'Set here the default account that will be used, if the partner is found but does not have the bank account , or if he is domiciled'),
             'coda': fields.binary('Coda File', required=True),
             'note':fields.text('Log'),
     }
@@ -61,7 +61,8 @@ class account_coda_import(osv.osv_memory):
         bank_statement_obj = self.pool.get('account.bank.statement')
         move_line_obj = self.pool.get('account.move.line')
         bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-        statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
+        voucher_obj = self.pool.get('account.voucher')
+        voucher_line_obj = self.pool.get('account.voucher.line')
         account_coda_obj = self.pool.get('account.coda')
         mod_obj = self.pool.get('ir.model.data')
 
@@ -194,48 +195,76 @@ class account_coda_import(osv.osv_memory):
         for statement in bank_statements:
             try:
                 bk_st_id =bank_statement_obj.create(cr, uid, {
-                    'journal_id': statement['journal_id'],
-                    'date': time.strftime('%Y-%m-%d', time.strptime(statement['date'], "%y/%m/%d")),
-                    'period_id': statement['period_id'] or period,
-                    'balance_start': statement["balance_start"],
-                    'balance_end_real': statement["balance_end_real"],
+                    'journal_id': statement.get('journal_id',False),
+                    'date': time.strftime('%Y-%m-%d', time.strptime(statement.get('date',time.strftime('%Y-%m-%d')), "%y/%m/%d")),
+                    'period_id': statement.get('period_id',False) or period,
+                    'balance_start': statement.get('balance_start',False),
+                    'balance_end_real': statement.get('balance_end_real',False),
                     'state': 'draft',
-                    'name': statement['name'],
+                    'name': statement.get('name',False),
                 })
-                lines=statement["bank_statement_line"]
-                for value in lines:
-                    line=lines[value]
-                    reconcile_id = False
-                    if line['toreconcile']:
-                        name = line['name'][:3] + '/' + line['name'][3:7] + '/' + line['name'][7:]
-                        rec_id = pool.get('account.move.line').search(cr, uid, [('name', '=', name), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
-                        if rec_id:
-                            reconcile_id = statement_reconcile_obj.create(cr, uid, {
-                                'line_ids': [(6, 0, rec_id)]
-                                }, context=context)
-                            mv = pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
-                            if mv.partner_id:
-                                line['partner_id'] = mv.partner_id.id
-                                if line['amount'] < 0 :
-                                    line['account_id'] = mv.partner_id.property_account_payable.id
-                                else :
-                                    line['account_id'] = mv.partner_id.property_account_receivable.id
+                lines = statement.get('bank_statement_line',False)
+                if lines:
+                    for value in lines:
+                        line = lines[value]
+                        voucher_id = False
+                        if line.get('toreconcile',False): # Fix me
+                            name = line['name'][:3] + '/' + line['name'][3:7] + '/' + line['name'][7:]
+                            rec_id = self.pool.get('account.move.line').search(cr, uid, [('name', '=', name), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
+                            if rec_id:
+                                voucher_res = { 'type':(line['amount'] < 0 and 'payment' or 'receipt') ,
+                                'name': line['name'],#line.name,
+                                'partner_id': line['partner_id'] ,#line.partner_id.id,
+                                'journal_id': statement['journal_id'], #statement.journal_id.id,
+                                'account_id': line['account_id'],#line.account_id.id,
+                                'company_id': statement['company_id'],#statement.company_id.id,
+                                'currency_id': statement['currency'],#statement.currency.id,
+                                'date': line['date'], #line.date,
+                                'amount':abs(line['amount']),
+                                'period_id':statement.get('period_id',False) or period,# statement.period_id.id
+                                }
+                                voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
+    
+                                result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'))
+                                voucher_line_dict =  False
+                                if result['value']['line_ids']:
+                                    for line_dict in result['value']['line_ids']:
+                                        move_line = line_obj.browse(cr, uid, line_dict['move_line_id'], context)
+                                        if line.move_id.id == move_line.move_id.id:
+                                            voucher_line_dict = line_dict
+    
+                                if voucher_line_dict:
+                                    voucher_line_dict.update({'voucher_id':voucher_id})
+                                    voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
+    
+    #                            reconcile_id = statement_reconcile_obj.create(cr, uid, {
+    #                                'line_ids': [(6, 0, rec_id)]
+    #                                }, context=context)
+    #
+    
+                                mv = self.pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
+                                if mv.partner_id:
+                                    line['partner_id'] = mv.partner_id.id
+                                    if line['amount'] < 0 :
+                                        line['account_id'] = mv.partner_id.property_account_payable.id
+                                    else :
+                                        line['account_id'] = mv.partner_id.property_account_receivable.id
                     str_not1 = ''
                     if line.has_key('contry_name') and line.has_key('cntry_number'):
                         str_not1="Partner name:%s \n Partner Account Number:%s \n Communication:%s \n Value Date:%s \n Entry Date:%s \n"%(line["contry_name"], line["cntry_number"], line["free_comm"]+line['extra_note'], line["val_date"][0], line["entry_date"][0])
-                    id=bank_statement_line_obj.create(cr, uid, {
+                    id = bank_statement_line_obj.create(cr, uid, {
                                'name':line['name'],
                                'date': line['date'],
                                'amount': line['amount'],
                                'partner_id':line['partner_id'] or 0,
                                'account_id':line['account_id'],
                                'statement_id': bk_st_id,
-                               'reconcile_id': reconcile_id,
+                               'voucher_id': voucher_id,
                                'note':str_not1,
                                'ref':line['ref'],
                                })
 
-                str_not= "\n \n Account Number: %s \n Account Holder Name: %s " %(statement["acc_number"], statement["acc_holder"])
+                str_not = "\n \n Account Number: %s \n Account Holder Name: %s " %(statement["acc_number"], statement["acc_holder"])
                 std_log += "\nStatement : %s , Date  : %s, Starting Balance :  %.2f , Ending Balance : %.2f \n"\
                           %(statement['name'], statement['date'], float(statement["balance_start"]), float(statement["balance_end_real"]))
                 bkst_list.append(bk_st_id)
@@ -267,7 +296,7 @@ class account_coda_import(osv.osv_memory):
             'date': time.strftime("%Y-%m-%d"),
             'user_id': uid,
         })
-        test=''
+        test = ''
         test = str_log1 + std_log + err_log
         self.write(cr, uid, ids, {'note': test}, context=context)
         extraction = { 'statment_ids': bkst_list}
@@ -291,6 +320,7 @@ class account_coda_import(osv.osv_memory):
     def action_open_window(self, cr, uid, data, context=None):
         if not context:
             cotext = {}
+
         return {
             'domain':"[('id','in',%s)]"%(context.get('statment_ids', False)),
             'name': 'Statement',
@@ -299,7 +329,7 @@ class account_coda_import(osv.osv_memory):
             'res_model': 'account.bank.statement',
             'view_id': False,
             'type': 'ir.actions.act_window',
-        }
+    }
 
 account_coda_import()
 

@@ -224,8 +224,8 @@
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="   Today   " separator="1" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
-                        <filter icon="terp-go-week" string="    7 Days    " separator="1"
+                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
+                        <filter icon="terp-go-week" string="7 Days" separator="1"
                             domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                             help="Bugs during last 7 days"
                             />
@@ -233,7 +233,6 @@
                         <field name="name" string="Name"/>
                         <field name="user_id"/>
                         <field name="project_id" string="Project"/>
-                        <field name="state"/>
                         <field name="categ_id"/>
                     </group>
                     <newline/>
