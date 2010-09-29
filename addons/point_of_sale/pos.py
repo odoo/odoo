@@ -1079,8 +1079,6 @@ class pos_order_line(osv.osv):
                     else:
                         res[line.id][f] = line.price_unit * line.qty
                     res[line.id][f] += tax_amount
-        print ids
-        print res
         return res
 
     def price_by_product_multi(self, cr, uid, ids, context=None):
@@ -1090,20 +1088,11 @@ class pos_order_line(osv.osv):
         res = {}.fromkeys(ids, 0.0)
 
         lines = self.browse(cr, uid, ids, context=context)
-        # product_map:
-        # {10, 1): {'qty': 5, 'uom_id': 1, 'partner_id': 512},
-        #  (22, 3): {'qty': 10, 'uom_id': 2, 'partner_id', 35},
-        # }
-        # key = (product_id, pricelist_id)
-        product_map = dict([((line.product_id.id, line.order_id.pricelist_id.id), {
-                                    'qty': line.qty,
-                                    'uom_id': line.product_id.uom_po_id.id,
-                                    'partner_id': line.order_id.partner_id.id,
-                                })
-                                for line
-                                    in lines])
 
-        price_get_multi_res = self.pool.get('product.pricelist').price_get_multi(cr, uid, product_map)
+        pricelist_ids = [line.order_id.pricelist_id.id for line in lines]
+        products_by_qty_by_partner = [(line.product_id.id, line.qty, line.order_id.partner_id.id) for line in lines]
+
+        price_get_multi_res = self.pool.get('product.pricelist').price_get_multi(cr, uid, pricelist_ids, products_by_qty_by_partner, context=context)
 
         for line in lines:
             pricelist = line.order_id.pricelist_id.id

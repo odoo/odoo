@@ -503,7 +503,15 @@ class product_product(osv.osv):
     #
     # Could be overrided for variants matrices prices
     #
-    def price_get(self, cr, uid, ids, ptype='list_price', context={}):
+    def price_get(self, cr, uid, ids, ptype='list_price', context=None):
+        if context is None:
+            context = {}
+
+        if 'currency_id' in context:
+            pricetype_obj = self.pool.get('product.price.type')
+            price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
+            price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
+
         res = {}
         product_uom_obj = self.pool.get('product.uom')
         for product in self.browse(cr, uid, ids, context=context):
@@ -517,11 +525,8 @@ class product_product(osv.osv):
                         uom.id, res[product.id], context['uom'])
             # Convert from price_type currency to asked one
             if 'currency_id' in context:
-                pricetype_obj = self.pool.get('product.price.type')
                 # Take the price_type currency from the product field
                 # This is right cause a field cannot be in more than one currency
-                price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
-                price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
                 res[product.id] = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
                     context['currency_id'], res[product.id],context=context)
 
