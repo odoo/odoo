@@ -299,6 +299,8 @@
       <field name="type">search</field>
       <field name="arch" type="xml">
         <search string="Workflow Instances">
+          <filter icon="terp-camera_test"  string="Active" domain="[]" context="{'search_default_active': 1}"/>
+          <separator orientation="vertical"/>
           <field name="wkf_id"/>
           <field name="uid"/>
           <field name="res_id"/>
@@ -355,6 +357,8 @@
       <field name="type">search</field>
       <field name="arch" type="xml">
         <search string="Workflow Workitems">
+          <filter icon="terp-camera_test"  string="Active" domain="[]" context="{'search_default_active': 1}"/>
+          <separator orientation="vertical"/>
           <field name="act_id"/>
           <field name="subflow_id"/>
           <field name="inst_id"/>
