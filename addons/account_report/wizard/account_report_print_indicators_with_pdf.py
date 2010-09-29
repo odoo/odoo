@@ -19,7 +19,6 @@
 #
 ##############################################################################
 import time
-from mx.DateTime import *
 import os
 import base64
 import StringIO
