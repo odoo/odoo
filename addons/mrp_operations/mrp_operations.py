@@ -39,6 +39,15 @@ class stock_move(osv.osv):
     _columns = {
         'move_dest_id_lines': fields.one2many('stock.move','move_dest_id', 'Children Moves')
     }
+    
+    def copy(self, cr, uid, id, default=None, context={}):
+        if default is None:
+            default = {}
+        default.update({
+            'move_dest_id_lines': [],
+        })
+        return super(stock_move, self).copy(cr, uid, id, default, context)
+    
 stock_move()
 
 class mrp_production_workcenter_line(osv.osv):

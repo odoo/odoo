@@ -100,9 +100,9 @@ class crm_lead_report(osv.osv):
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
-                         domain="[('section_id','=',section_id)]" , readonly=True),
+                         domain="['|',('section_id','=',False),('section_id','=',section_id)]" , readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                         domain="[('section_id','=',section_id),\
+                         domain="['|',('section_id','=',False),('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'opening_date': fields.date('Opening Date', readonly=True),
