@@ -52,7 +52,7 @@ class ir_cron(osv.osv, netsvc.Agent):
             ('hours', 'Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
         'numbercall': fields.integer('Number of Calls', help='Number of time the function is called,\na negative number indicates that the function will always be called'),
         'doall' : fields.boolean('Repeat Missed'),
-        'nextcall' : fields.datetime('Next Call Date', required=True),
+        'nextcall' : fields.datetime('Next Execution Date', required=True),
         'model': fields.char('Object', size=64),
         'function': fields.char('Function', size=64),
         'args': fields.text('Arguments'),
