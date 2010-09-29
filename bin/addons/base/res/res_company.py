@@ -212,8 +212,8 @@ class res_company(osv.osv):
         <setFont name="DejaVu Sans Bold" size="10"/>
         <drawString x="490" y="725">[[ company.partner_id.name ]]</drawString>
         <setFont name="DejaVu Sans" size="8"/>
-        <drawRightString x="1065" y="725"><pageNumber/>/  </drawRightString>
-        <drawString x="1065" y="725"><pageCount/></drawString>
+        <drawRightString x="1073" y="725"><pageNumber/>/</drawRightString>
+        <drawString x="1073" y="725"><pageCount/></drawString>
         <stroke color="#000000"/>
         <lines>25 720 1085 720</lines>
     </pageGraphics>
@@ -232,8 +232,8 @@ class res_company(osv.osv):
         <setFont name="DejaVu Sans Bold" size="10"/>
         <drawString x="9.8cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
         <setFont name="DejaVu Sans" size="8"/>
-        <drawRightString x="19.7cm" y="28.3cm"><pageNumber/> /  </drawRightString>
-        <drawString x="19.8cm" y="28.3cm"><pageCount/></drawString>
+        <drawRightString x="19.7cm" y="28.3cm"><pageNumber/>/</drawRightString>
+        <drawString x="19.7cm" y="28.3cm"><pageCount/></drawString>
         <stroke color="#000000"/>
         <lines>1.3cm 28.1cm 20cm 28.1cm</lines>
         </pageGraphics>

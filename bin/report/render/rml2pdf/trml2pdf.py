@@ -261,7 +261,7 @@ class _rml_canvas(object):
             if n.tag == 'pageNumber':
                 rc += str(self.canvas.getPageNumber())
             rc += utils._process_text(self, n.tail)
-        return rc
+        return rc.replace('\n','')
 
     def _drawString(self, node):
         v = utils.attr_get(node, ['x','y'])

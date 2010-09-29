@@ -95,7 +95,7 @@ class base_module_upgrade(osv.osv_memory):
                 if dep_mod.state in ('unknown','uninstalled'):
                     unmet_packages.append(dep_mod.name)
         if len(unmet_packages):
-            raise wizard.except_wizard('Unmet dependency !', 'Following modules are uninstalled or unknown. \n\n'+'\n'.join(unmet_packages))
+            raise osv.except_osv('Unmet dependency !', 'Following modules are uninstalled or unknown. \n\n'+'\n'.join(unmet_packages))
         mod_obj.download(cr, uid, ids, context=context)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
