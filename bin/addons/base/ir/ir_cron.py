@@ -47,15 +47,15 @@ class ir_cron(osv.osv, netsvc.Agent):
         'name': fields.char('Name', size=60, required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'active': fields.boolean('Active'),
-        'interval_number': fields.integer('Interval Number'),
+        'interval_number': fields.integer('Interval Number',help="Repeat every x."),
         'interval_type': fields.selection( [('minutes', 'Minutes'),
             ('hours', 'Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
         'numbercall': fields.integer('Number of Calls', help='Number of time the function is called,\na negative number indicates that the function will always be called'),
-        'doall' : fields.boolean('Repeat Missed'),
-        'nextcall' : fields.datetime('Next Execution Date', required=True),
-        'model': fields.char('Object', size=64),
-        'function': fields.char('Function', size=64),
-        'args': fields.text('Arguments'),
+        'doall' : fields.boolean('Repeat Missed',help="Select this if you want to run the scheduler for the missed occurencs."),
+        'nextcall' : fields.datetime('Next Execution Date', required=True,help="Date when this schedular will call next time"),
+        'model': fields.char('Object', size=64,help="Name of object whose function will be called when this scheduler will run. e.g. 'res.partener'"),
+        'function': fields.char('Function', size=64,help="Name of the function to be called by this scheduler. "),
+        'args': fields.text('Arguments',help="Arguments to be passed to the function. e.g. (uid,)"),
         'priority': fields.integer('Priority', help='0=Very Urgent\n10=Not urgent')
     }
 
