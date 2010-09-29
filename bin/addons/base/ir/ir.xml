@@ -10,22 +10,14 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Connect Events to Actions">
-                	<group col="6" colspan="4">
                     <field name="name" required="1"/>
                     <field name="model_id" on_change="onchange_object_id(model_id)"/>
                     <field name="action_id" on_change="onchange_action_id(action_id)"/>
                     <field name="key2" required="1"/>
-                    <field name="res_id"/>
                     <field name="object" readonly="1"/>
-					</group>
-                	<group col="2" colspan="2">
-                        <separator colspan="2" string="Value"/>
-                    	<field name="value_unpickle" nolabel="1"/>
-                    </group>
-                	<group col="2" colspan="2">
-                        <separator colspan="2" string="Metadata"/>
-	                    <field name="meta_unpickle" nolabel="1"/>
-                    </group>
+                    <field name="res_id"/>
+                    <field name="value_unpickle"/>
+                    <field name="meta_unpickle"/>
                     <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </form>
@@ -55,17 +47,12 @@
                     <field name="name"/>
                     <field name="model"/>
                     <field name="key2"/>
-                    <newline/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'key2'}"/>
-                    </group>
                 </search>
             </field>
         </record>
 
         <record id="act_values_form_action" model="ir.actions.act_window">
-            <field name="name">Client Events</field>
+            <field name="name">Client Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.values</field>
             <field name="view_type">form</field>
@@ -89,9 +76,7 @@
 	        <field name="act_window_id" ref="act_values_form_action"/>
 	    </record>
 
-        <menuitem id="next_id_6" name="Actions" parent="base.next_id_4"/>
-
-        <menuitem action="act_values_form_action" id="menu_values_form_action" parent="next_id_6"/>
+        <menuitem action="act_values_form_action" id="menu_values_form_action" parent="base.menu_custom_action"/>
 
 
         <!-- Values -->
@@ -269,7 +254,7 @@
         </record>
 
         <record id="ir_sequence_type" model="ir.actions.act_window">
-            <field name="name">Sequence Codes</field>
+            <field name="name">Sequence Types</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.sequence.type</field>
             <field name="view_type">form</field>
@@ -325,8 +310,7 @@
             <field name="view_id" ref="action_view_tree"/>
             <field name="search_view_id" ref="action_view_search"/>
         </record>
-
-
+        <menuitem id="next_id_6" name="Actions" parent="base.next_id_4"/>
         <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
 
         <!--Filters form view-->
@@ -842,29 +826,23 @@
                 <search string="Role">
                     <field name="name"/>
                     <field name="parent_id"/>
+                    <field name="description"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
+                        <filter string="Parent" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'parent_id'}"/>
+                	</group>
                 </search>
             </field>
         </record>
 
-        <record id="action_res_roles" model="ir.actions.act_window">
-            <field name="name">Roles Structure</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.roles</field>
-            <field name="view_type">tree</field>
-            <field eval="[('parent_id','=',False)]" name="domain"/>
-        </record>
-        <menuitem action="action_res_roles"
-            groups="base.group_extended"
-            id="menu_action_res_roles" parent="base.menu_users"/>
-
-        <record id="action_res_roles_form" model="ir.actions.act_window">
+       <record id="action_res_roles_form" model="ir.actions.act_window">
             <field name="name">Roles</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.roles</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_roles_search"/>
         </record>
-        <menuitem action="action_res_roles_form" id="menu_action_res_roles_form" parent="menu_action_res_roles"/>
+        <menuitem action="action_res_roles_form" id="menu_action_res_roles_form" parent="base.menu_users"/>
 
         <!-- View -->
         <record id="view_view_form" model="ir.ui.view">
@@ -873,25 +851,21 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Views">
-		            <group colspan="4" col="6">
-		                <field name="name" select="1" colspan="6"/>
-		                <field name="type" select="1"/>
-		                <field name="model" select="1"/>
-		                <field name="priority"/>
-		            </group>
-                    <notebook colspan="4">
-                    	<page string="Architecture">
-	                    	<field colspan="4" nolabel="1" name="arch"/>
-	                	</page>
-                    	<page string="Extra Info">
-	                        <separator string="Advanced" colspan="4"/>
-	                        <newline/>
-	                        <field name="field_parent"/>
-	                        <field name="inherit_id" select="1"/>
-	                        <field name="xml_id" select="1"/>
-	                	</page>
-
-	                </notebook>
+                    <group colspan="2" col="2">
+                        <separator string="General" colspan="2"/>
+                        <field name="name" select="1"/>
+                        <field name="type" select="1"/>
+                        <field name="model" select="1"/>
+                        <field name="priority"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Advanced" colspan="2"/>
+                        <field name="field_parent"/>
+                        <field name="inherit_id" select="1"/>
+                        <field name="xml_id" select="1"/>
+                    </group>
+                    <separator string="View architecture" colspan="4"/>
+                    <field colspan="4" nolabel="1" name="arch"/>
                 </form>
             </field>
         </record>
@@ -918,13 +892,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Views">
-                    <filter icon="terp-stock_zoom" string="Search"
-                        domain="[('type', '=', 'search')]" />
-                    <filter icon="gtk-indent" string="Tree"
-                        domain="[('type', '=', 'tree')]" />
-                    <filter icon="gtk-new" string="Form"
-                        domain="[('type', '=','form')]" />
-                    <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
@@ -932,7 +899,7 @@
                     <field name="xml_id"/>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Object" icon="terp-stage" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>
@@ -954,14 +921,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Attachments">
-                    <group colspan="4" col="2">
+                    <group colspan="4" col="4">
                         <field name="name" select="1" />
+                        <field name="type"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Attachment">
                     <group col="4" colspan="4">
-                        <separator string="Data" colspan="2"/>
-                        <field name="type"/>
+                        <separator string="Data" colspan="4"/>
                         <newline />
                         <group col="2" colspan="4" attrs="{'invisible':[('type','=','url')]}">
                             <field name="datas" filename="datas_fname"/>
@@ -1010,13 +977,21 @@
             <field name="arch" type="xml">
                 <search string="Attachments">
                     <group colspan="4" col="10">
+                      <filter icon="terp-stage"
+                        string="URL"
+                        domain="[('type','=','url')]"/>
+                      <filter icon="terp-stock_align_left_24"
+                        string="Binary"
+                        domain="[('type','=','binary')]"/>
+                    <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="datas_fname"/>
                         <field name="type"/>
+                        <field name="datas_fname"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By" colspan="4">
-                        <filter string="File Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Creator" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                 </search>
             </field>
@@ -1182,7 +1157,7 @@
                                         <field name="translate"/>
                                         <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
                                     </group>
-                                    <separator string="Security on Groups" colspan="4"/>
+                                    <separator string="Groups" colspan="4"/>
                                     <field name="groups" colspan="4" nolabel="1"/>
                                 </form>
                             </field>
@@ -1235,18 +1210,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Model Description">
-                    <filter icon="terp-camera_test" string="In Memory"
-                        domain="[('osv_memory', '=', True)]" />
-                    <separator orientation="vertical" />
-                    <filter icon="terp-stock_symbol-selection"
-                        string="Custom" domain="[('state', '=', 'manual')]" />
-                    <separator orientation="vertical" />
-                    <filter icon="terp-stock_align_left_24" string="Base"
-                        domain="[('state', '=', 'base')]" />
-                    <separator orientation="vertical" />
                     <field name="name"/>
                     <field name="model"/>
-                    <newline/>
+                    <field name="osv_memory"/>
+                    <field name="state"/>
+                    <field name="access_ids"/>
+                    <field name="info"/>
                 </search>
             </field>
         </record>
@@ -1258,12 +1227,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Fields">
-                	<group colspan="4" col="6">
-		                <field name="name" select="1" />
-		            	<field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
-		            	<field name="field_description"/>
-		            	<field name="state"/>
-           	   		</group>
+                    <group colspan="4" col="4">
+                        <field name="name" select="1"/>
+                        <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                        <field name="field_description"/>
+                        <field name="state"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Properties">
                             <group colspan="2" col="2">
@@ -1313,29 +1282,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Fields">
-                	<filter icon="terp-camera_test"
-                        string="Required"
-                        domain="[('required', '=', True)]"/>
-                    <separator orientation="vertical"/>
-                	<filter icon="terp-stock_align_left_24"
-                        string="Readonly"
-                        domain="[('readonly', '=', True)]"/>
-                    <separator orientation="vertical"/>
-                	<filter icon="terp-translate"
-                        string="Translate"
-                        domain="[('translate', '=', True)]"/>
-                    <newline/>
                     <field name="name"/>
                     <field name="field_description"/>
                     <field name="model_id"/>
                     <field name="ttype"/>
                     <field name="required"/>
                     <field name="readonly"/>
-                    <newline/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
-                    </group>
-
                 </search>
             </field>
         </record>
@@ -1378,10 +1330,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Module Data">
-                	<filter icon="terp-stock_effects-object-colorize"
-                        string="Updatable"
-                        domain="[('noupdate', '=', False)]"/>
-                    <separator orientation="vertical"/>
                     <field name="module"/>
                     <field name="name"/>
                     <field name="model"/>
@@ -1389,8 +1337,8 @@
                     <field name="noupdate"/>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Module" icon="terp-folder-blue" domain="[]" context="{'group_by':'module'}"/>
-                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Module" icon="terp-stage" domain="[]" context="{'group_by':'module'}"/>
+                        <filter string="Object" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'model'}"/>
                     </group>
                 </search>
             </field>
@@ -1433,7 +1381,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Translations">
-                    <filter icon="terp-project"
+                    <filter icon="terp-document-new"
                         string="Untranslated"
                         domain="['|',('value', '=', False),('value','=','')]"/>
                     <separator orientation="vertical"/>
@@ -1454,16 +1402,15 @@
                     <field name="type"/>
                     <field name="name"/>
                     <field name="res_id"/>
-                    <group colspan="4" col="4">
-                        <group colspan="2" col="2">
-		                    <separator string="Source Term" colspan="2"/>
-		                    <field name="src" nolabel="1" height="400"/>
-	                    </group>
-	                    <group colspan="2" col="2">
-		                    <separator string="Tranlsation Term" colspan="2"/>
-		                    <field name="value" nolabel="1" height="400"/>
-		                </group>
+                    <group colspan="2" col="2">
+		               <separator string="Source Term" colspan="2"/>
+		               <field name="src" nolabel="1" height="400"/>
 	                </group>
+	                <group colspan="2" col="2">
+		               <separator string="Tranlsation" colspan="2"/>
+		               <field name="value" nolabel="1" height="400"/>
+		            </group>
+
                 </form>
             </field>
         </record>
@@ -1488,7 +1435,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_translation_tree"/>
         </record>
-        <menuitem action="action_translation" id="menu_action_translation" parent="base.menu_translation_app"/>
+        <menuitem action="action_translation" id="menu_action_translation" parent="base.menu_translation_app" />
 
         <!--
     =============================================================
@@ -1548,7 +1495,7 @@
                         <field name="icon_pict" widget="picture" nolabel="1" colspan="2"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Security on Groups">
+                        <page string="Groups">
 		                    <field name="groups_id" colspan="4" nolabel="1"/>
 		                </page>
 		            </notebook>
@@ -1569,13 +1516,13 @@
 	    </record>
 
         <record id="grant_menu_access" model="ir.actions.act_window">
-            <field name="name">Manage Menus</field>
+            <field name="name">Menu Items</field>
             <field name="res_model">ir.ui.menu</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_menu"/>
             <field name="search_view_id" ref="edit_menu_access_search"/>
         </record>
-        <menuitem action="grant_menu_access" id="menu_grant_menu_access" parent="base.menu_security" sequence="1"/>
+        <menuitem action="grant_menu_access" id="menu_grant_menu_access" parent="base.next_id_2" sequence="1"/>
 
         <!--
     =============================================================
@@ -1622,8 +1569,7 @@
                         <separator string="Action to Trigger" colspan="4"/>
                         <field name="model" groups="base.group_extended"/>
                         <field name="function"/>
-                        <separator string="Arguments" colspan="4"/>
-                        <field colspan="4" name="args" nolabel="1"/>
+                        <field colspan="4" name="args"/>
                     </page>
                     </notebook>
                 </form>
@@ -1642,8 +1588,8 @@
                     <field name="active"/>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Execution" icon="terp-go-month"
+                        <filter string="User" icon="terp-personal-" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Next Call" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'nextcall'}" />
                     </group>
                 </search>
@@ -1698,14 +1644,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Access Controls">
-                    <field colspan="4" name="name"/>
-                    <field name="model_id"/>
-                    <field name="group_id"/>
-                    <newline/>
-                    <field name="perm_read"/>
-                    <field name="perm_write"/>
-                    <field name="perm_create"/>
-                    <field name="perm_unlink"/>
+                    <group col="6" colspan="4">
+	                    <field name="name"/>
+	                    <field name="model_id"/>
+	                    <field name="group_id"/>
+	                </group>
+	                <separator string="Access" colspan="4"/>
+		                <group col="4" colspan="4">
+							<field name="perm_read"/>
+			                <field name="perm_write"/>
+			                <field name="perm_create"/>
+			                <field name="perm_unlink"/>
+			           </group>
                 </form>
             </field>
         </record>
@@ -1715,9 +1665,22 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Access Controls">
-                    <field name="name"/>
-                    <field name="model_id"/>
-                    <field name="group_id"/>
+                <group>
+                		<filter string="Global" icon="terp-stage" domain="[('group_id','=',False)]"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Full Access" icon="terp-gtk-select-all" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
+                        <filter string="Read Access" icon="terp-stock_align_left_24" domain="[('perm_read','=',True)]"/>
+                        <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
+	                    <separator orientation="vertical"/>
+                		<field name="name"/>
+	          			<field name="model_id"/>
+	            		<field name="group_id"/>
+	            </group>
+	            <newline/>
+	            <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
+                     <filter string="Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
+                     <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
+               	</group>
                 </search>
             </field>
         </record>
@@ -1729,8 +1692,7 @@
             <field name="view_id" ref="ir_access_view_tree"/>
             <field name="search_view_id" ref="ir_access_view_search"/>
         </record>
-        <menuitem name="Access Controls" id="menu_security_access" parent="menu_security" sequence="5"/>
-        <menuitem action="ir_access_act" id="menu_ir_access_act" parent="menu_security_access"/>
+      <menuitem action="ir_access_act" id="menu_ir_access_act" parent="base.menu_security"/>
 
         <!-- Rules -->
 
@@ -1796,9 +1758,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Record rules">
-                    <field name="model_id"/>
-                    <field name="global"/>
-                    <field name="groups"/>
+                	<group>
+                        <filter string="Global" icon="terp-stage" domain="[('global','=',True)]"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Full Access" icon="terp-gtk-select-all" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
+                        <filter string="Read Access" icon="terp-stock_align_left_24" domain="[('perm_read','=',True)]"/>
+                        <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="model_id"/>
+	                    <field name="global"/>
+	                    <field name="groups"/>
+	                </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
+                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
+                	</group>
                 </search>
             </field>
         </record>
@@ -1943,15 +1917,7 @@
             <field name="search_view_id" ref="view_server_action_search"/>
             <field name="context">{'key':'server_action'}</field>
         </record>
-        <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
-
-        <record model="ir.actions.act_window" id="action_model_grid_security">
-            <field name="name">Access Controls Grid</field>
-            <field name="res_model">ir.model.grid</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem action="action_model_grid_security" id="menu_ir_access_grid" parent="menu_security_access"/>
+        <menuitem action="action_server_action" id="menu_server_action" parent="base.menu_custom_action"/>
 
         <record id="ir_actions_todo_tree" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
@@ -1961,10 +1927,11 @@
                 <tree editable="bottom" string="Config Wizard Steps">
                     <field name="sequence"/>
                     <field name="action_id"/>
-                    <field name="restart"/>
                     <field name="state" readonly="1"/>
-                    <button name="action_open" states="cancel,skip,done" string="Set as todo" type="object" icon="gtk-convert"/>
-                    <button name="action_launch" states="open" string="Launch this wizard" type="object" icon="gtk-execute"/>
+                    <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
+                    <button name="action_open" states="cancel,skip,done"
+                            string="Todo" type="object" help="Set as Todo"
+                            icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -1984,8 +1951,10 @@
                     <field name="groups_id" nolabel="1" colspan="4"/>
                     <group colspan="4" col="4">
                         <field name="state" colspan="2" readonly="1"/>
-                        <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch this wizard"/>
-                        <button name="action_open" states="cancel,skip,done" string="Set as todo" type="object" icon="gtk-convert"/>
+                        <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
+                        <button name="action_open" states="cancel,skip,done"
+                            string="Set as Todo" type="object"
+                            icon="gtk-convert"/>
                     </group>
                 </form>
             </field>
@@ -1999,8 +1968,8 @@
                 <search string="Search Actions">
                 	<filter string="To Do" name="todo" icon="terp-camera_test" domain=" ['|',('state','=','open'),'&amp;',('state','=','skip'),('restart','=','onskip')]" help="Todo State Or (Skip State And Onskip Restart)"/>
                 	<separator orientation="vertical"/>
-                	<field name="state"/>
-					<field name="restart"/>
+                    <field name="state"/>
+                    <field name="restart"/>
                 </search>
             </field>
         </record>
@@ -2013,8 +1982,14 @@
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
+        <wizard id="wizard_configuration" model="ir.module.module" name="module.configuration" string="Start Configuration"/>
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
                 parent="next_id_11" groups="base.group_extended" sequence="20"/>
+
+        <menuitem
+            action="wizard_configuration" name="Start Configuration"
+            id="menu_configurator_module" parent="next_id_11"
+            type="wizard"/>
 
     </data>
 </openerp>

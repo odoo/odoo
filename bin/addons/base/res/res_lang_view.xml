@@ -24,22 +24,23 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Languages">
-                	<group col="4" colspan="4">
-                    <field name="name" colspan="4"/>
-                    <field name="code" />
-                    <field name="iso_code"/>
-                    <field name="active" />
-                    <field name="translatable"/>
-                    <field name="grouping" />
-                    <field name="direction" />
-                    <newline/>
-                    <field name="date_format"/>
-                    <field name="time_format"/>
-                    <field name="decimal_point"/>
-                    <field name="thousands_sep"/>
-                    <newline/>
-                    </group>
-                    <separator colspan="4" string="Legends for Date and Time Formats"/>
+                	<group col="6" colspan="4">
+                    	<field name="name"/>
+                   		<field name="code" />
+                    	<field name="iso_code"/>
+                    	<newline/>
+                    	<field name="grouping" />
+                    	<field name="date_format"/>
+              		    <field name="time_format"/>
+              		    <newline/>
+						<field name="direction" />
+           		        <field name="decimal_point"/>
+           		        <field name="thousands_sep"/>
+           		        <newline/>
+           		        <field name="active" />
+	                    <field name="translatable"/>
+           		    </group>
+					<separator colspan="4" string="Legends for Date and Time Formats"/>
                     <group col="4" colspan="4">
 	                     <label align="0.0" string="%%a - Abbreviated weekday name."/>
 	                     <label align="0.0" string="%%A - Full weekday name."/>
@@ -106,10 +107,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Languages">
-					<field name="name"/>
-					<field name="code"/>
-					<field name="iso_code"/>
-					<field name="direction"/>
+	                 <group>
+	                	<filter string="Translatable" icon="terp-tools" domain="[('translatable','=',True)]"/>
+	                    <separator orientation="vertical"/>
+						<field name="name"/>
+						<field name="code"/>
+						<field name="iso_code"/>
+						<field name="direction"/>
+					</group>
                 </search>
             </field>
         </record>
@@ -121,6 +126,6 @@
             <field name="context">{'active_test': False}</field>
             <field name="search_view_id" ref="res_lang_search"/>
         </record>
-        <menuitem action="res_lang_act_window" id="menu_res_lang_act_window" parent="menu_translation"/>
+        <menuitem action="res_lang_act_window" id="menu_res_lang_act_window" parent="menu_translation" groups="base.group_extended" sequence="1"/>
     </data>
 </openerp>
