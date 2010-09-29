@@ -198,7 +198,7 @@ var openPartnerHandler = {
 
                 if (parseInt(partner_id) > 0){
                     alert(partner_id)
-                  var t = urlport + "/form/view?model=res.partner&id="+partner_id;
+                  var t = urlport + "/openerp/form/view?model=res.partner&id="+partner_id;
                   window.open(t);
                 
                 }
@@ -303,7 +303,7 @@ var listDocumentHandler = {
          weburl = getWebServerURL();
          webport = getwebPort();
          var urlport = weburl+':'+webport
-         var t = urlport + "/form/view?model=" + model +"&id=" + res_id
+         var t = urlport + "/openerp/form/view?model=" + model +"&id=" + res_id
          alert(t)
          window.open(t);
 	},
