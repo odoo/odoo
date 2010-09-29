@@ -101,7 +101,18 @@ class res_partner_contact(osv.osv):
             _contact += contact.first_name or ""
             res.append((contact.id, _contact))
         return res
-
+    
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=None):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        if name:
+            ids = self.search(cr, uid, ['|',('name', operator, name),('first_name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context=context)
+    
 res_partner_contact()
 
 
@@ -166,41 +177,6 @@ class res_partner_job(osv.osv):
             function_name = r.function
             funct = function_name and (", " + function_name) or ""
             res.append((r.id, contact_names.get(r.contact_id.id, '') + funct))
-
-        return res
-
-    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        """ search parnter job
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param user: the current user
-            @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
-            @param offset: The Number of Results to Pass
-            @param limit: The Number of Results to Return
-            @param context: A standard dictionary for contextual values
-        """
-
-        job_ids = []
-        for arg in args:
-            if arg[0] == 'address_id':
-                self._order = 'sequence_partner'
-            elif arg[0] == 'contact_id':
-                self._order = 'sequence_contact'
-
-                contact_obj = self.pool.get('res.partner.contact')
-                if arg[2] and not count:
-                    search_arg = ['|', ('first_name', 'ilike', arg[2]), ('name', 'ilike', arg[2])]
-                    contact_ids = contact_obj.search(cr, user, search_arg, offset=offset, limit=limit, order=order, context=context, count=count)
-                    if not contact_ids:
-                         continue
-                    contacts = contact_obj.browse(cr, user, contact_ids, context=context)
-                    for contact in contacts:
-                        job_ids.extend([item.id for item in contact.job_ids])
-
-        res = super(res_partner_job,self).search(cr, user, args, offset=offset,\
-                    limit=limit, order=order, context=context, count=count)
-        if job_ids:
-            res = list(set(res + job_ids))
 
         return res
 
