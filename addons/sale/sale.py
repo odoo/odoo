@@ -21,12 +21,12 @@
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+import time
+
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
 import netsvc
-import time
-
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -62,6 +62,7 @@ class sale_order(osv.osv):
             'shipped': False,
             'invoice_ids': [],
             'picking_ids': [],
+            'date_confirm':False,
             'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
