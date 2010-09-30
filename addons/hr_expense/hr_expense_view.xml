@@ -136,11 +136,13 @@
                       <separator orientation="vertical"/>
                       <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"
                         help="Confirmed Expense"/>
-                      <filter icon="terp-check" domain="[('state','=','accepted')]" string="To Pay"
+                      <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay"
                         help="Expenses to Invoice"/>
+                      <separator orientation="vertical"/>
                       <filter icon="terp-go-month" string="This Month" name="this"
                               domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>                        
                       <separator orientation="vertical"/>
+                      <field name="employee_id" select='1'/>
                       <field name="name" select='1'/>
                       <field name="date" select='1'/>
                       <field name="user_id"  string="User" invisible="True">
