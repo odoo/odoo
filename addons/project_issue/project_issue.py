@@ -193,7 +193,7 @@ class project_issue(crm.crm_case, osv.osv):
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'progress': fields.related('task_id', 'progress', string='Progress (%)',group_operator="avg"),
+        'progress': fields.related('task_id', 'progress', string='Progress (%)',group_operator="avg", store=True),
     }
 
     def _get_project(self, cr, uid, context):
