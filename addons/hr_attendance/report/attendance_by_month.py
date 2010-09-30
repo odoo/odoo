@@ -20,9 +20,8 @@
 ##############################################################################
 
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-import datetime
 import netsvc
 import pooler
 
@@ -43,13 +42,6 @@ def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
-
-def strToDate(dt):
-    if dt:
-        dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
-        return dt_date
-    else:
-        return
 
 class report_custom(report_rml):
 
@@ -91,7 +83,7 @@ class report_custom(report_rml):
                     for att in attendences:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if att['action'] == 'sign_out':
-                            wh += (dt - ldt).hours
+                            wh += (dt - ldt).seconds/60/60
                         ldt = dt
                     # Week xml representation
 #                    wh = hour2str(wh)
@@ -111,8 +103,8 @@ class report_custom(report_rml):
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
 
         first_date = str(month)
-        som = strToDate(first_date)
-        eom = som+datetime.timedelta(int(dy)-1)
+        som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')
+        eom = som + timedelta(int(dy)-1)
         day_diff=eom-som
         date_xml=[]
         cell=1
