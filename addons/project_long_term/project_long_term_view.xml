@@ -97,7 +97,7 @@
 	                    <group colspan="2" col="4">
 	                       <field name="project_id" on_change="onchange_project(project_id)" colspan="4"/>
                            <newline/>
-	                       <field name="duration" colspan="1"/>
+	                       <field name="duration" colspan="1" on_change="onchange_days(project_id)" />
                            <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
 	                    </group>
 	                    <group colspan="2" col="2">
@@ -134,6 +134,7 @@
                                     <field name="user_id"/>
                                     <field name="planned_hours" widget="float_time"/>
                                     <field name="project_id" invisible="1"/>
+                                    <field name="total_hours" sum='Total Hours'/>
                                   </tree>
                                   <form string="Project's Tasks">
                                       <notebook colspan="4">
@@ -151,6 +152,7 @@
                                             <group colspan="2" col="2">
                                                   <separator string="Planning" colspan="2"/>
                                                   <field name="planned_hours" widget="float_time"/>
+                                                <field name="total_hours" widget="float_time"/>
                                                 <field name="remaining_hours" widget="float_time" sum="Remaining Hours"/>
                                                 <field name="effective_hours" invisible="1"/>
                                             </group>
@@ -299,7 +301,30 @@
     # ------------------------------------------------------
     # Project Task
     # ------------------------------------------------------
-
+    
+        <record id="view_phase_task_form2" model="ir.ui.view">
+            <field name="name">phase.task.form2</field>
+            <field name="model">project.task</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <field name="sequence" position="after">
+                    <field name="phase_id"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_phase_task_search_form" model="ir.ui.view">
+            <field name="name">phase.task.search.form</field>
+            <field name="model">project.task</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+                <field name="project_id" position="after">
+                    <field name="phase_id" select="1"/>
+                </field>
+            </field>
+        </record>   
+    
     <act_window
         id="project_phase_task_list"
         name="Related Tasks"

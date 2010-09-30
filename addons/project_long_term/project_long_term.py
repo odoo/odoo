@@ -20,6 +20,7 @@
 ##############################################################################
 
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task
@@ -90,6 +91,19 @@ class project_phase(osv.osv):
        model_data_obj = self.pool.get('ir.model.data')
        model_data_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
        return model_data_obj.read(cr, uid, [model_data_id], ['res_id'])[0]['res_id']
+    
+    def _compute(self, cr, uid, ids, context=None):
+        res = {}
+        if not ids:
+            return res
+        for phase in self.browse(cr, uid, ids, context=context):
+            tot = 0.0
+            for task in phase.task_ids:
+                tot += task.planned_hours
+            res[phase.id] = {
+                'total_hours' : tot
+            }
+        return res
 
     _columns = {
         'name': fields.char("Name", size=64, required=True),
@@ -108,7 +122,8 @@ class project_phase(osv.osv):
         'responsible_id': fields.many2one('res.users', 'Responsible', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the phase is created the state \'Draft\'.\n If the phase is started, the state becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' state.\
-                                  \n If the phase is over, the states is set to \'Done\'.')
+                                  \n If the phase is over, the states is set to \'Done\'.'),
+        'total_hours': fields.function(_compute, method=True, string='Total Hours'),
      }
     _defaults = {
         'responsible_id': lambda obj,cr,uid,context: uid,
@@ -129,6 +144,14 @@ class project_phase(osv.osv):
         if project:
             project_id = project_obj.browse(cr, uid, project, context=context)
             result['date_start'] = project_id.date_start
+        return {'value': result}
+    
+    def onchange_days(self, cr, uid, ids, project, context=None):
+        result = {}
+        for id in ids:
+            project_id = self.browse(cr, uid, id, context=context)
+            newdate = datetime.strptime(project_id.date_start, '%Y-%m-%d') + relativedelta(days=project_id.duration or 0.0)
+            result['date_end'] = newdate.strftime('%Y-%m-%d')
         return {'value': result}
 
     def _check_date_start(self, cr, uid, phase, date_end, context=None):

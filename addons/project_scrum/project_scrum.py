@@ -257,7 +257,7 @@ class project_scrum_product_backlog(osv.osv):
         'name' : fields.char('Feature', size=64, required=True),
         'note' : fields.text('Note'),
         'active' : fields.boolean('Active', help="If Active field is set to true, it will allow you to hide the product backlog without removing it."),
-        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
+        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)]),
         'user_id': fields.many2one('res.users', 'Author'),
         'sprint_id': fields.many2one('project.scrum.sprint', 'Sprint'),
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
