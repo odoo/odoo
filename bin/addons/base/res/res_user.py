@@ -357,7 +357,6 @@ class users(osv.osv):
         'context_lang': lambda *args: 'en_US',
         'active' : lambda *a: True,
         'menu_id': _get_menu,
-        'action_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
