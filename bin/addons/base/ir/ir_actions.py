@@ -530,7 +530,7 @@ class actions_server(osv.osv):
                         'uid': uid,
                         'object':obj
                         }
-                    eval(action.code, globals(), localdict, 'exec')
+                    eval(action.code, localdict, mode="exec", nocopy=True) # nocopy allows to return 'action'
                     if 'action' in localdict:
                         return localdict['action']
                 else:
