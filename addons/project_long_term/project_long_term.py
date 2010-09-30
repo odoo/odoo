@@ -291,6 +291,9 @@ class project_phase(osv.osv):
             def Project():
                 # If project has working calendar then that
                 # else the default one would be considered
+                start = start_date
+                minimum_time_unit = 1
+                resource = phase_resource_obj
                 if calendar_id:
                     working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
                     vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id))

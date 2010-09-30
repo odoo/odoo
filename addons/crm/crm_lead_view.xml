@@ -342,8 +342,9 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Group By...">
-                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
+                    <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Category" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'categ_id'}"/>
                     <filter string="Campaign" icon="terp-stock_symbol-selection"
@@ -351,11 +352,10 @@
                     <filter string="Channel" icon="terp-stock_symbol-selection"
                         domain="[]" context="{'group_by':'channel_id'}" />
                     <separator orientation="vertical"/>
-                    <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
-                    <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
+                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Creation Month" icon="terp-go-month"
+                    <filter string="Creation" help="Create date" icon="terp-go-month"
                         domain="[]" context="{'group_by':'create_date'}" />
                 </group>
            </search>
