@@ -109,8 +109,8 @@ class project_phase(osv.osv):
         'name': fields.char("Name", size=64, required=True),
         'date_start': fields.date('Start Date', help="Starting Date of the phase", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'date_end': fields.date('End Date', help="Ending Date of the phase", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'constraint_date_start': fields.date('Start Date', help='force the phase to start after this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'constraint_date_end': fields.date('End Date', help='force the phase to finish before this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'constraint_date_start': fields.date('Minimum Start Date', help='force the phase to start after this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'constraint_date_end': fields.date('Deadline', help='force the phase to finish before this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'project_id': fields.many2one('project.project', 'Project', required=True),
         'next_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'prv_phase_id', 'next_phase_id', 'Next Phases', states={'cancelled':[('readonly',True)]}),
         'previous_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'next_phase_id', 'prv_phase_id', 'Previous Phases', states={'cancelled':[('readonly',True)]}),
@@ -394,8 +394,10 @@ class project_resource_allocation(osv.osv):
     _columns = {
         'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
         'phase_id': fields.many2one('project.phase', 'Project Phase', ondelete='cascade', required=True),
-        'phase_id_date_start': fields.related('phase_id', 'date_start', type='date', string='Starting Date of the phase'),
-        'phase_id_date_end': fields.related('phase_id', 'date_end', type='date', string='Ending Date of the phase'),
+        'project_id': fields.related('phase_id', 'project_id', type='many2one', relation="project.project", string='Project', store=True),
+        'user_id': fields.related('resource_id', 'user_id', type='many2one', relation="res.users", string='User'),
+        'date_start': fields.date('Start Date', help="Starting Date"),
+        'date_end': fields.date('End Date', help="Ending Date"),
         'useability': fields.float('Usability', help="Usability of this resource for this project phase in percentage (=50%)"),
     }
     _defaults = {

@@ -44,7 +44,6 @@
                         <newline/>
                         <separator colspan="4" string="Message"/>
                      	<field name="message" colspan="4" nolabel="1"/>
-                     	<field name="date"/>
                      </group>
                 </form>
             </field>
@@ -56,6 +55,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Messages">
+                        <field name="create_date"/>
                         <field name="project_id"/>
                         <field name="from_id"/>
                         <field name="to_id"/>
@@ -70,11 +70,12 @@
            <field name="arch" type="xml">
                <search string="Project Messages">
                		<group>
+                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','=',time.strftime('%%Y-%%m-%%d'))]"/>
+                        <separator orientation="vertical"/>
                			<field name="project_id"/>
                         <field name="from_id"/>
                         <field name="to_id"/>
                         <field name="message"/>
-                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                		</group>
                		<newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">

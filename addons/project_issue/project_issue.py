@@ -185,7 +185,7 @@ class project_issue(crm.crm_case, osv.osv):
                                 method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
-        'assigned_to': fields.many2one('res.users', 'Assigned to', help='This is the current user to whom the related task have been assigned'),
+        'assigned_to': fields.related('task_id', 'user_id', string = 'Assigned to', type="many2one", relation="res.users", store=True, help='This is the current user to whom the related task have been assigned'),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 method=True, multi='working_days_open', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
@@ -318,6 +318,7 @@ class project_issue(crm.crm_case, osv.osv):
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)
+        self._history(cr, uid, cases, _('Escalate'))
         return True
 
     def message_new(self, cr, uid, msg, context):
@@ -368,6 +369,31 @@ class project_issue(crm.crm_case, osv.osv):
             self.pool.get('ir.attachment').create(cr, uid, data_attach)
 
         return res
+
+    def get_stage_dict(self, cr, uid, ids, context=None):
+        """This function gives dictionary for stage according to stage levels
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case IDs
+        @param context: A standard dictionary for contextual values"""
+        if not context:
+            context = {}
+        stage_obj = self.pool.get('crm.case.stage')
+        domain = [('object_id.model', '=', self._name)]
+        if 'force_domain' in context and context['force_domain']:
+            domain += context['force_domain']
+        sid = stage_obj.search(cr, uid, domain, context=context)
+        s = {}
+        previous = {}
+        section = self._name
+
+        for stage in stage_obj.browse(cr, uid, sid, context=context):
+            s.setdefault(section, {})
+            s[section][previous.get(section, False)] = stage.id
+            previous[section] = stage.id
+        return s
+
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
         if context is None:

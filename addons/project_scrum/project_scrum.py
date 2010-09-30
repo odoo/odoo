@@ -18,13 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from mx import DateTime
 from osv import fields, osv
 from tools.translate import _
 import re
 import time
 import tools
-
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class project_scrum_project(osv.osv):
     _inherit = 'project.project'
@@ -147,7 +147,7 @@ class project_scrum_sprint(osv.osv):
             proj = self.pool.get('project.project').browse(cr, uid, [project_id])[0]
             v['product_owner_id']= proj.product_owner_id and proj.product_owner_id.id or False
             v['scrum_master_id']= proj.user_id and proj.user_id.id or False
-            v['date_stop'] = (DateTime.now() + DateTime.RelativeDateTime(days=int(proj.sprint_size or 14))).strftime('%Y-%m-%d')
+            v['date_stop'] = (datetime.now() + relativedelta(days=int(proj.sprint_size or 14))).strftime('%Y-%m-%d')
         return {'value':v}
 
 project_scrum_sprint()
@@ -264,7 +264,7 @@ class project_scrum_product_backlog(osv.osv):
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
         'progress': fields.function(_compute, multi="progress", group_operator="avg", type='float', method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_compute, multi="effective_hours", method=True, string='Spent Hours', help="Computed using the sum of the time spent on every related tasks"),
+        'effective_hours': fields.function(_compute, multi="effective_hours", method=True, string='Spent Hours', help="Computed using the sum of the time spent on every related tasks", store=True),
         'expected_hours': fields.float('Planned Hours', help='Estimated total time to do the Backlog'),
         'create_date': fields.datetime("Creation Date", readonly=True),
         'task_hours': fields.function(_compute, multi="task_hours", method=True, string='Task Hours', help='Estimated time of the total hours of the tasks')
