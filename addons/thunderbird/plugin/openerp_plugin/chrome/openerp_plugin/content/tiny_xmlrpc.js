@@ -983,7 +983,7 @@ var listSearchwebdocumentHandler = {
                   open_document();} 
     
             if(strlSearchResult=="email" && strlSearchResultValue==''){
-                alert("Contact is not available.");
+                alert("Contact is not available.so not open any document.");
             } 
 
             if(strlSearchResult=="res_id"){

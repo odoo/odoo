@@ -200,7 +200,7 @@ var openPartnerHandler = {
 
                 if (parseInt(partner_id) > 0){
                   var t = urlport + "/openerp/form/view?model=res.partner&id="+partner_id;
-                  alert(t + ":" + " " + "you can copy the link and paste in weburl");
+                  alert(t + ":" + " " + "\n\n" + "If you can not open this link directly in web browser then you can copy the link and paste in web browser.");
                   window.open(t);
                 
                 }
@@ -307,7 +307,7 @@ var listDocumentHandler = {
         
         var urlport = weburl+':'+webport;
         var t = urlport + "/openerp/form/view?model=" + model +"&id=" + res_id;
-        alert(t + ":" + " " + "you can copy the link and paste in weburl");
+        alert(t + ":" + " " + "\n\n" + "If you can not open this link directly in web browser then you can copy the link and paste in web browser.");
         window.open(t); 
          
 	},
