@@ -26,7 +26,7 @@ class res_partner_contact(osv.osv):
 
     _name = "res.partner.contact"
     _description = "Contact"
-    
+
     def _main_job(self, cr, uid, ids, fields, arg, context=None):
         """
             @param self: The object pointer
@@ -36,12 +36,16 @@ class res_partner_contact(osv.osv):
             @fields: Get Fields
             @param context: A standard dictionary for contextual values
             @param arg: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...]. """
-
-
         res = dict.fromkeys(ids, False)
+
+        res_partner_job_obj = self.pool.get('res.partner.job')
+        all_job_ids = res_partner_job_obj.search(cr, uid, [])
+        all_job_names = dict(zip(all_job_ids, res_partner_job_obj.name_get(cr, uid, all_job_ids, context=context)))
+
         for contact in self.browse(cr, uid, ids, context):
             if contact.job_ids:
-                res[contact.id] = contact.job_ids[0].name_get()[0]
+                res[contact.id] = all_job_names.get(contact.job_ids[0].id, False)
+
         return res
 
     _columns = {
@@ -61,7 +65,7 @@ class res_partner_contact(osv.osv):
         'function': fields.related('job_ids', 'function', type='char', \
                                  string='Main Function'),
         'job_id': fields.function(_main_job, method=True, type='many2one',\
-                                 relation='res.partner.job', string='Main Job', store=True),
+                                 relation='res.partner.job', string='Main Job'),
         'email': fields.char('E-Mail', size=240),
         'comment': fields.text('Notes', translate=True),
         'photo': fields.binary('Image'),
@@ -97,7 +101,18 @@ class res_partner_contact(osv.osv):
             _contact += contact.first_name or ""
             res.append((contact.id, _contact))
         return res
-
+    
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=None):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        if name:
+            ids = self.search(cr, uid, ['|',('name', operator, name),('first_name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context=context)
+    
 res_partner_contact()
 
 
@@ -138,8 +153,7 @@ class res_partner_address(osv.osv):
 res_partner_address()
 
 class res_partner_job(osv.osv):
-
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -147,12 +161,15 @@ class res_partner_job(osv.osv):
             @param ids: List of partner address’s IDs
             @param context: A standard dictionary for contextual values
         """
+        if context is None:
+            context = {}
 
-        if not len(ids):
+        if not ids:
             return []
         res = []
 
         jobs = self.browse(cr, uid, ids)
+
         contact_ids = [rec.contact_id.id for rec in jobs]
         contact_names = dict(self.pool.get('res.partner.contact').name_get(cr, uid, contact_ids, context=context))
 
@@ -160,40 +177,6 @@ class res_partner_job(osv.osv):
             function_name = r.function
             funct = function_name and (", " + function_name) or ""
             res.append((r.id, contact_names.get(r.contact_id.id, '') + funct))
-        return res
-
-    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        """ search parnter job
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param user: the current user
-            @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
-            @param offset: The Number of Results to Pass
-            @param limit: The Number of Results to Return
-            @param context: A standard dictionary for contextual values
-        """
-
-        job_ids = []
-        for arg in args:
-            if arg[0] == 'address_id':
-                self._order = 'sequence_partner'
-            elif arg[0] == 'contact_id':
-                self._order = 'sequence_contact'
-
-                contact_obj = self.pool.get('res.partner.contact')
-                if arg[2] and not count:
-                    search_arg = ['|', ('first_name', 'ilike', arg[2]), ('name', 'ilike', arg[2])]
-                    contact_ids = contact_obj.search(cr, user, search_arg, offset=offset, limit=limit, order=order, context=context, count=count)
-                    if not contact_ids:
-                         continue
-                    contacts = contact_obj.browse(cr, user, contact_ids, context=context)
-                    for contact in contacts:
-                        job_ids.extend([item.id for item in contact.job_ids])
-
-        res = super(res_partner_job,self).search(cr, user, args, offset=offset,\
-                    limit=limit, order=order, context=context, count=count)
-        if job_ids:
-            res = list(set(res + job_ids))
 
         return res
 

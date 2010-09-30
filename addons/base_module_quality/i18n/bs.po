@@ -7,60 +7,61 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-16 14:36+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-09-29 09:53+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 04:06+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_quality
 #: field:module.quality.check,final_score:0
 msgid "Final Score (%)"
-msgstr ""
+msgstr "Konačni Rezultat (%)"
 
 #. module: base_module_quality
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Naziv objekta mora počinjati sa x_ i ne smije sadržavati specijalne znakove!"
 
 #. module: base_module_quality
 #: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
 msgid "Base module quality"
-msgstr ""
+msgstr "Kvalitet osnovnog modula"
 
 #. module: base_module_quality
 #: field:module.quality.check,name:0
 msgid "Rated Module"
-msgstr ""
+msgstr "Ocijenjen modul"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
 msgid "Detail"
-msgstr ""
+msgstr "Detalj"
 
 #. module: base_module_quality
 #: field:module.quality.detail,note:0
 msgid "Note"
-msgstr ""
+msgstr "Bilješka"
 
 #. module: base_module_quality
 #: field:module.quality.detail,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: base_module_quality
 #: field:module.quality.detail,detail:0
 msgid "Details"
-msgstr ""
+msgstr "Detalji"
 
 #. module: base_module_quality
 #: field:module.quality.detail,ponderation:0
 msgid "Ponderation"
-msgstr ""
+msgstr "Ponderacija"
 
 #. module: base_module_quality
 #: help:module.quality.detail,ponderation:0
@@ -68,17 +69,19 @@ msgid ""
 "Some tests are more critical than others, so they have a bigger weight in "
 "the computation of final rating"
 msgstr ""
+"Neki su testovi od većeg kritičnog značaja od drugih, tako da imaju veću "
+"\"težinu\" u izračunu konačne procjene."
 
 #. module: base_module_quality
 #: view:module.quality.check:0
 #: field:module.quality.check,check_detail_ids:0
 msgid "Tests"
-msgstr ""
+msgstr "Testovi"
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
 msgid "Skipped"
-msgstr ""
+msgstr "Preskočeno"
 
 #. module: base_module_quality
 #: help:module.quality.detail,state:0
@@ -86,6 +89,8 @@ msgid ""
 "The test will be completed only if the module is installed or if the test "
 "may be processed on uninstalled module."
 msgstr ""
+"Test će biti dovršen samo ukoliko je modul instaliran ili ukolike se test "
+"može provesti nad neinstaliranim modulom."
 
 #. module: base_module_quality
 #: constraint:ir.ui.view:0
@@ -95,58 +100,58 @@ msgstr "Neodgovarajući XML za arhitekturu prikaza!"
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
 msgid "module.quality.check"
-msgstr ""
+msgstr "module.quality.check"
 
 #. module: base_module_quality
 #: field:module.quality.detail,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,module_file:0
 msgid "Save report"
-msgstr ""
+msgstr "Spremi Izvještaj"
 
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,name:0
 msgid "File name"
-msgstr ""
+msgstr "Naziv datoteke"
 
 #. module: base_module_quality
 #: field:module.quality.detail,score:0
 msgid "Score (%)"
-msgstr ""
+msgstr "Rezultat (%)"
 
 #. module: base_module_quality
 #: help:quality_detail_save,init,name:0
 msgid "Save report as .html format"
-msgstr ""
+msgstr "Spremi izvještaj u .html formatu"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
 #: field:module.quality.detail,summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sažetak"
 
 #. module: base_module_quality
 #: model:ir.actions.wizard,name:base_module_quality.quality_detail_save
 msgid "Report Save"
-msgstr ""
+msgstr "Spremi Izvještaj"
 
 #. module: base_module_quality
 #: wizard_view:quality_detail_save,init:0
 msgid "Standard entries"
-msgstr ""
+msgstr "Standardne stavke"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
 msgid "Save Report"
-msgstr ""
+msgstr "Spremi Izvještaj"
 
 #. module: base_module_quality
 #: model:ir.actions.wizard,name:base_module_quality.create_quality_check_id
 msgid "Quality Check"
-msgstr ""
+msgstr "Provjera kvalitete"
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_detail
@@ -156,25 +161,25 @@ msgstr ""
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
 msgid "Done"
-msgstr ""
+msgstr "Završeno"
 
 #. module: base_module_quality
 #: view:module.quality.check:0
 #: view:module.quality.detail:0
 msgid "Result"
-msgstr ""
+msgstr "Rezultat"
 
 #. module: base_module_quality
 #: wizard_button:quality_detail_save,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Poništi"
 
 #. module: base_module_quality
 #: field:module.quality.detail,message:0
 msgid "Message"
-msgstr ""
+msgstr "Poruka"
 
 #. module: base_module_quality
 #: field:module.quality.detail,quality_check_id:0
 msgid "Quality"
-msgstr ""
+msgstr "Kvaliteta"
