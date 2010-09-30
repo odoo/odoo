@@ -568,6 +568,7 @@ class account_voucher(osv.osv):
         analytic_pool = self.pool.get('account.analytic.line')
         currency_pool = self.pool.get('res.currency')
         invoice_pool = self.pool.get('account.invoice')
+        bank_st_line_obj = self.pool.get('account.bank.statement.line')
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
@@ -587,6 +588,11 @@ class account_voucher(osv.osv):
                 'period_id': inv.period_id and inv.period_id.id or False
             }
             move_id = move_pool.create(cr, uid, move)
+            line_bank_ids = bank_st_line_obj.search(cr, uid, [('voucher_id', '=', inv.id)], context=context)
+            if line_bank_ids:
+                bank_st_line_obj.write(cr, uid, line_bank_ids, {
+            'move_ids': [(4, move_id, False)]
+            })
 
             #create the first line manually
             company_currency = inv.journal_id.company_id.currency_id.id

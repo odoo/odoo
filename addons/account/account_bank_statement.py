@@ -375,7 +375,7 @@ class account_bank_statement(osv.osv):
                 if not st_line.amount:
                     continue
                 st_line_number = self.get_next_st_line_number(cr, uid, st_number, st_line, context)
-                self.create_move_from_st_line(cr, uid, st_line, company_currency_id, st_line_number, context)
+                self.create_move_from_st_line(cr, uid, st_line.id, company_currency_id, st_line_number, context)
 
             self.write(cr, uid, [st.id], {'name': st_number}, context=context)
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st_number)
