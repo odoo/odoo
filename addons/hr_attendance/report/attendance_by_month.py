@@ -19,10 +19,9 @@
 #
 ##############################################################################
 
-from mx import DateTime
-from mx.DateTime import now
 import time
-import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 import netsvc
 import pooler
 
@@ -31,7 +30,7 @@ from report.interface import toxml
 
 from report import report_sxw
 
-one_day = DateTime.RelativeDateTime(days=1)
+one_day = relativedelta(days=1)
 month2name = [0, 'January', 'February', 'March', 'April', 'May', 'Jun', 'July', 'August', 'September', 'October', 'November', 'December']
 
 #def hour2str(h):
@@ -44,20 +43,13 @@ def lengthmonth(year, month):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
-def strToDate(dt):
-    if dt:
-        dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
-        return dt_date
-    else:
-        return
-
 class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
         obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
         if context is None:
             context = {}
-        month = DateTime.DateTime(datas['form']['year'], datas['form']['month'], 1)
+        month = datetime(datas['form']['year'], datas['form']['month'], 1)
         emp_ids = context.get('active_ids', [])
         user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
         if emp_ids:
@@ -89,9 +81,9 @@ class report_custom(report_rml):
                         attendences.append({'name': tomor.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
                     # sum up the attendances' durations
                     for att in attendences:
-                        dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
+                        dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if att['action'] == 'sign_out':
-                            wh += (dt - ldt).hours
+                            wh += (dt - ldt).seconds/60/60
                         ldt = dt
                     # Week xml representation
 #                    wh = hour2str(wh)
@@ -111,8 +103,8 @@ class report_custom(report_rml):
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
 
         first_date = str(month)
-        som = strToDate(first_date)
-        eom = som+datetime.timedelta(int(dy)-1)
+        som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')
+        eom = som + timedelta(int(dy)-1)
         day_diff=eom-som
         date_xml=[]
         cell=1

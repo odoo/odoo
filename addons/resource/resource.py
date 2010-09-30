@@ -20,11 +20,16 @@
 ##############################################################################
 
 from datetime import datetime, timedelta
+from mx import DateTime
 import math
 from faces import *
 from new import classobj
 from osv import fields, osv
 from tools.translate import _
+
+from itertools import groupby
+from operator import itemgetter
+
 
 class resource_calendar(osv.osv):
     _name = "resource.calendar"
@@ -44,11 +49,12 @@ class resource_calendar(osv.osv):
         dt_leave = []
 
         resource_leave_ids = resource_cal_leaves.search(cr, uid, [('calendar_id','=',id), '|', ('resource_id','=',False), ('resource_id','=',resource)])
-        res_leaves = resource_cal_leaves.read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
+        #res_leaves = resource_cal_leaves.read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
+        res_leaves = resource_cal_leaves.browse(cr, uid, resource_leave_ids)
 
         for leave in res_leaves:
-            dtf = datetime.strptime(leave['date_from'], '%Y-%m-%d %H:%M:%S')
-            dtt = datetime.strptime(leave['date_to'], '%Y-%m-%d %H:%M:%S')
+            dtf = datetime.strptime(leave.date_from, '%Y-%m-%d %H:%M:%S')
+            dtt = datetime.strptime(leave.date_to, '%Y-%m-%d %H:%M:%S')
             no = dtt - dtf
             [dt_leave.append((dtf + timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
             dt_leave.sort()
@@ -92,40 +98,61 @@ class resource_calendar(osv.osv):
         result.reverse()
         return result
 
+    # def interval_get(self, cr, uid, id, dt_from, hours, resource=False, byday=True):
+    def interval_get_multi(self, cr, uid, date_and_hours_by_cal, resource=False, byday=True):
+        def group(lst, key):
+            lst.sort(key=itemgetter(key))
+            grouped = groupby(lst, itemgetter(key))
+            return dict([(k, [v for v in itr]) for k, itr in grouped])
+        # END group
+
+        cr.execute("select calendar_id, dayofweek, hour_from, hour_to from resource_calendar_attendance order by hour_from")
+        hour_res = cr.dictfetchall()
+        hours_by_cal = group(hour_res, 'calendar_id')
+
+        results = {}
+
+        for d, hours, id in date_and_hours_by_cal:
+            dt_from = DateTime.strptime(d, '%Y-%m-%d %H:%M:%S')
+            if not id:
+                td = int(hours)*3
+                results[(d, hours, id)] = [(dt_from, dt_from + timedelta(hours=td))]
+                continue
+
+            dt_leave = self._get_leaves(cr, uid, id, resource)
+            todo = hours
+            result = []
+            maxrecur = 100
+            current_hour = dt_from.hour
+            while (todo>0) and maxrecur:
+                for (hour_from,hour_to) in [(item['hour_from'], item['hour_to']) for item in hours_by_cal[id] if item['dayofweek'] == str(dt_from.weekday())]:
+                    leave_flag  = False
+                    if (hour_to>current_hour) and (todo>0):
+                        m = max(hour_from, current_hour)
+                        if (hour_to-m)>todo:
+                            hour_to = m+todo
+                        dt_check = dt_from.strftime('%Y-%m-%d')
+                        for leave in dt_leave:
+                            if dt_check == leave:
+                                dt_check = datetime.strptime(dt_check, '%Y-%m-%d') + timedelta(days=1)
+                                leave_flag = True
+                        if leave_flag:
+                            break
+                        else:
+                            d1 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
+                            d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
+                            result.append((d1, d2))
+                            current_hour = hour_to
+                            todo -= (hour_to - m)
+                dt_from += timedelta(days=1)
+                current_hour = 0
+                maxrecur -= 1
+            results[(d, hours, id)] = result
+        return results
+
     def interval_get(self, cr, uid, id, dt_from, hours, resource=False, byday=True):
-        if not id:
-            td = int(hours)*3
-            return [(dt_from, dt_from + timedelta(hours=td))]
-        dt_leave = self._get_leaves(cr, uid, id, resource)
-        todo = hours
-        result = []
-        maxrecur = 100
-        current_hour = dt_from.hour
-        while (todo>0) and maxrecur:
-            cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.weekday(),id))
-            for (hour_from,hour_to) in cr.fetchall():
-                leave_flag  = False
-                if (hour_to>current_hour) and (todo>0):
-                    m = max(hour_from, current_hour)
-                    if (hour_to-m)>todo:
-                        hour_to = m+todo
-                    dt_check = dt_from.strftime('%Y-%m-%d')
-                    for leave in dt_leave:
-                        if dt_check == leave:
-                            dt_check = datetime.strptime(dt_check, '%Y-%m-%d') + timedelta(days=1)
-                            leave_flag = True
-                    if leave_flag:
-                        break
-                    else:
-                        d1 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
-                        d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
-                        result.append((d1, d2))
-                        current_hour = hour_to
-                        todo -= (hour_to - m)
-            dt_from += timedelta(days=1)
-            current_hour = 0
-            maxrecur -= 1
-        return result
+        res = self.interval_get_multi(cr, uid, [(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)], resource, byday)[(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)]
+        return res
 
     def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
         if not id:

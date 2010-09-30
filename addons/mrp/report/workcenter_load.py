@@ -23,8 +23,12 @@ from report.render import render
 from report.interface import report_int
 from pychart import *
 from mx.DateTime import *
+import time
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 from report.misc import choice_colors
-import time, mx
+
 import random
 import StringIO
 
@@ -62,8 +66,8 @@ class report_custom(report_int):
                 months = {1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"}
                 dates[i] = {
                     'name' :months[month],
-                    'start':(Date(year, month, 2) + RelativeDateTime(day=1)).strftime('%Y-%m-%d'),
-                    'stop' :(Date(year, month, 2) + RelativeDateTime(day=-1)).strftime('%Y-%m-%d'),
+                    'start':(datetime.date(year, month, 2) + relativedelta(day=1)).strftime('%Y-%m-%d'),
+                    'stop' :(datetime.date(year, month, 2) + relativedelta(day=-1)).strftime('%Y-%m-%d'),
                 }
             return dates
         elif time_unit == 'week':
@@ -90,7 +94,7 @@ class report_custom(report_int):
                     'start':i.strftime('%Y-%m-%d'),
                     'stop' :i.strftime('%Y-%m-%d'),
                 }
-                i = i + RelativeDateTime(days=+1)
+                i = i + relativedelta(days=+1)
             return dates
         return {}
 
