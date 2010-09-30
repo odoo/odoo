@@ -31,7 +31,7 @@
 ##############################################################################
 
 import time
-import mx.DateTime
+from datetime import datetime
 import base64
 
 from osv import osv, fields
@@ -469,11 +469,11 @@ def _create_dta(obj, cr, uid, data, context=None):
                     'on line: ' + pline.name)
 
         if pline.order_id.date_scheduled:
-            date_value = mx.DateTime.strptime(pline.order_id.date_scheduled, '%Y-%m-%d')
+            date_value = datetime.strptime(pline.order_id.date_scheduled, '%Y-%m-%d')
         elif pline.date:
-            date_value = mx.DateTime.strptime(pline.date, '%Y-%m-%d')
+            date_value = datetime.strptime(pline.date, '%Y-%m-%d')
         else:
-            date_value = mx.DateTime.now()
+            date_value = datetime.now()
         v['date_value'] = date_value.strftime("%y%m%d")
 
         # si compte iban -> iban (836)

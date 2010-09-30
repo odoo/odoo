@@ -389,6 +389,7 @@ class task(osv.osv):
         if not default.get('remaining_hours', False):
             default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
+        default['type_id'] = False
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
         return super(task, self).copy_data(cr, uid, id, default, context)

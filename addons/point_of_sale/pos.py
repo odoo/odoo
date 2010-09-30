@@ -1022,15 +1022,16 @@ class pos_order_line(osv.osv):
     def _amount_line_ttc(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0.0)
         account_tax_obj = self.pool.get('account.tax')
+        prices = self.price_by_product_multi(cr, uid, ids)
         for line in self.browse(cr, uid, ids):
             tax_amount = 0.0
             taxes = [t for t in line.product_id.taxes_id]
-	    if line.qty == 0.0:
-		continue
+            if line.qty == 0.0:
+                continue
             computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
             for tax in computed_taxes:
                 tax_amount += tax['amount']
-            price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
+            price = prices[line.id]
             if line.discount!=0.0:
                 res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
             else:
@@ -1041,12 +1042,89 @@ class pos_order_line(osv.osv):
     def _amount_line(self, cr, uid, ids, field_name, arg, context):
         res = {}
 
+        prices = self.price_by_product_multi(cr, uid, ids)
         for line in self.browse(cr, uid, ids):
-            price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
+            price = prices[line.id]
             if line.discount!=0.0:
                 res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
             else:
                 res[line.id]=line.price_unit*line.qty
+        return res
+
+    def _amount_line_all(self, cr, uid, ids, field_names, arg, context):
+        res = dict([(i, {}) for i in ids])
+
+        account_tax_obj = self.pool.get('account.tax')
+
+        prices = self.price_by_product_multi(cr, uid, ids)
+        for line in self.browse(cr, uid, ids):
+            for f in field_names:
+                if f == 'price_subtotal':
+                    price = prices[line.id]
+                    if line.discount != 0.0:
+                        res[line.id][f] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
+                    else:
+                        res[line.id][f] = line.price_unit * line.qty
+                elif f == 'price_subtotal_incl':
+                    tax_amount = 0.0
+                    taxes = [t for t in line.product_id.taxes_id]
+                    if line.qty == 0.0:
+                        continue
+                    computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
+                    for tax in computed_taxes:
+                        tax_amount += tax['amount']
+                    price = prices[line.id]
+                    if line.discount!=0.0:
+                        res[line.id][f] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
+                    else:
+                        res[line.id][f] = line.price_unit * line.qty
+                    res[line.id][f] += tax_amount
+        return res
+
+    def price_by_product_multi(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+
+        res = {}.fromkeys(ids, 0.0)
+
+        lines = self.browse(cr, uid, ids, context=context)
+
+        pricelist_ids = [line.order_id.pricelist_id.id for line in lines]
+        products_by_qty_by_partner = [(line.product_id.id, line.qty, line.order_id.partner_id.id) for line in lines]
+
+        price_get_multi_res = self.pool.get('product.pricelist').price_get_multi(cr, uid, pricelist_ids, products_by_qty_by_partner, context=context)
+
+        for line in lines:
+            pricelist = line.order_id.pricelist_id.id
+            product_id = line.product_id
+            qty = line.qty or 0
+            partner_id = line.order_id.partner_id.id or False
+
+            if not product_id:
+                res[line.id] = 0.0
+                continue
+            if not pricelist:
+                raise osv.except_osv(_('No Pricelist !'),
+                    _('You have to select a pricelist in the sale form !\n' \
+                    'Please set one before choosing a product.'))
+
+            uom_id = product_id.uom_po_id.id
+
+            #old_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id.id, qty or 1.0, partner_id, {'uom': uom_id})[pricelist]
+            #print "prod_id: %s, pricelist: %s, price: %s" % (product_id.id, pricelist, price)
+            price = price_get_multi_res[line.product_id.id][pricelist]
+            #print "prod_id: %s, pricelist: %s, price2: %s" % (product_id.id, pricelist, price2)
+
+            #if old_price != price:
+            #    raise Exception('old_price != price')
+
+            unit_price = price or product_id.list_price
+            res[line.id] = unit_price
+            if unit_price is False:
+                raise osv.except_osv(_('No valid pricelist line found !'),
+                    _("Couldn't find a pricelist line matching this product" \
+                    " and quantity.\nYou have to change either the product," \
+                    " the quantity or the pricelist."))
         return res
 
     def price_by_product(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
@@ -1057,7 +1135,7 @@ class pos_order_line(osv.osv):
                 _('You have to select a pricelist in the sale form !\n' \
                 'Please set one before choosing a product.'))
         p_obj = self.pool.get('product.product').browse(cr,uid,[product_id])[0]
-        uom_id=p_obj.uom_po_id.id
+        uom_id = p_obj.uom_po_id.id
         price = self.pool.get('product.pricelist').price_get(cr, uid,
             [pricelist], product_id, qty or 1.0, partner_id,{'uom': uom_id})[pricelist]
         unit_price=price or p_obj.list_price
@@ -1120,13 +1198,13 @@ class pos_order_line(osv.osv):
                 return {'value': {'notice':'Minimum Discount','price_ded':price*discount*0.01 or 0.0  }}
         else :
             return {'value': {'notice':'No Discount', 'price_ded':price*discount*0.01 or 0.0}}
-        
+
     def onchange_qty(self, cr, uid, ids, discount, qty, price, context=None):
         subtotal = qty * price
         if discount:
             subtotal = subtotal - (subtotal * discount / 100)
         return {'value': {'price_subtotal_incl': subtotal}}
-    
+
     _columns = {
         'name': fields.char('Line Description', size=512),
         'company_id':fields.many2one('res.company', 'Company', required=True),
@@ -1137,8 +1215,8 @@ class pos_order_line(osv.osv):
         'price_ded': fields.float('Discount(Amount)',digits_compute=dp.get_precision('Point Of Sale')),
         'qty': fields.float('Quantity'),
         'qty_rfd': fields.float('Refunded Quantity'),
-        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal w/o Tax'),
-        'price_subtotal_incl': fields.function(_amount_line_ttc, method=True, string='Subtotal'),
+        'price_subtotal': fields.function(_amount_line_all, method=True, multi='pos_order_line_amount', string='Subtotal w/o Tax'),
+        'price_subtotal_incl': fields.function(_amount_line_all, method=True, multi='pos_order_line_amount', string='Subtotal'),
         'discount': fields.float('Discount (%)', digits=(16, 2)),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),

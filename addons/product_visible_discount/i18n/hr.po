@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-03-25 12:11+0000\n"
-"PO-Revision-Date: 2010-09-08 21:19+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-09-29 10:53+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-09 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_visible_discount
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Neispravan XML za arhitekturu View-a"
 
 #. module: product_visible_discount
 #: model:ir.module.module,description:product_visible_discount.module_name_translation
@@ -39,8 +39,20 @@ msgid ""
 "Invoice lines: Unit price=225, Discount=0,00, Net price=225\n"
 "    "
 msgstr ""
+"\n"
+"    Ovaj modul dozvoljava izračun popusta na stavke narudžbi i osnovu "
+"stavaka faktura na partnerovom cjeniku.\n"
+"    Zbog toga je dodana nova kućica \"Vidljivi popust\" na formu cjenika.\n"
+"    Primjer:\n"
+"        Za proizvod PC1 i partnera \"Asustek\": ako je prikazana cijena=450, "
+"a cijena izračunata prema Asustekovom cjeniku iznosi 225\n"
+"        Ako je kućica označena, na stavki računa pisat će: Cijena=450, "
+"Popust=50,00, Neto cijena=225\n"
+"        Ako kućica nije označena, na stavkama računa i fakture pisat će: "
+"Cijena=225, Popust=0,00, Neto cijena=225\n"
+"    "
 
 #. module: product_visible_discount
 #: field:product.pricelist,visible_discount:0
 msgid "Visible Discount"
-msgstr ""
+msgstr "Vidljiv popust"

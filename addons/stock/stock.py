@@ -21,6 +21,8 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
+from operator import itemgetter
+from itertools import groupby
 
 from osv import fields, osv
 from tools import config
@@ -103,64 +105,43 @@ class stock_location(osv.osv):
             res[m.id] = _get_one_full_name(m)
         return res
 
-    def _product_qty_available(self, cr, uid, ids, field_names, arg, context=None):
-        """ Finds real and virtual quantity for product available at particular location.
-        @return: Dictionary of values
-        """
-        res = {}
-        for id in ids:
-            res[id] = {}.fromkeys(field_names, 0.0)
-        if ('product_id' not in context) or not ids:
-            return res
-        for loc in ids:
-            context['location'] = [loc]
-            prod = self.pool.get('product.product').browse(cr, uid, context['product_id'], context)
-            if 'stock_real' in field_names:
-                res[loc]['stock_real'] = prod.qty_available
-            if 'stock_virtual' in field_names:
-                res[loc]['stock_virtual'] = prod.virtual_available
-        return res
-
-    def product_detail(self, cr, uid, id, field, context=None):
-        """ Finds detail of product like price type, currency and then calculates its price.
-        @param field: Field name
-        @return: Calculated price
-        """
-        res = {}
-        res[id] = {}
-        final_value = 0.0
-        field_to_read = 'virtual_available'
-        if context is None:
-            context = {}
-        if field == 'stock_real_value':
-            field_to_read = 'qty_available'
-        cr.execute('select distinct product_id from stock_move where (location_id=%s) or (location_dest_id=%s)', (id, id))
-        result = cr.dictfetchall()
-        if result:
-            # Choose the right filed standard_price to read
-            # Take the user company
-            for r in result:
-                c = (context or {}).copy()
-                c['location'] = id
-                product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read], context=c)
-                # Compute the amount_unit in right currency
-                context['currency_id'] = self.pool.get('res.users').browse(cr,uid,uid).company_id.currency_id.id
-                amount_unit = self.pool.get('product.product').browse(cr,uid,r['product_id']).price_get('standard_price', context)[r['product_id']]
-                final_value += (product[field_to_read] * amount_unit)
-        return final_value
 
     def _product_value(self, cr, uid, ids, field_names, arg, context=None):
-        """ Calculates real and virtual stock value of a product.
+        """Computes stock value (real and virtual) for a product, as well as stock qty (real and virtual).
         @param field_names: Name of field
         @return: Dictionary of values
         """
-        result = {}
-        for id in ids:
-            result[id] = {}.fromkeys(field_names, 0.0)
-        for field_name in field_names:
-            for loc in ids:
-                ret_dict = self.product_detail(cr, uid, loc, field=field_name)
-                result[loc][field_name] = ret_dict
+        result = dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
+
+        product_product_obj = self.pool.get('product.product')
+
+        cr.execute('select distinct product_id, location_id from stock_move where location_id in %s or location_dest_id in %s', (tuple(ids), tuple(ids)))
+        res_products_by_location = sorted(cr.dictfetchall(), key=itemgetter('location_id'))
+        products_by_location = dict((k, [v['product_id'] for v in itr]) for k, itr in groupby(res_products_by_location, itemgetter('location_id')))
+
+        currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
+        currency_obj = self.pool.get('res.currency')
+        currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
+        currency_obj.round(cr, uid, currency, 300)
+
+        for loc_id, product_ids in products_by_location.items():
+            c = (context or {}).copy()
+            c['location'] = loc_id
+            for prod in product_product_obj.browse(cr, uid, product_ids, context=c):
+                for f in field_names:
+                    if f == 'stock_real':
+                        result[loc_id][f] += prod.qty_available
+                    elif f == 'stock_virtual':
+                        result[loc_id][f] += prod.virtual_available
+                    elif f == 'stock_real_value':
+                        amount = prod.qty_available * prod.standard_price
+                        amount = currency_obj.round(cr, uid, currency, amount)
+                        result[loc_id][f] += amount
+                    elif f == 'stock_virtual_value':
+                        amount = prod.virtual_available * prod.standard_price
+                        amount = currency_obj.round(cr, uid, currency, amount)
+                        result[loc_id][f] += amount
+
         return result
 
     _columns = {
@@ -178,8 +159,8 @@ class stock_location(osv.osv):
          # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
         'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
 
-        'stock_real': fields.function(_product_qty_available, method=True, type='float', string='Real Stock', multi="stock", digits_compute=dp.get_precision('Product UoM')),
-        'stock_virtual': fields.function(_product_qty_available, method=True, type='float', string='Virtual Stock', multi="stock", digits_compute=dp.get_precision('Product UoM')),
+        'stock_real': fields.function(_product_value, method=True, type='float', string='Real Stock', multi="stock"),
+        'stock_virtual': fields.function(_product_value, method=True, type='float', string='Virtual Stock', multi="stock"),
 
         'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),

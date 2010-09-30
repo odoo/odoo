@@ -21,8 +21,8 @@
 
 from osv import fields,osv
 import netsvc
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, today
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
 from tools.translate import _
 import decimal_precision as dp
 
@@ -222,8 +222,7 @@ class mrp_repair(osv.osv):
         if move_id:
             move =  self.pool.get('stock.move').browse(cr, uid, move_id)
             product = self.pool.get('product.product').browse(cr, uid, prod_id)
-            date = move.date
-            limit = mx.DateTime.strptime(date, '%Y-%m-%d %H:%M:%S') + RelativeDateTime(months=product.warranty)
+            limit = datetime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + relativedelta(months=product.warranty)
             data['value']['guarantee_limit'] = limit.strftime('%Y-%m-%d')
             data['value']['location_id'] = move.location_dest_id.id
             data['value']['location_dest_id'] = move.location_dest_id.id
@@ -688,7 +687,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         if type == 'add':
             stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
             to_invoice = False
-            if guarantee_limit and today() > mx.DateTime.strptime(guarantee_limit, '%Y-%m-%d'):
+            if guarantee_limit and date.today() > datetime.strptime(guarantee_limit, '%Y-%m-%d'):
                 to_invoice=True
             return {'value': {
                         'to_invoice': to_invoice,
