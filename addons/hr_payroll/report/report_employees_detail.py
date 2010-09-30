@@ -229,7 +229,7 @@ class employees_salary_report(rml_parse.rml_parse):
     def get_monthly_total(self):
         return self.month_total_list
 
-report_sxw.report_sxw('report.employees.salary', 'hr.payslip', 'hr_payroll/report/report_employees_detail.rml', parser=employees_salary_report)
+report_sxw.report_sxw('report.employees.salary', 'hr.payslip', 'hr_payroll/report/report_employees_detail.rml', parser=employees_salary_report,header=3)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

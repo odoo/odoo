@@ -73,7 +73,9 @@ def _import(obj, cursor, user, data, context=None):
 
     pool = pooler.get_pool(cursor.dbname)
     statement_line_obj = pool.get('account.bank.statement.line')
-    statement_reconcile_obj = pool.get('account.bank.statement.reconcile')
+#    statement_reconcile_obj = pool.get('account.bank.statement.reconcile')
+    voucher_obj = self.pool.get('account.voucher')
+    voucher_line_obj = self.pool.get('account.voucher.line')
     move_line_obj = pool.get('account.move.line')
     property_obj = pool.get('ir.property')
     model_fields_obj = pool.get('ir.model.fields')
@@ -200,9 +202,32 @@ def _import(obj, cursor, user, data, context=None):
         values['partner_id'] = partner_id
 
         if line2reconcile:
-            values['reconcile_id'] = statement_reconcile_obj.create(cursor, user, {
-                'line_ids': [(6, 0, [line2reconcile])],
-                }, context=context)
+            voucher_res = { 'type': 'payment' ,
+                'name': line.name,
+                'partner_id': line.partner_id.id,
+                'journal_id': statement.journal_id.id,
+                'account_id': account,
+                'company_id': statement.company_id.id,
+                'currency_id': statement.currency.id,
+                'date': line.date or time.strftime('%Y-%m-%d'),
+                'amount': abs(amount),
+                'period_id': statement.period_id.id
+                }
+            voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment')
+            voucher_line_dict =  False
+            if result['value']['line_ids']:
+                for line_dict in result['value']['line_ids']:
+                    move_line = self.pool.get('account.move.line').browse(cr, uid, line_dict['move_line_id'], context)
+                    if line.move_line_id.move_id.id == move_line.move_id.id:
+                        voucher_line_dict = line_dict
+            if voucher_line_dict:
+                voucher_line_dict.update({'voucher_id':voucher_id})
+                voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
+            values['voucher_id'] = voucher_id
+#            values['reconcile_id'] = statement_reconcile_obj.create(cursor, user, {
+#                'line_ids': [(6, 0, [line2reconcile])],
+#                }, context=context)
 
         statement_line_obj.create(cursor, user, values, context=context)
     attachment_obj.create(cursor, user, {

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<document filename="HipHop.pdf">
+<document filename="partner_balance.pdf">
   <template pageSize="(595.0,842.0)" title="Partner Balance" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
@@ -234,14 +234,14 @@
         <td><para style="P12b">Debit</para></td>
         <td><para style="P12b">Credit</para></td>
         <td><para style="P12b">Balance</para></td>
-        <td><para style="P12a">In dispute</para></td>
+        <td><para style="P12b">In dispute</para></td>
       </tr>
       <tr>
         <td><para style="P7">Total:</para></td>
         <td><para style="P8"></para></td>
-        <td><para style="P8"><u>[[ formatLang(sum_debit()) ]] </u></para></td>
+        <td><para style="P8"><u>[[ formatLang(sum_debit()) ]]</u></para></td>
         <td><para style="P8"><u>[[ formatLang(sum_credit()) ]]</u></para></td>
-        <td><para style="P8"><u>[[ formatLang((solde_debit()-solde_credit())) ]] [[ company.currency_id.symbol ]]</u></para></td>
+        <td><para style="P8"><u>[[ formatLang((sum_debit()-sum_credit())) ]] [[ company.currency_id.symbol ]]</u></para></td>
         <td><para style="P8"><u>[[ formatLang(sum_litige()) ]] [[ company.currency_id.symbol ]]</u></para></td>
       </tr>
       <tr>

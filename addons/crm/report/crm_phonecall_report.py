@@ -100,9 +100,6 @@ class crm_phonecall_report(osv.osv):
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.phonecall')]", readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'opening_date': fields.date('Opening Date', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
@@ -130,7 +127,6 @@ class crm_phonecall_report(osv.osv):
                     c.section_id,
                     c.categ_id,
                     c.partner_id,
-                    c.stage_id,
                     c.duration,
                     c.company_id,
                     c.priority,

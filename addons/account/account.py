@@ -930,6 +930,19 @@ class account_period(osv.osv):
                 raise osv.except_osv(_('Warning !'), _('You cannot modify company of this period as its related record exist in Entry Lines'))
         return super(account_period, self).write(cr, uid, ids, vals, context=context)
 
+    def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
+        period_from = self.browse(cr, uid, period_from_id)
+        period_date_start = period_from.date_start
+        company1_id = period_from.company_id.id
+        period_to = self.browse(cr, uid, period_to_id)
+        period_date_stop = period_to.date_stop
+        company2_id = period_to.company_id.id
+        if company1_id != company2_id:
+            raise osv.except_osv(_('Error'), _('You should have chosen periods that belongs to the same company'))
+        if period_date_start > period_date_stop:
+            raise osv.except_osv(_('Error'), _('Start period should be smaller then End period'))
+        return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('company_id', '=', company1_id)])
+
 account_period()
 
 class account_journal_period(osv.osv):
