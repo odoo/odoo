@@ -123,25 +123,24 @@ class stock_location(osv.osv):
         currency_obj = self.pool.get('res.currency')
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
         currency_obj.round(cr, uid, currency, 300)
-
         for loc_id, product_ids in products_by_location.items():
             c = (context or {}).copy()
-            c['location'] = loc_id
-            for prod in product_product_obj.browse(cr, uid, product_ids, context=c):
-                for f in field_names:
-                    if f == 'stock_real':
-                        result[loc_id][f] += prod.qty_available
-                    elif f == 'stock_virtual':
-                        result[loc_id][f] += prod.virtual_available
-                    elif f == 'stock_real_value':
-                        amount = prod.qty_available * prod.standard_price
-                        amount = currency_obj.round(cr, uid, currency, amount)
-                        result[loc_id][f] += amount
-                    elif f == 'stock_virtual_value':
-                        amount = prod.virtual_available * prod.standard_price
-                        amount = currency_obj.round(cr, uid, currency, amount)
-                        result[loc_id][f] += amount
-
+            if loc_id in ids:
+                c['location'] = loc_id
+                for prod in product_product_obj.browse(cr, uid, product_ids, context=c):
+                    for f in field_names:
+                        if f == 'stock_real':
+                            result[loc_id][f] += prod.qty_available
+                        elif f == 'stock_virtual':
+                            result[loc_id][f] += prod.virtual_available
+                        elif f == 'stock_real_value':
+                            amount = prod.qty_available * prod.standard_price
+                            amount = currency_obj.round(cr, uid, currency, amount)
+                            result[loc_id][f] += amount
+                        elif f == 'stock_virtual_value':
+                            amount = prod.virtual_available * prod.standard_price
+                            amount = currency_obj.round(cr, uid, currency, amount)
+                            result[loc_id][f] += amount
         return result
 
     _columns = {
