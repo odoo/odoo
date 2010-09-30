@@ -274,7 +274,11 @@
                                help="Unassigned Claims" />
                    </field>
                    <field name="section_id" select="1"
-                       widget="selection"/>
+                       widget="selection">
+                       <filter icon="terp-personal+"
+                            domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                            help="My section" />
+                    </field>
                    <newline/>
                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"
