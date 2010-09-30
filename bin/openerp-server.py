@@ -34,9 +34,13 @@ GNU Public Licence.
 #----------------------------------------------------------
 # python imports
 #----------------------------------------------------------
-import sys
+import logging
 import os
+import pwd
 import signal
+import sys
+import threading
+import traceback
 
 import release
 __author__ = release.author
@@ -134,9 +138,48 @@ if tools.config["stop_after_init"]:
 
 
 #----------------------------------------------------------
+# Register signal handlers
+#----------------------------------------------------------
+LST_SIGNALS = ['SIGINT', 'SIGTERM']
+
+SIGNALS = dict(
+    [(getattr(signal, sign), sign) for sign in LST_SIGNALS]
+)
+
+def handler(signum, frame):
+    if tools.config['netrpc']:
+        tinySocket.stop()
+    if tools.config['xmlrpc']:
+        httpd.stop()
+    netsvc.Agent.quit()
+    if tools.config['pidfile']:
+        os.unlink(tools.config['pidfile'])
+    logger.notifyChannel('shutdown', netsvc.LOG_INFO, "Shutdown Server! - %s" % ( SIGNALS[signum], ))
+    logger.shutdown()
+    sys.exit(0)
+
+def dumpstacks(signum, frame):
+    # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
+    id2name = dict([(th.ident, th.name) for th in threading.enumerate()])
+    code = []
+    for threadId, stack in sys._current_frames().items():
+        code.append("\n# Thread: %s(%d)" % (id2name[threadId], threadId))
+        for filename, lineno, name, line in traceback.extract_stack(stack):
+            code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
+            if line:
+                code.append("  %s" % (line.strip()))
+
+    logger.notifyChannel("dumpstacks", netsvc.LOG_INFO, "\n".join(code))
+
+for signum in SIGNALS:
+    signal.signal(signum, handler)
+
+if os.name == 'posix' and sys.version_info >= (2,5):
+    signal.signal(signal.SIGQUIT, dumpstacks)
+
+#----------------------------------------------------------
 # Launch Server
 #----------------------------------------------------------
-
 if tools.config['xmlrpc']:
     port = int(tools.config['port'])
     interface = tools.config["interface"]
@@ -150,48 +193,12 @@ if tools.config['xmlrpc']:
                          "starting XML-RPC%s services, port %s" % 
                          ((tools.config['secure'] and ' Secure' or ''), port))
 
-#
-#if tools.config["soap"]:
-#   soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
-#   httpd.attach("/soap", soap_gw )
-#   logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
-#
-
 if tools.config['netrpc']:
     netport = int(tools.config['netport'])
     netinterface = tools.config["netinterface"]
     tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
     logger.notifyChannel("web-services", netsvc.LOG_INFO, 
                          "starting NET-RPC service, port %d" % (netport,))
-
-LST_SIGNALS = ['SIGINT', 'SIGTERM']
-if os.name == 'posix':
-    LST_SIGNALS.extend(['SIGUSR1','SIGQUIT'])
-
-
-SIGNALS = dict(
-    [(getattr(signal, sign), sign) for sign in LST_SIGNALS]
-)
-
-def handler(signum, _):
-    """
-    :param signum: the signal number
-    :param _: 
-    """
-    if tools.config['netrpc']:
-        tinySocket.stop()
-    if tools.config['xmlrpc']:
-        httpd.stop()
-    netsvc.Agent.quit()
-    if tools.config['pidfile']:
-        os.unlink(tools.config['pidfile'])
-    logger.notifyChannel('shutdown', netsvc.LOG_INFO, 
-                         "Shutdown Server! - %s" % ( SIGNALS[signum], ))
-    logger.shutdown()
-    sys.exit(0)
-
-for signum in SIGNALS:
-    signal.signal(signum, handler)
 
 if tools.config['pidfile']:
     fd = open(tools.config['pidfile'], 'w')
