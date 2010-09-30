@@ -24,7 +24,6 @@ from osv import fields,osv,orm
 from tools.translate import _
 import crm
 import time
-import mx.DateTime
 
 AVAILABLE_STATES = [
     ('draft','Draft'),

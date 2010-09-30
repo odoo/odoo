@@ -27,9 +27,9 @@ import netsvc
 from tools.translate import _
 
 from time import strftime
-import datetime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import copy
-from mx.DateTime import *
 import os
 
 class survey_type(osv.osv):
@@ -694,7 +694,7 @@ class survey_request(osv.osv):
     }
     _defaults = {
         'state': lambda * a: 'draft',
-#        'date_deadline': lambda * a :  (now() + RelativeDateTime(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
+#        'date_deadline': lambda * a :  (datetime.now() + relativedelta(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
     }
     def survey_req_waiting_answer(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, { 'state' : 'waiting_answer'})
