@@ -186,13 +186,13 @@
     </record>
 
 	<record id="open_view_project_vs_remaining_hours_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
+            <field eval="2" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_project_vs_remaining_hours_tree"/>
             <field name="act_window_id" ref="action_project_vs_remaining_hours_graph"/>
    </record>
    <record id="open_view_project_vs_remaining_hours_graph" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
+            <field eval="1" name="sequence"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
             <field name="act_window_id" ref="action_project_vs_remaining_hours_graph"/>
@@ -262,7 +262,7 @@
     </record>
 
     <record id="action_project_vs_planned_total_hours_graph" model="ir.actions.act_window">
-        <field name="name">My projects: Planned Vs Total hours</field>
+        <field name="name">My projects: Planned vs Total hours</field>
         <field name="res_model">project.vs.hours</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
@@ -271,13 +271,13 @@
     </record>
 
 	<record id="open_view_project_vs_planned_total_hours_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
+            <field eval="2" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_project_vs_planned_total_hours_tree"/>
             <field name="act_window_id" ref="action_project_vs_planned_total_hours_graph"/>
     </record>
     <record id="open_view_project_vs_planned_total_hours_graph" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
+            <field eval="1" name="sequence"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
             <field name="act_window_id" ref="action_project_vs_planned_total_hours_graph"/>
