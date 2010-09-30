@@ -512,15 +512,15 @@
            src_model="account.journal"/>
 
         <act_window
-            domain="[('partner_id', '=', partner_id), ('account_id.reconcile', '=', True)]"
-            context="{'search_default_unreconciled':True}"
+            domain="[('account_id.reconcile', '=', True)]"
+            context="{'search_default_unreconciled':True,'search_default_partner_id':[partner_id]}"
             id="act_account_invoice_account_move_unreconciled"
             name="Items to Reconcile"
             res_model="account.move.line"
             src_model="account.invoice"/>
 
         <act_window
-            domain="[('move_id', '=', move_id)]"
+            context="{'search_default_move_id':move_id}"
             id="act_account_invoice_account_move_invoice_link"
             name="Invoice Items"
             res_model="account.move.line"

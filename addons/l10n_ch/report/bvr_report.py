@@ -31,20 +31,32 @@
 ##############################################################################
 
 import re
-import os
-import sys
-import shutil
 import time
-from mx.DateTime import *
 
 from report import report_sxw
 from tools import mod10r
+import logging
+log = logging.getLogger('init')
+
+try:
+    this_module = 'l10n_ch'
+    from report.render.rml2pdf import customfonts
+    from addons import get_module_resource
+    ocrb_fname = get_module_resource(this_module, 'report', 'ocrbb.ttf')
+    if not ocrb_fname:
+        raise OSError("Cannot find ocrbb.ttf in %s resources", this_module)
+    customfonts.CustomTTFonts.append( ('ocrb', 'ocrb', ocrb_fname , None ) )
+    log.debug("module: %s registered custom OCR-B font at %s", this_module, ocrb_fname)
+except ImportError:
+    log.debug("Import error", exc_info=True)
+    pass
+except Exception, e:
+    log.exception("Cannot register custom font")
 
 class account_invoice_bvr(report_sxw.rml_parse):
     """Report class that Allows to print BVR payement vector"""
     def __init__(self, cr, uid, name, context):
         super(account_invoice_bvr, self).__init__(cr, uid, name, context)
-        self.copyocrbfile('addons/l10n_ch/report/ocrbb.ttf')
         self.localcontext.update({
             'time': time,
             'user':self.pool.get("res.users").browse(cr,uid,uid),
@@ -53,32 +65,13 @@ class account_invoice_bvr(report_sxw.rml_parse):
             '_get_ref': self._get_ref,
             'comma_me': self.comma_me,
             'format_date': self._get_and_change_date_format_for_swiss,
-            'police_absolute_path' : self.police_absolute_path,
-            'copyocrbfile': self.copyocrbfile
         })
     def _get_and_change_date_format_for_swiss (self,date_to_format):
         date_formatted=''
         print date_to_format
         if date_to_format:
-            date_formatted = strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
+            date_formatted = time.strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
-
-    def police_absolute_path(self, inner_path) :
-        path = os.path.join(os.path.dirname(sys.argv[0]), inner_path)
-        return  path
-
-    def copyocrbfile(self,file):
-        src = self.police_absolute_path(file)
-        file = os.path.basename(src)
-        dest = os.path.join('/tmp/',file)
-        if not os.path.isfile(dest):
-            try:
-                shutil.copyfile(src,dest)
-            except:
-                """print ocrbfile was not copy in /tmp/ please
-                copy it manually from l10_ch/report"""
-
-
 
     def comma_me(self,amount):
         if  type(amount) is float :

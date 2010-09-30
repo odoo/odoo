@@ -58,17 +58,17 @@ class mrp_production(osv.osv):
             return move_id
 
         res = {}
-        productions = self.read(cr, uid, ids, ['id','move_prod_id'])
+        productions = self.browse(cr, uid, ids)
         for production in productions:
-            res[production['id']] = False
-            if production.get('move_prod_id',False):
-                parent_move_line = get_parent_move(production['move_prod_id'][0])
+            res[production.id] = False
+            if production.move_prod_id:
+                parent_move_line = get_parent_move(production.move_prod_id)
                 if parent_move_line:
                     move = move_obj.browse(cr,uid,parent_move_line)
                     if field_name == 'name':
-                        res[production['id']] = move.sale_line_id and move.sale_line_id.order_id.name or False
+                        res[production.id] = move.sale_line_id and move.sale_line_id.order_id.name or False
                     if field_name == 'client_order_ref':
-                        res[production['id']] = move.sale_line_id and move.sale_line_id.order_id.client_order_ref or False
+                        res[production.id] = move.sale_line_id and move.sale_line_id.order_id.client_order_ref or False
         return res
 
     _columns = {
