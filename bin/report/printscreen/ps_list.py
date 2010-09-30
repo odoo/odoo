@@ -98,6 +98,7 @@ class report_printscreen_list(report_int):
                             continue
                         child_ids = model.search(cr, uid, inner_domain)
                         res = model.read(cr, uid, child_ids, result['fields'].keys(), context)
+                        res.sort(lambda x,y: cmp(ids.index(x['id']), ids.index(y['id'])))
                         rows.extend(res)
             dom = [('id','in',ids)]
             if self.groupby_no_leaf and len(ids) and not ids[0]:
