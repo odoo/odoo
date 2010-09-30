@@ -334,7 +334,7 @@ class account_voucher(osv.osv):
 
         return default
 
-    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, context={}):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, context=None):
         """price
         Returns a dict that contains new values and context
 
@@ -346,6 +346,9 @@ class account_voucher(osv.osv):
         """
         if not journal_id:
             return {}
+
+        if context is None:
+            context = {}
 
         currency_pool = self.pool.get('res.currency')
         move_pool = self.pool.get('account.move')
