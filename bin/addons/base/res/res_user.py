@@ -28,6 +28,7 @@ import pooler
 from tools.translate import _
 from service import security
 import netsvc
+import time
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -265,7 +266,7 @@ class users(osv.osv):
                                 string='Interface', help="Choose between the simplified interface and the extended one"),
         'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
-
+        'date': fields.datetime('Last Connection', readonly=True),
     }
 
     def on_change_company_id(self, cr, uid, ids, company_id):
@@ -445,12 +446,14 @@ class users(osv.osv):
         cr = pooler.get_db(db).cursor()
         cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
         res = cr.fetchone()
-        cr.close()
+
         if res:
+            cr.execute("update res_users set date=%s where id=%s", (time.strftime('%Y-%m-%d %H:%M:%S'),res[0]))
+            cr.commit()
             return res[0]
         else:
             return False
-
+        cr.close()
     def check_super(self, passwd):
         if passwd == tools.config['admin_passwd']:
             return True
