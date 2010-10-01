@@ -41,7 +41,9 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         obj_move = self.pool.get('account.move.line')
         self.sortby = data['form'].get('sortby', 'sort_date')
         self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context',{}))
-        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context_initial_bal', {}))
+        ctx2 = data['form'].get('used_context',{}).copy()
+        ctx2.update({'initial_bal': True})
+        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
         self.init_balance = data['form']['initial_balance']
         self.display_account = data['form']['display_account']
         self.target_move = data['form'].get('target_move', 'all')
