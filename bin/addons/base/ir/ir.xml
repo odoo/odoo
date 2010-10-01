@@ -389,59 +389,6 @@
         <menuitem parent="base.next_id_6" name="Filters"
             id="menu_ir_filters" action="actions_ir_filters_view" />
 
-
-        <record id="act_report_custom_view" model="ir.ui.view">
-            <field name="name">ir.actions.report.custom</field>
-            <field name="model">ir.actions.report.custom</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Report custom">
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="report_id"/>
-                    <field name="usage"/>
-                </form>
-            </field>
-        </record>
-        <record id="act_report_custom_view_tree" model="ir.ui.view">
-            <field name="name">ir.actions.report.custom.tree</field>
-            <field name="model">ir.actions.report.custom</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Report custom">
-                    <field name="name"/>
-                    <field name="type"/>
-                </tree>
-            </field>
-        </record>
-        <record id="act_report_custom_search_view" model="ir.ui.view">
-            <field name="name">ir.actions.report.custom.search</field>
-            <field name="model">ir.actions.report.custom</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Report custom">
-                    <group colspan="4" col="10">
-                        <field name="name"/>
-                        <field name="type"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By" colspan="4">
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
-                    </group>
-                </search>
-           </field>
-        </record>
-
-        <record id="ir_action_report_custom" model="ir.actions.act_window">
-            <field name="name">Report Custom</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.actions.report.custom</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="act_report_custom_view_tree"/>
-            <field name="search_view_id" ref="act_report_custom_search_view"/>
-        </record>
-        <menuitem action="ir_action_report_custom" id="menu_ir_action_report_custom" parent="base.next_id_6"/>
-
         <record id="act_report_xml_view" model="ir.ui.view">
             <field name="name">ir.actions.report.xml</field>
             <field name="model">ir.actions.report.xml</field>
@@ -1065,42 +1012,6 @@
 
                 </form>
             </field>
-        </record>
-
-        <record id="view_report_custom_form" model="ir.ui.view">
-            <field name="name">ir.report.custom</field>
-            <field name="model">ir.report.custom</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Custom Report">
-                    <field name="name" select="1"/>
-                    <field name="model_id" on_change="onchange_model_id(model_id)" select="1"/>
-                    <field name="title"/>
-                    <field name="type"/>
-                    <field name="print_format"/>
-                    <field name="print_orientation"/>
-                    <field name="repeat_header"/>
-                    <field name="footer"/>
-                    <field name="sortby"/>
-                    <field name="field_parent"/>
-                    <field name="frequency"/>
-                    <field name="limitt"/>
-                    <field name="menu_id"/>
-                    <field colspan="4" name="fields_child0" widget="one2many_list"/>
-                    <field name="state" readonly="1" select="1"/>
-                    <group col="2" colspan="2">
-                        <button name="subscribe" states="unsubscribed" string="Subscribe Report" type="object"/>
-                        <button name="unsubscribe" states="subscribed" string="Unsubscribe Report" type="object"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="action_report_custom" model="ir.actions.act_window">
-            <field name="name">Custom Report</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.report.custom</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_report_custom_form"/>
         </record>
 
         <!--
