@@ -65,6 +65,7 @@ class purchase_report(osv.osv):
         'nbr': fields.integer('# of Lines', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'category_id': fields.many2one('product.category', 'Category', readonly=True)
 
     }
     _order = 'name desc,price_total desc'
@@ -90,6 +91,7 @@ class purchase_report(osv.osv):
                     s.create_uid as user_id,
                     s.company_id as company_id,
                     l.product_id,
+                    t.categ_id as category_id,
                     l.product_uom as product_uom,
                     s.location_id as location_id,
                     sum(l.product_qty*u.factor) as quantity,
@@ -123,6 +125,7 @@ class purchase_report(osv.osv):
                     s.validator,
                     s.dest_address_id,
                     l.product_id,
+                    t.categ_id,
                     s.date_order,
                     to_char(s.date_order, 'YYYY'),
                     to_char(s.date_order, 'MM'),
