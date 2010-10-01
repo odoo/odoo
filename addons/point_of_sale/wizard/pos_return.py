@@ -162,6 +162,7 @@ class pos_return(osv.osv_memory):
         stock_move_obj = self.pool.get('stock.move')
         property_obj= self.pool.get("ir.property")
         uom_obj =self. pool.get('product.uom')
+        statementl_obj = self.pool.get('account.bank.statement.line')
         wf_service = netsvc.LocalService("workflow")
         #Todo :Need to clean the code
         if active_id:
@@ -187,10 +188,13 @@ class pos_return(osv.osv_memory):
                                                               'lines':[],
                                                               'statement_ids':[],
                                                               'picking_id':[]})
+                account_def = property_obj.get(cr, uid, 'property_account_payable', 'res.partner', context=context)
+                amount = 0.0
                 for line in order_id.lines:
                     if line.id:
                         try:
                             qty = data['return%s' %line.id]
+                            amount += qty * line.price_unit
                         except :
                             qty = line.qty
                         stock_move_obj.create(cr, uid, {
@@ -206,6 +210,15 @@ class pos_return(osv.osv_memory):
                             'date_planned': date_cur
                         })
                         line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
+                statementl_obj.create(cr, uid, {
+                                                'name': 'Refund %s'%order_id.name,
+                                                'statement_id': order_id.statement_ids[0].statement_id.id,
+                                                'pos_statement_id': new_order,
+                                                'date': time.strftime('%Y-%m-%d'),
+                                                'account_id': order_id.partner_id and order_id.partner_id.property_account_payable \
+                                                             and order_id.partner_id.property_account_payable.id or account_def.id,
+                                                'amount': -amount,
+                                                })
                 order_obj.write(cr,uid, [active_id,new_order], {'state': 'done'})
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
