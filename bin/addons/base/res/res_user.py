@@ -288,15 +288,7 @@ class users(osv.osv):
                 result = override_password(result)
             else:
                 result = map(override_password, result)
-
-        if isinstance(result, list):
-            for rec in result:
-                if not rec.get('action_id',True):
-                    rec['action_id'] = (self._get_menu(cr, uid),'Menu')
-        else:
-            if not result.get('action_id',True):
-                result['action_id'] = (self._get_menu(cr, uid),'Menu')
-
+                
         return result
 
 
@@ -357,7 +349,6 @@ class users(osv.osv):
         'context_lang': lambda *args: 'en_US',
         'active' : lambda *a: True,
         'menu_id': _get_menu,
-        'action_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
