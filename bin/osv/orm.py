@@ -2294,7 +2294,7 @@ class orm(orm_template):
         Add missing table SELECT and JOIN clause to ``query`` for reaching the parent table (no duplicates)
 
         :param parent_model_name: name of the parent model for which the clauses should be added
-        :param query: query object on which the JOIN should be added 
+        :param query: query object on which the JOIN should be added
         """
         inherits_field = self._inherits[parent_model_name]
         parent_model = self.pool.get(parent_model_name)
@@ -3936,7 +3936,7 @@ class orm(orm_template):
                         query.tables.append(table)
                 return True
             return False
-        
+
         # apply main rules on the object
         rule_obj = self.pool.get('ir.rule')
         apply_rule(*rule_obj.domain_get(cr, uid, self._name, mode, context=context))
@@ -3954,7 +3954,7 @@ class orm(orm_template):
         Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
         either native m2o fields or function/related fields that are stored, including
         intermediate JOINs for inheritance if required.
-        
+
         :return: the qualified field name to use in an ORDER BY clause to sort by ``order_field``
         """
         if order_field not in self._columns and order_field in self._inherit_fields:

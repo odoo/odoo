@@ -30,7 +30,7 @@ class Query(object):
     """
      Dumb implementation of a Query object, using 3 string lists so far
      for backwards compatibility with the (table, where_clause, where_params) previously used.
-     
+
      TODO: To be improved after v6.0 to rewrite part of the ORM and add support for:
       - auto-generated multiple table aliases
       - multiple joins to the same table with different conditions
@@ -45,7 +45,7 @@ class Query(object):
         self.tables = tables or []
 
         # holds the list of WHERE clause elements, to be joined with
-        # 'AND' when generating the final query 
+        # 'AND' when generating the final query
         self.where_clause = where_clause or []
 
         # holds the parameters for the formatting of `where_clause`, to be
@@ -69,7 +69,7 @@ class Query(object):
     def join(self, connection, outer=False):
         """Adds the JOIN specified in ``connection``.
 
-        :param connection: a tuple ``(lhs, table, lhs_col, col)``. 
+        :param connection: a tuple ``(lhs, table, lhs_col, col)``.
                            The join corresponds to the SQL equivalent of::
 
                                 ``(lhs.lhs_col = table.col)``
@@ -77,9 +77,9 @@ class Query(object):
         :param outer: True if a LEFT OUTER JOIN should be used, if possible
                       (no promotion to OUTER JOIN is supported in case the JOIN
                        was already present in the query, as for the moment
-                       implicit INNER JOINs are only connected from NON-NULL 
-                       columns so it would not be correct (e.g. for 
-                       ``_inherits`` or when a domain criterion explicitly 
+                       implicit INNER JOINs are only connected from NON-NULL
+                       columns so it would not be correct (e.g. for
+                       ``_inherits`` or when a domain criterion explicitly
                        adds filtering)
         """
         (lhs, table, lhs_col, col) = connection
@@ -93,7 +93,7 @@ class Query(object):
             # add JOIN
             self.tables.append(table)
             self.joins.setdefault(lhs, []).append((table, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN'))
-        return self 
+        return self
 
     def get_sql(self):
         """Returns (query_from, query_where, query_params)"""
