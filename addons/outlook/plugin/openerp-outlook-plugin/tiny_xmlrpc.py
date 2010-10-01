@@ -209,12 +209,12 @@ class XMLRpcConn(object):
         obj_list = [ustr(item['name']).encode('iso-8859-1') for item in objects]
         return obj_list
 
-    def GetPartners(self):
+    def GetPartners(self, search_partner=''):
+        import win32ui
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         ids=[]
         obj_list=[]
-
-        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','search',[])
+        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','search',[('name','ilike',ustr(search_partner))])
         if ids:
             ids.sort()
             obj_list.append((-999, ustr('')))
@@ -302,13 +302,13 @@ class XMLRpcConn(object):
             result[obj].update({obj_id: attachment_ids})
         return result
 
-    def CreateContact(self, sel=None, res=None):
+    def CreateContact(self, res=None):
+        import win32ui
         res=eval(str(res))
-
-        self.partner_id_list=eval(str(self.partner_id_list))
-        if self.partner_id_list.get(sel,-999) != -999:
-            res['partner_id'] = self.partner_id_list[sel]
+        partner = res['partner_id']
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        partner_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner', 'search', [('name','=',ustr(partner))])
+        res.update({'partner_id' : partner_id[0]})
         id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner.address','create',res)
         return id
 
@@ -339,12 +339,16 @@ class XMLRpcConn(object):
         flag = -1
         new_dict = dict(new_vals)
         email=new_dict['email']
+        partner = new_dict['partner']
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        partner_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner', 'search', [('name','=',ustr(partner))])
         address_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'search', [('email','=',ustr(email))])
         if not address_id:
             return flag
         address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address','read',address_id[0],['id','partner_id','state_id','country_id'])
-        vals_res_address={ 'name' : new_dict['name'],
+        vals_res_address={
+                           'partner_id' : partner_id[0],
+                           'name' : new_dict['name'],
                            'street':new_dict['street'],
                            'street2' : new_dict['street2'],
                            'city' : new_dict['city'],
@@ -353,12 +357,6 @@ class XMLRpcConn(object):
                            'fax' : new_dict['fax'],
                            'zip' : new_dict['zip'],
                          }
-        if new_dict['partner_id'] != -1:
-            vals_res_address['partner_id'] = new_dict['partner_id']
-        if new_dict['state_id'] != -1:
-            vals_res_address['state_id'] = new_dict['state_id']
-        if new_dict['country_id'] != -1:
-            vals_res_address['country_id'] = new_dict['country_id']
         temp = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'write', address_id, vals_res_address)
         if temp:
             flag=1
