@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-import mail_gateway
-import res_partner
-import wizard
+import mail_gateway_document
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
