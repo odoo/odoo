@@ -615,7 +615,7 @@
             <field name="act_window_id" ref="action_bank_statement_tree"/>
         </record>
 
-		<record id="action_bank_statement_periodic_tree" model="ir.actions.act_window">
+    <record id="action_bank_statement_periodic_tree" model="ir.actions.act_window">
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
@@ -839,7 +839,7 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="description" select="1"/>
-	                <field name="type_tax_use"/>
+                  <field name="type_tax_use"/>
                         <field name="price_include"/>
                         <field name="active"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -873,8 +873,8 @@
                         </page>
                         <page groups="base.group_extended" string="Special Computation">
                             <separator colspan="4" string="Applicability Options"/>
-	                    <field name="applicable_type"/>
-	                    <field name="domain"/>
+                      <field name="applicable_type"/>
+                      <field name="domain"/>
                             <separator colspan="4" string="Applicable Code (if type=code)"/>
                             <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
                             <separator colspan="4" string="Compute Code (if type=code)"/>
@@ -1410,10 +1410,6 @@
             res_model="account.move.line"
             src_model="account.move"/>
 
-      <record id="account.act_account_move_to_account_move_line_open" model="ir.actions.act_window">
-          <field eval="[(6,0,[ref('account.group_accounting_accountant')])]" name="groups_id"/>
-      </record>
-
         <record id="action_move_line_search" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="type">ir.actions.act_window</field>
@@ -1639,17 +1635,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Journal Entry Model">
-                	<group>
-	                	<filter string="Sale" icon="terp-sale" domain="[('journal_id.type', '=', 'sale')]"/>
-	                	<filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
-	                	<separator orientation="vertical"/>
-	                    <field name="name"/>
-	                    <field name="journal_id"/>
-	                    <field name="company_id" groups="base.group_multi_company"/>
+                  <group>
+                    <filter string="Sale" icon="terp-sale" domain="[('journal_id.type', '=', 'sale')]"/>
+                    <filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
+                    <separator orientation="vertical"/>
+                      <field name="name"/>
+                      <field name="journal_id"/>
+                      <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                    	<filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                      <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                     </group>
                 </search>
             </field>
@@ -1793,7 +1789,7 @@
             </field>
         </record>
 
-       	<record id="view_subscription_search" model="ir.ui.view">
+         <record id="view_subscription_search" model="ir.ui.view">
             <field name="name">account.subscription.search</field>
             <field name="model">account.subscription</field>
             <field name="type">search</field>
