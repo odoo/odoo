@@ -114,13 +114,16 @@ class pos_order(osv.osv):
         res = {}
         val=None
         for order in self.browse(cr, uid, ids):
-            cr.execute("select date_payment from pos_order where id=%d"%(order.id))
+            cr.execute("SELECT date_payment FROM pos_order WHERE id=%s", (order.id,))
             date_p=cr.fetchone()
             date_p=date_p and date_p[0] or None
             if date_p:
                 res[order.id]=date_p
                 return res
-            cr.execute(" SELECT max(l.date) from account_move_line l, account_move m, account_invoice i, account_move_reconcile r, pos_order o where i.move_id=m.id and l.move_id=m.id and l.reconcile_id=r.id and o.id=%d and o.invoice_id=i.id"%(order.id))
+            cr.execute(" SELECT max(l.date) "
+                        " FROM account_move_line l, account_move m, account_invoice i, account_move_reconcile r, pos_order o "
+                        " WHERE i.move_id=m.id AND l.move_id=m.id AND l.reconcile_id=r.id AND o.id=%s AND o.invoice_id=i.id",
+                        (order.id,))
             val=cr.fetchone()
             val= val and val[0] or None
             if val:
@@ -135,7 +138,7 @@ class pos_order(osv.osv):
         res = {}
         val=None
         for order in self.browse(cr, uid, ids):
-            cr.execute("select date_validation from pos_order where id=%d"%(order.id))
+            cr.execute("SELECT date_validation FROM pos_order WHERE id=%s", (order.id,))
             date_p=cr.fetchone()
             date_p=date_p and date_p[0] or None
             if date_p:
@@ -146,7 +149,7 @@ class pos_order(osv.osv):
                 if line.discount > discount_allowed:
                     return {order.id: None }
             if order.amount_paid == order.amount_total and not date_p:
-                cr.execute("select max(date) from account_bank_statement_line where pos_statement_id=%d"%(order.id))
+                cr.execute("SELECT MAX(date) FROM account_bank_statement_line WHERE pos_statement_id=%s", (order.id,))
                 val=cr.fetchone()
                 val=val and val[0] or None
             if order.invoice_id and order.invoice_id.move_id and not date_p and not val:
@@ -240,15 +243,15 @@ class pos_order(osv.osv):
             comp=res_obj.browse(cr,uid,uid).company_id.company_discount or 0.0
         else:
             comp= company_disc[0] and company_disc[0].company_id and  company_disc[0].company_id.company_discount  or 0.0
-        cr.execute("select discount from pos_order_line where order_id=%s and discount <= %s"%(ids[0],comp))
+        cr.execute("select discount from pos_order_line where order_id=%s and discount <= %s", (ids[0],comp))
         res=cr.fetchone()
-        cr.execute("select discount from pos_order_line where order_id=%s and discount > %s"%(ids[0],comp))
+        cr.execute("select discount from pos_order_line where order_id=%s and discount > %s", (ids[0],comp))
         res2=cr.fetchone()
-        cr.execute("select journal_id from account_bank_statement_line where pos_statement_id=%s "%(ids[0]))
+        cr.execute("select journal_id from account_bank_statement_line where pos_statement_id=%s ", (ids[0],))
         res3=cr.fetchall()
         list_jrnl=[]
         for r in res3:
-            cr.execute("select id from account_journal where name= '%s' and special_journal='t'"%(r[0]))
+            cr.execute("select id from account_journal where name= '%s' and special_journal='t'", (r[0],))
             res3=cr.fetchone()
             is_special=res3 and res3[0] or None
             if is_special:
@@ -479,7 +482,7 @@ class pos_order(osv.osv):
                         continue
                     prop_ids = property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
                     val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
-                    cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order.shop_id.warehouse_id.id))
+                    cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id=%s", (order.shop_id.warehouse_id.id,))
                     res=cr.fetchone()
                     location_id=res and res[0] or None
                     stock_dest_id = val.id

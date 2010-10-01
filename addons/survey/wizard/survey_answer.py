@@ -108,7 +108,7 @@ class survey_question_wiz(osv.osv_memory):
                             if sur_rec.state != "open" :
                                 raise osv.except_osv(_('Warning !'),_("You can not give answer because of survey is not open for answer"))
                             cr.execute('select count(id) from survey_history where user_id=%s\
-                                                    and survey_id=%s' % (uid,survey_id))
+                                                    and survey_id=%s', (uid,survey_id))
                             res = cr.fetchone()[0]
                             user_limit = survey_obj.browse(cr, uid, survey_id)
                             user_limit = user_limit.response_user
@@ -401,12 +401,12 @@ class survey_question_wiz(osv.osv_memory):
 
                         address_id = user_obj.browse(cr, uid, uid).address_id.id
                         if address_id:
-                            cr.execute("select email from res_partner_address where id =%d" % address_id)
+                            cr.execute("select email from res_partner_address where id =%s", (address_id,))
                             user_email = cr.fetchone()[0]
                         resp_id = survey_data.responsible_id.address_id
 
                         if resp_id:
-                            cr.execute("select email from res_partner_address where id =%d" % resp_id.id)
+                            cr.execute("select email from res_partner_address where id =%s", (resp_id.id,))
                             resp_email = cr.fetchone()[0]
                         if user_email and resp_email:
                             user_name = user_obj.browse(cr, uid, uid).name

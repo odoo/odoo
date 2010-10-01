@@ -171,7 +171,9 @@ class pos_return(osv.osv_memory):
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
                 val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
-                cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
+                cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
+                            "WHERE w.lot_stock_id=s.id AND w.id=%s ", 
+                            (order_id.shop_id.warehouse_id.id,))
                 res = cr.fetchone()
                 location_id = res and res[0] or None
                 stock_dest_id = val.id
@@ -254,7 +256,9 @@ class add_product(osv.osv_memory):
                 qty=data['quantity']
                 prop_ids = property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
                 val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
-                cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
+                cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
+                            "WHERE w.lot_stock_id=s.id AND w.id=%s ",
+                            (order_id.shop_id.warehouse_id.id,))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
                 stock_dest_id = val.id
@@ -316,7 +320,9 @@ class add_product(osv.osv_memory):
         for order_id in order_obj.browse(cr, uid, active_ids, context=context):
             prop_ids =property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
             val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
-            cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
+            cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
+                        " WHERE w.lot_stock_id=s.id AND w.id=%s ",
+                        (order_id.shop_id.warehouse_id.id,))
             res=cr.fetchone()
             location_id=res and res[0] or None
             stock_dest_id = val.id
@@ -331,13 +337,13 @@ class add_product(osv.osv_memory):
                             'date':date_cur
                         })
             for line in order_id.lines:
-                key=('return%s') %line.id
+                key= 'return%s' % line.id
                 if line.id: 
                     if data.has_key(key):
-                        qty = data['return%s' %line.id]
+                        qty = data[key]
                         lines_obj.write(cr,uid,[line.id], {
-                                'qty_rfd':(line.qty or 0.0) + data['return%s' %line.id],
-                                'qty':line.qty-(data['return%s' %line.id] or 0.0)
+                                'qty_rfd':(line.qty or 0.0) + data[key],
+                                'qty':line.qty-(data[key] or 0.0)
                         })
                     else:
                         qty = line.qty
@@ -349,7 +355,7 @@ class add_product(osv.osv_memory):
                         'location_id':location_id,
                         'product_id':line.product_id.id,
                         'location_dest_id':stock_dest_id,
-                        'name':'%s (return)' %order_id.name,
+                        'name':'%s (return)' % order_id.name,
                         'date':date_cur,
                         'date_planned':date_cur
                     })
