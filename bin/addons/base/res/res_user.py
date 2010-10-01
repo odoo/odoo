@@ -242,8 +242,8 @@ class users(osv.osv):
         'signature': fields.text('Signature', size=64),
         'address_id': fields.many2one('res.partner.address', 'Company Address'),
         'active': fields.boolean('Active'),
-        'action_id': fields.many2one('ir.actions.actions', 'Home Action'),
-        'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
+        'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
+        'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 
@@ -288,7 +288,6 @@ class users(osv.osv):
                 result = override_password(result)
             else:
                 result = map(override_password, result)
-                
         return result
 
 
@@ -319,10 +318,6 @@ class users(osv.osv):
             self.__admin_ids[cr.dbname] = ir_model_data_obj.read(cr, 1, [mdid], ['res_id'])[0]['res_id']
         return self.__admin_ids[cr.dbname]
 
-    def _get_action(self,cr, uid, context={}):
-        ids = self.pool.get('ir.ui.menu').search(cr, uid, [('usage','=','menu')])
-        return ids and ids[0] or False
-
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
@@ -336,12 +331,12 @@ class users(osv.osv):
             return [c]
         return False
 
-    def _get_menu(self,cr, uid, context={}):
-        ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')])
+    def _get_menu(self,cr, uid, context=None):
+        ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')], context=context)
         return ids and ids[0] or False
 
-    def _get_group(self,cr, uid, context={}):
-        ids = self.pool.get('res.groups').search(cr, uid, [('name','=','Employee')])
+    def _get_group(self,cr, uid, context=None):
+        ids = self.pool.get('res.groups').search(cr, uid, [('name','=','Employee')], context=context)
         return ids or False
 
     _defaults = {
