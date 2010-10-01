@@ -100,8 +100,6 @@ class report_xml(osv.osv):
         cr.execute("SELECT * FROM ir_act_report_xml WHERE auto=%s ORDER BY id", (True,))
         result = cr.dictfetchall()
         svcs = netsvc.Service._services
-        import pdb
-        pdb.set_trace()
         for r in result:
             if svcs.has_key('report.'+r['report_name']):
                 continue
