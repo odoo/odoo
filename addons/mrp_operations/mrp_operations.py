@@ -75,7 +75,6 @@ class mrp_production_workcenter_line(osv.osv):
         for op in ops:
             res[op.id] = False
             if op.date_planned:
-                d = DateTime.strptime(op.date_planned,'%Y-%m-%d %H:%M:%S')
                 i = intervals[(op.date_planned, op.hour, op.workcenter_id.calendar_id.id)]
                 if i:
                     res[op.id] = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
