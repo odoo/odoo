@@ -42,11 +42,7 @@
        if l.reconcile_id:
          reconciled = True
          break
-    if not reconciled:
-       print "Info: Voucher is not paid"
-    else:
-       print "Info: Voucher is paid"
-
+    assert (not reconciled), "Found reconciled move lines, should not be"
 -
   I create and post a voucher payment of amount 30000.0 for the partner Seagate
 -
@@ -74,8 +70,6 @@
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher_id.id, 'proforma_voucher', cr)
-    
-
 -
   I check that move lines are reconciled meaning voucher is paid
 -
@@ -85,7 +79,4 @@
        if l.reconcile_id:
          reconciled = True
          break
-    if not reconciled:
-       print "Info: Voucher is not paid"
-    else:
-       print "Info: Voucher is paid"
+    assert reconciled, "Found unreconciled move lines/unpaid voucher"
