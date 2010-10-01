@@ -35,8 +35,57 @@ from lxml import etree
 import base64
 from reportlab.platypus.doctemplate import ActionFlowable
 from tools.safe_eval import safe_eval as eval
+from reportlab.lib.units import inch,cm,mm
 
 encoding = 'utf-8'
+
+class NumberedCanvas(canvas.Canvas):
+
+    def __init__(self, *args, **kwargs):
+        canvas.Canvas.__init__(self, *args, **kwargs)
+        self._codes = []
+        self._flag=False
+        self._pageCount=0
+        self.i =0
+        self.k=0
+        self.pages={}
+
+    def showPage(self):
+        self.i +=1
+        if not self._flag:
+           self._pageCount += 1
+        else:
+            self.pages.update({self.i:self._pageCount})
+        self._codes.append({'code': self._code, 'stack': self._codeStack})
+        self._startPage()
+        self._flag=False
+
+    def pageCount(self):
+        if self.pages.get(self.k,False):
+            self._pageNumber=0
+        self.k +=1
+        key=self.k
+        if not self.pages.get(key,False):
+            while not self.pages.get(key,False):
+                key = key + 1
+        self.setFont("Helvetica", 15)
+        self.drawRightString(200*mm, 20*mm,
+            "page %(this)i of %(total)i" % {
+               'this': self._pageNumber+1,
+               'total': self.pages.get(key,False),
+            }
+        )
+
+    def save(self):
+        """add page info to each page (page x of y)"""
+        # reset page counter
+        self._pageNumber = 0
+        for code in self._codes:
+            self._code = code['code']
+            self._codeStack = code['stack']
+            self.pageCount()
+            canvas.Canvas.showPage(self)
+        self._doc.SaveToFile(self._filename, self)
 
 class PageCount(platypus.Flowable):
     def draw(self):
@@ -762,6 +811,9 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
         self.handle_frameBegin()
     def afterFlowable(self, flowable):
         if isinstance(flowable, PageReset):
+            self.canv._pageCount=self.page
+            self.page=0
+            self.canv._flag=True
             self.canv._pageNumber = 0
 
 class _rml_template(object):
@@ -808,13 +860,15 @@ class _rml_template(object):
         for node_story in node_stories:
             if story_cnt > 0:
                 fis.append(platypus.PageBreak())
+
             fis += r.render(node_story)
             # Reset Page Number with new story tag
             fis.append(PageReset())
+            self.doc_tmpl.afterFlowable(fis)
             story_cnt += 1
         if self.localcontext:
             fis.append(PageCount())
-        self.doc_tmpl.build(fis)
+        self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
 
 def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
     node = etree.XML(rml)
