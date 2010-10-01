@@ -437,64 +437,6 @@ function open_contact()
     searchContact();
 }
 
-/*function search_document()
-{	
-	if (check() == false){
-        return true
-    }
-    
-    var prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-	var version_obj = prefService.getBranch("extensions.");
-	version_obj.QueryInterface(Components.interfaces.nsIPrefBranch2);
-	version = version_obj.getCharPref("lastAppVersion");
-	version = parseInt(version[0])
-	
-	file = getPredefinedFolder(2);
-	
-	if (version > 2)
-	{
-		var emlsArray = gFolderDisplay.selectedMessages;
-	}
-	else
-	{
-		var emlsArray = GetSelectedMessages();
-	}
-
-	IETtotal = emlsArray.length;
-	IETexported = 0;
-	var msguri = emlsArray[0];
-
-	
-	//gives the selected email uri
-	var messageUri= gDBView.URIForFirstSelectedMessage;
-
-	var messenger = Components.classes['@mozilla.org/messenger;1'].createInstance(Components.interfaces.nsIMessenger);
-
-	//gives the selected email object 
-	var message = messenger.messageServiceFromURI(messageUri).messageURIToMsgHdr(messageUri);
-
-	//functionality to split the author name and email
-	if(message.author.charAt(0) == '"'){
-		sendername = message.author.split('"')[1].split('"')[0];
-	}
-	else if(message.author.indexOf('<')!=-1){
-		sendername = message.author.split('<')[0];
-	}
-	else{
-		sendername = message.author;
-	}
-	if(message.author.indexOf('<')!=-1){
-		senderemail = message.author.split('<')[1].split('>')[0];
-	}
-	else{
-		senderemail = message.author
-	}
-
-	//set the initial information for the selected email
-    setSenderEmail(senderemail);
-    setSenderName(sendername);
-    searchdocument();
-}*/
 
 //function to open the configuration window
 var Config = {
