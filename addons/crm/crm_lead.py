@@ -23,7 +23,6 @@ from osv import fields, osv
 from datetime import datetime
 import crm
 import time
-import mx.DateTime
 from tools.translate import _
 from crm import crm_case
 import binascii
@@ -84,12 +83,12 @@ class crm_lead(crm_case, osv.osv):
                         new_dates = cal_obj.interval_get(cr,
                             uid,
                             lead.section_id.resource_calendar_id and lead.section_id.resource_calendar_id.id or False,
-                            mx.DateTime.strptime(lead.create_date, '%Y-%m-%d %H:%M:%S'),
+                            datetime.strptime(lead.create_date, '%Y-%m-%d %H:%M:%S'),
                             duration,
                             resource=resource_id
                         )
                         no_days = []
-                        date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
+                        date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
                         for in_time, out_time in new_dates:
                             if in_time.date not in no_days:
                                 no_days.append(in_time.date)
@@ -186,14 +185,16 @@ class crm_lead(crm_case, osv.osv):
         @param *args: Give Tuple Value
         """
         old_state = self.read(cr, uid, ids, ['state'])[0]['state']
+        old_stage_id = self.read(cr, uid, ids, ['stage_id'])[0]['stage_id']
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
         if old_state == 'draft':
-            stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
-            if stage_id:
-                value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
-            else:
-                value = {}
-            value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+            value = {}
+            if not old_stage_id:
+                stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
+                if stage_id:
+                    value.update({'stage_id': stage_id})
+                    value.update(self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value'])
+            value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
             self.write(cr, uid, ids, value)
 
         for (id, name) in self.name_get(cr, uid, ids):

@@ -31,6 +31,7 @@ class backlog_create_task(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         task = self.pool.get('project.task')
         backlog_id = self.pool.get('project.scrum.product.backlog')
+        document_pool = self.pool.get('ir.attachment')
         ids_task = []
 
         if context is None:
@@ -39,9 +40,9 @@ class backlog_create_task(osv.osv_memory):
         backlogs = backlog_id.browse(cr, uid, context['active_ids'], context=context)
         result = mod_obj._get_id(cr, uid, 'project', 'view_task_search_form')
         id = mod_obj.read(cr, uid, result, ['res_id'])
-
+        
         for backlog in backlogs:
-            ids_task.append(task.create(cr, uid, {
+            task_id = task.create(cr, uid, {
                 'product_backlog_id': backlog.id,
                 'name': backlog.name,
                 'description': backlog.note,
@@ -50,8 +51,11 @@ class backlog_create_task(osv.osv_memory):
                 'planned_hours': backlog.expected_hours,
                 'remaining_hours':backlog.expected_hours,
                 'sequence':backlog.sequence,
-            }))
-
+            })
+            document_ids = document_pool.search(cr, uid, [('res_id', '=', backlog.id), ('res_model', '=', backlog_id._name)])
+            for document_id in document_ids:
+                document_pool.copy(cr, uid, document_id, default={'res_id':task_id, 'res_model':task._name})
+            ids_task.append(task_id)
         return {
             'domain': "[('product_backlog_id','in',["+','.join(map(str, context['active_ids']))+"])]",
             'name': 'Tasks',

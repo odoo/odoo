@@ -20,12 +20,8 @@
 #
 ##############################################################################
 
-import time
 from osv import osv
 from osv import fields
-from mx import DateTime
-from decimal import Decimal
-from tools.translate import _
 
 class account_journal(osv.osv):
 
@@ -46,8 +42,8 @@ class account_cash_statement(osv.osv):
     
     _inherit = 'account.bank.statement'
 
-    def _equal_balance(self, cr, uid, ids, statement, context={}):
-
+    def _equal_balance(self, cr, uid, cash_id, context={}):
+        statement = self.browse(cr, uid, cash_id, context=context)
         if not statement.journal_id.check_dtls:
             return True
         

@@ -159,9 +159,6 @@ class thunderbird_partner(osv.osv_memory):
         msg_ids = []
         res = {}
         res_ids = []
-        if message_id:
-            msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
-        if msg_ids and len(msg_ids): return 0
         for ref_id in ref_ids:
             msg_new = dictcreate.get('message')
             ref = ref_id.split(',')
@@ -180,6 +177,24 @@ class thunderbird_partner(osv.osv_memory):
         model = str(dictcreate.get('model'))
         message = dictcreate.get('message')
         return self.pool.get('email.server.tools').process_email(cr, uid, model, message, attach=True, context=None)
+
+    def search_message(self, cr, uid, message, context=None):
+        #@param message: string of mail which is read from EML File
+        #@return model,res_id
+        dictcreate = dict(message)
+        message = dictcreate.get('message')
+        msg_pool = self.pool.get('mailgate.message')
+        msg = self.pool.get('email.server.tools').parse_message(message)
+        message_id = msg.get('message-id', False)
+        model = False
+        res_id = False
+        if message_id:
+            msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
+            if msg_ids and len(msg_ids):
+                msg = msg_pool.browse(cr, uid, msg_ids[0])
+                model = msg.model
+                res_id = msg.res_id
+        return (model,res_id)
 
     def search_contact(self, cr, user, email):
         address_pool = self.pool.get('res.partner.address')

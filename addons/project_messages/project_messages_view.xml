@@ -55,6 +55,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Messages">
+                        <field name="create_date"/>
                         <field name="project_id"/>
                         <field name="from_id"/>
                         <field name="to_id"/>
@@ -67,8 +68,10 @@
            <field name="model">project.messages</field>
            <field name="type">search</field>
            <field name="arch" type="xml">
-               <search string="Communication Messages">
+               <search string="Project Messages">
                		<group>
+                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','=',time.strftime('%%Y-%%m-%%d'))]"/>
+                        <separator orientation="vertical"/>
                			<field name="project_id"/>
                         <field name="from_id"/>
                         <field name="to_id"/>
@@ -86,7 +89,7 @@
         </record>
 
        	<record id="messages_form" model="ir.actions.act_window">
-            <field name="name">Communication Messages</field>
+            <field name="name">Project Messages</field>
             <field name="res_model">project.messages</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_project_messages_search"/>
