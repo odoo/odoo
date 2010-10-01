@@ -251,7 +251,7 @@
                    domain="[('state','in', ('draft','open','pending'))]"/>
                <filter icon="terp-go-today" string="Today"
                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
-                    ('date','&gt;=',datetime.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                    ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"
                    name="today"
                    help="Todays's Phonecalls"
                />
