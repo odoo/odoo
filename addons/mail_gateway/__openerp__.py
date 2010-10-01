@@ -31,7 +31,6 @@
     'depends': ['base'],
     'init_xml': [],
     'update_xml': [
-        'wizard/mail_gateway_document_view.xml',
         "mail_gateway_view.xml",
         "res_partner_view.xml",
         'security/ir.model.access.csv'
