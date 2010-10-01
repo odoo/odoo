@@ -111,7 +111,7 @@
                         <button name="case_open" string="Open"
                             states="draft,pending" type="object"
                             icon="gtk-go-forward" />
-                        <button name="case_close" string="Close"
+                        <button name="case_mark_lost" string="Close"
                             states="open,draft,pending" type="object"
                             icon="gtk-close" />
                         <button name="case_pending" string="Pending"
@@ -318,7 +318,7 @@
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
-                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         help="My Sales Team(s)"/>
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
@@ -342,8 +342,9 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Group By...">
-                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
+                    <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Category" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'categ_id'}"/>
                     <filter string="Campaign" icon="terp-stock_symbol-selection"
@@ -351,11 +352,10 @@
                     <filter string="Channel" icon="terp-stock_symbol-selection"
                         domain="[]" context="{'group_by':'channel_id'}" />
                     <separator orientation="vertical"/>
-                    <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
-                    <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
+                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Creation Month" icon="terp-go-month"
+                    <filter string="Creation" help="Create date" icon="terp-go-month"
                         domain="[]" context="{'group_by':'create_date'}" />
                 </group>
            </search>

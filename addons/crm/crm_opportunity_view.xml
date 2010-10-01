@@ -211,7 +211,7 @@
                 <field name="model">crm.lead</field>
                 <field name="type">tree</field>
                 <field name="arch" type="xml">
-                    <tree string="Opportunities"  colors="blue:state=='pending';grey:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
+                    <tree string="Opportunities" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                         <field name="date_deadline" invisible="1"/>
                         <field name="create_date"/>
                         <field name="name" string="Opportunity"/>
@@ -302,7 +302,7 @@
                             context="{'invisible_section': False}"
                             widget="selection">
                             <filter icon="terp-personal+"
-                                domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                                domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                 context="{'invisible_section': False}"
                                 help="My Sales Team(s)" />
                             <filter icon="terp-personal+"

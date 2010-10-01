@@ -71,7 +71,7 @@
                         attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                     <label colspan="6"  string=""/>
                     <button string="Schedule Other Call"
-                     icon="gtk-redo"
+                     icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
                     type="action"  />
 
@@ -150,7 +150,7 @@
                         attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                     <label colspan="6"  string=""/>
                     <button string="Schedule Other Call"
-                     icon="gtk-redo"
+                     icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
                     type="action"  />
 
@@ -272,7 +272,7 @@
                <field name="section_id"
                    select="1" widget="selection" string="Sales Team">
                    <filter icon="terp-personal+"
-                       domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                       domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
                </field>
                <newline/>

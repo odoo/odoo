@@ -1,8 +1,9 @@
 <openerp>
    <data>
-
+        <menuitem id="base.menu_base_config" name="Configuration" parent="base.menu_base_partner" sequence="30"
+            groups="base.group_system,base.group_sale_salesman"/>
         <menuitem id="menu_sale_journal_config" name="Sale Journals"
-            parent="base.menu_base_config" sequence="5" groups="base.group_system"/>
+            parent="base.menu_base_config" sequence="5" groups="base.group_system,base.group_sale_salesman"/>
 
    <!--  sale journal invoice Type's Form  view -->
 
@@ -303,7 +304,7 @@
         <!-- Action of sale journal report in sale journal  -->
 
         <act_window name="Monthly sales"
-            domain="[('journal_id', '=', active_id)]"
+            context="{'search_default_journal_id': active_id}"
             res_model="sale.journal.report"
             src_model="sale_journal.sale.journal"
             id="act_sale_journal_sale_journal_2_sale_journal_sale_stats"/>
@@ -311,7 +312,8 @@
        <!-- Action  of stock picking  in picking journal  -->
 
         <act_window name="Assigned picking"
-            domain="[('journal_id', '=', active_id),('state', '=', 'assigned')]"
+            domain="[('state', '=', 'assigned')]"
+            context="{'search_default_journal_id': [active_id]}"
             res_model="stock.picking"
             src_model="sale_journal.picking.journal"
             id="act_sale_journal_picking_journal_2_stock_picking_assigned"/>
@@ -319,7 +321,8 @@
       <!-- Action  of stock picking  in picking journal  -->
 
         <act_window name="Confirmed picking"
-            domain="[('journal_id', '=', active_id),('state', '=', 'confirmed')]"
+            domain="[('state', '=', 'confirmed')]"
+            context="{'search_default_journal_id': [active_id]}"
             res_model="stock.picking"
             src_model="sale_journal.picking.journal"
             id="act_sale_journal_picking_journal_2_stock_picking_confirmed"/>
@@ -327,7 +330,8 @@
      <!-- Action  of stock picking  in sale journal  -->
 
         <act_window name="Assigned picking"
-            domain="[('sale_journal_id', '=', active_id),('state', '=', 'assigned')]"
+            domain="[('state', '=', 'assigned')]"
+            context="{'search_default_sale_journal_id': [active_id]}"
             res_model="stock.picking"
             src_model="sale_journal.sale.journal"
             id="act_sale_journal_sale_journal_2_stock_picking_assigned"/>
@@ -335,7 +339,8 @@
     <!-- Action  of stock picking in sale journal -->
 
         <act_window name="Confirmed picking"
-            domain="[('sale_journal_id', '=', active_id),('state', '=', 'confirmed')]"
+            domain="[('state', '=', 'confirmed')]"
+            context="{'search_default_sale_journal_id': [active_id]}"
             res_model="stock.picking"
             src_model="sale_journal.sale.journal"
             id="act_sale_journal_sale_journal_2_stock_picking_confirmed"/>

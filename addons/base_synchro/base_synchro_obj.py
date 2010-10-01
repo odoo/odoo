@@ -42,7 +42,7 @@ class base_synchro_server(osv.osv):
 base_synchro_server()
 
 class base_synchro_obj(osv.osv):
-    '''Class to store the operations done by wizart'''
+    '''Class to store the operations done by wizard'''
     _name = "base.synchro.obj"
     _description = "Register Class"
     _columns = {
@@ -66,6 +66,10 @@ class base_synchro_obj(osv.osv):
     #
     # Return a list of changes: [ (date, id) ]
     #
+
+    def get_ids(self, cr, uid, object, dt, domain=[], context={}):
+        return self._get_ids(cr, uid, object, dt, domain, context)
+
     def _get_ids(self, cr, uid, object, dt, domain=[], context={}):
         result = []
         if dt:

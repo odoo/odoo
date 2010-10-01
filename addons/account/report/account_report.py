@@ -20,9 +20,8 @@
 ##############################################################################
 
 import time
-import datetime
-import mx.DateTime
-
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import pooler
 import tools
 from osv import fields,osv
@@ -128,13 +127,13 @@ class report_aged_receivable(osv.osv):
         LIST_RANGES = []
         if fy_id:
             fy_start_date = pool_obj_fy.read(cr, uid, fy_id, ['date_start'])['date_start']
-            fy_start_date = mx.DateTime.strptime(fy_start_date, '%Y-%m-%d')
-            last_month_date = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
+            fy_start_date = datetime.strptime(fy_start_date, '%Y-%m-%d')
+            last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
 
             while (last_month_date > fy_start_date):
                 LIST_RANGES.append(today + " to " + last_month_date.strftime('%Y-%m-%d'))
-                today = (last_month_date- 1).strftime('%Y-%m-%d')
-                last_month_date = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
+                today = (last_month_date- relativedelta(days=1)).strftime('%Y-%m-%d')
+                last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
 
             LIST_RANGES.append(today +" to " + fy_start_date.strftime('%Y-%m-%d'))
             cr.execute('delete from temp_range')

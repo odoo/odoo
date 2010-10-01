@@ -23,7 +23,6 @@ from base_calendar import base_calendar
 from osv import fields, osv
 from tools.translate import _
 import tools
-import mx.DateTime
 import re
 
 
