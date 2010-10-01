@@ -50,8 +50,8 @@ class survey_send_invitation(osv.osv_memory):
     _defaults = {
         'send_mail': lambda *a: 1,
         'send_mail_existing': lambda *a: 1,
-        'mail_subject': lambda *a: "New user account.",
-        'mail_subject_existing': lambda *a: "User account info.",
+        'mail_subject': lambda *a: "Invitation",
+        'mail_subject_existing': lambda *a: "Invitation",
         'mail_from': lambda *a: tools.config['email_from']
     }
 
@@ -100,7 +100,7 @@ class survey_send_invitation(osv.osv_memory):
         survey_ref= self.pool.get('survey')
 
         model_data_obj = self.pool.get('ir.model.data')
-        group_id = model_data_obj._get_id(cr, uid, 'base', 'group_tool_user')
+        group_id = model_data_obj._get_id(cr, uid, 'survey', 'group_survey_user')
         group_id = model_data_obj.browse(cr, uid, group_id, context=context).res_id
 
         act_id = self.pool.get('ir.actions.act_window')

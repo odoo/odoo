@@ -31,11 +31,11 @@ class account_budget_crossvered_summary_report(osv.osv_memory):
     _columns = {
         'date_from': fields.date('Start of period', required=True),
         'date_to': fields.date('End of period', required=True),
-        }
+    }
     _defaults= {
         'date_from': time.strftime('%Y-01-01'),
         'date_to': time.strftime('%Y-%m-%d'),
-        }
+    }
 
     def check_report(self, cr, uid, ids, context=None):
         datas = {}
@@ -46,14 +46,13 @@ class account_budget_crossvered_summary_report(osv.osv_memory):
              'ids': context.get('active_ids',[]),
              'model': 'crossovered.budge',
              'form': data
-                 }
-        datas['form']['report']='analytic-one'
+        }
+        datas['form']['report'] = 'analytic-one'
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'crossovered.budget.report',
             'datas': datas,
-            }
-        return {}
+        }
 
 account_budget_crossvered_summary_report()
 

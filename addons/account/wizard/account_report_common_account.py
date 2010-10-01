@@ -35,7 +35,7 @@ class account_common_account_report(osv.osv_memory):
         'display_account': 'bal_all',
     }
 
-    def pre_print_report(self, cr, uid, ids, data, query_line, context=None):
+    def pre_print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
         data['form'].update(self.read(cr, uid, ids, ['display_account'])[0])

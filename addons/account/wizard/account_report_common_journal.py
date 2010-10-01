@@ -38,7 +38,7 @@ class account_common_journal_report(osv.osv_memory):
             result['periods'] = map(lambda x: x[0], cr.fetchall())
         return result
 
-    def pre_print_report(self, cr, uid, ids, data, query_line, context=None):
+    def pre_print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
         data['form'].update(self.read(cr, uid, ids, ['amount_currency'])[0])
