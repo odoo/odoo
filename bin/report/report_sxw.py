@@ -253,7 +253,11 @@ class rml_parse(object):
             if ids:
                 d = decimal_precision_obj.browse(self.cr, self.uid, ids)[0].digits
         elif obj and f:
-            d = getattr(obj._columns[f], 'digits', lambda x: ((16,DEFAULT_DIGITS)))(self.cr)[1]
+            res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16,DEFAULT_DIGITS)))
+            if isinstance(res_digits, tuple):
+                d = res_digits[1]
+            else:
+                d = res_digits(self.cr)[1]
         elif (hasattr(obj, '_field') and\
                 isinstance(obj._field, (float_class, function_class)) and\
                 obj._field.digits):
