@@ -63,10 +63,10 @@ class account_common_report(osv.osv_memory):
         if filter == 'filter_period' and fiscalyear_id:
             start_period = end_period = False
             cr.execute('''
-                SELECT * FROM (SELECT p.id 
-                               FROM account_period p 
-                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id) 
-                               WHERE f.id = %s 
+                SELECT * FROM (SELECT p.id
+                               FROM account_period p
+                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
+                               WHERE f.id = %s
                                ORDER BY p.date_start ASC
                                LIMIT 1) AS period_start
                 UNION

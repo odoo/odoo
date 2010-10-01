@@ -50,10 +50,10 @@ class account_pl_report(osv.osv_memory):
         res['arch'] = etree.tostring(doc)
         return res
 
-    def _print_report(self, cr, uid, ids, data, query_line, context=None):
+    def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['display_type'])[0])
         if data['form']['display_type']:
             return {
