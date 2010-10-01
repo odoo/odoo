@@ -79,7 +79,7 @@ class pos_make_payment(osv.osv_memory):
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
-        res = super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
+        super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
         active_id = context and context.get('active_id', False) or False
         if active_id:
             order = self.pool.get('pos.order').browse(cr, uid, active_id)

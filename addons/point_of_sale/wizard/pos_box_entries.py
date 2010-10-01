@@ -129,7 +129,7 @@ class pos_box_entries(osv.osv_memory):
             if address_u:
                 partner_id = address_u.partner_id and address_u.partner_id.id or None
                 args['partner_id'] = partner_id
-            statement_line_id = bank_statement.create(cr, uid, args)
+            bank_statement.create(cr, uid, args)
 
             return {}
 

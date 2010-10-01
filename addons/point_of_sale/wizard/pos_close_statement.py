@@ -35,8 +35,6 @@ class pos_close_statement(osv.osv_memory):
              @param context: A standard dictionary
              @return : Blank Dictionary
         """
-        company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        list_statement = []
         mod_obj = self.pool.get('ir.model.data')
         statement_obj = self.pool.get('account.bank.statement')
         journal_obj = self.pool.get('account.journal')

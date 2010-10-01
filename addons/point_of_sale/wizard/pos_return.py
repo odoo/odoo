@@ -123,9 +123,9 @@ class pos_return(osv.osv_memory):
                    <button icon='gtk-cancel' special="cancel"
                                string="Cancel" />
                                    <button icon='gtk-ok' name= "create_returns"
-                       string="Return goods and Exchange" type="object"/>
+                       string="Return with Echange" type="object"/>
                                    <button icon='gtk-ok' name="create_returns2"
-                        string="Return without Refund" type="object"/>
+                        string="Refund Without Exchange" type="object"/>
                 </form>"""
 
             result['arch'] = _moves_arch_lst

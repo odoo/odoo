@@ -21,7 +21,6 @@
 
 from osv import osv
 from tools.translate import _
-import time
 
 class pos_open_statement(osv.osv_memory):
     _name = 'pos.open.statement'
