@@ -100,7 +100,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
                             FROM account_move_line l \
                             WHERE l.account_id = %s AND %s '%(account.id, self.init_query))
             sum_currency += self.cr.fetchone()[0] or 0.0
-        return str(sum_currency)
+        return sum_currency
 
     def get_children_accounts(self, account):
         res = []

@@ -24,6 +24,8 @@ import datetime
 from osv import osv, fields
 from tools.translate import _
 
+import decimal_precision as dp
+
 def strToDate(dt):
         dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
         return dt_date
@@ -241,10 +243,10 @@ class crossovered_budget_lines(osv.osv):
         'date_from': fields.date('Start Date', required=True),
         'date_to': fields.date('End Date', required=True),
         'paid_date': fields.date('Paid Date'),
-        'planned_amount': fields.float('Planned Amount', required=True, digits=(16,2)),
-        'practical_amount': fields.function(_prac, method=True, string='Practical Amount', type='float', digits=(16,2)),
-        'theoritical_amount': fields.function(_theo, method=True, string='Theoritical Amount', type='float', digits=(16,2)),
-        'percentage': fields.function(_perc, method=True, string='Percentage', type='float'),
+        'planned_amount':fields.float('Planned Amount', required=True, digits_compute=dp.get_precision('Account')),
+        'practical_amount':fields.function(_prac, method=True, string='Practical Amount', type='float', digits_compute=dp.get_precision('Account')),
+        'theoritical_amount':fields.function(_theo, method=True, string='Theoritical Amount', type='float', digits_compute=dp.get_precision('Account')),
+        'percentage':fields.function(_perc, method=True, string='Percentage', type='float'),
         'company_id': fields.related('crossovered_budget_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
