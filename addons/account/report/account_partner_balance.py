@@ -52,8 +52,10 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
     def set_context(self, objects, data, ids, report_type=None):
         self.display_partner = data['form'].get('display_partner', 'non-zero_balance')
-        self.query = data['form'].get('query_line', '')
-        self.init_query = data['form'].get('initial_bal_query', '')
+        obj_move = self.pool.get('account.move.line')
+        self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context',{}))
+#        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context_initial_bal', {}))
+
         self.result_selection = data['form'].get('result_selection')
         self.target_move = data['form'].get('target_move', 'all')
 
@@ -116,7 +118,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         for rec in full_account:
             if not rec.get('name', False):
                 rec.update({'name': _('Unknown Partner')})
-                
+
         ## We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
         return subtotal_row
@@ -141,8 +143,8 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 new_header['ref'] = ''
                 new_header['name'] = r['account_name']
                 new_header['code'] = r['code']
-                new_header['debit'] = r['debit'] 
-                new_header['credit'] = r['credit'] 
+                new_header['debit'] = r['debit']
+                new_header['credit'] = r['credit']
                 new_header['scredit'] = tot_scredit
                 new_header['sdebit'] = tot_sdebit
                 new_header['enlitige'] = tot_enlitige
