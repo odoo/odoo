@@ -24,9 +24,6 @@ from osv import fields, osv
 
 from tools.misc import currency
 
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
-
 
 class color_rml(osv.osv):
     _name = "color.rml"

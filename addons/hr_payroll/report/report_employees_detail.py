@@ -5,8 +5,6 @@ from report import report_sxw
 import time
 import pooler
 import rml_parse
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 class employees_salary_report(rml_parse.rml_parse):
 

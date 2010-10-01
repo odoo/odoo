@@ -506,30 +506,53 @@ class sale_order(osv.osv):
     def action_invoice_cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        for sale in self.browse(cr, uid, ids, context=context):
+        for sale in self.browse(cr, uid, ids):
             for line in sale.order_line:
+                #
+                # Check if the line is invoiced (has asociated invoice
+                # lines from non-cancelled invoices).
+                #
                 invoiced = False
                 for iline in line.invoice_lines:
-                    if iline.invoice_id and iline.invoice_id.state == 'cancel':
-                        continue
-                    else:
+                    if iline.invoice_id and iline.invoice_id.state != 'cancel':
                         invoiced = True
-                self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced})
-        self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False})
+                        break
+                # Update the line (only when needed)
+                if line.invoiced != invoiced:
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced}, context=context)
+        self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False}, context=context)
         return True
 
     def action_invoice_end(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-
         for order in self.browse(cr, uid, ids, context=context):
+            #
+            # Update the sale order lines state (and invoiced flag).
+            #
             for line in order.order_line:
+                vals = {}
+                #
+                # Check if the line is invoiced (has asociated invoice
+                # lines from non-cancelled invoices).
+                #
+                invoiced = False
+                for iline in line.invoice_lines:
+                    if iline.invoice_id and iline.invoice_id.state != 'cancel':
+                        invoiced = True
+                        break
+                if line.invoiced != invoiced:
+                    vals['invoiced'] = invoiced
+                # If the line was in exception state, now it gets confirmed.
                 if line.state == 'exception':
-                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'state': 'confirmed'}, context=context)
-
+                    vals['state'] = 'confirmed'
+                # Update the line (only when needed).
+                if vals:
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], vals, context=context)
+            #
+            # Update the sale order state.
+            #
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
-
+            
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):

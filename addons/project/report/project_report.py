@@ -72,7 +72,7 @@ class report_project_task_user(osv.osv):
                     date_trunc('day',t.date_end) as date_end,
                     to_date(to_char(t.date_deadline, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_deadline,
 --                    sum(cast(to_char(date_trunc('day',t.date_end) - date_trunc('day',t.date_start),'DD') as int)) as no_of_days,
-                    (extract('epoch' from (t.date_end-t.date_start)))/(3600*24)  as no_of_days,
+                    abs((extract('epoch' from (t.date_end-t.date_start)))/(3600*24))  as no_of_days,
                     t.user_id,
                     progress as progress,
                     t.project_id,

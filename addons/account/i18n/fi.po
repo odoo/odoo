@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-02 19:40+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"PO-Revision-Date: 2010-09-29 11:46+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:51+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -145,6 +145,8 @@ msgid "Error ! The duration of the Period(s) is/are invalid. "
 msgstr "Virhe! Jakson / jaksojen pituus on virheellinen. "
 
 #. module: account
+#: view:account.bank.statement.reconcile:0
+#: field:account.bank.statement.reconcile,line_ids:0
 #: field:account.move,line_id:0
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -231,6 +233,7 @@ msgstr "Toistuvat tapahtumat"
 #. module: account
 #: field:account.analytic.line,amount:0
 #: field:account.bank.statement.line,amount:0
+#: field:account.bank.statement.reconcile.line,amount:0
 #: rml:account.invoice:0
 #: field:account.invoice.tax,amount:0
 #: field:account.move,amount:0
@@ -385,6 +388,11 @@ msgstr "Laskujen kuvaus"
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
 msgstr "Virhe! Et voi luoda päällekkäisiä analyyttisiä tilejä."
+
+#. module: account
+#: field:account.bank.statement.reconcile,total_entry:0
+msgid "Total entries"
+msgstr "Merkintöjen kokonaismäärä"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -1095,6 +1103,11 @@ msgstr ""
 "arvosta isoimpaan"
 
 #. module: account
+#: field:account.bank.statement.reconcile,total_new:0
+msgid "Total write-off"
+msgstr "Arvonalennus yhteensä"
+
+#. module: account
 #: view:account.tax.template:0
 msgid "Compute Code for Taxes included prices"
 msgstr "Laske koodi hinnoille joissa on vero mukana"
@@ -1465,6 +1478,8 @@ msgid "Keep empty to use the income account"
 msgstr "Jätä tyhjäksi käyttääksesi tulotiliä"
 
 #. module: account
+#: view:account.bank.statement.reconcile:0
+#: field:account.bank.statement.reconcile,line_new_ids:0
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
 msgid "Write-Off"
@@ -1810,7 +1825,8 @@ msgstr "Seuraava"
 #. module: account
 #: help:res.partner,property_account_position:0
 msgid ""
-"The fiscal mapping will determine taxes and the accounts used for the partner."
+"The fiscal mapping will determine taxes and the accounts used for the "
+"partner."
 msgstr ""
 
 #. module: account
@@ -2038,6 +2054,7 @@ msgstr ""
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
+#: field:account.bank.statement.reconcile,partner_id:0
 #: rml:account.general.ledger:0
 #: field:account.invoice,partner_id:0
 #: field:account.move,partner_id:0
@@ -2110,6 +2127,8 @@ msgstr "Mennyt"
 #: field:account.analytic.account,company_currency_id:0
 #: field:account.bank.accounts.wizard,currency_id:0
 #: field:account.bank.statement,currency:0
+#: field:account.bank.statement.reconcile,total_currency:0
+#: field:account.bank.statement.reconcile,total_second_currency:0
 #: rml:account.general.ledger:0
 #: field:account.invoice,currency_id:0
 #: field:account.journal,currency:0
@@ -2303,6 +2322,7 @@ msgstr "Verotuksen tilipohja."
 #: field:account.analytic.line,date:0
 #: field:account.bank.statement,date:0
 #: field:account.bank.statement.line,date:0
+#: field:account.bank.statement.reconcile,name:0
 #: rml:account.general.ledger:0
 #: selection:account.general.ledger.report,checktype,sortbydate:0
 #: rml:account.journal.period.print:0
@@ -2490,6 +2510,11 @@ msgstr "Lisäsopimustiedot"
 #: model:process.transition,name:account.process_transition_supplierentriesreconcile0
 msgid "Entries Reconcile"
 msgstr "Merkintöjen suoritus"
+
+#. module: account
+#: help:account.bank.statement.reconcile,total_second_amount:0
+msgid "The amount in the currency of the journal"
+msgstr "Summa tämän päiväkirjan valuutassa"
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,landscape:0
@@ -2856,6 +2881,8 @@ msgstr "Uusi asiakaslasku"
 #: field:account.account,reconcile:0
 #: wizard_button:account.automatic.reconcile,init,reconcile:0
 #: field:account.bank.statement.line,reconcile_id:0
+#: view:account.bank.statement.reconcile:0
+#: field:account.bank.statement.reconcile.line,line_id:0
 #: field:account.move.line,reconcile_id:0
 #: wizard_button:account.move.line.reconcile,addendum,reconcile:0
 #: wizard_button:account.move.line.reconcile,init_full,reconcile:0
@@ -3168,6 +3195,7 @@ msgstr "account.move.line.select"
 #: wizard_field:account.account.balance.report,account_selection,Account_list:0
 #: wizard_field:account.automatic.reconcile,init,writeoff_acc_id:0
 #: field:account.bank.statement.line,account_id:0
+#: field:account.bank.statement.reconcile.line,account_id:0
 #: field:account.invoice,account_id:0
 #: field:account.invoice.line,account_id:0
 #: field:account.journal,account_control_ids:0
@@ -4134,6 +4162,11 @@ msgid "Separated Journal Sequences"
 msgstr "Erotellut päiväkirjan sarjat"
 
 #. module: account
+#: help:account.bank.statement.reconcile,total_second_currency:0
+msgid "The currency of the journal"
+msgstr "Päiväkirjan valuutta"
+
+#. module: account
 #: view:account.journal.column:0
 #: model:ir.model,name:account.model_account_journal_column
 msgid "Journal Column"
@@ -4814,6 +4847,7 @@ msgid "Open for unreconciliation"
 msgstr "Avaa suoritusten poistolle"
 
 #. module: account
+#: field:account.bank.statement.reconcile,statement_line:0
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Pankin tiliotteen rivi"
@@ -4910,6 +4944,12 @@ msgid ""
 msgstr ""
 "Tätä kenttää käytetään vain jos kehität oman moduulin joka sallii "
 "kehittäjien luoda tiettyjä veroja muokatulla toimialueella."
+
+#. module: account
+#: field:account.bank.statement.reconcile,total_amount:0
+#: field:account.bank.statement.reconcile,total_second_amount:0
+msgid "Payment amount"
+msgstr "Maksun määrä"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -5410,6 +5450,7 @@ msgstr ""
 
 #. module: account
 #: view:account.bank.statement:0
+#: view:account.bank.statement.reconcile:0
 #: view:account.subscription:0
 msgid "Compute"
 msgstr "Laske"
@@ -5473,6 +5514,7 @@ msgstr "Yleinen päiväkirja"
 #: rml:account.analytic.account.cost_ledger:0
 #: rml:account.analytic.account.inverted.balance:0
 #: field:account.bank.statement,balance_end:0
+#: field:account.bank.statement.reconcile,total_balance:0
 #: rml:account.general.ledger:0
 #: field:account.move.line,balance:0
 #: rml:account.partner.balance:0
@@ -5663,6 +5705,7 @@ msgstr "IntraCom"
 #: view:account.analytic.account:0
 #: field:account.analytic.account,description:0
 #: field:account.analytic.line,name:0
+#: field:account.bank.statement.reconcile.line,name:0
 #: rml:account.invoice:0
 #: field:account.invoice,name:0
 #: field:account.invoice.line,name:0
