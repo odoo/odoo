@@ -70,7 +70,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'partner_name': fields.char("Employee's Name", size=64), 
         'partner_mobile': fields.char('Mobile', size=32), 
         'partner_phone': fields.char('Phone', size=32), 
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage'), 
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="('object_id.model', '=', 'crm.claim')]"), 
         'probability': fields.float('Probability (%)'), 
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
