@@ -200,7 +200,8 @@ var openPartnerHandler = {
 
                 if (parseInt(partner_id) > 0){
                   var t = urlport + "/openerp/form/view?model=res.partner&id="+partner_id;
-                  alert(t + ":" + " " + "\n\n" + "If you can not open this link directly in web browser then you can copy the link and paste in web browser.");
+                   alert(t + ":" + " " + "\n\n" + "You can copy this URL into your WebBrowser if URL is not redirected automatic.");
+
                   window.open(t);
                 
                 }
@@ -307,7 +308,7 @@ var listDocumentHandler = {
         
         var urlport = weburl+':'+webport;
         var t = urlport + "/openerp/form/view?model=" + model +"&id=" + res_id;
-        alert(t + ":" + " " + "\n\n" + "If you can not open this link directly in web browser then you can copy the link and paste in web browser.");
+        alert(t + ":" + " " + "\n\n" + "You can copy this URL into your WebBrowser if URL is not redirected automatic.");
         window.open(t); 
          
 	},
@@ -368,7 +369,6 @@ function open_document()
 	var arrofarr = dictcontact(a,b); 
 	xmlRpcClient.asyncCall(listDocumentHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
-
 
 function open_contact()
 {	
@@ -437,7 +437,7 @@ function open_contact()
     searchContact();
 }
 
-function search_document()
+/*function search_document()
 {	
 	if (check() == false){
         return true
@@ -494,7 +494,7 @@ function search_document()
     setSenderEmail(senderemail);
     setSenderName(sendername);
     searchdocument();
-}
+}*/
 
 //function to open the configuration window
 var Config = {

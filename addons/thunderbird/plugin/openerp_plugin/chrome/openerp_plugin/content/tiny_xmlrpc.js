@@ -966,7 +966,7 @@ function module_install()
     xmlRpcClient.asyncCall(listinstallmodulehandler,null,'execute',[ strDbName,struid,strpass,strobj,strmethod, strvalue],6);
 }
 
-var listSearchwebdocumentHandler = {
+/*var listSearchwebdocumentHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
         var sendername = getSenderEmail();
@@ -983,7 +983,7 @@ var listSearchwebdocumentHandler = {
                   open_document();} 
     
             if(strlSearchResult=="email" && strlSearchResultValue==''){
-                alert("Contact is not available.so not open any document.");
+                alert("Contact is not available.");
             } 
 
             if(strlSearchResult=="res_id"){
@@ -998,7 +998,7 @@ var listSearchwebdocumentHandler = {
 
 	}
 
-}
+}*/
 
 
 
@@ -1312,7 +1312,7 @@ function searchCheckbox()
 	xmlRpcClient.asyncCall(listSearchCheckboxHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,arrofarr ],6);
 }
 
-function searchdocument()
+/*function searchdocument()
 {
 	var branchobj = getPref();
 	setServerService('xmlrpc/object');
@@ -1334,7 +1334,7 @@ function searchdocument()
 	strname.data = getSenderEmail();
   	
 	xmlRpcClient.asyncCall(listSearchwebdocumentHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strname ],6);
-}
+}*/
 
 
 function searchContact()
@@ -1459,17 +1459,17 @@ var listArchiveHandler = {
         createId = parseInt(createId);
         if(createId==0)
         {
-            alert("Mail is Already Archived Successfully.");
+            alert("Mail is Already Pushed.");
         }
         else if (createId<0)
         {
-            alert("sorry Mail is not Archived");
+            alert("sorry Mail is not Pushed.");
         
         }
     
     else if (createId>=1)
         {
-            alert("Mail Archived Successfully");
+            alert("Mail is Successfully Pushed.");
         }
     window.close();
 
