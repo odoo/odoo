@@ -113,7 +113,6 @@ class pos_details(report_sxw.rml_parse):
             config_journal_ids = self.pool.get("pos.config.journal").search(self.cr, self.uid, [('code', '=', 'GIFT')])
             if len(config_journal_ids):
                 config_journal = self.pool.get("pos.config.journal").browse(self.cr, self.uid, config_journal_ids, {})[0]
-                gift_journal_id = config_journal.journal_id.id
         pos_ids=self.pool.get("pos.order").search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','=',self.uid)])
         data={}
         if pos_ids:
