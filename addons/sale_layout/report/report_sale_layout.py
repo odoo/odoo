@@ -62,11 +62,11 @@ class sale_order_1(report_sxw.rml_parse):
             if entry.layout_type == 'article':
                 res['tax_id'] = ', '.join(map(lambda x: x.name, entry.tax_id)) or ''
                 res['name'] = entry.name
-                res['product_uom_qty'] = self.digits_fmt(entry, 'product_uos') % (entry.product_uos and entry.product_uos_qty or entry.product_uom_qty or 0.00)
+                res['product_uom_qty'] = entry.product_uos and entry.product_uos_qty or entry.product_uom_qty or 0.00
                 res['product_uom'] = entry.product_uos and entry.product_uos.name or entry.product_uom.name
-                res['price_unit'] = self.digits_fmt(entry, 'price_unit') % (entry.price_unit or 0.00)
-                res['discount'] = self.digits_fmt(entry, 'discount') % (entry.discount and entry.discount or 0.00)
-                res['price_subtotal'] = self.digits_fmt(entry, 'price_subtotal') % (entry.price_subtotal and entry.price_subtotal or 0.00)
+                res['price_unit'] = entry.price_unit or 0.00
+                res['discount'] = entry.discount and entry.discount or 0.00
+                res['price_subtotal'] = entry.price_subtotal and entry.price_subtotal or 0.00
                 sub_total[i] = entry.price_subtotal and entry.price_subtotal
                 i = i + 1
                 res['note'] = entry.notes or ''
@@ -95,7 +95,7 @@ class sale_order_1(report_sxw.rml_parse):
                     sum_flag[j+1] = sum_id +1
 
                     j = j + 1
-                    res['price_subtotal'] = self.digits_fmt(entry, 'price_subtotal') % (sum)
+                    res['price_subtotal'] = sum
                     res['currency'] = sale_order.pricelist_id.currency_id.name
                     res['quantity'] = ''
                     res['price_unit'] = ''
