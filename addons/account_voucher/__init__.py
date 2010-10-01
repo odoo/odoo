@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import voucher
+import account_voucher
 import report
 import wizard
 

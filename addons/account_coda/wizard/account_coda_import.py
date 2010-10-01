@@ -224,24 +224,24 @@ class account_coda_import(osv.osv_memory):
                                 'period_id':statement.get('period_id',False) or period,# statement.period_id.id
                                 }
                                 voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
-    
-                                result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'))
+                                context.update({'move_line_ids': rec_id})
+                                result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'), context=context)
                                 voucher_line_dict =  False
                                 if result['value']['line_ids']:
                                     for line_dict in result['value']['line_ids']:
                                         move_line = line_obj.browse(cr, uid, line_dict['move_line_id'], context)
                                         if line.move_id.id == move_line.move_id.id:
                                             voucher_line_dict = line_dict
-    
+
                                 if voucher_line_dict:
                                     voucher_line_dict.update({'voucher_id':voucher_id})
                                     voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
-    
+
     #                            reconcile_id = statement_reconcile_obj.create(cr, uid, {
     #                                'line_ids': [(6, 0, rec_id)]
     #                                }, context=context)
     #
-    
+
                                 mv = self.pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
                                 if mv.partner_id:
                                     line['partner_id'] = mv.partner_id.id

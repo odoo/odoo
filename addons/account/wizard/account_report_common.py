@@ -63,10 +63,10 @@ class account_common_report(osv.osv_memory):
         if filter == 'filter_period' and fiscalyear_id:
             start_period = end_period = False
             cr.execute('''
-                SELECT * FROM (SELECT p.id 
-                               FROM account_period p 
-                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id) 
-                               WHERE f.id = %s 
+                SELECT * FROM (SELECT p.id
+                               FROM account_period p
+                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
+                               WHERE f.id = %s
                                ORDER BY p.date_start ASC
                                LIMIT 1) AS period_start
                 UNION
@@ -112,29 +112,16 @@ class account_common_report(osv.osv_memory):
         result['fiscalyear'] = 'fiscalyear_id' in data['form'] and data['form']['fiscalyear_id'] or False
         result['journal_ids'] = 'journal_ids' in data['form'] and data['form']['journal_ids'] or False
         result['chart_account_id'] = 'chart_account_id' in data['form'] and data['form']['chart_account_id'] or False
-        result_initial_bal = result.copy()
         if data['form']['filter'] == 'filter_date':
             result['date_from'] = data['form']['date_from']
             result['date_to'] = data['form']['date_to']
-            result_initial_bal['date_from'] = '0001-01-01'
-            result_initial_bal['date_to'] = (datetime.datetime.strptime(data['form']['date_from'], "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
                 raise osv.except_osv(_('Error'),_('Select a starting and an ending period'))
-            company_id = period_obj.browse(cr, uid, data['form']['period_from'], context=context).company_id.id
             result['periods'] = period_obj.build_ctx_periods(cr, uid, data['form']['period_from'], data['form']['period_to'])
-            first_period = self.pool.get('account.period').search(cr, uid, [('company_id', '=', company_id)], order='date_start', limit=1)[0]
-            result_initial_bal['periods'] = period_obj.build_ctx_periods(cr, uid, first_period, data['form']['period_from'])
-        else:
-            if data['form']['fiscalyear_id']:
-                fiscal_date_start = fiscal_obj.browse(cr, uid, [data['form']['fiscalyear_id']], context=context)[0].date_start
-                result_initial_bal['empty_fy_allow'] = True #Improve me => there should be something generic in account.move.line -> query get
-                result_initial_bal['fiscalyear'] = fiscal_obj.search(cr, uid, [('date_stop', '<', fiscal_date_start), ('state', '=', 'draft')], context=context)
-                result_initial_bal['date_from'] = '0001-01-01'
-                result_initial_bal['date_to'] = (datetime.datetime.strptime(fiscal_date_start, "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
-        return result, result_initial_bal
+        return result
 
-    def _print_report(self, cr, uid, ids, data, query_line, context=None):
+    def _print_report(self, cr, uid, ids, data, context=None):
         raise (_('Error'), _('not implemented'))
 
     def check_report(self, cr, uid, ids, context=None):
@@ -145,12 +132,10 @@ class account_common_report(osv.osv_memory):
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
         data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id'])[0]
-        used_context, used_context_initial_bal = self._build_contexts(cr, uid, ids, data, context=context)
-        query_line = obj_move._query_get(cr, uid, obj='l', context=used_context)
+        used_context = self._build_contexts(cr, uid, ids, data, context=context)
         data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
-        data['form']['query_line'] = query_line
-        data['form']['initial_bal_query'] = obj_move._query_get(cr, uid, obj='l', context=used_context_initial_bal)
-        return self._print_report(cr, uid, ids, data, query_line, context=context)
+        data['form']['used_context'] = used_context
+        return self._print_report(cr, uid, ids, data, context=context)
 
 account_common_report()
 

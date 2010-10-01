@@ -24,7 +24,7 @@ from osv import fields, osv
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
-        'overdue_msg' : fields.text('Overdue Payments Message', translate=True),
+        'overdue_msg': fields.text('Overdue Payments Message', translate=True),
         'property_reserve_and_surplus_account': fields.property(
             'account.account',
             type='many2one',
@@ -41,6 +41,7 @@ class res_company(osv.osv):
 out after this mail was sent, please consider the present one as \
 void. Do not hesitate to contact our accounting department'
     }
+
 res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -38,17 +38,19 @@ class budget_report(report_sxw.rml_parse):
     def post_total(self, post_obj, date1, date2):
         def str2date(date_str):
             return datetime.date.fromtimestamp(time.mktime(time.strptime(date_str, '%Y-%m-%d')))
+
         def interval(d1str, d2str):
             return (str2date(d2str) - str2date(d1str) + datetime.timedelta(days=1)).days
+
         prev = reduce(lambda x,d: x + d.amount, post_obj.dotation_ids, 0.0)
         period_days = interval(date1, date2)
         for d in post_obj.dotation_ids:
             i = interval(d.period_id.date_start, d.period_id.date_stop)
         total_days = reduce(lambda x,d: x+interval(d.period_id.date_start, d.period_id.date_stop), post_obj.dotation_ids, 0)
         achievements = reduce(lambda x,l: x+l['achievements'], self.lines(post_obj, date1, date2), 0.0)
-        prev_1=1.00
-        if total_days<>0.00:
-            prev_1=prev * period_days / total_days
+        prev_1 = 1.00
+        if total_days <> 0.00:
+            prev_1 = prev * period_days / total_days
         return [{'prev': prev, 'prev_period': prev_1, 'achievements': achievements}]
 
     def budget_total(self, post_obj, date1, date2):
@@ -66,7 +68,7 @@ class budget_report(report_sxw.rml_parse):
             res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
         return res
 
-report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml',parser=budget_report, header="internal")
+report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml', parser=budget_report, header="internal")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

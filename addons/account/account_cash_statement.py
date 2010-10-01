@@ -247,7 +247,7 @@ class account_cash_statement(osv.osv):
         open_jrnl = self.search(cr, uid, sql)
         if open_jrnl:
             raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
-        
+
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id']).type == 'cash':
             open_close = self._get_cash_open_close_box_lines(cr, uid, context)
             vals.update({
@@ -370,16 +370,6 @@ class account_cash_statement(osv.osv):
         super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'closing_date':time.strftime("%Y-%m-%d %H:%M:%S")}, context=context)
 
-
-    def button_cancel(self, cr, uid, ids, context={}):
-        done = []
-        for st in self.browse(cr, uid, ids, context):
-            ids = []
-            for line in st.line_ids:
-                ids += [x.id for x in line.move_ids]
-            self.pool.get('account.move').unlink(cr, uid, ids, context)
-            done.append(st.id)
-        self.write(cr, uid, done, {'state':'draft'}, context=context)
-        return True
-
 account_cash_statement()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
