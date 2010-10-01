@@ -50,8 +50,8 @@ class survey_send_invitation(osv.osv_memory):
     _defaults = {
         'send_mail': lambda *a: 1,
         'send_mail_existing': lambda *a: 1,
-        'mail_subject': lambda *a: "New user account.",
-        'mail_subject_existing': lambda *a: "User account info.",
+        'mail_subject': lambda *a: "Invitation",
+        'mail_subject_existing': lambda *a: "Invitation",
         'mail_from': lambda *a: tools.config['email_from']
     }
 
