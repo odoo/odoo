@@ -42,7 +42,8 @@ class pos_make_payment(osv.osv_memory):
         active_id = context and context.get('active_id',False)
         if active_id:
             j_obj = self.pool.get('account.journal')
-            cr.execute("""select DISTINCT journal_id from pos_journal_users where user_id=%d order by journal_id"""%(uid))
+            cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users "
+                        "WHERE user_id=%d ORDER BY journal_id"% (uid,))
             j_ids = map(lambda x1: x1[0], cr.fetchall())
             journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)])
 
@@ -78,7 +79,7 @@ class pos_make_payment(osv.osv_memory):
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
-        res = super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
+        super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
         active_id = context and context.get('active_id', False) or False
         if active_id:
             order = self.pool.get('pos.order').browse(cr, uid, active_id)
