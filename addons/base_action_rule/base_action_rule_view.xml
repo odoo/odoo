@@ -65,12 +65,13 @@
                                 <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
                                     <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
                                 </group>
-	                            <separator colspan="4" string="Email Information"/>
+                                <separator colspan="4" string="Email Information"/>
                                 <field name="act_email_from" />
-	                            <field name="act_mail_to_user"/>
-	                            <field colspan="4" name="act_mail_to_email"/>
-	                            <field name="act_mail_to_watchers"/>
-	                            <field colspan="4" name="act_email_cc"/>
+                                <field name="act_email_to" />
+                                <field name="act_mail_to_user"/>
+                                <field colspan="4" name="act_mail_to_email"/>
+                                <field name="act_mail_to_watchers"/>
+                                <field colspan="4" name="act_email_cc"/>
                             <separator colspan="4" string="Email Body"/>
                             <field colspan="4" name="act_mail_body" height="250"
                             	nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />

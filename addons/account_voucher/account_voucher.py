@@ -334,7 +334,7 @@ class account_voucher(osv.osv):
 
         return default
 
-    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, context={}):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, context=None):
         """price
         Returns a dict that contains new values and context
 
@@ -346,6 +346,9 @@ class account_voucher(osv.osv):
         """
         if not journal_id:
             return {}
+
+        if context is None:
+            context = {}
 
         currency_pool = self.pool.get('res.currency')
         move_pool = self.pool.get('account.move')
@@ -565,6 +568,7 @@ class account_voucher(osv.osv):
         analytic_pool = self.pool.get('account.analytic.line')
         currency_pool = self.pool.get('res.currency')
         invoice_pool = self.pool.get('account.invoice')
+        bank_st_line_obj = self.pool.get('account.bank.statement.line')
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
@@ -584,6 +588,11 @@ class account_voucher(osv.osv):
                 'period_id': inv.period_id and inv.period_id.id or False
             }
             move_id = move_pool.create(cr, uid, move)
+            line_bank_ids = bank_st_line_obj.search(cr, uid, [('voucher_id', '=', inv.id)], context=context)
+            if line_bank_ids:
+                bank_st_line_obj.write(cr, uid, line_bank_ids, {
+            'move_ids': [(4, move_id, False)]
+            })
 
             #create the first line manually
             company_currency = inv.journal_id.company_id.currency_id.id
@@ -838,6 +847,17 @@ account_voucher_line()
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
 
+    def button_cancel(self, cr, uid, ids, context=None):
+        done = []
+        for st in self.browse(cr, uid, ids, context):
+            voucher_ids = []
+            for line in st.line_ids:
+                if line.voucher_id:
+                    voucher_ids.append(line.voucher_id.id)
+            self.pool.get('account.voucher').cancel_voucher(cr, uid, voucher_ids, context)
+            self.pool.get('account.voucher').unlink(cr, uid, voucher_ids, context)
+        return super(account_bank_statement, self).button_cancel(cr, uid, ids, context=context)
+
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, next_number, context=None):
         voucher_obj = self.pool.get('account.voucher')
         wf_service = netsvc.LocalService("workflow")
@@ -846,7 +866,7 @@ class account_bank_statement(osv.osv):
             voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
             wf_service.trg_validate(uid, 'account.voucher', st_line.voucher_id.id, 'proforma_voucher', cr)
             return self.pool.get('account.move.line').write(cr, uid, [x.id for x in st_line.voucher_id.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
-        return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line, company_currency_id, next_number, context=context)
+        return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line.id, company_currency_id, next_number, context=context)
 
 account_bank_statement()
 
@@ -883,7 +903,8 @@ class account_bank_statement_line(osv.osv):
         statement_line = self.browse(cr, uid, ids, context)
         unlink_ids = []
         for st_line in statement_line:
-            unlink_ids.append(st_line.voucher_id.id)
+            if st_line.voucher_id:
+                unlink_ids.append(st_line.voucher_id.id)
         self.pool.get('account.voucher').unlink(cr, uid, unlink_ids, context=context)
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 

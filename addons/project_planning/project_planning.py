@@ -21,7 +21,8 @@
 ##############################################################################
 
 import time
-import mx.DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv
 from tools.translate import _
@@ -139,7 +140,7 @@ class report_account_analytic_planning(osv.osv):
     }
     _defaults = {
         'date_from': time.strftime('%Y-%m-01'),
-        'date_to': (mx.DateTime.now()+mx.DateTime.RelativeDateTime(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
+        'date_to': (datetime.now()+relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
         'user_id': lambda self, cr, uid, c: uid,
         'state': 'draft',
         'business_days': 20,
