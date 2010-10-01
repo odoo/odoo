@@ -42,7 +42,7 @@ class pos_open_statement(osv.osv_memory):
         sequence_obj = self.pool.get('ir.sequence')
         journal_obj = self.pool.get('account.journal')
         cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users "
-                    "WHERE user_id=%s ORDER BY journal_id", (uid,))
+                    "WHERE user_id=%s ORDER BY journal_id"% (uid,))
         j_ids = map(lambda x1: x1[0], cr.fetchall())
         journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)])
 
@@ -50,32 +50,17 @@ class pos_open_statement(osv.osv_memory):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
             if len(ids):
                 raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s".\nPlease close its related Register.' %(journal.name)))
-
-            statement_ids = sorted(statement_obj.search(cr, uid, [('state', '=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)]))
-            if statement_ids:
-                res = []
-                statement_ids.reverse()
-                statement = statement_obj.browse(cr, uid, statement_ids[0])
-                for end_bal in statement.ending_details_ids:
-                    dct = {
-                            'pieces': end_bal.pieces,
-                            'number': end_bal.number,
-                    }
-                    res.append((0, 0, dct))
-                data['starting_details_ids'] = res
-            else:
-                data['starting_details_ids'] = statement_obj._get_cash_close_box_lines(cr, uid, [])
-
+            
             number = ''
             if journal.sequence_id:
                 number = sequence_obj.get_id(cr, uid, journal.sequence_id.id)
             else:
-                number = sequence_obj.get(cr, uid, 'account.bank.statement')
+                number = sequence_obj.get(cr, uid, 'account.cash.statement')
 
             data.update({'journal_id': journal.id,
                          'company_id': company_id,
                          'user_id': uid,
-                         'state': 'open',
+                         'state': 'draft',
                          'name': number })
             statement_id = statement_obj.create(cr, uid, data)
             statement_obj.button_open(cr, uid, [statement_id], context)
