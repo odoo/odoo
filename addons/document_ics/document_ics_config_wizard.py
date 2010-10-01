@@ -23,7 +23,6 @@ import time
 import tools
 from osv import fields, osv, orm
 import os
-import mx.DateTime
 import base64
 import pooler
 

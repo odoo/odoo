@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-01-05 05:59+0000\n"
-"PO-Revision-Date: 2010-09-28 19:24+0000\n"
+"PO-Revision-Date: 2010-09-29 14:26+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -61,7 +61,7 @@ msgstr "    7 дней    "
 #. module: crm
 #: help:crm.menu.config_wizard,helpdesk:0
 msgid "Manages an Helpdesk service."
-msgstr "Управление службой поддержки"
+msgstr "Управление службой техподдержки"
 
 #. module: crm
 #: view:crm.job:0
@@ -104,6 +104,8 @@ msgid ""
 "The partner category that will be added to partners that match the "
 "segmentation criterions after computation."
 msgstr ""
+"Категория партнера, которая будет добавлена партнерам, которые соответствуют "
+"критериям классификации после вычисления."
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_hr
@@ -346,7 +348,7 @@ msgstr "Даты"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Segmentation Test"
-msgstr ""
+msgstr "Проверка классификации"
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadpartner0
@@ -786,7 +788,7 @@ msgstr "Дата претензиии"
 #. module: crm
 #: view:crm.segmentation.line:0
 msgid "Partner Segmentation Lines"
-msgstr ""
+msgstr "Позиции классификации партнера"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_leads_all
@@ -802,7 +804,7 @@ msgstr "Форма кандидатов"
 #: view:crm.segmentation:0
 #: model:ir.model,name:crm.model_crm_segmentation
 msgid "Partner Segmentation"
-msgstr ""
+msgstr "Классификация партнера"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_job5
@@ -988,7 +990,7 @@ msgstr "Сделки"
 #. module: crm
 #: help:crm.segmentation,name:0
 msgid "The name of the segmentation."
-msgstr "Название деления"
+msgstr "Название классификации"
 
 #. module: crm
 #: field:crm.case.rule,trg_partner_categ_id:0
@@ -1192,7 +1194,7 @@ msgstr "Название категории"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
-msgstr "Сегментация партнеров"
+msgstr "Классификация партнеров"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1295,7 +1297,7 @@ msgstr "Кандидат отказался"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Compute Segmentation"
-msgstr ""
+msgstr "Вычислить классификацию"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1487,6 +1489,8 @@ msgid ""
 "Check if you want to use this tab as part of the segmentation rule. If not "
 "checked, the criteria beneath will be ignored"
 msgstr ""
+"Отметьте, если хотите использовать правило классификации. Если не отмечено, "
+"следующий ниже критерий будет проигнорирован."
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -2075,7 +2079,7 @@ msgstr "Приостановлено"
 #. module: crm
 #: view:crm.case:0
 msgid "Helpdesk Supports"
-msgstr ""
+msgstr "Техподдержка"
 
 #. module: crm
 #: model:crm.case.section,name:crm.section_support4
@@ -2197,7 +2201,7 @@ msgstr "Информация кандидата"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
 msgid "Segmentation line"
-msgstr ""
+msgstr "Позиция классификации"
 
 #. module: crm
 #: wizard_field:crm.job.reschedule_phone_call,init,deadline:0
@@ -2378,7 +2382,7 @@ msgstr "Сбросить в \"Неподтвержденный\""
 #. module: crm
 #: view:crm.case:0
 msgid "Helpdesk Support"
-msgstr ""
+msgstr "Техподдержка"
 
 #. module: crm
 #: field:crm.case,email_cc:0
@@ -3022,7 +3026,7 @@ msgstr ""
 #: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 msgid "Segmentation"
-msgstr "Сегментация"
+msgstr "Классификация"
 
 #. module: crm
 #: view:crm.fundraising:0
@@ -3404,6 +3408,10 @@ msgid ""
 "has decreased because he probably bought goods to another supplier. Use this "
 "functionality for recurring businesses."
 msgstr ""
+"Период - среднее число дней между двумя циклами продаж/покупок для этой "
+"классификации. Если партнер покупает редко, или совсем не покупает, то мы "
+"предполагаем, что его мнение о нас ухудшилось и он покупает в другом месте. "
+"Используйте эту функцию для повторяющихся сделок."
 
 #. module: crm
 #: selection:report.crm.case.section.categ.categ2,month:0
@@ -3458,7 +3466,7 @@ msgstr "Менеджер продаж"
 #. module: crm
 #: model:crm.case.section,name:crm.section_support_help
 msgid "HelpDesk"
-msgstr ""
+msgstr "Техподдержка"
 
 #. module: crm
 #: field:crm.case,ref2:0
@@ -3944,7 +3952,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_helpdesk
 msgid "Helpdesk Cases"
-msgstr ""
+msgstr "Вопросы техподдержки"
 
 #. module: crm
 #: model:ir.actions.wizard,name:crm.wizard_crm_cal_export

@@ -26,9 +26,6 @@ import pooler
 from tools.misc import currency
 from tools.translate import _
 
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
-
 
 class account_report(osv.osv):
     _name = "account.report.report"
