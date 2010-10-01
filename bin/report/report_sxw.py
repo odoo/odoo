@@ -39,6 +39,7 @@ import tools
 import warnings
 import zipfile
 import common
+from osv.fields import float as float_class, function as function_class
 
 DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -240,9 +241,32 @@ class rml_parse(object):
         self.default_lang[lang] = self.lang_dict.copy()
         return True
 
-    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False):
+    def digits_fmt(self, obj=None, f=None, dp=None):
+        digits = self.get_digits(obj, f, dp)
+        return "%%.%df" % (digits, )
+
+    def get_digits(self, obj=None, f=None, dp=None):
+        d = DEFAULT_DIGITS = 2
+        if dp:
+            decimal_precision_obj = self.pool.get('decimal.precision')
+            ids = decimal_precision_obj.search(self.cr, self.uid, [('name', '=', dp)])
+            if ids:
+                d = decimal_precision_obj.browse(self.cr, self.uid, ids)[0].digits
+        elif obj and f:
+            d = getattr(obj._columns[f], 'digits', lambda x: ((16,DEFAULT_DIGITS)))(self.cr)[1]
+        elif (hasattr(obj, '_field') and\
+                isinstance(obj._field, (float_class, function_class)) and\
+                obj._field.digits):
+                d = obj._field.digits[1] or DEFAULT_DIGITS
+        return d
+
+    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False):
+        if digits is None:
+            digits = self.get_digits(value)
+
         if isinstance(value, (str, unicode)) and not value:
             return ''
+
         if not self.lang_dict_called:
             self._get_lang_dict()
             self.lang_dict_called = True
@@ -250,6 +274,7 @@ class rml_parse(object):
         if date or date_time:
             if not str(value):
                 return ''
+
             date_format = self.lang_dict['date_format']
             parse_format = DT_FORMAT
             if date_time:
@@ -258,9 +283,11 @@ class rml_parse(object):
                 parse_format = DHM_FORMAT
             if not isinstance(value, time.struct_time):
                 return time.strftime(date_format, time.strptime(value, parse_format))
+
             else:
                 date = datetime(*value.timetuple()[:6])
             return date.strftime(date_format)
+
         return self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
     def repeatIn(self, lst, name,nodes_parent=False):
@@ -305,6 +332,8 @@ class rml_parse(object):
     def set_context(self, objects, data, ids, report_type = None):
         self.localcontext['data'] = data
         self.localcontext['objects'] = objects
+        self.localcontext['digits_fmt'] = self.digits_fmt
+        self.localcontext['get_digits'] = self.get_digits
         self.datas = data
         self.ids = ids
         self.objects = objects
