@@ -272,7 +272,6 @@
       <field name="arch" type="xml">
         <form string="Workflow Instances">
           <field name="wkf_id" readonly="1"/>
-          <field name="uid" readonly="1"/>
           <field name="res_id" readonly="1"/>
           <field name="res_type" readonly="1"/>
           <field name="state" readonly="1"/>
@@ -286,7 +285,6 @@
       <field name="arch" type="xml">
         <tree string="Workflow Instances">
           <field name="wkf_id"/>
-          <field name="uid"/>
           <field name="res_id"/>
           <field name="res_type"/>
           <field name="state"/>
@@ -301,8 +299,7 @@
         <search string="Workflow Instances">
           <filter icon="terp-camera_test" string="Active" domain="[('state','=','active')]" name="active"/>
           <separator orientation="vertical"/>
-          <field name="wkf_id"/>
-          <field name="uid"/>
+          <field name="wkf_id" widget="selection"/>
           <field name="res_id"/>
           <field name="res_type"/>
           <field name="state"/>
@@ -332,6 +329,7 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Workflow Workitems">
+          <field name="wkf_id" readonly="1"/>  
           <field name="act_id" readonly="1"/>
           <field name="subflow_id" readonly="1"/>
           <field name="inst_id" readonly="1"/>
@@ -345,6 +343,7 @@
       <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="Workflow Workitems">
+          <field name="wkf_id"/>  
           <field name="act_id"/>
           <field name="subflow_id"/>
           <field name="inst_id"/>
@@ -360,6 +359,7 @@
         <search string="Workflow Workitems">
           <filter icon="terp-camera_test" string="Active" name="active" domain="[('state','=','active')]"/>
           <separator orientation="vertical"/>
+          <field name="wkf_id" widget="selection"/>  
           <field name="act_id"/>
           <field name="subflow_id"/>
           <field name="inst_id"/>
