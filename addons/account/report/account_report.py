@@ -132,7 +132,7 @@ class report_aged_receivable(osv.osv):
 
             while (last_month_date > fy_start_date):
                 LIST_RANGES.append(today + " to " + last_month_date.strftime('%Y-%m-%d'))
-                today = (last_month_date- 1).strftime('%Y-%m-%d')
+                today = (last_month_date- relativedelta(days=1)).strftime('%Y-%m-%d')
                 last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
 
             LIST_RANGES.append(today +" to " + fy_start_date.strftime('%Y-%m-%d'))

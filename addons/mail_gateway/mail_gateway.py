@@ -327,7 +327,7 @@ class mailgate_tool(osv.osv_memory):
                     msg['to'] = email_error
                     tools.misc._email_send(smtp_from, self.to_email(email_error), msg, openobject_id=res.id)
 
-    def process_email(self, cr, uid, model, message, attach=True, context=None):
+    def process_email(self, cr, uid, model, message, custom_values=None, attach=True, context=None):
         """This function Processes email and create record for given OpenERP model
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -346,6 +346,9 @@ class mailgate_tool(osv.osv_memory):
         if not context:
             context = {}
 
+        if custom_values is None or not isinstance(custom_values, dict):
+            custom_values = {}
+
         model_pool = self.pool.get(model)
         res_id = False
 
@@ -354,6 +357,8 @@ class mailgate_tool(osv.osv_memory):
             att_ids = []
             if hasattr(model_pool, 'message_new'):
                 res_id = model_pool.message_new(cr, uid, msg, context)
+                if custom_values:
+                    model_pool.write(cr, uid, [res_id], custom_values, context=context)
             else:
                 data = {
                     'name': msg.get('subject'),
