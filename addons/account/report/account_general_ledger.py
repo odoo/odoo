@@ -38,9 +38,10 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
 
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
+        obj_move = self.pool.get('account.move.line')
         self.sortby = data['form'].get('sortby', 'sort_date')
-        self.query = data['form'].get('query_line', '')
-        self.init_query = data['form']['initial_bal_query']
+        self.query = obj_move._query_get(cr, uid, obj='l', context=data['form'].get('used_context',{}))
+        self.init_query = obj_move._query_get(cr, uid, obj='l', context=data['form'].get('used_context_initial_bal', {}))
         self.init_balance = data['form']['initial_balance']
         self.display_account = data['form']['display_account']
         self.target_move = data['form'].get('target_move', 'all')

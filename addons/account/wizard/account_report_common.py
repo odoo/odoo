@@ -148,8 +148,8 @@ class account_common_report(osv.osv_memory):
         used_context, used_context_initial_bal = self._build_contexts(cr, uid, ids, data, context=context)
         query_line = obj_move._query_get(cr, uid, obj='l', context=used_context)
         data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
-        data['form']['query_line'] = query_line
-        data['form']['initial_bal_query'] = obj_move._query_get(cr, uid, obj='l', context=used_context_initial_bal)
+        data['form']['used_context'] = used_context
+        data['form']['used_context_initial_bal'] = used_context_initial_bal
         return self._print_report(cr, uid, ids, data, query_line, context=context)
 
 account_common_report()
