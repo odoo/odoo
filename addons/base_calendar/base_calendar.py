@@ -978,7 +978,7 @@ class calendar_event(osv.osv):
         if not context:
             context = {}
         for event_id in ids:
-            cr.execute('select id from %s  where recurrent_uid=%s' , (self._table, event_id))
+            cr.execute("select id from %s where recurrent_uid=%%s" % (self._table), (event_id,))
             r_ids = map(lambda x: x[0], cr.fetchall())
             self.unlink(cr, uid, r_ids, context=context)
         return True
