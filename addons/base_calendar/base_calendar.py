@@ -724,7 +724,7 @@ true, it will allow you to hide the event alarm information without removing it.
             if alarm_ids:
                 alarm_obj.unlink(cr, uid, alarm_ids)
                 cr.execute('Update %s set base_calendar_alarm_id=NULL, alarm_id=NULL\
-                            where id=%%d' % model_obj._table,(datas.id,))
+                            where id=%%s' % model_obj._table,(datas.id,))
         return True
 
 res_alarm()
@@ -978,7 +978,7 @@ class calendar_event(osv.osv):
         if not context:
             context = {}
         for event_id in ids:
-            cr.execute('select id from %s  where recurrent_uid=%s' % (self._table, event_id))
+            cr.execute('select id from %s  where recurrent_uid=%s' , (self._table, event_id))
             r_ids = map(lambda x: x[0], cr.fetchall())
             self.unlink(cr, uid, r_ids, context=context)
         return True
