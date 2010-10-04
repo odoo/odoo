@@ -145,10 +145,8 @@ class users(osv.osv):
         return self.WELCOME_MAIL_BODY
 
     def get_current_company(self, cr, uid):
-        res=[]
         cr.execute('select company_id, res_company.name from res_users left join res_company on res_company.id = company_id where res_users.id=%s' %uid)
-        res = cr.fetchall()
-        return res
+        return cr.fetchall()
 
     def send_welcome_email(self, cr, uid, id, context=None):
         logger= netsvc.Logger()
@@ -233,7 +231,7 @@ class users(osv.osv):
                  " aren't configured, it won't be possible to email new "
                  "users."),
         'signature': fields.text('Signature', size=64),
-        'address_id': fields.many2one('res.partner.address', 'Company Address'),
+        'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action'),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
