@@ -296,7 +296,7 @@
                     <group col="6" colspan="4">
                         <field name="name" colspan="4" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="account_id" select="1" groups="base.group_extended"/>
+                        <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                         <field name="company_id"/>
                     </group>
                     <notebook colspan="4">
@@ -361,7 +361,7 @@
                     <field name="amount_type"/>
                     <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
                     <field name="account_id"/>
-                    <field name="analytic_account_id" groups="base.group_extended"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                 </tree>
             </field>
         </record>
@@ -389,7 +389,7 @@
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Accounting Informations"/>
                         <field name="account_id"/>
-                        <field name="analytic_account_id" groups="base.group_extended"/>
+                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                         <separator colspan="4" string="Company contribution"/>
                         <field name="company_contrib"/>
                     </group>

@@ -19,7 +19,7 @@
                     <separator colspan="4" string="Accounting"/>
                     <field name="payment_default_id"/>
                     <field domain="[('type','=','sale')]" name="pricelist_id" select="1"/>
-                    <field name="project_id" select="1"/>
+                    <field name="project_id" select="1" groups="analytic.group_analytic_accounting"/>
                 </form>
             </field>
         </record>
@@ -32,7 +32,7 @@
                     <field name="name"/>
                     <field name="warehouse_id"/>
                     <field name="pricelist_id"/>
-                    <field name="project_id"/>
+                    <field name="project_id" groups="analytic.group_analytic_accounting"/>
                 </tree>
             </field>
         </record>
@@ -115,7 +115,7 @@
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
-                                groups="base.group_extended" domain="[('parent_id','!=',False)]" />
+                                groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
                             <newline/>
                             <field colspan="4" mode="tree,form,graph" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sale Order Lines">
@@ -451,7 +451,7 @@ to your configuration: from the sales order, from the pickings, etc.
                         name="sale order"
                         help="Confirmed Sale Order Lines"
                         />
-                    <separator orientation="vertical"/>    
+                    <separator orientation="vertical"/>
                     <filter icon="terp-accessories-archiver" string="Shipped"
                         domain="[('state','=','done')]"
                         name="unshipped"
@@ -501,19 +501,19 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="filter" eval="True"/>
         </record>
 
-        <act_window 
-        context="{'search_default_partner_id': [active_id]}" 
-        id="act_res_partner_2_sale_order" 
-        name="Sales" 
-        res_model="sale.order" 
+        <act_window
+        context="{'search_default_partner_id': [active_id]}"
+        id="act_res_partner_2_sale_order"
+        name="Sales"
+        res_model="sale.order"
         src_model="res.partner"/>
 
-        <act_window 
-        context="{'search_default_product_id': [active_id]}" 
-        id="action_order_line_product_tree" 
-        name="Product sales" 
-        res_model="sale.order.line" 
-        src_model="product.product" 
+        <act_window
+        context="{'search_default_product_id': [active_id]}"
+        id="action_order_line_product_tree"
+        name="Product sales"
+        res_model="sale.order.line"
+        src_model="product.product"
         groups="base.group_extended"/>
 
         <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="5"/>
@@ -549,7 +549,7 @@ to your configuration: from the sales order, from the pickings, etc.
                   <field name="step"/>
                 </group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
-               
+
               </data>
             </field>
         </record>

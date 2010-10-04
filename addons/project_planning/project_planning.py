@@ -215,7 +215,7 @@ class report_account_analytic_planning_line(osv.osv):
         return result
 
     _columns = {
-        'account_id': fields.many2one('account.analytic.account', 'Analytic account', required=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'planning_id': fields.many2one('report_account_analytic.planning', 'Planning', required=True, ondelete='cascade'),
         'user_id': fields.many2one('res.users', 'User'),
         'amount': fields.float('Quantity', required=True),
@@ -577,7 +577,7 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
         'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
         'user_id': fields.many2one('res.users', 'User'),
         'manager_id': fields.many2one('res.users', 'Manager'),
-        'account_id': fields.many2one('account.analytic.account', 'Account', required=True),
+        'account_id': fields.many2one('account.analytic.account', 'Account'),
         'sum_amount': fields.float('Planned Days', required=True),
         'sum_amount_real': fields.function(_sum_amount_real, method=True, string='Timesheet'),
         'sum_amount_tasks': fields.function(_sum_amount_tasks, method=True, string='Tasks'),
