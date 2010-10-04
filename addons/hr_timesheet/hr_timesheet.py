@@ -57,7 +57,7 @@ class hr_analytic_timesheet(osv.osv):
         return super(hr_analytic_timesheet, self).unlink(cr, uid, ids, context=context)
 
 
-    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit, context=None):
+    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, company_id, unit, context=None):
         if context is None:
             context = {}
         res = {'value':{}}

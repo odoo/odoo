@@ -190,7 +190,6 @@ class project(osv.osv):
         'active': True,
         'priority': 1,
         'sequence': 10,
-        'warn_manager': True,
     }
 
     def _check_dates(self, cr, uid, ids):

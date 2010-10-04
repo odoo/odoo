@@ -98,7 +98,7 @@ class project_work(osv.osv):
 
         # Compute based on pricetype
         amount_unit = obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
-            prod_id, amount, unit, context=context)
+            prod_id, amount, False, unit, context=context)
         if amount_unit and 'amount' in amount_unit.get('value',{}):
             updv = { 'amount': amount_unit['value']['amount'] }
             obj_timesheet.write(cr, uid, [timeline_id], updv, context=context)
@@ -146,7 +146,7 @@ class project_work(osv.osv):
                 # Compute based on pricetype
                 amount_unit = obj.on_change_unit_amount(cr, uid, line_id.id,
                     prod_id=prod_id,
-                    unit_amount=vals_line['unit_amount'], unit=False, context=context)
+                    quantity=vals_line['unit_amount'], unit=False, context=context)
 
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     vals_line['amount'] = amount_unit['value']['amount']

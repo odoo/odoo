@@ -12,13 +12,13 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Timesheet Lines">
-                    <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
                     <field name="date" on_change="on_change_date(date)"/>
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id"/>
+                    <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
                     <field name="name"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" required="1" domain="[('type','=','service')]"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" sum="Total time"/>
-                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                    <field domain="[('type','=','normal')]" name="account_id"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id)" required="1" domain="[('type','=','service')]"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id)" sum="Total time"/>
+                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id)"/>
                     <field name="amount" sum="Total cost"/>
                     <field name="general_account_id"/>
                     <field name="journal_id"/>
@@ -40,9 +40,9 @@
                         <page string="Information">
                             <group colspan="2" col="2">
                                 <separator string="Product" colspan="2"/>
-                                <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" required="1" domain="[('type','=','service')]"/>
-                                <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                                <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id)" required="1" domain="[('type','=','service')]"/>
+                                <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id)"/>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id)"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Accounting" colspan="2"/>
