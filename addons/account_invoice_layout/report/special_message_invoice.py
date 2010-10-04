@@ -55,7 +55,7 @@ class account_invoice_with_message(report_sxw.rml_parse):
             list_in_seq[info] = info.sequence
         i = 1
         j = 0
-        final=sorted(list_in_seq.items(), lambda x, y: cmp(x[1], y[1]))
+        final = sorted(list_in_seq.items(), lambda x, y: cmp(x[1], y[1]))
         invoice_list = [x[0] for x in final]
         sum_flag = {}
         sum_flag[j] = -1
@@ -77,10 +77,10 @@ class account_invoice_with_message(report_sxw.rml_parse):
                     tax_names = ','.join([tax_names_dict[x] for x in range(0, len(tax_names_dict))])
                     res['tax_types'] = tax_names
                 res['name'] = entry.name
-                res['quantity'] = "%.2f" % (entry.quantity)
-                res['price_unit'] = "%.2f" % (entry.price_unit)
-                res['discount'] = "%.2f" % (entry.discount)
-                res['price_subtotal'] = "%.2f" % (entry.price_subtotal)
+                res['quantity'] = self.formatLang(entry.quantity, digits=self.get_digits(dp='Account'))
+                res['price_unit'] = self.formatLang(entry.price_unit, digits=self.get_digits(dp='Account'))
+                res['discount'] = self.formatLang(entry.discount, digits=self.get_digits(dp='Account'))
+                res['price_subtotal'] = self.formatLang(entry.price_subtotal, digits=self.get_digits(dp='Account'))
                 sub_total[i] = entry.price_subtotal
                 i = i + 1
                 res['note'] = entry.note
@@ -93,7 +93,6 @@ class account_invoice_with_message(report_sxw.rml_parse):
                     uos_name = self.pool.get('product.uom').read(self.cr, self.uid, entry.uos_id.id, ['name'], self.context.copy())
                     res['uos'] = uos_name['name']
             else:
-
                 res['quantity'] = ''
                 res['price_unit'] = ''
                 res['discount'] = ''
