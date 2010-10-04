@@ -50,12 +50,12 @@ class ir_cron(osv.osv, netsvc.Agent):
         'interval_number': fields.integer('Interval Number',help="Repeat every x."),
         'interval_type': fields.selection( [('minutes', 'Minutes'),
             ('hours', 'Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
-        'numbercall': fields.integer('Number of Calls', help='Number of time the function is called,\na negative number indicates that the function will always be called'),
-        'doall' : fields.boolean('Repeat Missed',help="Select this if you want to run the scheduler for the missed occurencs."),
-        'nextcall' : fields.datetime('Next Execution Date', required=True,help="Date when this schedular will call next time"),
-        'model': fields.char('Object', size=64,help="Name of object whose function will be called when this scheduler will run. e.g. 'res.partener'"),
-        'function': fields.char('Function', size=64,help="Name of the function to be called by this scheduler. "),
-        'args': fields.text('Arguments',help="Arguments to be passed to the function. e.g. (uid,)"),
+        'numbercall': fields.integer('Number of Calls', help='Number of time the function is called,\na negative number indicates no limit'),
+        'doall' : fields.boolean('Repeat Missed', help="Enable this if you want to execute missed occurences as soon as the server restarts."),
+        'nextcall' : fields.datetime('Next Execution Date', required=True, help="Next planned execution date for this scheduler"),
+        'model': fields.char('Object', size=64, help="Name of object whose function will be called when this scheduler will run. e.g. 'res.partener'"),
+        'function': fields.char('Function', size=64, help="Name of the method to be called on the object when this scheduler is executed."),
+        'args': fields.text('Arguments', help="Arguments to be passed to the method. e.g. (uid,)"),
         'priority': fields.integer('Priority', help='0=Very Urgent\n10=Not urgent')
     }
 
