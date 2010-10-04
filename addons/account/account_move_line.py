@@ -65,13 +65,13 @@ class account_move_line(osv.osv):
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
 
-        if context.get('period_from', False) and context.get('periof_from', False) and not context.get('periods', False):
+        if context.get('period_from', False) and context.get('period_to', False) and not context.get('periods', False):
             if initial_bal:
-                period_company_id = period_obj.browse(cr, uid, data['form']['period_from'], context=context).company_id.id
-                first_period = self.pool.get('account.period').search(cr, uid, [('company_id', '=', period_company_id)], order='date_start', limit=1)[0]
-                context['periods'] = period_obj.build_ctx_periods(cr, uid, first_period, data['form']['period_from'])
+                period_company_id = fiscalperiod_obj.browse(cr, uid, context['period_from'], context=context).company_id.id
+                first_period = fiscalperiod_obj.search(cr, uid, [('company_id', '=', period_company_id)], order='date_start', limit=1)[0]
+                context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, first_period, context['period_from'])
             else:
-                context['periods'] = period_obj.build_ctx_periods(cr, uid, data['form']['period_from'], data['form']['period_to'])
+                context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, context['period_from'], context['period_to'])
 
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
