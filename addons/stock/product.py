@@ -233,9 +233,11 @@ class product_product(osv.osv):
         to_date = context.get('to_date',False)
         date_str = False
         date_values = False
+        where = [tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states)]
         if from_date and to_date:
             date_str = "date>=%s and date<=%s"
-            date_values = [from_date, to_date]
+            where.append(tuple([from_date]))
+            where.append(tuple([to_date]))
         elif from_date:
             date_str = "date>=%s"
             date_values = [from_date] 
@@ -243,7 +245,7 @@ class product_product(osv.osv):
             date_str = "date<=%s"
             date_values = [to_date]
 
-        where = [tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states)]
+       
         if date_values:
             where.append(tuple(date_values))
         if 'in' in what:
