@@ -19,26 +19,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import tarfile
-import re
-import urllib
-import os
 import imp
 import logging
-import tools
-from osv import fields, osv, orm
-import zipfile
-import release
+import os
+import re
+import urllib
 import zipimport
 
-import wizard
 import addons
-import pooler
 import netsvc
+import pooler
+import release
+import tools
 
 from tools.parse_version import parse_version
 from tools.translate import _
+
+from osv import fields, osv, orm
 
 class module_category(osv.osv):
     _name = "ir.module.category"
@@ -80,8 +77,9 @@ class module(osv.osv):
             info = addons.load_information_from_description_file(name)
             if 'version' in info:
                 info['version'] = release.major_version + '.' + info['version']
-        except:
-            pass
+        except Exception:
+            self.__logger.debug('Error when trying to fetch informations for '
+                                'module %s', name, exc_info=True)
         return info
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
@@ -116,17 +114,21 @@ class module(osv.osv):
                         v = view_obj.browse(cr,uid,data_id.res_id)
                         aa = v.inherit_id and '* INHERIT ' or ''
                         res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
-                    except:
-                        pass
+                    except Exception:
+                        self.__logger.debug(
+                            'Unknown error while browsing ir.ui.view[%s]',
+                            data_id.res_id, exc_info=True)
                 elif key=='ir.actions.report.xml':
                     res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
                 elif key=='ir.ui.menu':
                     try:
                         m = menu_obj.browse(cr,uid,data_id.res_id)
                         res[mnames[data_id.module]]['menus_by_module'] += m.complete_name + '\n'
-                    except:
-                        pass
-            except KeyError, e:
+                    except Exception:
+                        self.__logger.debug(
+                            'Unknown error while browsing ir.ui.menu[%s]',
+                            data_id.res_id, exc_info=True)
+            except KeyError:
                 pass
         return res
 
@@ -393,7 +395,9 @@ class module(osv.osv):
                 fp = file(fname, 'wb')
                 fp.write(zipfile)
                 fp.close()
-            except Exception, e:
+            except Exception:
+                self.__logger.exception('Error when trying to create module '
+                                        'file %s', fname)
                 raise orm.except_orm(_('Error'), _('Can not create the module file:\n %s') % (fname,))
             terp = self.get_module_info(mod.name)
             self.write(cr, uid, mod.id, self.get_values_from_terp(terp))

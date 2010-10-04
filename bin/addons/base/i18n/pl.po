@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-09-08 21:50+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2010-09-29 08:34+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-09 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -68,7 +68,7 @@ msgstr "Aby zobaczyć oficjalne tłumaczenia, zobacz ten link: "
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Hungarian / Magyar"
-msgstr ""
+msgstr "Węgierski"
 
 #. module: base
 #: field:ir.actions.server,wkf_model_id:0
@@ -149,7 +149,7 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CANCEL"
-msgstr ""
+msgstr "Anuluj"
 
 #. module: base
 #: field:ir.report.custom,sortby:0
@@ -316,7 +316,7 @@ msgstr "Moduły niezainstalowanie"
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "txt"
-msgstr ""
+msgstr "txt"
 
 #. module: base
 #: wizard_view:server.action.create,init:0
@@ -332,7 +332,7 @@ msgstr "Konfiguruj"
 #. module: base
 #: model:res.country,name:base.tv
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #. module: base
 #: selection:ir.model,state:0
@@ -349,7 +349,7 @@ msgstr "Format daty"
 #: field:res.bank,email:0
 #: field:res.partner.address,email:0
 msgid "E-Mail"
-msgstr ""
+msgstr "E-mail"
 
 #. module: base
 #: model:res.country,name:base.an
@@ -438,7 +438,7 @@ msgstr ""
 #: selection:workflow.activity,join_mode:0
 #: selection:workflow.activity,split_mode:0
 msgid "Xor"
-msgstr ""
+msgstr "XOR"
 
 #. module: base
 #: view:res.partner:0
@@ -2256,7 +2256,7 @@ msgstr "GPL-2 lub wersja późniejsza"
 #. module: base
 #: selection:res.partner.event,type:0
 msgid "Prospect Contact"
-msgstr ""
+msgstr "Potencjalny Kontakt"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_wizard
@@ -8054,7 +8054,7 @@ msgstr "Kod BIC/Swift"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Prospect"
-msgstr ""
+msgstr "Potencjalny Klient"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -8094,73 +8094,74 @@ msgstr ""
 #: sql_constraint:res.user:0
 msgid "You cannot have two users with the same login !"
 msgstr "Nie może być dwóch użytkowników o tym samym loginie !"
- 
+
 #. module: base
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
 msgid "Shortcut for this menu already exists!"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:ir.model.data:0
-msgid "You cannot have multiple records with the same id for the same module !"
+msgid ""
+"You cannot have multiple records with the same id for the same module !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:maintenance.contract:0
 msgid "Your maintenance contract is already subscribed in the system !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:ir.module.module:0
 #: sql_constraint:ir.module.web:0
 msgid "The name of the module must be unique !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:res.partner.function:0
 msgid "The Code of the Partner Function must be unique !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:res.partner:0
 msgid "The name of the Partner must be unique !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The code of the language must be unique !"
 msgstr ""
- 
+
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
 msgstr ""
- 
+
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
@@ -8170,13 +8171,20 @@ msgstr ""
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
-msgid "The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set"
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still "
+"reference it\n"
+"- creation/update: a mandatory field is not correctly set"
 msgstr ""
 
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
-msgid "\n\n[object with reference: %s - %s]"
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
 msgstr ""
 
 #. module: base
