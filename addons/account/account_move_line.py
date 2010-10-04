@@ -292,15 +292,27 @@ class account_move_line(osv.osv):
         ml = self.browse(cr, uid, id, context)
         return map(lambda x: x.id, ml.move_id.line_id)
 
-    # TODO: this is false, it does not uses draft and closed periods
-    def _balance(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        res={}
-        # TODO group the foreach in sql
-        for id in ids:
-            cr.execute('SELECT date,account_id FROM account_move_line WHERE id=%s', (id,))
-            dt, acc = cr.fetchone()
-            cr.execute('SELECT SUM(debit-credit) FROM account_move_line WHERE account_id=%s AND (date<%s OR (date=%s AND id<=%s))', (acc,dt,dt,id))
-            res[id] = cr.fetchone()[0]
+    def _balance(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+
+        c = context.copy()
+        c['initital_bal'] = True
+
+        sql = [
+            """select l2.id, sum(l1.debit-l1.credit) from account_move_line l1, account_move_line l2""",
+            """where l2.account_id=l1.account_id""",
+            """and""",
+            """l1.id<=l2.id""",
+            """and""",
+            """l2.id in %s""",
+            """and""",
+            self._query_get(cr, uid, obj='l1', context=c),
+            """ group by l2.id""",
+        ]
+
+        cr.execute('\n'.join(sql), [tuple(ids)])
+        res = dict(cr.fetchall())
         return res
 
     def _invoice(self, cursor, user, ids, name, arg, context=None):

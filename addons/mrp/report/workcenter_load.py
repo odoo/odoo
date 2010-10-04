@@ -22,9 +22,8 @@
 from report.render import render
 from report.interface import report_int
 from pychart import *
-from mx.DateTime import *
 import time
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from report.misc import choice_colors
@@ -55,8 +54,8 @@ class report_custom(report_int):
             stop = start
         if time_unit == 'month':
             dates = {}
-            a = Date(*map(int, start.split("-"))).year*12+Date(*map(int, start.split("-"))).month
-            z = Date(*map(int,  stop.split("-"))).year*12+Date(*map(int,  stop.split("-"))).month+1
+            a = int(start.split("-")[0])*12 + int(start.split("-")[1])
+            z = int(stop.split("-")[0])*12 + int(stop.split("-")[1]) + 1
             for i in range(a,z):
                 year = i/12
                 month = i%12
@@ -66,27 +65,31 @@ class report_custom(report_int):
                 months = {1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"}
                 dates[i] = {
                     'name' :months[month],
-                    'start':(datetime.date(year, month, 2) + relativedelta(day=1)).strftime('%Y-%m-%d'),
-                    'stop' :(datetime.date(year, month, 2) + relativedelta(day=-1)).strftime('%Y-%m-%d'),
+                    'start':(datetime(year, month, 2) + relativedelta(day=1)).strftime('%Y-%m-%d'),
+                    'stop' :(datetime(year, month, 2) + relativedelta(day=31)).strftime('%Y-%m-%d'),
                 }
             return dates
         elif time_unit == 'week':
             dates = {}
-            a = Date(*map(int, start.split("-"))).iso_week[0]*52+Date(*map(int, start.split("-"))).iso_week[1]
-            z = Date(*map(int,  stop.split("-"))).iso_week[0]*52+Date(*map(int,  stop.split("-"))).iso_week[1]
+            start_week = date(int(start.split("-")[0]),int(start.split("-")[1]),int(start.split("-")[2])).isocalendar()
+            end_week = date(int(stop.split("-")[0]),int(stop.split("-")[1]),int(stop.split("-")[2])).isocalendar()
+            a = int(start.split("-")[0])*52 + start_week[1]
+            z = int(stop.split("-")[0])*52 + end_week[1]
             for i in range(a,z+1):
                 year = i/52
                 week = i%52
+                d = date(year, 1, 1)
+                
                 dates[i] = {
                     'name' :"Week #%d" % week,
-                    'start':ISO.WeekTime(year, week, 1).strftime('%Y-%m-%d'),
-                    'stop' :ISO.WeekTime(year, week, 7).strftime('%Y-%m-%d'),
+                    'start':(d + timedelta(days=-d.weekday(), weeks=week)).strftime('%Y-%m-%d'),
+                    'stop' :(d + timedelta(days=6-d.weekday(), weeks=week)).strftime('%Y-%m-%d'),
                 }
             return dates
         else: # time_unit = day
             dates = {}
-            a = Date(*map(int, start.split("-")))
-            z = Date(*map(int, stop.split("-")))
+            a = datetime(int(start.split("-")[0]),int(start.split("-")[1]),int(start.split("-")[2]))
+            z = datetime(int(stop.split("-")[0]),int(stop.split("-")[1]),int(stop.split("-")[2]))
             i = a
             while i <= z:
                 dates[map(int,i.strftime('%Y%m%d').split())[0]] = {

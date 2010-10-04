@@ -34,6 +34,7 @@
         "mail_gateway_view.xml",
         "res_partner_view.xml",
         'security/ir.model.access.csv'
+
     ],
     'demo_xml': [],
     'installable': True,
