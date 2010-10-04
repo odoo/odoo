@@ -179,6 +179,50 @@ class mailgate_message(osv.osv):
     '''
     Mailgateway Message
     '''
+    def open_document(self, cr, uid, ids, context):
+        """ To Open Document
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID of messages
+        @param context: A standard dictionary
+        """
+        action_data = False
+        if ids:
+            message_id = ids[0]
+            mailgate_data = self.browse(cr, uid, message_id)
+            model = mailgate_data.model
+            res_id = mailgate_data.res_id
+
+            action_pool = self.pool.get('ir.actions.act_window')
+            action_ids = action_pool.search(cr, uid, [('res_model', '=', model)])
+            if action_ids:
+                action_data = action_pool.read(cr, uid, action_ids[0], context=context)
+                action_data.update({
+                    'res_id': res_id,
+                    'nodestroy': True
+                    })
+        return action_data
+    
+    def open_attachment(self, cr, uid, ids, context):
+        """ To Open attachments
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID of messages
+        @param context: A standard dictionary
+        """
+        action_data = False
+        action_pool = self.pool.get('ir.actions.act_window')
+        action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
+        if action_ids:
+            action_data = action_pool.read(cr, uid, action_ids[0], context=context)
+            action_data.update({
+                'domain': [('res_id','in',ids),('res_model','=',self._name)],
+                'nodestroy': True
+                })
+        return action_data
+
     def truncate_data(self, cr, uid, data, context=None):
         data_list = data and data.split('\n') or []
         if len(data_list) > 3:
@@ -547,3 +591,5 @@ class mailgate_tool(osv.osv_memory):
         return res
 
 mailgate_tool()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

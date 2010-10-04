@@ -53,12 +53,13 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         })
 
     def set_context(self, objects, data, ids, report_type=None):
+        obj_move = self.pool.get('account.move.line')
         new_ids = ids
         self.query_get_clause = ''
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
             self.query_get_clause = 'AND '
-            self.query_get_clause += data['form']['query_line'] or ''
+            self.query_get_clause += obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
             objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
         if new_ids:
             self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))

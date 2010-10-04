@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
 
 from osv import fields, osv
@@ -30,11 +29,11 @@ class account_budget_crossvered_report(osv.osv_memory):
     _columns = {
         'date_from': fields.date('Start of period', required=True),
         'date_to': fields.date('End of period', required=True),
-        }
+    }
     _defaults= {
         'date_from': time.strftime('%Y-01-01'),
         'date_to': time.strftime('%Y-%m-%d'),
-        }
+    }
 
     def check_report(self, cr, uid, ids, context=None):
         datas = {}
@@ -45,13 +44,13 @@ class account_budget_crossvered_report(osv.osv_memory):
              'ids': context.get('active_ids',[]),
              'model': 'crossovered.budget',
              'form': data
-                 }
+        }
         datas['form']['report']='analytic-full'
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'crossovered.budget.report',
             'datas': datas,
-            }
+        }
 
 account_budget_crossvered_report()
 

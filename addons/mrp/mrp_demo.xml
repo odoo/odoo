@@ -232,14 +232,6 @@
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
         </record>
-        <record id="mrp_bom_8" model="mrp.bom">
-            <field name="name">HDD Seagate</field>
-            <field name="sequence">26</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
-            <field model="product.product" name="product_id" ref="product.product_product_hdd1"/>
-        </record>
         <record id="mrp_bom_9" model="mrp.bom">
             <field name="name">Assembly Basic PC</field>
             <field name="sequence">29</field>
@@ -563,6 +555,14 @@
         <!--
     Resource: mrp.bom new EVV
     -->
+    <record id="mrp_bom_defaultbomforshelfofcm0" model="mrp.bom">
+        <field name="name">Default BOM for Shelf of 100cm</field>
+        <field name="code">SHE100</field>
+            <field name="sequence">129</field>
+        <field name="product_id" ref="product.product_product_shelfofcm0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">1.0</field>
+    </record>
 
     <record id="mrp_bom_assemblysection0" model="mrp.bom">
         <field name="name">Assembly Section</field>
@@ -589,15 +589,6 @@
         <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">12.0</field>
         <field model="mrp.bom" name="bom_id" search="[('name', '=', u'Default BOM for Shelf of 100cm')]"/>
-    </record>
-
-    <record id="mrp_bom_defaultbomforshelfofcm0" model="mrp.bom">
-        <field name="name">Default BOM for Shelf of 100cm</field>
-        <field name="code">SHE100</field>
-            <field name="sequence">129</field>
-        <field name="product_id" ref="product.product_product_shelfofcm0"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
     </record>
 
     <record id="mrp_bom_rearpanelarm0" model="mrp.bom">
@@ -645,15 +636,6 @@
         <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
         <field name="type">phantom</field>
-    </record>
-
-    <record id="mrp_bom_rearpanelarm1" model="mrp.bom">
-           <field name="sequence">141</field>
-       <field name="product_id" ref="product.product_product_rearpanelarm0"/>
-       <field name="product_uom" ref="product.product_uom_unit"/>
-       <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
-           <field name="product_qty">1.0</field>
-       <field name="name">Rear panel SHE100</field>
     </record>
 
     <record id="mrp_bom_assemblysection2" model="mrp.bom">

@@ -89,7 +89,7 @@
                         <field name="user_id" string="Responsible"/>
                         <field name="date"/>
                         <field name="categ_id" select="1" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
-                        <field name="type_id" string="Payment Mode" select="1" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
+                        <field name="type_id" string="Payment Mode" select="1" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Funds">
@@ -274,7 +274,7 @@
                             </field>
                             <field name="section_id" select="1" widget="selection" string="Sales Team">
                                 <filter icon="terp-personal+"
-                                    domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                                    domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                     help="My section" />
                             </field>
                         </group>

@@ -34,11 +34,11 @@ class calendar_collection(osv.osv):
     def _get_root_calendar_directory(self, cr, uid, context=None):
         objid = self.pool.get('ir.model.data')
         try:
-            mid = objid._get_id(cr, uid, 'document', 'dir_calendars')            
+            mid = objid._get_id(cr, uid, 'document', 'dir_calendars')
             if not mid:
                 return False
-            root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']            
-            root_cal_dir = self.browse(cr, uid, root_id, context=context) 
+            root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']
+            root_cal_dir = self.browse(cr,uid, root_id, context=context) 
             return root_cal_dir.name
         except Exception, e:
             import netsvc
@@ -67,7 +67,7 @@ class calendar_collection(osv.osv):
             ], limit=1, context=context)
 
         root_cal_dir = self._get_root_calendar_directory(cr, uid, context=context)
-        if not calendar_ids:            
+        if not calendar_ids:
             return root_cal_dir
         calendar_id = calendar_ids[0]
         calendar = calendar_obj.browse(cr, uid, calendar_id,

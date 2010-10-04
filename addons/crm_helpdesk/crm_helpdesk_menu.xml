@@ -11,7 +11,7 @@
         <field name="res_model">crm.helpdesk</field>
         <field name="view_mode">tree,calendar,form</field>
         <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
-        <field name="context">{"search_default_user_id":uid}</field>
+        <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
         <field name="search_view_id" ref="view_crm_case_helpdesk_filter"/>
         <field name="help">Alike records and processing of claims, Helpdesk and Support is a good tool to trace your interventions. This menu is more adapted to an oral communication, which is not necessarily related to a claim. Select a customer, add notes and categorize your interventions with a channel and a priority level.</field>
     </record>
