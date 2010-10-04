@@ -30,7 +30,7 @@
 -
   !record {model: account.tax.code, id: account_tax_code_0}:
     name : Tax Code Test
-    sign : 1.00
+    sign : 10.00
 -
  Print Tax Code entries report
 - 
@@ -40,13 +40,14 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-tax-code-entries.'+format), 'wb+').write(data)
 
+
 -
   Print Vat Declaration Report
 -
    !python {model: account.tax.code}: |
     import netsvc, tools, os
     data_dict = {'model': 'ir.ui.menu', 'form': {'based_on': 'invoices','company_id':ref('base.main_company'),'periods':[]}}
-    (data, format) = netsvc.LocalService('report.account.vat.declaration').create(cr, uid, [ref("account_tax_code_0")], data_dict, {})
+    (data, format) = netsvc.LocalService('report.account.vat.declaration').create(cr, uid, [ref("account_move_0")], data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-vat-declaration.'+format), 'wb+').write(data)
 
