@@ -123,7 +123,7 @@ class pos_return(osv.osv_memory):
                    <button icon='gtk-cancel' special="cancel"
                                string="Cancel" />
                                    <button icon='gtk-ok' name= "create_returns"
-                       string="Return with Echange" type="object"/>
+                       string="Return with Exchange" type="object"/>
                                    <button icon='gtk-ok' name="create_returns2"
                         string="Refund Without Exchange" type="object"/>
                 </form>"""
