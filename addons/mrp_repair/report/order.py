@@ -33,9 +33,9 @@ class order(report_sxw.rml_parse):
     def total(self, repair):
         total = 0.0
         for operation in repair.operations:
-           total+=operation.price_subtotal
+           total += operation.price_subtotal
         for fee in repair.fees_lines:
-           total+=fee.price_subtotal
+           total += fee.price_subtotal
         total = total + repair.amount_tax
         return total
 
