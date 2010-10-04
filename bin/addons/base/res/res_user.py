@@ -327,8 +327,9 @@ class users(osv.osv):
         return ids and ids[0] or False
 
     def _get_group(self,cr, uid, context=None):
-        ids = self.pool.get('res.groups').search(cr, uid, [('name','=','Employee')], context=context)
-        return ids or False
+        dataobj = self.pool.get('ir.model.data')
+        data_id = dataobj._get_id(cr, 1, 'base', 'group_user')
+        return data_id and [data_id] or False
 
     _defaults = {
         'password' : lambda *a : '',
