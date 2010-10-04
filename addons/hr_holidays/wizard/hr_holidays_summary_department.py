@@ -43,8 +43,6 @@ class hr_holidays_summary_dept(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
-        print context
-        print data
         if not data['depts']:
             raise osv.except_osv(_('Error'), _('You have to select at least 1 Department. And try again'))
         datas = {
@@ -52,7 +50,6 @@ class hr_holidays_summary_dept(osv.osv_memory):
              'model': 'ir.ui.menu',
              'form': data
             }
-        print datas
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'holidays.summary',
