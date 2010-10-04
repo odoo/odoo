@@ -20,8 +20,6 @@
 ##############################################################################
 
 import pooler
-import os
-import tools
 from osv import osv, fields
 
 class base_module_upgrade(osv.osv_memory):
@@ -98,7 +96,7 @@ class base_module_upgrade(osv.osv_memory):
             raise osv.except_osv('Unmet dependency !', 'Following modules are uninstalled or unknown. \n\n'+'\n'.join(unmet_packages))
         mod_obj.download(cr, uid, ids, context=context)
         cr.commit()
-        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        _, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
         id2 = data_obj._get_id(cr, uid, 'base', 'view_base_module_upgrade_install')
         if id2:
