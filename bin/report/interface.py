@@ -219,25 +219,5 @@ class report_rml(report_int):
         obj.render()
         return obj.get()
 
-from report_sxw import report_sxw
-
-def register_all(db):
-    opj = os.path.join
-    cr = db.cursor()
-    cr.execute("SELECT * FROM ir_act_report_xml WHERE auto=%s ORDER BY id", (True,))
-    result = cr.dictfetchall()
-    cr.close()
-    svcs = netsvc.Service._services
-    for r in result:
-        if svcs.has_key('report.'+r['report_name']):
-            continue
-        if r['report_rml'] or r['report_rml_content_data']:
-            report_sxw('report.'+r['report_name'], r['model'],
-                    opj('addons',r['report_rml'] or '/'), header=r['header'])
-        if r['report_xsl']:
-            report_rml('report.'+r['report_name'], r['model'],
-                    opj('addons',r['report_xml']),
-                    r['report_xsl'] and opj('addons',r['report_xsl']))
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
