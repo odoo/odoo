@@ -487,7 +487,6 @@ class task(osv.osv):
         return True
 
     _constraints = [
-        (_check_dates, 'Error! Task start-date must be lower then task end-date.', ['date_start', 'date_end']),
         (_check_recursion, _('Error ! You cannot create recursive tasks.'), ['parent_ids'])
     ]
     #
