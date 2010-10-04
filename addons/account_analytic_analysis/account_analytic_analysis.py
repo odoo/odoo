@@ -66,6 +66,8 @@ class account_analytic_account(osv.osv):
                                 and invoice_id is not null \
                             GROUP BY account_analytic_line.account_id;", (parent_ids,))
                     for account_id, sum in cr.fetchall():
+                        if account_id not in res:
+                            res[account_id] = {}
                         res[account_id][f] = sum
                 for account in accounts:
                     for child in account.child_ids:
@@ -102,6 +104,8 @@ class account_analytic_account(osv.osv):
                                 and account_analytic_journal.type in ('purchase','general') \
                             GROUP BY account_analytic_account.id;""", (parent_ids,))
                     for account_id, sum in cr.fetchall():
+                        if account_id not in res:
+                            res[account_id] = {}
                         res[account_id][f] = round(sum, dp)
 
                 for account in accounts:
@@ -142,6 +146,8 @@ class account_analytic_account(osv.osv):
                                 and invoice_id is null \
                             GROUP BY account_analytic_line.account_id" ,(parent_ids,))
                     for account_id, lwd in cr.fetchall():
+                        if account_id not in res:
+                            res[account_id] = {}
                         res[account_id][f] = lwd
                 for account in accounts:
                     for child in account.child_ids:
@@ -161,6 +167,8 @@ class account_analytic_account(osv.osv):
                                 AND to_invoice IS NOT NULL \
                             GROUP BY account_analytic_line.account_id;",(parent_ids,))
                     for account_id, sua in cr.fetchall():
+                        if account_id not in res:
+                            res[account_id] = {}
                         res[account_id][f] = round(sua, dp)
                 for account in accounts:
                     for child in account.child_ids:
@@ -181,10 +189,14 @@ class account_analytic_account(osv.osv):
                             GROUP BY account_analytic_line.account_id",(parent_ids,))
                     ff =  cr.fetchall()
                     for account_id, hq in ff:
+                        if account_id not in res:
+                            res[account_id] = {}
                         res[account_id][f] = round(hq, dp)
                 for account in accounts:
                     for child in account.child_ids:
                         if account.id != child.id:
+                            if account.id not in res:
+                                res[account.id] = {f: 0.0}
                             res[account.id][f] += res.get(child.id, {}).get(f, 0.0)
                 for id in ids:
                     res[id][f] = round(res[id][f], dp)
@@ -223,6 +235,8 @@ class account_analytic_account(osv.osv):
                     res2.setdefault(account.id, 0.0)
                     for child in account.child_ids:
                         if account.id != child.id:
+                            if account.id not in res:
+                                res[account.id] = {f: 0.0}
                             res[account.id][f] += res.get(child.id, {}).get(f, 0.0)
                             res[account.id][f] += res2.get(child.id, 0.0)
 
