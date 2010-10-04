@@ -180,7 +180,7 @@
                     <field name="id"/>
                     <field name="create_date"/>
                     <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" groups="base.group_extended"/>
                     <field name="project_id" />
                     <field name="priority" string="Priority"/>
                     <field name="type_id" widget="selection" readonly="1"/>
@@ -216,7 +216,7 @@
                         <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="partner_id" />
+                        <field name="partner_id" groups="base.group_extended"/>
                         <field name="user_id">
                             <filter domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
                         </field>
@@ -282,7 +282,7 @@
                 <tree string="Feature Tracker Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                     <field name="id"/>
                     <field name="name" string="Feature description"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" groups="base.group_extended"/>
                     <field name="priority" string="Priority"/>
                                 <field name="type_id" widget="selection" readonly="1"/>
                                 <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
