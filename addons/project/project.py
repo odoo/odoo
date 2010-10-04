@@ -686,7 +686,7 @@ class task(osv.osv):
     def prev_type(self, cr, uid, ids, *args):
         for task in self.browse(cr, uid, ids):
             typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id.type_ids)
+            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
             if types:
                 if typeid and typeid in types:
                     index = types.index(typeid)
