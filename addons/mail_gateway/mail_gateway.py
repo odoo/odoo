@@ -199,11 +199,11 @@ class mailgate_message(osv.osv):
             if action_ids:
                 action_data = action_pool.read(cr, uid, action_ids[0], context=context)
                 action_data.update({
-                    'res_id': res_id,
+                    'domain' : "[('id','=',%d)]"%(res_id),
                     'nodestroy': True
                     })
         return action_data
-    
+
     def open_attachment(self, cr, uid, ids, context):
         """ To Open attachments
         @param self: The object pointer.
