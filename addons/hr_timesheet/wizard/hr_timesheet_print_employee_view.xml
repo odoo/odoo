@@ -8,12 +8,11 @@
             <field name="model">hr.analytical.timesheet.employee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-				<form string="Employee Timesheet">
+				<form string="Monthly Employee Timesheet">
 					<group colspan="4">
-					<separator string="This wizard will print monthly timesheet of employee" colspan="4"/>
 						<field name="month"/>
 						<field name="year"/>
-						<field name="user_id" colspan="3"/>
+						<field name="employee_id" colspan="3"/>
 					</group>
 					<separator colspan="4"/>
                     <group colspan="4" col="6">
