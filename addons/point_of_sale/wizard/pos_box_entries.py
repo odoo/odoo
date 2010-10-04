@@ -36,7 +36,7 @@ def get_journal(self, cr, uid, context):
 
     obj = self.pool.get('account.journal')
     statement_obj = self.pool.get('account.bank.statement')
-    cr.execute("""select DISTINCT journal_id from pos_journal_users where user_id=%d order by journal_id"""%(uid))
+    cr.execute("SELECT DISTINCT journal_id from pos_journal_users where user_id=%s order by journal_id", (uid,))
     j_ids = map(lambda x1: x1[0], cr.fetchall())
     ids = obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)])
     obj_ids= statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', ids)])
@@ -129,7 +129,7 @@ class pos_box_entries(osv.osv_memory):
             if address_u:
                 partner_id = address_u.partner_id and address_u.partner_id.id or None
                 args['partner_id'] = partner_id
-            statement_line_id = bank_statement.create(cr, uid, args)
+            bank_statement.create(cr, uid, args)
 
             return {}
 

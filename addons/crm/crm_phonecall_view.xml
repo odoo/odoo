@@ -71,7 +71,7 @@
                         attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                     <label colspan="6"  string=""/>
                     <button string="Schedule Other Call"
-                     icon="gtk-redo"
+                     icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
                     type="action"  />
 
@@ -150,7 +150,7 @@
                         attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                     <label colspan="6"  string=""/>
                     <button string="Schedule Other Call"
-                     icon="gtk-redo"
+                     icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
                     type="action"  />
 
@@ -250,8 +250,8 @@
                    name="current"
                    domain="[('state','in', ('draft','open','pending'))]"/>
                <filter icon="terp-go-today" string="Today"
-                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),\
-                    ('date','&gt;=',datetime.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
+                    ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"
                    name="today"
                    help="Todays's Phonecalls"
                />
@@ -272,7 +272,7 @@
                <field name="section_id"
                    select="1" widget="selection" string="Sales Team">
                    <filter icon="terp-personal+"
-                       domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                       domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
                </field>
                <newline/>

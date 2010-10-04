@@ -38,9 +38,12 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
 
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
+        obj_move = self.pool.get('account.move.line')
         self.sortby = data['form'].get('sortby', 'sort_date')
-        self.query = data['form'].get('query_line', '')
-        self.init_query = data['form']['initial_bal_query']
+        self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context',{}))
+        ctx2 = data['form'].get('used_context',{}).copy()
+        ctx2.update({'initial_bal': True})
+        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
         self.init_balance = data['form']['initial_balance']
         self.display_account = data['form']['display_account']
         self.target_move = data['form'].get('target_move', 'all')
@@ -97,7 +100,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
                             FROM account_move_line l \
                             WHERE l.account_id = %s AND %s '%(account.id, self.init_query))
             sum_currency += self.cr.fetchone()[0] or 0.0
-        return str(sum_currency)
+        return sum_currency
 
     def get_children_accounts(self, account):
         res = []

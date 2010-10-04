@@ -101,7 +101,7 @@
                             domain="[('state','=','pending')]"/>
 
                            <separator orientation="vertical" />
-                           <field name="section_id" string="Sales Team"
+                              <field name="section_id" string="Sales Team"
                                default="context.get('section_id', False)"
                                context="{'invisible_section': False}">
 
@@ -118,9 +118,9 @@
                         help="My company"/>
                         </field>
 
-                          <field name="user_id" string="Salesman" select="1">
-                            <filter icon="terp-personal+" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
-                           </field>
+                      	<field name="user_id" string="Salesman" select="1">
+	            			<filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+               			</field>
                    </group>
                    <newline/>
                    <group  expand="0" string="Extended Filters..." groups="base.group_extended">
@@ -141,7 +141,7 @@
                    </group>
                    <newline/>
                    <group  expand="1" string="Group By...">
-                        <filter string="User" name="User" icon="terp-personal"
+                        <filter string="Salesman" name="Salesman" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"

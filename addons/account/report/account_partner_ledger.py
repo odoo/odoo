@@ -56,8 +56,11 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         })
 
     def set_context(self, objects, data, ids, report_type=None):
-        self.query = data['form'].get('query_line', '')
-        self.init_query = data['form'].get('initial_bal_query', '')
+        obj_move = self.pool.get('account.move.line')
+        self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
+        ctx2 = data['form'].get('used_context',{}).copy()
+        ctx2.update({'initial_bal': True})
+        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
         self.reconcil = data['form'].get('reconcil', True)
         self.initial_balance = data['form'].get('initial_balance', True)
         self.result_selection = data['form'].get('result_selection', 'customer')

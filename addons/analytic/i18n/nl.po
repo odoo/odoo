@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-06-18 10:59+0000\n"
-"PO-Revision-Date: 2010-09-24 14:42+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-10-01 11:59+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-10-02 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr ""
+msgstr "Subrekeningen"
 
 #. module: analytic
 #: help:account.analytic.line,amount_currency:0
@@ -28,27 +28,31 @@ msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
 msgstr ""
+"Het bedrag in de valuta van de gekoppelde rekening als deze afwijkt van die "
+"van het bedrijf"
 
 #. module: analytic
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account Name"
-msgstr ""
+msgstr "Naam rekening"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
+msgstr "Het aantal te rekenen eenheden"
 
 #. module: analytic
 #: help:account.analytic.line,currency_id:0
 msgid "The related account currency if not equal to the company one."
 msgstr ""
+"De valuta van de gekoppelde rekening wijkt af van die van het bedrijf."
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -56,31 +60,33 @@ msgid ""
 "Module for defining analytic accounting object.\n"
 "    "
 msgstr ""
+"Module voor het definiëren van kostenplaatsen.\n"
+"    "
 
 #. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
-msgstr ""
+msgstr "Rekeningbeheerder"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Concept"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Gesloten"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
 msgid "Debit"
-msgstr ""
+msgstr "Debit"
 
 #. module: analytic
 #: help:account.analytic.account,state:0
@@ -100,32 +106,46 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
+"* Nadat de rekening is gemaakt, wordt de status 'Concept'.                   "
+"               \n"
+"* Als er een gekoppelde relatie is, kan de status naar 'Open'.               "
+"                   \n"
+"* Als er openstaand saldo is, kan de status naar 'Wacht'.                    "
+"               \n"
+"* En tenslotte als alle transacties klaar zijn, dan gaat de status naar "
+"'Gesloten'.                                   \n"
+"* Het project kan zowel in 'Sjabloon' als in 'Lopend' zijn.\n"
+" Als het in 'Sjabloon' status is, dan kunnen we projecten maken op basis van "
+"het sjabloon project. Als het status 'Lopend' heeft, dan is het een gewoon "
+"project.                                 \n"
+" Als het moet worden nagekeken is de status 'Wacht'.\n"
+" Als het project klaar is dan is de status 'Klaar'."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
-msgstr ""
+msgstr "Rekeningsoort"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Template"
-msgstr ""
+msgstr "Sjabloon"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Wacht"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Kostenplaatsboeking"
 
 #. module: analytic
 #: field:account.analytic.account,description:0
 #: field:account.analytic.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Omschrijving"
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
@@ -133,133 +153,134 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price."
 msgstr ""
+"Berekend door het aantal en de product kostprijs te vermenigvuldigen."
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
 #: field:account.analytic.line,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Bedrijf"
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Maximum Quantity"
-msgstr ""
+msgstr "Maximum aantal"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Gebruiker"
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
 msgid "Parent Analytic Account"
-msgstr ""
+msgstr "Bovenliggende kostenplaats"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 #: field:account.analytic.line,currency_id:0
 msgid "Account currency"
-msgstr ""
+msgstr "Kostenplaats valuta"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "View"
-msgstr ""
+msgstr "Weergave"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of quantity of hours."
-msgstr ""
+msgstr "Stelt de bovengrens in van het aantal uren."
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
 msgid "Credit"
-msgstr ""
+msgstr "Credit"
 
 #. module: analytic
 #: field:account.analytic.line,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Bedrag"
 
 #. module: analytic
 #: field:account.analytic.account,contact_id:0
 msgid "Contact"
-msgstr ""
+msgstr "Contactpersoon"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Geannuleerd"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "Saldo"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Begindatum"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
 #: field:account.analytic.line,unit_amount:0
 msgid "Quantity"
-msgstr ""
+msgstr "Aantal"
 
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Date End"
-msgstr ""
+msgstr "Einddatum"
 
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Account Code"
-msgstr ""
+msgstr "Rekeningcode"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Normal"
-msgstr ""
+msgstr "Normaal"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Account Name"
-msgstr ""
+msgstr "Volledige naam kostenplaats"
 
 #. module: analytic
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 #: model:ir.module.module,shortdesc:analytic.module_meta_information
 msgid "Analytic Account"
-msgstr ""
+msgstr "Kostenplaats"
 
 #. module: analytic
 #: field:account.analytic.account,company_currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: analytic
 #: field:account.analytic.line,amount_currency:0
 msgid "Amount currency"
-msgstr ""
+msgstr "Bedrag in valuta"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "Gekoppelde relatie"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Open"
-msgstr ""
+msgstr "Open"
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Kostenplaatsboekingen"

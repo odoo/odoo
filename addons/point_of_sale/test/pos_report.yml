@@ -68,13 +68,22 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale- pos details report'+format), 'wb+').write(data)
 -
+  I create a cash journal.
+-
+  !record {model: account.journal, id: account_journal_cash0}:
+    name: 'Cash Journal'
+    code: 'CSJ'
+    type: 'cash'
+    view_id: account.account_journal_bank_view
+    sequence_id: account.sequence_journal
+-
   I create a record for Bank Statement.
 -
   !record {model: account.bank.statement, id: account_bank_statement_st0}:
     name: St.05/19
     balance_end_real: 0.0
     date: '2010-05-19'
-    journal_id: account.bank_journal
+    journal_id: account_journal_cash0
     period_id: account.period_5
     state: 'draft'
 -

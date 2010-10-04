@@ -30,7 +30,6 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context):
         super(aged_trial_report, self).__init__(cr, uid, name, context=context)
-        self.query_line = ''
         self.total_account = []
         self.localcontext.update({
             'time': time,
@@ -47,7 +46,8 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
         })
 
     def set_context(self, objects, data, ids, report_type=None):
-        self.query = data['form'].get('query_line', '')
+        obj_move = self.pool.get('account.move.line')
+        self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
         self.direction_selection = data['form'].get('direction_selection', 'past')
         self.target_move = data['form'].get('target_move', 'all')
         self.date_from = data['form'].get('date_from', time.strftime('%Y-%m-%d'))
