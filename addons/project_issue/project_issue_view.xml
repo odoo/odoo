@@ -68,7 +68,7 @@
                     <field name="user_id"/>
                     <field name="assigned_to" />
                         <group colspan="2" col="4">
-                        <field name="stage_id" on_change="onchange_stage_id(stage_id)"  domain="[('object_id.model', '=', 'project.issue')]" widget="selection"/>
+                        <field name="stage_id" on_change="onchange_stage_id(stage_id)"  domain="[('object_id.model', '=', 'project.issue')]" widget="selection" readonly="1"/>
                         <button icon="gtk-go-back" string="" name="stage_previous" type="object"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
