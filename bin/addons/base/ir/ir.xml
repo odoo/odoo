@@ -353,8 +353,8 @@
                 <form string="Filters">
                     <group colspan="4" col="6" >
                         <field name="name"/>
-                        <field name="user_id"/>
                         <field name="model_id"/>
+                        <field name="user_id"/>
                     </group>
                     <group col="4" expand="1">
                         <separator string="Domain" colspan="2" />
@@ -425,14 +425,13 @@
             <field name="model">ir.actions.report.xml</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Report xml">
+                <form string="Report">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="model" select="1"/>
-                        <field name="type" select="1"/>
+                        <field name="usage"/>
 
                         <field name="report_name" select="1"/>
-                        <field name="usage"/>
                         <field name="report_type"/>
                     </group>
 
@@ -503,7 +502,7 @@
         </record>
 
         <record id="ir_action_report_xml" model="ir.actions.act_window">
-            <field name="name">XML Reports</field>
+            <field name="name">Reports</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.report.xml</field>
             <field name="view_type">form</field>
@@ -831,7 +830,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Views">
-                   <separator string="General" colspan="4"/>
                     <group colspan="4" col="6">
                         <field name="name" select="1" colspan="6"/>
                         <field name="type" select="1"/>
@@ -1337,7 +1335,7 @@
                        <field name="src" nolabel="1" height="400"/>
                     </group>
                     <group colspan="2" col="2">
-                       <separator string="Tranlsation" colspan="2"/>
+                       <separator string="Translation" colspan="2"/>
                        <field name="value" nolabel="1" height="400"/>
                     </group>
 
@@ -1858,6 +1856,7 @@
                 <tree editable="bottom" string="Config Wizard Steps">
                     <field name="sequence"/>
                     <field name="action_id"/>
+                    <field name="restart"/>
                     <field name="state" readonly="1"/>
                     <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
                     <button name="action_open" states="cancel,skip,done"
