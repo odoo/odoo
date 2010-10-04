@@ -620,7 +620,10 @@ class task(osv.osv):
     def do_open(self, cr, uid, ids, *args):
         tasks= self.browse(cr,uid,ids)
         for t in tasks:
-            self.write(cr, uid, [t.id], {'state': 'open',  'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),})
+            data = {'state': 'open'}
+            if not t.date_start:
+                data['date_start'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            self.write(cr, uid, [t.id], data)
             message = _('Task ') + " '" + t.name + "' "+ _("is Open.")
             self.log(cr, uid, t.id, message)
         return True
