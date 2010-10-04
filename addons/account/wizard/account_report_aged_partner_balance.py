@@ -55,12 +55,12 @@ class account_aged_trial_balance(osv.osv_memory):
         res['arch'] = etree.tostring(doc)
         return res
 
-    def _print_report(self, cr, uid, ids, data, query_line, context=None):
+    def _print_report(self, cr, uid, ids, data, context=None):
         res = {}
         if context is None:
             context = {}
 
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection'])[0])
 
         period_length = data['form']['period_length']
@@ -70,7 +70,7 @@ class account_aged_trial_balance(osv.osv_memory):
             raise osv.except_osv(_('UserError'), _('Enter a Start date !'))
 
         start = datetime.strptime(data['form']['date_from'], "%Y-%m-%d")
-        
+
         if data['form']['direction_selection'] == 'past':
             for i in range(5)[::-1]:
                 stop = start - relativedelta(days=period_length)

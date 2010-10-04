@@ -73,7 +73,7 @@ class account_move_journal(osv.osv_memory):
 
         period_pool = self.pool.get('account.period')
         journal_pool = self.pool.get('account.journal')
-        
+
         journal_id = self._get_journal(cr, uid, context)
         period_id = self._get_period(cr, uid, context)
 
@@ -97,15 +97,16 @@ class account_move_journal(osv.osv_memory):
             </group>
             <group colspan="4" col="4">
                 <label string ="" colspan="2"/>
-                <button icon="terp-gtk-go-back-rtl" string="Ok" name="action_open_window" type="object"/>
+                <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                <button icon="terp-gtk-go-back-rtl" string="Open" name="action_open_window" default_focus="1" type="object"/>
             </group>
         </form>""" % (str(journal), str(period))
-        
+
         res.update({
             'arch':view
         })
         return res
-        
+
     def action_open_window(self, cr, uid, ids, context=None):
         """
         This function Open action move line window on given period and  Journal/Payment Mode
