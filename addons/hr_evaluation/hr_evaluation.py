@@ -33,7 +33,7 @@ class hr_evaluation_plan(osv.osv):
         'name': fields.char("Evaluation Plan", size=64, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Evaluation Phases'),
-        'month_first': fields.integer('First Evaluation After'),
+        'month_first': fields.integer('Next Evaluation After'),
         'month_next': fields.integer('After the Date of Start'),
         'active': fields.boolean('Active')
     }

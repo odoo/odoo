@@ -29,8 +29,9 @@ class hr_holidays_summary_dept(osv.osv_memory):
     _description = 'HR Holidays Summary Report By Department'
     _columns = {
         'date_from': fields.date('From', required=True),
+        'date_to': fields.date('To', required=True),
         'depts': fields.many2many('hr.department', 'summary_dept_rel', 'sum_id', 'dept_id', 'Department(s)'),
-        'holiday_type': fields.selection([('Validated','Validated'),('Confirmed','Confirmed'),('both','Both Validated and Confirmed')], 'Select Holiday Type', required=True)
+        'holiday_type': fields.selection([('Validated','Validated'),('Confirmed','Confirmed'),('both','Both Validated and Confirmed')], 'Select Holyday State', required=True)
     }
 
     _defaults = {
@@ -42,6 +43,8 @@ class hr_holidays_summary_dept(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
+        print context
+        print data
         if not data['depts']:
             raise osv.except_osv(_('Error'), _('You have to select at least 1 Department. And try again'))
         datas = {
@@ -49,6 +52,7 @@ class hr_holidays_summary_dept(osv.osv_memory):
              'model': 'ir.ui.menu',
              'form': data
             }
+        print datas
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'holidays.summary',
