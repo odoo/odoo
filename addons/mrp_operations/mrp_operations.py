@@ -21,10 +21,9 @@
 
 from osv import fields
 from osv import osv
-import datetime
 import netsvc
 import time
-from mx import DateTime
+from datetime import datetime
 from tools.translate import _
 
 #----------------------------------------------------------
@@ -175,8 +174,8 @@ class mrp_production_workcenter_line(osv.osv):
         date_now = time.strftime('%Y-%m-%d %H:%M:%S')
         obj_line = self.browse(cr, uid, ids[0])
         
-        date_start = datetime.datetime.strptime(obj_line.date_start,'%Y-%m-%d %H:%M:%S')
-        date_finished = datetime.datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
+        date_start = datetime.strptime(obj_line.date_start,'%Y-%m-%d %H:%M:%S')
+        date_finished = datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
         delay += (date_finished-date_start).days * 24
         delay += (date_finished-date_start).seconds / float(60*60)
         
@@ -258,9 +257,9 @@ class mrp_production(osv.osv):
         """ Computes planned and finished dates for work order.
         @return: Calculated date
         """
-        dt_end = DateTime.now()
+        dt_end = datetime.now()
         for po in self.browse(cr, uid, ids, context=context):
-            dt_end = DateTime.strptime(po.date_planned, '%Y-%m-%d %H:%M:%S')
+            dt_end = datetime.strptime(po.date_planned, '%Y-%m-%d %H:%M:%S')
             if not po.date_start:
                 self.write(cr, uid, [po.id], {
                     'date_start': po.date_planned
@@ -286,7 +285,7 @@ class mrp_production(osv.osv):
                     if i:
                         dt_end = max(dt_end, i[-1][1])
                 else:
-                    dt_end = DateTime.strptime(wc.date_planned_end, '%Y-%m-%d %H:%M:%S')
+                    dt_end = datetime.strptime(wc.date_planned_end, '%Y-%m-%d %H:%M:%S')
                 old = wc.sequence or 0
             super(mrp_production, self).write(cr, uid, [po.id], {
                 'date_finnished': dt_end
@@ -301,7 +300,7 @@ class mrp_production(osv.osv):
             if po.allow_reorder:
                 continue
             todo = po.move_lines
-            dt = DateTime.strptime(po.date_start,'%Y-%m-%d %H:%M:%S')
+            dt = datetime.strptime(po.date_start,'%Y-%m-%d %H:%M:%S')
             while todo:
                 l = todo.pop(0)
                 if l.state in ('done','cancel','draft'):
@@ -425,8 +424,8 @@ class mrp_operations_operation(osv.osv):
                 if not i: continue
                 if code_lst[i-1] not in ('resume','start'):
                    continue
-                a = datetime.datetime.strptime(time_lst[i-1],'%Y-%m-%d %H:%M:%S')
-                b = datetime.datetime.strptime(time_lst[i],'%Y-%m-%d %H:%M:%S')
+                a = datetime.strptime(time_lst[i-1],'%Y-%m-%d %H:%M:%S')
+                b = datetime.strptime(time_lst[i],'%Y-%m-%d %H:%M:%S')
                 diff += (b-a).days * 24
                 diff += (b-a).seconds / float(60*60)
         return diff
@@ -512,7 +511,7 @@ class mrp_operations_operation(osv.osv):
             if code.start_stop=='done':
                 self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,wc_op_id)
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_done', cr)
-                self.pool.get('mrp.production').write(cr,uid,vals['production_id'],{'date_finnished':DateTime.now().strftime('%Y-%m-%d %H:%M:%S')})
+                self.pool.get('mrp.production').write(cr,uid,vals['production_id'],{'date_finnished':datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
 
             if code.start_stop=='pause':
                 self.pool.get('mrp.production.workcenter.line').action_pause(cr,uid,wc_op_id)
@@ -550,7 +549,7 @@ class mrp_operations_operation(osv.osv):
         'order_date': fields.function(_get_order_date,method=True,string='Order Date',type='date',store={'mrp.production':(_order_date_search_production,['date_planned'], 10)}),
         }
     _defaults={
-        'date_start': lambda *a:DateTime.now().strftime('%Y-%m-%d %H:%M:%S')
+        'date_start': lambda *a:datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
 mrp_operations_operation()

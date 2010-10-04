@@ -24,9 +24,12 @@
         "version":"0.1",
         "author":"Tiny",
         "category":"Generic Modules/Base",
+        "description": """Synchronization with all objects.""",
         "depends":["base"],
         "demo_xml":[],
-        "update_xml":["base_synchro_wizard.xml","base_synchro_view.xml"],
+        "update_xml":[ "wizard/base_synchro_view.xml",
+                      "base_synchro_view.xml",
+                       "security/ir.model.access.csv",],
         "active":False,
         "installable":True,
 }
