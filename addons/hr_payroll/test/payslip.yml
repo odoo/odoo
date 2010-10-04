@@ -3,12 +3,18 @@
 -
   I Create a bank record
 -
+  !record {model: res.bank, id: res_bank_0}:
+    name: Argenta
+-
+  I Create a bank record for a partner
+-
   !record {model: res.partner.bank, id: res_partner_bank_0}:
     acc_number: '987654321'
     partner_id: base.res_partner_desertic_hispafuentes
     sequence: 0.0
     name: Fortis
     state: bank
+    bank: res_bank_0
 -
   I create a new employee “Richard”
 -
