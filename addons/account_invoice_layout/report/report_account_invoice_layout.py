@@ -68,10 +68,10 @@ class account_invoice_1(report_sxw.rml_parse):
                     tax_names = ','.join([tax_names_dict[x] for x in range(0, len(tax_names_dict))])
                     res['tax_types'] = tax_names
                 res['name'] = entry.name
-                res['quantity'] = "%.2f" % (entry.quantity)
-                res['price_unit'] = "%.2f" % (entry.price_unit)
-                res['discount'] = "%.2f" % (entry.discount)
-                res['price_subtotal'] = "%.2f" % (entry.price_subtotal)
+                res['quantity'] = self.formatLang(entry.quantity, digits=self.get_digits(dp='Account'))
+                res['price_unit'] = self.formatLang(entry.price_unit, digits=self.get_digits(dp='Account'))
+                res['discount'] = self.formatLang(entry.discount, digits=self.get_digits(dp='Account'))
+                res['price_subtotal'] = self.formatLang(entry.price_subtotal, digits=self.get_digits(dp='Account'))
                 sub_total[i] = entry.price_subtotal
                 i = i + 1
                 res['note'] = entry.note
