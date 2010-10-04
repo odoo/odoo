@@ -105,13 +105,13 @@ class report_printscreen_list(report_int):
                 dom = datas.get('_domain',[])
             get_groupby_data(self.groupby, dom)
         else:
-             rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
-             ids2 = map(itemgetter('id'), rows) # getting the ids from read result
-             if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
-                 rows_new = []
-                 for id in datas['ids']:
-                     rows_new += [elem for elem in rows if elem['id'] == id]
-                 rows = rows_new
+            rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
+            ids2 = map(itemgetter('id'), rows) # getting the ids from read result
+            if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
+                rows_new = []
+                for id in datas['ids']:
+                    rows_new += [elem for elem in rows if elem['id'] == id]
+                rows = rows_new
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
         return (self.obj.get(), 'pdf')
 
@@ -232,7 +232,7 @@ class report_printscreen_list(report_int):
                 if line[f] != None:
                     col.text = tools.ustr(line[f] or '')
                     if float_flag:
-                       col.set('tree','float')
+                        col.set('tree','float')
                     if line.get('__no_leaf') and temp[count] == 1 and f != 'id' and not line['__context']['group_by']:
                         tsum[count] = float(tsum[count]) + float(line[f])
                     if not line.get('__group') and f != 'id' and temp[count] == 1:
@@ -240,19 +240,18 @@ class report_printscreen_list(report_int):
                 else:
                     col.text = '/'
 
-
-
         node_line = etree.SubElement(lines, 'row')
         for f in range(0, len(fields_order)):
             col = etree.SubElement(node_line, 'col', para='group', tree='no')
-            col.set('tree','float')
+            col.set('tree', 'float')
             if tsum[f] != None:
-               if tsum[f] >= 0.01 :
-                   prec = '%.2f'
-                   total = prec%(tsum[f])
-                   txt = str(total or '')
-               else:
-                   txt = str(tsum[f] or '')
+                if tsum[f] != 0.0:
+                    digits = fields[fields_order[f]].get('digits', (16, 2))
+                    prec = '%%.%sf' % (digits[1], )
+                    total = prec % (tsum[f], )
+                    txt = str(total or '')
+                else:
+                    txt = str(tsum[f] or '')
             else:
                 txt = '/'
             if f == 0:
