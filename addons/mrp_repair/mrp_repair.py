@@ -687,7 +687,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         if type == 'add':
             stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
             to_invoice = False
-            if guarantee_limit and date.today() > datetime.strptime(guarantee_limit, '%Y-%m-%d'):
+            if guarantee_limit and datetime.today() > datetime.strptime(guarantee_limit, '%Y-%m-%d'):
                 to_invoice=True
             return {'value': {
                         'to_invoice': to_invoice,

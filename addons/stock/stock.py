@@ -128,18 +128,19 @@ class stock_location(osv.osv):
             c['location'] = loc_id
             for prod in product_product_obj.browse(cr, uid, product_ids, context=c):
                 for f in field_names:
-                    if f == 'stock_real':
-                        result[loc_id][f] += prod.qty_available
-                    elif f == 'stock_virtual':
-                        result[loc_id][f] += prod.virtual_available
-                    elif f == 'stock_real_value':
-                        amount = prod.qty_available * prod.standard_price
-                        amount = currency_obj.round(cr, uid, currency, amount)
-                        result[loc_id][f] += amount
-                    elif f == 'stock_virtual_value':
-                        amount = prod.virtual_available * prod.standard_price
-                        amount = currency_obj.round(cr, uid, currency, amount)
-                        result[loc_id][f] += amount
+                    if loc_id in result.keys():
+                        if f == 'stock_real':
+                            result[loc_id][f] += prod.qty_available
+                        elif f == 'stock_virtual':
+                            result[loc_id][f] += prod.virtual_available
+                        elif f == 'stock_real_value':
+                            amount = prod.qty_available * prod.standard_price
+                            amount = currency_obj.round(cr, uid, currency, amount)
+                            result[loc_id][f] += amount
+                        elif f == 'stock_virtual_value':
+                            amount = prod.virtual_available * prod.standard_price
+                            amount = currency_obj.round(cr, uid, currency, amount)
+                            result[loc_id][f] += amount
 
         return result
 
