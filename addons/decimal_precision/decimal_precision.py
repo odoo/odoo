@@ -46,11 +46,11 @@ class decimal_precision(osv.osv):
 
     def write(self, cr, uid, ids, data, *args, **argv):
         res = super(decimal_precision, self).write(cr, uid, ids, data, *args, **argv)
-        for obj in self.pool.obj_list():
-            for colname,col in self.pool.get(obj)._columns.items():
-                if isinstance(col, fields.float):
-                    col.digits_change(cr)
         self.precision_get.clear_cache(cr.dbname)
+        for obj in self.pool.obj_list():
+            for colname, col in self.pool.get(obj)._columns.items():
+                if isinstance(col, (fields.float, fields.function)):
+                    col.digits_change(cr)
         return res
 
 decimal_precision()
@@ -61,5 +61,4 @@ def get_precision(application):
         res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, application)
         return (16, res)
     return change_digit
-
 

@@ -222,11 +222,11 @@ class account_bank_statement(osv.osv):
         account_move_line_obj = self.pool.get('account.move.line')
         account_analytic_line_obj = self.pool.get('account.analytic.line')
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-
         st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id, context)
         st = st_line.statement_id
 
         context.update({'date': st_line.date})
+
         move_id = account_move_obj.create(cr, uid, {
             'journal_id': st.journal_id.id,
             'period_id': st.period_id.id,

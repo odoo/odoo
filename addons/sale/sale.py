@@ -21,12 +21,12 @@
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+import time
+
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
 import netsvc
-import time
-
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -37,7 +37,10 @@ class sale_shop(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=False),
+    }
+    _defaults = {
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.shop', context=c),
     }
 
 sale_shop()
@@ -62,6 +65,7 @@ class sale_order(osv.osv):
             'shipped': False,
             'invoice_ids': [],
             'picking_ids': [],
+            'date_confirm':False,
             'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
@@ -863,13 +867,6 @@ class sale_order_line(osv.osv):
         'type': 'make_to_stock',
         'product_packaging': False
     }
-
-    def create_sale_order_line_invoice(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        context.update({'active_ids' : ids,'active_id' : ids})
-        self.pool.get('sale.order.line.make.invoice').make_invoices(cr, uid, ids, context=context)
-        return True
 
     def invoice_line_create(self, cr, uid, ids, context=None):
         if context is None:

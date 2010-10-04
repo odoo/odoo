@@ -99,7 +99,7 @@ class lunch_cashmove(osv.osv):
         'amount': fields.float('Amount', digits=(16, 2)),
         'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, required=True),
         'active': fields.boolean('Active'),
-        'create_date': fields.datetime('Created date', readonly=True),
+        'create_date': fields.datetime('Creation Date', readonly=True),
     }
 
     _defaults = {
@@ -141,7 +141,7 @@ class lunch_order(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ], \
             'State', readonly=True, select=True),
         'price': fields.function(_price_get, method=True, string="Price"),
-        'category': fields.many2one('lunch.category','Category',readonly=True),
+        'category': fields.many2one('lunch.category','Category'),
     }
 
     _defaults = {
