@@ -148,7 +148,7 @@ class account_invoice(osv.osv):
             res[id] = []
             if not invoice.move_id:
                 continue
-            data_lines = invoice.move_id.line_id
+            data_lines = [x for x in invoice.move_id.line_id if x.account_id.id == invoice.account_id.id]
             partial_ids = []
             for line in data_lines:
                 ids_line = []
