@@ -8,6 +8,7 @@
         <record id="bank_iban" model="res.partner.bank.type">
             <field name="name">IBAN Account</field>
             <field name="code">iban</field>
+            <field name="bank" ref="base.res_bank_1"/>
         </record>
         <record id="bank_iban_field" model="res.partner.bank.type.field">
             <field name="name">iban</field>
