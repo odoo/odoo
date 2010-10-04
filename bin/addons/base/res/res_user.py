@@ -47,7 +47,7 @@ class groups(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context={}):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
-        default.update({'name': group_name +' (copy)'})
+        default.update({'name': _('%s (copy)')%group_name})
         return super(groups, self).copy(cr, uid, id, default, context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -74,14 +74,6 @@ class groups(osv.osv):
             if aid:
                 aid.write({'groups_id': [(4, gid)]})
         return gid
-
-    def copy(self, cr, uid, id, default={}, context={}, done_list=[], local=False):
-        group = self.browse(cr, uid, id, context=context)
-        default = default.copy()
-        if not 'name' in default:
-            default['name'] = group['name']
-        default['name'] = default['name'] + _(' (copy)')
-        return super(groups, self).copy(cr, uid, id, default, context=context)
 
     def get_extended_interface_group(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
