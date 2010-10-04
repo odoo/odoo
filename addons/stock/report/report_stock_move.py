@@ -137,7 +137,7 @@ class report_stock_inventory(osv.osv):
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'product_qty':fields.float('Qty', digits=(16,2), readonly=True),
-        'value' : fields.float('Total Value', digits=(16,2), required=True),
+        'value' : fields.float('Total Value', digits=(16,2), required=True, digits_compute=dp.get_precision('Sale Price')),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
               help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
               \nThe state is \'Waiting\' if the move is waiting for another one.'),
