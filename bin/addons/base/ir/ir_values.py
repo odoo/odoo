@@ -176,7 +176,7 @@ class ir_values(osv.osv):
                     where.append('res_id=%s')
                     params.append(res_id)
 
-            where.append('(user_id=%s or (user_id IS NULL))')
+            where.append('(user_id=%s or (user_id IS NULL)) order by id')
             params.append(uid)
             clause = ' and '.join(where)
             cr.execute('select id,name,value,object,meta, key from ir_values where ' + clause, params)
