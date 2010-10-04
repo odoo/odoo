@@ -1278,7 +1278,6 @@ function searchCheckbox()
 	xmlRpcClient.asyncCall(listSearchCheckboxHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,arrofarr ],6);
 }
 
-
 function searchContact()
 {
 	var branchobj = getPref();
@@ -1783,6 +1782,25 @@ var listLoginHandler = {
 	}
 }
 
+
+var listLoginwebHandler = {
+	onResult: function(client, context, result) {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+        weburl = getWebServerURL();
+        
+        var urlport = weburl
+        alert(urlport + ":" + " " + "\n\n" + "You can copy this URL into your WebBrowser if URL is not redirected automatic.");
+        window.open(t); 
+	},
+	onFault: function (client, ctxt, fault) {
+
+	},
+
+	onError: function (client, ctxt, status, errorMsg) {
+        alert("Database does not Exist!\n\n Please specify proper database name.");
+	}
+}
+
 //function to check the login information
 function testConnection(){
 	if (getconnect_server() == "false")
@@ -1828,6 +1846,16 @@ function testConnection(){
     
 }
 
+function testConnection_web(){
+	var branchobj = getPref();
+    weburl = getWebServerURL();
+    var urlport = weburl
+        alert(urlport + " " + "\n\n" + "You can copy this URL into your WebBrowser if URL is not redirected automatic.");
+    window.close();
+    window.open(urlport); 
+	xmlRpcClient.asyncCall(listLoginwebHandler,null,'login',[strwebName],1);
+    
+}
 
 //xmlrpc request handler for handling the login information
 var listcreateLoginHandler = {
