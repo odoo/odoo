@@ -316,7 +316,7 @@ class project(osv.osv):
             if child_ids:
                 self.setActive(cr, uid, child_ids, value, context=None)
         return True
-    
+
 project()
 
 class users(osv.osv):
@@ -523,7 +523,7 @@ class task(osv.osv):
         if not project_id: return False
         task = self.browse(cr, uid, project_id, context=context)
         project = task.project_id
-        res = self.do_close(cr, uid, [project_id], context=context) 
+        res = self.do_close(cr, uid, [project_id], context=context)
         if project.warn_manager or project.warn_customer:
            return {
                 'name': _('Send Email after close task'),
@@ -534,7 +534,7 @@ class task(osv.osv):
                 'target': 'new',
                 'nodestroy': True,
                 'context': {'active_id': task.id}
-           } 
+           }
         return res
 
     def do_close(self, cr, uid, ids, context=None):
@@ -576,6 +576,8 @@ class task(osv.osv):
         if context is None:
             context = {}
         request = self.pool.get('res.request')
+        p_issue = self.pool.get('project.issue')
+
         for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
             if project and project.warn_manager and project.user_id.id and (project.user_id.id != uid):
@@ -590,10 +592,15 @@ class task(osv.osv):
                 })
 
             self.write(cr, uid, [task.id], {'state': 'open'})
+            issue_id=p_issue.search(cr,uid,[('task_id','=',task.id)])
+            p_issue.write(cr, uid,issue_id, {'progress':0.0})
+
         return True
 
     def do_cancel(self, cr, uid, ids, *args):
         request = self.pool.get('res.request')
+        p_issue = self.pool.get('project.issue')
+        print "Cancel"
         tasks = self.browse(cr, uid, ids)
         for task in tasks:
             project = task.project_id
@@ -609,7 +616,9 @@ class task(osv.osv):
                 })
             message = _('Task ') + " '" + task.name + "' "+ _("is Cancelled.")
             self.log(cr, uid, task.id, message)
+            issue_id=p_issue.search(cr,uid,[('task_id','=',task.id)])
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0})
+            p_issue.write(cr, uid,issue_id, {'progress':100.0})
         return True
 
     def do_open(self, cr, uid, ids, *args):

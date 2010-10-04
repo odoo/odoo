@@ -15,7 +15,7 @@
             <field name="arch" type="xml">
               <gantt color="phase_id" date_start="date_start" date_stop="date_end" string="R.A." mode="year">
                <level object="res.users" link="user_id" domain="[]">
-                   <field name="useability" string="Availability"/>
+                   <field name="phase_id" string="Phase Name"/>
                 </level>
               </gantt>
             </field>
@@ -326,7 +326,7 @@
     # ------------------------------------------------------
     # Project Task
     # ------------------------------------------------------
-    
+
         <record id="view_phase_task_form2" model="ir.ui.view">
             <field name="name">phase.task.form2</field>
             <field name="model">project.task</field>
@@ -348,8 +348,8 @@
                     <field name="phase_id" select="1"/>
                 </field>
             </field>
-        </record>   
-    
+        </record>
+
     <act_window
         id="project_phase_task_list"
         name="Related Tasks"
