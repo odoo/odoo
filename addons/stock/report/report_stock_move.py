@@ -21,6 +21,7 @@
 
 import tools
 from osv import fields,osv
+from decimal_precision import decimal_precision as dp
 
 
 class report_stock_move(osv.osv):
@@ -44,7 +45,7 @@ class report_stock_move(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True),
         'product_qty_in':fields.integer('In Qty',readonly=True),
         'product_qty_out':fields.integer('Out Qty',readonly=True),
-        'value' : fields.float('Total Value', required=True),
+        'value' : fields.float('Total Value', required=True, digits_compute=dp.get_precision('Sale Price')),
         'day_diff2':fields.float('Delay (Days)',readonly=True, digits=(16,2), group_operator="avg"),
         'day_diff1':fields.float('Planned (Days)',readonly=True, digits=(16,2), group_operator="avg"),
         'day_diff':fields.float('Real (Days)',readonly=True, digits=(16,2), group_operator="avg"),
