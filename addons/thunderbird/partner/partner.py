@@ -159,9 +159,6 @@ class thunderbird_partner(osv.osv_memory):
         msg_ids = []
         res = {}
         res_ids = []
-        if message_id:
-            msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
-        if msg_ids and len(msg_ids): return 0
         for ref_id in ref_ids:
             msg_new = dictcreate.get('message')
             ref = ref_id.split(',')

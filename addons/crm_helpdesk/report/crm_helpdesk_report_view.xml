@@ -114,23 +114,24 @@
                         help="My company"/>
                         </field>
                          <field name="user_id" string="Salesman">
-                         <filter icon="terp-personal+" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
+                         <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                          </field>
                    </group>
                    <newline/>
                    <group expand="0" string="Extended Filters..."  groups="base.group_extended">
-                        <filter string="Priority" icon="terp-rating-rated"
-                            domain="[]" context="{'group_by':'priority'}" />
+                         <field name="priority" string="Priority"/>
+                         <field name="categ_id"/>
+                         <field name="date_closed" string="Close Date"/>
                    </group>
                    <newline/>
                    <group expand="1" string="Group By...">
-                        <filter string="User" icon="terp-personal"
+                        <filter string="Salesman" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}"
                             default="1" />
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
                             context="{'group_by':'section_id'}" />
-                        <filter string="Partner" icon="terp-personal"
+                        <filter string="Partner" icon="terp-partner"
                             domain="[]"
                             context="{'group_by':'partner_id'}" />
                             

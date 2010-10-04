@@ -177,15 +177,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Synchronized server">
-                    <field name="name" select="1"/>
-                    <newline/>
-                    <field name="server_url" select="2"/>
-                    <newline/>
-                    <field name="server_port"/>
-                    <field name="server_db"/>
-                    <newline/>
-                    <field name="login" select="1"/>
-                    <field name="password" password="True"/>
+                    <group colspan="4" col="6">
+                        <field name="name"/>
+                        <field name="login"/>
+                        <field name="password" password="True"/>
+                        <field name="server_url"/>
+                        <field name="server_port"/>
+                        <field name="server_db"/>
+                    </group>
+                    
                 </form>
             </field>
         </record>

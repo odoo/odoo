@@ -57,10 +57,10 @@ class account_bs_report(osv.osv_memory):
         res['arch'] = etree.tostring(doc)
         return res
 
-    def _print_report(self, cr, uid, ids, data, query_line, context=None):
+    def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data = self.pre_print_report(cr, uid, ids, data, context=context)
         account = self.pool.get('account.account').browse(cr, uid, data['form']['chart_account_id'])
         if not account.company_id.property_reserve_and_surplus_account:
             raise osv.except_osv(_('Warning'),_('Please define the Reserve and Profit/Loss account for current user company !'))
