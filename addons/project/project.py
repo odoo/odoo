@@ -373,6 +373,11 @@ class task(osv.osv):
         return res
 
 
+    def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned = 0.0):
+        if remaining and not planned:
+            return {'value':{'planned_hours': remaining}}
+        return {}
+
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
         return {'value':{'remaining_hours': planned - effective}}
 
