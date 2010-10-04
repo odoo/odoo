@@ -112,6 +112,7 @@ class project_work(osv.osv):
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
         project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
+        result = {}
         
         if isinstance(ids, (long, int)):
             ids = [ids,]
@@ -139,7 +140,7 @@ class project_work(osv.osv):
                 vals_line['unit_amount'] = vals['hours']
                 prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
 
-                if result['product_uom_id'] and (not result['product_uom_id'] == default_uom):
+                if result.get('product_uom_id',False) and (not result['product_uom_id'] == default_uom):
                     vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
                     
                 # Compute based on pricetype
