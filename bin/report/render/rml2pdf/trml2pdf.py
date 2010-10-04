@@ -40,37 +40,36 @@ from reportlab.lib.units import inch,cm,mm
 encoding = 'utf-8'
 
 class NumberedCanvas(canvas.Canvas):
-
     def __init__(self, *args, **kwargs):
         canvas.Canvas.__init__(self, *args, **kwargs)
         self._codes = []
         self._flag=False
         self._pageCount=0
-        self.i =0
-        self.k=0
+        self._currentPage =0
+        self._pageCounter=0
         self.pages={}
 
     def showPage(self):
-        self.i +=1
+        self._currentPage +=1
         if not self._flag:
            self._pageCount += 1
         else:
-            self.pages.update({self.i:self._pageCount})
+            self.pages.update({self._currentPage:self._pageCount})
         self._codes.append({'code': self._code, 'stack': self._codeStack})
         self._startPage()
         self._flag=False
 
     def pageCount(self):
-        if self.pages.get(self.k,False):
+        if self.pages.get(self._pageCounter,False):
             self._pageNumber=0
-        self.k +=1
-        key=self.k
+        self._pageCounter +=1
+        key=self._pageCounter
         if not self.pages.get(key,False):
             while not self.pages.get(key,False):
                 key = key + 1
-        self.setFont("Helvetica", 15)
-        self.drawRightString(200*mm, 20*mm,
-            "page %(this)i of %(total)i" % {
+        self.setFont("Helvetica", 8)
+        self.drawRightString((self._pagesize[0]-35), (self._pagesize[1]-40),
+            "%(this)i / %(total)i" % {
                'this': self._pageNumber+1,
                'total': self.pages.get(key,False),
             }
@@ -85,6 +84,7 @@ class NumberedCanvas(canvas.Canvas):
             self._codeStack = code['stack']
             self.pageCount()
             canvas.Canvas.showPage(self)
+#        self.restoreState()
         self._doc.SaveToFile(self._filename, self)
 
 class PageCount(platypus.Flowable):
@@ -452,6 +452,7 @@ class _rml_canvas(object):
             else:
                 args['height'] = sy * args['width'] / sx
         self.canvas.drawImage(img, **args)
+#        self.canvas._doc.SaveToFile(self.canvas._filename, self.canvas)
 
     def _path(self, node):
         self.path = self.canvas.beginPath()
@@ -832,6 +833,7 @@ class _rml_template(object):
         self.page_templates = []
         self.styles = doc.styles
         self.doc = doc
+        self.image=[]
         pts = node.findall('pageTemplate')
         for pt in pts:
             frames = []
@@ -846,6 +848,7 @@ class _rml_template(object):
             except Exception: # FIXME: be even more specific, perhaps?
                 gr=''
             if len(gr):
+                self.image=[ n for n in utils._child_get(gr[0], self) if n.tag=='image' or not self.localcontext]
                 drw = _rml_draw(self.localcontext,gr[0], self.doc, images=images, path=self.path, title=self.title)
                 self.page_templates.append( platypus.PageTemplate(frames=frames, onPage=drw.render, **utils.attr_get(pt, [], {'id':'str'}) ))
             else:
@@ -860,15 +863,18 @@ class _rml_template(object):
         for node_story in node_stories:
             if story_cnt > 0:
                 fis.append(platypus.PageBreak())
-
             fis += r.render(node_story)
             # Reset Page Number with new story tag
             fis.append(PageReset())
-            self.doc_tmpl.afterFlowable(fis)
+            if not self.image:
+                self.doc_tmpl.afterFlowable(fis)
             story_cnt += 1
         if self.localcontext:
             fis.append(PageCount())
-        self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
+        if not self.image:
+            self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
+        else:
+            self.doc_tmpl.build(fis)
 
 def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
     node = etree.XML(rml)
