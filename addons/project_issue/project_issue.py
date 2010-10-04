@@ -144,7 +144,7 @@ class project_issue(crm.crm_case, osv.osv):
     
     _columns = {
         'id': fields.integer('ID'),
-        'name': fields.char('Name', size=128, required=True),
+        'name': fields.char('Issue', size=128, required=True),
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Update Date', readonly=True),
@@ -177,7 +177,7 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Resolution', domain="[('object_id.model', '=', 'project.issue')]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
