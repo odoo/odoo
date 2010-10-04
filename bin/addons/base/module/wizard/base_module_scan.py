@@ -19,16 +19,13 @@
 #
 ##############################################################################
 import os
-import re
 import glob
-import time
 import imp
 
 import tools
-import pooler
 
 import zipfile
-from osv import osv, fields
+from osv import osv
 
 class base_module_scan(osv.osv_memory):
     """ scan module """

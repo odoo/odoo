@@ -12,6 +12,7 @@
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="res_model"/>
+                    <field name="create_date"/>
                 </search>
             </field>
         </record>
@@ -21,6 +22,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Logs">
+                    <field name="create_date"/>
                     <field name="name"/>
                     <field name="user_id"/>
                 </tree>
@@ -32,8 +34,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Logs">
+                    <field name="name"/>
+                    <field name="create_date"/>
                     <group colspan="4" col="6">
-                        <field name="name" colspan="4"/>
                         <field name="user_id" />
                         <field name="res_model"/>
                         <field name="res_id"/>

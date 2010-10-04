@@ -125,7 +125,6 @@ class ir_ui_menu(osv.osv):
                 data = menu.action
                 if data:
                     model_field = { 'ir.actions.act_window':    'res_model',
-                                    'ir.actions.report.custom': 'model',
                                     'ir.actions.report.xml':    'model',
                                     'ir.actions.wizard':        'model',
                                     'ir.actions.server':        'model_id',
@@ -272,7 +271,6 @@ class ir_ui_menu(osv.osv):
         'action': fields.function(_action, fnct_inv=_action_inv,
             method=True, type='reference', string='Action',
             selection=[
-                ('ir.actions.report.custom', 'ir.actions.report.custom'),
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
                 ('ir.actions.wizard', 'ir.actions.wizard'),

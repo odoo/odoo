@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -50,7 +50,7 @@ class res_request(osv.osv):
         return True
 
     def request_close(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'closed', 'active':False})
+        self.write(cr, uid, ids, {'state':'closed'})
         return True
 
     def request_get(self, cr, uid):
@@ -113,7 +113,7 @@ class res_request_history(osv.osv):
         'name': lambda *a: 'NoName',
         'act_from': lambda obj,cr,uid,context={}: uid,
         'act_to': lambda obj,cr,uid,context={}: uid,
-        'date_sent': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
+        'date_sent': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 res_request_history()
 

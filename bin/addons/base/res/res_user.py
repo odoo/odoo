@@ -28,6 +28,7 @@ import pooler
 from tools.translate import _
 from service import security
 import netsvc
+import time
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -46,7 +47,7 @@ class groups(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context={}):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
-        default.update({'name': group_name +' (copy)'})
+        default.update({'name': _('%s (copy)')%group_name})
         return super(groups, self).copy(cr, uid, id, default, context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -73,14 +74,6 @@ class groups(osv.osv):
             if aid:
                 aid.write({'groups_id': [(4, gid)]})
         return gid
-
-    def copy(self, cr, uid, id, default={}, context={}, done_list=[], local=False):
-        group = self.browse(cr, uid, id, context=context)
-        default = default.copy()
-        if not 'name' in default:
-            default['name'] = group['name']
-        default['name'] = default['name'] + _(' (copy)')
-        return super(groups, self).copy(cr, uid, id, default, context=context)
 
     def get_extended_interface_group(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
@@ -152,10 +145,8 @@ class users(osv.osv):
         return self.WELCOME_MAIL_BODY
 
     def get_current_company(self, cr, uid):
-        res=[]
         cr.execute('select company_id, res_company.name from res_users left join res_company on res_company.id = company_id where res_users.id=%s' %uid)
-        res = cr.fetchall()
-        return res
+        return cr.fetchall()
 
     def send_welcome_email(self, cr, uid, id, context=None):
         logger= netsvc.Logger()
@@ -240,7 +231,7 @@ class users(osv.osv):
                  " aren't configured, it won't be possible to email new "
                  "users."),
         'signature': fields.text('Signature', size=64),
-        'address_id': fields.many2one('res.partner.address', 'Company Address'),
+        'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
@@ -265,7 +256,7 @@ class users(osv.osv):
                                 string='Interface', help="Choose between the simplified interface and the extended one"),
         'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
-
+        'date': fields.datetime('Last Connection', readonly=True),
     }
 
     def on_change_company_id(self, cr, uid, ids, company_id):
@@ -431,12 +422,14 @@ class users(osv.osv):
         cr = pooler.get_db(db).cursor()
         cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
         res = cr.fetchone()
-        cr.close()
+
         if res:
+            cr.execute("update res_users set date=%s where id=%s", (time.strftime('%Y-%m-%d %H:%M:%S'),res[0]))
+            cr.commit()
             return res[0]
         else:
             return False
-
+        cr.close()
     def check_super(self, passwd):
         if passwd == tools.config['admin_passwd']:
             return True

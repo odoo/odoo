@@ -7,17 +7,41 @@
             <field name="model">base.module.import</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Module import">
-            <separator string="Module Import" colspan="4"/>
-            <label string="Please give your module .ZIP file to import." colspan="4"/>
-            <field name="module_file"/>
-            <separator string="" colspan="4" />
-            <newline/>
-            <group colspan="6" >
-                <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                <button name="importzip" string="Import module" type="object" icon="gtk-ok"/>
-            </group>
-             </form>
+                <form string="Import module">
+                    <group col="8">
+                        <group colspan="3">
+                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
+                            <newline/>
+                            <label colspan="4" width="220" string="This wizard helps you add a new language to you OpenERP system. After loading a new language it becomes available as default interface language for users and partners."/>
+                            <label colspan="4" width="220"/>
+                            <label colspan="4" width="220" string="Please be patient, this operation may take a few minutes (depending on the number of modules currently installed)..."/>
+                            <field name="state" invisible="1"/>
+                        </group>
+                        <separator orientation="vertical" rowspan="15"/>
+                        <group colspan="4">
+                            <separator string="Module Import" colspan="4"/>
+                            <group states="init" colspan="4" col="4">
+                                <label string="Select module package to import (.zip file):" colspan="4"/>
+                                <field name="module_file" colspan="4"/>
+                            </group>
+                            <group states="done" colspan="4" col="4">
+                                <label string="Module file successfully imported!" colspan="4"/>
+                            </group>
+                        </group>
+                        <group colspan="8" col="8" states="init">
+                            <separator string="" colspan="8"/>
+                            <label colspan="6" width="220"/>
+                            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                            <button name="importzip" string="Import module" type="object" icon="gtk-apply"/>
+                        </group>
+                        <group colspan="8" col="8" states="done">
+                            <separator string="" colspan="8"/>
+                            <label colspan="6" width="220"/>
+                            <button special="cancel" string="Close" icon="gtk-ok"/>
+                            <button name="action_module_open" string="Open Modules" type="object" icon="gtk-go-forward"/>
+                        </group>
+                    </group>
+                </form>
             </field>
         </record>
 
@@ -31,36 +55,12 @@
         </record>
 
         <menuitem
-        name="Import Module"
-        action="action_view_base_module_import"
-        id="menu_view_base_module_import"
-       parent="menu_management"
-       sequence="1"/>
+            name="Import Module"
+            action="action_view_base_module_import"
+            id="menu_view_base_module_import"
+            parent="menu_management"
+            sequence="1"/>
 
-        <record id="view_base_module_import_msg" model="ir.ui.view">
-            <field name="name">Module Import Message</field>
-            <field name="model">base.module.import.msg</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-            <form string="Message">
-            <label string="Module successfully imported !"/>
-            <separator string="" colspan="4"/>
-            <newline/>
-            <group>
-            <button name="action_module_open" string="Cancel" type="object" icon="gtk-cancel"/>
-            </group>
-            </form>
-            </field>
-        </record>
-
-        <record id="action_view_base_module_import_msg" model="ir.actions.act_window">
-            <field name="name">Module Import Message</field>
-            <field name="res_model">base.module.import.msg</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_base_module_import"/>
-            <field name="target">new</field>
-        </record>
     </data>
 </openerp>
 

@@ -37,7 +37,7 @@ class actions(osv.osv):
     _table = 'ir_actions'
     _columns = {
         'name': fields.char('Action Name', required=True, size=64),
-        'type': fields.char('Action Type', required=True, size=32),
+        'type': fields.char('Action Type', required=True, size=32,readonly=True),
         'usage': fields.char('Action Usage', size=32),
     }
     _defaults = {
@@ -45,23 +45,6 @@ class actions(osv.osv):
     }
 actions()
 
-class report_custom(osv.osv):
-    _name = 'ir.actions.report.custom'
-    _table = 'ir_act_report_custom'
-    _sequence = 'ir_actions_id_seq'
-    _columns = {
-        'name': fields.char('Report Name', size=64, required=True, translate=True),
-        'type': fields.char('Report Type', size=32, required=True),
-        'model':fields.char('Object', size=64, required=True),
-        'report_id': fields.integer('Report Ref.', required=True),
-        'usage': fields.char('Action Usage', size=32),
-        'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
-    }
-    _defaults = {
-        'multi': lambda *a: False,
-        'type': lambda *a: 'ir.actions.report.custom',
-    }
-report_custom()
 
 class report_xml(osv.osv):
 
@@ -259,7 +242,6 @@ class act_window(osv.osv):
         'search_view_id': fields.many2one('ir.ui.view', 'Search View Ref.'),
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
-        'default_user_ids': fields.many2many('res.users', 'ir_act_window_user_rel', 'act_id', 'uid', 'Users'),
         'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
         'menus': fields.char('Menus', size=4096),
         'help': fields.text('Action description',

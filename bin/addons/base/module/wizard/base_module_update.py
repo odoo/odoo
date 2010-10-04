@@ -18,8 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import netsvc
-import pooler
 from osv import osv, fields
 
 class base_module_update(osv.osv_memory):
@@ -27,85 +25,37 @@ class base_module_update(osv.osv_memory):
 
     _name = "base.module.update"
     _description = "Update Module"
-
-    def update_module(self, cr, uid, ids, context):
-        """
-           Update Module
-
-            @param cr: the current row, from the database cursor.
-            @param uid: the current user’s ID for security checks.
-            @param ids: the ID or list of IDs
-            @param context: A standard dictionary
-        """
-        data_obj = self.pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'base', 'view_base_module_update_open')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'base.module.update.open',
-            'views': [(id2, 'form')],
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-
-        }
-
-base_module_update()
-
-class base_module_update_open(osv.osv_memory):
-    """ Update Module Open """
-
-    _name = "base.module.update.open"
-    _description = "Update Module Open"
-
-    def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-        @return : default values of fields.
-        """
-
-        module_obj = self.pool.get('ir.module.module')
-        update, add = module_obj.update_list(cr, uid,)
-        return {'update': update, 'add': add}
+    _inherit = "ir.wizard.screen"
 
     _columns = {
-          'update': fields.integer('Number of modules updated', readonly=True),
-          'add': fields.integer('Number of modules added', readonly=True),
+        'update': fields.integer('Number of modules updated', readonly=True),
+        'add': fields.integer('Number of modules added', readonly=True),
+        'state':fields.selection([('init','init'),('done','done')], 'state', readonly=True),
     }
 
-    def action_module_open(self, cr, uid, ids, context):
-        """
-           Update Module List Open
+    _defaults = {  
+        'state': 'init',
+    }
 
-            @param cr: the current row, from the database cursor.
-            @param uid: the current user’s ID for security checks.
-            @param ids: the ID or list of IDs
-            @param context: A standard dictionary
-        """
+    def update_module(self, cr, uid, ids, context=None):
+        module_obj = self.pool.get('ir.module.module')
+        update, add = module_obj.update_list(cr, uid,)
+        self.write(cr, uid, ids, {'update': update, 'add': add, 'state': 'done'}, context=context)
+        return False
+
+    def action_module_open(self, cr, uid, ids, context):
         res = {
             'domain': str([]),
-            'name': 'Module List',
+            'name': 'Modules',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'ir.module.module',
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
-        view_obj = self.pool.get('ir.ui.view')
-        search_view_id = view_obj.search(cr, uid, [('name','=','ir.module.module.list.select')], context=context)
-        if search_view_id:
-            res.update({'search_view_id' : search_view_id[0]})
         return res
 
-base_module_update_open()
+
+base_module_update()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
