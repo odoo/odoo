@@ -75,6 +75,9 @@ class account_analytic_line(osv.osv):
             unit=False, journal_id=False, context=None):
         if context==None:
             context={}
+        if not journal_id:
+            j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=','purchase')])
+            j_id = j_ids and j_ids[0] or False
         if not journal_id or not prod_id:
             return {}
         product_obj = self.pool.get('product.product')
@@ -86,7 +89,7 @@ class account_analytic_line(osv.osv):
         result = 0.0
         is_purchase = False
         
-        if j_id.type == 'purchase':
+        if j_id.type <> 'sale':
             a = prod.product_tmpl_id.property_account_expense.id
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id
