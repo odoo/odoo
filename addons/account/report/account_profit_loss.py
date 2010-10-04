@@ -53,6 +53,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
             'get_company':self._get_company,
+            'get_target_move': self._get_target_move,
         })
         self.context = context
 
