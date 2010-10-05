@@ -4,7 +4,7 @@
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.register();myPrefObserver.webregister();"  unload="myPrefObserver.unregister()" height="410" width="800">
+	title="&title.label;" onload="myPrefObserver.register();myPrefObserver.webregister();"  unload="myPrefObserver.unregister()" height="410" width="900">
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
@@ -50,7 +50,7 @@
 		</vbox>
 
         <separator class="groove-thin" orient="horizontal" width="10"/> 
-        <vbox style="border:1px solid black">
+        <vbox style="border:1px solid black" width="94">
       <groupbox id="webgroup" > 
         <vbox>
          <caption label="&webConnection.label;"/>
@@ -130,7 +130,7 @@
   </tabpanels>
 </tabbox>
 <hbox>
-	<spacer width="677"/>
+	<spacer width="800"/>
 	<button label="&close.label;" oncommand="close();" image="&imagecancel.value;"/>
 </hbox>
 </window>
