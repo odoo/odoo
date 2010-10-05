@@ -21,6 +21,8 @@
 
 import tools
 from osv import fields,osv
+from decimal_precision import decimal_precision as dp
+
 
 class timesheet_report(osv.osv):
     _name = "timesheet.report"
@@ -53,7 +55,7 @@ class timesheet_report(osv.osv):
             ('confirm','Confirmed'),
             ('done','Done')], 'State', readonly=True),
         'quantity': fields.float('#Quantity',readonly=True),
-        'cost': fields.float('#Cost',readonly=True),
+        'cost': fields.float('#Cost',readonly=True, digits_compute=dp.get_precision('Account')),
         }
 
     def init(self, cr):
