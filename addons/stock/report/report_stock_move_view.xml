@@ -44,7 +44,6 @@
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
-             	 <field name="day" group="True"/>
                  <field name="product_id"/>
                  <field name="day_diff2" operator="+"/>
              </graph>
@@ -63,6 +62,7 @@
                 help="Current year"/>
                 <filter icon="terp-go-month"
                  string="Month-1"
+                 name="month-1"
                  separator="1"
                  domain="[('date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
                  help="Last month"/>
