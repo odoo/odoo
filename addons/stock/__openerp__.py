@@ -45,6 +45,8 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "init_xml" : [],
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [
+        "security/stock_security.xml",  
+        "security/ir.model.access.csv",                  
         "stock_data.xml",
         "wizard/stock_move_view.xml",
         "wizard/stock_partial_picking_view.xml",
@@ -68,8 +70,6 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "partner_view.xml",
         "report/report_stock_move_view.xml",
         "report/report_stock_view.xml",
-        "security/stock_security.xml",
-        "security/ir.model.access.csv",
         "board_warehouse_view.xml"
     ],
     'test': ['test/stock_test.yml',
