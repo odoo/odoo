@@ -21,10 +21,10 @@
 
 from osv import fields,osv
 
-class openerp_feedback(osv.osv):
-    _name = "twitter.widget"
+class res_widget(osv.osv):
+    _name = "res.widget"
     _columns = {
                 'title' : fields.char('Title', size=64,help="ABC"),
                 'content': fields.text('Content')
                 }
-openerp_feedback()
+res_widget()
