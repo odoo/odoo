@@ -192,7 +192,7 @@
         <!--
               Scrum Sprint
        -->
-        
+
         <record id="view_scrum_sprint_calendar" model="ir.ui.view">
             <field name="name">project.scrum.sprint.calendar</field>
             <field name="model">project.scrum.sprint</field>
@@ -204,7 +204,7 @@
                 </calendar>
             </field>
         </record>
-        
+
         <record id="view_scrum_sprint_tree" model="ir.ui.view">
             <field name="name">project.scrum.sprint.tree</field>
             <field name="model">project.scrum.sprint</field>
@@ -357,7 +357,7 @@
         <!--
               Daily Meeting
        -->
-        
+
         <record id="view_scrum_meeting_calendar" model="ir.ui.view">
             <field name="name">project.scrum.meeting.calendar</field>
             <field name="model">project.scrum.meeting</field>
@@ -369,7 +369,7 @@
                 </calendar>
             </field>
         </record>
-        
+
         <record id="view_scrum_meeting_tree" model="ir.ui.view">
             <field name="name">project.scrum.meeting.tree</field>
             <field name="model">project.scrum.meeting</field>
@@ -389,10 +389,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scrum Meeting">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="8">
                         <field name="date"/>
                         <field name="sprint_id" domain="[('state', '=', 'open')]"/>
                         <field name="user_id"/>
+                        <button name="%(action_project_scrum_email)d"  string="Send Email" type="action" icon="terp-mail-message-new" />
                     </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">
