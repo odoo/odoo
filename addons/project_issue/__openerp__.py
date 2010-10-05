@@ -32,7 +32,6 @@
     'depends': [
         'crm',
         'project',
-        'hr_timesheet_sheet',
     ],
     'init_xml': [
         'project_issue_data.xml'

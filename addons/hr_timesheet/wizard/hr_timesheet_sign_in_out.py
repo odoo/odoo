@@ -81,7 +81,7 @@ class hr_so_project(osv.osv_memory):
 
         if not res['product_uom_id']:
             raise osv.except_osv(_('UserError'), _('No cost unit defined for this employee !'))
-        up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour, res['product_uom_id'])['value']
+        up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour,False, res['product_uom_id'])['value']
 
         res['name'] = data['info']
         res['account_id'] = data['account_id'].id
