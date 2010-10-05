@@ -318,7 +318,7 @@ class product_product(osv.osv):
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Production Lot for all moves containing this product and going to a Customer Location"),
         'location_id': fields.dummy(string='Stock Location', relation='stock.location', type='many2one'),
         'valuation':fields.selection([('manual_periodic', 'Periodic (manual)'),
-                                        ('real_time','Real Time (automatized)'),], 'Stock Valuation', help="Decide if the system must automatically creates account moves based on stock moves", required=True),
+                                        ('real_time','Real Time (automatized)'),], 'Stock Valuation', help="Decide if the system must automatically create account moves based on stock moves", required=True),
     }
 
     _defaults = {

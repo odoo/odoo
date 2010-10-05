@@ -724,7 +724,7 @@ true, it will allow you to hide the event alarm information without removing it.
             if alarm_ids:
                 alarm_obj.unlink(cr, uid, alarm_ids)
                 cr.execute('Update %s set base_calendar_alarm_id=NULL, alarm_id=NULL\
-                            where id=%%d' % model_obj._table,(datas.id,))
+                            where id=%%s' % model_obj._table,(datas.id,))
         return True
 
 res_alarm()

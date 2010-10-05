@@ -23,6 +23,8 @@ from osv import osv, fields
 from osv.orm import intersect
 import tools.sql
 from tools.translate import _
+from decimal_precision import decimal_precision as dp
+
 
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
@@ -66,6 +68,8 @@ class account_analytic_account(osv.osv):
                                 and invoice_id is not null \
                             GROUP BY account_analytic_line.account_id;", (parent_ids,))
                     for account_id, sum in cr.fetchall():
+                        if account_id not in res:
+                            res[account_id] = {}
                         res[account_id][f] = sum
                 for account in accounts:
                     for child in account.child_ids:
@@ -102,6 +106,8 @@ class account_analytic_account(osv.osv):
                                 and account_analytic_journal.type in ('purchase','general') \
                             GROUP BY account_analytic_account.id;""", (parent_ids,))
                     for account_id, sum in cr.fetchall():
+                        if account_id not in res:
+                            res[account_id] = {}
                         res[account_id][f] = round(sum, dp)
 
                 for account in accounts:
@@ -142,6 +148,8 @@ class account_analytic_account(osv.osv):
                                 and invoice_id is null \
                             GROUP BY account_analytic_line.account_id" ,(parent_ids,))
                     for account_id, lwd in cr.fetchall():
+                        if account_id not in res:
+                            res[account_id] = {}
                         res[account_id][f] = lwd
                 for account in accounts:
                     for child in account.child_ids:
@@ -161,6 +169,8 @@ class account_analytic_account(osv.osv):
                                 AND to_invoice IS NOT NULL \
                             GROUP BY account_analytic_line.account_id;",(parent_ids,))
                     for account_id, sua in cr.fetchall():
+                        if account_id not in res:
+                            res[account_id] = {}
                         res[account_id][f] = round(sua, dp)
                 for account in accounts:
                     for child in account.child_ids:
@@ -181,10 +191,14 @@ class account_analytic_account(osv.osv):
                             GROUP BY account_analytic_line.account_id",(parent_ids,))
                     ff =  cr.fetchall()
                     for account_id, hq in ff:
+                        if account_id not in res:
+                            res[account_id] = {}
                         res[account_id][f] = round(hq, dp)
                 for account in accounts:
                     for child in account.child_ids:
                         if account.id != child.id:
+                            if account.id not in res:
+                                res[account.id] = {f: 0.0}
                             res[account.id][f] += res.get(child.id, {}).get(f, 0.0)
                 for id in ids:
                     res[id][f] = round(res[id][f], dp)
@@ -223,6 +237,8 @@ class account_analytic_account(osv.osv):
                     res2.setdefault(account.id, 0.0)
                     for child in account.child_ids:
                         if account.id != child.id:
+                            if account.id not in res:
+                                res[account.id] = {f: 0.0}
                             res[account.id][f] += res.get(child.id, {}).get(f, 0.0)
                             res[account.id][f] += res2.get(child.id, 0.0)
 
@@ -337,22 +353,47 @@ class account_analytic_account(osv.osv):
         return res
 
     _columns ={
-        'ca_invoiced': fields.function(_ca_invoiced_calc, method=True, type='float', string='Invoiced Amount', help="Total customer invoiced amount for this account."),
-        'total_cost': fields.function(_total_cost_calc, method=True, type='float', string='Total Costs', help="Total of costs for this account. It includes real costs (from invoices) and indirect costs, like time spent on timesheets."),
-        'ca_to_invoice': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Uninvoiced Amount', help="If invoice from analytic account, the remaining amount you can invoice to the customer based on the total costs."),
-        'ca_theorical': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Theorical Revenue', help="Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist."),
-        'hours_quantity': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Hours Tot', help="Number of hours you spent on the analytic account (from timesheet). It computes on all journal of type 'general'."),
-        'last_invoice_date': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='date', string='Last Invoice Date', help="Date of the last invoice created for this analytic account."),
-        'last_worked_invoiced_date': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='date', string='Date of Last Invoiced Cost', help="If invoice from the costs, this is the date of the latest work or cost that have been invoiced."),
-        'last_worked_date': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='date', string='Date of Last Cost/Work', help="Date of the latest work done on this account."),
-        'hours_qtt_non_invoiced': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Uninvoiced Hours', help="Number of hours (from journal of type 'general') that can be invoiced if you invoice based on analytic account."),
-        'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, method=True, type='float', string='Invoiced Hours', help="Number of hours that can be invoiced plus those that already have been invoiced."),
-        'remaining_hours': fields.function(_remaining_hours_calc, method=True, type='float', string='Remaining Hours', help="Computed using the formula: Maximum Quantity - Hours Tot."),
-        'remaining_ca': fields.function(_remaining_ca_calc, method=True, type='float', string='Remaining Revenue', help="Computed using the formula: Max Invoice Price - Invoiced Amount."),
-        'revenue_per_hour': fields.function(_revenue_per_hour_calc, method=True, type='float', string='Revenue per Hours (real)', help="Computed using the formula: Invoiced Amount / Hours Tot."),
-        'real_margin': fields.function(_real_margin_calc, method=True, type='float', string='Real Margin', help="Computed using the formula: Invoiced Amount - Total Costs."),
-        'theorical_margin': fields.function(_theorical_margin_calc, method=True, type='float', string='Theorical Margin', help="Computed using the formula: Theorial Revenue - Total Costs"),
-        'real_margin_rate': fields.function(_real_margin_rate_calc, method=True, type='float', string='Real Margin Rate (%)', help="Computes using the formula: (Real Margin / Total Costs) * 100."),
+        'ca_invoiced': fields.function(_ca_invoiced_calc, method=True, type='float', string='Invoiced Amount',
+            help="Total customer invoiced amount for this account.",
+            digits_compute=dp.get_precision('Account')),
+        'total_cost': fields.function(_total_cost_calc, method=True, type='float', string='Total Costs',
+            help="Total of costs for this account. It includes real costs (from invoices) and indirect costs, like time spent on timesheets.",
+            digits_compute=dp.get_precision('Account')),
+        'ca_to_invoice': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Uninvoiced Amount',
+            help="If invoice from analytic account, the remaining amount you can invoice to the customer based on the total costs.",
+            digits_compute=dp.get_precision('Account')),
+        'ca_theorical': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Theorical Revenue',
+            help="Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist.",
+            digits_compute=dp.get_precision('Account')),
+        'hours_quantity': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Hours Tot',
+            help="Number of hours you spent on the analytic account (from timesheet). It computes on all journal of type 'general'."),
+        'last_invoice_date': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='date', string='Last Invoice Date',
+            help="Date of the last invoice created for this analytic account."),
+        'last_worked_invoiced_date': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='date', string='Date of Last Invoiced Cost',
+            help="If invoice from the costs, this is the date of the latest work or cost that have been invoiced."),
+        'last_worked_date': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='date', string='Date of Last Cost/Work',
+            help="Date of the latest work done on this account."),
+        'hours_qtt_non_invoiced': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Uninvoiced Hours',
+            help="Number of hours (from journal of type 'general') that can be invoiced if you invoice based on analytic account."),
+        'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, method=True, type='float', string='Invoiced Hours',
+            help="Number of hours that can be invoiced plus those that already have been invoiced."),
+        'remaining_hours': fields.function(_remaining_hours_calc, method=True, type='float', string='Remaining Hours',
+            help="Computed using the formula: Maximum Quantity - Hours Tot."),
+        'remaining_ca': fields.function(_remaining_ca_calc, method=True, type='float', string='Remaining Revenue',
+            help="Computed using the formula: Max Invoice Price - Invoiced Amount.",
+            digits_compute=dp.get_precision('Account')),
+        'revenue_per_hour': fields.function(_revenue_per_hour_calc, method=True, type='float', string='Revenue per Hours (real)',
+            help="Computed using the formula: Invoiced Amount / Hours Tot.",
+            digits_compute=dp.get_precision('Account')),
+        'real_margin': fields.function(_real_margin_calc, method=True, type='float', string='Real Margin',
+            help="Computed using the formula: Invoiced Amount - Total Costs.",
+            digits_compute=dp.get_precision('Account')),
+        'theorical_margin': fields.function(_theorical_margin_calc, method=True, type='float', string='Theorical Margin',
+            help="Computed using the formula: Theorial Revenue - Total Costs",
+            digits_compute=dp.get_precision('Account')),
+        'real_margin_rate': fields.function(_real_margin_rate_calc, method=True, type='float', string='Real Margin Rate (%)',
+            help="Computes using the formula: (Real Margin / Total Costs) * 100.",
+            digits_compute=dp.get_precision('Account')),
         'month_ids': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, method=True, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
     }
