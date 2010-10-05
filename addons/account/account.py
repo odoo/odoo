@@ -1653,11 +1653,11 @@ class account_tax(osv.osv):
     _columns = {
         'name': fields.char('Tax Name', size=64, required=True, translate=True, help="This name will be displayed on reports"),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."),
-        'amount': fields.float('Amount', required=True, digits=(14,4), help="For Tax Type percent enter % ratio between 0-1."),
+        'amount': fields.float('Amount', required=True, digits_compute=dp.get_precision('Account'), help="For taxes of type percentage, enter % ratio between 0-1."),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the tax without removing it."),
-        'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code'),('balance','Balance')], 'Tax Type', required=True,
+        'type': fields.selection( [('percent','Percentage'), ('fixed','Fixed Amount'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True,
             help="The computation method for the tax amount."),
-        'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True,
+        'applicable_type': fields.selection( [('true','Always'), ('code','Given by Python Code')], 'Applicability', required=True,
             help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
         'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
         'account_collected_id':fields.many2one('account.account', 'Invoice Tax Account'),
@@ -1668,7 +1668,6 @@ class account_tax(osv.osv):
         'python_compute':fields.text('Python Code'),
         'python_compute_inv':fields.text('Python Code (reverse)'),
         'python_applicable':fields.text('Python Code'),
-        'tax_group': fields.selection([('vat','VAT'),('other','Other')], 'Tax Group', help="If a default tax is given in the partner it only overrides taxes from accounts (or products) in the same group."),
 
         #
         # Fields used for the VAT declaration
@@ -1761,7 +1760,6 @@ class account_tax(osv.osv):
         'active': 1,
         'type_tax_use': 'all',
         'sequence': 1,
-        'tax_group': 'vat',
         'ref_tax_sign': 1,
         'ref_base_sign': 1,
         'tax_sign': 1,
@@ -2420,7 +2418,6 @@ class account_tax_template(osv.osv):
         'python_compute':fields.text('Python Code'),
         'python_compute_inv':fields.text('Python Code (reverse)'),
         'python_applicable':fields.text('Python Code'),
-        'tax_group': fields.selection([('vat','VAT'),('other','Other')], 'Tax Group', help="If a default tax if given in the partner it only override taxes from account (or product) of the same group."),
 
         #
         # Fields used for the VAT declaration
@@ -2463,7 +2460,6 @@ class account_tax_template(osv.osv):
         'type': 'percent',
         'amount': 0,
         'sequence': 1,
-        'tax_group': 'vat',
         'ref_tax_sign': 1,
         'ref_base_sign': 1,
         'tax_sign': 1,
@@ -2608,7 +2604,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'python_compute': tax.python_compute,
                 'python_compute_inv': tax.python_compute_inv,
                 'python_applicable': tax.python_applicable,
-                'tax_group':tax.tax_group,
                 'base_code_id': tax.base_code_id and ((tax.base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.base_code_id.id]) or False,
                 'tax_code_id': tax.tax_code_id and ((tax.tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.tax_code_id.id]) or False,
                 'base_sign': tax.base_sign,

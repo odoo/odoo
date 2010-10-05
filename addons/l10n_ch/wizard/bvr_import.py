@@ -214,7 +214,8 @@ def _import(obj, cursor, user, data, context=None):
                 'period_id': statement.period_id.id
                 }
             voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
-            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment')
+            context.update({'move_line_ids': line_ids})
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment', context=context)
             voucher_line_dict =  False
             if result['value']['line_ids']:
                 for line_dict in result['value']['line_ids']:

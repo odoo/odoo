@@ -159,8 +159,8 @@ send an Email to Invited Person')
 
         if not partner_id:
             return {'value': {'contact_ids': []}}
-        cr.execute('select id from res_partner_address \
-                         where partner_id=%s' % (partner_id))
+        cr.execute('SELECT id FROM res_partner_address \
+                         WHERE partner_id=%s', (partner_id,))
         contacts = map(lambda x: x[0], cr.fetchall())
         return {'value': {'contact_ids': contacts}}
 
