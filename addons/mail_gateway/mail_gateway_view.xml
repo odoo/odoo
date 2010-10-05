@@ -135,16 +135,6 @@
         </record>
 
          <!--        Emails action-->
-        <record model="ir.actions.act_window" id="action_view_mailgate_message">
-            <field name="name">Emails</field>
-            <field name="res_model">mailgate.message</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('history', '=', True)]</field>
-            <field name="view_id" ref="view_mailgate_message_tree"/>
-            <field name="context">{"search_default_user_id":uid}</field>
-        </record>
-
         <record model="ir.actions.act_window" id="action_view_mailgate_thread">
             <field name="name">Mailgateway Threads</field>
             <field name="res_model">mailgate.thread</field>
@@ -196,18 +186,9 @@
             view_id="view_mailgate_message_tree"
             />
 
-
-      <menuitem name="Emails" id="menu_base_config_mail"
-        parent="base.menu_base_partner" sequence="5" />
-
-    <menuitem name="Emails" id="menu_mailgate_message"
-        parent="menu_base_config_mail"
-        action="mail_gateway.action_view_mailgate_message"
-       />
-
     <act_window
        id="act_res_partner_open_email" name="Attachments"
-        res_model="ir.attachment"
+       res_model="ir.attachment"
        src_model="mailgate.message"
        domain="[('res_id', '=', res_id),('res_model','=',model)]"/>
 
