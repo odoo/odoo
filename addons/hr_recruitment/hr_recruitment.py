@@ -181,15 +181,15 @@ class hr_applicant(crm.crm_case, osv.osv):
     }
 
     def onchange_job(self,cr, uid, ids, job, context=None):
-        job_obj = self.pool.get('hr.job')
         if context is None:
             context = {}
         result = {}
 
         if job:
+            job_obj = self.pool.get('hr.job')
             result['department_id'] = job_obj.browse(cr, uid, job, context=context).department_id.id
             return {'value': result}
-        return {'value': {'department_id': []}}
+        return {'value': {'department_id': False}}
 
     def stage_previous(self, cr, uid, ids, context=None):
         """This function computes previous stage for case from its current stage
