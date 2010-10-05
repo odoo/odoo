@@ -72,10 +72,20 @@ class account_move_line(osv.osv):
                 context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, first_period, context['period_from'])
             else:
                 context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, context['period_from'], context['period_to'])
-
         if context.get('periods', False):
-            ids = ','.join([str(x) for x in context['periods']])
-            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
+            if initial_bal:
+                query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
+                period_ids = fiscalperiod_obj.search(cr, uid, [('id', 'in', context['periods'])], order='date_start', limit=1)
+                if period_ids and period_ids[0]:
+                    first_period = fiscalperiod_obj.browse(cr, uid, period_ids[0], context=context)
+                    # Find the old periods where date start of those periods less then Start period
+                    periods = fiscalperiod_obj.search(cr, uid, [('date_start', '<', first_period.date_start)])
+                    periods = ','.join([str(x) for x in periods])
+                    if periods:
+                        query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) OR id in (%s)) %s %s" % (fiscalyear_clause, periods, where_move_state, where_move_lines_by_date)
+            else:
+                ids = ','.join([str(x) for x in context['periods']])
+                query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
         else:
             query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
 
