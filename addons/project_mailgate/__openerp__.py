@@ -35,6 +35,7 @@ Moreover, it keeps track of all further communications and task states.
     "init_xml": [],
     "update_xml": [
         "project_mailgate_view.xml",
+        "security/ir.model.access.csv"
     ],
     'demo_xml': [
     ],
