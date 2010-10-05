@@ -253,7 +253,7 @@ class rml_parse(object):
             if ids:
                 d = decimal_precision_obj.browse(self.cr, self.uid, ids)[0].digits
         elif obj and f:
-            res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16,DEFAULT_DIGITS)))
+            res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16, DEFAULT_DIGITS)))
             if isinstance(res_digits, tuple):
                 d = res_digits[1]
             else:
@@ -264,9 +264,18 @@ class rml_parse(object):
                 d = obj._field.digits[1] or DEFAULT_DIGITS
         return d
 
-    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False):
+    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False):
+        """
+            Assuming 'Account' decimal.precision=3:
+                formatLang(value, digits=4) -> digits=4
+                formatLang(value, dp='Account') -> digits=3 ('Account' decimal.precision=3)
+                formatLang(value, digits=5, dp='Account') -> digits=5
+        """
         if digits is None:
-            digits = self.get_digits(value)
+            if dp:
+                digits = self.get_digits(dp=dp)
+            else:
+                digits = self.get_digits(value)
 
         if isinstance(value, (str, unicode)) and not value:
             return ''
