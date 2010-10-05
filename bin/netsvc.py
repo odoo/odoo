@@ -211,7 +211,7 @@ def init_logger():
                 handler = logging.handlers.WatchedFileHandler(logf)
             else:
                 handler = logging.handlers.FileHandler(logf)
-        except Exception, ex:
+        except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
             handler = logging.StreamHandler(sys.stdout)
     else:
@@ -269,11 +269,11 @@ class Logger(object):
                     level_method('[%02d]: %s' % (idx+1, s,))
             elif result:
                 level_method(result[0])
-        except IOError,e:
+        except IOError:
             # TODO: perhaps reset the logger streams?
             #if logrotate closes our files, we end up here..
             pass
-        except:
+        except Exception:
             # better ignore the exception and carry on..
             pass
 
@@ -473,13 +473,13 @@ class OpenERPDispatcher:
 
     def dispatch(self, service_name, method, params):
         try:
+            logger = logging.getLogger('result')
             self.log('service', service_name)
             self.log('method', method)
-            self.log('params', params)
+            self.log('params', params, depth=(logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) and 3 or 1))
             auth = getattr(self, 'auth_provider', None)
             result = ExportService.getService(service_name).dispatch(method, auth, params)
-            logger = logging.getLogger('result')
-            self.log('result', result, channel=logging.DEBUG_RPC_ANSWER, depth=(logger.isEnabledFor(logging.DEBUG_SQL) and 1 or None))
+            self.log('result', result, channel=logging.DEBUG_RPC_ANSWER, depth=(logger.isEnabledFor(logging.DEBUG_SQL) and 5 or 3))
             return result
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))
