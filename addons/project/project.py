@@ -190,7 +190,6 @@ class project(osv.osv):
         'active': True,
         'priority': 1,
         'sequence': 10,
-        'warn_manager': True,
     }
 
     def _check_dates(self, cr, uid, ids):
@@ -373,6 +372,11 @@ class task(osv.osv):
         return res
 
 
+    def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned = 0.0):
+        if remaining and not planned:
+            return {'value':{'planned_hours': remaining}}
+        return {}
+
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
         return {'value':{'remaining_hours': planned - effective}}
 
@@ -482,7 +486,6 @@ class task(osv.osv):
         return True
 
     _constraints = [
-        (_check_dates, 'Error! Task start-date must be lower then task end-date.', ['date_start', 'date_end']),
         (_check_recursion, _('Error ! You cannot create recursive tasks.'), ['parent_ids'])
     ]
     #
@@ -615,7 +618,10 @@ class task(osv.osv):
     def do_open(self, cr, uid, ids, *args):
         tasks= self.browse(cr,uid,ids)
         for t in tasks:
-            self.write(cr, uid, [t.id], {'state': 'open',  'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),})
+            data = {'state': 'open'}
+            if not t.date_start:
+                data['date_start'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            self.write(cr, uid, [t.id], data)
             message = _('Task ') + " '" + t.name + "' "+ _("is Open.")
             self.log(cr, uid, t.id, message)
         return True
@@ -680,7 +686,7 @@ class task(osv.osv):
     def prev_type(self, cr, uid, ids, *args):
         for task in self.browse(cr, uid, ids):
             typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id.type_ids)
+            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
             if types:
                 if typeid and typeid in types:
                     index = types.index(typeid)
