@@ -267,8 +267,9 @@ class rml_parse(object):
     def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False):
         """
             Assuming 'Account' decimal.precision=3:
+                formatLang(value) -> digits=2 (default)
                 formatLang(value, digits=4) -> digits=4
-                formatLang(value, dp='Account') -> digits=3 ('Account' decimal.precision=3)
+                formatLang(value, dp='Account') -> digits=3
                 formatLang(value, digits=5, dp='Account') -> digits=5
         """
         if digits is None:
