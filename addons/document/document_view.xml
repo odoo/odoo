@@ -106,7 +106,7 @@
                             <field name="extension"/>
                             <field name="include_name"/>
                             <separator string="PDF Report" colspan="4"/>
-                            <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
+                             <field name="report_id"/>
                         </form>
                         <tree string="Contents">
                             <field name="sequence" string="Seq."/>
@@ -403,7 +403,7 @@
         src_model="res.partner"
         groups="base.group_extended"/>
 
-    <act_window 
+    <act_window
     	context="{'search_default_parent_id': [active_id]}"
         id="zoom_directory" name="Related Documents"
         res_model="ir.attachment"
