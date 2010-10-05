@@ -184,8 +184,17 @@ class wiki_wiki2(osv.osv):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
-
-        id = super(wiki_wiki2, self).create(cr, uid, vals, context)
+        id = super(wiki_wiki2, self).create(cr, uid,
+                             {'create_id':vals.get('create_id',''),
+                              'name':vals.get('name',''),
+                              'minor_edit':vals.get('minor_edit',''),
+                              'review':vals.get('review',''),
+                              'write_uid':vals.get('write_uid',''),
+                              'parent_id':vals.get('parent_id',''),
+                              'text_area':vals.get('text_area',''),
+                              'toc':vals.get('toc',''),
+                              'group_id':vals.get('group_id',''),
+                              'section':vals.get('section','',)}, context)
         self.create_history(cr, uid, [id], vals, context)
         return id
 
@@ -193,7 +202,6 @@ class wiki_wiki2(osv.osv):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
-
         result = super(wiki_wiki2, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result
