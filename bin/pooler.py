@@ -44,12 +44,11 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
         cr = db.cursor()
         try:
             pool.init_set(cr, False)
+            pool.get('ir.actions.report.xml').register_all(cr)
             cr.commit()
         finally:
             cr.close()
 
-        import report
-        report.interface.register_all(db)
         if pooljobs:
             pool.get('ir.cron').restart(db.dbname)
     return db, pool

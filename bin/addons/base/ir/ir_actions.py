@@ -28,7 +28,9 @@ from tools.translate import _
 import netsvc
 import re
 import copy
+import os
 from xml import dom
+from report.report_sxw import report_sxw, report_rml
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -71,6 +73,27 @@ class report_xml(osv.osv):
                 res[report.id] = False
         return res
 
+    def register_all(self, cr):
+        """Report registration handler that may be overridden by subclasses to
+           add their own kinds of report services.
+           Loads all reports with no manual loaders (auto==True) and
+           registers the appropriate services to implement them.
+        """
+        opj = os.path.join
+        cr.execute("SELECT * FROM ir_act_report_xml WHERE auto=%s ORDER BY id", (True,))
+        result = cr.dictfetchall()
+        svcs = netsvc.Service._services
+        for r in result:
+            if svcs.has_key('report.'+r['report_name']):
+                continue
+            if r['report_rml'] or r['report_rml_content_data']:
+                report_sxw('report.'+r['report_name'], r['model'],
+                        opj('addons',r['report_rml'] or '/'), header=r['header'])
+            if r['report_xsl']:
+                report_rml('report.'+r['report_name'], r['model'],
+                        opj('addons',r['report_xml']),
+                        r['report_xsl'] and opj('addons',r['report_xsl']))
+
     _name = 'ir.actions.report.xml'
     _table = 'ir_act_report_xml'
     _sequence = 'ir_actions_id_seq'
@@ -80,7 +103,7 @@ class report_xml(osv.osv):
         'type': fields.char('Action Type', size=32, required=True),
         'report_name': fields.char('Service Name', size=64, required=True),
         'usage': fields.char('Action Usage', size=32),
-        'report_type': fields.selection([ ('pdf','pdf'), ('html','html'), ('raw','raw'), ('sxw','sxw'), ('txt','txt'), ('odt','odt'), ('html2html','HTML from HTML'), ('mako2html','HTML from Mako'), ], string='Report Type', required=True),
+        'report_type': fields.char('Report Type', size=32, required=True, help="Report Type, e.g. pdf, html, raw, sxw, odt, html2html, mako2html, ..."),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
         'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
         'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
