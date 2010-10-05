@@ -376,7 +376,7 @@
           <para style="terp_default_9">Net Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed) ]] [[ o.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -391,7 +391,7 @@
           <para style="terp_default_9">Taxes:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]] [[ o.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -406,7 +406,7 @@
           <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total) ]] [[ o.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -445,10 +445,10 @@
             <para style="terp_default_8">[[ t.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_8">[[ formatLang(t.base) ]]</para>
+            <para style="terp_default_Right_8">[[ formatLang(t.base, digits=get_digits(dp='Account')) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_8">[[ (t.tax_code_id and t.tax_code_id.notprintable) and removeParentNode('blockTable') or '' ]] [[ formatLang(t.amount) ]]</para>
+            <para style="terp_default_Right_8">[[ (t.tax_code_id and t.tax_code_id.notprintable) and removeParentNode('blockTable') or '' ]] [[ formatLang(t.amount, digits=get_digits(dp='Account')) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_8">

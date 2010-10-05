@@ -144,7 +144,7 @@ class project_issue(crm.crm_case, osv.osv):
     
     _columns = {
         'id': fields.integer('ID'),
-        'name': fields.char('Name', size=128, required=True),
+        'name': fields.char('Issue', size=128, required=True),
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Update Date', readonly=True),
@@ -177,7 +177,7 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
+        'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('object_id.model', '=', 'project.issue')]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -279,16 +279,29 @@ class project_issue(crm.crm_case, osv.osv):
     def convert_to_bug(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
-        if context is None:
-            context = {}
-        if not stage_id:
-            return {'value':{}}
-        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
-        if not stage.on_change:
-            return {'value':{}}
-        return {'value':{}}
-    
+
+    def next_type(self, cr, uid, ids, *args):
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id.type_ids or [])
+            if types:
+                if not typeid:
+                    self.write(cr, uid, task.id, {'type_id': types[0]})
+                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
+                    index = types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': types[index+1]})
+        return True
+
+    def prev_type(self, cr, uid, ids, *args):
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
+            if types:
+                if typeid and typeid in types:
+                    index = types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
+        return True
+
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         if context is None:
             context = {}
@@ -369,31 +382,6 @@ class project_issue(crm.crm_case, osv.osv):
             self.pool.get('ir.attachment').create(cr, uid, data_attach)
 
         return res
-
-    def get_stage_dict(self, cr, uid, ids, context=None):
-        """This function gives dictionary for stage according to stage levels
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param context: A standard dictionary for contextual values"""
-        if not context:
-            context = {}
-        stage_obj = self.pool.get('crm.case.stage')
-        domain = [('object_id.model', '=', self._name)]
-        if 'force_domain' in context and context['force_domain']:
-            domain += context['force_domain']
-        sid = stage_obj.search(cr, uid, domain, context=context)
-        s = {}
-        previous = {}
-        section = self._name
-
-        for stage in stage_obj.browse(cr, uid, sid, context=context):
-            s.setdefault(section, {})
-            s[section][previous.get(section, False)] = stage.id
-            previous[section] = stage.id
-        return s
-
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
         if context is None:

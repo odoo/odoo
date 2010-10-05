@@ -111,7 +111,6 @@ class stock_location(osv.osv):
         @param field_names: Name of field
         @return: Dictionary of values
         """
-        result = dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
 
         product_product_obj = self.pool.get('product.product')
 
@@ -119,28 +118,32 @@ class stock_location(osv.osv):
         res_products_by_location = sorted(cr.dictfetchall(), key=itemgetter('location_id'))
         products_by_location = dict((k, [v['product_id'] for v in itr]) for k, itr in groupby(res_products_by_location, itemgetter('location_id')))
 
+        result = dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
+        result.update(dict([(i, {}.fromkeys(field_names, 0.0)) for i in list(set([aaa['location_id'] for aaa in res_products_by_location]))]))
+
         currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
         currency_obj = self.pool.get('res.currency')
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
         currency_obj.round(cr, uid, currency, 300)
         for loc_id, product_ids in products_by_location.items():
             c = (context or {}).copy()
-            if loc_id in ids:
-                c['location'] = loc_id
-                for prod in product_product_obj.browse(cr, uid, product_ids, context=c):
-                    for f in field_names:
-                        if f == 'stock_real':
-                            result[loc_id][f] += prod.qty_available
-                        elif f == 'stock_virtual':
-                            result[loc_id][f] += prod.virtual_available
-                        elif f == 'stock_real_value':
-                            amount = prod.qty_available * prod.standard_price
-                            amount = currency_obj.round(cr, uid, currency, amount)
-                            result[loc_id][f] += amount
-                        elif f == 'stock_virtual_value':
-                            amount = prod.virtual_available * prod.standard_price
-                            amount = currency_obj.round(cr, uid, currency, amount)
-                            result[loc_id][f] += amount
+            c['location'] = loc_id
+            for prod in product_product_obj.browse(cr, uid, product_ids, context=c):
+                for f in field_names:
+                    if f == 'stock_real':
+                        if loc_id not in result:
+                            result[loc_id] = {}
+                        result[loc_id][f] += prod.qty_available
+                    elif f == 'stock_virtual':
+                        result[loc_id][f] += prod.virtual_available
+                    elif f == 'stock_real_value':
+                        amount = prod.qty_available * prod.standard_price
+                        amount = currency_obj.round(cr, uid, currency, amount)
+                        result[loc_id][f] += amount
+                    elif f == 'stock_virtual_value':
+                        amount = prod.virtual_available * prod.standard_price
+                        amount = currency_obj.round(cr, uid, currency, amount)
+                        result[loc_id][f] += amount
         return result
 
     _columns = {
