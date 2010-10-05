@@ -91,7 +91,7 @@
 	                    <field name="project_id">
 	                        <filter icon="terp-folder-blue"
 	                        		string="My Projects"
-	                        		help="My Projects" domain="[('project_id','=',uid)]"/>
+	                        		help="My Projects" domain="[('project_id.user_id','=',uid)]"/>
                           </field>
 
                           <field name="user_id" widget="selection">

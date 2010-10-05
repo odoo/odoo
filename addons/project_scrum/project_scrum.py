@@ -237,6 +237,7 @@ class project_scrum_product_backlog(osv.osv):
         return True
 
     def button_postpone(self, cr, uid, ids, context=None):
+        raise osv.except_osv(_('Warning!'), _( "Are you sure to postpone Backlog ?"))
         if context is None:
             context = {}
         for product in self.browse(cr, uid, ids, context=context):
