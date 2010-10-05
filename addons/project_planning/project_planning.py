@@ -25,7 +25,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv
-from tools.translate import _
 import tools
 
 

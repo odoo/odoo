@@ -73,7 +73,6 @@ class account_budget_post_dotation(osv.osv):
             if line.period_id:
                 obj_period = self.pool.get('account.period').browse(cr, uid, line.period_id.id)
 
-                total_days = strToDate(obj_period.date_stop) - strToDate(obj_period.date_start)
                 budget_id = line.post_id and line.post_id.id or False
                 query="SELECT id FROM crossovered_budget_lines WHERE \
                         general_budget_id= %s AND (date_from  >=%s AND date_from <= %s ) \

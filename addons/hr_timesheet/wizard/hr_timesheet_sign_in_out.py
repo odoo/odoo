@@ -172,7 +172,7 @@ class hr_si_project(osv.osv_memory):
             context = {}
         for data in self.browse(cr, uid, ids, context=context):
             emp_id = data.emp_id.id
-            success = emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data.date or False)
+            emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data.date or False)
         return {}
 
     def default_get(self, cr, uid, fields_list, context=None):

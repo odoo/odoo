@@ -326,7 +326,7 @@ class account_move_line(osv.osv):
                        'journal_id': line.journal_id.analytic_journal_id.id,
                        'ref': line.ref,
                    }
-                   ali_id=analytic_line_obj.create(cr, uid, al_vals, context=context)
+                   analytic_line_obj.create(cr, uid, al_vals, context=context)
         return True
 
 account_move_line()
