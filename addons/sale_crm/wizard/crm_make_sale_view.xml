@@ -9,7 +9,6 @@
           <field name="type">form</field>
           <field name="arch" type="xml">
               <form string="Create a Sale Order" >
-              		<group width="660" height="300">
                     <group colspan="4">
                         <field name="partner_id" required="1"/>
                         <field name="shop_id" required="1" widget="selection"/>
@@ -64,7 +63,6 @@
                     <label string="" colspan="2"/>
                     <button special="cancel" string="_Close" icon="gtk-cancel"/>
                     <button name="makeOrder" string="_Create" type="object" icon='gtk-ok'/>
-                </group>
                 </group>
             </form>
           </field>
