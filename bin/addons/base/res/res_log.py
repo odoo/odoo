@@ -21,7 +21,7 @@
 
 from osv import fields, osv
 import tools
-
+import time
 class res_log(osv.osv_memory):
     _name = 'res.log'
     _columns = {
@@ -33,9 +33,10 @@ class res_log(osv.osv_memory):
         'create_date': fields.datetime('Created Date', readonly=True),
     }
     _defaults = {
-        'user_id': lambda self,cr,uid,ctx: uid
+        'user_id': lambda self,cr,uid,ctx: uid,
+        'create_date': time.strftime('%Y-%m-%d %H:%M:%S')
     }
-    _order='date desc'
+    _order='create_date desc'
 
     # TODO: do not return secondary log if same object than in the model (but unlink it)
     def get(self, cr, uid, context={}):

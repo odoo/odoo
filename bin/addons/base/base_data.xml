@@ -1053,8 +1053,6 @@
             <field name="address_id" ref="main_address"/>
             <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
-            <field name="action_id" ref="action_menu_admin"/>
-            <field name="menu_id" ref="action_menu_admin"/>
         </record>
 
         <record id="main_partner" model="res.partner">
@@ -1375,6 +1373,9 @@
             <field name="currency_id" ref="UAH"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-
+        <record id="res_bank_1" model="res.bank">
+            <field name="name">Reserve</field>
+            <field name="code">RSV</field>
+        </record>
     </data>
 </openerp>

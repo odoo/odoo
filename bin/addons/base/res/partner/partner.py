@@ -392,7 +392,7 @@ class res_partner_bank(osv.osv):
     _columns = {
         'name': fields.char('Description', size=128),
         'acc_number': fields.char('Account Number', size=64, required=False),
-        'bank': fields.many2one('res.bank', 'Bank'),
+        'bank': fields.many2one('res.bank', 'Bank', required=True),
         'owner_name': fields.char('Account Owner', size=64),
         'street': fields.char('Street', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),

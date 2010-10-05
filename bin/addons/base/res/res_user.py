@@ -47,7 +47,7 @@ class groups(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context={}):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
-        default.update({'name': group_name +' (copy)'})
+        default.update({'name': _('%s (copy)')%group_name})
         return super(groups, self).copy(cr, uid, id, default, context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -74,14 +74,6 @@ class groups(osv.osv):
             if aid:
                 aid.write({'groups_id': [(4, gid)]})
         return gid
-
-    def copy(self, cr, uid, id, default={}, context={}, done_list=[], local=False):
-        group = self.browse(cr, uid, id, context=context)
-        default = default.copy()
-        if not 'name' in default:
-            default['name'] = group['name']
-        default['name'] = default['name'] + _(' (copy)')
-        return super(groups, self).copy(cr, uid, id, default, context=context)
 
     def get_extended_interface_group(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
@@ -153,10 +145,8 @@ class users(osv.osv):
         return self.WELCOME_MAIL_BODY
 
     def get_current_company(self, cr, uid):
-        res=[]
         cr.execute('select company_id, res_company.name from res_users left join res_company on res_company.id = company_id where res_users.id=%s' %uid)
-        res = cr.fetchall()
-        return res
+        return cr.fetchall()
 
     def send_welcome_email(self, cr, uid, id, context=None):
         logger= netsvc.Logger()
@@ -241,10 +231,10 @@ class users(osv.osv):
                  " aren't configured, it won't be possible to email new "
                  "users."),
         'signature': fields.text('Signature', size=64),
-        'address_id': fields.many2one('res.partner.address', 'Company Address'),
+        'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
-        'action_id': fields.many2one('ir.actions.actions', 'Home Action'),
-        'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
+        'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
+        'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 
@@ -289,15 +279,6 @@ class users(osv.osv):
                 result = override_password(result)
             else:
                 result = map(override_password, result)
-
-        if isinstance(result, list):
-            for rec in result:
-                if not rec.get('action_id',True):
-                    rec['action_id'] = (self._get_menu(cr, uid),'Menu')
-        else:
-            if not result.get('action_id',True):
-                result['action_id'] = (self._get_menu(cr, uid),'Menu')
-
         return result
 
 
@@ -328,10 +309,6 @@ class users(osv.osv):
             self.__admin_ids[cr.dbname] = ir_model_data_obj.read(cr, 1, [mdid], ['res_id'])[0]['res_id']
         return self.__admin_ids[cr.dbname]
 
-    def _get_action(self,cr, uid, context={}):
-        ids = self.pool.get('ir.ui.menu').search(cr, uid, [('usage','=','menu')])
-        return ids and ids[0] or False
-
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
@@ -345,20 +322,20 @@ class users(osv.osv):
             return [c]
         return False
 
-    def _get_menu(self,cr, uid, context={}):
-        ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')])
+    def _get_menu(self,cr, uid, context=None):
+        ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')], context=context)
         return ids and ids[0] or False
 
-    def _get_group(self,cr, uid, context={}):
-        ids = self.pool.get('res.groups').search(cr, uid, [('name','=','Employee')])
-        return ids or False
+    def _get_group(self,cr, uid, context=None):
+        dataobj = self.pool.get('ir.model.data')
+        data_id = dataobj._get_id(cr, 1, 'base', 'group_user')
+        return data_id and [data_id] or False
 
     _defaults = {
         'password' : lambda *a : '',
         'context_lang': lambda *args: 'en_US',
         'active' : lambda *a: True,
         'menu_id': _get_menu,
-        'action_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,

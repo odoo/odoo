@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-09-09 18:36+0000\n"
-"Last-Translator: Anup (OpenERP) <ach@tinyerp.com>\n"
+"PO-Revision-Date: 2010-10-01 11:47+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:42+0000\n"
+"X-Launchpad-Export-Date: 2010-10-02 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -3366,7 +3366,7 @@ msgstr "U kunt het menu opnieuw laden met (Ctrl+t Ctrl+r)."
 #: view:ir.ui.view_sc:0
 #: field:res.partner.title,shortcut:0
 msgid "Shortcut"
-msgstr "Sneltoets"
+msgstr "Snelkoppeling"
 
 #. module: base
 #: field:ir.model.data,date_init:0
@@ -8109,34 +8109,35 @@ msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam !"
 #. module: base
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
 msgid "Shortcut for this menu already exists!"
-msgstr ""
+msgstr "Dit menu heeft al een snelkoppeling!"
 
 #. module: base
 #: sql_constraint:ir.model.data:0
 msgid ""
 "You cannot have multiple records with the same id for the same module !"
 msgstr ""
+"U kunt niet meer records hebben met dezelfde id voor dezelfde module !"
 
 #. module: base
 #: sql_constraint:maintenance.contract:0
 msgid "Your maintenance contract is already subscribed in the system !"
-msgstr ""
+msgstr "Uw onderhoudscontract is al ingeschreven in het systeem !"
 
 #. module: base
 #: sql_constraint:ir.module.module:0
 #: sql_constraint:ir.module.web:0
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "De modulenaam moet uniek zijn !"
 
 #. module: base
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: base
 #: sql_constraint:res.partner.function:0
@@ -8146,38 +8147,38 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.partner:0
 msgid "The name of the Partner must be unique !"
-msgstr ""
+msgstr "De relatienaam moet uniek zijn !"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr ""
+msgstr "De landnaam moet uniek zijn !"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
-msgstr ""
+msgstr "De landcode moet uniek zijn !"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr ""
+msgstr "De taalnaam moet uniek zijn !"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The code of the language must be unique !"
-msgstr ""
+msgstr "De taalcode moet uniek zijn !"
 
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr ""
+msgstr "De groepsnaam moet uniek zijn !"
 
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Constraint Error"
-msgstr ""
+msgstr "Voorwaarde Fout"
 
 #. module: base
 #: code:addons/osv/osv.py:0
@@ -8188,6 +8189,10 @@ msgid ""
 "reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
+"De bewerking kan niet worden afgerond, waarschijnlijk vanwege:\n"
+"- verwijdering: u probeert een record te verwijderen terwijl er nog door een "
+"ander aan wordt gerefereerd\n"
+"- maken/wijzigen: een verplicht veld is niet correct ingevuld"
 
 #. module: base
 #: code:addons/osv/osv.py:0
@@ -8197,12 +8202,15 @@ msgid ""
 "\n"
 "[object with reference: %s - %s]"
 msgstr ""
+"\n"
+"\n"
+"[object met referentie: %s - %s]"
 
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Integrity Error"
-msgstr ""
+msgstr "Integriteit Fout"
 
 #~ msgid "Main Company"
 #~ msgstr "Moederorganisatie"
