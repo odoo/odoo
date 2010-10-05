@@ -423,14 +423,13 @@ class users(osv.osv):
         cr = pooler.get_db(db).cursor()
         cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
         res = cr.fetchone()
-
+        result = False
         if res:
             cr.execute("update res_users set date=%s where id=%s", (time.strftime('%Y-%m-%d %H:%M:%S'),res[0]))
             cr.commit()
-            return res[0]
-        else:
-            return False
+            result = res[0]
         cr.close()
+        return result
     def check_super(self, passwd):
         if passwd == tools.config['admin_passwd']:
             return True
