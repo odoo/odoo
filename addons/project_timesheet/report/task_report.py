@@ -32,7 +32,7 @@ class report_timesheet_task_user(osv.osv):
     def _get_task_hours(self, cr, uid, ids, name,args,context):
         result = {}
         for record in self.browse(cr, uid, ids,context):
-            last_date = datetime(record.name, '%Y-%m-%d') + relativedelta(months=1) - 1
+            last_date = datetime.strptime(record.name, '%Y-%m-%d') + relativedelta(months=1) - 1
             task_obj=self.pool.get('project.task.work')
             task_ids = task_obj.search(cr, uid, [('user_id','=',record.user_id.id),('date','>=',record.name),('date','<=',last_date.strftime('%Y-%m-%d'))])
             tsk_hrs = task_obj.read(cr, uid, task_ids, ['hours','date','user_id'])
