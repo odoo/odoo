@@ -683,12 +683,12 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                         'location_dest_id': False
                     }
             }
-        produc_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
+        product_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
 
         if type != 'add':
             return {'value': {
                 'to_invoice': False,
-                'location_id': produc_id,
+                'location_id': product_id,
                 'location_dest_id': False
                 }
             }
@@ -701,7 +701,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         return {'value': {
             'to_invoice': to_invoice,
             'location_id': stock_id,
-            'location_dest_id': produc_id
+            'location_dest_id': product_id
             }
         }
 
