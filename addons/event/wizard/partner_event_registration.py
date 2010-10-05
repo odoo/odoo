@@ -24,6 +24,7 @@ import netsvc
 import tools
 from osv import fields, osv
 from tools.translate import _
+from decimal_precision import decimal_precision as dp
 
 
 class partner_event_registration(osv.osv_memory):
@@ -36,7 +37,7 @@ class partner_event_registration(osv.osv_memory):
     _columns = {
         'event_id': fields.many2one('event.event', 'Event'),
         'event_type': fields.many2one('event.type', 'Type', readonly=True),
-        'unit_price': fields.float('Registration Cost'),
+        'unit_price': fields.float('Registration Cost', digits_compute=dp.get_precision('Sale Price')),
         'start_date': fields.datetime('Start date', required=True, help="Beginning Date of Event", readonly=True),
         'end_date': fields.datetime('Closing date', required=True, help="Closing Date of Event", readonly=True),
         'nb_register': fields.integer('Number of Registration'),
