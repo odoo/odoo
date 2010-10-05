@@ -179,22 +179,22 @@
             <para style="terp_default_8">[[ l.employee_id.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.basic) ]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.basic, dp='Account') ]] [[ company.currency_id.symbol]] </para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.other_pay)]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.other_pay, dp='Account')]] [[ company.currency_id.symbol]] </para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.allounce)]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.allounce, dp='Account')]] [[ company.currency_id.symbol]] </para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.grows)]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.grows, dp='Account')]] [[ company.currency_id.symbol]] </para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.deduction)]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.deduction, dp='Account')]] [[ company.currency_id.symbol]] </para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.net)]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.net, dp='Account')]] [[ company.currency_id.symbol]] </para>
           </td>
         </tr>
       </blockTable>
@@ -213,22 +213,22 @@
           <para style="terp_tblheader_details">Total SAL<font face="Helvetica" size="7.0">([[ company.currency_id.code]])</font></para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_basic())]][[ company.currency_id.symbol]] </para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_basic(), dp='Account')]][[ company.currency_id.symbol]] </para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_other())]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_other(), dp='Account')]] [[ company.currency_id.symbol]]</para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_allow())]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_allow(), dp='Account')]] [[ company.currency_id.symbol]]</para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_grows())]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_grows(), dp='Account')]] [[ company.currency_id.symbol]]</para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_deduct())]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_deduct(), dp='Account')]] [[ company.currency_id.symbol]]</para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_net())]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_net(), dp='Account')]] [[ company.currency_id.symbol]]</para>
         </td>
       </tr>
     </blockTable>
