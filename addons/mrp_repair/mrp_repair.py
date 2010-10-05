@@ -683,8 +683,8 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                         'location_dest_id': False
                     }
             }
-        product_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
 
+        product_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
         if type != 'add':
             return {'value': {
                 'to_invoice': False,
@@ -694,10 +694,8 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
             }
 
         stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
-        to_invoice = False
-        if guarantee_limit and datetime.now() > datetime.strptime(guarantee_limit, '%Y-%m-%d'):
-            to_invoice=True
-
+        to_invoice = (guarantee_limit and
+                      datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now()):
         return {'value': {
             'to_invoice': to_invoice,
             'location_id': stock_id,
