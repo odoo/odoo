@@ -26,10 +26,28 @@ import tools
 from tools.translate import _
 
 class hr_employee_category(osv.osv):
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
+        res = self.name_get(cr, uid, ids, context)
+        return dict(res)
+
     _name = "hr.employee.category"
     _description = "Employee Category"
     _columns = {
         'name': fields.char("Category", size=64, required=True),
+        'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
         'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories')
     }
