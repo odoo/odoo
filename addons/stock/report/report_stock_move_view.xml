@@ -204,7 +204,7 @@
                     <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                      <filter name="group_lot" string="Lot" context="{'group_by':'prodlot_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter name="group_company" string="Company" context="{'group_by':'company_id'}"/>
+                    <filter name="group_company" string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <filter name="group_location" string="Location" context="{'group_by':'location_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Date" icon="terp-go-month" context="{'group_by':'date'}"/>
