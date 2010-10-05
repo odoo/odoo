@@ -123,7 +123,7 @@
             <field name="act_window_id" ref="action_partner_address_form"/>
         </record>
         <menuitem action="action_partner_address_form" id="menu_partner_address_form"
-            groups="base.group_extended,base.group_system,group_sale_manager,group_sale_salesman"
+            groups="base.group_extended"
             parent="base.menu_address_book" sequence="30"/>
 
         <!--
@@ -207,7 +207,7 @@
             <field name="domain">[('domain','=','partner')]</field>
         </record>
 
-        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" name="Partner Title" parent="menu_config_address_book" sequence="2"/>
+        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="menu_config_address_book" sequence="2"/>
 
         <record id="action_partner_title_contact" model="ir.actions.act_window">
             <field name="name">Contact Titles</field>
