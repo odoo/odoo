@@ -35,10 +35,10 @@ class report_voucher_move(report_sxw.rml_parse):
             'debit':self.debit,
             'credit':self.credit,
         })
- 	self.user = uid
+        self.user = uid
 
     def convert(self, amount):
-    	user_id = self.pool.get('res.users').browse(self.cr, self.user, [self.user])[0]
+        user_id = self.pool.get('res.users').browse(self.cr, self.user, [self.user])[0]
         return amount_to_text_en.amount_to_text(amount, 'en', user_id.company_id.currency_id.name)
 
     def get_title(self, voucher):
