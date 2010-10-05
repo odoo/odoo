@@ -56,13 +56,13 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
             'get_company':self._get_company,
-
+            'get_target_move': self._get_target_move,
         })
         self.context = context
 
     def sum_dr(self):
         if self.res_bl['type'] == 'Net Profit':
-            self.result_sum_dr += self.res_bl['balance']
+            self.result_sum_dr += self.res_bl['balance']*-1
         return self.result_sum_dr
 
     def sum_cr(self):
@@ -127,9 +127,9 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
                         'balance':account.balance,
                     }
                     if typ == 'liability' and account.type <> 'view' and (account.debit <> account.credit):
-                        self.result_sum_dr += abs(account.debit - account.credit)
+                        self.result_sum_dr += account.balance
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
-                        self.result_sum_cr += abs(account.debit - account.credit)
+                        self.result_sum_cr += account.balance
                     if data['form']['display_account'] == 'bal_movement':
                         if account.credit > 0 or account.debit > 0 or account.balance > 0 :
                             accounts_temp.append(account_dict)

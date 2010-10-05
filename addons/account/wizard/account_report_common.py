@@ -40,7 +40,10 @@ class account_common_report(osv.osv_memory):
         'journal_ids': fields.many2many('account.journal', 'account_common_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
         'date_from': fields.date("Start Date"),
         'date_to': fields.date("End Date"),
-                }
+        'target_move': fields.selection([('all', 'All Entries'),
+                                        ('posted', 'All Posted Entries')], 'Target Moves', required=True),
+
+        }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         mod_obj = self.pool.get('ir.model.data')
@@ -101,6 +104,7 @@ class account_common_report(osv.osv_memory):
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
             'chart_account_id': _get_account,
+            'target_move': 'all',
     }
 
     def _build_contexts(self, cr, uid, ids, data, context=None):
@@ -132,7 +136,7 @@ class account_common_report(osv.osv_memory):
         data = {}
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
-        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id'])[0]
+        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'])[0]
         used_context = self._build_contexts(cr, uid, ids, data, context=context)
         data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
         data['form']['used_context'] = used_context

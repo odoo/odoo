@@ -31,5 +31,10 @@
                 </xpath>
             </field>
         </record>
+
+        <menuitem id="menu_project_billing" name="Billing"
+                  parent="base.menu_main_pm" sequence="5"/>
+        <menuitem id="menu_project_billing_line" name="Bill Tasks Work"
+            parent="menu_project_billing" action="hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree"/>
     </data>
 </openerp>

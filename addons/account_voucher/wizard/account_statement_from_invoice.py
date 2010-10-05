@@ -128,7 +128,7 @@ class account_statement_from_invoice(osv.osv_memory):
         'line_ids': fields.many2many('account.move.line', 'account_move_line_relation', 'move_id', 'line_id', 'Invoices'),
     }
     _defaults = {
-        'date':lambda *a: time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
     }
 
     def search_invoices(self, cr, uid, ids, context=None):

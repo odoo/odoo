@@ -25,12 +25,9 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 import netsvc
-import pooler
 from osv import fields, osv
 import decimal_precision as dp
-from tools.misc import currency
 from tools.translate import _
-from tools import config
 
 def check_cycle(self, cr, uid, ids):
     """ climbs the ``self._table.parent_id`` chains for 100 levels or
@@ -624,7 +621,6 @@ class account_journal(osv.osv):
     }
 
     def write(self, cr, uid, ids, vals, context=None):
-        obj=[]
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
             if move_lines:
@@ -640,20 +636,9 @@ class account_journal(osv.osv):
         @param context: context arguments, like lang, time zone
         @return: return a result
         """
-
-        journal_type = ('sale', 'sale_refund', 'purchase', 'purchase_refund')
-        journal_seq = {
-            'sale':'seq_out_invoice',
-            'purchase':'seq_in_invoice',
-            'purchase_refund':'seq_out_refund',
-            'sale_refund':'seq_in_refund'
-        }
-
         seq_pool = self.pool.get('ir.sequence')
         seq_typ_pool = self.pool.get('ir.sequence.type')
-        date_pool = self.pool.get('ir.model.data')
 
-        result = True
         name = vals['name']
         code = vals['code'].lower()
 
@@ -924,7 +909,6 @@ class account_period(osv.osv):
         return self.name_get(cr, user, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context={}):
-        obj=[]
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
             if move_lines:
@@ -2332,7 +2316,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
             'parent_id': data[0]['cparent_id'],
             'company_id': company_id,
             }
-        new_account = acc_obj.create(cr, uid, vals)
+        acc_obj.create(cr, uid, vals)
         return {'type':'state', 'state': 'end' }
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -2738,7 +2722,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             if ref_acc_bank.code:
                 try:
                     new_code = str(int(ref_acc_bank.code.ljust(dig,'0')) + current_num)
-                except Exception,e:
+                except:
                     new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)),'0')) + str(current_num)
             vals = {
                 'name': tmp,
@@ -2860,4 +2844,3 @@ class account_bank_accounts_wizard(osv.osv_memory):
 account_bank_accounts_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

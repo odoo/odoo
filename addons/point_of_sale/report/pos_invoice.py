@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -32,7 +32,7 @@ class pos_invoice(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
         })
-        
+
 
     def set_context(self, objects, data, ids, report_type=None):
         super(pos_invoice, self).set_context(objects, data, ids, report_type)
@@ -54,5 +54,5 @@ class pos_invoice(report_sxw.rml_parse):
         self.localcontext['data'] = data
         self.localcontext['objects'] = iids
 
-report_sxw.report_sxw('report.pos.invoice', 'pos.order', 'addons/account/report/invoice.rml', parser= pos_invoice)
+report_sxw.report_sxw('report.pos.invoice', 'pos.order', 'addons/account/report/account_print_invoice.rml', parser= pos_invoice)
 

@@ -64,7 +64,7 @@ class account_analytic_plan_line(osv.osv):
         'plan_id':fields.many2one('account.analytic.plan','Analytic Plan'),
         'name': fields.char('Plan Name', size=64, required=True, select=True),
         'sequence':fields.integer('Sequence'),
-        'root_analytic_id': fields.many2one('account.analytic.account','Root Account',help="Root account of this plan.",required=True),
+        'root_analytic_id': fields.many2one('account.analytic.account','Root Account',help="Root account of this plan.",required=False),
         'min_required': fields.float('Minimum Allowed (%)'),
         'max_required': fields.float('Maximum Allowed (%)'),
     }
@@ -326,7 +326,7 @@ class account_move_line(osv.osv):
                        'journal_id': line.journal_id.analytic_journal_id.id,
                        'ref': line.ref,
                    }
-                   ali_id=analytic_line_obj.create(cr, uid, al_vals, context=context)
+                   analytic_line_obj.create(cr, uid, al_vals, context=context)
         return True
 
 account_move_line()
@@ -343,7 +343,6 @@ class account_invoice(osv.osv):
     def _get_analytic_lines(self, cr, uid, id):
         inv = self.browse(cr, uid, [id])[0]
         cur_obj = self.pool.get('res.currency')
-
         company_currency = inv.company_id.currency_id.id
         if inv.type in ('out_invoice', 'in_refund'):
             sign = 1
@@ -354,7 +353,7 @@ class account_invoice(osv.osv):
         acct_ins_obj = self.pool.get('account.analytic.plan.instance')
 
         for il in iml:
-            if il['analytics_id']:
+            if il.get('analytics_id', False):
 
                 if inv.type in ('in_invoice', 'in_refund'):
                     ref = inv.reference
@@ -363,7 +362,7 @@ class account_invoice(osv.osv):
                 obj_move_line = acct_ins_obj.browse(cr, uid, il['analytics_id'])
                 amount_calc = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, il['price'], context={'date': inv.date_invoice}) * sign
                 qty = il['quantity']
-                il['analytic_lines']=[]
+                il['analytic_lines'] = []
                 for line2 in obj_move_line.account_ids:
                     amt = amount_calc * (line2.rate/100)
                     qtty = qty* (line2.rate/100)
@@ -418,6 +417,5 @@ class sale_order_line(osv.osv):
         return create_ids
 
 sale_order_line()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

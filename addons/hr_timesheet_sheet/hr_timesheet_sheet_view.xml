@@ -39,7 +39,7 @@
             <field name="arch" type="xml">
                 <form string="Timesheet by Accounts">
                     <field name="sheet_id" select="1"/>
-                    <field name="name" select="1" groups="base.group_extended"/>
+                    <field name="name" select="1" groups="analytic.group_analytic_accounting"/>
                     <field name="total" sum="Total"/>
                     <field name="invoice_rate"/>
                 </form>
@@ -53,7 +53,7 @@
             <field name="arch" type="xml">
                 <tree string="Timesheet by Accounts">
                     <field name="sheet_id"/>
-                    <field name="name" groups="base.group_extended"/>
+                    <field name="name" groups="analytic.group_analytic_accounting"/>
                     <field name="total" sum="Total"/>
                     <field name="invoice_rate"/>
                 </tree>
@@ -104,11 +104,11 @@
                                     <field invisible="1" name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
                                     <field name="name"/>
-                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
                                     <field name="to_invoice"/>
                                     <field invisible="1" name="journal_id"/>
-                                    <field invisible="1" name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-                                    <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                                    <field invisible="1" name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                    <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
                                     <field invisible="1" name="amount"/>
                                     <field invisible="1" name="general_account_id"/>
                                     <field invisible="1" name="user_id" required="1"/>
@@ -117,11 +117,11 @@
                                     <field name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
                                     <field name="name"/>
-                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
                                     <field name="to_invoice"/>
                                     <field name="journal_id"/>
-                                    <field name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-                                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                                    <field name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
                                     <field name="amount"/>
                                     <field name="general_account_id"/>
                                     <field name="user_id" required="1"/>
@@ -201,8 +201,7 @@
              id="base.menu_project_management_time_tracking"
              name="Time Tracking"
              parent="base.menu_main_pm" sequence="5"/>
-        <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="base.menu_project_management_time_tracking"
-              sequence="5"/>
+
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
              sequence="2"/>
 
@@ -290,26 +289,26 @@
             </field>
         </record>
 
-        <act_window 
+        <act_window
         context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_by_day" 
-        name="Timesheet by Account" 
-        res_model="hr_timesheet_sheet.sheet.account" 
+        id="act_hr_timesheet_sheet_sheet_by_day"
+        name="Timesheet by Account"
+        res_model="hr_timesheet_sheet.sheet.account"
         src_model="hr_timesheet_sheet.sheet"/>
 
-        <act_window 
+        <act_window
         context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet" 
-        name="Timesheet Lines" 
-        res_model="hr.analytic.timesheet" 
+        id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet"
+        name="Timesheet Lines"
+        res_model="hr.analytic.timesheet"
         src_model="hr_timesheet_sheet.sheet"/>
-        
 
-        <act_window 
+
+        <act_window
         context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_2_hr_attendance" 
-        name="Attendances" 
-        res_model="hr.attendance" 
+        id="act_hr_timesheet_sheet_sheet_2_hr_attendance"
+        name="Attendances"
+        res_model="hr.attendance"
         src_model="hr_timesheet_sheet.sheet"/>
 
         <record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
