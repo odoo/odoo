@@ -27,6 +27,7 @@ import netsvc
 from osv import fields, osv
 from tools import config
 from tools.translate import _
+import decimal_precision as dp
 
 
 
@@ -774,9 +775,9 @@ class hr_payslip(osv.osv):
             ('done','Paid Salary'),
             ('cancel','Reject'),
         ],'State', select=True, readonly=True),
-        'basic_before_leaves': fields.float('Basic Salary', readonly=True,  digits=(16, 2)),
-        'leaves': fields.float('Leave Deductions', readonly=True,  digits=(16, 2)),
-        'basic': fields.float('Net Basic', readonly=True,  digits=(16, 2)),
+        'basic_before_leaves': fields.float('Basic Salary', readonly=True, digits_compute=dp.get_precision('Account')),
+        'leaves': fields.float('Leave Deductions', readonly=True, digits_compute=dp.get_precision('Account')),
+        'basic': fields.float('Net Basic', readonly=True, digits_compute=dp.get_precision('Account')),
         'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 2)),
         'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, 2)),
         'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits=(16, 2)),
