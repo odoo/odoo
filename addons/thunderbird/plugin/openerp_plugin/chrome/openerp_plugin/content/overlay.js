@@ -195,11 +195,9 @@ var openPartnerHandler = {
             if(strlSearchResult=="partner_id"){
                 partner_id = strlSearchResultValue;
                 weburl = getWebServerURL();
-                webport = getwebPort();
-                var urlport = weburl+':'+webport
 
                 if (parseInt(partner_id) > 0){
-                  var t = urlport + "/openerp/form/view?model=res.partner&id="+partner_id;
+                  var t = weburl + "/openerp/form/view?model=res.partner&id="+partner_id;
                    alert(t + ":" + " " + "\n\n" + "You can copy this URL into your WebBrowser if URL is not redirected automatic.");
 
                   window.open(t);
@@ -304,10 +302,8 @@ var listDocumentHandler = {
         res_id = res.QueryElementAt(1, Components.interfaces.nsISupportsPRInt32);
 		model = res.QueryElementAt(0, Components.interfaces.nsISupportsCString); 
         weburl = getWebServerURL();
-        webport = getwebPort();
         
-        var urlport = weburl+':'+webport;
-        var t = urlport + "/openerp/form/view?model=" + model +"&id=" + res_id;
+        var t = weburl + "/openerp/form/view?model=" + model +"&id=" + res_id;
         alert(t + ":" + " " + "\n\n" + "You can copy this URL into your WebBrowser if URL is not redirected automatic.");
         window.open(t); 
          
