@@ -679,9 +679,9 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         """
         if not type:
             return {'value': {
-                        'location_id': False,
-                        'location_dest_id': False
-                    }
+                'location_id': False,
+                'location_dest_id': False
+                }
             }
 
         product_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
