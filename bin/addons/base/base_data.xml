@@ -1373,6 +1373,9 @@
             <field name="currency_id" ref="UAH"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-
+        <record id="res_bank_1" model="res.bank">
+            <field name="name">Reserve</field>
+            <field name="code">RSV</field>
+        </record>
     </data>
 </openerp>
