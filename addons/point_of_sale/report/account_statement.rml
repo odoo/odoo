@@ -216,10 +216,10 @@
           <para style="terp_default_Centre_8">[[ formatLang(statement.closing_date,date=True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(statement.balance_start, digits=get_digits(dp='Account')) ]][[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang(statement.balance_start, dp='Account') ]][[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(statement.balance_end_real, digits=get_digits(dp='Account')) ]][[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang(statement.balance_end_real, dp='Account') ]][[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -254,7 +254,7 @@
           <para style="terp_default_9">[[ line_ids.partner_id.name ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(line_ids.amount, digits=get_digits(dp='Account')) ]][[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(line_ids.amount, dp='Account') ]][[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -269,7 +269,7 @@
           <para style="terp_default_Right_9_Bold">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(get_total(statement.line_ids), digits=get_digits(dp='Account')) ]][[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(get_total(statement.line_ids), dp='Account') ]][[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
