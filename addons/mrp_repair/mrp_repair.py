@@ -695,7 +695,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
 
         stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
         to_invoice = (guarantee_limit and
-                      datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now()):
+                      datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
         return {'value': {
             'to_invoice': to_invoice,
             'location_id': stock_id,
