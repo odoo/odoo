@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-account" id="menu_finance" name="Accounting" sequence="13"/>
+        <menuitem icon="terp-account" id="menu_finance" name="Accounting" sequence="13" groups="group_account_invoice,group_account_user,group_account_manager"/>
         <menuitem id="menu_finance_receivables" name="Customers" parent="menu_finance" sequence="1" groups="group_account_user,group_account_manager"/>
         <menuitem id="menu_finance_payables" name="Vendors" parent="menu_finance" sequence="2" groups="group_account_user,group_account_manager"/>
         <menuitem id="menu_finance_bank_and_cash" name="Bank and Cash" parent="menu_finance" sequence="3"/>
