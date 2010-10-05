@@ -357,7 +357,7 @@
             <para style="terp_default_Right_9">[[ l.discount and formatLang (l.discount) or '' ]] </para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal, dp='Account') ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ o.currency_id.code ]]</para>
@@ -488,7 +488,7 @@
     <blockTable colWidths="530.0" style="Table_Main_Table">
       <tr>
         <td>
-          <para style="terp_default_8">[[ o.amount_tax and formatLang(o.amount_tax, digits=get_digits(dp='Account')) or removeParentNode('blockTable') ]]</para>
+          <para style="terp_default_8">[[ o.amount_tax and formatLang(o.amount_tax, dp='Account') or removeParentNode('blockTable') ]]</para>
           <blockTable colWidths="54.0,58.0,67.0" style="Table_Tax_Header">
             <tr>
               <td>
@@ -516,10 +516,10 @@
                 <para style="terp_default_Centre_8">[[ t.name ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ formatLang(t.base, digits=get_digits(dp='Account')) ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(t.base, dp='Account') ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ formatLang(t.amount, digits=get_digits(dp='Account')) ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(t.amount, dp='Account') ]]</para>
               </td>
             </tr>
           </blockTable>
