@@ -2,13 +2,13 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse" parent="" groups="group_stock_manager" sequence="5"/>
-        <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1" groups="group_stock_manager,base.group_extended"/>
+        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse" groups="group_stock_manager,group_stock_user" sequence="5"/>
+        <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1" groups="group_stock_manager,group_stock_user,base.group_extended"/>
         <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2"/>
         <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="6"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager,base.group_system"/>
-        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="1" groups="base.group_system"/>
+        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="1" groups="group_stock_manager,base.group_system"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
 
         <record id="stock_inventory_line_tree" model="ir.ui.view">
@@ -508,7 +508,7 @@
             <field name="search_view_id" ref="view_location_search"/>
             <field name="context">{'full':1, 'search_default_in_location':1}</field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config" groups="base.group_system"/>
+        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config" groups="base.group_system,group_stock_manager"/>
 
         <record id="view_location_tree" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
@@ -568,7 +568,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_tree"/>
         </record>
-        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_warehouse_config" groups="base.group_system"/>
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_warehouse_config" groups="group_stock_manager,base.group_system"/>
 
         <record id="stock_picking_move_wizard_form" model="ir.ui.view">
             <field name="name">stock.picking.move.wizard.form</field>
@@ -2053,7 +2053,7 @@
         <menuitem
             action="action_stock_journal_form"
             id="menu_action_stock_journal_form"
-            groups="base.group_extended"
+            groups="group_stock_manager,base.group_extended"
             parent="menu_warehouse_config" />
 
     </data>
