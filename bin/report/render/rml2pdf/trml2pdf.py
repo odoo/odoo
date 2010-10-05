@@ -68,8 +68,8 @@ class NumberedCanvas(canvas.Canvas):
             while not self.pages.get(key,False):
                 key = key + 1
         self.setFont("Helvetica", 8)
-        self.drawRightString((self._pagesize[0]-35), (self._pagesize[1]-40),
-            "%(this)i / %(total)i" % {
+        self.drawRightString((self._pagesize[0]-35), (self._pagesize[1]-43),
+            "Page %(this)i of %(total)i" % {
                'this': self._pageNumber+1,
                'total': self.pages.get(key,False),
             }
@@ -820,9 +820,12 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
 class _rml_template(object):
     def __init__(self, localcontext, out, node, doc, images={}, path='.', title=None):
         self.localcontext = localcontext
+        if not self.localcontext:
+            self.localcontext={'header':'internal'}
         self.images= images
         self.path = path
         self.title = title
+
         if not node.get('pageSize'):
             pageSize = (utils.unit_get('21cm'), utils.unit_get('29.7cm'))
         else:
@@ -848,7 +851,7 @@ class _rml_template(object):
             except Exception: # FIXME: be even more specific, perhaps?
                 gr=''
             if len(gr):
-                self.image=[ n for n in utils._child_get(gr[0], self) if n.tag=='image' or not self.localcontext]
+#                self.image=[ n for n in utils._child_get(gr[0], self) if n.tag=='image' or not self.localcontext]
                 drw = _rml_draw(self.localcontext,gr[0], self.doc, images=images, path=self.path, title=self.title)
                 self.page_templates.append( platypus.PageTemplate(frames=frames, onPage=drw.render, **utils.attr_get(pt, [], {'id':'str'}) ))
             else:
@@ -866,12 +869,14 @@ class _rml_template(object):
             fis += r.render(node_story)
             # Reset Page Number with new story tag
             fis.append(PageReset())
-            if not self.image:
+            if self.localcontext and self.localcontext.get('header',False) and \
+               (self.localcontext['header']=='internal' or self.localcontext['header']=='internal landscape'):
                 self.doc_tmpl.afterFlowable(fis)
             story_cnt += 1
         if self.localcontext:
             fis.append(PageCount())
-        if not self.image:
+        if self.localcontext and self.localcontext.get('header',False) and \
+           (self.localcontext['header']=='internal' or self.localcontext['header']=='internal landscape'):
             self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
         else:
             self.doc_tmpl.build(fis)
