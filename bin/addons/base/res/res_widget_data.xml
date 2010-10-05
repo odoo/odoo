@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="openerp_twitter_favorites" model="twitter.widget">
+      <field name="title">OpenERP Favorites</field>
+      <field name="content"><![CDATA[
+<script type="text/javascript" src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script type="text/javascript">
+new TWTR.Widget({
+  version: 2,
+  type: 'faves',
+  rpp: 10,
+  interval: 6000,
+  title: '',
+  subject: '',
+  width: 'auto',
+  height: 300,
+  theme: {
+    shell: {
+      background: '#F0EEEE',
+      color: '#444444'
+    },
+    tweets: {
+      background: '#F0EEEE',
+      color: '#444444',
+      links: '#43c43f'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: true,
+    behavior: 'all'
+  }
+}).render().setUser('openerp').start();
+</script>]]> </field>
+    </record>
+  </data>
+</openerp>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="twitter_widget_form" model="ir.ui.view">
+            <field name="name">twitter.widget.form</field>
+            <field name="model">twitter.widget</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="OpenERP Feedback">
+                    <field name="title"/>
+                    <field name="content"/>
+                </form>
+            </field>
+        </record>
+        <record id="twitter_widget_tree" model="ir.ui.view">
+            <field name="name">twitter.widget.tree</field>
+            <field name="model">twitter.widget</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="OpenERP Feedback">
+                    <field name="title"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="twitter_widget_act_window" model="ir.actions.act_window">
+            <field name="name">OpenERP Feedback</field>
+            <field name="res_model">twitter.widget</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="twitter_widget_tree"/>
+        </record>
+        <menuitem
+            action="twitter_widget_act_window"
+            id="menu_twitter_widget_act_window"
+            parent="base.menu_users"/>
+    </data>
+</openerp>
