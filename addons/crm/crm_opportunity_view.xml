@@ -302,11 +302,11 @@
                             default="context.get('section_id', False)"
                             context="{'invisible_section': False}"
                             widget="selection">
-                            <filter icon="terp-personal+"
+                            <filter icon="terp-personal+" groups="base.group_extended"
                                 domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                 context="{'invisible_section': False}"
                                 help="My Sales Team(s)" />
-                            <filter icon="terp-personal+"
+                            <filter icon="terp-personal+" groups="base.group_extended"
                                 context="{'invisible_section': False}"
                                 domain="[]"
                                 help="Show Sales Team"/>
