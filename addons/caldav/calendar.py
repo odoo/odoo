@@ -716,7 +716,7 @@ class basic_calendar_line(osv.osv):
         """
 
         cr.execute("SELECT COUNT(id) FROM basic_calendar_lines \
-                                WHERE name='%s' AND calendar_id=%s", 
+                                WHERE name=%s AND calendar_id=%s", 
                                 (vals.get('name'), vals.get('calendar_id')))
         res = cr.fetchone()
         if res:

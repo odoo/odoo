@@ -38,7 +38,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         'accounts': fields.many2many('account.analytic.account', 'invoice_id', 'account_id', 'Analytic Accounts', required=True),
         'date': fields.boolean('Date', help='The real date of each work will be displayed on the invoice'),
         'time': fields.boolean('Time spent', help='The time of each work done will be displayed on the invoice'),
-        'name': fields.boolean('Name of entry', help='The detail of each work done will be displayed on the invoice'),
+        'name': fields.boolean('Description', help='The detail of each work done will be displayed on the invoice'),
         'price': fields.boolean('Cost', help='The cost of each work done will be displayed on the invoice. You probably don\'t want to check this'),
         'product': fields.many2one('product.product', 'Product', help='Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost.'),
                 }
@@ -59,8 +59,10 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         return [x[0] for x in account_ids]
 
     _defaults = {
-         'accounts': _get_accounts
-                 }
+         'accounts': _get_accounts,
+         'date': lambda *args: 1,
+         'name': lambda *args: 1
+    }
 
     def do_create(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
