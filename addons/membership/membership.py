@@ -125,7 +125,7 @@ class membership_line(osv.osv):
     _name = 'membership.membership_line'
     _columns = {
         'partner': fields.many2one('res.partner', 'Partner', ondelete='cascade', select=1),
-        'membership_id': fields.many2one('product.product', string="Membership", required=True),
+        'membership_id': fields.many2one('product.product', string="Membership Product", required=True),
         'date_from': fields.date('From', readonly=True),
         'date_to': fields.date('To', readonly=True),
         'date_cancel' : fields.date('Cancel date'),
@@ -133,7 +133,8 @@ class membership_line(osv.osv):
         'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True),
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
         'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
-        'state': fields.function(_state, method=True, string='State', type='selection', selection=STATE),
+        'state': fields.function(_state, method=True, string='Membership State', type='selection', selection=STATE, store=True),
+        'company_id': fields.related('account_invoice_line', 'invoice_id', 'company_id', type="many2one", relation="res.company", string="Company", readonly=True, store=True)
     }
     _rec_name = 'partner'
     _order = 'id desc'
