@@ -329,7 +329,7 @@ class users(osv.osv):
     def _get_group(self,cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
         dummy,group_id = dataobj.get_object_reference(cr, 1, 'base', 'group_user')
-        return [group_id] or False
+        return [group_id]
 
     _defaults = {
         'password' : lambda *a : '',
