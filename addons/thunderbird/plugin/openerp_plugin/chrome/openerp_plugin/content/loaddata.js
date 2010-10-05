@@ -91,6 +91,17 @@ var myPrefObserver =
 		}
     },
 
+    webregister: function()
+  	{
+    	preferenceBranch.addObserver("", myPrefObserver, false);
+        weburl = getWebServerURL();
+	    document.getElementById("txtweburl").value = weburl;
+    	var s = document.getElementById('txtweburl').value;
+	   
+    },
+
+
+
     createContactAddress: function()
 	{
 	  	document.getElementById("txtselectpartner").value = getPartnerName();
