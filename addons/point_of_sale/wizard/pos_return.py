@@ -209,7 +209,8 @@ class pos_return(osv.osv_memory):
                             'date': date_cur,
                             'date_planned': date_cur
                         })
-                        line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
+                        if qty != 0.0:
+                            line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
                 statementl_obj.create(cr, uid, {
                                                 'name': 'Refund %s'%order_id.name,
                                                 'statement_id': order_id.statement_ids[0].statement_id.id,

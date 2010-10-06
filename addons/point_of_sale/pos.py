@@ -1043,6 +1043,7 @@ class pos_order_line(osv.osv):
                     tax_amount = 0.0
                     taxes = [t for t in line.product_id.taxes_id]
                     if line.qty == 0.0:
+                        res[line.id][f] = 0.0
                         continue
                     computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
                     for tax in computed_taxes:
