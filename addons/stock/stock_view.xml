@@ -1281,9 +1281,9 @@
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}" >
                                 <tree colors="grey:scrapped==True" string="Stock Moves">
-                                    <field name="product_id" readonly="1"/>
-                                    <field name="product_qty" readonly="1"/>
-                                    <field name="product_uom" string="UoM" readonly="1"/>
+                                    <field name="product_id" />
+                                    <field name="product_qty" />
+                                    <field name="product_uom" string="UoM" />
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
