@@ -41,14 +41,14 @@ FIELDS = {
 
 START_FIELD = {
     'date': {'string': 'Date payment', 'type': 'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'journal_id': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'domain': '[("type","in",["sale","purchase","cash"])]', 'help': 'This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals.'},
+    'journal_ids': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'domain': '[("type","in",["sale","purchase","cash"])]', 'help': 'This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals.'},
 }
 
 START_FORM = '''<?xml version="1.0"?>
 <form string="Import Invoices in Statement">
     <label string="Choose Journal and Payment Date" colspan="4"/>
     <field name="date"/>
-    <field name="journal_id" colspan="4"/>
+    <field name="journal_ids" colspan="4"/>
 </form>'''
 
 def _search_invoices(obj, cr, uid, data, context):
@@ -73,7 +73,7 @@ def _search_invoices(obj, cr, uid, data, context):
         if move_line_id:
             repeated_move_line_ids += move_line_id
         
-    journal_ids = data['form']['journal_id'][0][2]
+    journal_ids = data['form']['journal_ids'][0][2]
 
     if journal_ids == []:
         journal_ids = journal_obj.search(cr, uid, [('type', 'in', ('sale','cash','purchase'))], context=context)
