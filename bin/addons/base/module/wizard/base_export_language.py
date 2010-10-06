@@ -68,6 +68,7 @@ class base_language_export(osv.osv_memory):
         return self.write(cr, uid, ids, {'state':'get', 'data':out, 'advice':this.advice, 'name':this.name}, context=context)
 
     _name = "base.language.export"
+    _inherit = "ir.wizard.screen"
     _columns = {
             'name': fields.char('Filename', 16, readonly=True),
             'lang': fields.selection(_get_languages, 'Language', help='To export a new language, do not select a language.'), # not required: unset = new language
@@ -78,11 +79,11 @@ class base_language_export(osv.osv_memory):
             'state': fields.selection( ( ('choose','choose'),   # choose language
                                          ('get','get'),         # get the file
                                        ) ),
-            }
-    _defaults = { 'state': lambda *a: 'choose',
-                  'name': lambda *a: 'lang.tar.gz'
-                }
+    }
+    _defaults = { 
+        'state': lambda *a: 'choose',
+        'name': lambda *a: 'lang.tar.gz'
+    }
 base_language_export()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

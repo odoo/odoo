@@ -20,17 +20,22 @@
 ##############################################################################
 
 import tools
-import pooler
 from osv import osv, fields
 
 class base_language_install(osv.osv_memory):
     """ Install Language"""
 
     _name = "base.language.install"
+    _inherit = "ir.wizard.screen"
     _description = "Install Language"
 
     _columns = {
-        'lang': fields.selection(tools.scan_languages(),'Language'),
+        'lang': fields.selection(tools.scan_languages(),'Language', required=True),
+        'state':fields.selection([('init','init'),('done','done')], 'state', readonly=True),
+    }
+
+    _defaults = {  
+        'state': 'init',
     }
 
     def lang_install(self, cr, uid, ids, context):
@@ -40,30 +45,9 @@ class base_language_install(osv.osv_memory):
             modobj = self.pool.get('ir.module.module')
             mids = modobj.search(cr, uid, [('state', '=', 'installed')])
             modobj.update_translations(cr, uid, mids, lang)
-
-        data_obj = self.pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'base', 'view_base_language_install_msg')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'base.module.import.msg',
-            'views': [(id2, 'form')],
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
+            self.write(cr, uid, ids, {'state': 'done'}, context=context)
+        return False
 
 base_language_install()
 
-class base_language_install_msg(osv.osv_memory):
-    """ Install Language"""
-
-    _name = "base.language.install.msg"
-    _description = "Install Language"
-
-base_language_install_msg()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

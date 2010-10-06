@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-
-import pooler
 import os
 import tools
 
@@ -34,19 +32,24 @@ class base_module_import(osv.osv_memory):
     """ Import Module """
 
     _name = "base.module.import"
+    _inherit = "ir.wizard.screen"
     _description = "Import Module"
 
     _columns = {
           'module_file': fields.binary('Module .ZIP file', required=True),
+          'state':fields.selection([('init','init'),('done','done')], 'state', readonly=True),
+          'module_name': fields.char('Module Name', size=128),
+    }
+
+    _defaults = {  
+        'state': 'init',
     }
 
     def importzip(self, cr, uid, ids, context):
-        module_obj= self.pool.get('ir.module.module')
-        active_ids = context and context.get('active_ids', False)
-        data = self.browse(cr, uid, ids , context=context)[0]
+        (data,) = self.browse(cr, uid, ids , context=context)
         module_data = data.module_file
 
-        val =base64.decodestring(module_data)
+        val = base64.decodestring(module_data)
         fp = StringIO()
         fp.write(val)
         fdata = zipfile.ZipFile(fp, 'r')
@@ -55,62 +58,30 @@ class base_module_import(osv.osv_memory):
 
         ad = tools.config['addons_path']
 
-        fname = os.path.join(ad,module_name+'.zip')
+        fname = os.path.join(ad, module_name+'.zip')
         try:
             fp = file(fname, 'wb')
             fp.write(val)
             fp.close()
-        except IOError, e:
+        except IOError:
             raise osv.except_osv(_('Error !'), _('Can not create the module file: %s !') % (fname,) )
 
-        module_obj.update_list(cr, uid,{'module_name': module_name,})
-        data_obj = self.pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'base', 'view_base_module_import_msg')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-
-        module_name = module_obj.browse(cr, uid, ids, context=context)
-        return {
-            'domain': str([('name', '=', module_name)]),
-            'name': 'Message',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'base.module.import.msg',
-            'views': [(id2, 'form')],
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
-
-base_module_import()
-
-class base_module_import_msg(osv.osv_memory):
-    """   message    """
-    _name = "base.module.import.msg"
-    _description = "Message"
+        self.pool.get('ir.module.module').update_list(cr, uid, {'module_name': module_name,})
+        self.write(cr, uid, ids, {'state':'done', 'module_name': module_name}, context)
+        return False
 
     def action_module_open(self, cr, uid, ids, context):
-        module_obj = self.pool.get('base.module.import')
-        data = module_obj.browse(cr, uid, ids , context=context)[0]
-        module_data = data.module_file
-
-        val =base64.decodestring(module_data)
-        fp = StringIO()
-        fp.write(val)
-        fdata = zipfile.ZipFile(fp, 'r')
-        fname = fdata.namelist()[0]
-        module_name = os.path.split(fname)[0]
-
+        (data,) = self.browse(cr, uid, ids , context=context)
         return {
-            'domain': str([('name', '=', module_name)]),
-            'name': 'Module List',
+            'domain': str([('name', '=', data.module_name)]),
+            'name': 'Modules',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'ir.module.module',
             'type': 'ir.actions.act_window',
         }
 
-base_module_import_msg()
+base_module_import()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+    	<menuitem name="Requests" id="menu_resquest_ref" parent="base.next_id_4" sequence="1"/>
+
         <record id="res_request_tree-view" model="ir.ui.view">
             <field name="name">res.request.tree</field>
             <field name="model">res.request</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Requests" colors="blue:state in ('draft');gray:state in ('closed')">
+                <tree string="Requests" colors="blue:state in ('waiting');gray:state in ('closed')">
                     <field name="create_date"/>
                     <field name="act_from"/>
                     <field name="act_to"/>
@@ -40,9 +42,9 @@
                             <field colspan="4" name="body" nolabel="1"/>
                             <group col="5" colspan="4">
                                 <field name="state"/>
-                                <button name="request_close" states="waiting,draft,active" string="End of Request" type="object"/>
-                                <button name="request_send" states="draft,active" string="Send" type="object"/>
-                                <button name="request_reply" states="waiting" string="Reply" type="object"/>
+                                <button name="request_close" states="waiting,draft,active" string="Close" type="object" icon="gtk-close"/>
+                                <button name="request_send" states="draft,active" string="Send" type="object" icon="terp-camera_test"/>
+                                <button name="request_reply" states="waiting" string="Reply" type="object" icon="gtk-undo"/>
                             </group>
                         </page>
                         <page string="References" groups="base.group_extended">
@@ -75,12 +77,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Requests">
-                    <group colspan="4" col="10">
-	                    <field name="act_from"/>
-	                    <field name="act_to" select="1"/>
-	                    <field name="name"/>
-	                    <field name="state"/>
-	                </group>
+                    <filter string="Current" icon="terp-camera_test" domain="['|',('state','=','draft'),('state','=','active')]"
+                    help="Draft and Active"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state','=','waiting')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="act_from"/>
+                    <field name="act_to" select="1"/>
+                    <field name="name"/>
+                    <field name="state"/>
 	                <newline/>
 	                <group expand="0" string="Group By" colspan="4">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -108,7 +113,7 @@
             <field name="search_view_id" ref="res_request_search_view"/>
             <field name="context">{"search_default_act_to":uid}</field>
         </record>
-        <menuitem action="res_request-act" id="menu_res_request_act" parent="base.next_id_4" sequence="1"/>
+        <menuitem action="res_request-act" id="menu_res_request_act" parent="menu_resquest_ref" />
 
         <record id="res_request_link-view" model="ir.ui.view">
             <field name="name">res.request.link.form</field>
@@ -146,14 +151,16 @@
         </record>
 
         <record id="res_request_link-act" model="ir.actions.act_window">
-            <field name="name">References Link</field>
+            <field name="name">Request Reference Types</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.request.link</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="res_request_link_search_view"/>
         </record>
-        <menuitem action="res_request_link-act" id="menu_res_request_link_act" parent="base.next_id_4" sequence="4"/>
+        <menuitem action="res_request_link-act" id="menu_res_request_link_act" parent="menu_resquest_ref" />
+
+
 
 
         <record id="res_request_history_tree-view" model="ir.ui.view">

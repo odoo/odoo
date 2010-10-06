@@ -21,7 +21,6 @@
 
 import tools
 import base64
-import pooler
 from tempfile import TemporaryFile
 from osv import osv, fields
 
@@ -30,6 +29,7 @@ class base_language_import(osv.osv_memory):
 
     _name = "base.language.import"
     _description = "Language Import"
+    _inherit = "ir.wizard.screen"
 
     _columns = {
         'name': fields.char('Language Name',size=64 , required=True),
