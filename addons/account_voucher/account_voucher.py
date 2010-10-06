@@ -115,7 +115,7 @@ class account_voucher(osv.osv):
         if not view_id and context.get('invoice_type',False):
             mod_obj = self.pool.get('ir.model.data')
             act_obj = self.pool.get('ir.actions.act_window')
-            if context.get('invoice_type') in ('out_invoice','out_refund'): 
+            if context.get('invoice_type') in ('out_invoice','out_refund'):
                 result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
             else:
                 result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_payment_form')
@@ -867,16 +867,16 @@ class account_bank_statement(osv.osv):
                 if line.voucher_id:
                     voucher_ids.append(line.voucher_id.id)
             self.pool.get('account.voucher').cancel_voucher(cr, uid, voucher_ids, context)
-            self.pool.get('account.voucher').unlink(cr, uid, voucher_ids, context)
         return super(account_bank_statement, self).button_cancel(cr, uid, ids, context=context)
 
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, next_number, context=None):
         voucher_obj = self.pool.get('account.voucher')
         wf_service = netsvc.LocalService("workflow")
         st_line = self.pool.get('account.bank.statement.line').browse(cr, uid, st_line_id, context=context)
-
         if st_line.voucher_id:
             voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
+            if st_line.voucher_id.state == 'cancel':
+                voucher_obj.action_cancel_draft(cr, uid, [st_line.voucher_id.id], context=context)
             wf_service.trg_validate(uid, 'account.voucher', st_line.voucher_id.id, 'proforma_voucher', cr)
             return self.pool.get('account.move.line').write(cr, uid, [x.id for x in st_line.voucher_id.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
         return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line.id, company_currency_id, next_number, context=context)
