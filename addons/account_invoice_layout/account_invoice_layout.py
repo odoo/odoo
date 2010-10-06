@@ -130,19 +130,22 @@ class account_invoice_line(osv.osv):
         default['state'] = self.browse(cr, uid, id).state
         return super(account_invoice_line, self).copy_data(cr, uid, id, default, context)
 
-    def _fnct(self, cr, uid, id, name, args, context=None):
+    def _fnct(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for m in self.browse(cr, uid, id):
-            if m.state != 'article':
-                if m.state == 'line':
-                    res[m.id] = '-----------------------------------------'
-                elif m.state == 'break':
-                    res[m.id] = 'PAGE BREAK'
+
+        lines = self.browse(cr, uid, ids)
+        account_ids = [line.account_id.id for line in lines]
+        account_names = dict(self.pool.get('account.account').name_get(cr, uid, account_ids, context=context))
+        for line in lines:
+            if line.state != 'article':
+                if line.state == 'line':
+                    res[line.id] = '-----------------------------------------'
+                elif line.state == 'break':
+                    res[line.id] = 'PAGE BREAK'
                 else:
-                    res[m.id] = ' '
+                    res[line.id] = ' '
             else:
-                [(temp)] = self.pool.get('account.account').name_get(cr, uid, [m.account_id.id], context=context)
-                res[m.id] = temp[1]
+                res[line.id] = account_names.get(line.account_id.id, '')
         return res
 
     _name = "account.invoice.line"

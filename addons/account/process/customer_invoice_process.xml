@@ -122,7 +122,6 @@
         -->
 
         <record id="process_transition_confirmstatementfromdraft0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirm statement&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The accountant confirms the statement.&quot;&quot;&quot;" name="note"/>
@@ -131,7 +130,6 @@
         </record>
 
         <record id="process_transition_analyticinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From analytic accounts&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Analytic costs (timesheets, some purchased products, ...) come from analytic accounts. These generate draft invoices.&quot;&quot;&quot;" name="note"/>
@@ -140,7 +138,6 @@
         </record>
 
         <record id="process_transition_customerinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Validation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Draft invoices are checked, validated and printed.&quot;&quot;&quot;" name="note"/>
@@ -150,7 +147,6 @@
         </record>
 
         <record id="process_transition_validentries0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Validation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Accountant validates the accounting entries coming from the invoice.&quot;&quot;&quot;" name="note"/>
@@ -159,7 +155,6 @@
         </record>
 
         <record id="process_transition_entriesreconcile0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Accounting entries&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Accounting entries are the first input of the reconciliation.&quot;&quot;&quot;" name="note"/>
@@ -168,7 +163,6 @@
         </record>
 
         <record id="process_transition_statemententries0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Validation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Manual or automatic creation of payment entries according to the statements&quot;&quot;&quot;" name="note"/>
@@ -177,7 +171,6 @@
         </record>
 
         <record id="process_transition_paymentreconcile0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Payment entries&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Payment entries are the second input of the reconciliation.&quot;&quot;&quot;" name="note"/>
@@ -186,7 +179,6 @@
         </record>
 
         <record id="process_transition_reconcilepaid0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Payment&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;As soon as the reconciliation is done, the invoice can be paid.&quot;&quot;&quot;" name="note"/>

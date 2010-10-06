@@ -35,7 +35,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="vertical" string="Project Issue" type="bar">
-                    <field name="stage_id"/>
+                    <field name="type_id"/>
                     <field name="nbr" operator="+"/>
                     <field group="True" name="user_id"/>
                 </graph>
