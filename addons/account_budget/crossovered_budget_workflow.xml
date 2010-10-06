@@ -65,28 +65,24 @@
 		<field name="act_from" ref="act_confirm" />
 		<field name="act_to" ref="act_validate" />
 		<field name="signal">validate</field>
-		<field name="role_id" ref="crossovered_budget_role"/>
 	</record>
 
 	<record model="workflow.transition" id="t3">
 		<field name="act_from" ref="act_confirm" />
 		<field name="act_to" ref="act_cancel" />
 		<field name="signal">cancel</field>
-		<field name="role_id" ref="crossovered_budget_role"/>
 	</record>
 
 	<record model="workflow.transition" id="t4">
 		<field name="act_from" ref="act_validate" />
 		<field name="act_to" ref="act_cancel" />
 		<field name="signal">cancel</field>
-		<field name="role_id" ref="crossovered_budget_role"/>
 	</record>
 
 	<record model="workflow.transition" id="t5">
 		<field name="act_from" ref="act_validate" />
 		<field name="act_to" ref="act_done" />
 		<field name="signal">done</field>
-		<field name="role_id" ref="crossovered_budget_role"/>
 	</record>
 
 	<record model="workflow.transition" id="t6">

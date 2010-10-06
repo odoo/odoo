@@ -114,7 +114,7 @@ class account_payment_populate_statement(osv.osv_memory):
                     'voucher_id': voucher_id,
                     }, context=context)
 
-            line_obj.write(cr, uid, [line.id], {'bank_statement_line_id': st_line_id})
+                line_obj.write(cr, uid, [line.id], {'bank_statement_line_id': st_line_id})
         return {'type': 'ir.actions.act_window_close'}
 
 account_payment_populate_statement()
