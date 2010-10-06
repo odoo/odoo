@@ -49,6 +49,17 @@
              </graph>
          </field>
     </record>
+    <record id="view_stock_graph_board" model="ir.ui.view">
+         <field name="name">report.stock.move.graph</field>
+         <field name="model">report.stock.move</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Moves Analysis" type="bar">
+                 <field name="day"/>
+                 <field name="day_diff2" operator="+"/>
+             </graph>
+         </field>
+    </record>
 
     <record id="view_stock_search" model="ir.ui.view">
         <field name="name">report.stock.move.search</field>
