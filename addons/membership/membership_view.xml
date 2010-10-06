@@ -29,34 +29,35 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Membership products">
-                	<group col="6">
-	                    <field name="name"/>
-	                    <field name="default_code"/>
-	                    <field name="active"/>
-	                    <field name="membership_date_from" required="1"/>
-	                    <field name="membership_date_to" required="1"/>
-	                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                  <group col="6">
+                      <field name="name"/>
+                      <field name="default_code"/>
+                      <field name="active"/>
+                      <field name="membership_date_from" required="1"/>
+                      <field name="membership_date_to" required="1"/>
+                      <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                      <field name="membership"/>
                     </group>
                     <notebook colspan="4">
-	                    <page string="General">
-    		                <separator string="Accounting Info" colspan="2"/>
-            		        <separator string="Categorization" colspan="2"/>
-                    		<field name="price" />
-                    		<field name="type" />
-                    		<field name="property_account_income"/>
-                    		<field name="categ_id"/>
-                    		<separator string="Sale Taxes" colspan="2"/>
-                    		<newline/>
-                    		<field name="taxes_id" nolabel="1" colspan="4"/>
-	                    </page>
-	                    <page string="Description">
+                      <page string="General">
+                        <separator string="Accounting Info" colspan="2"/>
+                        <separator string="Categorization" colspan="2"/>
+                        <field name="price" />
+                        <field name="type" />
+                        <field name="property_account_income"/>
+                        <field name="categ_id"/>
+                        <separator string="Sale Taxes" colspan="2"/>
+                        <newline/>
+                        <field name="taxes_id" nolabel="1" colspan="4"/>
+                      </page>
+                      <page string="Description">
                             <separator string="Description"/>
                             <field colspan="4" name="description" nolabel="1"/>
                             <separator string="Sale Description"/>
                             <field colspan="4" name="description_sale" nolabel="1"/>
                             <separator string="Purchase Description"/>
                             <field colspan="4" name="description_purchase" nolabel="1"/>
-	                    </page>
+                      </page>
                     </notebook>
                        <!--field name="list_price" string="Membership Fee"/>
                     <separator colspan="4" string="Customer Taxes:"/>
@@ -138,12 +139,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <field name="category_id" position="after">
-					<filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
-                   	<filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-					<separator orientation="vertical"/>
-					<filter icon="terp-personal" name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
-					<filter icon="terp-personal" name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
-					<separator orientation="vertical"/>
+          <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+                     <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+          <separator orientation="vertical"/>
+          <filter icon="terp-personal" name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
+          <filter icon="terp-personal" name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
+          <separator orientation="vertical"/>
                    <field name="membership_stop" string="End Membership Date"/>
                    <field name="membership_start" invisible="1"/>
                    <newline/>
@@ -159,14 +160,14 @@
             <field name="arch" type="xml">
                 <field name="membership_start" position="after">
                 <newline/>
-	            <group expand="0" string="Group By" colspan="10" col="8">
-	            	<filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
-	                <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
-	                <separator orientation="vertical"/>
+              <group expand="0" string="Group By" colspan="10" col="8">
+                <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+                  <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
+                  <separator orientation="vertical"/>
                     <filter string=" Membership State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
                     <separator orientation="vertical"/>
-	                <filter string="Start Date" help="Starting Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
-	                <filter string="End Date" help="Ending Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
+                  <filter string="Start Date" help="Starting Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
+                  <filter string="End Date" help="Ending Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
                 </group>
                 </field>
             </field>
