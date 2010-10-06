@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.translate import _
 
 class ir_filters(osv.osv):
     '''
@@ -36,30 +37,31 @@ class ir_filters(osv.osv):
         act_ids = self.search(cr,uid,[('model_id','=',model),('user_id','=',uid)])
         my_acts = self.read(cr, uid, act_ids, ['name', 'domain','context'])
         return my_acts
-    
+
     def create_or_replace(self, cr, uid, vals, context=None):
         filter_id = None
-        for filter in self.get_filters(cr, uid, vals['model_id']):
-            if filter['name'].lower() == vals['name'].lower():
-                filter_id = filter['id']
-                break
-        if filter_id:
-            return self.write(cr, uid, filter_id, vals, context)
+        lower_name = vals['name'].lower()
+        matching_filters = [x for x in self.get_filters(cr, uid, vals['model_id'])
+                                if x['name'].lower() == lower_name]
+        if matching_filters:
+            self.write(cr, uid, matching_filters[0]['id'], vals, context)
+            return False
         return self.create(cr, uid, vals, context)
 
+    def _auto_init(self, cr, context={}):
+        super(ir_filters, self)._auto_init(cr, context)
+        # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)
+        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_filters_name_model_uid_unique_index'")
+        if not cr.fetchone():
+            cr.execute('CREATE UNIQUE INDEX "ir_filters_name_model_uid_unique_index" ON ir_filters (lower(name), model_id, user_id)')
 
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True, required=True),
         'user_id':fields.many2one('res.users', 'User', help='False means for every user'),
         'domain': fields.text('Domain Value', required=True),
         'context': fields.text('Context Value', required=True),
-        'model_id': fields.selection(_list_all_models, 'Model', required=True),
+        'model_id': fields.selection(_list_all_models, 'Object', required=True),
     }
-    
-    _sql_constraints = [
-        ('name_model_uid_uniq', 'UNIQUE(name, model_id, user_id)', 'Filter name must be unique!'),
-    ]
-
 
 ir_filters()
 
