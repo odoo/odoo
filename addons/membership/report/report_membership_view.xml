@@ -44,19 +44,9 @@
                         <filter string="Last 30 Days" icon="terp-go-month" name="month"
                             domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_from','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
-		                <filter icon="terp-camera_test"
-		                    string="Invoiced"
-		                    domain="[('state','=','invoiced')]"/>
-		                <filter icon="terp-check"
-                            string="Paid"
-                            domain="[('state','=','paid')]"/>
-                        <filter icon="terp-gtk-media-pause"
-                            string="Waiting"
-                            default="1" name="none"
-                            domain="[('state','=', 'waiting')]"/>
-                        <filter string="Cancel And Free" icon="terp-check" context="{'free_cancel_visible':1}"/>
-                        <filter string="Forecast" icon="terp-check" context="{'waiting_invoiced_totpending_visible':1}"/>
-                        <filter string="Revenue Done" name="Revenue" icon="terp-check" context="{'paid_old_totearned_visible':1}"/>
+                        <filter string="Cancel &amp; Free" icon="terp-check" context="{'free_cancel_visible':1}" help="This will display free and cancel column"/>
+                        <filter string="Forecast" icon="terp-check" context="{'waiting_invoiced_totpending_visible':1}" help="This will display waiting, invoiced and total pending columns"/>
+                        <filter string="Revenue Done" name="Revenue" icon="terp-check" context="{'paid_old_totearned_visible':1}" help="This will display paid, old and total earned columns"/>
                         <separator orientation="vertical"/>
                         <field name="partner_id"/>
                         <field name="membership_id"/>
