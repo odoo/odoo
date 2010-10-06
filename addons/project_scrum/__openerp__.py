@@ -56,6 +56,7 @@
         'wizard/project_scrum_backlog_merger_view.xml',
         'project_scrum_view.xml',
         'wizard/project_scrum_backlog_sprint_view.xml',
+        'wizard/project_scrum_postpone_view.xml',
         'process/project_scrum_process.xml',
         "board_project_scrum_view.xml",
     ],

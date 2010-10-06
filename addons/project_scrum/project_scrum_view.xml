@@ -62,7 +62,7 @@
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"/>
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
-      					<button name="button_postpone" string="Postpone" type="object"
+     					<button name="%(action_postpone_wizard)d" string="Postpone" type="action"
 							help="Postpone backlog" colspan="2"
                          icon="gtk-convert"  attrs="{'invisible':[('state','=','done')]}"/>
                         <field name="user_id" select="1"/>
@@ -192,7 +192,7 @@
         <!--
               Scrum Sprint
        -->
-        
+
         <record id="view_scrum_sprint_calendar" model="ir.ui.view">
             <field name="name">project.scrum.sprint.calendar</field>
             <field name="model">project.scrum.sprint</field>
@@ -204,7 +204,7 @@
                 </calendar>
             </field>
         </record>
-        
+
         <record id="view_scrum_sprint_tree" model="ir.ui.view">
             <field name="name">project.scrum.sprint.tree</field>
             <field name="model">project.scrum.sprint</field>
@@ -357,7 +357,7 @@
         <!--
               Daily Meeting
        -->
-        
+
         <record id="view_scrum_meeting_calendar" model="ir.ui.view">
             <field name="name">project.scrum.meeting.calendar</field>
             <field name="model">project.scrum.meeting</field>
@@ -369,7 +369,7 @@
                 </calendar>
             </field>
         </record>
-        
+
         <record id="view_scrum_meeting_tree" model="ir.ui.view">
             <field name="name">project.scrum.meeting.tree</field>
             <field name="model">project.scrum.meeting</field>
