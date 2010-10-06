@@ -14,14 +14,14 @@
                             <label string="Stage:" align="1.0"/>
                             <group colspan="1" col="4">
                                 <field name="stage_id" nolabel="1"
+                                    widget="selection"
                                     on_change="onchange_stage_id(stage_id)"
-                                    domain="[('object_id.model', '=', 'crm.lead')]"
-                                    readonly="1" />
+                                    domain="[('object_id.model', '=', 'crm.lead')]"/>
                                 <button name="stage_previous"
-                                states="open,pending" type="object"
-                                icon="gtk-go-back" string="" />
-                                <button name="stage_next" states="open,pending"
-                                type="object" icon="gtk-go-forward" string="" />
+                                    states="draft,open,pending" type="object"
+                                    icon="gtk-go-back" string="" />
+                                <button name="stage_next" states="draft,open,pending"
+                                    type="object" icon="gtk-go-forward" string="" />
                             </group>
                             <field name="user_id"/>
 
@@ -88,7 +88,7 @@
                                     groups="base.group_extended"
                                     icon="gtk-go-up" />
                                 <button name="case_cancel" string="Cancel"
-                                    states="draft,open,pending" type="object"
+                                    states="draft" type="object"
                                     icon="gtk-close" />
                                 <button name="case_mark_lost" string="Mark Lost"
                                     states="open,pending" type="object"
@@ -282,14 +282,6 @@
                         <filter icon="terp-gtk-media-pause"
                             string="Pending"  help="Pending Opportunities"
                             domain="[('state','=','pending')]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Today"
-                            domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('create_date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                            help="Todays' Opportunities" />
-                        <filter icon="terp-go-week" string="7 Days"
-                            help="Opportunities created during last 7 days"
-                            domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"
-                        />
                         <separator orientation="vertical"/>
                         <field name="name" string="Opportunity"/>
                         <field name="partner_id"/>
