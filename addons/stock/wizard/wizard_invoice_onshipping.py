@@ -87,6 +87,8 @@ def _get_type(obj, cr, uid, data, context=None):
 
 
 def _create_invoice(obj, cr, uid, data, context=None):
+    if context is None:
+        context = {}
     if data['form'].get('new_picking', False):
         data['id'] = data['form']['new_picking']
         data['ids'] = [data['form']['new_picking']]
