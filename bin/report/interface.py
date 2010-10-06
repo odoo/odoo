@@ -70,7 +70,7 @@ class report_rml(report_int):
     def __init__(self, name, table, tmpl, xsl):
         super(report_rml, self).__init__(name)
         self.table = table
-        self.pageCount=False
+        self.pageCount=True
         self.tmpl = tmpl
         self.xsl = xsl
         self.bin_datas = {}
@@ -180,8 +180,9 @@ class report_rml(report_int):
             if self.tmpl=='' and not self.pageCount:
                 self.pageCount=True
             else:
-              self.pageCount=False
+                self.pageCount=False
             localcontext.update({'header':self.pageCount})
+
         if logo:
             self.bin_datas['logo'] = logo
         else:
@@ -189,6 +190,7 @@ class report_rml(report_int):
                 del self.bin_datas['logo']
         obj = render.rml(rml, localcontext, self.bin_datas, tools.config['root_path'],title)
         obj.render()
+        self.pageCount=True
         return obj.get()
 
     def create_html(self, rml, localcontext = None, logo=None, title=None):
