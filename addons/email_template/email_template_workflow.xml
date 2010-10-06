@@ -47,26 +47,22 @@
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_approved"/>
             <field name="signal">button_approval</field>
-            <field name="role_id" ref="PE_ADMIN"/>
         </record>
 
         <record id="trans_approved_suspended" model="workflow.transition">
             <field name="act_from" ref="act_approved"/>
             <field name="act_to" ref="act_suspended"/>
             <field name="signal">button_suspended</field>
-            <field name="role_id" ref="PE_ADMIN"/>
         </record>
         <record id="trans_suspended_reapproved" model="workflow.transition">
             <field name="act_from" ref="act_suspended"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">get_reapprove</field>
-            <field name="role_id" ref="PE_ADMIN"/>
         </record>
         <record id="trans_suspended_dummy" model="workflow.transition">
             <field name="act_from" ref="act_suspended"/>
             <field name="act_to" ref="act_dummy"/>
             <field name="signal">get_never</field>
-            <field name="role_id" ref="PE_ADMIN"/>
         </record>
     </data>
 </openerp>

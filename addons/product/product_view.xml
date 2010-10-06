@@ -257,11 +257,12 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
-            <field name="help">Products category opens a tree structure view of your products by category.</field>
+            <field name="help">This is a hyerarchical structure of your product's categories, you can enter a category to browse all products in this category and his children.</field>
         </record>
         <menuitem
             action="product_category_action"
             id="product.menu_products_category"
+            groups="base.group_extended"
             parent="base.menu_product"
             sequence="0"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
