@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -37,7 +37,7 @@ class report_voucher_print(report_sxw.rml_parse):
     def convert(self, amount, cur):
         amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur);
         return amt_en
-    
+
     def get_lines(self,voucher):
         result = []
         if voucher.type in ('payment','receipt'):
@@ -67,13 +67,13 @@ class report_voucher_print(report_sxw.rml_parse):
                     res['amount'] = amount
                     result.append(res)
         return result
-        
+
     def get_title(self, type):
         title = ''
         if type:
             title = type[0].swapcase() + type[1:] + " Voucher"
         return title
- 
+
     def get_on_account(self, voucher):
         name = ""
         if voucher.type == 'receipt':
@@ -85,10 +85,10 @@ class report_voucher_print(report_sxw.rml_parse):
         elif voucher.type == 'purchase':
             name = "Purchase from "+str(voucher.partner_id.name)
         return name
-    
+
 report_sxw.report_sxw(
     'report.voucher.print',
     'account.voucher',
-    'addons/account_voucher/report/report_voucher_print.rml',
+    'addons/account_voucher/report/account_voucher_print.rml',
     parser=report_voucher_print,header="external"
 )

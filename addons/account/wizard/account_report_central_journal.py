@@ -25,8 +25,8 @@ class account_central_journal(osv.osv_memory):
     _description = 'Account Central Journal'
     _inherit = "account.common.journal.report"
 
-    def _print_report(self, cr, uid, ids, data, query_line, context=None):
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+    def _print_report(self, cr, uid, ids, data, context=None):
+        data = self.pre_print_report(cr, uid, ids, data, context=context)
         return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.central.journal',

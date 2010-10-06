@@ -122,7 +122,7 @@
                        separator="1" help="Delegated Invitations" />
                    <separator orientation="vertical"/>
                    <field name="email" select='1'/>
-                   <field name="user_id" select="1"/>
+                   <field name="user_id" select="1" string="Responsible"/>
                    <separator orientation="vertical"/>
                    <field name="cutype" string="Invitation type" select="1"/>
                    <field name="event_date" select="1"/>
@@ -163,7 +163,8 @@
         <!-- Invitation menu -->
 
            <menuitem id="menu_attendee_invitations"
-            name="Event Invitations" parent="base.menu_calendar_configuration"
+            parent="base.menu_calendar_configuration"
+            groups="base.group_extended"
             sequence="10" action="action_view_attendee_form" />
 
         <!--        ALARM FORM VIEW-->
@@ -496,6 +497,7 @@
 
         <menuitem id="menu_events"
                 name="Events" parent="base.menu_calendar_configuration"
+                groups="base.group_extended"
                 sequence="5" action="action_view_event" />
 
      </data>

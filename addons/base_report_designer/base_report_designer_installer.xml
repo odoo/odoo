@@ -72,20 +72,9 @@
       <field name="context">{'menu':True}</field> 
     </record>
 
-    
-    <menuitem icon="terp-graph" id="base.reporting_menu"
-            name="Reporting" sequence="30" />
-
-    <menuitem id="base.next_id_50" name="Configuration"
-        parent="base.reporting_menu"  sequence="3" />
-
-    <menuitem parent="base.next_id_50" name="Report Designer"
+    <menuitem parent="base.reporting_menu" name="Report Designer"
         action="action_report_designer_wizard"
         id="menu_action_report_designer_wizard" sequence="70" />
-
-   <menuitem parent="base.next_id_50" name="Modify an existing report"
-            action="action_view_base_report_sxw"
-            id="menu_wizard_report_designer_modify" sequence="70" groups="base.group_extended"/>
 
   </data>
 </openerp>

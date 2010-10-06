@@ -21,12 +21,12 @@
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+import time
+
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
 import netsvc
-import time
-
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -37,7 +37,10 @@ class sale_shop(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=False),
+    }
+    _defaults = {
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.shop', context=c),
     }
 
 sale_shop()
@@ -62,6 +65,7 @@ class sale_order(osv.osv):
             'shipped': False,
             'invoice_ids': [],
             'picking_ids': [],
+            'date_confirm':False,
             'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
@@ -419,8 +423,14 @@ class sale_order(osv.osv):
             pay_term = order.payment_term.id
         else:
             pay_term = False
+        invoiced_sale_line_ids = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id), ('invoiced', '=', True)], context=context)
+        from_line_invoice_ids = []
+        for invoiced_sale_line_id in self.pool.get('sale.order.line').browse(cr, uid, invoiced_sale_line_ids, context=context):
+            for invoice_line_id in invoiced_sale_line_id.invoice_lines:
+                if invoice_line_id.invoice_id.id not in from_line_invoice_ids:
+                    from_line_invoice_ids.append(invoice_line_id.invoice_id.id)
         for preinv in order.invoice_ids:
-            if preinv.state not in ('cancel',):
+            if preinv.state not in ('cancel',) and preinv.id not in from_line_invoice_ids:
                 for preline in preinv.invoice_line:
                     inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
@@ -467,7 +477,6 @@ class sale_order(osv.osv):
             lines = []
             for line in o.order_line:
                 if line.invoiced:
-                    #raise osv.except_osv(_('Error !'), _('The Sale Order already has some lines invoiced. You should continue the billing process by line.'))
                     continue
                 elif (line.state in states):
                     lines.append(line.id)
@@ -863,13 +872,6 @@ class sale_order_line(osv.osv):
         'type': 'make_to_stock',
         'product_packaging': False
     }
-
-    def create_sale_order_line_invoice(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        context.update({'active_ids' : ids,'active_id' : ids})
-        self.pool.get('sale.order.line.make.invoice').make_invoices(cr, uid, ids, context=context)
-        return True
 
     def invoice_line_create(self, cr, uid, ids, context=None):
         if context is None:

@@ -170,7 +170,6 @@ class account_installer(osv.osv_memory):
                 'python_compute': tax.python_compute,
                 'python_compute_inv': tax.python_compute_inv,
                 'python_applicable': tax.python_applicable,
-                'tax_group':tax.tax_group,
                 'base_code_id': tax.base_code_id and ((tax.base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.base_code_id.id]) or False,
                 'tax_code_id': tax.tax_code_id and ((tax.tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.tax_code_id.id]) or False,
                 'base_sign': tax.base_sign,

@@ -174,10 +174,10 @@ class project(osv.osv):
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
-        'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects."),
-        'effective_hours': fields.function(_progress_rate, multi="progress", method=True, string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects."),
-        'total_hours': fields.function(_progress_rate, multi="progress", method=True, string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects."),
-        'progress_rate': fields.function(_progress_rate, multi="progress", method=True, string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo."),
+        'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.", store=True),
+        'effective_hours': fields.function(_progress_rate, multi="progress", method=True, string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects.", store=True),
+        'total_hours': fields.function(_progress_rate, multi="progress", method=True, string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.", store=True),
+        'progress_rate': fields.function(_progress_rate, multi="progress", method=True, string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo.", store=True),
         'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -190,7 +190,6 @@ class project(osv.osv):
         'active': True,
         'priority': 1,
         'sequence': 10,
-        'warn_manager': True,
     }
 
     def _check_dates(self, cr, uid, ids):
@@ -373,6 +372,11 @@ class task(osv.osv):
         return res
 
 
+    def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned = 0.0):
+        if remaining and not planned:
+            return {'value':{'planned_hours': remaining}}
+        return {}
+
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
         return {'value':{'remaining_hours': planned - effective}}
 
@@ -441,6 +445,7 @@ class task(osv.osv):
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
+        'id': fields.integer('ID'),
     }
 
     _defaults = {
@@ -481,7 +486,6 @@ class task(osv.osv):
         return True
 
     _constraints = [
-        (_check_dates, 'Error! Task start-date must be lower then task end-date.', ['date_start', 'date_end']),
         (_check_recursion, _('Error ! You cannot create recursive tasks.'), ['parent_ids'])
     ]
     #
@@ -614,7 +618,10 @@ class task(osv.osv):
     def do_open(self, cr, uid, ids, *args):
         tasks= self.browse(cr,uid,ids)
         for t in tasks:
-            self.write(cr, uid, [t.id], {'state': 'open',  'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),})
+            data = {'state': 'open'}
+            if not t.date_start:
+                data['date_start'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            self.write(cr, uid, [t.id], data)
             message = _('Task ') + " '" + t.name + "' "+ _("is Open.")
             self.log(cr, uid, t.id, message)
         return True
@@ -679,7 +686,7 @@ class task(osv.osv):
     def prev_type(self, cr, uid, ids, *args):
         for task in self.browse(cr, uid, ids):
             typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id.type_ids)
+            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
             if types:
                 if typeid and typeid in types:
                     index = types.index(typeid)

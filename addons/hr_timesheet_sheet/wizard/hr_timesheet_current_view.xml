@@ -6,7 +6,7 @@
         <field name="model">hr.timesheet.current.open</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Current Timesheet">
+            <form string="My Timesheet">
                <separator string="It will open the your current timesheet" colspan="4" />
                <group colspan="4" col="6">
                     <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
@@ -17,7 +17,7 @@
     </record>
 
     <record id="action_hr_timesheet_current_open" model="ir.actions.act_window">
-        <field name="name">Current Timesheet</field>
+        <field name="name">My Timesheet</field>
         <field name="res_model">hr.timesheet.current.open</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -25,7 +25,11 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem action="action_hr_timesheet_current_open" icon="STOCK_NEW" id="menu_act_hr_timesheet_sheet_form_my_current" name="Current Timesheet" parent="hr_attendance.menu_hr_time_tracking" sequence="1"/>
+    <menuitem action="action_hr_timesheet_current_open" icon="STOCK_NEW" id="menu_act_hr_timesheet_sheet_form_my_current" name="My Timesheet" parent="hr_attendance.menu_hr_time_tracking" sequence="1"/>
+
+    <menuitem action="action_hr_timesheet_current_open"
+        id="menu_act_project_management_timesheet_sheet_form" parent="base.menu_project_management_time_tracking"
+        sequence="5"/>
 
     </data>
 </openerp>

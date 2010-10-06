@@ -86,17 +86,17 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                    <field name="date"/>
-                    <field name="date_confirm"/>
-                    <separator orientation="vertical"/>
                     <field name="shop_id" widget="selection"/>
                     <field name="categ_id" widget="selection"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <newline/>
+                    <field name="date"/>
+                    <field name="date_confirm"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Salesman" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
+                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
                     <filter string="Default UoM" icon="terp-mrp" context="{'group_by':'uom_name'}"/>
@@ -246,7 +246,7 @@
     </record>
 
    <record id="action_sales_product_total_price" model="ir.actions.act_window">
-        <field name="name">Sales by Product Category</field>
+        <field name="name">Sales by Product's Category</field>
         <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>

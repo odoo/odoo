@@ -138,14 +138,6 @@
             <field eval="&quot;&quot;&quot;Salesman&quot;&quot;&quot;" name="name"/>
         </record>
 
-        <record id="sale.trans_draft_router" model="workflow.transition">
-            <field name="role_id" ref="res_roles_salesman0"/>
-        </record>
-
-        <record id="sale.trans_wait_invoice_invoice_manual" model="workflow.transition">
-            <field name="role_id" ref="res_roles_salesman0"/>
-        </record>
-
         <record id="process_transition_confirmquotation0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirm Quotation&quot;&quot;&quot;" name="name"/>
@@ -197,7 +189,6 @@
         </record>
 
         <record id="process_transition_saleorderprocurement0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement of sold material&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;For every sale order line, a procurement order is created to supply the sold product.&quot;&quot;&quot;" name="note"/>
@@ -206,7 +197,6 @@
         </record>
 
         <record id="process_transition_saleinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a sale order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A sale order generates an invoice, as soon as it is confirmed by the salesman. Depending on the Invoicing control of the sale order, the invoice is based on delivered or on ordered quantities.&quot;&quot;&quot;" name="note"/>

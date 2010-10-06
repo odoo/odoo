@@ -34,14 +34,10 @@ class project_installer(osv.osv_memory):
         'hr_timesheet_sheet': fields.boolean('Timesheets',
             help="Tracks and helps employees encode and validate timesheets "
                  "and attendances."),
-        'hr_timesheet_invoice': fields.boolean('Invoice Based on Hours',
-            help="Helps generate invoices based on human resources "
-                 "costs and general expenses."),
+        'project_timesheet': fields.boolean('Bill Time on Tasks',
+            help="Helps generate invoices based on time spent on tasks, if activated on the project."),
         'account_budget': fields.boolean('Budgets',
             help="Helps accountants manage analytic and crossover budgets."),
-        'project_messages': fields.boolean('Project Messages',
-            help="Lets employees send messages to other members of the "
-                 "projects they're working on."),
         'project_issue': fields.boolean('Issues Tracker',
             help="Automatically synchronizes project tasks and crm cases."),
         # Methodologies
@@ -50,7 +46,7 @@ class project_installer(osv.osv_memory):
                  "in the SCRUM methodology."),
         'project_gtd': fields.boolean('Getting Things Done',
             help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
-        }
+    }
 
     _defaults={
         'project_issue': True,

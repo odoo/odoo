@@ -52,13 +52,14 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     })
 
     def set_context(self, objects, data, ids, report_type=None):
+        obj_move = self.pool.get('account.move.line')
         new_ids = ids
         self.query_get_clause = ''
         self.target_move = data['form'].get('target_move', 'all')
         if (data['model'] == 'ir.ui.menu'):
             new_ids = data['form'].get('active_ids', [])
             self.query_get_clause = 'AND '
-            self.query_get_clause += data['form'].get('query_line', '')
+            self.query_get_clause += obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
             self.sort_selection = data['form'].get('sort_selection', 'date')
             objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
         if new_ids:

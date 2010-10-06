@@ -126,8 +126,8 @@ class crm_lead(crm_case, osv.osv):
 
         'contact_name': fields.char('Contact Name', size=64), 
         'partner_name': fields.char("Partner Name", size=64),
-        'optin': fields.boolean('Opt-In'),
-        'optout': fields.boolean('Opt-Out'),
+        'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
+        'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),
@@ -185,14 +185,16 @@ class crm_lead(crm_case, osv.osv):
         @param *args: Give Tuple Value
         """
         old_state = self.read(cr, uid, ids, ['state'])[0]['state']
+        old_stage_id = self.read(cr, uid, ids, ['stage_id'])[0]['stage_id']
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
         if old_state == 'draft':
-            stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
-            if stage_id:
-                value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
-            else:
-                value = {}
-            value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+            value = {}
+            if not old_stage_id:
+                stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
+                if stage_id:
+                    value.update({'stage_id': stage_id})
+                    value.update(self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value'])
+            value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
             self.write(cr, uid, ids, value)
 
         for (id, name) in self.name_get(cr, uid, ids):

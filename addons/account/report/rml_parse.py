@@ -21,12 +21,10 @@
 
 from report import report_sxw
 import xml.dom.minidom
-import os, time
+import time
 import osv
 import re
-import tools
 import pooler
-import re
 import sys
 
 

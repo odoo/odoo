@@ -240,7 +240,7 @@
             </para>
           </td>
           <td>
-            <para style="terp_default_Right_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font') ]]</font><font>[[ formatLang(abs(a['balance1'])) ]] [[ company.currency_id.symbol ]]</font></para>
+            <para style="terp_default_Right_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font') ]]</font><font>[[(a['code1'] and a['name1']) and  formatLang(abs(a['balance1'])) or removeParentNode('font') ]] [[ company.currency_id.symbol ]]</font></para>
           </td>
         </tr>
       </blockTable>
