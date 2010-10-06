@@ -423,6 +423,7 @@ class survey_analysis(report_rml):
         rml += """</document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
+        self.pageCount=True
         pdf = create_doc(rml, title=self.title)
 
         return (pdf, report_type)
