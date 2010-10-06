@@ -463,6 +463,7 @@ class account_voucher(osv.osv):
                 default['value']['pre_line'] = 1
             elif ttype == 'receipt' and len(default['value']['line_dr_ids']) > 0:
                 default['value']['pre_line'] = 1
+
         return default
 
     def onchange_date(self, cr, user, ids, date, context={}):
@@ -683,6 +684,7 @@ class account_voucher(osv.osv):
                     move_line.update({
                         'account_tax_id':inv.tax_id.id,
                     })
+
                 master_line = move_line_pool.create(cr, uid, move_line)
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
@@ -706,6 +708,7 @@ class account_voucher(osv.osv):
                 else:
                     account_id = inv.partner_id.property_account_payable.id
                 move_line['account_id'] = account_id
+
                 move_line_id = move_line_pool.create(cr, uid, move_line)
 
             self.write(cr, uid, [inv.id], {
@@ -871,6 +874,7 @@ class account_bank_statement(osv.osv):
         voucher_obj = self.pool.get('account.voucher')
         wf_service = netsvc.LocalService("workflow")
         st_line = self.pool.get('account.bank.statement.line').browse(cr, uid, st_line_id, context=context)
+
         if st_line.voucher_id:
             voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
             wf_service.trg_validate(uid, 'account.voucher', st_line.voucher_id.id, 'proforma_voucher', cr)

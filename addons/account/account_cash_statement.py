@@ -143,6 +143,7 @@ class account_cash_statement(osv.osv):
                         res[statement.id] -= res_currency_obj.compute(cursor,
                                 user, company_currency_id, currency_id,
                                 line.credit, context=context)
+
             if statement.state in ('draft', 'open'):
                 for line in statement.line_ids:
                     res[statement.id] += line.amount
@@ -383,7 +384,7 @@ class account_cash_statement(osv.osv):
             for end in st.ending_details_ids:
                 cash_box_line_pool.write(cr, uid, [end.id], {'number':0})
         return True
-    
+
 account_cash_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -171,6 +171,7 @@ class account_statement_from_invoice(osv.osv_memory):
 
         line_ids = line_obj.search(cr, uid, args,
             context=context)
+
         model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice_lines')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {
