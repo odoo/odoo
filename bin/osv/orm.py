@@ -3947,9 +3947,8 @@ class orm(orm_template):
 
         # apply ir.rules from the parents (through _inherits)
         for inherited_model in self._inherits:
-            apply_rule(*rule_obj.domain_get(cr, uid, inherited_model, mode, context=context),
-                       parent_model=inherited_model,
-                       child_object=self)
+            kwargs = dict(parent_model=inherited_model, child_object=self) #workaround for python2.5
+            apply_rule(*rule_obj.domain_get(cr, uid, inherited_model, mode, context=context), **kwargs)
 
     def _generate_m2o_order_by(self, order_field, query):
         """
