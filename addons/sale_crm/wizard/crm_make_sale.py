@@ -180,10 +180,11 @@ class crm_make_sale(osv.osv_memory):
         'partner_id': fields.many2one('res.partner', 'Customer', required=True), 
         'sale_order_line': fields.one2many('sale.order.make.line', 'opportunity_order_id', 'Product Line'), 
         'analytic_account': fields.many2one('account.analytic.account', 'Analytic Account'), 
-        'close': fields.boolean('Close Case', help='Check this to close the case after having created the sale order.'), 
+        'close': fields.boolean('Close Opportunity', help='Check this to close the opportunity after having created the sale order.'), 
     }
     _defaults = {
          'shop_id': _get_shop_id, 
+         'close': lambda *args: 1, 
          'partner_id': _selectPartner, 
     }
 
