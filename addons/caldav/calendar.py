@@ -63,11 +63,12 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
             return (False, None)
         qry = 'SELECT DISTINCT(id) FROM %s' % model_obj._table
         if rdate:
-            qry += " WHERE recurrent_id=%s"
-            cr.execute(qry, (rdate,))
+            qry += " where recurrent_id='%s'" % (rdate) #TOFIX: sql injection
+            cr.execute(qry)
             r_id = cr.fetchone()
             if r_id:
                 return (id, r_id[0])
+        
         cr.execute(qry)
         ids = map(lambda x: str(x[0]), cr.fetchall())
         if id in ids:
