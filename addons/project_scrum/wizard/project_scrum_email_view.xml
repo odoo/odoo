@@ -12,8 +12,8 @@
                     <group col="2" colspan="4">
 	                    <field name="scrum_master_id"/>
 	                    <field name="product_owner_id"/>
-	                    <field name="subject"/>
-                    </group>
+					</group>
+                    <field name="subject"/>
 					<notebook colspan="4">
 						<page string="Message">
                     		<field name="message" nolabel="1"/>
@@ -22,7 +22,7 @@
 
                     <separator string="" colspan="4"/>
                     <button icon="gtk-close" special="cancel" string="_Cancel"/>
-                    <button icon="gtk-go-forward"  string="_Send" type="object" default_focus="1"/>
+                    <button icon="gtk-go-forward" name="button_send_scrum_email"  string="_Send" type="object" default_focus="1" />
                 </form>
             </field>
         </record>
