@@ -112,6 +112,15 @@ class account_voucher(osv.osv):
         return [(r['id'], (str("%.2f" % r['amount']) or '')) for r in self.read(cr, uid, ids, ['amount'], context, load='_classic_write')]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        if not view_id and context.get('invoice_type',False):
+            mod_obj = self.pool.get('ir.model.data')
+            act_obj = self.pool.get('ir.actions.act_window')
+            if context.get('invoice_type') in ('out_invoice','out_refund'): 
+                result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
+            else:
+                result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_payment_form')
+            result = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
+            view_id = result
         res = super(account_voucher,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         doc = etree.XML(res['arch'])
         nodes = doc.xpath("//field[@name='partner_id']")
@@ -349,7 +358,6 @@ class account_voucher(osv.osv):
 
         if context is None:
             context = {}
-
         currency_pool = self.pool.get('res.currency')
         move_pool = self.pool.get('account.move')
         line_pool = self.pool.get('account.voucher.line')
@@ -384,6 +392,7 @@ class account_voucher(osv.osv):
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
 
         default['value']['account_id'] = account_id
+
         if journal.type not in ('cash', 'bank'):
             return default
 
