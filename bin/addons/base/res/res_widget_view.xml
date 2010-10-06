@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="view_res_widget_search" model="ir.ui.view">
+            <field name="name">res.widget.search</field>
+            <field name="model">res.widget</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Widget">
+                    <field name="title" />
+                 </search>
+            </field>
+        </record>
+        
         <record id="res_widget_form" model="ir.ui.view">
             <field name="name">res.widget.form</field>
             <field name="model">res.widget</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="OpenERP Favourites">
+                <form string="Widgets">
                     <field name="title"/>
                     <field name="content"/>
                 </form>
@@ -17,17 +28,18 @@
             <field name="model">res.widget</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="OpenERP Favourites">
+                <tree string="Widgets">
                     <field name="title"/>
                 </tree>
             </field>
         </record>
 
         <record id="res_widget_act_window" model="ir.actions.act_window">
-            <field name="name">OpenERP Favourites</field>
+            <field name="name">Widgets</field>
             <field name="res_model">res.widget</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="res_widget_tree"/>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_res_widget_search"/>
         </record>
         
         <menuitem

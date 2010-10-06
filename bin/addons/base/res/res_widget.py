@@ -23,6 +23,7 @@ from osv import fields,osv
 
 class res_widget(osv.osv):
     _name = "res.widget"
+    _rec_name = "title"
     _columns = {
                 'title' : fields.char('Title', size=64),
                 'content': fields.text('Content')
