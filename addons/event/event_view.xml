@@ -179,6 +179,7 @@
                     <field name="register_min"/>
                     <field name="register_current"/>
                     <field name="state"/>
+                    <field name="user_id"/>
                     <button string="Confirm Event" help="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                     <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
                     <button string="Event Done" help="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
@@ -226,27 +227,27 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group col="10" colspan="4">
-                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'confirm'))]" help="Current Events"/>
-                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','confirm')]" help="Open Events"/>
+                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'confirm'))]" help="Events in draft or confirmed state"/>
+                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                         <separator orientation="vertical"/>
-                        <field name="name" string="Event" select="1"/>
-                        <field name="state" select="1"/>
+                        <field name="name" select="1"/>
                         <field name="user_id" widget="selection">
-                               <filter icon="terp-personal"
-                                    string="My Events"
-                                    help="My Events"
-                                    domain="[('user_id','=',uid)]"/>
+                        <filter icon="terp-personal"
+                              string="My Events"
+                                help="My Events"
+                              domain="[('user_id','=',uid)]"/>
                         </field>
                         <field name="date_begin" select="1"/>
+                        <field name="state" select="1"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="12">
+                        <filter string="Responsible"  icon="terp-personal" context="{'group_by': 'user_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
                         <filter string="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Responsible"  icon="terp-personal" context="{'group_by': 'user_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Creation" icon="terp-go-month"
+                        <filter string="Beginning Date" icon="terp-go-month"
                             domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>
                 </search>
@@ -295,11 +296,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Registration">
-                    <field name="date" string="Date"/>
-                    <field name="event_id"/>
                     <field name="partner_id"/>
+                    <field name="event_id"/>
                     <field name="nb_register"/>
-                    <field name="price_subtotal"/>
+                    <field name="price_subtotal" sum="Total"/>
+                    <field name="user_id"/>
                     <field name="state"/>
                     <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                     <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
@@ -343,9 +344,9 @@
                             <separator string="" colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state" select="1" colspan="2"/>
+                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                 <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                                 <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Extra Info">
@@ -468,27 +469,26 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <group col="12" colspan="4">
-                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'open'))]" help="Current Registrations"/>
-                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Registrations"/>
+                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'open'))]" help="Registrations in unconfirmed or confirmed state"/>
+                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                         <separator orientation="vertical"/>
                         <field name="partner_id" />
                         <field name="event_id" widget="selection"/>
-                        <field name="state" select="1"/>
-
                         <field name="user_id" widget="selection">
-                              <filter icon="terp-personal"
-                                    string="My Registration"
-                                    help="My Registration"
-                                    domain="[('user_id','=',uid)]"/>
+                        <filter icon="terp-personal"
+                              string="My Registrations"
+                                help="My Registrations"
+                              domain="[('user_id','=',uid)]"/>
                         </field>
+                        <field name="state" select="1"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
+                        <filter string="Responsible"  icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Event" icon="terp-crm" domain="[]" context="{'group_by':'event_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Responsible"  icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                    </group>
                 </search>
             </field>

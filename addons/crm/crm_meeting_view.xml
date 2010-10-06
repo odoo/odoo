@@ -13,7 +13,8 @@
         <field name="context">{'object_id':'crm.meeting'}</field>
     </record>
 
-     <menuitem action="crm_meeting_categ_action" name="Categories of Meeting"
+     <menuitem action="crm_meeting_categ_action"
+        groups="base.group_extended"
         id="menu_crm_case_meeting-act" parent="base.menu_calendar_configuration" sequence="1"/>
 
     <!-- CRM Meetings Form View -->
@@ -311,7 +312,7 @@
                            <separator orientation="vertical"/>
                            <field name="partner_id" select="1" />
                            <field name="section_id" select="1" widget="selection">
-                               <filter icon="terp-personal+"
+                               <filter icon="terp-personal+" groups="base.group_extended"
                                    domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                    help="My Sales Team(s)" />
                            </field>

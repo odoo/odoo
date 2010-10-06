@@ -184,16 +184,17 @@ class wiki_wiki2(osv.osv):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
-
-        id = super(wiki_wiki2, self).create(cr, uid, vals, context)
-        self.create_history(cr, uid, [id], vals, context)
-        return id
+        #TOFIX: why create_uid in vals
+        if 'create_uid' in vals: del vals['create_uid']
+        wiki_id = super(wiki_wiki2, self).create(cr, uid,
+                             vals, context)
+        self.create_history(cr, uid, [wiki_id], vals, context)
+        return wiki_id
 
     def write(self, cr, uid, ids, vals, context=None):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
-
         result = super(wiki_wiki2, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result

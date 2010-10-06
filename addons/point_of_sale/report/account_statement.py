@@ -31,10 +31,21 @@ class account_statement(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
             'get_total':self._get_total,
+            'get_data':self._get_data,
         })
+
+    def _get_data(self, statement):
+        lines = []
+        for line in statement.line_ids:
+            lines.append(line)
+
+        return lines
+
     def _get_total(self, statement_line_ids):
         total = 0.0
         for line in statement_line_ids:
             total += line.amount
         return total
+
 report_sxw.report_sxw('report.account.statement', 'account.bank.statement', 'addons/statement/report/account_statement.rml', parser=account_statement,header='internal')
+

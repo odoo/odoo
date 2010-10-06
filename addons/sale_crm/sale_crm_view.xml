@@ -43,5 +43,14 @@
 	        </field>
 	    </record>
 
+        <record id="sale.action_order_form" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{'search_default_section_id':section_id}</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+        </record>
 	</data>
 </openerp>

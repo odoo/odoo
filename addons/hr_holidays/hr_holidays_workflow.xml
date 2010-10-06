@@ -77,28 +77,24 @@
         <field name="act_to" ref="act_validate" />
         <field name="signal">validate</field>
         <field name="condition">(holiday_status_id.double_validation == False)</field>
-        <field name="role_id" ref="HR_holidays"/>
     </record>
 
     <record model="workflow.transition" id="t3">
         <field name="act_from" ref="act_confirm" />
         <field name="act_to" ref="act_refuse" />
         <field name="signal">refuse</field>
-        <field name="role_id" ref="HR_holidays"/>
     </record>
 
     <record model="workflow.transition" id="t4">
         <field name="act_from" ref="act_validate" />
         <field name="act_to" ref="act_cancel" />
         <field name="signal">cancel</field>
-        <field name="role_id" ref="HR_holidays"/>
     </record>
 
     <record model="workflow.transition" id="t5">
         <field name="act_from" ref="act_refuse" />
         <field name="act_to" ref="act_cancel" />
         <field name="signal">cancel</field>
-        <field name="role_id" ref="HR_holidays"/>
     </record>
 
     <record model="workflow.transition" id="t7">
@@ -124,7 +120,6 @@
         <field name="act_to" ref="act_validate1" />
         <field name="condition">(holiday_status_id.double_validation == True)</field>
         <field name="signal">validate</field>
-        <field name="role_id" ref="HR_holidays"/>
     </record>
 
 </data>

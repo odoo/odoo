@@ -1065,7 +1065,7 @@ class calendar_event(osv.osv):
             'rule_type': rrule_type,
             'id': id,
         })
-        cr.execute(qry, val) # Hopefully psycopg2 works with dicts. But, FIXME
+        cr.execute(qry % val)
         return True
 
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
