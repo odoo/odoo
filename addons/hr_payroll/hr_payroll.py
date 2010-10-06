@@ -894,12 +894,22 @@ class hr_payslip(osv.osv):
                     count += 1
             return count
 
-        for slip in self.browse(cr, uid, ids, context=context):
-            
+        for slip in self.browse(cr, uid, ids, context=context):            
             old_slip_ids = slip_line_pool.search(cr, uid, [('slip_id','=',slip.id)], context=context)
             slip_line_pool.unlink(cr, uid, old_slip_ids, context=context)
-            
-            if not slip.employee_id.contract_id:
+            update = {}
+            ttyme = datetime.fromtimestamp(time.mktime(time.strptime(slip.date,"%Y-%m-%d")))
+            contracts = self.get_contract(cr, uid, slip.employee_id, date, context)
+            if contracts.get('id', False) == False:
+                update.update({
+                    'basic': round(0.0),
+                    'basic_before_leaves': round(0.0),
+                    'name':'Salary Slip of %s for %s' % (slip.employee_id.name, ttyme.strftime('%B-%Y')),
+                    'state':'draft',
+                    'contract_id':False,
+                    'company_id':slip.employee_id.company_id.id
+                })
+                self.write(cr, uid, [slip.id], update, context=context)
                 continue
 
             contract = slip.employee_id.contract_id
@@ -920,7 +930,6 @@ class hr_payslip(osv.osv):
             ded_fix = 0.0
 
             obj = {'basic':0.0}
-            update = {}
             if contract.wage_type_id.type == 'gross':
                 obj['gross'] = contract.wage
                 update['igross'] = contract.wage
@@ -958,7 +967,7 @@ class hr_payslip(osv.osv):
                 base = line.category_id.base
 
                 try:
-                    # Please have a look at the configuration guide for rules and restrictions
+                    #Please have a look at the configuration guide.
                     amt = eval(base, obj)
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
@@ -1015,7 +1024,6 @@ class hr_payslip(osv.osv):
                 basic = contract.wage
 
             number = sequence_obj.get(cr, uid, 'salary.slip')
-            ttyme = datetime.fromtimestamp(time.mktime(time.strptime(slip.date,"%Y-%m-%d")))
             update.update({
                 'deg_id':function,
                 'number':number,
@@ -1029,7 +1037,7 @@ class hr_payslip(osv.osv):
             self.write(cr, uid, [slip.id], update, context=context)
 
         for slip in self.browse(cr, uid, ids, context=context):
-            if not slip.employee_id.contract_id:
+            if not slip.contract_id:
                 continue
 
             basic_before_leaves = slip.basic
