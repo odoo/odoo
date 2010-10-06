@@ -272,7 +272,8 @@ def _reconcile(self, cr, uid, data, context):
                 "AND partner_id=%s " \
                 "AND reconcile_id IS NULL " \
                 "AND state <> 'draft' " \
-                "AND debit > 0",
+                "AND debit > 0 " \
+                "ORDER BY date_maturity",
                 (account_id, partner_id))
             debits = cr.fetchall()
                 
@@ -284,7 +285,8 @@ def _reconcile(self, cr, uid, data, context):
                 "AND partner_id=%s " \
                 "AND reconcile_id IS NULL " \
                 "AND state <> 'draft' " \
-                "AND credit > 0",
+                "AND credit > 0 " \
+                "ORDER BY date_maturity",
                 (account_id, partner_id))
             credits = cr.fetchall()
             
