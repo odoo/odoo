@@ -24,7 +24,7 @@
         </record>
 
         <record model="ir.ui.view" id="membership_products_form">
-            <field name="name">Memberships</field>
+            <field name="name">Membership Products</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -83,7 +83,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_membership_products">
-            <field name="name">Memberships</field>
+            <field name="name">Membership Products</field>
             <field name="res_model">product.product</field>
             <field name="domain">[('membership','=',True), ('type', '=', 'service')]</field>
             <field name="context">{'membership':True, 'type':'service'}</field>
