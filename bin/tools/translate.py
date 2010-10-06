@@ -29,6 +29,7 @@ import re
 import tarfile
 import tempfile
 from os.path import join
+import logging
 
 from datetime import datetime
 from lxml import etree
@@ -127,30 +128,55 @@ def translate(cr, name, source_type, lang, source=None):
     res = res_trans and res_trans[0] or False
     return res
 
+logger = logging.getLogger('translate')
+
 class GettextAlias(object):
+
+    def _get_cr(self, frame):
+        is_new_cr = False
+        cr = frame.f_locals.get('cr')
+        if not cr:
+            s = frame.f_locals.get('self', {})
+            cr = getattr(s, 'cr', False)
+            if not cr:
+                if frame.f_globals.get('pooler', False):
+                    # TODO: we should probably get rid of the 'is_new_cr' case: no cr in locals -> no translation for you
+                    dbs = frame.f_globals['pooler'].pool_dic.keys()
+                    if len(dbs) == 1:
+                        cr = pooler.get_db(dbs[0]).cursor()
+                        is_new_cr = True
+        return cr, is_new_cr
+    
+    def _get_lang(self, frame):
+        lang = frame.f_locals.get('context', {}).get('lang', False)
+        if not lang:
+            args = frame.f_locals.get('args', False)
+            if args:
+                lang = args[-1].get('lang', False)
+            if not lang:
+                s = frame.f_locals.get('self', {})
+                c = getattr(s, 'localcontext', {})
+                lang = c.get('lang', False)
+        return lang
+    
     def __call__(self, source):
+        is_new_cr = False
+        res = source
         try:
             frame = inspect.stack()[1][0]
+            cr, is_new_cr = self._get_cr(frame)
+            lang = self._get_lang(frame)
+            if lang and cr:
+                cr.execute('SELECT value FROM ir_translation WHERE lang=%s AND type IN (%s, %s) AND src=%s', (lang, 'code','sql_constraint', source))
+                res_trans = cr.fetchone()
+                res = res_trans and res_trans[0] or source
         except:
-            return source
+            logger.warn('translation went wrong for string %s', repr(source))
+        finally:
+            if is_new_cr:
+                cr.close()
+        return res
 
-        cr = frame.f_locals.get('cr')
-        try:
-            lang = (frame.f_locals.get('context') or {}).get('lang', False)
-            if not (cr and lang):
-                args = frame.f_locals.get('args',False)
-                if args:
-                    lang = args[-1].get('lang',False)
-                    if frame.f_globals.get('pooler',False):
-                        cr = pooler.get_db(frame.f_globals['pooler'].pool_dic.keys()[0]).cursor()
-            if not (lang and cr):
-                return source
-        except:
-            return source
-
-        cr.execute('select value from ir_translation where lang=%s and type IN (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
-        res_trans = cr.fetchone()
-        return res_trans and res_trans[0] or source
 _ = GettextAlias()
 
 
