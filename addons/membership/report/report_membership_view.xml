@@ -27,6 +27,7 @@
                     <field name="year" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -43,19 +44,8 @@
                         <filter string="Last 30 Days" icon="terp-go-month" name="month"
                             domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_from','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
-		                <filter icon="terp-camera_test"
-		                    string="Invoiced"
-		                    domain="[('state','=','invoiced')]"/>
-		                <filter icon="terp-check"
-                            string="Paid"
-                            domain="[('state','=','paid')]"/>
-                        <filter icon="terp-gtk-media-pause"
-                            string="Waiting"
-                            default="1" name="none"
-                            domain="[('state','=', 'waiting')]"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id"/>
-                        <field name="membership_id"/>
+                        <field name="state"/>
+                        <field name="user_id"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="12">
@@ -63,24 +53,24 @@
                             domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" name="partner"
                             domain="[]" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>       
+                        <separator orientation="vertical"/>
                         <filter string="Membership Product" icon="terp-product" name="product"
-                            domain="[]" context="{'group_by':'membership_id'}"/>    
+                            domain="[]" context="{'group_by':'membership_id'}"/>
                         <filter string="Membership State" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical" groups="base.group_multi_company"/>       
+                        <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home"
                             domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <separator orientation="vertical"/>       
+                        <separator orientation="vertical"/>
                         <filter string="Year" name="year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'year'}"/>
                         <filter string="Month" name="month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}"/>    
+                            domain="[]" context="{'group_by':'month'}"/>
                     </group>
                 </search>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_report_membership_graph1">
             <field name="name">report.membership.graph1</field>
             <field name="model">report.membership</field>
@@ -123,4 +113,4 @@
             id="menu_report_membership"/>
 
     </data>
-</openerp>            
+</openerp>
