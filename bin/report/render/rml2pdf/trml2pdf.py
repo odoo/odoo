@@ -820,8 +820,9 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
 class _rml_template(object):
     def __init__(self, localcontext, out, node, doc, images={}, path='.', title=None):
         self.localcontext = localcontext
-        if not self.localcontext:
-            self.localcontext={'header':'internal'}
+        if not self.localcontext or not self.localcontext.get('header',False):
+            self.localcontext={}
+            self.localcontext.update({'header':'internal'})
         self.images= images
         self.path = path
         self.title = title

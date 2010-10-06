@@ -70,6 +70,7 @@ class report_rml(report_int):
     def __init__(self, name, table, tmpl, xsl):
         super(report_rml, self).__init__(name)
         self.table = table
+        self.pageCount=False
         self.tmpl = tmpl
         self.xsl = xsl
         self.bin_datas = {}
@@ -174,6 +175,13 @@ class report_rml(report_int):
         return xml
 
     def create_pdf(self, rml, localcontext = None, logo=None, title=None):
+        if not localcontext:
+            localcontext={}
+            if self.tmpl=='' and not self.pageCount:
+                self.pageCount=True
+            else:
+              self.pageCount=False
+            localcontext.update({'header':self.pageCount})
         if logo:
             self.bin_datas['logo'] = logo
         else:
