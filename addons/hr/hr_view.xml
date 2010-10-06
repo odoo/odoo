@@ -4,9 +4,9 @@
 
         <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
-        <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_system" sequence="50"/>
+        <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="1"/>
-        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" groups="base.group_system" name="Employees" sequence="1" />
+        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" groups="base.group_hr_manager" name="Employees" sequence="1" />
 
         <!--
         ==========
@@ -151,7 +151,7 @@
             <field name="help">The employee directory contains all data related to your employees : from their photo up to their hourly estimated costs for the timesheets.Employees are managed by departments and can be linked to users to manage their access rights.</field>
         </record>
 
-        <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main" groups="base.group_system,base.group_hr_manager,base.group_hr_user"/>
+        <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main" groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
 
         <!--
         =======================
@@ -284,7 +284,7 @@
         </record>
 
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
-            parent="menu_view_employee_category_configuration_form" sequence="1" groups="base.group_extended"/>
+            parent="menu_view_employee_category_configuration_form" sequence="1" groups="base.group_extended,base.group_user"/>
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories structure</field>
@@ -399,7 +399,7 @@
             <field name="help">Job Positions are used to define the jobs, the requirements. You can attach a survey to a job position. This survey will be used in the recruitement process to evaluate the applicants for this job position.</field>
         </record>
 
-        <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_manager,base.group_system"/>
+        <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_manager"/>
         <menuitem parent="base.menu_crm_case_job_req_main" id="menu_hr_job" action="action_hr_job" sequence="2"/>
 
     </data>
