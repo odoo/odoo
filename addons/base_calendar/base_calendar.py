@@ -978,7 +978,7 @@ class calendar_event(osv.osv):
         if not context:
             context = {}
         for event_id in ids:
-            cr.execute('select id from %s  where recurrent_uid=%s' % (self._table, event_id))
+            cr.execute("select id from %s where recurrent_uid=%%s" % (self._table), (event_id,))
             r_ids = map(lambda x: x[0], cr.fetchall())
             self.unlink(cr, uid, r_ids, context=context)
         return True
@@ -1065,7 +1065,7 @@ class calendar_event(osv.osv):
             'rule_type': rrule_type,
             'id': id,
         })
-        cr.execute(qry, val) # Hopefully psycopg2 works with dicts. But, FIXME
+        cr.execute(qry % val)
         return True
 
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
