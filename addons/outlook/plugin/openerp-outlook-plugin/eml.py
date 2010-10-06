@@ -90,4 +90,5 @@ def generateEML(mail):
         print email.lastErrorText()
         sys.exit()
 
+    print "Saved EML!",eml_path
     return eml_path
