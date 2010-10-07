@@ -492,8 +492,13 @@ class payment_category(osv.osv):
         'type':fields.selection([
             ('allowance','Allowance'),
             ('deduction','Deduction'),
-            ('other','Others'),
-        ],'Type', select=True),
+            ('leaves','Leaves'),
+            ('advance','Advance'),
+            ('loan','Loan'),
+            ('installment','Loan Installment'),
+            ('otherpay','Other Payment'),
+            ('otherdeduct','Other Deduction'),
+        ],'Type', select=True, required=True),
         'base':fields.text('Based on', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'condition':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
@@ -620,7 +625,8 @@ class hr_holidays_status(osv.osv):
             ('halfpaid','Half-Pay Holiday')
             ], string='Payment'),
         'head_id': fields.many2one('hr.allounce.deduction.categoty', 'Payroll Head', domain=[('type','=','deduction')]),
-        'code':fields.char('Code', size=64, required=False, readonly=False),
+        'code': fields.related('head_id','code', type='char', relation='hr.allounce.deduction.categoty', string='Code'),
+#        'code':fields.char('Code', size=64, required=False, readonly=False),
     }
     _defaults = {
         'type': lambda *args: 'unpaid',
@@ -1057,6 +1063,9 @@ class hr_payslip(osv.osv):
             total_leave = 0.0
             paid_leave = 0.0
             for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
+                if not hday.holiday_status_id.head_id:
+                    raise osv.except_osv(_('Error !'), _('Please check configuration of %s, payroll head is missing' % (hday.holiday_status_id.name)))
+                    
                 res = {
                     'slip_id':slip.id,
                     'name':hday.holiday_status_id.name + '-%s' % (hday.number_of_days),
@@ -1141,7 +1150,8 @@ class hr_payslip_line(osv.osv):
         'employee_id':fields.many2one('hr.employee', 'Employee', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
-        'code':fields.char('Code', size=64, required=False, readonly=False),
+        'code':fields.char('Code', size=64, required=False, readonly=False),        
+        'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Category', required=True),
         'type':fields.selection([
             ('allowance','Allowance'),
             ('deduction','Deduction'),
@@ -1152,12 +1162,13 @@ class hr_payslip_line(osv.osv):
             ('otherpay','Other Payment'),
             ('otherdeduct','Other Deduction'),
         ],'Type', select=True, required=True),
-        'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Category', required=True),
+        #TODO: link type to the category_id instead of define again
+        #'type': fields.related('category_id','type', type='selection', size=64, relation='hr.allounce.deduction.categoty', string='Type', store=True),
         'amount_type':fields.selection([
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
             ('func','Function Value'),
-        ],'Amount Type', select=True),
+        ],'Amount Type', select=True, required=True),
         'amount': fields.float('Amount / Percentage', digits=(16, 4)),
         'total': fields.float('Sub Total', readonly=True, digits=(16, 4)),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
@@ -1166,6 +1177,9 @@ class hr_payslip_line(osv.osv):
         'line_ids':fields.one2many('hr.payslip.line.line', 'slipline_id', 'Calculations', required=False)
     }
     _order = 'sequence'
+    _defaults = {
+        'amount_type': lambda *a: 'per'
+    }
 
     def execute_function(self, cr, uid, id, value, context=None):
         if context is None:

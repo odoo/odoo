@@ -350,16 +350,17 @@
             <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="color_name" position="after">
-                    <group col="2" colspan="2">
-                        <separator colspan="4" string="Payroll Accounting"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/>
-                        <field name="code"/>
-                    </group>
+                <field name="double_validation" position="replace">
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Payroll Configurtion"/>
                         <field name="type"/>
                         <field name="head_id"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/>
+                        <field name="code" readonly="True"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="4" string="Validation"/>
+                        <field name="double_validation"/>
                     </group>
                 </field>
             </field>
@@ -586,7 +587,42 @@
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
                         <page string="Contribution">
-                            <field name="contribute_ids" colspan="4" nolabel="1" height="300"/>
+                            <field name="contribute_ids" colspan="4" nolabel="1" height="300">
+                                <form string="Company Contribution">
+                                    <group col="6" colspan="6">
+                                        <field name="name" select="1"/>
+                                        <field name="code" select="1"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="2" string="Contributions"/>
+                                        <field name="amount_type" attrs="{'required': [('contribute','=',True)]}"/>
+                                        <field name="contribute_per" attrs="{'required': [('contribute','=',True)], 'readonly':[(('amount_type','=','func'))]}"/>
+                                        <field name="register_id" attrs="{'required': [('contribute','=',True)]}"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="2" string="Other Information"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection" select="1"/>
+                                        <field name="active" select="1"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">
+                                            <field name="line_ids" colspan="4" nolabel="1">
+                                                <tree string="Function Arguments" editable="bottom">
+                                                    <field name="name"/>
+                                                    <field name="sequence"/>
+                                                    <field name="from_val"/>
+                                                    <field name="to_val"/>
+                                                    <field name="amount_type"/>
+                                                    <field name="value"/>
+                                                </tree>
+                                            </field>
+                                        </page>
+                                        <page string="Description">
+                                            <field name="note" colspan="4" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
                         </page>
                     </notebook>
                 </form>
