@@ -60,8 +60,9 @@
     </record>
 
     <record id="thunderbird_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_thunderbird_installer"/>
-      <field name="sequence">3</field>
+        <field name="action_id" ref="action_thunderbird_installer"/>
+        <field name="restart">always</field>
+        <field name="sequence">3</field>
     </record>
 
 

@@ -48,8 +48,9 @@
 
       <record model="ir.actions.todo"
             id="config_install_module">
-        <field name="action_id" ref="action_config_install_module"/>
-        <field name="sequence">3</field>
+            <field name="action_id" ref="action_config_install_module"/>
+            <field name="sequence">3</field>
+            <field name="restart">always</field>
       </record>
 
         <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9" groups="base.group_extended"/>
