@@ -450,8 +450,18 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
+        applicant = self.browse(cr, uid, ids)[0]
+        if applicant.job_id :
+            job_obj = self.pool.get('hr.job')
+            emp_obj = self.pool.get('hr.employee')
+            job_data = job_obj.browse(cr,uid, applicant.job_id.id)
+            expected_emp = job_data['expected_employees'] + 1
+            emp_id = emp_obj.search(cr,uid, [('job_id','=',applicant.job_id.id),('name','=',applicant.name)])
+            emp_obj.unlink(cr, uid, emp_id)
+            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp})
         res = super(hr_applicant, self).case_reset(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed':False})
+        
         return res
 
 
