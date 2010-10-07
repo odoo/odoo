@@ -49,7 +49,6 @@ var myPrefObserver =
         document.getElementById("txtname").value = getSenderName();
         document.getElementById("txtemail").value = getSenderEmail();
         document.getElementById("country").value = getAllCountry();
-        document.getElementById("state").value = getAllState();
         setPartnerId(0);
 	},
     
