@@ -7,25 +7,12 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-details_summary report'+format), 'wb+').write(data)
 
-
-- 
-  I open the register.
-- 
-  !record {model: pos.open.statement, id: pos_open_statement_0}:
-    {}
-- 
-  I open the statement.
-- 
-  !python {model: pos.open.statement}: |
-    self.open_statement(cr, uid, [ref("pos_open_statement_0")], {"lang": "en_US", "active_model":
-      "ir.ui.menu", "active_ids": [ref("point_of_sale.menu_open_statement")], "tz":
-      False, "active_id": ref("point_of_sale.menu_open_statement"), })
 -
   In order to test the PDF reports defined on a Point Of Sale, we will print a POS Invoice Report
 -
   !python {model: pos.order}: |
     import netsvc, tools, os
-    data_dict = {'model':'ir.ui.menu', 'form':{'invoice_wanted': 1, 'journal':pos_open_statement_0,}}    
+    data_dict = {'model':'ir.ui.menu', 'form':{'invoice_wanted': 1}}    
     (data, format) = netsvc.LocalService('report.pos.invoice').create(cr, uid, [ref('point_of_sale.order_pos1')], data_dict, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-invoice report'+format), 'wb+').write(data)
