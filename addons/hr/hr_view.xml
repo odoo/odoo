@@ -99,7 +99,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <filter icon="terp-personal+" domain="[('active','=',True)]" string="Active" groups="base.group_extended"/>
+                    <filter icon="terp-personal+" domain="[('active','=',True)]" name="active" string="Active" groups="base.group_extended"/>
                     <separator orientation="vertical" />
                     <field name="name"/>
                     <field name="department_id" widget="selection">
@@ -145,7 +145,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
-            <field name="context">{"search_default_department_id": department_id}</field>
+            <field name="context">{"search_default_department_id": department_id,"search_default_active":eval('True')}</field>
             <field name="view_id" ref="view_employee_tree"/>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help">The employee directory contains all data related to your employees : from their photo up to their hourly estimated costs for the timesheets.Employees are managed by departments and can be linked to users to manage their access rights.</field>
