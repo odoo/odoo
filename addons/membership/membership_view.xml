@@ -221,7 +221,7 @@
                         <group colspan="2" col="2">
                             <group colspan="4" col="3">
                             <field name="free_member"/>
-                            <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" icon="gtk-apply"/>
+                            <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" icon="gtk-apply"/>
                             <field colspan="4" name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')], 'readonly':[('free_member','=',True)]}"/>
                             <field colspan="4" name="membership_state"/>
                             </group>
