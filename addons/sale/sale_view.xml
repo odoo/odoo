@@ -568,6 +568,7 @@ to your configuration: from the sales order, from the pickings, etc.
         <!-- register configuration wizard -->
         <record id="config_wizard_step_sale_picking_policy" model="ir.actions.todo">
             <field name="action_id" ref="action_config_picking_policy"/>
+            <field name="restart">always</field>
             <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
         </record>
 
