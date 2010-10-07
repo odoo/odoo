@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
+import time
+
 from osv import fields, osv
 from tools import config
-import time
-from tools.translate import _
 import decimal_precision as dp
-
+from tools.translate import _
 
 STATE = [
     ('none', 'Non Member'),
