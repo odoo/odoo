@@ -1162,32 +1162,36 @@ class account_move(osv.osv):
     ]
 
     def post(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         invoice = context.get('invoice', False)
         valid_moves = self.validate(cr, uid, ids, context)
-        if valid_moves:
-            for move in self.browse(cr, uid, valid_moves):
-                if move.name =='/':
-                    new_name = False
-                    journal = move.journal_id
+        
+        if not valid_moves:
+            raise osv.except_osv(_('Integrity Error !'), _('You cannot validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type "Balance" !'))
+        
+        for move in self.browse(cr, uid, valid_moves):
+            if move.name =='/':
+                new_name = False
+                journal = move.journal_id
 
-                    if invoice and invoice.internal_number:
-                        new_name = invoice.internal_number
+                if invoice and invoice.internal_number:
+                    new_name = invoice.internal_number
+                else:
+                    if journal.sequence_id:
+                        c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
+                        new_name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id, context=c)
                     else:
-                        if journal.sequence_id:
-                            c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
-                            new_name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id, context=c)
-                        else:
-                            raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
+                        raise osv.except_osv(_('Error'), _('No sequence defined on the journal !'))
 
-                    if new_name:
-                        self.write(cr, uid, [move.id], {'name':new_name})
+                if new_name:
+                    self.write(cr, uid, [move.id], {'name':new_name})
 
-            cr.execute('UPDATE account_move '\
-                       'SET state=%s '\
-                       'WHERE id IN %s',
-                       ('posted', tuple(valid_moves),))
-        else:
-            raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type "Balance" !'))
+        cr.execute('UPDATE account_move '\
+                   'SET state=%s '\
+                   'WHERE id IN %s',
+                   ('posted', tuple(valid_moves),))
+            
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
