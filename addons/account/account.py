@@ -1043,6 +1043,8 @@ class account_move(osv.osv):
         return self.name_get(cr, user, ids, context=context)
 
     def name_get(self, cursor, user, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if not len(ids):
             return []
         res = []
@@ -1592,6 +1594,8 @@ class account_tax_code(osv.osv):
 
 
     def name_get(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if not len(ids):
             return []
         if isinstance(ids, (int, long)):
