@@ -115,9 +115,9 @@
                             <field colspan="4" name="period_ids" nolabel="1">
                                 <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
                                     <field name="name"/>
-                                    <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
+                                    <field name="total_attendance" widget="float_time"/>
                                     <field name="total_timesheet" widget="float_time"/>
-                                    <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
+                                    <field name="total_difference" widget="float_time"/>
                                 </tree>
                             </field>
                             <group colspan="4" col="6">
@@ -303,9 +303,9 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="department_id"/>
-                    <field name="total_attendance" groups="base.group_hr_attendance"/>
+                    <field name="total_attendance"/>
                     <field name="total_timesheet"/>
-                    <field name="total_difference" groups="base.group_hr_attendance"/>
+                    <field name="total_difference"/>
                     <field name="state"/>
                 </tree>
             </field>
