@@ -126,5 +126,12 @@
             <field name="name">Other Taxable Allowance</field>
             <field name="sequence" eval="90"/>
         </record>
+        
+        <!-- Contract Wage Types -->
+        <record id="hr_contract_monthly_basic" model="hr.contract.wage.type">
+            <field name="name">Monthly Basic Wage</field>
+            <field name="type">gross</field>
+            <field name="period_id" ref="hr_contract.hr_contract_wage_type_period_monthly"/>
+        </record>
     </data>
 </openerp>

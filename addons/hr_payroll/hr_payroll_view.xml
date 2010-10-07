@@ -192,24 +192,6 @@
                             </tree>
                         </field>
                     </page>
-                    <page string="Salary Slips" groups="base.group_extended">
-                        <field name="slip_ids" colspan="4" nolabel="1" readonly="True">
-                            <tree colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payslip">
-                                <field name="number"/>
-                                <field name="name"/>
-                                <field name="date"/>
-                                <field name="register_id"/>
-                                <field name="basic"/>
-                                <field name="allounce"/>
-                                <field name="grows"/>
-                                <field name="deduction"/>
-                                <field name="net"/>
-                                <field name="total_pay" sum="Total Salary Paid"/>
-                                <field name="state"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            </tree>
-                        </field>
-                    </page>
                 </xpath>
             </data>
             </field>
@@ -223,9 +205,11 @@
             <field name="arch" type="xml">
                 <field name="passport_id" position="replace">
                     <field name="passport_id"/>
+                    <field name="otherid"/>
                 </field>
             </field>
         </record>
+        
         <!-- End Employee View -->
         
         <!-- Contract View -->
@@ -987,6 +971,14 @@
                 </form>
             </field>
         </record>
+        
+        <!--  Shortcuts -->
+        <act_window name="Payslips"
+            domain="[('employee_id', '=', active_id)]"
+            res_model="hr.payslip"
+            src_model="hr.employee"
+            view_id ="eval('view_hr_payslip_tree')"
+            id="act_hr_employee_payslip_list"/>
     </data>
 </openerp>
 
