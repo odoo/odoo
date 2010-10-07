@@ -53,6 +53,7 @@ class report_stock_move(osv.osv):
         'day_diff':fields.float('Execution Lead Time (Days)',readonly=True,  digits_compute=dp.get_precision('Shipping Delay'), group_operator="avg"),
         'stock_journal': fields.many2one('stock.journal','Stock Journal', select=True),
 
+
     }
 
     def init(self, cr):
