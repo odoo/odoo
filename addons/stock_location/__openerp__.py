@@ -79,7 +79,8 @@ product (i.e. the destination location of that procurement order).
     'depends': ['procurement','stock'],
     'init_xml': [],
     'update_xml': ['stock_location_view.xml', 'security/ir.model.access.csv', 'mrp_pull_workflow.xml'],
-    'demo_xml': [],
+    'demo_xml': ['stock_location_demo.xml',],
+    
     'installable': True,
     'test':[
             'test/stock_location.yml'
