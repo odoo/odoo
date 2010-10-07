@@ -50,7 +50,6 @@ class procurement_order(osv.osv):
     def action_move_create(self, cr, uid, ids,context=None):
         proc_obj = self.pool.get('procurement.order')
         move_obj = self.pool.get('stock.move')
-        location_obj = self.pool.get('stock.location')
         picking_obj=self.pool.get('stock.picking')
         wf_service = netsvc.LocalService("workflow")
         for proc in proc_obj.browse(cr, uid, ids, context=context):
