@@ -820,9 +820,7 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
 class _rml_template(object):
     def __init__(self, localcontext, out, node, doc, images={}, path='.', title=None):
         if not localcontext:
-            localcontext={'header':'internal'}
-        if not localcontext.get('header',True):
-            localcontext.update({'header':'internal'})
+            localcontext={'internal_header':True}
         self.localcontext = localcontext
         self.images= images
         self.path = path
@@ -871,16 +869,12 @@ class _rml_template(object):
             fis += r.render(node_story)
             # Reset Page Number with new story tag
             fis.append(PageReset())
-            if self.localcontext and self.localcontext.get('header',False) and \
-               (self.localcontext['header']=='internal' or self.localcontext['header']=='internal landscape'):
-                self.doc_tmpl.afterFlowable(fis)
             story_cnt += 1
-        if self.localcontext:
-            fis.append(PageCount())
-        if self.localcontext and self.localcontext.get('header',False) and \
-           (self.localcontext['header']=='internal' or self.localcontext['header']=='internal landscape'):
+        if self.localcontext and self.localcontext.get('internal_header',False):
+            self.doc_tmpl.afterFlowable(fis)
             self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
         else:
+            fis.append(PageCount())
             self.doc_tmpl.build(fis)
 
 def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
