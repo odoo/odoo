@@ -53,7 +53,7 @@
             </field>
         </record>
 
-        <record id="action_analytic_default_form" model="ir.actions.act_window">
+        <record id="action_analytic_default_list" model="ir.actions.act_window">
             <field name="name">Analytic Defaults</field>
             <field name="res_model">account.analytic.default</field>
             <field name="view_type">form</field>
@@ -68,6 +68,11 @@
             src_model="account.account"
             context="{'search_default_account_id': [active_id]}"
             />
+
+        <menuitem
+            action="action_analytic_default_list"
+            id="menu_analytic_default_list"
+            parent="account.menu_analytic_accounting"/>
 
 
         <act_window
