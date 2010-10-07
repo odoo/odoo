@@ -127,7 +127,8 @@ class hr_employee(osv.osv):
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
-        'photo': fields.binary('Photo')
+        'photo': fields.binary('Photo'),
+        'passport_id':fields.char('Passport', size=64)
     }
 
     def onchange_company(self, cr, uid, ids, company, context=None):
