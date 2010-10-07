@@ -52,6 +52,7 @@ var myPrefObserver =
         document.getElementById("state").value = getAllState();
         setPartnerId(0);
 	},
+    
 
 	//sets the value of email information in preferences and adds observer for the window
 	register: function()

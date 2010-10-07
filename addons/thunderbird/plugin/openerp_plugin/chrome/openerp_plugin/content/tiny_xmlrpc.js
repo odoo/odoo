@@ -773,10 +773,9 @@ var listAllCountryHandler = {
 			var popup = document.getElementById("country"); // a <menupopup> element
 			for (i=0;i<arrPartnerList.length;i++){
 				popup.menupopup.appendChild(createMenuItem_partner(arrPartnerList[i][1],arrPartnerList[i][0]));
-
 			}
 		}
-	
+	       
 	},
 	onFault: function (client, ctxt, fault) {
 		
@@ -874,6 +873,7 @@ function getAllCountry(){
 }
 
 function getAllState(){
+   // alert("hhhhhh");
 	var branchobj = getPref();
 	setServerService('xmlrpc/object');
 	var xmlRpcClient = getXmlRpc();
@@ -1831,7 +1831,6 @@ function testConnection(){
 function testConnection_web(){
 	var branchobj = getPref();
     weburl = getWebServerURL();
-    alert(weburl);
     window.open(weburl, "", "chrome","resizable=yes,scrollbars=yes,status=yes");
     
 }

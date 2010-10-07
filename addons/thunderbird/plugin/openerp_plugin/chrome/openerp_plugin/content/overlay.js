@@ -303,7 +303,7 @@ var listDocumentHandler = {
         weburl = getWebServerURL();
         
         var t = weburl + "/openerp/form/view?model=" + model +"&id=" + res_id;
-        window.open(t, "", "chrome","resizable=yes,scrollbars=yes,status=yes");
+        window.open(t, "", "chrome","resizable=yes,scrollbars=yes,status=yes,");
          
 	},
 	onFault: function (client, ctxt, fault) {
