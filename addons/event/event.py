@@ -55,6 +55,7 @@ class event_event(osv.osv):
             'registration_ids': False,
         })
         return super(event_event, self).copy(cr, uid, id, default=default, context=context)
+
     def onchange_product(self, cr, uid, ids, product_id):
         """This function returns value of  product's unit price based on product id.
         @param self: The object pointer
@@ -339,8 +340,8 @@ class event_registration(osv.osv):
     _defaults = {
         'nb_register': 1,
         'tobe_invoiced':  True,
-        'state': lambda *a: 'draft',
-        'active': lambda *a: 1,
+        'state': 'draft',
+        'active': True,
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
@@ -711,4 +712,3 @@ class event_registration_badge(osv.osv):
 event_registration_badge()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
