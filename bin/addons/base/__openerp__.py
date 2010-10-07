@@ -73,13 +73,14 @@
         'security/base_security.xml',
         'maintenance/maintenance_view.xml',
 
-        'security/ir.model.access.csv'
-
+        'security/ir.model.access.csv',
+        'res/res_widget_view.xml',
     ],
     'demo_xml': [
         'base_demo.xml',
         'res/partner/partner_demo.xml',
         'res/partner/crm_demo.xml',
+        'res/res_widget_data.xml',
     ],
     'test': [
         'test/base_test.xml',
