@@ -258,6 +258,7 @@ class hr_evaluation(osv.osv):
     def button_done(self,cr, uid, ids, context=None):
         if context is None:
             context = {}
+        self.write(cr, uid, ids,{'progress': 1 * 100}, context=context)
         self.write(cr, uid, ids,{'state':'done', 'date_close': time.strftime('%Y-%m-%d')}, context=context)
         return True
 
