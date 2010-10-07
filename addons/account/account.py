@@ -2231,7 +2231,7 @@ class account_account_template(osv.osv):
             ('view','View'),
             ('consolidation','Consolidation'),
             ('liquidity','Liquidity'),
-            ('other','Others'),
+            ('other','Regular'),
             ('closed','Closed'),
             ], 'Internal Type', required=True,help="This type is used to differentiate types with "\
             "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
