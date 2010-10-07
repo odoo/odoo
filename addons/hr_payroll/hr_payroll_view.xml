@@ -242,8 +242,11 @@
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Advantages"/>
                                 <field name="struct_id" select="1"/>
-                                <field name="advantages_net"/>
+                                <field name="basic" groups="base.group_extended"/>
                                 <field name="advantages_gross"/>
+                                <field name="gross" groups="base.group_extended"/>
+                                <field name="advantages_net"/>
+                                <field name="net" groups="base.group_extended"/>
                                 <field name="advantages" nolabel="1" colspan="2"/>
                             </group>
                         </page>
@@ -379,9 +382,6 @@
                         <field name="sequence"/>
                     </group>
                     <group col="2" colspan="2">
-<!--                        <separator colspan="4" string="Accounting Informations"/>-->
-<!--                        <field name="account_id"/>-->
-<!--                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>-->
                         <separator colspan="4" string="Company contribution"/>
                         <field name="company_contrib"/>
                     </group>

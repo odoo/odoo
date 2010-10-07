@@ -130,6 +130,172 @@ class hr_contract(osv.osv):
     Employee contract based on the visa, work permits
     allowas to configure different Salary structure
     """
+    
+    def compute_basic(self, cr, uid, ids, context={}):
+        res = {}
+        ids += context.get('employee_structure', [])
+        
+        for contract in self.browse(cr, uid, ids, context):
+            
+            all_per = 0.0
+            ded_per = 0.0
+            all_fix = 0.0
+            ded_fix = 0.0
+            obj = {'basic':0.0}
+            update = {}
+            if contract.wage_type_id.type == 'gross':
+                obj['gross'] = contract.wage
+                update['gross'] = contract.wage
+            if contract.wage_type_id.type == 'net':
+                obj['net'] = contract.wage
+                update['net'] = contract.wage
+            if contract.wage_type_id.type == 'basic':
+                obj['basic'] = contract.wage
+                update['basic'] = contract.wage
+            
+            sal_type = contract.wage_type_id.type
+            function = contract.struct_id.id
+            lines = contract.struct_id.line_ids
+            if not contract.struct_id:
+                res[contract.id] = obj['basic']
+                continue 
+            
+            ad = []
+            c_type = {}
+            for line in lines:
+                cd = line.code.lower()
+                obj[cd] = line.amount or 0.0
+            
+            for line in lines:
+                if line.category_id.code in ad:
+                    continue
+                ad.append(line.category_id.code)
+                cd = line.category_id.code.lower()
+                calculate = False
+                try:
+                    exp = line.category_id.condition
+                    calculate = eval(exp, obj)
+                except Exception, e:
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+
+                if not calculate:
+                    continue
+
+                percent = 0.0
+                value = 0.0
+                base = False
+                company_contrib = 0.0
+                base = line.category_id.base
+
+                try:
+                    #Please have a look at the configuration guide.
+                    amt = eval(base, obj)
+                except Exception, e:
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+
+                if sal_type in ('gross', 'net'):
+                    if line.amount_type == 'per':
+                        percent = line.amount
+                        if amt > 1:
+                            value = percent * amt
+                        elif amt > 0 and amt <= 1:
+                            percent = percent * amt
+                        if value > 0:
+                            percent = 0.0
+                    elif line.amount_type == 'fix':
+                        value = line.amount
+                    elif line.amount_type == 'func':
+                        value = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
+                        line.amount = value
+                else:
+                    if line.amount_type in ('fix', 'per'):
+                        value = line.amount
+                    elif line.amount_type == 'func':
+                        value = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
+                        line.amount = value
+                if line.type == 'allowance':
+                    all_per += percent
+                    all_fix += value
+                elif line.type == 'deduction':
+                    ded_per += percent
+                    ded_fix += value
+            if sal_type in ('gross', 'net'):
+                sal = contract.wage
+                if sal_type == 'net':
+                    sal += ded_fix
+                sal -= all_fix
+                per = 0.0
+                if sal_type == 'net':
+                    per = (all_per - ded_per)
+                else:
+                    per = all_per
+                if per <=0 :
+                    per *= -1
+                final = (per * 100) + 100
+                basic = (sal * 100) / final
+            else:
+                basic = contract.wage
+            
+            res[contract.id] = basic
+
+        return res
+    
+    def _calculate_salary(self, cr, uid, ids, field_names, arg, context=None):
+        res = self.compute_basic(cr, uid, ids, context)
+        vals = {}
+        for rs in self.browse(cr, uid, ids, context=context):
+            allow = 0.0
+            deduct = 0.0
+            others = 0.0
+            obj = {'basic':res[rs.id], 'gross':0.0, 'net':0.0}
+            if rs.wage_type_id.type == 'gross':
+                obj['gross'] = rs.wage
+            if rs.wage_type_id.type == 'net':
+                obj['net'] = rs.net
+            
+            if not rs.struct_id:
+                record = {
+                    'advantages_gross':0.0,
+                    'advantages_net':0.0,
+                    'basic':obj['basic'],
+                    'gross':obj['gross'],
+                    'net':obj['net']
+                }
+                vals[rs.id] = record
+                continue
+                
+            for line in rs.struct_id.line_ids:
+                amount = 0.0
+                if line.amount_type == 'per':
+                    try:
+                        amount = line.amount * eval(str(line.category_id.base), obj)
+                    except Exception, e:
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                elif line.amount_type in ('fix', 'func'):
+                    amount = line.amount
+                cd = line.category_id.code.lower()
+                obj[cd] = amount
+                
+                if line.type == 'allowance':
+                    allow += amount
+                elif line.type == 'deduction':
+                    deduct += amount
+                elif line.type == 'advance':
+                    others += amount
+                elif line.type == 'loan':
+                    others += amount
+                elif line.type == 'otherpay':
+                    others += amount
+            record = {
+                'advantages_gross':round(allow),
+                'advantages_net':round(deduct),
+                'basic':res[rs.id],
+                'gross':round(res[rs.id] + allow),
+                'net':round(res[rs.id] + allow - deduct)
+            }
+            vals[rs.id] = record
+
+        return vals
 
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
@@ -140,7 +306,12 @@ class hr_contract(osv.osv):
         'visa_no':fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
         'struct_id' : fields.many2one('hr.payroll.structure', 'Salary Structure'),
-        'working_days_per_week': fields.integer('Working Days', help="No of Working days / week for an employee")
+        'working_days_per_week': fields.integer('Working Days', help="No of Working days / week for an employee"),
+        'basic': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Basic Salary'),
+        'gross': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Gross Salary'),
+        'net': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Net Salary'),
+        'advantages_net': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Deductions'),
+        'advantages_gross': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Allowances'),
     }
     _defaults = {
         'working_days_per_week': lambda *a: 5,
