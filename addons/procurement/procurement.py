@@ -439,7 +439,7 @@ class procurement_order(osv.osv):
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
         return True
 
-    def action_check_finnished(self, cr, uid, ids):
+    def action_check_finished(self, cr, uid, ids):
         return self.check_move_done(cr, uid, ids)
 
     def action_check(self, cr, uid, ids):
@@ -492,9 +492,9 @@ procurement_order()
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
 
-    def test_finnished(self, cursor, user, ids):
+    def test_finished(self, cursor, user, ids):
         wf_service = netsvc.LocalService("workflow")
-        res = super(StockPicking, self).test_finnished(cursor, user, ids)
+        res = super(StockPicking, self).test_finished(cursor, user, ids)
         for picking in self.browse(cursor, user, ids):
             for move in picking.move_lines:
                 if move.state == 'done' and move.procurements:
