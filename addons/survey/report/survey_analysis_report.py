@@ -29,7 +29,6 @@ from report import report_sxw
 
 class survey_analysis(report_rml):
     def create(self, cr, uid, ids, datas, context):
-
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
         user_obj = pooler.get_pool(cr.dbname).get('res.users')
         rml_obj=report_sxw.rml_parse(cr, uid, surv_obj._name,context)
@@ -423,7 +422,7 @@ class survey_analysis(report_rml):
         rml += """</document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
-        self.pageCount=True
+        self.internal_header=True
         pdf = create_doc(rml, title=self.title)
 
         return (pdf, report_type)
