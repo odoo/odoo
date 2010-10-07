@@ -860,6 +860,8 @@ class _rml_template(object):
         self.doc_tmpl.addPageTemplates(self.page_templates)
 
     def render(self, node_stories):
+        if self.localcontext and not self.localcontext.get('internal_header',False):
+            del self.localcontext['internal_header']
         fis = []
         r = _rml_flowable(self.doc,self.localcontext, images=self.images, path=self.path, title=self.title)
         story_cnt = 0
