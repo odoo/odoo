@@ -873,7 +873,6 @@ function getAllCountry(){
 }
 
 function getAllState(){
-   // alert("hhhhhh");
 	var branchobj = getPref();
 	setServerService('xmlrpc/object');
 	var xmlRpcClient = getXmlRpc();
@@ -889,7 +888,7 @@ function getAllState(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	var strvalue = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strvalue.data = document.getElementById("state").value;
+	strvalue.data = document.getElementById("country").value;
     xmlRpcClient.asyncCall(listAllStateHandler,null,'execute',[ strDbName,struid,strpass,strobj,strmethod,strvalue ],6);
 }
 

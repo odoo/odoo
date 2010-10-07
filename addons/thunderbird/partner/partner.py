@@ -138,6 +138,7 @@ class thunderbird_partner(osv.osv_memory):
     _description="Thunderbid mails"
 
     def create_contact(self,cr,user,vals):
+        print "vvvvvvvvvvvvvvvvv",vals
         dictcreate = dict(vals)
         # Set False value if 'undefined'. Thunerbird set 'undefined' if user did not set any value.
         for key in dictcreate:
@@ -317,10 +318,12 @@ class thunderbird_partner(osv.osv_memory):
         country_list = cr.fetchall()
         return country_list
 
+
     def list_allstate(self,cr,user,vals):
-        cr.execute("SELECT id, name from res_country_state")
-        state_country_list = cr.fetchall()
-        return state_country_list
+         cr.execute("select id, name  from res_country_state  where country_id = %s",(vals,) )
+         state_country_list = cr.fetchall()
+         return state_country_list
+
 
     def search_document_attachment(self,cr,user,vals):
         model_obj = self.pool.get('ir.model')
