@@ -20,14 +20,11 @@
 ##############################################################################
 
 import time
-from operator import itemgetter
 import decimal_precision as dp
-from lxml import etree
 
 import netsvc
 from osv import fields, osv, orm
 import pooler
-from tools import config
 from tools.translate import _
 
 class account_invoice(osv.osv):
@@ -536,7 +533,7 @@ class account_invoice(osv.osv):
                                 if not result_id:
                                     raise osv.except_osv(_('Configuration Error !'),
                                         _('Can not find account chart for this company in invoice line account, Please Create account.'))
-                                r_id = self.pool.get('account.invoice.line').write(cr, uid, [line.id], {'account_id': result_id[0]})
+                                self.pool.get('account.invoice.line').write(cr, uid, [line.id], {'account_id': result_id[0]})
             else:
                 if invoice_line:
                     for inv_line in invoice_line:
@@ -586,16 +583,6 @@ class account_invoice(osv.osv):
         for inv_id in ids:
             wf_service.trg_create(uid, 'account.invoice', inv_id, cr)
         return True
-
-    def finalize_invoice_move_lines(self, cr, uid, invoice_browse, move_lines):
-        """finalize_invoice_move_lines(cr, uid, invoice, move_lines) -> move_lines
-        Hook method to be overridden in additional modules to verify and possibly alter the
-        move lines to be created by an invoice, for special cases.
-        :param invoice_browse: browsable record of the invoice that is generating the move lines
-        :param move_lines: list of dictionaries with the account.move.lines (as for create())
-        :return: the (possibly updated) final move_lines to create for this invoice
-        """
-        return move_lines
 
     # Workflow stuff
     #################
@@ -817,7 +804,6 @@ class account_invoice(osv.osv):
                 self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')})
             company_currency = inv.company_id.currency_id.id
             # create the analytical lines
-            line_ids = self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id)
             # check if taxes are all computed
@@ -1390,8 +1376,6 @@ class account_invoice_line(osv.osv):
         if a:
             result['account_id'] = a
 
-        taxep = None
-        tax_obj = self.pool.get('account.tax')
         if type in ('out_invoice', 'out_refund'):
             taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
             tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
@@ -1444,13 +1428,10 @@ class account_invoice_line(osv.osv):
 
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = []
-        tax_grouped = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
-        ait_obj = self.pool.get('account.invoice.tax')
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
         company_currency = inv.company_id.currency_id.id
-        cur = inv.currency_id
 
         for line in inv.invoice_line:
             mres = self.move_line_get_item(cr, uid, line, context)
