@@ -156,11 +156,12 @@ class event_event(osv.osv):
                         ('event_id', '=', event.id),
                        ('state', 'in', state)])
 
+            cr.execute('select sum(nb_register) from event_registration where id IN %s', (tuple(reg_ids),))
+            number = cr.fetchone()
             if 'register_current' in fields:
-                res[event.id]['register_current'] = len(reg_ids)
+                res[event.id]['register_current'] = number and number[0] or 0.0
             if 'register_prospect' in fields:
-                res[event.id]['register_prospect'] = len(reg_ids)
-
+                res[event.id]['register_prospect'] = number and number[0] or 0.0
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
