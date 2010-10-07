@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
-        <menuitem id="base.menu_project_management_time_tracking" name="Time Tracking"
-                  parent="base.menu_main_pm" sequence="3"/>
-
         <!--
         Invoices
         -->
@@ -439,19 +435,6 @@
             <field name="help">Most of customer invoices are automatically generated in draft mode by OpenERP flows, following a purchase order for instance. Review, confirm or cancel, pay or refund your customers' invoices here. A manual invoice can be created here.</field>
         </record>
 
-        <record id="action_invoice_tree_partner" model="ir.actions.act_window">
-            <field name="name">Partner Invoice</field>
-            <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','out_invoice')]</field>
-            <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">Most of customer invoices are automatically generated in draft mode by OpenERP flows, following a purchase order for instance. Review, confirm or cancel, pay or refund your customers' invoices here. A manual invoice can be created here.</field>
-        </record>
-
-
 
         <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -467,7 +450,6 @@
         </record>
 
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables"/>
-        <menuitem action="action_invoice_tree_partner" id="menu_action_invoice_tree1_project" parent="base.menu_project_management_time_tracking" sequence="100"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
             <field name="name">Vendor Invoices</field>

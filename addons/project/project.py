@@ -576,7 +576,6 @@ class task(osv.osv):
         if context is None:
             context = {}
         request = self.pool.get('res.request')
-        p_issue = self.pool.get('project.issue')
 
         for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
@@ -592,15 +591,11 @@ class task(osv.osv):
                 })
 
             self.write(cr, uid, [task.id], {'state': 'open'})
-            issue_id=p_issue.search(cr,uid,[('task_id','=',task.id)])
-            p_issue.write(cr, uid,issue_id, {'progress':0.0})
 
         return True
 
     def do_cancel(self, cr, uid, ids, *args):
         request = self.pool.get('res.request')
-        p_issue = self.pool.get('project.issue')
-        print "Cancel"
         tasks = self.browse(cr, uid, ids)
         for task in tasks:
             project = task.project_id
@@ -616,9 +611,7 @@ class task(osv.osv):
                 })
             message = _('Task ') + " '" + task.name + "' "+ _("is Cancelled.")
             self.log(cr, uid, task.id, message)
-            issue_id=p_issue.search(cr,uid,[('task_id','=',task.id)])
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0})
-            p_issue.write(cr, uid,issue_id, {'progress':100.0})
         return True
 
     def do_open(self, cr, uid, ids, *args):

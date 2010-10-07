@@ -221,57 +221,48 @@ class project_issue(crm.crm_case, osv.osv):
         task_obj = self.pool.get('project.task')
 
 
-        for curr_task in case_obj.browse(cr, uid,ids):
-            if curr_task.state in ['open']:
-                if context is None:
-                    context = {}
-                result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
-                res = data_obj.read(cr, uid, result, ['res_id'])
-                id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
-                id3 = data_obj._get_id(cr, uid, 'project', 'view_task_tree2')
-                if id2:
-                    id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-                if id3:
-                    id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        if context is None:
+            context = {}
 
-                for bug in case_obj.browse(cr, uid, ids, context=context):
-                    new_task_id = task_obj.create(cr, uid, {
-                        'name': bug.name,
-                        'partner_id': bug.partner_id.id,
-                        'description':bug.description,
-                        'date': bug.date,
-                        'project_id': bug.project_id.id,
-                        'priority': bug.priority,
-                        'user_id': bug.assigned_to.id,
-                        'planned_hours': 0.0,
-                    })
+        result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
+        res = data_obj.read(cr, uid, result, ['res_id'])
+        id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
+        id3 = data_obj._get_id(cr, uid, 'project', 'view_task_tree2')
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
-                    vals = {
-                        'task_id': new_task_id,
-                        'state':'open'
-                    }
-                    case_obj.write(cr, uid, [bug.id], vals)
+        for bug in case_obj.browse(cr, uid, ids, context=context):
+            new_task_id = task_obj.create(cr, uid, {
+                'name': bug.name,
+                'partner_id': bug.partner_id.id,
+                'description':bug.description,
+                'date': bug.date,
+                'project_id': bug.project_id.id,
+                'priority': bug.priority,
+                'user_id': bug.assigned_to.id,
+                'planned_hours': 0.0,
+            })
 
-                return  {
-                    'name': _('Tasks'),
-                    'view_type': 'form',
-                    'view_mode': 'form,tree',
-                    'res_model': 'project.task',
-                    'res_id': int(new_task_id),
-                    'view_id': False,
-                    'views': [(id2,'form'),(id3,'tree'),(False,'calendar'),(False,'graph')],
-                    'type': 'ir.actions.act_window',
-                    'search_view_id': res['res_id'],
-                    'nodestroy': True
-                        }
-            elif curr_task.state in ['done', 'cancel']:
-                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
-Issue Could not convert into Task"))
-                return True
-            else:
-                raise osv.except_osv(_("Warning !"), _("Issue should be in \
-\'To Do\'  state before converting to Task."))
-                return True
+            vals = {
+                'task_id': new_task_id,
+                'state':'open'
+            }
+            case_obj.write(cr, uid, [bug.id], vals)
+
+        return  {
+            'name': _('Tasks'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'project.task',
+            'res_id': int(new_task_id),
+            'view_id': False,
+            'views': [(id2,'form'),(id3,'tree'),(False,'calendar'),(False,'graph')],
+            'type': 'ir.actions.act_window',
+            'search_view_id': res['res_id'],
+            'nodestroy': True
+        }
 
 
     def _convert(self, cr, uid, ids, xml_id, context=None):
