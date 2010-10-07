@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 from tools.translate import _
+import re
 
 class crm_lead2partner(osv.osv_memory):
     """ Converts lead to partner """
@@ -74,12 +75,19 @@ class crm_lead2partner(osv.osv_memory):
         res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)
 
         for lead in lead_obj.browse(cr, uid, data, context=context):
-            partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name or lead.name)])
-            if not partner_ids and lead.email_from:
-                address_ids = contact_obj.search(cr, uid, [('email', '=', lead.email_from)])
+            partner_ids = []
+            if lead.email_from:
+                email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from)
+                address_ids = contact_obj.search(cr, uid, [('email', 'in', email)])
                 if address_ids:
                     addresses = contact_obj.browse(cr, uid, address_ids)
                     partner_ids = addresses and [addresses[0].partner_id.id] or False
+            if not partner_ids and lead.partner_name:
+                partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
+            if not partner_ids:
+                cr.execute("""SELECT p.id from res_partner p 
+                            where regexp_replace(lower(p.name), '[^a-z]*', '', 'g') = regexp_replace(%s, '[^a-z]*', '', 'g')""", (lead.name.lower(), ))
+                partner_ids = map(lambda x: x[0], cr.fetchall())
             partner_id = partner_ids and partner_ids[0] or False
 
             if 'partner_id' in fields:
