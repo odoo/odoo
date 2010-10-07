@@ -590,7 +590,6 @@ class event_registration(osv.osv):
         data ={}
         if not contact:
             return data
-        contact_obj = self.pool.get('res.partner.contact')
         addr_obj = self.pool.get('res.partner.address')
         job_obj = self.pool.get('res.partner.job')
 
