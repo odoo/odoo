@@ -198,9 +198,7 @@ var openPartnerHandler = {
 
                 if (parseInt(partner_id) > 0){
                   var t = weburl + "/openerp/form/view?model=res.partner&id="+partner_id;
-                   alert(t + ":" + " " + "\n\n" + "You can copy this URL into your WebBrowser if URL is not redirected automatic.");
-
-                  window.open(t);
+                  window.open(t, "", "chrome","resizable=yes,scrollbars=yes,status=yes");
                 
                 }
                 else{
@@ -295,6 +293,7 @@ function open_partner()
     searchPartner(senderemail);
 }
 
+
 var listDocumentHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -304,8 +303,7 @@ var listDocumentHandler = {
         weburl = getWebServerURL();
         
         var t = weburl + "/openerp/form/view?model=" + model +"&id=" + res_id;
-        alert(t + ":" + " " + "\n\n" + "You can copy this URL into your WebBrowser if URL is not redirected automatic.");
-        window.open(t); 
+        window.open(t, "", "chrome","resizable=yes,scrollbars=yes,status=yes");
          
 	},
 	onFault: function (client, ctxt, fault) {
