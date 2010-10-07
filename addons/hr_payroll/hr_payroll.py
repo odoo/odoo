@@ -136,7 +136,6 @@ class hr_contract(osv.osv):
         ids += context.get('employee_structure', [])
         
         for contract in self.browse(cr, uid, ids, context):
-            
             all_per = 0.0
             ded_per = 0.0
             all_fix = 0.0
@@ -307,11 +306,11 @@ class hr_contract(osv.osv):
         'visa_expire': fields.date('Visa Expire Date'),
         'struct_id' : fields.many2one('hr.payroll.structure', 'Salary Structure'),
         'working_days_per_week': fields.integer('Working Days', help="No of Working days / week for an employee"),
-        'basic': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Basic Salary'),
-        'gross': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Gross Salary'),
-        'net': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Net Salary'),
-        'advantages_net': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Deductions'),
-        'advantages_gross': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Allowances'),
+        'basic': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Basic Salary', digits=(14,2)),
+        'gross': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Gross Salary', digits=(14,2)),
+        'net': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Net Salary', digits=(14,2)),
+        'advantages_net': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Deductions', digits=(14,2)),
+        'advantages_gross': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Allowances', digits=(14,2)),
     }
     _defaults = {
         'working_days_per_week': lambda *a: 5,
