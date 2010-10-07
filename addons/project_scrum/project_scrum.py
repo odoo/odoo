@@ -236,6 +236,23 @@ class project_scrum_product_backlog(osv.osv):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         return True
 
+    def button_postpone(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            tasks_id = []
+            for task in product.tasks_id:
+                if task.state != 'done':
+                    tasks_id.append(task.id)
+
+            clone_id = self.copy(cr, uid, product.id, {
+                'name': 'PARTIAL:'+ product.name ,
+                'sprint_id':False,
+                'tasks_id':[(6, 0, tasks_id)],
+                                })
+        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        return True
+
     _columns = {
         'name' : fields.char('Feature', size=64, required=True),
         'note' : fields.text('Note'),
