@@ -1226,11 +1226,6 @@ class hr_employee(osv.osv):
     _description = 'Employee'
 
     _columns = {
-        'esp_account':fields.char('EPS Account', size=64, required=False, readonly=False, help="EPS Account Number"),
-        'pf_account':fields.char('PF Account', size=64, required=False, readonly=False, help="Providend Fund Account Number"),
-        'pg_joining': fields.date('PF Join Date'),
-        'esi_account':fields.char('ESI Account', size=64, required=False, readonly=False, help="ESI Account Number"),
-        'hospital_id':fields.many2one('res.partner.address', 'ESI Hospital', required=False),
         'passport_id':fields.many2one('hr.passport', 'Passport', required=False, domain="[('employee_id','=',active_id), ('address_id','=',address_home_id)]", help="Employee Passport Information"),
         'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account', domain="[('partner_id','=',partner_id)]", help="Employee bank salary account"),
         'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),

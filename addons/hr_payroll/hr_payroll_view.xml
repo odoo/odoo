@@ -119,18 +119,7 @@
                             <field name="manager" select="1"/>
                             <field name="vehicle" select="1"/>
                             <field name="vehicle_distance" select="1"/>
-                        </group>
-                        <group col="2" colspan="2" groups="base.group_extended">
-                            <separator colspan="2" string="ESI Information"/>
-                            <field name="esi_account" string="Account"/>
-                            <field name="hospital_id" string="Hospital"/>
                             <field name="medic_exam" select="1" string="Medical Examination"/>
-                            <field name="esp_account" select="1"/>
-                        </group>
-                        <group col="2" colspan="2" groups="base.group_extended">
-                            <separator colspan="2" string="Providend Fund"/>
-                            <field name="pf_account" string="Account"/>
-                            <field name="pg_joining" string="Join Date"/>
                         </group>
                     </page>
                     <page string="Contracts" groups="base.group_extended">
@@ -277,13 +266,13 @@
                         <page string="Work Permit">
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Passport"/>
-                                <field name="passport_id"/>
+                                <field name="passport_id" domain="[('employee_id','=',employee_id)]"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Valid for"/>
-                                <field name="visa_no"/>
-                                <field name="permit_no"/>
-                                <field name="visa_expire"/>
+                                <field name="visa_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
+                                <field name="permit_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
+                                <field name="visa_expire" attrs="{'required': [('passport_id','!=',False), ]}"/>
                             </group>
                         </page>
                     </notebook>
