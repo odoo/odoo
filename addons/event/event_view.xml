@@ -58,7 +58,7 @@
                             <separator string="Invoice Information" colspan="4"/>
                             <field name="product_id" on_change="onchange_product(product_id)" colspan="4"/>
                             <field name="unit_price"/>
-                            <field name="pricelist_id" domain="[('type','=','sale')]" groups="base.group_extended"/>
+                            <field name="pricelist_id" widget="selection" domain="[('type','=','sale')]" groups="base.group_extended"/>
                         </group>
                         <group colspan="2" col="2">
                             <separator string="Contact" colspan="4"/>
