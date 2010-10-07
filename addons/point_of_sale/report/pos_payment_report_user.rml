@@ -133,7 +133,7 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="256.0,59.0,42.0,61.0,64.0" style="Table3">
+    <blockTable colWidths="241.0,55.0,61.0,61.0,64.0" style="Table3">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Product</para>
@@ -154,7 +154,7 @@
     </blockTable>
     <section>
       <para style="P1">[[ repeatIn(pos_payment_user(data['form']), 'line_ids') ]]</para>
-      <blockTable colWidths="256.0,59.0,42.0,61.0,64.0" style="Table6">
+      <blockTable colWidths="241.0,55.0,61.0,61.0,64.0" style="Table6">
         <tr>
           <td>
             <para style="terp_default_9">[[ line_ids['name'] ]]</para>
@@ -169,12 +169,12 @@
             <para style="terp_default_Right_9">[[ formatLang(line_ids['price_unit']) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['total']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['total']) ]] [[company.currency_id.symbol]]</para>
           </td>
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="256.0,59.0,42.0,61.0,64.0" style="Table5">
+    <blockTable colWidths="241.0,56.0,61.0,61.0,64.0" style="Table5">
       <tr>
         <td>
           <para style="Table Contents">
@@ -192,10 +192,10 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right">Total</para>
+          <para style="terp_tblheader_General_Right">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(pos_payment_user_total(data['form'])) or removeParentNode('blockTable')]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(pos_payment_user_total(data['form'])) or removeParentNode('blockTable')]] [[company.currency_id.symbol]]</para>
         </td>
       </tr>
     </blockTable>

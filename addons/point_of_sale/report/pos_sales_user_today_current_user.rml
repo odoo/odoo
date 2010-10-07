@@ -109,7 +109,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="P3">Sales By Current User(Todays)</para>
+    <para style="P3">Today's Sales By Current User</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -175,7 +175,7 @@
             <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['total']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['total']) ]] [[company.currency_id.symbol]]</para>
           </td>
         </tr>
       </blockTable>
@@ -194,7 +194,7 @@
           <para style="terp_default_Right_9">[[ formatLang((get_data_current_user_qty(user))) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang((get_data_current_user_tot(user))) or removeParentNode('blockTable')]]</para>
+          <para style="terp_default_Right_9">[[ formatLang((get_data_current_user_tot(user))) or removeParentNode('blockTable')]] [[company.currency_id.symbol]]</para>
         </td>
       </tr>
     </blockTable>
