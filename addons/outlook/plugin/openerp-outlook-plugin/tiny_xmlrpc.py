@@ -261,7 +261,7 @@ class XMLRpcConn(object):
         attachments = mail.Attachments
         result = {}
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-        att_folder_path = os.path.abspath(os.path.dirname(__file__)+"\\dialogs\\resources\\mails\\attachments\\")
+        att_folder_path = os.path.abspath(os.path.dirname("%temp%\\"))
         if not os.path.exists(att_folder_path):
             os.makedirs(att_folder_path)
         for rec in recs: #[('res.partner', 3, 'Agrolait')]
