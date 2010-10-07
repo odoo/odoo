@@ -137,19 +137,8 @@ class XMLRpcConn(object):
         conn = xmlrpclib.ServerProxy(self._uri + '/xmlrpc/object')
         import eml
         new_msg = files = ext_msg =""
-        eml_path=eml.generateEML(mail)
-        att_name = ustr(eml_path.split('\\')[-1])
-        flag=False
+        new_mail=eml.generateEML(mail)
         attachments=mail.Attachments
-
-        try:
-            fp = open(eml_path, 'rb')
-            msg =fp.read()
-            fp.close()
-            new_mail =  email.message_from_string(str(msg))
-        except Exception,e:
-            win32ui.MessageBox(str(e),"Reading Error Mail")
-
         for rec in recs: #[('res.partner', 3, 'Agrolait')]
             model = rec[0]
             res_id = rec[1]
@@ -185,10 +174,8 @@ class XMLRpcConn(object):
             result = {}
             if attachments:
                 result = self.MakeAttachment([rec], mail)
-
             attachment_ids = result.get(model, {}).get(res_id, [])
             ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','history',model, res_id, msg, attachment_ids)
-
             new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
             flag = True
 
@@ -251,22 +238,24 @@ class XMLRpcConn(object):
         return res
 
     def CreateCase(self, section, mail, partner_ids, with_attachments=True):
-        res={}
         import win32ui
         import eml
         section=str(section)
-        partner_ids=eval(str(partner_ids))
-        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        flag = False
+        id = -1
         try:
-            eml_path=eml.generateEML(mail)
-            fp = open(eml_path, 'rb')
-            msg =fp.read()
-            fp.close()
-            new_mail =  email.message_from_string(str(msg))
-            execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(new_mail))
+            conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+            email=eml.generateEML(mail)
+            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, email)
+            if id > 0:
+                flag = True
+                return flag
+            else:
+                flag = False
+                return flag
         except Exception,e:
-            win32ui.MessageBox(str(e),"Mail Reading Error")
-            pass
+            win32ui.MessageBox("Create Case\n"+str(e),"Mail Reading Error")
+            return flag
 
     def MakeAttachment(self, recs, mail):
         attachments = mail.Attachments
@@ -412,23 +401,19 @@ class XMLRpcConn(object):
     def SearchEmailResources(self, mail):
         import win32ui
         import eml
+
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         sub = ""
         res_vals = []
+
         try:
-            parse_mail = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','parse_message',mail)
-            win32ui.MessageBox(str(parse_mail),"Temp")
-            eml_path=eml.generateEML(mail)
-            fp = open(eml_path, 'rb')
-            msg =fp.read()
-            fp.close()
-            new_mail =  email.message_from_string(str(msg))
-            sub = new_mail.get('Subject')
-            win32ui.MessageBox(str(sub),"Sub")
+#            new_mail = eml.generateEML(mail)
+            email.SaveAs()
+            message_id = str(new_mail.get('message-id'))
         except Exception,e:
             win32ui.MessageBox(str(e),"Mail Reading Error")
             return None
-        mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message', 'search', [('name','=',sub)])
+        mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message', 'search', [('message_id','=',message_id)])
         if not mail_id:
             return None
         address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message','read',mail_id[0],['model','res_id'])

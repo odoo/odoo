@@ -679,17 +679,21 @@ def CreateCase(btnProcessor,*args):
             for rec in r:
                 if rec[0] == 'res.partner':
                     partner_ids.append(rec[1])
-
+            f = False
             #Create new case
             try:
-                NewConn.CreateCase(str(section), mail, partner_ids)
+                f = NewConn.CreateCase(str(section), mail, partner_ids)
                 msg="New Document created."
                 flag=flag_info
             except Exception,e:
                 msg="New Document not created \n\n"+str(e)
                 flag=flag_error
-            win32ui.MessageBox(msg, "Create Document", flag)
-            return
+            if f:
+                win32ui.MessageBox(msg, "Create Document", flag)
+                return
+            else:
+                win32ui.MessageBox("Error While creating document.\n Document can not be created.", "Create Document", flag_error)
+                return
         else:
             win32ui.MessageBox("Document can not be created. CRM not installed", "Create Object", flag_info)
     except Exception, e:
@@ -935,9 +939,13 @@ def SetDefaultContact(txtProcessor,*args):
     global partner_ref
     global new_con_country
     global new_con_state
-    state = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[3])
-    country = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[2])
+    state = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[2])
+    country = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[3])
     if txtProcessor.init_done:
+        if new_con_country == "":
+            new_con_country = country
+        if new_con_state == "":
+            new_con_state = state
         win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[1],partner_ref)
         win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.control_id,name)
         win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0],email)
@@ -1063,6 +1071,8 @@ def set_name_email(dialogProcessor,*args):
     name = win32gui.GetDlgItemText(dialogProcessor.window.hwnd, dialogProcessor.other_ids[0])
     email = win32gui.GetDlgItemText(dialogProcessor.window.hwnd, dialogProcessor.other_ids[1])
 
+#Function for Getting default mail when dialog is loaded and finding contact related to this
+#setting values to the appropriate text areas
 def GetDefaultEmail(txtProcessor,*args):
 
     from win32com.client import Dispatch
@@ -1403,27 +1413,32 @@ def OpenPartnerForm(txtProcessor,*args):
 def SerachOpenDocuemnt(txtProcessor,*args):
     from win32com.client import Dispatch
     import win32con
+    import win32ui
     b = check()
     if not b:
         return
     global web_server
     global web_server_port
+    ex = txtProcessor.window.manager.outlook.ActiveExplorer()
+    assert ex.Selection.Count == 1
+    mail = ex.Selection.Item(1)
+    link_box = None
     #Acquiring control of the text box
-    link_box = txtProcessor.GetControl()
+    try:
+        link_box = txtProcessor.GetControl()
+    except Exception,e:
+        win32ui.MessageBox(str(e),"Excet")
     if web_server.strip() == "" or web_server.strip() == "http:\\\\":
         win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, " <Invalid Server Address>")
         txtProcessor.init_done=True
         return
     linktodoc = ""
     #Reading Current Selected Email.
-    vals = []
-
-    ex = txtProcessor.window.manager.outlook.ActiveExplorer()
-    assert ex.Selection.Count == 1
-    mail = ex.Selection.Item(1)
-    e_id = ustr(mail.EntryID).encode('iso-8859-1')
-    vals = list(NewConn.SearchEmailResources(mail))
-
+    win32ui.MessageBox(str(mail),"mail")
+    try:
+        vals = NewConn.SearchEmailResources(mail)
+    except Exception,e:
+        win32ui.MessageBox(str(e),"Excep")
     if vals == None:
         win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, "< Mail is still not archived.>")
         txtProcessor.init_done=True
@@ -1629,9 +1644,6 @@ dialog_map = {
                 "IDD_SERVER_PORT_DIALOG" : (
                     (CloseButtonProcessor,    "IDCANCEL"),
                     (OKButtonProcessor,  "IDOK ID_SERVER ID_PORT IDR_XML_PROTOCOL"),
-                #                (RadioButtonProcessor, "IDR_XML_PROTOCOL", GetConn, ()),
-                #                (RadioButtonProcessor, "IDR_XMLS_PROTOCOL", GetConn, ()),
-                #                (RadioButtonProcessor, "IDR_NETRPC_PROTOCOL", GetConn, ()),
                 ),
 
                 "IDD_SYNC" :               (

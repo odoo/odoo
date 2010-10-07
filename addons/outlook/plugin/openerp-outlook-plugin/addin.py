@@ -196,7 +196,7 @@ class OutlookAddin:
             toolbarweb = bars.Item("Web")
 
             item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
-            item = self.toolbarButtonPOpenPartner = DispatchWithEvents(item, OpenPartner)
+            item = self.toolbarButtonOpenPartner = DispatchWithEvents(item, OpenPartner)
             item.Caption = "Open Partners"
             item.TooltipText = "Click to Open OpenERP Partner Contact Information."
             item.Enabled = True
