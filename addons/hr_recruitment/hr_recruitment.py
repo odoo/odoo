@@ -436,11 +436,11 @@ class hr_applicant(crm.crm_case, osv.osv):
         if applicant.job_id :
             emp_id = employee_obj.create(cr,uid,{'name':applicant.name,'job_id':applicant.job_id.id})
             job_data = job_obj.browse(cr,uid, applicant.job_id.id)
-            if job_data.expected_employees == int(job_data.no_of_employee):
+            total_expected_emp = job_data['expected_employees']
+            expected_emp = job_data['expected_employees'] - 1
+            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp})
+            if total_expected_emp == int(job_data.no_of_employee):
                 job_obj.write(cr,uid, [applicant.job_id.id],{'state':'old'})
-#            expected_emp = job_data['expected_employees'] - 1
-#            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp})
-
         return res
 
     def case_reset(self, cr, uid, ids, *args):
