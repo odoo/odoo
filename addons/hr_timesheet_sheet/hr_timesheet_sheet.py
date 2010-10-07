@@ -178,6 +178,21 @@ class hr_timesheet_sheet(osv.osv):
     def copy(self, cr, uid, ids, *args, **argv):
         raise osv.except_osv(_('Error !'), _('You cannot duplicate a timesheet !'))
 
+    def create(self, cr, uid, vals, *args, **argv):
+        if 'employee_id' in vals:
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id:
+                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any user defined !'))
+        return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
+
+    def write(self, cr, uid, ids, vals, *args, **argv):
+        if 'employee_id' in vals:
+            new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id.id or False
+            if not new_user_id:
+                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any user defined !'))
+            if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id):
+                raise osv.except_osv(_('Error !'), _('You can not have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.'))
+        return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, *args, **argv)
+
     def button_confirm(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -262,8 +277,8 @@ class hr_timesheet_sheet(osv.osv):
     _columns = {
         'name': fields.char('Description', size=64, select=1,
                             states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
-        'user_id': fields.many2one('res.users', 'User', required=True, select=1,
-                            states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
+        'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
+        'user_id': fields.related('employee_id', 'user_id', type="many2one", relation="res.users", store=True, string="User", required=False, readonly=True),#fields.many2one('res.users', 'User', required=True, select=1, states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'date_from': fields.date('Date from', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
         'date_to': fields.date('Date to', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
         'date_current': fields.date('Current date', required=True),
@@ -320,24 +335,24 @@ class hr_timesheet_sheet(osv.osv):
         return time.strftime('%Y-%m-%d')
 
     _defaults = {
-        'user_id': lambda self,cr,uid,c: uid,
         'date_from' : _default_date_from,
         'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
         'date_to' : _default_date_to,
         'state': 'new',
-         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', context=c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', context=c)
     }
 
-    def _sheet_date(self, cr, uid, ids):
+    def _sheet_date(self, cr, uid, ids, forced_user_id=False):
         for sheet in self.browse(cr, uid, ids):
-            cr.execute('SELECT id \
+            new_user_id = forced_user_id or sheet.user_id and sheet.user_id.id
+            if new_user_id:
+                cr.execute('SELECT id \
                     FROM hr_timesheet_sheet_sheet \
                     WHERE (date_from < %s and %s < date_to) \
                         AND user_id=%s \
-                        AND id <> %s', (sheet.date_to, sheet.date_from,
-                            sheet.user_id.id, sheet.id))
-            if cr.fetchall():
-                return False
+                        AND id <> %s',(sheet.date_to, sheet.date_from, new_user_id, sheet.id))
+                if cr.fetchall():
+                    return False
         return True
 
     def _date_current_check(self, cr, uid, ids):
