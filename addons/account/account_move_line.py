@@ -905,7 +905,6 @@ class account_move_line(osv.osv):
         fld = sorted(fld, key=itemgetter(1))
 
         widths = {
-            'ref': 50,
             'statement_id': 50,
             'state': 60,
             'tax_code_id': 50,
