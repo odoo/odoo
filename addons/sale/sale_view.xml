@@ -86,8 +86,8 @@
                     <field name="user_id" />
                     <field name="picked_rate" widget="progressbar"/>
                     <field name="invoiced_rate" widget="progressbar"/>
-                    <field name="amount_untaxed" sum="Total Untaxed amount"/>
-                    <field name="amount_total" sum="Total amount"/>
+                    <field name="amount_untaxed" sum="Total Tax Excluded"/>
+                    <field name="amount_total" sum="Total Tax Included"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -363,7 +363,7 @@ to your configuration: from the sales order, from the pickings, etc.
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="UoM"/>
                     <field name="salesman_id"/>
-                    <field name="price_subtotal"/>
+                    <field name="price_subtotal" sum="Total"/>
                     <field name="state"/>
                     <field name="invoiced"/>
                 </tree>
