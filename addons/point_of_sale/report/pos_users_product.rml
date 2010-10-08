@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Product by user" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="User's Product'" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
     </pageTemplate>
@@ -175,7 +175,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="320.0,79.0,83.0" style="Table3">
+    <blockTable colWidths="239.0,80.0,163.0" style="Table3">
       <tr>
         <td>
           <para style="terp_tblheader_General">Product</para>
@@ -184,11 +184,11 @@
           <para style="terp_tblheader_General_Right">Qty</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right">Amount ([[ company.currency_id.code ]])</para>
+          <para style="terp_tblheader_General_Right">Amount </para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="320.0,79.0,83.0" style="Table4">
+    <blockTable colWidths="239.0,80.0,163.0" style="Table4">
       <tr>
         <td>
           <para style="P2">[[ repeatIn(get_data(statement), 'line_ids') and ' ' or removeParentNode('blockTable') ]]</para>
@@ -199,11 +199,11 @@
           <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(line_ids['amt']) ]][[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(line_ids['amt']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="320.0,79.0,83.0" style="Table5">
+    <blockTable colWidths="319.0,80.0,83.0" style="Table5">
       <tr>
         <td>
           <para style="P1">
@@ -214,7 +214,7 @@
           <para style="terp_tblheader_General_Right">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(get_total()) ]][[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(get_total()) ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>

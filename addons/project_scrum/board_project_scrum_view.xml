@@ -60,5 +60,41 @@
             name="Scrum Dashboard" parent="project.next_id_86"
             icon="terp-graph"
             action="open_board_project_scrum"/>
+
+    <!-- For Project Dashboard -->
+       <record id="view_scrum_sprint_project_dashboard_tree" model="ir.ui.view">
+            <field name="name">project.scrum.sprint.project.dashboard.tree</field>
+            <field name="model">project.scrum.sprint</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            	 <tree string="Scrum Sprint">
+                    <field name="name"/>
+                    <field name="progress" widget="progressbar"/>
+                    <field name="effective_hours"  widget="float_time"/>
+                    <field name="expected_hours"  widget="float_time"/>
+                	<button name="%(project_scrum.report_scrum_sprint_burndown_chart)d"
+                                	string="Burndown Chart" type="action" icon="gtk-print"/>
+             	</tree>
+            </field>
+        </record>
+        <record id="action_view_my_scrum_sprint_tree" model="ir.actions.act_window">
+            <field name="name">My Sprint</field>
+            <field name="res_model">project.scrum.sprint</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('product_owner_id','=',uid),('scrum_master_id','=',uid)]</field>
+           <field name="view_id" ref="view_scrum_sprint_project_dashboard_tree"/>
+        </record>
+       <record id="board_my_scrum_sprint_form" model="ir.ui.view">
+            <field name="name">board.my.scrum.sprint.form.inherit</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.board_project_form"/>
+            <field name="arch" type="xml">
+            	<xpath expr="/form/hpaned/child1/action[@string='My Delegated Tasks']" position="after">
+						<action colspan="4"  height="100" name="%(action_view_my_scrum_sprint_tree)d" string="My Sprint" />
+            	</xpath>
+            </field>
+        </record>
     </data>
 </openerp>

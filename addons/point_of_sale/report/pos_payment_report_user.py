@@ -24,7 +24,7 @@ from report import report_sxw
 class pos_payment_report_user(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(pos_payment_report_user, self).__init__(cr, uid, name, context)
+        super(pos_payment_report_user, self).__init__(cr, uid, name, context=context)
         self.total = 0.0
         self.localcontext.update({
             'time': time,
