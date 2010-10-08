@@ -152,8 +152,8 @@
                                         <group col="2" colspan="2">
                                             <separator colspan="2" string="Advantages"/>
                                             <field name="struct_id" select="1"/>
-                                            <field name="advantages_net"/>
                                             <field name="advantages_gross"/>
+                                            <field name="advantages_net"/>
                                             <field name="advantages" nolabel="1" colspan="2"/>
                                         </group>
                                     </page>
@@ -197,6 +197,42 @@
                                 <field name="amount_type"/>
                                 <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
                             </tree>
+                            <form string="Payslip Line">
+                                <group col="6" colspan="4">
+                                    <field name="name" colspan="4" select="1"/>
+                                    <field name="code" select="1"/>
+                                </group>
+                                <group col="2" colspan="2">
+                                    <separator colspan="4" string="Calculations"/>
+                                    <field name="category_id" on_change="onchange_category(category_id)"/>
+                                    <field name="type"/>
+                                    <field name="amount_type"/>
+                                    <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                    <field name="sequence" groups="base.group_extended"/>
+                                </group>
+                                <group col="2" colspan="2">
+                                    <separator colspan="4" string="Company contribution"/>
+                                    <field name="company_contrib"/>
+                                </group>
+                                <notebook colspan="4">
+                                    <page string="Function">
+                                        <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
+                                            <tree string="Function Arguments" editable="bottom">
+                                                <field name="name"/>
+                                                <field name="sequence" groups="base.group_extended"/>
+                                                <field name="from_val"/>
+                                                <field name="to_val"/>
+                                                <field name="amount_type"/>
+                                                <field name="value"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                    <page string="Description">
+                                        <separator colspan="4" string="Description"/>
+                                        <field name="note" colspan="4" nolabel="1"/>
+                                    </page>
+                                </notebook>
+                            </form>
                         </field>
                     </page>
                 </xpath>
@@ -302,7 +338,44 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Salary Structure">
-                            <field name="line_ids" nolabel="1" colspan="4"/>
+                            <field name="line_ids" nolabel="1" colspan="4">
+                                <form string="Payslip Line">
+                                    <group col="6" colspan="4">
+                                        <field name="name" colspan="4" select="1"/>
+                                        <field name="code" select="1"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="4" string="Calculations"/>
+                                        <field name="category_id" on_change="onchange_category(category_id)"/>
+                                        <field name="type"/>
+                                        <field name="amount_type"/>
+                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="4" string="Company contribution"/>
+                                        <field name="company_contrib"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Function">
+                                            <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
+                                                <tree string="Function Arguments" editable="bottom">
+                                                    <field name="name"/>
+                                                    <field name="sequence" groups="base.group_extended"/>
+                                                    <field name="from_val"/>
+                                                    <field name="to_val"/>
+                                                    <field name="amount_type"/>
+                                                    <field name="value"/>
+                                                </tree>
+                                            </field>
+                                        </page>
+                                        <page string="Description">
+                                            <separator colspan="4" string="Description"/>
+                                            <field name="note" colspan="4" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
                         </page>
                     </notebook>
                 </form>
@@ -454,6 +527,42 @@
                                     <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
                                     <field name="total"/>
                                 </tree>
+                                <form string="Payslip Line">
+                                    <group col="6" colspan="4">
+                                        <field name="name" colspan="4" select="1"/>
+                                        <field name="code" select="1"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="4" string="Calculations"/>
+                                        <field name="category_id" on_change="onchange_category(category_id)"/>
+                                        <field name="type"/>
+                                        <field name="amount_type"/>
+                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="4" string="Company contribution"/>
+                                        <field name="company_contrib"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Function">
+                                            <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
+                                                <tree string="Function Arguments" editable="bottom">
+                                                    <field name="name"/>
+                                                    <field name="sequence" groups="base.group_extended"/>
+                                                    <field name="from_val"/>
+                                                    <field name="to_val"/>
+                                                    <field name="amount_type"/>
+                                                    <field name="value"/>
+                                                </tree>
+                                            </field>
+                                        </page>
+                                        <page string="Description">
+                                            <separator colspan="4" string="Description"/>
+                                            <field name="note" colspan="4" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                </form>
                             </field>
                             <group col="6" colspan="4">
                                 <separator string="Computation Overview" colspan="6"/>
