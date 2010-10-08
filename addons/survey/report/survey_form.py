@@ -389,7 +389,6 @@ class survey_form(report_rml):
         rml += """</story></document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
-        self.pageCount=False
         pdf = create_doc(rml, title=self.title)
         return (pdf, report_type)
 

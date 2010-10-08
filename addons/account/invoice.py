@@ -650,18 +650,19 @@ class account_invoice(osv.osv):
         return ok
 
     def button_reset_taxes(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
+        ctx = context.copy()
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
             cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))
-            partner = self.browse(cr, uid, id, context=context).partner_id
+            partner = self.browse(cr, uid, id, context=ctx).partner_id
             if partner.lang:
-                context.update({'lang': partner.lang})
-            for taxe in ait_obj.compute(cr, uid, id, context=context).values():
+                ctx.update({'lang': partner.lang})
+            for taxe in ait_obj.compute(cr, uid, id, context=ctx).values():
                 ait_obj.create(cr, uid, taxe)
         # Update the stored value (fields.function), so we write to trigger recompute
-        self.pool.get('account.invoice').write(cr, uid, ids, {'invoice_line':[]}, context=context)
+        self.pool.get('account.invoice').write(cr, uid, ids, {'invoice_line':[]}, context=ctx)
         return True
 
     def button_compute(self, cr, uid, ids, context=None, set_total=False):
@@ -1621,6 +1622,7 @@ class account_invoice_tax(osv.osv):
                     tax_grouped[key]['tax_amount'] += val['tax_amount']
 
         for t in tax_grouped.values():
+            t['base'] = cur_obj.round(cr, uid, cur, t['base'])
             t['amount'] = cur_obj.round(cr, uid, cur, t['amount'])
             t['base_amount'] = cur_obj.round(cr, uid, cur, t['base_amount'])
             t['tax_amount'] = cur_obj.round(cr, uid, cur, t['tax_amount'])
