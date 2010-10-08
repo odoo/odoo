@@ -35,8 +35,57 @@ from lxml import etree
 import base64
 from reportlab.platypus.doctemplate import ActionFlowable
 from tools.safe_eval import safe_eval as eval
+from reportlab.lib.units import inch,cm,mm
 
 encoding = 'utf-8'
+
+class NumberedCanvas(canvas.Canvas):
+    def __init__(self, *args, **kwargs):
+        canvas.Canvas.__init__(self, *args, **kwargs)
+        self._codes = []
+        self._flag=False
+        self._pageCount=0
+        self._currentPage =0
+        self._pageCounter=0
+        self.pages={}
+
+    def showPage(self):
+        self._currentPage +=1
+        if not self._flag:
+           self._pageCount += 1
+        else:
+            self.pages.update({self._currentPage:self._pageCount})
+        self._codes.append({'code': self._code, 'stack': self._codeStack})
+        self._startPage()
+        self._flag=False
+
+    def pageCount(self):
+        if self.pages.get(self._pageCounter,False):
+            self._pageNumber=0
+        self._pageCounter +=1
+        key=self._pageCounter
+        if not self.pages.get(key,False):
+            while not self.pages.get(key,False):
+                key = key + 1
+        self.setFont("Helvetica", 8)
+        self.drawRightString((self._pagesize[0]-35), (self._pagesize[1]-43),
+            "Page %(this)i of %(total)i" % {
+               'this': self._pageNumber+1,
+               'total': self.pages.get(key,False),
+            }
+        )
+
+    def save(self):
+        """add page info to each page (page x of y)"""
+        # reset page counter
+        self._pageNumber = 0
+        for code in self._codes:
+            self._code = code['code']
+            self._codeStack = code['stack']
+            self.pageCount()
+            canvas.Canvas.showPage(self)
+#        self.restoreState()
+        self._doc.SaveToFile(self._filename, self)
 
 class PageCount(platypus.Flowable):
     def draw(self):
@@ -403,6 +452,7 @@ class _rml_canvas(object):
             else:
                 args['height'] = sy * args['width'] / sx
         self.canvas.drawImage(img, **args)
+#        self.canvas._doc.SaveToFile(self.canvas._filename, self.canvas)
 
     def _path(self, node):
         self.path = self.canvas.beginPath()
@@ -762,14 +812,20 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
         self.handle_frameBegin()
     def afterFlowable(self, flowable):
         if isinstance(flowable, PageReset):
+            self.canv._pageCount=self.page
+            self.page=0
+            self.canv._flag=True
             self.canv._pageNumber = 0
 
 class _rml_template(object):
     def __init__(self, localcontext, out, node, doc, images={}, path='.', title=None):
+        if not localcontext:
+            localcontext={'internal_header':True}
         self.localcontext = localcontext
         self.images= images
         self.path = path
         self.title = title
+
         if not node.get('pageSize'):
             pageSize = (utils.unit_get('21cm'), utils.unit_get('29.7cm'))
         else:
@@ -780,6 +836,7 @@ class _rml_template(object):
         self.page_templates = []
         self.styles = doc.styles
         self.doc = doc
+        self.image=[]
         pts = node.findall('pageTemplate')
         for pt in pts:
             frames = []
@@ -794,6 +851,7 @@ class _rml_template(object):
             except Exception: # FIXME: be even more specific, perhaps?
                 gr=''
             if len(gr):
+#                self.image=[ n for n in utils._child_get(gr[0], self) if n.tag=='image' or not self.localcontext]
                 drw = _rml_draw(self.localcontext,gr[0], self.doc, images=images, path=self.path, title=self.title)
                 self.page_templates.append( platypus.PageTemplate(frames=frames, onPage=drw.render, **utils.attr_get(pt, [], {'id':'str'}) ))
             else:
@@ -802,6 +860,8 @@ class _rml_template(object):
         self.doc_tmpl.addPageTemplates(self.page_templates)
 
     def render(self, node_stories):
+        if self.localcontext and not self.localcontext.get('internal_header',False):
+            del self.localcontext['internal_header']
         fis = []
         r = _rml_flowable(self.doc,self.localcontext, images=self.images, path=self.path, title=self.title)
         story_cnt = 0
@@ -812,9 +872,12 @@ class _rml_template(object):
             # Reset Page Number with new story tag
             fis.append(PageReset())
             story_cnt += 1
-        if self.localcontext:
+        if self.localcontext and self.localcontext.get('internal_header',False):
+            self.doc_tmpl.afterFlowable(fis)
+            self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
+        else:
             fis.append(PageCount())
-        self.doc_tmpl.build(fis)
+            self.doc_tmpl.build(fis)
 
 def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
     node = etree.XML(rml)

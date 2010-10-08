@@ -364,12 +364,17 @@ class report_sxw(report_rml, preprocess.report):
         self.parser = parser
         self.header = header
         self.store = store
+        self.internal_header=False
+        if header=='internal' or header=='internal landscape':
+            self.internal_header=True
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = pooler.get_pool(cr.dbname).get(self.table)
         return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context, fields_process=_fields_process)
 
     def create(self, cr, uid, ids, data, context=None):
+        if self.internal_header:
+            context.update({'internal_header':self.internal_header})
         pool = pooler.get_pool(cr.dbname)
         ir_obj = pool.get('ir.actions.report.xml')
         report_xml_ids = ir_obj.search(cr, uid,
