@@ -78,9 +78,9 @@ class res_partner_contact(osv.osv):
         if context is None:
             context = {}
         if name:
-            ids = self.search(cr, uid, ['|',('name', operator, name),('first_name', operator, name)] + args, limit=limit, context=context or {})
+            ids = self.search(cr, uid, ['|',('name', operator, name),('first_name', operator, name)] + args, limit=limit, context=context)
         else:
-            ids = self.search(cr, uid, args, limit=limit, context=context or {})
+            ids = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, ids, context=context)
 res_partner_contact()
 
