@@ -61,14 +61,14 @@ def GetConn():
     return d
 
 class ButtonEvent:
-    def OnClick(self, button, cancel):
-        import win32ui
-        try:
-            mngr = manager.GetManager()
-            mngr.ShowManager()
-        except Exception,e:
-            win32ui.MessageBox("Fail to Initialize dialog.\n"+str(e),"OpenERP Configuration", win32con.MB_ICONERROR)
-        return cancel
+	def OnClick(self, button, cancel):
+		import win32ui
+		try:
+			mngr = manager.GetManager()
+			mngr.ShowManager()
+		except Exception,e:
+			win32ui.MessageBox("Fail to Initialize dialog.\n"+str(e),"OpenERP Configuration", win32con.MB_ICONERROR)
+		return cancel
 #
 class ViewPartners:
     def OnClick(self, button, cancel):
@@ -87,6 +87,47 @@ class ViewPartners:
                 mngr.ShowManager("IDD_VIEW_PARTNER_DIALOG")
             elif ex.Selection.Count > 1:
                 win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Open Contact",win32con.MB_ICONINFORMATION)
+        return cancel
+#
+class OpenPartner:
+	def OnClick(self, button, cancel):
+		import win32ui
+		from manager import ustr
+		mngr = manager.GetManager()
+		data=mngr.LoadConfig()
+		outlook = Dispatch("Outlook.Application")
+		ex = outlook.ActiveExplorer()
+		if ex:
+			is_login = str(data['login'])
+			if is_login == 'False':
+				win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
+			elif ex.Selection.Count == 1:
+				mngr = manager.GetManager()
+				mngr.ShowManager("IDD_OPEN_PARTNER_DIALOG")
+			elif ex.Selection.Count == 0:
+				win32ui.MessageBox("No mail selected to push to OpenERP","Push to OpenERP",win32con.MB_ICONINFORMATION)
+			elif ex.Selection.Count > 1:
+				win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Push to OpenERP",win32con.MB_ICONINFORMATION)
+		return cancel
+#
+class OpenDocument:
+    def OnClick(self, button, cancel):
+        from win32com.client import Dispatch
+        import win32con
+        import win32ui
+        mngr = manager.GetManager()
+        data=mngr.LoadConfig()
+        outlook = Dispatch("Outlook.Application")
+        ex = outlook.ActiveExplorer()
+        if ex:
+            is_login = str(data['login'])
+            if is_login == 'False':
+                win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
+            elif ex.Selection.Count == 1 or ex.Selection.Count == 0:
+                mngr = manager.GetManager()
+                mngr.ShowManager("IDD_OPEN_DOCUEMNT_DIALOG")
+            elif ex.Selection.Count > 1:
+                win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Open Document",win32con.MB_ICONINFORMATION)
         return cancel
 #
 class ArchiveEvent:
@@ -151,7 +192,22 @@ class OutlookAddin:
             item.Enabled = True
 
             # Adding Menu in Menu Bar to the Web Menu of the Outlook
+            toolbaradvance = bars.Item("Advanced")
             toolbarweb = bars.Item("Web")
+
+            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
+            item = self.toolbarButtonOpenPartner = DispatchWithEvents(item, OpenPartner)
+            item.Caption = "Open Partners"
+            item.TooltipText = "Click to Open OpenERP Partner Contact Information."
+            item.Enabled = True
+
+
+#            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
+#            item = self.toolbarButtonOpenDocument = DispatchWithEvents(item, OpenDocument)
+#            item.Caption = "Open Document"
+#            item.TooltipText = "Click to Open Document that ha been pushed to server."
+#            item.Enabled = True
+
             # Hook events for the item
             item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
             item = self.toolbarButtonPartner = DispatchWithEvents(item, ViewPartners)
@@ -159,12 +215,21 @@ class OutlookAddin:
             item.TooltipText = "Click to Open OpenERP Partner Contact Information."
             item.Enabled = True
 
+
             item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.menu_bar_viewpartner_Button = DispatchWithEvents(item, ViewPartners)
             item.Caption = "Open Contact"
             item.TooltipText = "Click to Open Partner detail"
             item.Enabled = True
+
+            item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
+            # Hook events for the item
+            item = self.menu_bar_openpartner_Button = DispatchWithEvents(item, OpenPartner)
+            item.Caption = "Open Partner"
+            item.TooltipText = "Click to Open Partner detail"
+            item.Enabled = True
+
 
     def OnDisconnection(self, mode, custom):
         mngr = manager.GetManager()
