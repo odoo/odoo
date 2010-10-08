@@ -38,7 +38,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #            'sum_debit': self._sum_debit,
 #            'sum_credit': self._sum_credit,
             'get_currency': self._get_currency,
-            'comma_me' : self.comma_me,
+            'comma_me': self.comma_me,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
             'get_account': self._get_account,
@@ -103,7 +103,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "AND " + self.query +" " \
                     "AND l.account_id IN %s " \
                     " " + PARTNER_REQUEST + " " \
-                    "AND account.active " ,
+                    "AND account.active ",
                 (tuple(move_state), tuple(self.account_ids),))
 
         res = self.cr.dictfetchall()
@@ -115,9 +115,9 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         return super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
 
     def comma_me(self, amount):
-        if type(amount) is float :
+        if type(amount) is float:
             amount = str('%.2f'%amount)
-        else :
+        else:
             amount = str(amount)
         if (amount == '0'):
              return ' '
@@ -186,7 +186,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
         result_tmp = 0.0
         result_init = 0.0
-        if self.reconcil :
+        if self.reconcil:
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
@@ -217,7 +217,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "AND m.state IN %s "
                     "AND account_id IN %s" \
                     " " + RECONCILE_TAG + " " \
-                    "AND " + self.query + " " ,
+                    "AND " + self.query + " ",
                 (partner.id, tuple(move_state), tuple(self.account_ids),))
 
         contemp = self.cr.fetchone()
@@ -235,7 +235,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
         result_tmp = 0.0
         result_init = 0.0
-        if self.reconcil :
+        if self.reconcil:
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
@@ -266,7 +266,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "AND m.state IN %s "
                     "AND account_id IN %s" \
                     " " + RECONCILE_TAG + " " \
-                    "AND " + self.query + " " ,
+                    "AND " + self.query + " ",
                 (partner.id, tuple(move_state), tuple(self.account_ids),))
 
         contemp = self.cr.fetchone()
@@ -401,7 +401,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
          return False
 
     def _display_currency(self, data):
-         if self.amount_currency :
+         if self.amount_currency:
              return True
          return False
 

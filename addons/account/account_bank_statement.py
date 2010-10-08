@@ -284,7 +284,7 @@ class account_bank_statement(osv.osv):
                         account=acc_cur)
             val['amount_currency'] = amount_cur
 
-        move_line_id = account_move_line_obj.create(cr, uid, val , context=context)
+        move_line_id = account_move_line_obj.create(cr, uid, val, context=context)
         torec.append(move_line_id)
 
         # Fill the secondary amount/currency
