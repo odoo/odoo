@@ -313,13 +313,13 @@ class thunderbird_partner(osv.osv_memory):
 
     def list_allcountry(self,cr,user,vals):
         country_list = []
-        cr.execute("SELECT id, name from res_country")
+        cr.execute("SELECT id, name from res_country order by name")
         country_list = cr.fetchall()
         return country_list
 
 
     def list_allstate(self,cr,user,vals):
-         cr.execute("select id, name  from res_country_state  where country_id = %s",(vals,) )
+         cr.execute("select id, name  from res_country_state  where country_id = %s order by name",(vals,) )
          state_country_list = cr.fetchall()
          return state_country_list
 

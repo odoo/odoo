@@ -100,8 +100,6 @@ var myPrefObserver =
 	   
     },
 
-
-
     createContactAddress: function()
 	{
 	  	document.getElementById("txtselectpartner").value = getPartnerName();

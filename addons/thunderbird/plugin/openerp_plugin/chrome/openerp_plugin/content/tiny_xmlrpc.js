@@ -793,7 +793,7 @@ var listAllStateHandler = {
 		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
                 // Set the number of results
 		var count = arrIdList.Count();
-
+        
 		// Loop through the results, adding items to the list
 		for (i = 0; i < count; i++) {
 			var strlResult = arrIdList.QueryElementAt(i, Components.interfaces.nsISupportsArray);
@@ -802,16 +802,20 @@ var listAllStateHandler = {
 			arrDataPair[0] = strlResult.QueryElementAt(0, Components.interfaces.nsISupportsPRInt32);
 			arrDataPair[1] = strlResult.QueryElementAt(1, Components.interfaces.nsISupportsCString);
 			arrPartnerList1[i] = arrDataPair;
+
+          
 		}
 		if (!context)
 		{
 			const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+
 			var popup = document.getElementById("state"); 
             // a <menupopup> element
 			for (i=0;i<arrPartnerList1.length;i++){
 				popup.menupopup.appendChild(createMenuItem_partner(arrPartnerList1[i][1],arrPartnerList1[i][0]));
 
 			}
+          //  popup.menupopup.selectedItem = popup.menupopup.firstChild;
 		}
 	
 	},
@@ -877,6 +881,14 @@ function getAllState(){
 	setServerService('xmlrpc/object');
 	var xmlRpcClient = getXmlRpc();
 	arrPartnerList1 = [];
+    var state = document.getElementById('state').menupopup;
+    while (state.firstChild) 
+     {
+        //The list is LIVE so it will re-index each call
+        state.removeChild(state.firstChild);
+    };
+
+
 	var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strDbName.data = branchobj.getCharPref("serverdbname");
 	var struid = xmlRpcClient.createType(xmlRpcClient.INT,{});
