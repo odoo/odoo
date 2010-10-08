@@ -1815,7 +1815,7 @@ class account_tax(osv.osv):
                 data['amount'] = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
                 data['balance'] = cur_price_unit
 
-            amount2 = data['amount']
+            amount2 = data.get('amount', 0.0)
             if len(tax.child_ids):
                 if tax.child_depend:
                     latest = res.pop()
