@@ -46,7 +46,7 @@ class project_work(osv.osv):
             raise osv.except_osv(_('Bad Configuration !'),
                  _('No journal defined on the related employee.\nFill in the timesheet tab of the employee form.'))
 
-        a =  emp.product_id.product_tmpl_id.property_account_expense.id
+        a = emp.product_id.product_tmpl_id.property_account_expense.id
         if not a:
             a = emp.product_id.categ_id.property_account_expense_categ.id
             if not a:
@@ -108,7 +108,6 @@ class project_work(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
-        obj = self.pool.get('hr.analytic.timesheet')
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
         project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
@@ -144,7 +143,7 @@ class project_work(osv.osv):
                     vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
                     
                 # Compute based on pricetype
-                amount_unit = obj.on_change_unit_amount(cr, uid, line_id.id,
+                amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, line_id.id,
                     prod_id=prod_id,
                     quantity=vals_line['unit_amount'], unit=False, context=context)
 
