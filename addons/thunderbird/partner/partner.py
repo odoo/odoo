@@ -138,7 +138,6 @@ class thunderbird_partner(osv.osv_memory):
     _description="Thunderbid mails"
 
     def create_contact(self,cr,user,vals):
-        print "vvvvvvvvvvvvvvvvv",vals
         dictcreate = dict(vals)
         # Set False value if 'undefined'. Thunerbird set 'undefined' if user did not set any value.
         for key in dictcreate:
