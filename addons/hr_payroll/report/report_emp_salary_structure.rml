@@ -290,10 +290,10 @@
             <para style="terp_default_9">[[ employee.name ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details">Other Id</para>
+            <para style="terp_tblheader_Details">PAN No.</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.otherid or '' ]]</para>
+            <para style="terp_default_9">[[ employee.pan_no or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Address</para>
@@ -369,7 +369,7 @@
             <para style="terp_tblheader_Details">Salary</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ formatLang(cont.wage) or '' ]] [[ employee.company_id.currency_id.symbol]]</para>
+            <para style="terp_default_9">[[ formatLang(cont.wage) or '' ]] [[ employee.company_id and employee.company_id.currency_id.symbol]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Notes:</para>
@@ -389,13 +389,7 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
       <section>
-        <para style="terp_default_1">
-          <font color="white"> </font>
-        </para>
         <blockTable colWidths="34.0,116.0,40.0,67.0,44.0,109.0,70.0,59.0" style="Table5">
           <tr>
             <td>
@@ -457,18 +451,9 @@
               </td>
             </tr>
           </blockTable>
-          <para style="terp_default_1">
-            <font color="white"> </font>
-          </para>
         </section>
-        <para style="terp_default_1">
-          <font color="white"> </font>
-        </para>
       </section>
     </section>
-    <para style="terp_default_space">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="539.0" style="Table10">
       <tr>
         <td>
@@ -476,13 +461,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_1">
-      <font color="white"> </font>
-    </para>
     <section>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
       <blockTable colWidths="34.0,116.0,40.0,67.0,44.0,109.0,128.0" style="Table11">
         <tr>
           <td>
@@ -508,11 +487,8 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
       <section>
-        <para style="terp_default_9">[[repeatIn(employee.line_ids,'line1')]]</para>
+        <para style="terp_default_1">[[repeatIn(employee.line_ids,'line1')]]</para>
         <blockTable colWidths="34.0,117.0,39.0,67.0,44.0,110.0,128.0" style="Table12">
           <tr>
             <td>
@@ -542,12 +518,6 @@
           <font color="white"> </font>
         </para>
       </section>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
     </section>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
   </story>
 </document>

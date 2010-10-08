@@ -12,8 +12,7 @@
 -
   !python {model: pos.order}: |
     import netsvc, tools, os
-    data_dict = {'model':'ir.ui.menu', 'form':{ 'invoice_wanted':1}}
-    (data, format) = netsvc.LocalService('report.pos.invoice').create(cr, uid, [ref('point_of_sale.order_pos1')], {}, {})
+    (data, format) = netsvc.LocalService('report.pos.invoice').create(cr, uid, [ref('point_of_sale.pos_order_pos11')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-invoice report'+format), 'wb+').write(data)
 
