@@ -11,15 +11,15 @@
                  </search>
             </field>
         </record>
-        
+
         <record id="res_widget_form" model="ir.ui.view">
             <field name="name">res.widget.form</field>
             <field name="model">res.widget</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Widgets">
-                    <field name="title"/>
-                    <field name="content"/>
+                    <field name="title" colspan="4"/>
+                    <field name="content" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -41,7 +41,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_res_widget_search"/>
         </record>
-        
+
         <menuitem
             action="res_widget_act_window"
             id="menu_res_widget_act_window"
