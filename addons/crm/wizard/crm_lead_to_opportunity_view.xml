@@ -46,6 +46,9 @@
                <form string="Create a Partner">
                 <label string="Are you sure you want to create a partner based on this lead ?" colspan="4"/>
                 <label string="You may have to verify that this partner does not exist already." colspan="4"/>
+                <group colspan="4" col="1" attrs="{'invisible':[('msg','=',False)]}">
+                    <field name="msg" colspan="4" nolabel="1"  height="50"/>
+                </group>
                 <newline />
                 <field name="action"/>
                 <group attrs="{'invisible':[('action','!=','exist')]}">
