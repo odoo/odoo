@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+from lxml import etree
 import decimal_precision as dp
 
 import netsvc
@@ -346,6 +347,16 @@ class account_invoice(osv.osv):
             if field == 'journal_id':
                 journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
+
+        if view_type == 'tree':
+            doc = etree.XML(res['arch'])
+            nodes = doc.xpath("//field[@name='partner_id']")
+            partner_string = 'Customer'
+            if context.get('type', 'out_invoice') in ('in_invoice', 'in_refund'):
+                partner_string = 'Vendor'
+            for node in nodes:
+                node.set('string', partner_string)
+            res['arch'] = etree.tostring(doc)
         return res
 
     def create(self, cr, uid, vals, context=None):
