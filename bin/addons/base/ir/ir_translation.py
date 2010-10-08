@@ -25,7 +25,8 @@ import tools
 TRANSLATION_TYPE = [
     ('field', 'Field'),
     ('model', 'Object'),
-    ('rml', 'RML'),
+    ('rml', 'RML  (deprecated - use Report)'), # Pending deprecation - to be replaced by report!
+    ('report', 'Report/Template'),
     ('selection', 'Selection'),
     ('view', 'View'),
     ('wizard_button', 'Wizard Button'),
@@ -131,14 +132,14 @@ class ir_translation(osv.osv):
         return len(ids)
 
     @tools.cache(skiparg=3)
-    def _get_source(self, cr, uid, name, tt, lang, source=None):
+    def _get_source(self, cr, uid, name, types, lang, source=None):
         """
         Returns the translation for the given combination of name, type, language
         and source. All values passed to this method should be unicode (not byte strings),
         especially ``source``.
 
         :param name: identification of the term to translate, such as field name
-        :param type: type of term to translate (see ``type`` field on ir.translation)
+        :param types: single string defining type of term to translate (see ``type`` field on ir.translation), or sequence of allowed types (strings)
         :param lang: language code of the desired translation
         :param source: optional source term to translate (should be unicode)
         :rtype: unicode
@@ -147,24 +148,25 @@ class ir_translation(osv.osv):
         """
         # FIXME: should assert that `source` is unicode and fix all callers to always pass unicode
         # so we can remove the string encoding/decoding.
-
         if not lang:
             return u''
+        if isinstance(types, basestring):
+            types = (types,)
         if source:
             cr.execute('select value ' \
                     'from ir_translation ' \
                     'where lang=%s ' \
-                        'and type=%s ' \
+                        'and type in %s ' \
                         'and name=%s ' \
                         'and src=%s',
-                    (lang or '', tt, tools.ustr(name), source))
+                    (lang or '', types, tools.ustr(name), source))
         else:
             cr.execute('select value ' \
                     'from ir_translation ' \
                     'where lang=%s ' \
-                        'and type=%s ' \
+                        'and type in %s ' \
                         'and name=%s',
-                    (lang or '', tt, tools.ustr(name)))
+                    (lang or '', types, tools.ustr(name)))
         res = cr.fetchone()
         trad = res and res[0] or u''
         if source and not trad:
