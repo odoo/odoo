@@ -318,7 +318,7 @@
             <para style="terp_tblheader_Details">Designation</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.contract_id and employee.contract_id.job_id and employee.contract_id.job_id.name or '' ]]</para>
+            <para style="terp_default_9">[[ employee.contract_id.job_id and employee.contract_id.job_id.name or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Phone No.</para>
@@ -356,19 +356,19 @@
             <para style="terp_tblheader_Details">Start Date</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.contract_id and formatLang(employee.contract_id.date_start,date=True) or '' ]]</para>
+            <para style="terp_default_9">[[ formatLang(employee.contract_id.date_start,date=True) or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">End Date</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.contract_id and formatLang(employee.contract_id.date_end,date=True) or removeParentNode('para') ]]</para>
+            <para style="terp_default_9">[[ formatLang(employee.contract_id.date_end,date=True) or removeParentNode('para') ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Type</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.contract_id and get_type(employee.contract_id.wage_type_id.type) or '' ]]</para>
+            <para style="terp_default_9">[[ get_type(employee.contract_id.wage_type_id.type) or '' ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -378,13 +378,13 @@
             <para style="terp_tblheader_Details">Salary</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.contract_id and formatLang(employee.contract_id.wage) or '' ]] [[ employee.company_id.currency_id.symbol]]</para>
+            <para style="terp_default_9">[[ formatLang(employee.contract_id.wage) or '' ]] [[ employee.company_id.currency_id.symbol]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Notes:</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.contract_id and employee.contract_id.notes or '' ]]</para>
+            <para style="terp_default_9">[[ employee.contract_id.notes or '' ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -463,7 +463,7 @@
           <font color="white"> </font>
         </para>
         <section>
-          <para style="terp_default_9">[[repeatIn(employee.contract_id and employee.contract_id.struct_id and employee.contract_id.struct_id.line_ids or [],'line')]]</para>
+          <para style="terp_default_9">[[repeatIn(employee.contract_id.struct_id and employee.contract_id.struct_id.line_ids or [],'line')]]</para>
           <blockTable colWidths="34.0,340.0,80.0,84.0" style="Table8">
             <tr>
               <td>
@@ -473,7 +473,7 @@
                 <para style="terp_default_9">[[ line.name ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ line.amount or '']] [[ get_line_amount_symbol(line.amount_type) ]]</para>
+                <para style="terp_default_Right_9">[[ line.amount_type =='per' and (line.amount*100) or line.amount]] [[ get_line_amount_symbol(line.amount_type) ]]</para>
               </td>
               <td>
                 <para style="terp_default_9">[[ get_line_amount_type(line.amount_type) ]]</para>
@@ -536,7 +536,7 @@
               <para style="terp_default_9">[[ line1.name ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9">[[ line1.amount ]] [[ get_line_amount_symbol(line1.amount_type) ]]</para>
+              <para style="terp_default_Right_9">[[ line1.amount_type =='per' and (line1.amount*100) or line1.amount ]] [[ get_line_amount_symbol(line1.amount_type) ]]</para>
             </td>
             <td>
               <para style="terp_default_9">[[ get_line_amount_type(line1.amount_type) ]]</para>
