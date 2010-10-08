@@ -394,19 +394,19 @@
             <para style="terp_tblheader_Details">Basic</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.basic ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
+            <para style="terp_default_9">[[ formatLang(employee.basic) ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Allowances</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.advantages_gross ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
+            <para style="terp_default_9">[[ formatLang(employee.advantages_gross) ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Gross Salary</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.gross ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
+            <para style="terp_default_9">[[ formatLang(employee.gross) ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -416,13 +416,13 @@
             <para style="terp_tblheader_Details">Deductions</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.advantages_net ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
+            <para style="terp_default_9">[[ formatLang(employee.advantages_net) ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Net Salary</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.net ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
+            <para style="terp_default_9">[[ formatLang(employee.net) ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -473,7 +473,7 @@
                 <para style="terp_default_9">[[ line.name ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ line.amount_type =='per' and (line.amount*100) or line.amount]] [[ get_line_amount_symbol(line.amount_type) ]]</para>
+                <para style="terp_default_Right_9">[[ line.amount_type =='per' and formatLang(line.amount*100) or formatLang(line.amount)]] [[ get_line_amount_symbol(line.amount_type) ]]</para>
               </td>
               <td>
                 <para style="terp_default_9">[[ get_line_amount_type(line.amount_type) ]]</para>
@@ -536,7 +536,7 @@
               <para style="terp_default_9">[[ line1.name ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9">[[ line1.amount_type =='per' and (line1.amount*100) or line1.amount ]] [[ get_line_amount_symbol(line1.amount_type) ]]</para>
+              <para style="terp_default_Right_9">[[ line1.amount_type =='per' and formatLang(line1.amount*100) or formatLang(line1.amount) ]] [[ get_line_amount_symbol(line1.amount_type) ]]</para>
             </td>
             <td>
               <para style="terp_default_9">[[ get_line_amount_type(line1.amount_type) ]]</para>
