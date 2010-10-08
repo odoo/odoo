@@ -247,7 +247,7 @@ class module(osv.osv):
                 else:
                     od = self.browse(cr, uid, ids2)[0]
                     mdemo = od.demo or mdemo
-            
+
             terp = self.get_module_info(module.name)
             try:
                 self._check_external_dependencies(terp)
