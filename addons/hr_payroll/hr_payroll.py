@@ -135,6 +135,9 @@ class hr_contract(osv.osv):
         res = {}
         ids += context.get('employee_structure', [])
         
+        slip_pool = self.pool.get('hr.payslip')
+        slip_line_pool = self.pool.get('hr.payslip.line')
+        
         for contract in self.browse(cr, uid, ids, context):
             all_per = 0.0
             ded_per = 0.0
@@ -238,7 +241,12 @@ class hr_contract(osv.osv):
             res[contract.id] = basic
 
         return res
-    
+        
+    def check_vals(self, val1, val2):
+        if val1 == val2 and val1 == 0:
+            return True
+        return False
+        
     def _calculate_salary(self, cr, uid, ids, field_names, arg, context=None):
         res = self.compute_basic(cr, uid, ids, context)
         vals = {}
@@ -253,6 +261,12 @@ class hr_contract(osv.osv):
                 obj['net'] = rs.net
             
             if not rs.struct_id:
+                if self.check_vals(obj['basic'], obj['gross']):
+                    obj['gross'] = obj['basic'] = obj['net']
+                elif self.check_vals(obj['gross'], obj['net']):
+                    obj['gross']= obj['net'] = obj['basic']
+                elif self.check_vals(obj['net'], obj['basic']):
+                    obj['net'] = obj['basic'] = obj['gross']
                 record = {
                     'advantages_gross':0.0,
                     'advantages_net':0.0,
@@ -262,7 +276,7 @@ class hr_contract(osv.osv):
                 }
                 vals[rs.id] = record
                 continue
-                
+            
             for line in rs.struct_id.line_ids:
                 amount = 0.0
                 if line.amount_type == 'per':
@@ -288,9 +302,9 @@ class hr_contract(osv.osv):
             record = {
                 'advantages_gross':round(allow),
                 'advantages_net':round(deduct),
-                'basic':res[rs.id],
-                'gross':round(res[rs.id] + allow),
-                'net':round(res[rs.id] + allow - deduct)
+                'basic':obj['basic'],
+                'gross':round(obj['basic'] + allow),
+                'net':round(obj['basic'] + allow - deduct)
             }
             vals[rs.id] = record
 
@@ -1394,13 +1408,67 @@ class hr_employee(osv.osv):
     '''
     _inherit = 'hr.employee'
     _description = 'Employee'
-
+    
+    def _calculate_salary(self, cr, uid, ids, field_names, arg, context=None):
+        vals = {}
+        slip_line_pool = self.pool.get('hr.payslip.line')
+        
+        for employee in self.browse(cr, uid, ids, context):
+            if not employee.contract_id:
+                vals[employee.id] = {'basic':0.0, 'gross':0.0, 'net':0.0, 'advantages_gross':0.0, 'advantages_net':0.0}
+                continue
+            
+            basic = employee.contract_id.basic
+            gross = employee.contract_id.gross
+            net = employee.contract_id.net
+            allowance = employee.contract_id.advantages_gross
+            deduction = employee.contract_id.advantages_net
+            
+            obj = {
+                'basic':basic, 
+                'gross':gross, 
+                'net':net
+            }
+            for line in employee.line_ids:
+                base = line.category_id.base
+                try:
+                    amt = eval(base, obj)
+                except Exception, e:
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                amount = 0.0
+                if line.amount_type == 'per':
+                    amount = amt * line.amount
+                elif line.amount_type == 'func':
+                    amount = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
+                elif line.amount_type == 'fix':
+                    amount = line.amount
+                
+                if line.type == 'allowance':
+                    allowance += amount
+                elif line.type == 'deduction':
+                    deduction += amount
+            
+            vals[employee.id] = {
+                'basic':basic, 
+                'advantages_gross':allowance, 
+                'gross':basic + allowance, 
+                'advantages_net':deduction,
+                'net':basic + allowance - deduction
+            }
+        return vals
+    
     _columns = {
         'passport_id':fields.many2one('hr.passport', 'Passport', required=False, domain="[('employee_id','=',active_id), ('address_id','=',address_home_id)]", help="Employee Passport Information"),
         'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account', domain="[('partner_id','=',partner_id)]", help="Employee bank salary account"),
         'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
-        'otherid': fields.char('Other Id', size=64)
+        'otherid': fields.char('Other Id', size=64),
+        
+        'basic': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Basic Salary', digits=(14,2)),
+        'gross': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Gross Salary', digits=(14,2)),
+        'net': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Net Salary', digits=(14,2)),
+        'advantages_net': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Deductions', digits=(14,2)),
+        'advantages_gross': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Allowances', digits=(14,2)),
     }
 hr_employee()
 

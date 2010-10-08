@@ -180,6 +180,15 @@
                 </xpath>
                 <xpath expr="/form/notebook/page[@string='Notes']" position="before">
                     <page string="Salary Structure" groups="base.group_extended">
+                        <group col="10" colspan="4">
+                            <separator string="Salary Computation" colspan="10"/>
+                            <field name="basic"/>
+                            <field name="advantages_gross"/>
+                            <field name="gross"/>
+                            <field name="advantages_net"/>
+                            <field name="net"/>
+                        </group>
+                        <separator string="Employee specific allowances and deductions" colspan="4"/>
                         <field name="line_ids" nolabel="1" colspan="4" string="Salary Structure">
                             <tree string="Salary Structure" editable="bottom">
                                 <field name="category_id" on_change="onchange_category(category_id)"/>
