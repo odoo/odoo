@@ -214,6 +214,10 @@ class act_window(osv.osv):
                 res[act.id] = str(form_arch)
         return res
 
+    def _get_help_status(self, cr, uid, ids, name, arg, context={}):
+        activate_tips = self.pool.get('res.users').browse(cr, uid, uid).menu_tips
+        return dict([(id, activate_tips) for id in ids])
+
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
@@ -246,7 +250,8 @@ class act_window(osv.osv):
         'menus': fields.char('Menus', size=4096),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.'),
-
+        'display_menu_tip':fields.function(_get_help_status, type='boolean', method=True, string='Display Menu Tips',
+            help='It gives the status if the tip has to be displayed or not when a user executes an action')
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',

@@ -37,7 +37,7 @@ class ir_property(osv.osv):
         res = set()
         for o in obj.browse(cr, uid, ids, context=context):
             res.add(get(o))
-        return res
+        return list(res)
 
     def _models_get(self, cr, uid, context=None):
         return self._models_field_get(cr, uid, 'model', 'model_id.name', context)
