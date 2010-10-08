@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -50,8 +50,8 @@ class report_membership(osv.osv):
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
-        'date_from': fields.datetime('Start Date', readonly=True, help="Start membership date"),                          
-        'date_to': fields.datetime('End Date', readonly=True, help="End membership date"),                          
+        'date_from': fields.datetime('Start Date', readonly=True, help="Start membership date"),
+        'date_to': fields.datetime('End Date', readonly=True, help="End membership date"),
         'num_canceled': fields.integer('# Canceled', readonly=True),
         'num_old': fields.integer('# Old', readonly=True),
         'num_waiting': fields.integer('# Waiting', readonly=True),
@@ -59,7 +59,7 @@ class report_membership(osv.osv):
         'num_free': fields.integer('# Free', readonly=True),
         'num_paid': fields.integer('# Paid', readonly=True),
         'tot_pending': fields.float('Pending Amount', digits_compute= dp.get_precision('Account'), readonly=True),
-        'tot_earned': fields.float('Earned Amount', digits_compute= dp.get_precision('Account'), readonly=True),            
+        'tot_earned': fields.float('Earned Amount', digits_compute= dp.get_precision('Account'), readonly=True),
         'state':fields.selection(STATE, 'Membership State'),
         'partner_id': fields.many2one('res.partner', 'Members', readonly=True),
         'membership_id': fields.many2one('product.product', 'Membership Product', readonly=True),
@@ -73,15 +73,15 @@ class report_membership(osv.osv):
         cr.execute("""
     CREATE OR REPLACE VIEW report_membership AS (
         SELECT
-        MIN(id) as id,
-        COUNT(num_canceled) as num_canceled,
-        COUNT(num_old) as num_old,
-        COUNT(num_waiting) as num_waiting,
-        COUNT(num_invoiced) as num_invoiced,
-        COUNT(num_free) as num_free,
-        COUNT(num_paid) as num_paid,
-        SUM(tot_pending) as tot_pending,
-        SUM(tot_earned) as tot_earned,
+        MIN(id) AS id,
+        COUNT(num_canceled) AS num_canceled,
+        COUNT(num_old) AS num_old,
+        COUNT(num_waiting) AS num_waiting,
+        COUNT(num_invoiced) AS num_invoiced,
+        COUNT(num_free) AS num_free,
+        COUNT(num_paid) AS num_paid,
+        SUM(tot_pending) AS tot_pending,
+        SUM(tot_earned) AS tot_earned,
         year,
         month,
         date_from,
@@ -91,7 +91,7 @@ class report_membership(osv.osv):
         company_id,
         user_id,
         state
-        FROM 
+        FROM
         (SELECT
             CASE WHEN ml.state = 'canceled' THEN ml.id END AS num_canceled,
             CASE WHEN ml.state = 'old'      THEN ml.id END AS num_old,
@@ -115,20 +115,20 @@ class report_membership(osv.osv):
             LEFT JOIN account_invoice_line il ON (ml.account_invoice_line = il.id)
             LEFT JOIN account_invoice ai ON (il.invoice_id = ai.id)
             LEFT JOIN res_partner p ON (ml.partner = p.id)
-            GROUP BY 
-                 TO_CHAR(ml.date_from, 'YYYY'),  
-                 TO_CHAR(ml.date_from, 'MM'), 
-                 TO_CHAR(ml.date_from, 'YYYY-MM-DD'), 
-                 TO_CHAR(ml.date_to, 'YYYY-MM-DD'), 
+            GROUP BY
+                 TO_CHAR(ml.date_from, 'YYYY'),
+                 TO_CHAR(ml.date_from, 'MM'),
+                 TO_CHAR(ml.date_from, 'YYYY-MM-DD'),
+                 TO_CHAR(ml.date_to, 'YYYY-MM-DD'),
                  ml.partner,
-                 ml.id, 
+                 ml.id,
                  p.user_id,
                  ml.company_id,
                  ml.state,
                  ml.membership_id) AS foo
         GROUP BY year, month, date_from, date_to, partner_id, user_id, membership_id, company_id, state)
                 """)
-        
+
 report_membership()
 
-#
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
