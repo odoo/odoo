@@ -124,6 +124,8 @@ class account_installer(osv.osv_memory):
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         obj_multi = self.pool.get('account.chart.template').browse(cr, uid, id)
 
+        record = self.browse(cr, uid, ids, context=context)[0]
+
         if context is None:
             context = {}
         company_id = self.browse(cr, uid, ids, context)[0].company_id
@@ -250,7 +252,7 @@ class account_installer(osv.osv_memory):
                 check_result = mod_obj._get_id(cr, uid, 'account', 'conf_account_type_chk')
                 check_type_id = mod_obj.read(cr, uid, [check_result], ['res_id'])[0]['res_id']
 
-                record = self.browse(cr, uid, ids, context=context)[0]
+#                record = self.browse(cr, uid, ids, context=context)[0]
                 code_cnt = 1
                 vals_seq = {
                         'name': _('Bank Journal '),
@@ -485,8 +487,8 @@ class account_installer(osv.osv_memory):
             for position in obj_fiscal_position_template.browse(cr, uid, fp_ids):
 
                 vals_fp = {
-                           'company_id' : company_id.id,
-                           'name' : position.name,
+                           'company_id': company_id.id,
+                           'name': position.name,
                            }
                 new_fp = obj_fiscal_position.create(cr, uid, vals_fp)
 
@@ -495,17 +497,17 @@ class account_installer(osv.osv_memory):
 
                 for tax in position.tax_ids:
                     vals_tax = {
-                                'tax_src_id' : tax_template_ref[tax.tax_src_id.id],
-                                'tax_dest_id' : tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                                'position_id' : new_fp,
+                                'tax_src_id': tax_template_ref[tax.tax_src_id.id],
+                                'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
+                                'position_id': new_fp,
                                 }
                     obj_tax_fp.create(cr, uid, vals_tax)
 
                 for acc in position.account_ids:
                     vals_acc = {
-                                'account_src_id' : acc_template_ref[acc.account_src_id.id],
-                                'account_dest_id' : acc_template_ref[acc.account_dest_id.id],
-                                'position_id' : new_fp,
+                                'account_src_id': acc_template_ref[acc.account_src_id.id],
+                                'account_dest_id': acc_template_ref[acc.account_dest_id.id],
+                                'position_id': new_fp,
                                 }
                     obj_ac_fp.create(cr, uid, vals_acc)
 
@@ -646,7 +648,7 @@ class account_installer(osv.osv_memory):
                         obj_acc.write(cr, uid, default_account_ids, {'tax_ids':[(6,0,[purchase_tax])]})
                     tax_val.update({'supplier_taxes_id':[(6,0,[purchase_tax])]})
                     default_tax.append(('supplier_taxes_id',purchase_tax))
-                if len(tax_val):
+                if tax_val:
                     product_ids = obj_product.search(cr, uid, [])
                     for product in obj_product.browse(cr, uid, product_ids):
                         obj_product.write(cr, uid, product.id, tax_val)

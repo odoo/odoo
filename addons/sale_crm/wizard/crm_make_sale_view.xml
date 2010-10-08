@@ -8,15 +8,15 @@
           <field name="model">crm.make.sale</field>
           <field name="type">form</field>
           <field name="arch" type="xml">
-              <form string="Create a Sale Order" >
-                    <group colspan="4">
-                        <field name="partner_id" required="1"/>
-                        <field name="shop_id" required="1" widget="selection"/>
-                        <field name="analytic_account" domain="[('type','=','normal')]"
-                            groups="base.group_extended"/>
-                        <field name="close"/>
-                    </group>
-                    <newline/>
+            <form string="Create a Sale Order" >
+                <group colspan="4">
+                    <field name="partner_id" required="1"/>
+                    <field name="shop_id" required="1" widget="selection"/>
+                    <field name="analytic_account" domain="[('type','=','normal')]"
+                        groups="base.group_extended"/>
+                    <field name="close"/>
+                </group>
+                <newline/>
                 <separator colspan="4"/>
                 <group col="4" colspan="4">
                     <label string="" colspan="2"/>

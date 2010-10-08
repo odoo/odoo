@@ -33,7 +33,7 @@ class hr_evaluation_plan(osv.osv):
         'name': fields.char("Evaluation Plan", size=64, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Evaluation Phases'),
-        'month_first': fields.integer('First Evaluation After'),
+        'month_first': fields.integer('Next Evaluation After'),
         'month_next': fields.integer('After the Date of Start'),
         'active': fields.boolean('Active')
     }
@@ -115,12 +115,11 @@ class hr_employee(osv.osv):
         return True
 
     def onchange_evaluation_plan_id(self, cr, uid, ids, evaluation_plan_id, evaluation_date, context=None):
-        evaluation_date = evaluation_date or False
-        evaluation_plan_obj=self.pool.get('hr_evaluation.plan')
-        obj_evaluation = self.pool.get('hr_evaluation.evaluation')
         if context is None:
             context = {}
         if evaluation_plan_id:
+            evaluation_plan_obj=self.pool.get('hr_evaluation.plan')
+            obj_evaluation = self.pool.get('hr_evaluation.evaluation')
             flag = False
             evaluation_plan =  evaluation_plan_obj.browse(cr, uid, [evaluation_plan_id], context=context)[0]
             if not evaluation_date:
@@ -192,11 +191,11 @@ class hr_evaluation(osv.osv):
         return res
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
-        employee_obj=self.pool.get('hr.employee')
         if context is None:
             context = {}
-        evaluation_plan_id=''
+        evaluation_plan_id=False
         if employee_id:
+            employee_obj=self.pool.get('hr.employee')
             for employee in employee_obj.browse(cr, uid, [employee_id], context=context):
                 if employee and employee.evaluation_plan_id and employee.evaluation_plan_id.id:
                     evaluation_plan_id=employee.evaluation_plan_id.id
@@ -259,6 +258,7 @@ class hr_evaluation(osv.osv):
     def button_done(self,cr, uid, ids, context=None):
         if context is None:
             context = {}
+        self.write(cr, uid, ids,{'progress': 1 * 100}, context=context)
         self.write(cr, uid, ids,{'state':'done', 'date_close': time.strftime('%Y-%m-%d')}, context=context)
         return True
 

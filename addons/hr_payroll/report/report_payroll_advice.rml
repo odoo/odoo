@@ -151,7 +151,7 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_Bold_9">[[ o.bank or 'Bank' ]]</para>
+          <para style="terp_default_Bold_9">[[ o.bank_id and o.bank_id.name or 'Bank' ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9">
@@ -199,10 +199,10 @@
           <para style="terp_tblheader_Details">Name of the Employee</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Amount([[ company.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Right">Amount</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">By Sal([[ company.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Right">By Salary</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Bank Account</para>

@@ -143,6 +143,7 @@ class account_cash_statement(osv.osv):
                         res[statement.id] -= res_currency_obj.compute(cursor,
                                 user, company_currency_id, currency_id,
                                 line.credit, context=context)
+
             if statement.state in ('draft', 'open'):
                 for line in statement.line_ids:
                     res[statement.id] += line.amount
@@ -250,6 +251,12 @@ class account_cash_statement(osv.osv):
 
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id']).type == 'cash':
             open_close = self._get_cash_open_close_box_lines(cr, uid, context)
+            if vals.get('starting_details_ids',False):
+                for start in vals.get('starting_details_ids'):
+                    dict_val = start[2]
+                    for end in open_close['end']:
+                       if end[2]['pieces'] == dict_val['pieces']:
+                           end[2]['number'] += dict_val['number']
             vals.update({
                 'ending_details_ids':open_close['start'],
                 'starting_details_ids':open_close['end']
@@ -260,7 +267,7 @@ class account_cash_statement(osv.osv):
                 'starting_details_ids':False
             })
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
-        #self.write(cr, uid, [res_id], {})
+        self.write(cr, uid, [res_id], {})
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -369,6 +376,14 @@ class account_cash_statement(osv.osv):
     def button_confirm_cash(self, cr, uid, ids, context=None):
         super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'closing_date':time.strftime("%Y-%m-%d %H:%M:%S")}, context=context)
+
+    def button_cancel(self, cr, uid, ids, context=None):
+        cash_box_line_pool = self.pool.get('account.cashbox.line')
+        super(account_cash_statement, self).button_cancel(cr, uid, ids, context=context)
+        for st in self.browse(cr, uid, ids, context):
+            for end in st.ending_details_ids:
+                cash_box_line_pool.write(cr, uid, [end.id], {'number':0})
+        return True
 
 account_cash_statement()
 

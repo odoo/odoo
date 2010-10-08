@@ -9,14 +9,14 @@
             <field name="domain">[('state','in',('confirm', 'accepted'))]</field>
             <field name="view_id" ref="hr_expense.view_editable_expenses_tree"/>
         </record>
-        
+
         <record id="board_hr_manager_expense_form" model="ir.ui.view">
             <field name="name">board.hr.manager.expense.form</field>
             <field name="model">board.board</field>
-			<field name="inherit_id" ref="hr.board_hr_manager_form"/>              
+			<field name="inherit_id" ref="hr.board_hr_manager_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-      		<xpath expr="/form/hpaned/child1" position="inside"> 
+      		<xpath expr="/form/hpaned/child1" position="inside">
 				 <action colspan="4" height="220" name="%(action_employee_expense)d" string="All Employee Expenses" />
 			</xpath>
             </field>

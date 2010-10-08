@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import osv, fields
+
+from osv import osv
 
 class account_central_journal(osv.osv_memory):
     _name = 'account.central.journal'
