@@ -83,7 +83,6 @@ class report_custom(report_rml):
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if att['action'] == 'sign_out':
                             week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + ((dt - ldt).seconds/3600)
-                        ldt = dt
 
                 # Week xml representation
                 week_repr = ['<week>', '<weekstart>%s</weekstart>' % monday.strftime('%Y-%m-%d'), '<weekend>%s</weekend>' % n_monday.strftime('%Y-%m-%d')]
