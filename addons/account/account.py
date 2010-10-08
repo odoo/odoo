@@ -1776,26 +1776,25 @@ class account_tax(osv.osv):
 
     def _unit_compute(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None, quantity=0):
         taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
-
         res = []
         cur_price_unit=price_unit
         for tax in taxes:
             # we compute the amount for the current tax object and append it to the result
 
             data = {'id':tax.id,
-                            'name':tax.description and tax.description + " - " + tax.name or tax.name,
-                            'account_collected_id':tax.account_collected_id.id,
-                            'account_paid_id':tax.account_paid_id.id,
-                            'base_code_id': tax.base_code_id.id,
-                            'ref_base_code_id': tax.ref_base_code_id.id,
-                            'sequence': tax.sequence,
-                            'base_sign': tax.base_sign,
-                            'tax_sign': tax.tax_sign,
-                            'ref_base_sign': tax.ref_base_sign,
-                            'ref_tax_sign': tax.ref_tax_sign,
-                            'price_unit': cur_price_unit,
-                            'tax_code_id': tax.tax_code_id.id,
-                            'ref_tax_code_id': tax.ref_tax_code_id.id,
+                    'name':tax.description and tax.description + " - " + tax.name or tax.name,
+                    'account_collected_id':tax.account_collected_id.id,
+                    'account_paid_id':tax.account_paid_id.id,
+                    'base_code_id': tax.base_code_id.id,
+                    'ref_base_code_id': tax.ref_base_code_id.id,
+                    'sequence': tax.sequence,
+                    'base_sign': tax.base_sign,
+                    'tax_sign': tax.tax_sign,
+                    'ref_base_sign': tax.ref_base_sign,
+                    'ref_tax_sign': tax.ref_tax_sign,
+                    'price_unit': cur_price_unit,
+                    'tax_code_id': tax.tax_code_id.id,
+                    'ref_tax_code_id': tax.ref_tax_code_id.id,
             }
             res.append(data)
             if tax.type=='percent':
