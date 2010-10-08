@@ -78,8 +78,6 @@ def _import(obj, cursor, user, data, context=None):
     voucher_obj = pool.get('account.voucher')
     voucher_line_obj = pool.get('account.voucher.line')
     move_line_obj = pool.get('account.move.line')
-    property_obj = pool.get('ir.property')
-    model_fields_obj = pool.get('ir.model.fields')
     attachment_obj = pool.get('ir.attachment')
     file = data['form']['file']
     statement_id = data['id']
@@ -149,7 +147,7 @@ def _import(obj, cursor, user, data, context=None):
     account_receivable = False
     account_payable = False
     statement = statement_obj.browse(cursor, user, statement_id, context=context)
-   
+
     for record in records:
         # Remove the 11 first char because it can be adherent number
         # TODO check if 11 is the right number
@@ -162,7 +160,7 @@ def _import(obj, cursor, user, data, context=None):
             'type': (record['amount'] >= 0 and 'customer') or 'supplier',
             'statement_id': statement_id,
         }
-        
+
         line_ids = move_line_obj.search(cursor, user, [
             ('ref', 'like', reference),
             ('reconcile_id', '=', False),
@@ -171,7 +169,6 @@ def _import(obj, cursor, user, data, context=None):
         if not line_ids:
             line_ids = _reconstruct_invoice_ref(cursor, user, reference, None)
 
-        line2reconcile = False
         partner_id = False
         account_id = False
         for line in move_line_obj.browse(cursor, user, line_ids, context=context):
@@ -181,12 +178,12 @@ def _import(obj, cursor, user, data, context=None):
             move_id = line.move_id.id
             if record['amount'] >= 0:
                 if round(record['amount'] - line.debit, 2) < 0.01:
-                    line2reconcile = line.id
+#                    line2reconcile = line.id
                     account_id = line.account_id.id
                     break
             else:
                 if round(line.credit + record['amount'], 2) < 0.01:
-                    line2reconcile = line.id
+#                    line2reconcile = line.id
                     account_id = line.account_id.id
                     break
         result = voucher_obj.onchange_partner_id(cursor, user, [], partner_id=partner_id, journal_id=statement.journal_id.id, price=abs(record['amount']), currency_id= statement.currency.id, ttype='payment', context=context)
