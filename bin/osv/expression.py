@@ -284,10 +284,15 @@ class expression(object):
                             context = {}                        
                         c = context.copy()
                         c['active_test'] = False
-                        dict_op = {'not in':'!=','in':'='}
+                        #Special treatment to ill-formed domains
+                        operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
+                        
+                        dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in','<>':'not in'}
                         if isinstance(right,tuple):
                             right = list(right)
                         if (not isinstance(right,list)) and operator in ['not in','in']:
+                            operator = dict_op[operator]
+                        elif isinstance(right,list) and operator in ['<>','!=','=']: #for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
                         res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)
                         if not res_ids:
@@ -297,14 +302,22 @@ class expression(object):
                             return (left, 'in', right)
 
                     m2o_str = False
-                    if isinstance(right, basestring): # and not isinstance(field, fields.related):
-                        m2o_str = True
-                    elif isinstance(right, list) or isinstance(right, tuple):
-                        m2o_str = True
-                        for ele in right:
-                            if not isinstance(ele, basestring): 
-                                m2o_str = False
-                                break
+                    if right:
+                        if isinstance(right, basestring): # and not isinstance(field, fields.related):
+                            m2o_str = True
+                        elif isinstance(right,(list,tuple)):
+                            m2o_str = True
+                            for ele in right:
+                                if not isinstance(ele, basestring): 
+                                    m2o_str = False
+                                    break
+                    else:
+                        new_op = '='
+                        if operator in  ['not like','not ilike','not in','<>','!=']:
+                            new_op = '!='
+                        #Is it ok to put 'left' and not 'id' ?
+                        self.__exp[i] = (left,new_op,False)
+                        
                     if m2o_str:
                         self.__exp[i] = _get_expression(field_obj,cr, uid, left, right, operator, context=context)
             else:

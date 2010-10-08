@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,23 +15,17 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import tools
+from osv import fields,osv
 
-import country
-import bank
-import res_lang
-import partner
-import res_config
-import res_currency
-import res_company
-import res_user
-import res_request
-import res_lang 
-import res_log 
-import ir_property
-import res_widget
-
+class res_widget(osv.osv):
+    _name = "res.widget"
+    _rec_name = "title"
+    _columns = {
+        'title' : fields.char('Title', size=64, required=True),
+        'content': fields.text('Content', required=True)
+    }
+res_widget()

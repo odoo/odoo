@@ -114,9 +114,13 @@ class report_xml(osv.osv):
 
         'report_xsl': fields.char('XSL path', size=256),
         'report_xml': fields.char('XML path', size=256, help=''),
-        'report_rml': fields.char('RML path', size=256, help="The .rml path of the file or NULL if the content is in report_rml_content"),
-        'report_sxw': fields.function(_report_sxw, method=True, type='char', string='SXW path'),
 
+        # Pending deprecation... to be replaced by report_file as this object will become the default report object (not so specific to RML anymore)
+        'report_rml': fields.char('Main report file path', size=256, help="The path to the main report file (depending on Report Type) or NULL if the content is in another data field"),
+        # temporary related field as report_rml is pending deprecation - this field will replace report_rml after v6.0
+        'report_file': fields.related('report_rml', type="char", size=256, required=False, readonly=False, string='Report file', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
+
+        'report_sxw': fields.function(_report_sxw, method=True, type='char', string='SXW path'),
         'report_sxw_content_data': fields.binary('SXW content'),
         'report_rml_content_data': fields.binary('RML content'),
         'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, method=True, type='binary', string='SXW content',),
