@@ -86,7 +86,7 @@ class base_setup_company(osv.osv_memory):
         'street2':fields.char('Street 2', size=128),
         'zip':fields.char('Zip Code', size=24),
         'city':fields.char('City', size=128),
-        'state_id':fields.selection(_get_all_states, 'State'),
+        'state_id':fields.selection(_get_all_states, 'Fed. State'),
         'country_id':fields.selection(_get_all_countries, 'Country'),
         'email':fields.char('E-mail', size=64),
         'phone':fields.char('Phone', size=64),
@@ -105,7 +105,7 @@ We suggest you to put bank information here:
 IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
         'logo':fields.binary('Logo'),
         'account_no':fields.char('Account No', size=64),
-        'website': fields.char('Web', size=64),
+        'website': fields.char('Company Website', size=64, help="Exemple: http://openerp.com"),
     }
 
     def execute(self, cr, uid, ids, context=None):

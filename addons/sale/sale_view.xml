@@ -199,17 +199,17 @@
                             </group>
                             <group col="13" colspan="4">
                                 <field name="state"/>
-                                <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
-                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-print"/>
+                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
                                 <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="gtk-apply"/>
                                 <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-ok"/>
                                 <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-apply"/>
                                 <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
-                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="terp-document-new"/>
+                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="gtk-go-forward"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                 <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
+                                <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
                             </group>
                         </page>
                         <page string="Other Information">
@@ -549,7 +549,6 @@ to your configuration: from the sales order, from the pickings, etc.
                   <field name="step"/>
                 </group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
-               
               </data>
             </field>
         </record>
