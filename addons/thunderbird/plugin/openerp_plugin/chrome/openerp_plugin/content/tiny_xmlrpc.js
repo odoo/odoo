@@ -1831,10 +1831,8 @@ function testConnection(){
 function testConnection_web(){
 	var branchobj = getPref();
     weburl = getWebServerURL();
-    var urlport = weburl
-        alert(urlport + " " + "\n\n" + "You can copy this URL into your WebBrowser if URL is not redirected automatic.");
-    window.close();
-    window.open(urlport); 
+    alert(weburl);
+    window.open(weburl, "", "chrome","resizable=yes,scrollbars=yes,status=yes");
     
 }
 
