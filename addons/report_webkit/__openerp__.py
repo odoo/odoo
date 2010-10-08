@@ -30,9 +30,9 @@
 ##############################################################################
 
 {
-    "name" : "webkit report",
-    "description" : """Report system base on WebKit engine (wkhtmltopd lib) that allows to do HTML2PDF reporting.
-The module structure and some is inspired of the report_openoffice module
+    "name" : "Webkit Report Engine",
+    "description" : """This module adds a new Report Engine based on WebKit library (wkhtmltopdf) to support reports designed in HTML + CSS.
+The module structure and some code is inspired by the report_openoffice module.
 The module allows:
     -HTML report definition
     -Multi header support 
@@ -44,19 +44,21 @@ The module allows:
     -Book printing capabilities
     -Margins definition 
     -Paper size definition
-and munch more
+and much more
 
-Many header are defined per company
-Many logo are defined per company
-CSS style, header and footer body are defined in the company
+Multiple headers and logos can be defined per company.
+CSS style, header and footer body are defined per company
 
-The mapper library can be found here
+The library to install can be found here
 http://code.google.com/p/wkhtmltopdf/
-The libraries are included for Linux, Mac OS X i386 and Windows 32.
+The system libraries are available for Linux, Mac OS X i386 and Windows 32.
 
-A sample invoice report is defined in the report. 
-You have to create the print button by calling a wizard. For more details :
+After installing the wkhtmltopdf library on the OpenERP Server machine, you need to set the
+path to the wkthtmltopdf executable file on the Company.
+
+For a sample report see also the webkit_report_sample module, and this video:
     http://files.me.com/nbessi/06n92k.mov 
+
 
 TODO :
 JavaScript support activation deactivation
@@ -67,8 +69,9 @@ Web client WYSIWYG
     "version" : "0.9",
     "depends" : ["base"],
     "author" : "Camptocamp SA - NBessi",
-    "init_xml" : [],
-    "update_xml": [
+    "category": "Reports/Webkit",
+    "url": "http://http://www.camptocamp.com/",
+    "data": [
                         "company_view.xml",
                         "header_view.xml",
                         "ir_report_view.xml",

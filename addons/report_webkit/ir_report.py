@@ -38,12 +38,6 @@ import tools
 from tools.translate import _
 import os
 
-def delete_report_service(name):
-    "Delete the report of the known services"
-    name = 'report.%s' % name
-    if netsvc.Service._services.get( name, False ):
-        del netsvc.Service._services
-
 def register_report(name, model, tmpl_path, parser):
     "Register the report into the services"
     name = 'report.%s' % name
@@ -65,21 +59,7 @@ class ReportXML(osv.osv):
             if record['report_type'] == 'webkit':
                 parser=rml_parse
                 register_report(record['report_name'], record['model'], record['report_rml'], parser)
-        return value        
-
-    def _report_content(self, cursor, user, ids, name, arg, context=None):
-        """Ask OpenERP for Doc String ??"""
-        res = {}
-        for report in self.browse(cursor, user, ids, context=context):
-            data = report[name + '_data']
-            if not data and report[name[:-8]]:
-                try:
-                    fp = tools.file_open(report[name[:-8]], mode='rb')
-                    data = fp.read()
-                except:
-                    data = False
-            res[report.id] = data
-        return res
+        return value
 
     def unlink(self, cursor, user, ids, context=None):
         """Delete report and unregister it"""
@@ -88,11 +68,14 @@ class ReportXML(osv.osv):
         trans_ids = trans_obj.search(
             cursor, 
             user,
-            [('type', '=', 'webkit'), ('res_id', 'in', ids)]
+            [('type', '=', 'report'), ('res_id', 'in', ids)]
         )
         trans_obj.unlink(cursor, user, trans_ids)
-        for record in records:
-            delete_report_service(record['report_name'])
+
+        # Warning: we cannot unregister the services at the moment
+        # because they are shared across databases. Calling a deleted
+        # report will fail so it's ok. 
+
         records = None
         res = super(ReportXML, self).unlink(
                                             cursor, 
@@ -107,23 +90,16 @@ class ReportXML(osv.osv):
         "Create report and register it"
         res = super(ReportXML, self).create(cursor, user, vals, context)
         parser=rml_parse
-        try:
-            register_report(
-                                vals['report_name'], 
-                                vals['model'], 
-                                vals.get('report_rml', False), 
-                                parser
-                            )
-        except Exception, e:
-            print e
-            raise osv.except_osv(
-                                    _('Report registration error !'), 
-                                    _('Report was not registered in system !')
-                                )
+        register_report(
+                        vals['report_name'], 
+                        vals['model'], 
+                        vals.get('report_rml', False), 
+                        parser
+                        )
         return res
         
     def write(self, cursor, user, ids, vals, context=None):
-        "Edit report and manage it regitration"
+        "Edit report and manage it registration"
         parser=rml_parse
         record = self.read(cursor, user, ids)
         if isinstance(record, list) :
@@ -134,33 +110,20 @@ class ReportXML(osv.osv):
             report_name = vals['report_name']
         else:
             report_name = record['report_name']
-        try:
-            register_report( 
-                                report_name, 
-                                vals.get('model', record['model']), 
-                                vals.get('report_rml', record['report_rml']), 
-                                parser
-                            )
-        except Exception, e:
-            print e
-            raise osv.except_osv(
-                                    _('Report registration error !'), 
-                                    _('Report was not registered in system !')
-                                )
+
+        register_report(
+                        report_name, 
+                        vals.get('model', record['model']), 
+                        vals.get('report_rml', record['report_rml']), 
+                        parser
+                        )
         res = super(ReportXML, self).write(cursor, user, ids, vals, context)
         return res
-
-    def _report_content_inv(self, cursor, user, inid, 
-        name, value, arg, context=None):
-        """Ask OpenERP for Doc String ??"""
-        
-        self.write(cursor, user, inid, {name+'_data': value}, context=context)
-
 
     _name = 'ir.actions.report.xml'
     _inherit = 'ir.actions.report.xml'
     _columns = {
-        'webkit_header':  fields.property(   
+        'webkit_header':  fields.property(
                                             'ir.header_webkit',
                                             type='many2one',
                                             relation='ir.header_webkit',
@@ -170,12 +133,8 @@ class ReportXML(osv.osv):
                                             view_load=True,
                                             required=True
                                         ),
-        'report_webkit': fields.char( 
-                                        'WebKit HTML path',
-                                        size=256,
-                                    ),
-        'webkit_debug' : fields.boolean('Webkit debug'),
-        'report_webkit_data': fields.text('WebKit HTML content'),
+        'webkit_debug' : fields.boolean('Webkit debug', help="Enable the webkit engine debugger"),
+        'report_webkit_data': fields.text('Webkit Template', help="This template will be used if the main report file is not found"),
     }
 
 ReportXML()

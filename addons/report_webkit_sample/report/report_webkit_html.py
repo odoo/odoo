@@ -13,5 +13,5 @@ class report_webkit_html(report_sxw.rml_parse):
         
 report_sxw.report_sxw('report.webkitaccount.invoice',
                        'account.invoice', 
-                       'addons/c2c_webkit_invoice/report/report_webkit_html.mako',
+                       'addons/report_webkit_sample/report/report_webkit_html.mako',
                        parser=report_webkit_html)

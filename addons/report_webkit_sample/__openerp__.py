@@ -30,18 +30,21 @@
 ##############################################################################
 
 {
-    "name" : "webkit report",
-    "description" : """Sample webkit Invoice Report  base on WebKit engine (wkhtmltopd lib) that allows to do HTML2PDF reporting.
+    "name" : "Webkit Report Samples",
+    "description" : """Samples for Webkit Report Engine (report_webkit module).
 
-    A sample invoice report is defined . 
-    You have to create the print button by calling a wizard. For more details :
+    A sample invoice report is included in this module, as well as a wizard to
+    add Webkit Report entries on any Document in the system.
+      
+    You have to create the print buttons by calling the wizard. For more details see:
         http://files.me.com/nbessi/06n92k.mov 
                     """,
     "version" : "0.9",
-    "depends" : ["base", "account","c2c_webkit_report"],
+    "depends" : ["base", "account", "report_webkit"],
+    "category": "Reports/Webkit",
     "author" : "Camptocamp SA - NBessi",
-    "init_xml" : ['data.xml'],
-    "update_xml": [     
+    "url": "http://www.camptocamp.com/",
+    "data": [           'data.xml',
                         "wizard_report_actions_view.xml",
                         "report_webkit_html_view.xml",
                    ],
