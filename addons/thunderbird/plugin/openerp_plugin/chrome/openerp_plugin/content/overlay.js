@@ -301,10 +301,17 @@ var listDocumentHandler = {
         res_id = res.QueryElementAt(1, Components.interfaces.nsISupportsPRInt32);
 		model = res.QueryElementAt(0, Components.interfaces.nsISupportsCString); 
         weburl = getWebServerURL();
-        
-        var t = weburl + "/openerp/form/view?model=" + model +"&id=" + res_id;
-        window.open(t, "", "chrome","resizable=yes,scrollbars=yes,status=yes");
-         
+        if(res_id==0)
+        {
+            alert("Document is not available.");
+            return;
+        }
+        else
+        {
+            var t = weburl + "/openerp/form/view?model=" + model +"&id=" + res_id;
+            window.open(t, "", "chrome","resizable=yes,scrollbars=yes,status=yes,"); 
+        }
+
 	},
 	onFault: function (client, ctxt, fault) {
 
@@ -342,6 +349,14 @@ function open_document()
 	IETexported = 0;
 	var msguri = emlsArray[0];
 
+    //gives the selected email uri
+	var messageUri= gDBView.URIForFirstSelectedMessage;
+
+	var messenger = Components.classes['@mozilla.org/messenger;1'].createInstance(Components.interfaces.nsIMessenger);
+
+	//gives the selected email object 
+	var message = messenger.messageServiceFromURI(messageUri).messageURIToMsgHdr(messageUri);
+    
 	
 	var branchobj = getPref();
 	setServerService('xmlrpc/object');
@@ -357,9 +372,8 @@ function open_document()
 	strmethod.data = 'search_message';
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
-    var eml_string = parse_eml()
-	var a = ['message'];
-	var b = [eml_string];
+	var a = ['message_id'];
+	var b = ['<'+message.messageId+'>'];
 	var arrofarr = dictcontact(a,b); 
 	xmlRpcClient.asyncCall(listDocumentHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }

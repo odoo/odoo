@@ -3,7 +3,7 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/create.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.createContact()" height="460" width="860">
+	title="&title.label;" onload="myPrefObserver.createContact();" height="460" width="860">
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
@@ -57,7 +57,7 @@
  
     <hbox>
          <label  align="right" id="countryname"  value="&country.value;" width="97" />
-         <menulist id="country" width="190">
+         <menulist id="country" width="190" oncommand= "getAllState();" >
            <menupopup>
 	     <menuitem label="" value=""/>
    	    </menupopup>
