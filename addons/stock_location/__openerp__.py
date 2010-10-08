@@ -83,7 +83,6 @@ product (i.e. the destination location of that procurement order).
     
     'installable': True,
     'test':[''
-            'test/stock_location.yml',
             'test/stock_location_pull_flow.yml',
             'test/stock_location_push_flow.yml',
             ],

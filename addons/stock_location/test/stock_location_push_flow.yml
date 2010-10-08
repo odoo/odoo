@@ -42,7 +42,7 @@
     procure_method: make_to_stock
     seller_ids:
       - delay: 1
-        name: res_partner_diasorinltd0
+        name: res_partner_microlinktechnologies0
         min_qty: 5.0
     path_ids:
       - auto: auto
@@ -103,7 +103,7 @@
       for move in pick.move_lines:
          assert(move.state == 'waiting'), _('Stock  is  not in waiting state')
 -
-  I receive the order of the supplier DiaSorin from the Incoming Shipments menu.
+  I receive the order of the supplier Micro Link Technologies from the Incoming Shipments menu.
 -
   !python {model: stock.picking }: |
    import time
