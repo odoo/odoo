@@ -25,7 +25,7 @@ class res_widget(osv.osv):
     _name = "res.widget"
     _rec_name = "title"
     _columns = {
-                'title' : fields.char('Title', size=64),
-                'content': fields.text('Content')
-                }
+        'title' : fields.char('Title', size=64, required=True),
+        'content': fields.text('Content', required=True)
+    }
 res_widget()
