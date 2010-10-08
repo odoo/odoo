@@ -22,19 +22,22 @@
 from osv import fields, osv
 import tools
 import time
+
 class res_log(osv.osv_memory):
     _name = 'res.log'
     _columns = {
         'name': fields.char('Message', size=128, help='The logging message.', required=True),
         'user_id': fields.many2one('res.users','User', required=True),
         'res_model': fields.char('Object', size=128),
+        'context': fields.char('Context', size=250),
         'res_id': fields.integer('Object ID'),
         'secondary': fields.boolean('Secondary Log', help='Do not display this log if it belongs to the same object the user is working on'),
         'create_date': fields.datetime('Created Date', readonly=True),
     }
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid,
-        'create_date': time.strftime('%Y-%m-%d %H:%M:%S')
+        'create_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'context': lambda *args: "{}"
     }
     _order='create_date desc'
 
