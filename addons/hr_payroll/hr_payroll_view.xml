@@ -87,7 +87,6 @@
         <!-- End Passport Views -->
 
         <!-- Employee View -->
-        
         <record id="view_employee_bank_form" model="ir.ui.view">
             <field name="name">res.partner.bank.form</field>
             <field name="model">res.partner.bank</field>
@@ -157,7 +156,6 @@
                                             <field name="advantages_gross"/>
                                             <field name="advantages" nolabel="1" colspan="2"/>
                                         </group>
-                                        
                                     </page>
                                     <page string="Work Permit">
                                         <group col="2" colspan="2">
@@ -192,7 +190,7 @@
                         <field name="line_ids" nolabel="1" colspan="4" string="Salary Structure">
                             <tree string="Salary Structure" editable="bottom">
                                 <field name="category_id" on_change="onchange_category(category_id)"/>
-                                <field name="sequence"/>
+                                <field name="sequence" groups="base.group_extended"/>
                                 <field name="name"/>
                                 <field name="code"/>
                                 <field name="type"/>
@@ -205,7 +203,6 @@
             </data>
             </field>
         </record>
-
         <record id="view_employee_passport_form" model="ir.ui.view">
             <field name="name">hr.employee.passport.form</field>
             <field name="model">hr.employee</field>
@@ -357,7 +354,7 @@
             <field name="arch" type="xml">
                 <tree string="Salary Structure" editable="bottom">
                     <field name="category_id" on_change="onchange_category(category_id)"/>
-                    <field name="sequence"/>
+                    <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="type"/>
@@ -385,7 +382,7 @@
                         <field name="type"/>
                         <field name="amount_type"/>
                         <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
-                        <field name="sequence"/>
+                        <field name="sequence" groups="base.group_extended"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Company contribution"/>
@@ -396,7 +393,7 @@
                             <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
                                 <tree string="Function Arguments" editable="bottom">
                                     <field name="name"/>
-                                    <field name="sequence"/>
+                                    <field name="sequence" groups="base.group_extended"/>
                                     <field name="from_val"/>
                                     <field name="to_val"/>
                                     <field name="amount_type"/>
@@ -449,7 +446,7 @@
                             <field name="line_ids" colspan="4" nolabel="1">
                                 <tree string="Salary Structure" editable="bottom">
                                     <field name="category_id" on_change="onchange_category(category_id)"/>
-                                    <field name="sequence"/>
+                                    <field name="sequence" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="code"/>
                                     <field name="type"/>

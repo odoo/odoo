@@ -1110,7 +1110,7 @@ class hr_payslip(osv.osv):
                 func = func_pool.read(cr, uid, function, ['line_ids'], context=context)
                 lines = slip_line_pool.browse(cr, uid, func['line_ids'], context=context)
 
-            lines += slip.employee_id.line_ids
+            #lines += slip.employee_id.line_ids
 
             ad = []
             lns = {}
@@ -1224,6 +1224,17 @@ class hr_payslip(osv.osv):
                 'contract_id':contract.id,
                 'company_id':slip.employee_id.company_id.id
             })
+            
+            for line in slip.employee_id.line_ids:
+                vals = {
+                    'amount':line.amount,
+                    'slip_id':slip.id,
+                    'employee_id':False,
+                    'function_id':False,
+                    'base':base
+                }
+                slip_line_pool.copy(cr, uid, line.id, vals, {})
+            
             self.write(cr, uid, [slip.id], update, context=context)
 
         for slip in self.browse(cr, uid, ids, context=context):
