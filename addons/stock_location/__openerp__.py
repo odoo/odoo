@@ -82,8 +82,10 @@ product (i.e. the destination location of that procurement order).
     'demo_xml': ['stock_location_demo.xml',],
     
     'installable': True,
-    'test':[
-            'test/stock_location.yml'
+    'test':[''
+            'test/stock_location.yml',
+            'test/stock_location_pull_flow.yml',
+            'test/stock_location_push_flow.yml',
             ],
     'active': False,
     'certificate': '0046505115101',
