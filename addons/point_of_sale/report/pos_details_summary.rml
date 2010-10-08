@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Detail of sales" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
     </pageTemplate>
@@ -20,9 +20,12 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
@@ -34,9 +37,12 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
@@ -108,7 +114,8 @@
     <paraStyle name="P2" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
     <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="P5" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="P5" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P6" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -147,14 +154,14 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="P4">
+    <para style="terp_default_9">
       <font color="white"> </font>
     </para>
     <para style="P4">Details of Sales</para>
-    <para style="P5">
+    <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="161.0,161.0,161.0" style="Table1">
+    <blockTable colWidths="161.0,161.0,80.0,80.0" style="Table1">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Company</para>
@@ -163,24 +170,30 @@
           <para style="terp_tblheader_General_Centre">Print Date</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Period</para>
+          <para style="terp_tblheader_General_Centre">Start Period</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Centre">End Period</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="161.0,161.0,161.0" style="Table2">
+    <blockTable colWidths="161.0,161.0,80.0,80.0" style="Table2">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ '%s' % getcompany(objects)]]</para>
+          <para style="P5">[[ '%s' % getcompany(objects)]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d'),date=True) ]]</para>
+          <para style="P5">[[ formatLang(time.strftime('%Y-%m-%d'),date=True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ '%s' % getperiod(objects) ]]</para>
+          <para style="P5">[[ '%s' % getstartperiod(objects) ]]</para>
+        </td>
+        <td>
+          <para style="P5">[[ '%s' % getendperiod(objects) ]]</para>
         </td>
       </tr>
     </blockTable>
-    <para style="terp_header">
+    <para style="terp_default_9">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="241.0,241.0" style="Table3">
@@ -196,13 +209,10 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_9">
-            <font face="Helvetica" size="6.0">[[ repeatIn(gettaxamount(objects).items(),'p') ]] </font>
-            <font face="Helvetica" size="8.0">[[ p[0] ]]</font>
-          </para>
+          <para style="P6">[[ repeatIn(gettaxamount(objects).items(),'p') ]] [[ p[0] ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ p[1] ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ p[1] ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -219,32 +229,20 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_9">
-            <font face="Helvetica" size="6.0">[[ repeatIn(getpayments(objects).items(),'t') ]]</font>
-            <font face="Helvetica" size="9.0">[[ t[0] ]]</font>
-          </para>
+          <para style="P6">[[ repeatIn(getpayments(objects).items(),'t') ]] <font face="Helvetica">[[ t[0] ]]</font></para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ '%.2f' % (t[1],) ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ '%.2f' % (t[1],) ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="241.0,241.0" style="Table8">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Summary</para>
+          <para style="terp_tblheader_Details">Summary</para>
         </td>
         <td>
           <para style="P2">

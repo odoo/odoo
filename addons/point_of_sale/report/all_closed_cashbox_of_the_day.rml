@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Cashbox of the day" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
     </pageTemplate>
@@ -71,6 +71,7 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -146,7 +147,7 @@
           <para style="terp_tblheader_General">St.Name</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Journal</para>
+          <para style="terp_tblheader_General">Journal</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Opening Date</para>
@@ -201,10 +202,10 @@
             <para style="terp_default_Bold_8">[[ statement['journal'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_8">[[ statement['date'] ]]</para>
+            <para style="P2">[[ statement['date'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_8">[[ statement['closing_date'] ]]</para>
+            <para style="P2">[[ statement['closing_date'] ]]</para>
           </td>
           <td>
             <para style="P1">[[ (get_bal(statement)) or '0.00' ]] [[company.currency_id.symbol]]</para>

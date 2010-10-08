@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Sales Lines" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="SalesLines" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="2.0" y1="57.0" width="537" height="728"/>
     </pageTemplate>
@@ -118,6 +118,9 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
     <blockTable colWidths="179.0,179.0,179.0" style="Table3">
       <tr>
         <td>
@@ -177,16 +180,16 @@
       <blockTable colWidths="178.0,61.0,71.0,77.0,73.0,76.0" style="Tableau7">
         <tr>
           <td>
-            <para style="terp_default_9">[[l.product_id.code]] [[l.product_id.name]]</para>
+            <para style="terp_default_9">[ [[l.product_id.code]] ] [[l.product_id.name]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[taxes(l)]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.qty) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.qty) ]] [[l.product_id.uom_id.name]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]] [[o.pricelist_id.currency_id. symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]] </para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(l.discount) ]]</para>
@@ -276,10 +279,10 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">Total</para>
+          <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_total + o.amount_tax) ]] [[o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total + o.amount_tax) ]] [[o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
     </blockTable>

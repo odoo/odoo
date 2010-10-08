@@ -38,7 +38,8 @@ class pos_details_summary(report_sxw.rml_parse):
             'getsuminvoice': self._sum_invoice,
             'gettaxamount': self._get_tax_amount,
             'getsalestotal': self._get_sales_total,
-            'getperiod': self._get_period,
+            'getstartperiod': self._get_start_period,
+            'getendperiod': self._get_end_period,            
             'getcompany':self.get_company
         })
 
@@ -119,14 +120,24 @@ class pos_details_summary(report_sxw.rml_parse):
     def _get_sales_total(self, objects):
         return reduce(lambda x, o: x + len(o.lines), objects, 0)
 
-    def _get_period(self, objects):
+    def _get_start_period(self, objects):
         date_orders = [obj.date_order for obj in objects]
         min_date = min(date_orders)
         max_date = max(date_orders)
         if min_date == max_date:
             return '%s' % min_date
         else:
-            return '%s - %s' % (min_date, max_date)
+            return '%s' % (min_date)
+
+    def _get_end_period(self, objects):
+        date_orders = [obj.date_order for obj in objects]
+        min_date = min(date_orders)
+        max_date = max(date_orders)
+        if min_date == max_date:
+            return '%s' % max_date
+        else:
+            return '%s' % (max_date)
+            
 
 
 

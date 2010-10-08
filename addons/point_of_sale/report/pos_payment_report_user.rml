@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Payment By User" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
     </pageTemplate>
@@ -61,6 +61,7 @@
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="6.0" leading="8" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -104,7 +105,13 @@
       <font color="white"> </font>
     </para>
     <para style="P2">Payment By User </para>
-    <para style="P2">
+    <para style="P3">
+      <font color="white"> </font>
+    </para>
+    <para style="P3">
+      <font color="white"> </font>
+    </para>
+    <para style="P3">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="241.0,241.0" style="Table1">
@@ -195,7 +202,7 @@
           <para style="terp_tblheader_General_Right">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(pos_payment_user_total(data['form'])) or removeParentNode('blockTable')]] [[company.currency_id.symbol]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(pos_payment_user_total(data['form'])) or removeParentNode('blockTable')]] [[company.currency_id.symbol]]</para>
         </td>
       </tr>
     </blockTable>

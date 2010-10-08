@@ -110,6 +110,7 @@
   </stylesheet>
   <images/>
   <story>
+	  <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>  
   	<para style="terp_default_9">
       <font color="white"> </font>
     </para>
@@ -169,32 +170,31 @@
      </tr>
     </blockTable>
     <section>
-	<para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
 	<section>
-      <para style="terp_default_8">[[ repeatIn(pos_payment(o), 'line_ids') ]]</para>
+<!--      <para style="terp_default_8">[[ repeatIn(pos_payment(o), 'line_ids') ]]</para>-->
       <blockTable colWidths="198.0,81.0,87.0,87.0,83.0" style="Tableau7">
         <tr>
           <td>
-            <para style="terp_default_9">[[ line_ids['name'] ]]</para>
+	          <para style="terp_default_8">[[ repeatIn(o.lines,'l') ]]</para>	      		          
+            <para style="terp_default_9">[ [[l.product_id.code]] ] [[ l.product_id.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.qty) ]] [[l.product_id.uom_id.name]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['discount']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.discount) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['price_unit']) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['total']) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal_incl)]] [[ company.currency_id.symbol ]]</para>
           </td>
-
         </tr>
       </blockTable>
        </section>
        </section>
-      <blockTable colWidths="198.0,81.0,87.0,87.0,83.0" style="Table1">
+      <blockTable colWidths="228.0,81.0,87.0,70.0,70.0" style="Table1">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -215,7 +215,7 @@
           <para style="terp_tblheader_Details">Net Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(pos_payment_total(o)) or removeParentNode('blockTable')]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total+o.amount_tax) or removeParentNode('blockTable')]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       </blockTable>
