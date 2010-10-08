@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="Analytic Defaults">
                     <field name="sequence"/>
-                    <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]"/>
+                    <field name="analytic_id" required="0" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
@@ -25,7 +25,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic Defaults">
-                    <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]"/>
+                    <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                     <field name="sequence"/>
                     <separator string="Conditions" colspan="4"/>
                     <field name="product_id"/>
@@ -44,7 +44,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Accounts">
-                    <field name="analytic_id"/>
+                    <field name="analytic_id" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
@@ -60,7 +60,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_analytic_default_form_search"/>
         </record>
-		
+
         <act_window
             name="Entries"
             id="act_account_acount_move_line_open"
@@ -68,7 +68,7 @@
             src_model="account.account"
             context="{'search_default_account_id': [active_id]}"
             />
-		
+
         <menuitem
             action="action_analytic_default_list"
             id="menu_analytic_default_list"

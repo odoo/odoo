@@ -48,12 +48,14 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
             'display_currency':self._display_currency,
+            'get_target_move': self._get_target_move,
         })
 
     def set_context(self, objects, data, ids, report_type=None):
         obj_move = self.pool.get('account.move.line')
         new_ids = ids
         self.query_get_clause = ''
+        self.target_move = data['form'].get('target_move', 'all')
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
             self.query_get_clause = 'AND '
@@ -66,7 +68,14 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return super(journal_print, self).set_context(objects, data, ids, report_type=report_type)
 
     def lines(self, period_id, journal_id):
-        self.cr.execute('SELECT a.currency_id ,a.code, a.name, c.code AS currency_code,l.currency_id ,l.amount_currency ,SUM(debit) AS debit, SUM(credit) AS credit from account_move_line l LEFT JOIN account_account a ON (l.account_id=a.id)  LEFT JOIN res_currency c on (l.currency_id=c.id)WHERE l.period_id=%s AND l.journal_id=%s '+self.query_get_clause+' GROUP BY a.id, a.code, a.name,l.amount_currency,c.code , a.currency_id,l.currency_id', (period_id, journal_id))
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+        self.cr.execute('SELECT a.currency_id ,a.code, a.name, c.code AS currency_code,l.currency_id ,l.amount_currency ,SUM(debit) AS debit, SUM(credit) AS credit  \
+                        from account_move_line l  \
+                        LEFT JOIN account_move am ON (l.move_id=am.id) \
+                        LEFT JOIN account_account a ON (l.account_id=a.id) \
+                        LEFT JOIN res_currency c on (l.currency_id=c.id) WHERE am.state IN %s AND l.period_id=%s AND l.journal_id=%s '+self.query_get_clause+' GROUP BY a.id, a.code, a.name,l.amount_currency,c.code , a.currency_id,l.currency_id', (tuple(move_state), period_id, journal_id))
         return self.cr.dictfetchall()
 
     def _set_get_account_currency_code(self, account_id):

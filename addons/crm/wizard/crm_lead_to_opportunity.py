@@ -98,7 +98,6 @@ class crm_lead2opportunity(osv.osv_memory):
             'type': 'ir.actions.act_window', 
             'search_view_id': res['res_id']
         }
-        
         return value
 
     _columns = {
@@ -124,9 +123,6 @@ class crm_lead2opportunity(osv.osv_memory):
             if lead.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
 Leads Could not convert into Opportunity"))
-            if lead.state not in ('open', 'pending'):
-                raise osv.except_osv(_('Warning !'), _('Lead should be in \
-\'Open\' or \'Pending\' state before converting to Opportunity.'))
         return False
 
     def default_get(self, cr, uid, fields, context=None):
@@ -250,9 +246,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             if lead.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
 Leads Could not convert into Opportunity"))
-            if lead.state not in ('open', 'pending'):
-                raise osv.except_osv(_('Warning !'), _('Lead should be in \
-\'Open\' or \'Pending\' state before converting to Opportunity.'))
         return False
 
 crm_lead2opportunity_partner()
@@ -263,16 +256,12 @@ class crm_lead2opportunity_action(osv.osv_memory):
     '''
     _name = 'crm.lead2opportunity.action'
     _description = 'Convert/Merge Opportunity'
-    
     _columns = {
         'name': fields.selection([('convert', 'Convert to Opportunity'), ('merge', 'Merge with existing Opportunity')],'Select Action', required=True),
-        
     }
-
     _defaults = {
         'name': 'convert',
-        }
-
+    }
     def do_action(self, cr, uid, ids, context=None):
         """
         This function opens form according to selected Action

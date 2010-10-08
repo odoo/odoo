@@ -76,7 +76,6 @@ class crm_make_sale(osv.osv_memory):
         case_obj = self.pool.get('crm.lead')
         sale_obj = self.pool.get('sale.order')
         partner_obj = self.pool.get('res.partner')
-        sale_line_obj = self.pool.get('sale.order.line')
 
         data = context and context.get('active_ids', []) or []
 
@@ -115,30 +114,10 @@ class crm_make_sale(osv.osv_memory):
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid
 
-                if make.analytic_account.id:
-                    vals['project_id'] = make.analytic_account.id
                 new_id = sale_obj.create(cr, uid, vals)
-                for line in make.sale_order_line:
-                    value = {
-                            'order_id': new_id, 
-                            'name': line.name, 
-                            'delay': line.delay, 
-                            'product_id': line.product_id and line.product_id.id or False, 
-                            'price_unit': line.price_unit, 
-                            'tax_id': line.tax_id and [(6, 0, map(lambda x: x.id, line.tax_id))] or False, 
-                            'type': line.type, 
-                            'product_uom_qty': line.product_uom_qty, 
-                            'product_uom': line.product_uom.id, 
-                            'product_uos_qty': line.product_uos_qty, 
-                            'product_uos': line.product_uos and line.product_uos.id or False, 
-                            'product_packaging': line.product_packaging and line.product_packaging.id or False, 
-                            'discount': line.discount, 
-                            'notes': line.notes
-                            }
-                    sale_line_obj.create(cr, uid, value, context=context)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
-                message = _('Opportunity ') + " '" + case.name + "' "+ _("is converted to Sales Quotation.")
+                message = _('Opportunity ') + " '" + case.name + "' "+ _("is converted to Quotation.")
                 self.log(cr, uid, case.id, message)
                 case_obj._history(cr, uid, [case], _("Converted to Sales Quotation(id: %s).") % (new_id))
 
@@ -179,8 +158,6 @@ class crm_make_sale(osv.osv_memory):
     _columns = {
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True), 
         'partner_id': fields.many2one('res.partner', 'Customer', required=True), 
-        'sale_order_line': fields.one2many('sale.order.make.line', 'opportunity_order_id', 'Product Line'), 
-        'analytic_account': fields.many2one('account.analytic.account', 'Analytic Account'), 
         'close': fields.boolean('Close Opportunity', help='Check this to close the opportunity after having created the sale order.'), 
     }
     _defaults = {
@@ -190,48 +167,3 @@ class crm_make_sale(osv.osv_memory):
     }
 
 crm_make_sale()
-
-class sale_order_make_line(osv.osv_memory):
-
-    def product_id_change(self, cr, uid, ids, product, qty=0, 
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False, 
-            lang=False, update_tax=True, packaging=False, flag=False):
-        if not  partner_id:
-            raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sale form !\nPlease set one customer before choosing a product.'))
-        date_order = time.strftime('%Y-%m-%d')
-        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
-        pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
-        fiscal_position = part.property_account_position and part.property_account_position.id or False
-        return self.pool.get('sale.order.line').product_id_change(cr, uid, ids, pricelist, product, qty, uom, qty_uos, uos, name, partner_id, lang, update_tax, date_order, packaging, fiscal_position, flag)
-
-    _name = 'sale.order.make.line'
-    _description = 'Opportunity Sale Order Line'
-    _columns = {
-        'opportunity_order_id': fields.many2one('crm.make.sale', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True,), 
-        'name': fields.char('Description', size=256, required=True, select=True,), 
-        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer"), 
-        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True), 
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price')), 
-        'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes'), 
-        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True), 
-        'product_uom_qty': fields.float('Quantity (UoM)', digits=(16, 2), required=True,), 
-        'product_uom': fields.many2one('product.uom', 'Unit of Measure ', required=True,), 
-        'product_uos_qty': fields.float('Quantity (UoS)'), 
-        'product_uos': fields.many2one('product.uom', 'Product UoS'), 
-        'product_packaging': fields.many2one('product.packaging', 'Packaging'), 
-        'discount': fields.float('Discount (%)', digits=(16, 2)), 
-        'notes': fields.text('Notes'), 
-    }
-    _order = 'sequence, id'
-    _defaults = {
-        'discount': 0.0, 
-        'delay': 0.0, 
-        'product_uom_qty': 1, 
-        'product_uos_qty': 1, 
-        'type': 'make_to_stock', 
-        'product_packaging': False
-    }
-
-sale_order_make_line()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

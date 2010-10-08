@@ -90,7 +90,7 @@ class Overdue(report_sxw.rml_parse):
         return message
 
 report_sxw.report_sxw('report.account.overdue', 'res.partner',
-        'addons/account/report/overdue.rml', parser=Overdue)
+        'addons/account/report/account_print_overdue.rml', parser=Overdue)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
