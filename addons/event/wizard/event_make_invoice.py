@@ -45,12 +45,9 @@ class event_make_invoice(osv.osv_memory):
         data = context and context.get('active_ids', [])
 
         for event_reg in obj_event_reg.browse(cr, uid, data, context=context):
-            if event_reg.state == 'draft':
+            if event_reg.state in ('draft', 'done', 'cancel'):
                      raise osv.except_osv(_('Warning !'),
-                        _("Invoice cannot be created if the registration is in draft state."))
-            if event_reg.state == 'done':
-                     raise osv.except_osv(_('Warning !'),
-                        _("Invoice cannot be created if the registration is in done state."))
+                        _("Invoice cannot be created if the registration is in %s state.") % (event_reg.state))
 
             if (not event_reg.tobe_invoiced):
                     raise osv.except_osv(_('Warning !'),

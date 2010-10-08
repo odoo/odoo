@@ -37,7 +37,7 @@ class event_type(osv.osv):
     }
 event_type()
 
-class event_event(osv.osv):
+class event_event(crm.crm_case, osv.osv):
     """Event"""
     _name = 'event.event'
     _description = __doc__
@@ -246,6 +246,7 @@ class event_event(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
+        'section_id': crm.crm_case._get_section,
     }
 
     def _check_recursion(self, cr, uid, ids):
