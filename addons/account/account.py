@@ -1893,9 +1893,9 @@ class account_tax(osv.osv):
         total = 0.0
         for r in res:
             if r.get('balance',False):
-                r['amount'] = round(r['balance'] * quantity, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')) - total
+                r['amount'] = round(r.get('balance', 0.0) * quantity, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')) - total
             else:
-                r['amount'] = round(r['amount'] * quantity, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
+                r['amount'] = round(r.get('amount', 0.0) * quantity, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
                 total += r['amount']
         return res
 
