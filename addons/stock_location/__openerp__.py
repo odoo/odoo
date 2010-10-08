@@ -38,7 +38,7 @@ Typically this could be used to:
 * Help rental management, by generating automated return moves for rented products
 
 Once this module is installed, an additional tab appear on the product form, where you can add
-Push and Pull flow specifications.
+Push and Pull flow specifications. The demo data of  CPU1 product for that push/pull :
 
 Push flows
 ----------

@@ -56,25 +56,29 @@
 			<field name="picking_type">out</field>
 		</record>
 		
-		<record id="product_pulled_flow_l1" model="product.pulled.flow">
+		<record id="product_pulled_flow_l0" model="product.pulled.flow">
 			<field name="product_id" ref="product.product_product_cpu1"/>
-			<field name="location_src_id" ref="stock.stock_location_suppliers"/>
-			<field name="location_id" ref="stock.stock_location_stock"/>
+			<field name="location_src_id" ref="stock.stock_location_stock"/>
+			<field name="location_id" ref="stock.stock_location_shop0"/>
+			<field name="partner_address_id" ref="base.main_address"/>
 			<field name="invoice_state">none</field>
 			<field name="company_id" ref="base.main_company"/>
 			<field name="type_proc">move</field>
 			<field eval="0" name="cancel_cascade"/>
-			<field name="procure_method">make_to_order</field>
+			<field name="procure_method">make_to_stock</field>
 			<field name="picking_type">out</field>
-			<field name="name">L002</field>
+			<field name="name">L001</field>
 		</record>
-		<record id="product_pulled_flow_l2" model="product.pulled.flow">
+		<record id="product_pulled_flow_l1" model="product.pulled.flow">
 			<field name="product_id" ref="product.product_product_cpu1"/>
 			<field name="location_id" ref="stock.stock_location_suppliers"/>
 			<field name="invoice_state">none</field>
 			<field name="company_id" ref="base.main_company"/>
 			<field name="type_proc">buy</field>
-			<field name="name">L003</field>
+			<field eval="0" name="cancel_cascade"/>
+			<field name="procure_method">make_to_stock</field>
+			<field name="picking_type">out</field>
+			<field name="name">L002</field>
 		</record>
 	</data>
 </openerp>
