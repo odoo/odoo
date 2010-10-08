@@ -225,7 +225,7 @@ class account_voucher(osv.osv):
 
             if not tax[0].price_include:
                 for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_amount, 1).get('taxes',[]):
-                    total_tax += tax_line.get('amount')
+                    total_tax += tax_line.get('amount', 0.0)
                 total += total_tax
             else:
                 line_ids2 = []
@@ -234,7 +234,7 @@ class account_voucher(osv.osv):
                     line_tax = 0.0
 
                     for tax_line in tax_pool.compute_all(cr, uid, tax, line.untax_amount or line.amount, 1).get('taxes',[]):
-                        line_tax += tax_line.get('amount')
+                        line_tax += tax_line.get('amount', 0.0)
                         line_total += tax_line.get('price_unit')
                     total_tax += line_tax
                     untax_amount = line.untax_amount or line.amount

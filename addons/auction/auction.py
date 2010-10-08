@@ -291,7 +291,7 @@ class auction_lots(osv.osv):
                         taxes += lot.auction_id.buyer_costs
                     tax = pt_tax.compute_all(cr, uid, taxes, amount, 1)['taxes']
                     for t in tax:
-                        result += t['amount']
+                        result += t.get('amount', 0.0)
                     result += amount
                 elif name == "seller_price":
                     if lot.bord_vnd_id.tax_id:
@@ -300,7 +300,7 @@ class auction_lots(osv.osv):
                         taxes += lot.auction_id.seller_costs
                     tax = pt_tax.compute_all(cr, uid, taxes, amount, 1)['taxes']
                     for t in tax:
-                        result += t['amount']
+                        result += t.get('amount', 0.0)
                     result += amount
                 elif name == "gross_revenue":
                     if lot.auction_id:
