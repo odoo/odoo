@@ -328,7 +328,7 @@
 			 	 			<td><para style="Standard"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para></td>
 			  				<td><para style="Standard"></para></td>
 						  	<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_debit_account(o), digits=get_digits(dp='Account')) ]]</u></para></td>
-					  		<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_credit_account(o), digits=get_digits(dp=Account)) ]]</u></para></td>
+					  		<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_credit_account(o), digits=get_digits(dp='Account')) ]]</u></para></td>
 			  				<td><para style="P9b"><u>[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</u></para></td>
 						</tr>
 					</blockTable>
