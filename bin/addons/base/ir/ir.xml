@@ -433,15 +433,14 @@
 
                         <field name="report_name" select="1"/>
                         <field name="report_type"/>
+                        <field name="report_file"/>
                     </group>
 
                     <notebook colspan="4">
                         <page string="Other Configuration">
                             <group col="2" colspan="2">
                                 <separator string="RML Report" colspan="2"/>
-                                <field name="report_rml"/>
                                 <field name="header"/>
-                                <field name="auto"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator string="XML Report" colspan="2"/>
@@ -456,6 +455,7 @@
                             <group col="2" colspan="2">
                                 <separator string="Miscellaneous" colspan="2"/>
                                 <field name="multi"/>
+                                <field name="auto"/>
                             </group>
                         </page>
                         <page string="Security">
