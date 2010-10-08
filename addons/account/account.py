@@ -1859,7 +1859,7 @@ class account_tax(osv.osv):
                 tex.append(tax)
         tin = self.compute_inv(cr, uid, tin, price_unit, quantity, address_id=address_id, product=product, partner=partner)
         for r in tin:
-            totalex -= r['amount']
+            totalex -= r.get('amount', 0.0)
         totlex_qty = 0.0
         try:
             totlex_qty=totalex/quantity
@@ -1867,7 +1867,7 @@ class account_tax(osv.osv):
             pass
         tex = self._compute(cr, uid, tex, totlex_qty, quantity, address_id=address_id, product=product, partner=partner)
         for r in tex:
-            totalin += r['amount']
+            totalin += r.get('amount', 0.0)
         return {
             'total': totalex,
             'total_included': totalin,
