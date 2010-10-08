@@ -67,7 +67,7 @@
             <field name="arch" type="xml">
                 <form string="Expenses Sheet">
                     <group colspan="4" col="6">
-                        <field name="employee_id"/>
+                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="name" select="1"/>
                         <field name="ref" groups="base.group_extended"/>
                         <field name="date" select="1"/>
@@ -136,18 +136,22 @@
                       <separator orientation="vertical"/>
                       <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"
                         help="Confirmed Expense"/>
-                      <filter icon="terp-check" domain="[('state','=','accepted')]" string="To Pay"
+                      <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay"
                         help="Expenses to Invoice"/>
+                      <separator orientation="vertical"/>
                       <filter icon="terp-go-month" string="This Month" name="this"
                               domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
                       <separator orientation="vertical"/>
+                      <field name="employee_id" select='1'/>
                       <field name="name" select='1'/>
                       <field name="date" select='1'/>
                       <field name="user_id"  string="User" invisible="True">
                       <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>
-                      <field name="department_id" widget="selection" groups="base.group_extended"/>
+                      <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
+                   <filter icon="terp-personal+" context="{'invisible_department': False}" domain="[('department_id','=',context.get('department_id',False))]" help="My Department"/>
+               </field>
                 </group>
                 <newline />
                 <group expand="0" string="Group By...">
@@ -165,7 +169,7 @@
             <field name="name">Expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_user_id":uid,'search_default_this':1}</field>
+            <field name="context">{"search_default_user_id":uid,"search_default_department_id": department_id,"search_default_this":1}</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="help">The OpenERP expenses management module allows you to track the full flow. Every month, the employees record their expenses. At the end of the month, their managers validates the expenses sheets which creates costs on projects/analytic accounts. The accountant validates the proposed entries and the employee can be reimbursed. You can also reinvoice the customer at the end of the flow.</field>
         </record>
