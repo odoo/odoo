@@ -378,7 +378,7 @@
             <para style="terp_tblheader_Details">Salary</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ formatLang(employee.contract_id.wage) or '' ]] [[ employee.company_id.currency_id.symbol]]</para>
+            <para style="terp_default_9">[[ formatLang(employee.contract_id.wage) or '' ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Notes:</para>
@@ -394,19 +394,19 @@
             <para style="terp_tblheader_Details">Basic</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.basic ]] [[ employee.company_id.currency_id.symbol ]]</para>
+            <para style="terp_default_9">[[ employee.basic ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Allowances</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.advantages_gross ]] [[ employee.company_id.currency_id.symbol ]]</para>
+            <para style="terp_default_9">[[ employee.advantages_gross ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Gross Salary</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.gross ]] [[ employee.company_id.currency_id.symbol ]]</para>
+            <para style="terp_default_9">[[ employee.gross ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -416,13 +416,13 @@
             <para style="terp_tblheader_Details">Deductions</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.advantages_net ]] [[ employee.company_id.currency_id.symbol ]]</para>
+            <para style="terp_default_9">[[ employee.advantages_net ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Net Salary</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ employee.net ]] [[ employee.company_id.currency_id.symbol ]]</para>
+            <para style="terp_default_9">[[ employee.net ]] [[ employee.company_id and employee.company_id.currency_id.symbol or '' ]]</para>
           </td>
         </tr>
       </blockTable>
