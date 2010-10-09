@@ -28,20 +28,24 @@ class hr_payroll_year_salary(osv.osv_memory):
    _name = "hr.payroll.year.salary"
    _columns = {
         'employee_ids': fields.many2many('hr.employee', 'payroll_year_rel','payroll_year_id','emp_id', 'Employees',required=True),
-        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True)  ,
+        'date_from': fields.date('Start Date', required=True),
+        'date_to': fields.date('End Date', required=True),
+        #'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True)  ,
         'salary_on': fields.selection([('current_month','Current Month Date'),('next_month','Next Month Date')],'Salary On'),
        }
 
-   def _get_fiscalyear(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        fiscal_ids=self.pool.get('account.fiscalyear').search(cr, uid, [], context=context)
-        if fiscal_ids:
-            return fiscal_ids[0]
-        return False
+#   def _get_fiscalyear(self, cr, uid, ids, context=None):
+#        if context is None:
+#            context = {}
+#        fiscal_ids=self.pool.get('account.fiscalyear').search(cr, uid, [], context=context)
+#        if fiscal_ids:
+#            return fiscal_ids[0]
+#        return False
 
    _defaults = {
-        'fiscalyear_id':_get_fiscalyear,
+       # 'fiscalyear_id':_get_fiscalyear,
+        'date_from':time.strftime('%Y-01-01'),
+        'date_to':time.strftime('%Y-%m-%d'),
         'salary_on': 'current_month'
     }
 
@@ -58,7 +62,7 @@ class hr_payroll_year_salary(osv.osv_memory):
             context = {}
         datas = {'ids': context.get('active_ids', [])}
 
-        res = self.read(cr, uid, ids, ['employee_ids', 'fiscalyear_id','salary_on'], context=context)
+        res = self.read(cr, uid, ids, ['employee_ids',  'date_from', 'date_to', 'salary_on'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
         return {

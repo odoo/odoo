@@ -40,6 +40,12 @@ class available_holidays_report(osv.osv):
         'remaining_leave': fields.float('Remaining Leaves', readonly=True),
         'department_id': fields.many2one('hr.department', 'Department', readonly=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'state': fields.selection([('draft', 'Draft'),
+                                   ('confirm', 'Waiting Validation'),
+                                   ('refuse', 'Refused'),
+                                   ('validate', 'Validated'),
+                                   ('cancel', 'Cancelled')]
+                                   ,'State', readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'available_holidays_report')

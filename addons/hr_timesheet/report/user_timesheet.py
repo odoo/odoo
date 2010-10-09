@@ -63,7 +63,7 @@ class report_custom(report_rml):
             "and product_uom_id = unit.id "\
             "and line.user_id=%s and line.date >= %s and line.date < %s "
             "order by line.date",
-            (data['form']['user_id'], som.strftime('%Y-%m-%d'), eom.strftime('%Y-%m-%d')))
+            (uid, som.strftime('%Y-%m-%d'), eom.strftime('%Y-%m-%d')))
 
         # Sum attendence by account, then by day
         accounts = {}
@@ -97,7 +97,7 @@ class report_custom(report_rml):
             account_xml.append('</account>')
 
         # Computing the employee
-        cr.execute("select name from res_users where id=%s", (data['form']['user_id'],))
+        cr.execute("select name from res_users where id=%s", (str(uid)))
         emp = cr.fetchone()[0]
 
         # Computing the xml

@@ -22,5 +22,5 @@
 
 
 import hr_payroll_employees_detail
-import hr_payroll_create_analytic
+#import hr_payroll_create_analytic
 import hr_payroll_year_salary

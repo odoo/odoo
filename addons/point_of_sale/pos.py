@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -186,7 +186,7 @@ class pos_order(osv.osv):
                             res[order.id]['amount_tax'])
                 elif line.qty != 0.0:
                     for c in tax_obj.compute_all(cr, uid, line.product_id.taxes_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.qty,  line.product_id, line.order_id.partner_id)['taxes']:
-                        val += c['amount']
+                        val += c.get('amount', 0.0)
                     res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
         return res
 
@@ -348,7 +348,7 @@ class pos_order(osv.osv):
 
 
     def test_order_lines(self, cr, uid, order, context=None):
-        """ Test order line is created or not for the order " 
+        """ Test order line is created or not for the order "
         @param name: Names of fields.
         @return: True
         """
@@ -549,7 +549,7 @@ class pos_order(osv.osv):
 
         """Create a new payment for the order"""
 
-        statement_obj= self.pool.get('account.bank.statement')        
+        statement_obj= self.pool.get('account.bank.statement')
         statementl_obj = self.pool.get('account.bank.statement.line')
         prod_obj = self.pool.get('product.product')
         property_obj=self.pool.get('ir.property')
@@ -622,7 +622,7 @@ class pos_order(osv.osv):
         return order_line_id, price
 
     def refund(self, cr, uid, ids, context=None):
-        """Create a copy of order  for refund order"""      
+        """Create a copy of order  for refund order"""
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
 

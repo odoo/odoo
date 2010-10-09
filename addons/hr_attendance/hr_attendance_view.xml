@@ -81,7 +81,7 @@
 
         <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="4"/>
 
-        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" groups="base.group_hr_user" sequence="3"/>
+        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" sequence="3"/>
 
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>
@@ -89,8 +89,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Define attendance reason">
-                    <field colspan="4" name="name"  />
-                    <field name="action_type" />
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="action_type" select="1"/>
                 </form>
             </field>
         </record>
@@ -101,7 +101,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Attendance reasons">
-                    <field name="name"/>
+                    <field name="name" />
                     <field name="action_type"/>
                 </tree>
             </field>
@@ -116,7 +116,7 @@
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
 
-        <menuitem sequence="2" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" name="Time Tracking" />
+        <menuitem sequence="2" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" name="Attendances" />
         <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config"/>
 
         <record id="hr_attendance_employee" model="ir.ui.view">
