@@ -270,7 +270,7 @@
                             <newline/>
                             <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>
                         </page>
-           				<page string="Notes">
+                           <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                         <page string="History" groups="base.group_extended">
@@ -310,8 +310,8 @@
                 <form string="Purchase Order Line">
                     <notebook colspan="4">
                         <page string="Order Line">
-                           	<separator colspan="4" string="General Information"/>
-                         	<field name="order_id"/>
+                               <separator colspan="4" string="General Information"/>
+                             <field name="order_id"/>
                             <field name="product_id" readonly="1" />
                             <field name="product_qty" readonly="1" />
                             <field name="product_uom" readonly="1"/>
@@ -332,7 +332,7 @@
                             <newline/>
                             <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>
                         </page>
-         				<page string="Notes">
+                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                         <page string="History" groups="base.group_extended">
@@ -349,7 +349,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                		<group>
+                        <group>
                         <field name="order_id"/>
                         <field name="product_id"/>
                         </group>

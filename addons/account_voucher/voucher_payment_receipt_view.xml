@@ -257,7 +257,7 @@
             <field name="model">account.voucher</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Payment">
+                <form string="Customer Payment">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" string="Customer"/>
                         <field name="journal_id"
@@ -334,7 +334,7 @@
         </record>
 
         <record id="action_vendor_receipt" model="ir.actions.act_window">
-            <field name="name">Sales Payment</field>
+            <field name="name">Customer Payment</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>

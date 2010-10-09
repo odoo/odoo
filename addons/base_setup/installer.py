@@ -27,8 +27,7 @@ class base_setup_installer(osv.osv_memory):
     _install_if = {
         ('sale','crm'): ['sale_crm'],
         ('sale','project'): ['project_mrp'],
-        ('sale',):['account_accountant']
-        }
+    }
     _columns = {
         # Generic modules
         'crm':fields.boolean('Customer Relationship Management',
@@ -51,9 +50,10 @@ class base_setup_installer(osv.osv_memory):
         'mrp':fields.boolean('Manufacturing',
             help="Helps you manage your manufacturing processes and generate "
                  "reports on those processes."),
-        'account':fields.boolean('Financial & Accounting',
-            help="Helps you handle your accounting needs, as well as create "
-                 "and track your budgets."),
+        'account_voucher':fields.boolean('Invoicing',
+            help="Allows you to create your invoices and track the payments. It is an easier version of the accounting module for managers who are not accountants."),
+        'account_accountant':fields.boolean('Accounting & Finance',
+            help="Helps you handle your accounting needs, if you are not an accountant, we suggest you to install only the Invoicing "),
         'purchase':fields.boolean('Purchase Management',
             help="Helps you manage your purchase-related processes such as "
                  "requests for quotations, supplier invoices, etc..."),
@@ -95,16 +95,7 @@ class base_setup_installer(osv.osv_memory):
         return None
 
     def _if_misc_tools(self, cr, uid, ids, context=None):
-        interface = self.pool.get('res.users').browse(cr, uid, uid, context=context).view
-        if interface == 'simple' or interface =='extended' :
-            return ['profile_tools']
-        return None
-
-    def _if_account(self, cr, uid, ids, context=None):
-        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
-               .view == 'simple':
-            return ['account_voucher']
-        return None
+        return ['profile_tools']
 
     def onchange_moduleselection(self, cr, uid, ids, *args, **kargs):
         value = {}

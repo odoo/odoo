@@ -315,7 +315,7 @@ class account_invoice(osv.osv):
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Mapping', readonly=True, states={'draft':[('readonly',False)]})
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]})
     }
     _defaults = {
         'type': _get_type,
@@ -353,7 +353,7 @@ class account_invoice(osv.osv):
             nodes = doc.xpath("//field[@name='partner_id']")
             partner_string = 'Customer'
             if context.get('type', 'out_invoice') in ('in_invoice', 'in_refund'):
-                partner_string = 'Vendor'
+                partner_string = _('Supplier')
             for node in nodes:
                 node.set('string', partner_string)
             res['arch'] = etree.tostring(doc)

@@ -25,9 +25,9 @@ import ir
 
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
-    _description = 'Fiscal Mapping'
+    _description = 'Fiscal Position'
     _columns = {
-        'name': fields.char('Fiscal Mapping', size=64, translate=True, required=True),
+        'name': fields.char('Fiscal Position', size=64, translate=True, required=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping'),
@@ -64,10 +64,10 @@ account_fiscal_position()
 
 class account_fiscal_position_tax(osv.osv):
     _name = 'account.fiscal.position.tax'
-    _description = 'Taxes Fiscal Mapping'
+    _description = 'Taxes Fiscal Position'
     _rec_name = 'position_id'
     _columns = {
-        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Mapping', required=True, ondelete='cascade'),
+        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
         'tax_src_id': fields.many2one('account.tax', 'Tax Source', required=True),
         'tax_dest_id': fields.many2one('account.tax', 'Replacement Tax')
     }
@@ -76,10 +76,10 @@ account_fiscal_position_tax()
 
 class account_fiscal_position_account(osv.osv):
     _name = 'account.fiscal.position.account'
-    _description = 'Accounts Fiscal Mapping'
+    _description = 'Accounts Fiscal Position'
     _rec_name = 'position_id'
     _columns = {
-        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Mapping', required=True, ondelete='cascade'),
+        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
         'account_src_id': fields.many2one('account.account', 'Account Source', domain=[('type','<>','view')], required=True),
         'account_dest_id': fields.many2one('account.account', 'Account Destination', domain=[('type','<>','view')], required=True)
     }
@@ -172,10 +172,10 @@ class res_partner(osv.osv):
             'account.fiscal.position',
             type='many2one',
             relation='account.fiscal.position',
-            string="Fiscal Mapping",
+            string="Fiscal Position",
             method=True,
             view_load=True,
-            help="The fiscal Mapping will determine taxes and the accounts used for the partner.",
+            help="The fiscal position will determine taxes and the accounts used for the partner.",
         ),
         'property_payment_term': fields.property(
             'account.payment.term',
