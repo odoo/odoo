@@ -49,7 +49,7 @@ class payslip_report(report_sxw.rml_parse):
           res = []
           ids = []
           for id in range(len(obj)):
-              if obj[id].category_id.type == 'other' and obj[id].type != 'leaves':
+              if obj[id].category_id.type in ('advance','loan','otherpay','otherdeduct','installment'):
                  ids.append(obj[id].id)
           payslip_line = self.pool.get('hr.payslip.line')
           if len(ids):
@@ -71,7 +71,7 @@ class payslip_report(report_sxw.rml_parse):
           res = []
           ids = []
           for id in range(len(obj)):
-              if obj[id].category_id.type == 'allow' and obj[id].type != 'leaves':
+              if obj[id].category_id.type == 'allowance' and obj[id].type != 'leaves':
                  ids.append(obj[id].id)
           payslip_line = self.pool.get('hr.payslip.line')
           if len(ids):
@@ -82,7 +82,7 @@ class payslip_report(report_sxw.rml_parse):
           res = []
           ids = []
           for id in range(len(obj)):
-              if obj[id].category_id.type == 'deduct' and obj[id].type != 'leaves':
+              if obj[id].category_id.type == 'deduction' and obj[id].type != 'leaves':
                  ids.append(obj[id].id)
           payslip_line = self.pool.get('hr.payslip.line')
           if len(ids):

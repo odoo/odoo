@@ -13,7 +13,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Timesheet Line" type="bar">
-                    <field name="account_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="quantity" operator="+"/>
                     <field group="True" name="user_id"/>
                 </graph>
@@ -33,7 +33,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="month" invisible="1"/>
-                    <field name="account_id" invisible="1"/>
+                    <field name="account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id" invisible="1"/>
                     <field name="invoice_id" invisible="1"/>
                 </tree>
@@ -66,7 +66,7 @@
                               help="Non Assigned timesheets to users"
                               domain="[('user_id','=',False)]"/>
                       </field>
-                      <field name="account_id"/>
+                      <field name="account_id" groups="analytic.group_analytic_accounting"/>
                         <field name="product_id"/>
                     </group>
                     <newline/>
@@ -192,7 +192,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Timesheet by invoice">
-                    <field name="account_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="amount_invoice" operator="+"/>
                 </graph>
             </field>
@@ -204,7 +204,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by invoice">
-                    <field name="account_id" select="1"/>
+                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                     <field name="manager_id" select="1"/>
                     <field name="user_id" select="1"/>
                 </form>
@@ -218,7 +218,7 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by invoice">
                     <separator orientation="vertical"/>
-                    <field name="account_id" select="1"/>
+                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                     <field name="manager_id" select="1"/>
                     <field name="user_id" select="1"/>
                 </search>
@@ -232,7 +232,7 @@
             <field name="arch" type="xml">
                 <tree string="Timesheets to invoice">
                     <field name="user_id"/>
-                    <field name="account_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="manager_id"/>
                     <field name="quantity"/>
                     <field name="amount_invoice"/>
@@ -259,7 +259,7 @@
                 <tree string="Daily timesheet per account">
                     <field name="name"/>
                     <field name="month" select="1"/>
-                    <field name="account_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="user_id"/>
                     <field name="quantity"/>
                 </tree>
@@ -271,7 +271,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Daily timesheet per account">
-                    <field name="account_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="quantity" operator="+"/>
                     <field group="True" name="user_id"/>
                 </graph>
@@ -286,7 +286,7 @@
                 <form string="Daily timesheet by account">
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
-                    <field name="account_id" select="1"/>
+                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                     <field name="user_id" select="1"/>
                     <field name="quantity"/>
                 </form>
@@ -306,7 +306,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="month" select="1"/>
-                        <field name="account_id" select="1"/>
+                        <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                         <field name="user_id" select="1"/>
                     </group>
                 </search>
@@ -332,7 +332,7 @@
                 <tree string="Timesheet per account">
                     <field name="name"/>
                     <field name="month" />
-                    <field name="account_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="user_id"/>
                     <field name="quantity"/>
                 </tree>
@@ -344,7 +344,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Timesheet per account">
-                    <field name="account_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="quantity" operator="+"/>
                     <field group="True" name="user_id"/>
                 </graph>
@@ -359,7 +359,7 @@
                 <form string="Timesheet by account">
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
-                    <field name="account_id" select="1"/>
+                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                     <field name="user_id" select="1"/>
                     <field name="quantity"/>
                 </form>
@@ -379,7 +379,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="month" select="1"/>
-                        <field name="account_id" select="1"/>
+                        <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                         <field name="user_id" select="1"/>
                     </group>
                 </form>
@@ -395,33 +395,33 @@
             <field name="search_view_id" ref="view_timesheet_account_search"/>
         </record>
 
-        <act_window 
+        <act_window
         context="{'search_default_user_id': [active_id]}"
-        id="act_res_users_2_report_timesheet_user" 
-        name="Timesheets per day" 
-        res_model="report_timesheet.user" 
-        src_model="res.users"/>
-        
-
-        <act_window 
-        context="{'search_default_user_id': [active_id]}"
-        id="act_res_users_2_report_timehsheet_account" 
-        name="Timesheets per account" 
-        res_model="report_timesheet.account" 
+        id="act_res_users_2_report_timesheet_user"
+        name="Timesheets per day"
+        res_model="report_timesheet.user"
         src_model="res.users"/>
 
-        <act_window 
+
+        <act_window
+        context="{'search_default_user_id': [active_id]}"
+        id="act_res_users_2_report_timehsheet_account"
+        name="Timesheets per account"
+        res_model="report_timesheet.account"
+        src_model="res.users"/>
+
+        <act_window
         context="{'search_default_account_id': [active_id]}"
-        id="act_account_analytic_account_2_report_timehsheet_account" 
-        name="Timesheets" 
-        res_model="report_timesheet.account" 
+        id="act_account_analytic_account_2_report_timehsheet_account"
+        name="Timesheets"
+        res_model="report_timesheet.account"
         src_model="account.analytic.account"/>
 
-        <act_window 
+        <act_window
         context="{'search_default_manager_id': [active_id]}"
-        id="act_res_users_2_report_timesheet_invoice" 
-        name="Costs to invoice" 
-        res_model="report_timesheet.invoice" 
+        id="act_res_users_2_report_timesheet_invoice"
+        name="Costs to invoice"
+        res_model="report_timesheet.invoice"
         src_model="res.users"/>
 
 
@@ -433,7 +433,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Random Timesheets">
-                    <field name="analytic_account_id" select="1" groups="base.group_extended"/>
+                    <field name="analytic_account_id" select="1" groups="analytic.group_analytic_accounting"/>
                     <field name="name" select="1"/>
                     <field name="quantity" select="2" />
                     <field name="date" select="1"/>
@@ -486,7 +486,7 @@
                     <field name="name" select="1"/>
                     <field name="quantity" />
                     <field name="product_id" select="1"/>
-                    <field name="analytic_account_id" select="1" groups="base.group_extended"/>
+                    <field name="analytic_account_id" select="1" groups="analytic.group_analytic_accounting"/>
                     <field name="uom_id" />
                     <field name="amount" />
                     <field name="to_invoice" select="1"/>
