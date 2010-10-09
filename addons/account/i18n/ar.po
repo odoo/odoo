@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-29 11:28+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-10-08 21:43+0000\n"
+"Last-Translator: Hamza Nizam <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:39+0000\n"
+"X-Launchpad-Export-Date: 2010-10-09 12:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -40,7 +40,7 @@ msgstr "تشفير المدخلات"
 #. module: account
 #: model:ir.actions.todo,note:account.config_wizard_account_base_setup_form
 msgid "Specify The Message for the Overdue Payment Report."
-msgstr ""
+msgstr "تحديد الرسالة لتقرير الدفع المتأخر"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
@@ -55,17 +55,17 @@ msgstr "أصل"
 #. module: account
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "اسم النموذج غير صالح في تعريف العمل."
 
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr ""
+msgstr "العملة المستعملة لإدخال البيان"
 
 #. module: account
 #: wizard_view:account_use_models,init_form:0
 msgid "Select Message"
-msgstr "أختر رسالة"
+msgstr "اختر رسالة"
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
@@ -73,28 +73,29 @@ msgid ""
 "This account will be used to value incoming stock for the current product "
 "category"
 msgstr ""
+"سيتم استخدام هذا الحساب لتقييم المؤن الواردة بالنسبة لفئة المنتج الحالي"
 
 #. module: account
 #: help:account.invoice,period_id:0
 msgid "Keep empty to use the period of the validation(invoice) date."
-msgstr ""
+msgstr "الإبقاء فارغ لاستخدام فترة تاريخ المصادقة (الفاتورة)"
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,reconcile:0
 msgid "Reconciliation result"
-msgstr ""
+msgstr "نتيجة التسوية"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled entries"
-msgstr "مدخلات لم يتم تسويتها"
+msgstr "إدخالات لم يتم تسويتها"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
 #: field:account.tax,base_code_id:0
 #: field:account.tax.template,base_code_id:0
 msgid "Base Code"
-msgstr ""
+msgstr "رمز الأساس"
 
 #. module: account
 #: view:account.account:0
@@ -115,12 +116,12 @@ msgstr "أصل"
 #. module: account
 #: selection:account.move,type:0
 msgid "Journal Voucher"
-msgstr ""
+msgstr "قسيمة الدفتر"
 
 #. module: account
 #: field:account.invoice,residual:0
 msgid "Residual"
-msgstr ""
+msgstr "متبقي"
 
 #. module: account
 #: field:account.tax,base_sign:0
@@ -128,18 +129,18 @@ msgstr ""
 #: field:account.tax.template,base_sign:0
 #: field:account.tax.template,ref_base_sign:0
 msgid "Base Code Sign"
-msgstr ""
+msgstr "علامة رمز الأساس"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
 #: model:ir.ui.menu,name:account.menu_unreconcile_select
 msgid "Unreconcile entries"
-msgstr ""
+msgstr "إلغاء تسوية الإدخالات"
 
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr ""
+msgstr "خظأ! إن مدة الفترة أو الفترات غير صالحة "
 
 #. module: account
 #: view:account.bank.statement.reconcile:0
@@ -149,17 +150,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_move_line_form
 #: model:ir.ui.menu,name:account.menu_action_move_line_form
 msgid "Entries"
-msgstr "مُدخلات"
+msgstr "إدخالات"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Debit Centralisation"
-msgstr ""
+msgstr "تمركز المدين"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_invoice_state_confirm
 msgid "Confirm draft invoices"
-msgstr ""
+msgstr "تثبيت مشاريع الفواتير"
 
 #. module: account
 #: help:account.payment.term.line,days2:0
@@ -168,11 +169,14 @@ msgid ""
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
 msgstr ""
+"يوم الشهر، إدخال -1 من أجل آخر يوم من الشهر الحالي. إذا كان إيجابيا  فسيعطي "
+"اليوم من الشهر القادم. إدخال 0 من أجل أيام صافية (وإلا فإنه يستند إلى بداية "
+"الشهر)."
 
 #. module: account
 #: view:account.move:0
 msgid "Total Credit"
-msgstr ""
+msgstr "مجموع المدين"
 
 #. module: account
 #: field:account.config.wizard,charts:0
@@ -190,39 +194,39 @@ msgstr ""
 #: rml:account.third_party_ledger:0
 #: rml:account.third_party_ledger_other:0
 msgid "Entry label"
-msgstr ""
+msgstr "تسمية المدخل"
 
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
 msgid "Account Model Entries"
-msgstr ""
+msgstr "إدخالات نماذج الحسابات"
 
 #. module: account
 #: field:account.tax.code,sum_period:0
 msgid "Period Sum"
-msgstr ""
+msgstr "مجموع الفترة"
 
 #. module: account
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Compute Code (if type=code)"
-msgstr ""
+msgstr "رمز الحساب (إذا كان النوع = الرمز)"
 
 #. module: account
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr ""
+msgstr "خط إدخال الحساب"
 
 #. module: account
 #: wizard_view:account.aged.trial.balance,init:0
 msgid "Aged Trial Balance"
-msgstr ""
+msgstr "ميزان المراجعة القديم"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurrent Entries"
-msgstr ""
+msgstr "إدخالات متكررة"
 
 #. module: account
 #: field:account.analytic.line,amount:0
@@ -235,19 +239,19 @@ msgstr ""
 #: field:account.tax.template,amount:0
 #: xsl:account.transfer:0
 msgid "Amount"
-msgstr ""
+msgstr "المبلغ"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
 #: model:ir.actions.wizard,name:account.wizard_third_party_ledger
 #: model:ir.ui.menu,name:account.menu_third_party_ledger
 msgid "Partner Ledger"
-msgstr ""
+msgstr "دفتر الشركاء"
 
 #. module: account
 #: field:product.template,supplier_taxes_id:0
 msgid "Supplier Taxes"
-msgstr ""
+msgstr "ضرائب المورد"
 
 #. module: account
 #: view:account.move:0
