@@ -36,31 +36,32 @@
                     <notebook colspan="6">
                         <page string="Personal Information">
                             <group col="2" colspan="2">
-                            <separator colspan="2" string="Social IDs"/>
-                            <field name="ssnid"/>
-                            <field name="sinid" groups="base.group_extended"/>
-                            <field name="identification_id" groups="base.group_extended"/>
+                                <separator colspan="2" string="Social IDs"/>
+                                <field name="ssnid"/>
+                                <field name="sinid" groups="base.group_extended"/>
+                                <field name="identification_id" groups="base.group_extended"/>
+                                <field name="passport_id"/>
                             </group>
                             <group col="2" colspan="2">
-                            <separator string="Status" colspan="2"/>
-                            <field name="gender"/>
-                            <field name="marital" widget="selection"/>
-                            <field name="country_id"/>
-                            <field name="birthday"/>
+                                <separator string="Status" colspan="2"/>
+                                <field name="gender"/>
+                                <field name="marital" widget="selection"/>
+                                <field name="country_id"/>
+                                <field name="birthday"/>
                             </group>
                             <group col="2" colspan="2">
-                            <separator string="Contact Information" colspan="2"/>
-                            <field name="address_home_id" colspan="2"/>
-                            <field name="partner_id" invisible="1" />
-                            <field name="address_id" colspan="2" domain="[('partner_id', '=', partner_id)]"/>
-                            <field name="work_phone"/>
-                            <field name="work_email" widget="email" />
-                            <field name="work_location"/>
+                                <separator string="Contact Information" colspan="2"/>
+                                <field name="address_home_id" colspan="2"/>
+                                <field name="partner_id" invisible="1" />
+                                <field name="address_id" colspan="2" domain="[('partner_id', '=', partner_id)]"/>
+                                <field name="work_phone"/>
+                                <field name="work_email" widget="email" />
+                                <field name="work_location"/>
                             </group>
                             <group col="2" colspan="2">
-                            <separator string="Position" colspan="2"/>
-                            <field name="job_id" domain="[('state','!=','old')]"/>
-                            <field name="coach_id" />
+                                <separator string="Position" colspan="2"/>
+                                <field name="job_id" domain="[('state','!=','old')]"/>
+                                <field name="coach_id" />
                             </group>
                         </page>
                         <page string="Categories">

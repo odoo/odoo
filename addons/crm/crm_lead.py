@@ -102,7 +102,7 @@ class crm_lead(crm_case, osv.osv):
         # Overridden from res.partner.address:
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', 
             select=True, help="Optional linked partner, usually after conversion of the lead"),
-        
+
         # From crm.case
         'id': fields.integer('ID'),
         'name': fields.char('Name', size=64),
@@ -125,7 +125,7 @@ class crm_lead(crm_case, osv.osv):
         'channel_id': fields.many2one('res.partner.canal', 'Channel'),
 
         'contact_name': fields.char('Contact Name', size=64), 
-        'partner_name': fields.char("Partner Name", size=64),
+        'partner_name': fields.char("Customer Name", size=64),
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
         'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([
@@ -315,10 +315,8 @@ class crm_lead(crm_case, osv.osv):
             vals.update(res)
 
         res = self.create(cr, uid, vals, context)
-        
         message = _('A Lead created') + " '" + subject + "' " + _("from Mailgate.")
         self.log(cr, uid, res, message)
-        
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {

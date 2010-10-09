@@ -29,7 +29,7 @@
                     <field name="company_id" invisible="1"/>
                     <field name="to_invoice" invisible="1"/>
                     <field name="product_id" invisible="1"/>
-                    <field name="account_id" invisible="1"/>
+                    <field name="account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
                     <field name="general_account_id" invisible="1"/>
                     <field name="year" invisible="1"/>
                     <field name="day" invisible="1"/>
@@ -71,8 +71,8 @@
                                     string="Done"
                                     domain="[('state','=','done')]"/>
                         <separator orientation="vertical"/>
-                        <field name="account_id"/>
                       <field name="employee_id" />
+                      <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters..." groups="base.group_extended">
@@ -97,7 +97,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Type of Invoicing" icon="terp-stock_symbol-selection" context="{'group_by':'to_invoice'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
+                        <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
                         <filter string="General Account" icon="terp-folder-orange" context="{'group_by':'general_account_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>

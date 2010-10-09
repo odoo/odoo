@@ -9,13 +9,13 @@
         <report auto="False" id="account_central_journal" model="account.journal.period" name="account.central.journal" rml="account/report/account_central_journal.rml" string="Central Journals" header="False"/>
         <report auto="False" id="account_general_journal" model="account.journal.period" name="account.general.journal" rml="account/report/account_general_journal.rml" string="General Journals" header="False"/>
         <report auto="False" id="account_journal" model="account.journal.period" name="account.journal.period.print" rml="account/report/account_journal.rml" string="Journals" header="False"/>
-        <report auto="False" id="account_overdue" model="res.partner" name="account.overdue" rml="account/report/overdue.rml" string="Overdue Payments"/>
+        <report auto="False" id="account_overdue" model="res.partner" name="account.overdue" rml="account/report/account_print_overdue.rml" string="Overdue Payments"/>
         <report
             auto="False"
             id="account_invoices"
             model="account.invoice"
             name="account.invoice"
-            rml="account/report/invoice.rml"
+            rml="account/report/account_print_invoice.rml"
             string="Invoices"
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/',''))"
             attachment_use="1"/>
@@ -30,14 +30,14 @@
             menu="False"
             model="account.tax.code"
             name="account.vat.declaration"
-            rml="account/report/tax_report.rml"
+            rml="account/report/account_tax_report.rml"
             string="Taxes Report"/>
 
         <report id="report_account_voucher_new"
             string="Print Voucher"
             model="account.move"
             name="account.move.voucher"
-            rml="account/report/voucher_print.rml"
+            rml="account/report/account_voucher_print.rml"
             auto="False"
             header = "False"
             menu="True"/>

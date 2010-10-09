@@ -49,6 +49,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_end_date':self._get_end_date,
             'display_currency':self._display_currency,
             'get_sortby': self._get_sortby,
+            'get_target_move': self._get_target_move,
     })
 
     def set_context(self, objects, data, ids, report_type=None):

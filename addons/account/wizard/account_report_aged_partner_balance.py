@@ -40,7 +40,7 @@ class account_aged_trial_balance(osv.osv_memory):
     }
     _defaults = {
         'period_length': 30,
-        'date_from' : time.strftime('%Y-%m-%d'),
+        'date_from': time.strftime('%Y-%m-%d'),
         'direction_selection': 'past',
     }
 
@@ -84,7 +84,7 @@ class account_aged_trial_balance(osv.osv_memory):
             for i in range(5):
                 stop = start + relativedelta(days=period_length)
                 res[str(5-(i+1))] = {
-                    'name' : (i!=4 and str((i) * period_length)+'-' + str((i+1) * period_length) or ('+'+str(4 * period_length))),
+                    'name': (i!=4 and str((i) * period_length)+'-' + str((i+1) * period_length) or ('+'+str(4 * period_length))),
                     'start': start.strftime('%Y-%m-%d'),
                     'stop': (i!=4 and stop.strftime('%Y-%m-%d') or False),
                 }

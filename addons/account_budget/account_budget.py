@@ -73,7 +73,6 @@ class account_budget_post_dotation(osv.osv):
             if line.period_id:
                 obj_period = self.pool.get('account.period').browse(cr, uid, line.period_id.id)
 
-                total_days = strToDate(obj_period.date_stop) - strToDate(obj_period.date_start)
                 budget_id = line.post_id and line.post_id.id or False
                 query="SELECT id FROM crossovered_budget_lines WHERE \
                         general_budget_id= %s AND (date_from  >=%s AND date_from <= %s ) \
@@ -238,7 +237,7 @@ class crossovered_budget_lines(osv.osv):
     _description = "Budget Line"
     _columns = {
         'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account',required=True),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account',required=False),
         'general_budget_id': fields.many2one('account.budget.post', 'Budgetary Position',required=True),
         'date_from': fields.date('Start Date', required=True),
         'date_to': fields.date('End Date', required=True),
