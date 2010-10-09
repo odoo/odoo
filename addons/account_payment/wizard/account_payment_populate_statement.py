@@ -71,6 +71,10 @@ class account_payment_populate_statement(osv.osv_memory):
             ctx['date'] = line.ml_maturity_date # was value_date earlier,but this field exists no more now
             amount = currency_obj.compute(cr, uid, line.currency.id,
                     statement.currency.id, line.amount_currency, context=ctx)
+
+            context.update({'move_line_ids': [line.move_line_id.id]})
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment', context=context)
+
             if line.partner_id:
 #                line['partner_id'] = mv.partner_id.id
                 if amount < 0 :
@@ -83,7 +87,7 @@ class account_payment_populate_statement(osv.osv_memory):
                 'name': line.name,
                 'partner_id': line.partner_id.id,
                 'journal_id': statement.journal_id.id,
-                'account_id': account,
+                'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
                 'company_id': statement.company_id.id,
                 'currency_id': statement.currency.id,
                 'date': line.date or time.strftime('%Y-%m-%d'),
@@ -91,8 +95,6 @@ class account_payment_populate_statement(osv.osv_memory):
                 'period_id': statement.period_id.id
                 }
                 voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
-                context.update({'move_line_ids': [line.move_line_id.id]})
-                result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment', context=context)
                 voucher_line_dict =  False
                 if result['value']['line_ids']:
                     for line_dict in result['value']['line_ids']:

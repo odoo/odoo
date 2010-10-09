@@ -75,7 +75,7 @@ class sale_order(osv.osv):
             context = {}
         val = 0.0
         for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id)['taxes']:
-            val += c['amount']
+            val += c.get('amount', 0.0)
         return val
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
@@ -507,6 +507,7 @@ class sale_order(osv.osv):
                     if order.order_policy == 'picking':
                         picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
+
         return res
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
@@ -558,7 +559,7 @@ class sale_order(osv.osv):
             #
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
-            
+
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -730,7 +731,7 @@ class sale_order(osv.osv):
             if picking_id:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-                
+
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
 
@@ -1175,7 +1176,7 @@ class sale_config_picking_policy(osv.osv_memory):
         'picking_policy': fields.selection([
             ('direct', 'Direct Delivery'),
             ('one', 'All at Once')
-        ], 'Picking Default Policy', required=True, help="The Shipping Policy is used to synchronise invoices and delivery operations."),
+        ], 'Picking Default Policy', required=True, help="The Shipping Policy is used to configure per order if you want to deliver as soon as possible when one product is available or you wait that all products are available.."),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),

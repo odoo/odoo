@@ -8,16 +8,16 @@
             <field name="model">hr.analytical.timesheet.users</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-				<form string="Employees Timesheet">
+				<form string="Monthly Employees Timesheet">
 					<group height="260" width="460">
 						<group colspan="4">
-							<separator string="This wizard will print monthly timesheet of employees" colspan="4"/>
 							<field name="month"/>
 							<field name="year"/>
-							<field name="user_ids" colspan="4"/>
+                            <separator string="Employees" colspan="4"/>
+							<field name="employee_ids" colspan="4" nolabel="1"/>
 						</group>
 						<separator colspan="4"/>
-						<group colspan="4" col="6">
+						<group colspan="4">
 							<button icon="gtk-cancel" special="cancel" string="Cancel"/>
 							<button icon="gtk-print" string="Print" name="print_report" type="object"/>
 						</group>
