@@ -276,7 +276,6 @@ class product_template(osv.osv):
         return res and res[0] or False
 
     def _default_category(self, cr, uid, context={}):
-        print '_default_categ', context
         if 'categ_id' in context and context['categ_id']:
             return context['categ_id']
         md = self.pool.get('ir.model.data')

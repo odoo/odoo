@@ -26,7 +26,6 @@ from tools.translate import _
 class invoice(osv.osv):
     _inherit = 'account.invoice'
     def invoice_pay_customer(self, cr, uid, ids, context={}):
-        print context
         if not ids: return []
         inv = self.browse(cr, uid, ids[0], context=context)
         return {
