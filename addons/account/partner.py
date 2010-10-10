@@ -21,7 +21,6 @@
 from operator import itemgetter
 
 from osv import fields, osv
-import ir
 
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
@@ -102,10 +101,6 @@ class res_partner(osv.osv):
                       GROUP BY l.partner_id, a.type
                       """,
                    (tuple(ids),))
-        tinvert = {
-            'credit': 'receivable',
-            'debit': 'payable'
-        }
         maps = {'receivable':'credit', 'payable':'debit' }
         res = {}
         for id in ids:
