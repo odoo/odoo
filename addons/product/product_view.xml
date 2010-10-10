@@ -89,7 +89,7 @@
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
                                 <field name="type"/>
-                                <field name="procure_method"/>
+                                <field name="procure_method" groups="base.group_extended"/>
                                 <field name="supply_method"/>
                             </group>
 
@@ -147,8 +147,8 @@
                             <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                             <field name="list_price"/>
                             <newline/>
-                            <field name="price_margin" groups="group_product_variant"/>
-                            <field name="price_extra" groups="group_product_variant"/>
+                            <field name="price_margin" groups="product.group_product_variant"/>
+                            <field name="price_extra" groups="product.group_product_variant"/>
                             <newline/>
                             <field groups="base.group_extended" name="cost_method"/>
                             <newline/>
@@ -304,9 +304,7 @@
                 <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="uom_type"/>
                     <field name="factor"/>
-                    <field name="rounding"/>
                 </tree>
             </field>
         </record>
@@ -556,7 +554,7 @@
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
                                 <field name="type"/>
-                                <field name="procure_method"/>
+                                <field name="procure_method" groups="base.group_extended"/>
                                 <field name="supply_method"/>
                             </group>
 

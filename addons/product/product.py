@@ -289,10 +289,15 @@ class product_template(osv.osv):
                 return {'value': {'uom_po_id': uom_id}}
         return False
 
+    def _get_categ(self, cursor, user, context={}):
+        md = self.pool.get('ir.model.data')
+        return md._get_id(cr, uid, 'product', 'cat0') or False
+
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
         'type': lambda *a: 'product',
         'list_price': lambda *a: 1,
+        'categ_id': _get_categ,
         'cost_method': lambda *a: 'standard',
         'supply_method': lambda *a: 'buy',
         'standard_price': lambda *a: 1,

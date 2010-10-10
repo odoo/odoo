@@ -187,7 +187,7 @@ class res_partner(osv.osv):
             help="This payment term will be used instead of the default one for the current partner"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
-        'last_reconciliation_date': fields.datetime('Last Reconciliation Date', help='Date on which the partner accounting entries were reconciled last time')
+        'last_reconciliation_date': fields.datetime('Latest Reconciliation Date', help='Date on which the partner accounting entries were reconciled last time')
     }
 res_partner()
 

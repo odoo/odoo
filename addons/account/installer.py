@@ -61,7 +61,7 @@ class account_installer(osv.osv_memory):
         'date_stop': fields.date('End Date', required=True),
         'period':fields.selection([('month','Monthly'), ('3months','3 Monthly')],
                                   'Periods', required=True),
-        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts',required=True),
+        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Your Bank and Cash Accounts',required=True),
         'sale_tax':fields.float('Sale Tax(%)'),
         'purchase_tax':fields.float('Purchase Tax(%)'),
         'company_id': fields.many2one('res.company', 'Company'),

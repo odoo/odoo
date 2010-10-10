@@ -45,8 +45,7 @@ class base_setup_installer(osv.osv_memory):
             help="Lets you install addons geared towards sharing knowledge "
                  "with and between your employees."),
         'stock':fields.boolean('Warehouse Management',
-            help="Helps you manage your stocks and stocks locations, as well "
-                 "as the flow of stock between warehouses."),
+            help="Helps you manage your inventory and main stock operations: delivery orders, receptions, etc."),
         'mrp':fields.boolean('Manufacturing',
             help="Helps you manage your manufacturing processes and generate "
                  "reports on those processes."),
@@ -83,9 +82,6 @@ class base_setup_installer(osv.osv_memory):
             help="Installs a preselected set of OpenERP "
                  "applications selected to help you manage your auctions "
                  "as well as the business processes around them."),
-        }
-    _defaults = {
-        'crm': True,
         }
 
     def _if_knowledge(self, cr, uid, ids, context=None):

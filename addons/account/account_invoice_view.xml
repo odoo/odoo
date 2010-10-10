@@ -36,7 +36,7 @@
             <field name="arch" type="xml">
                 <tree string="Invoice Line">
                     <field name="name"/>
-                    <field name="account_id" groups="base.group_user"/>
+                    <field name="account_id" groups="account.group_account_user"/>
                     <field name="quantity"/>
                     <field name="uos_id"/>
                     <field name="price_unit"/>
@@ -60,7 +60,7 @@
                             <field name="price_unit"/>
                             <field name="discount" groups="base.group_extended"/>
                             <field colspan="4" name="name"/>
-                            <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)" groups="base.group_user"/>
+                            <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <newline/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
@@ -83,7 +83,7 @@
                     <field name="sequence"/>
                     <field name="manual"/>
                     <field name="name"/>
-                    <field name="account_id" groups="base.group_user"/>
+                    <field name="account_id" groups="base.group_account_user"/>
                     <field name="base"/>
                     <field name="amount"/>
                 </tree>
@@ -98,7 +98,7 @@
                 <form string="Manual Invoice Taxes">
                     <field name="name"/>
                     <field name="sequence"/>
-                    <field name="account_id" groups="base.group_user"/>
+                    <field name="account_id"/>
                     <field name="manual"/>
                     <field name="amount"/>
                     <field name="base" readonly="0"/>
@@ -234,14 +234,14 @@
                         <page string="Payments" groups="base.group_extended">
                             <field name="payment_ids" colspan="4" nolabel="1" >
                                 <tree string="Payments">
-                                    <field name="date"/>
+                                    <field name="date" string="Payment Date"/>
                                     <field name="ref"/>
-                                    <field name="name"/>
+                                    <field name="name" groups="base.group_extended"/>
                                     <field name="journal_id"/>
                                     <field name="debit"/>
                                     <field name="credit"/>
-                                    <field name="amount_currency"/>
-                                    <field name="currency_id"/>
+                                    <field name="amount_currency" groups="base.group_extended"/>
+                                    <field name="currency_id" groups="base.group_extended"/>
                                 </tree>
                             </field>
                         </page>
@@ -354,9 +354,9 @@
             <field name="arch" type="xml">
                 <search string="Search Invoice">
                    <group col="10" colspan="4">
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
-                        <filter icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
-                        <filter icon="terp-camera_test" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
+                        <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
+                        <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
+                        <filter name="invoices" icon="terp-camera_test" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
                         <separator orientation="vertical"/>
                         <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>
@@ -450,7 +450,6 @@
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
-            <field name="name">Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>

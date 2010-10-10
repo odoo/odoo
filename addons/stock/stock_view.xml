@@ -172,7 +172,7 @@
                             context="{'type': 'move_history_ids','field': ''}" colspan="2"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Stock Moves">
+                        <page string="Inventory Moves">
                             <field colspan="2" name="move_ids" nolabel="1"/>
                         </page>
                     </notebook>
@@ -287,7 +287,7 @@
                         <page string="Revisions">
                             <field colspan="2" name="revisions" nolabel="1"/>
                         </page>
-                        <page string="Stock Moves">
+                        <page string="Inventory Moves">
                             <field colspan="2" name="move_ids" nolabel="1"/>
                         </page>
                     </notebook>
@@ -348,7 +348,7 @@
         # Lot composition (history)
         #
         <record id="stock_move_tree" model="ir.ui.view">
-            <field name="name">Stock Moves</field>
+            <field name="name">Inventory Moves</field>
             <field name="model">stock.move</field>
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids</field>
@@ -373,7 +373,7 @@
         </record>
 
         <record id="stock_move_tree2" model="ir.ui.view">
-            <field name="name">Stock Moves</field>
+            <field name="name">Inventory Moves</field>
             <field name="model">stock.move</field>
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids2</field>
@@ -624,7 +624,7 @@
                     <notebook colspan="4">
                         <page string="Products">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines}">
-                                <tree colors="grey:scrapped == True" string="Stock Moves">
+                                <tree colors="grey:scrapped == True" string="Inventory Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -660,7 +660,7 @@
                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
                                 </tree>
-                                <form string="Stock Moves">
+                                <form string="Inventory Moves">
                                     <group colspan="2" col="4">
                                         <separator colspan="4" string="Move Information"/>
                                         <field name="name" invisible="1" colspan="4"/>
@@ -717,7 +717,7 @@
                             </field>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
-                                <button name="draft_force_assign" states="draft" string="Confirm (Do Not Process Now)" type="object" icon="gtk-apply"/>
+                                <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
@@ -810,7 +810,7 @@
                     <notebook colspan="4">
                         <page string="Products">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}" >
-                                <tree colors="grey:scrapped == True" string="Stock Moves">
+                                <tree colors="grey:scrapped == True" string="Inventory Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -845,7 +845,7 @@
                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
                                 </tree>
-                                <form string="Stock Moves">
+                                <form string="Inventory Moves">
                                     <group colspan="2" col="4">
                                         <separator colspan="2" string="Move Information"/>
                                         <field name="name" invisible="1" colspan="4"/>
@@ -1029,7 +1029,7 @@
                     <notebook colspan="4">
                         <page string="Products">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}" >
-                                <tree colors="grey:scrapped==True" string="Stock Moves">
+                                <tree colors="grey:scrapped==True" string="Inventory Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" string="UoM"/>
@@ -1060,7 +1060,7 @@
                                     <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
                                     <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
                                 </tree>
-                                <form string="Stock Moves">
+                                <form string="Inventory Moves">
                                     <group colspan="2" col="4">
                                         <separator colspan="4" string="Move Information"/>
                                         <field name="name" invisible="1" colspan="4" />
@@ -1242,7 +1242,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}" >
-                                <tree colors="grey:scrapped==True" string="Stock Moves">
+                                <tree colors="grey:scrapped==True" string="Inventory Moves">
                                     <field name="product_id" readonly="1"/>
                                     <field name="product_qty" readonly="1"/>
                                     <field name="product_uom" string="UoM" readonly="1"/>
@@ -1271,7 +1271,7 @@
                                     <field name="location_dest_id"/>
                                     <field name="state"/>
                                 </tree>
-                                <form string="Stock Moves">
+                                <form string="Inventory Moves">
                                     <group colspan="2" col="4">
                                         <separator colspan="4" string="Move Information"/>
                                         <field name="name" invisible="1" colspan="4"/>
@@ -1516,33 +1516,35 @@
             <field name="type">form</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Stock Moves">
-                    <group colspan="2" col="4">
-                        <separator colspan="4" string="Move Information"/>
-                        <field name="name" colspan="4"/>
-                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)" colspan="4"/>
-                        <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="3"/>
+                <form string="Inventory Moves">
+                    <group colspan="4" col="7">
+                        <separator colspan="7" string="Move Information"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)"/>
+                        <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                        <field name="product_uom" string="Unit Of Measure" widget="selection"/>
                         <button name="%(stock.move_scrap)d" groups="base.group_extended"
                                 string="Scrap" type="action"
                                 icon="gtk-convert" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
-                        <field name="product_uom" string="Unit Of Measure" widget="selection" colspan="4"/>
-                        <field name="product_uos_qty" groups="product.product_uos" colspan="4"/>
-                        <field name="product_uos" groups="product.product_uos" colspan="4"/>
+			<newline/>
+                        <field name="name" string="Reason"/>
+                        <field name="product_uos_qty" groups="product.product_uos"/>
+                        <field name="product_uos" groups="product.product_uos"/>
+			<newline/>
+                        <field name="location_id"/>
+                        <field name="location_dest_id"/>
                     </group>
 
                     <group colspan="2" col="2">
                         <separator string="Locations &amp; Picking" colspan="2" />
-                        <field name="location_id" widget="selection"/>
-                        <field name="location_dest_id" widget="selection"/>
-                        <field name="picking_id"/>
                         <field name="address_id" context="{'contact_display':'partner'}"/>
+                        <field name="picking_id"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
 
                     <group colspan="2" col="2">
                         <separator string="Dates &amp; Priority" colspan="2" />
-                        <field name="date"/>
+                        <field name="date" groups="base.group_extended"/>
                         <field name="date_planned"/>
                         <field name="date_expected"/>
                         <field name="priority"/>
@@ -1568,7 +1570,7 @@
                     <separator colspan="4"/>
                     <field name="state"/>
                     <group col="4" colspan="2">
-                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+                        <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
                         <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                         <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
                         <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
@@ -1583,7 +1585,7 @@
             <field name="type">search</field>
             <field eval="3" name="priority"/>
             <field name="arch" type="xml">
-                <search string="Stock Moves">
+                <search string="Inventory Moves">
                     <group col="14" colspan="4">
                         <filter icon="terp-go-today" string="Today" domain="[('date_planned','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date_planned','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
                         <separator orientation="vertical"/>
@@ -1624,7 +1626,7 @@
         </record>
 
         <record id="action_move_form2" model="ir.actions.act_window">
-            <field name="name">Stock Moves</field>
+            <field name="name">Inventory Moves</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1673,7 +1675,7 @@
                         states="draft,assigned,confirmed,done"/>
                     <field name="date_planned"/>
                     <field name="state"/>
-                    <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
+                    <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes" groups="base.group_extended"/>
                     <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
                     <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
                 </tree>
@@ -1687,35 +1689,36 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Moves">
-                    <group colspan="2" col="4">
-                        <separator colspan="4" string="Move Information"/>
-                        <field name="name" colspan="4"/>
-                        <field name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, address_id)" colspan="4"/>
-                        <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="3"/>
+                    <group colspan="4" col="7">
+                        <field name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, address_id)"/>
+                        <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                        <field name="product_uom" widget="selection"/>
                         <button name="%(stock.move_scrap)d" groups="base.group_extended"
                                 string="Scrap" type="action"
                                 icon="gtk-convert" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
-                        <field name="product_uom" widget="selection" colspan="4"/>
-                        <field name="product_uos_qty" groups="product.product_uos" colspan="4"/>
-                        <field name="product_uos" widget="selection" groups="product.product_uos" colspan="4"/>
-                    </group>
-
-                    <group colspan="2" col="2">
-                        <separator string="Locations &amp; Picking" colspan="2" />
-                        <field name="location_id" widget="selection"/>
-                        <field name="location_dest_id" widget="selection"/>
-                        <field name="picking_id"/>
-                        <field name="address_id" context="{'contact_display':'partner'}"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+			<newline/>
+                        <field name="name" string="Reason"/>
+                        <field name="product_uos_qty" groups="product.product_uos"/>
+                        <field name="product_uos" widget="selection" groups="product.product_uos"/>
+			<newline/>
+                        <field name="location_id"/>
+                        <field name="location_dest_id"/>
                     </group>
 
                     <group colspan="2" col="2">
                         <separator string="Dates &amp; Priority" colspan="2" />
-                        <field name="date"/>
+                        <field name="date" groups="base.group_extended"/>
                         <field name="date_planned"/>
                         <field name="date_expected"/>
-                        <field name="priority"/>
+                        <field name="priority" groups="base.group_extended"/>
+                    </group>
+
+                    <group colspan="2" col="2">
+                        <separator string="Locations &amp; Picking" colspan="2" />
+                        <field name="address_id" context="{'contact_display':'partner'}"/>
+                        <field name="picking_id"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
 
                     <group colspan="2" col="4" groups="base.group_extended">
@@ -1737,11 +1740,11 @@
                     <separator colspan="4"/>
                     <field name="state"/>
                     <group col="5" colspan="2">
-                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
-                        <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                         <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
+                        <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                         <button name="%(action_partial_move)d" states="assigned,confirmed" string="Partial" type="action" icon="gtk-justify-fill"/>
-                        <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
+                        <button name="action_done" states="draft,confirmed,assigned" string="Done" type="object" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>
@@ -1753,7 +1756,7 @@
             <field name="type">search</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <search string="Stock Moves">
+                <search string="Inventory Moves">
                     <group col="8" colspan="4">
                         <filter icon="terp-go-today" string="Today" domain="[('date_planned','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date_planned','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
@@ -1790,7 +1793,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context">{"search_default_receive":1}</field>
+            <field name="context" eval="'{\'search_default_receive\':1,\'full\':1,\'default_location_dest_id\': '+str(ref('stock.stock_location_stock'))+', \'default_location_id\': '+str(ref('stock.stock_location_suppliers'))+'}'"/>
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
         </record>
 
@@ -1852,7 +1855,7 @@
         <act_window
             context="{'location': active_id, 'search_default_done': 1,'search_default_product_id': [active_id]}"
             id="act_product_stock_move_open"
-            name="Stock Moves"
+            name="Inventory Moves"
             res_model="stock.move"
             src_model="product.product"/>
 
@@ -1867,7 +1870,7 @@
             context="{'location': active_id, 'search_default_future': 1,'search_default_product_id': [active_id]}"
             domain="[('state','in',('waiting','confirmed','assigned'))]"
             id="act_product_stock_move_futur_open"
-            name="Future Stock Moves"
+            name="Future Inventory Moves"
             res_model="stock.move"
             src_model="product.product"
             groups="base.group_extended"/>
@@ -1928,7 +1931,7 @@
 
         <!--  Delivery Product Vs Planned -->
         <record model="ir.ui.view" id="view_move_delivery_products_planned_tree">
-            <field name="name">Delivery Products</field>
+            <field name="name">Delivered Products</field>
             <field name="model">report.delivery.products.planned</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
@@ -1941,7 +1944,7 @@
         </record>
 
         <record model="ir.ui.view" id="view_move_delivery_products_planned_graph">
-            <field name="name">Delivery Products</field>
+            <field name="name">Delivered Products</field>
             <field name="model">report.delivery.products.planned</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
@@ -1954,7 +1957,7 @@
         </record>
 
         <record id="action_move_delivery_products_planned" model="ir.actions.act_window">
-            <field name="name">Delivery Products Vs Planned</field>
+            <field name="name">Delivered Products Vs Planned</field>
             <field name="res_model">report.delivery.products.planned</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1998,7 +2001,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context">{"search_default_receive":1}</field>
+            <field name="context" eval="'{\'search_default_receive\':1,\'full\':1,\'default_location_id\': '+str(ref('stock.stock_location_stock'))+', \'default_location_dest_id\': '+str(ref('stock.stock_location_customers'))+'}'"/>
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
         </record>
 
