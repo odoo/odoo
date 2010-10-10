@@ -146,7 +146,7 @@
             <field name="type">form</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form string="Supplier invoice">
+                <form string="Supplier Invoice">
                     <group col="8" colspan="4">
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <field name="number" readonly="1"/>
@@ -449,6 +449,7 @@
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
+            <field name="name">Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
