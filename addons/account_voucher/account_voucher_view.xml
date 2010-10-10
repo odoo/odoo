@@ -218,14 +218,5 @@
             </field>
         </record>
 
-        <act_window
-            id="act_invoice_voucher_open"
-            name="Pay Invoice"
-            view_mode="form,tree"
-            domain="[('partner_id', '=', partner_id)]"
-            context="{'default_partner_id': partner_id, 'default_amount':residual, 'default_name':name, 'default_state': 'draft', 'invoice_type':type, 'default_type': type in ('out_invoice','out_refund') and 'receipt' or 'payment'}"
-            res_model="account.voucher"
-            src_model="account.invoice"/>
-
     </data>
 </openerp>
