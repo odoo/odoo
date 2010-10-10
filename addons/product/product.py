@@ -276,9 +276,12 @@ class product_template(osv.osv):
         return res and res[0] or False
 
     def _default_category(self, cr, uid, context={}):
+        print '_default_categ', context
         if 'categ_id' in context and context['categ_id']:
             return context['categ_id']
-        return False
+        md = self.pool.get('ir.model.data')
+        res = md.get_object_reference(cr, uid, 'product', 'cat0') or False
+        return res and res[1] or False
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
         if uom_id and uom_po_id:
@@ -289,15 +292,10 @@ class product_template(osv.osv):
                 return {'value': {'uom_po_id': uom_id}}
         return False
 
-    def _get_categ(self, cursor, user, context={}):
-        md = self.pool.get('ir.model.data')
-        return md._get_id(cr, uid, 'product', 'cat0') or False
-
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
         'type': lambda *a: 'product',
         'list_price': lambda *a: 1,
-        'categ_id': _get_categ,
         'cost_method': lambda *a: 'standard',
         'supply_method': lambda *a: 'buy',
         'standard_price': lambda *a: 1,
