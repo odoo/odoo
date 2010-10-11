@@ -270,7 +270,17 @@ def get_module_resource(module, *args):
     @return: absolute path to the resource
     """
     a = get_module_path(module)
-    return a and opj(a, *args) or False
+    res = a and opj(a, *args) or False
+    if zipfile.is_zipfile( a +'.zip') :
+        zip = zipfile.ZipFile( a + ".zip")
+        files = ['/'.join(f.split('/')[1:]) for f in zip.namelist()]
+        res = '/'.join(args)
+        if res in files:
+            return opj(a, res)
+    elif os.path.isfile(res):
+        return res
+    return False
+
 
 
 def get_modules():
@@ -297,9 +307,10 @@ def load_information_from_description_file(module):
     """
     :param module: The name of the module (sale, purchase, ...)
     """
+
     for filename in ['__openerp__.py', '__terp__.py']:
         description_file = get_module_resource(module, filename)
-        if os.path.isfile(description_file):
+        if description_file :
             return eval(tools.file_open(description_file).read())
 
     #TODO: refactor the logger in this file to follow the logging guidelines
@@ -332,9 +343,8 @@ def upgrade_graph(graph, cr, module_list, force=None):
     for module in module_list:
         mod_path = get_module_path(module)
         terp_file = get_module_resource(module, '__openerp__.py')
-        if not terp_file or not os.path.isfile(terp_file):
+        if not terp_file:
             terp_file = get_module_resource(module, '__terp__.py')
-
         if not mod_path or not terp_file:
             logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not found, skipped' % (module))
             continue
