@@ -34,7 +34,7 @@ class account_analytic_account(osv.osv):
         dp = 2
         res = dict([(i, {}) for i in ids])
 
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
+        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
         accounts = self.browse(cr, uid, ids, context=context)
 
         for f in fields:
@@ -62,10 +62,10 @@ class account_analytic_account(osv.osv):
                 for id in ids:
                     res[id][f] = 0.0
                 if parent_ids:
-                    cr.execute("select account_analytic_line.account_id, max(date) \
-                            from account_analytic_line \
-                            where account_id IN %s \
-                                and invoice_id is not null \
+                    cr.execute("SELECT account_analytic_line.account_id, MAX(date) \
+                            FROM account_analytic_line \
+                            WHERE account_id IN %s \
+                                AND invoice_id IS NOT NULL \
                             GROUP BY account_analytic_line.account_id;", (parent_ids,))
                     for account_id, sum in cr.fetchall():
                         if account_id not in res:
@@ -85,25 +85,25 @@ class account_analytic_account(osv.osv):
                     # This computation doesn't take care of pricelist !
                     # Just consider list_price
                     cr.execute("""SELECT account_analytic_account.id, \
-                                COALESCE(sum (product_template.list_price * \
+                                COALESCE(SUM (product_template.list_price * \
                                     account_analytic_line.unit_amount * \
-                                    ((100-hr_timesheet_invoice_factor.factor)/100)),0.0) \
+                                    ((100-hr_timesheet_invoice_factor.factor)/100)), 0.0) \
                                     AS ca_to_invoice \
                             FROM product_template \
-                            join product_product \
-                                on product_template.id = product_product.product_tmpl_id \
+                            JOIN product_product \
+                                ON product_template.id = product_product.product_tmpl_id \
                             JOIN account_analytic_line \
-                                on account_analytic_line.product_id = product_product.id \
+                                ON account_analytic_line.product_id = product_product.id \
                             JOIN account_analytic_journal \
-                                on account_analytic_line.journal_id = account_analytic_journal.id \
+                                ON account_analytic_line.journal_id = account_analytic_journal.id \
                             JOIN account_analytic_account \
-                                on account_analytic_account.id = account_analytic_line.account_id \
+                                ON account_analytic_account.id = account_analytic_line.account_id \
                             JOIN hr_timesheet_invoice_factor \
-                                on hr_timesheet_invoice_factor.id = account_analytic_account.to_invoice \
+                                ON hr_timesheet_invoice_factor.id = account_analytic_account.to_invoice \
                             WHERE account_analytic_account.id IN %s \
-                                AND account_analytic_line.invoice_id is null \
+                                AND account_analytic_line.invoice_id IS NULL \
                                 AND account_analytic_line.to_invoice IS NOT NULL \
-                                and account_analytic_journal.type in ('purchase','general') \
+                                AND account_analytic_journal.type IN ('purchase','general') \
                             GROUP BY account_analytic_account.id;""", (parent_ids,))
                     for account_id, sum in cr.fetchall():
                         if account_id not in res:
@@ -124,13 +124,13 @@ class account_analytic_account(osv.osv):
                 for id in ids:
                     res[id][f] = ''
                 if parent_ids:
-                    cr.execute ("select account_analytic_line.account_id, \
-                                date(max(account_invoice.date_invoice)) \
-                            from account_analytic_line \
-                            join account_invoice \
-                                on account_analytic_line.invoice_id = account_invoice.id \
-                            where account_analytic_line.account_id IN %s \
-                                and account_analytic_line.invoice_id is not null \
+                    cr.execute ("SELECT account_analytic_line.account_id, \
+                                DATE(MAX(account_invoice.date_invoice)) \
+                            FROM account_analytic_line \
+                            JOIN account_invoice \
+                                ON account_analytic_line.invoice_id = account_invoice.id \
+                            WHERE account_analytic_line.account_id IN %s \
+                                AND account_analytic_line.invoice_id IS NOT NULL \
                             GROUP BY account_analytic_line.account_id",(parent_ids,))
                     for account_id, lid in cr.fetchall():
                         res[account_id][f] = lid
@@ -142,11 +142,11 @@ class account_analytic_account(osv.osv):
                 for id in ids:
                     res[id][f] = ''
                 if parent_ids:
-                    cr.execute("select account_analytic_line.account_id, max(date) \
-                            from account_analytic_line \
-                            where account_id IN %s \
-                                and invoice_id is null \
-                            GROUP BY account_analytic_line.account_id", (parent_ids,))
+                    cr.execute("SELECT account_analytic_line.account_id, MAX(date) \
+                            FROM account_analytic_line \
+                            WHERE account_id IN %s \
+                                AND invoice_id IS NULL \
+                            GROUP BY account_analytic_line.account_id" ,(parent_ids,))
                     for account_id, lwd in cr.fetchall():
                         if account_id not in res:
                             res[account_id] = {}
@@ -159,13 +159,13 @@ class account_analytic_account(osv.osv):
                 for id in ids:
                     res[id][f] = 0.0
                 if parent_ids:
-                    cr.execute("select account_analytic_line.account_id, COALESCE(sum(unit_amount),0.0) \
-                            from account_analytic_line \
-                            join account_analytic_journal \
-                                on account_analytic_line.journal_id = account_analytic_journal.id \
-                            where account_analytic_line.account_id IN %s \
-                                and account_analytic_journal.type='general' \
-                                and invoice_id is null \
+                    cr.execute("SELECT account_analytic_line.account_id, COALESCE(SUM(unit_amount), 0.0) \
+                            FROM account_analytic_line \
+                            JOIN account_analytic_journal \
+                                ON account_analytic_line.journal_id = account_analytic_journal.id \
+                            WHERE account_analytic_line.account_id IN %s \
+                                AND account_analytic_journal.type='general' \
+                                AND invoice_id IS NULL \
                                 AND to_invoice IS NOT NULL \
                             GROUP BY account_analytic_line.account_id;",(parent_ids,))
                     for account_id, sua in cr.fetchall():
@@ -182,12 +182,12 @@ class account_analytic_account(osv.osv):
                 for id in ids:
                     res[id][f] = 0.0
                 if parent_ids:
-                    cr.execute("select account_analytic_line.account_id,COALESCE(SUM(unit_amount),0.0) \
-                            from account_analytic_line \
-                            join account_analytic_journal \
-                                on account_analytic_line.journal_id = account_analytic_journal.id \
-                            where account_analytic_line.account_id IN %s \
-                                and account_analytic_journal.type='general' \
+                    cr.execute("SELECT account_analytic_line.account_id, COALESCE(SUM(unit_amount), 0.0) \
+                            FROM account_analytic_line \
+                            JOIN account_analytic_journal \
+                                ON account_analytic_line.journal_id = account_analytic_journal.id \
+                            WHERE account_analytic_line.account_id IN %s \
+                                AND account_analytic_journal.type='general' \
                             GROUP BY account_analytic_line.account_id",(parent_ids,))
                     ff =  cr.fetchall()
                     for account_id, hq in ff:
@@ -211,24 +211,24 @@ class account_analytic_account(osv.osv):
                 # This computation doesn't take care of pricelist !
                 # Just consider list_price
                 if parent_ids:
-                    cr.execute("""select account_analytic_line.account_id as account_id, \
-                                COALESCE(sum((account_analytic_line.unit_amount * pt.list_price) \
+                    cr.execute("""SELECT account_analytic_line.account_id AS account_id, \
+                                COALESCE(SUM((account_analytic_line.unit_amount * pt.list_price) \
                                     - (account_analytic_line.unit_amount * pt.list_price \
-                                        * hr.factor)),0.0) as somme
-                            from account_analytic_line \
-                            left join account_analytic_journal \
-                                on (account_analytic_line.journal_id = account_analytic_journal.id) \
-                            join product_product pp \
-                                on (account_analytic_line.product_id = pp.id) \
-                            join product_template pt \
-                                on (pp.product_tmpl_id = pt.id) \
-                            join account_analytic_account a \
-                                on (a.id=account_analytic_line.account_id) \
-                            join hr_timesheet_invoice_factor hr \
-                                on (hr.id=a.to_invoice) \
-                        where account_analytic_line.account_id IN %s \
-                            and a.to_invoice IS NOT NULL \
-                            and account_analytic_journal.type IN ('purchase','general')
+                                        * hr.factor)), 0.0) AS somme
+                            FROM account_analytic_line \
+                            LEFT JOIN account_analytic_journal \
+                                ON (account_analytic_line.journal_id = account_analytic_journal.id) \
+                            JOIN product_product pp \
+                                ON (account_analytic_line.product_id = pp.id) \
+                            JOIN product_template pt \
+                                ON (pp.product_tmpl_id = pt.id) \
+                            JOIN account_analytic_account a \
+                                ON (a.id=account_analytic_line.account_id) \
+                            JOIN hr_timesheet_invoice_factor hr \
+                                ON (hr.id=a.to_invoice) \
+                        WHERE account_analytic_line.account_id IN %s \
+                            AND a.to_invoice IS NOT NULL \
+                            AND account_analytic_journal.type IN ('purchase', 'general')
                         GROUP BY account_analytic_line.account_id""",(parent_ids,))
                     for account_id, sum in cr.fetchall():
                         res2[account_id] = round(sum, dp)
@@ -250,53 +250,51 @@ class account_analytic_account(osv.osv):
 
     def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
+        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
         if parent_ids:
-            cr.execute("select account_analytic_line.account_id, COALESCE(sum(amount_currency),0.0) \
-                    from account_analytic_line \
-                    join account_analytic_journal \
-                        on account_analytic_line.journal_id = account_analytic_journal.id  \
-                    where account_analytic_line.account_id IN %s \
-                        and account_analytic_journal.type = 'sale' \
-                    group by account_analytic_line.account_id", (parent_ids,))
+            cr.execute("SELECT account_analytic_line.account_id, COALESCE(SUM(amount_currency), 0.0) \
+                    FROM account_analytic_line \
+                    JOIN account_analytic_journal \
+                        ON account_analytic_line.journal_id = account_analytic_journal.id  \
+                    WHERE account_analytic_line.account_id IN %s \
+                        AND account_analytic_journal.type = 'sale' \
+                    GROUP BY account_analytic_line.account_id", (parent_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
-
-        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context)
+        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context=context)
 
     def _total_cost_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
+        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
         if parent_ids:
-            cr.execute("""select account_analytic_line.account_id,COALESCE(sum(amount_currency),0.0) \
-
-                    from account_analytic_line \
-                    join account_analytic_journal \
-                        on account_analytic_line.journal_id = account_analytic_journal.id \
-                    where account_analytic_line.account_id IN %s \
-                        and amount<0 \
+            cr.execute("""SELECT account_analytic_line.account_id, COALESCE(SUM(amount_currency), 0.0) \
+                    FROM account_analytic_line \
+                    JOIN account_analytic_journal \
+                        ON account_analytic_line.journal_id = account_analytic_journal.id \
+                    WHERE account_analytic_line.account_id IN %s \
+                        AND amount<0 \
                     GROUP BY account_analytic_line.account_id""",(parent_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
-        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context)
+        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context=context)
 
     def _remaining_hours_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        for account in self.browse(cr, uid, ids, context=context):
             if account.quantity_max != 0:
                 res[account.id] = account.quantity_max - account.hours_quantity
             else:
-                res[account.id]=0.0
+                res[account.id] = 0.0
         for id in ids:
             res[id] = round(res.get(id, 0.0),2)
         return res
 
     def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = account.hours_quantity - account.hours_qtt_non_invoiced
             if res[account.id] < 0:
-                res[account.id]=0.0
+                res[account.id] = 0.0
         for id in ids:
             res[id] = round(res.get(id, 0.0),2)
         return res
@@ -414,7 +412,7 @@ class account_analytic_account_summary_user(osv.osv):
         max_user = cr.fetchone()[0]
         account_ids = [int(str(x/max_user - (x%max_user == 0 and 1 or 0))) for x in ids]
         user_ids = [int(str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user))) for x in ids]
-        parent_ids = tuple(account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)]))
+        parent_ids = tuple(account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)], context=context))
         if parent_ids:
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_user ' \
@@ -477,19 +475,19 @@ class account_analytic_account_summary_user(osv.osv):
 
     def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
         if not context:
-            context={}
+            context = {}
         if not ids:
             return []
 
-        if fields==None:
+        if fields is None:
             fields = self._columns.keys()
+        res_trans_obj = self.pool.get('ir.translation')
 
         # construct a clause for the rules:
         d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
-
         res = []
         cr.execute('SELECT MAX(id) FROM res_users')
         max_user = cr.fetchone()[0]
@@ -498,9 +496,9 @@ class account_analytic_account_summary_user(osv.osv):
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
-                    cr.execute('select %s from \"%s\" where id IN (%s) ' \
-                            'and account_id IN (%s) ' \
-                            'and "user" IN (%s) and %s order by %s' % \
+                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ' \
+                            'AND account_id IN (%s) ' \
+                            'AND "user" IN (%s) AND %s ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
                                 ','.join([str(x) for x in sub_ids]),
                                 ','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
@@ -510,9 +508,9 @@ class account_analytic_account_summary_user(osv.osv):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % self._description)
                 else:
-                    cr.execute('select %s from \"%s\" where id IN (%s) ' \
-                            'and account_id IN (%s) ' \
-                            'and "user" IN (%s) order by %s' % \
+                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ' \
+                            'AND account_id IN (%s) ' \
+                            'AND "user" IN (%s) ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
                                 ','.join([str(x) for x in sub_ids]),
                                 ','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
@@ -521,7 +519,6 @@ class account_analytic_account_summary_user(osv.osv):
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
-        res_trans_obj = self.pool.get('ir.translation')
         for f in fields_pre:
             if self._columns[f].translate:
                 ids = map(lambda x: x['id'], res)
@@ -579,7 +576,7 @@ class account_analytic_account_summary_month(osv.osv):
         account_obj = self.pool.get('account.analytic.account')
         account_ids = [int(str(int(x))[:-6]) for x in ids]
         month_ids = [int(str(int(x))[-6:]) for x in ids]
-        parent_ids = tuple(account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)]))
+        parent_ids = tuple(account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)], context=context))
         if parent_ids:
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_month ' \
@@ -598,11 +595,9 @@ class account_analytic_account_summary_month(osv.osv):
         return res
 
     _columns = {
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account',
-            readonly=True),
-        'unit_amount': fields.function(_unit_amount, method=True, type='float',
-            string='Total Time'),
-        'month': fields.char('Month', size=25, readonly=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'unit_amount': fields.function(_unit_amount, method=True, type='float', string='Total Time'),
+        'month': fields.char('Month', size=32, readonly=True),
     }
 
     def init(self, cr):
@@ -654,28 +649,27 @@ class account_analytic_account_summary_month(osv.osv):
 
     def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
         if not context:
-            context={}
+            context = {}
         if not ids:
             return []
 
-        if fields==None:
+        if fields is None:
             fields = self._columns.keys()
-
-        # construct a clause for the rules:
-        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        res_trans_obj = self.pool.get('ir.translation')
+        # construct a clause for the rules :
+        d1, d2, tables= self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
-
         res = []
         if fields_pre:
             fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
-                    cr.execute('select %s from \"%s\" where id IN (%s) ' \
-                            'and account_id IN (%s) ' \
-                            'and month_id IN (%s) and %s order by %s' % \
+                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ' \
+                            'AND account_id IN (%s) ' \
+                            'AND month_id IN (%s) AND %s ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
                                 ','.join([str(x) for x in sub_ids]),
                                 ','.join([str(x)[:-6] for x in sub_ids]),
@@ -685,9 +679,9 @@ class account_analytic_account_summary_month(osv.osv):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % self._description)
                 else:
-                    cr.execute('select %s from \"%s\" where id IN (%s) ' \
-                            'and account_id IN (%s) ' \
-                            'and month_id IN (%s) order by %s' % \
+                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ' \
+                            'AND account_id IN (%s) ' \
+                            'AND month_id IN (%s) ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
                                 ','.join([str(x) for x in sub_ids]),
                                 ','.join([str(x)[:-6] for x in sub_ids]),
@@ -697,7 +691,6 @@ class account_analytic_account_summary_month(osv.osv):
         else:
             res = map(lambda x: {'id': x}, ids)
 
-        res_trans_obj = self.pool.get('ir.translation')
         for f in fields_pre:
             if self._columns[f].translate:
                 ids = map(lambda x: x['id'], res)
@@ -739,10 +732,8 @@ class account_analytic_account_summary_month(osv.osv):
             res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
             for record in res:
                 record[f] = res2[record['id']]
-
         return res
 
 account_analytic_account_summary_month()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
