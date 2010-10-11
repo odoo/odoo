@@ -767,7 +767,7 @@ class stock_picking(osv.osv):
         self.log_picking(cr, uid, ids, context=context)
         return True
 
-    def test_finnished(self, cr, uid, ids):
+    def test_finished(self, cr, uid, ids):
         """ Tests whether the move is in done or cancel state or not.
         @return: True or False
         """

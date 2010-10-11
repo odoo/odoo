@@ -21,7 +21,7 @@
 
 from osv import fields,osv
 import netsvc
-from datetime import datetime, date
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from tools.translate import _
 import decimal_precision as dp

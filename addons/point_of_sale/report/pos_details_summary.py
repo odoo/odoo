@@ -78,10 +78,10 @@ class pos_details_summary(report_sxw.rml_parse):
 
         result = {}
         for obj in objects:
-            for payment in obj.payments:
-                if gift_journal_id and gift_journal_id == payment.journal_id.id:
+            for payment in obj.statement_ids:
+                if gift_journal_id and gift_journal_id == payment.statement_id.journal_id.id:
                     continue
-                result[payment.journal_id.name] = result.get(payment.journal_id.name, 0.0) + payment.amount
+                result[payment.statement_id.journal_id.name] = result.get(payment.statement_id.journal_id.name, 0.0) + payment.amount
         return result
 
     def _paid_total(self, objects):
