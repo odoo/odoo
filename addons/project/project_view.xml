@@ -46,7 +46,7 @@
                             <separator colspan="4"/>
                             <group col="9" colspan="8">
                                 <field name="state" select="1" readonly="1"/>
-                                <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
+                                <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert" groups="base.group_extended"/>
                                 <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
                                 <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
@@ -67,9 +67,9 @@
                                 </tree>
                             </field>
                         </page>
-                        <page groups="base.group_extended" string="Partner Info">
+                        <page groups="base.group_extended" string="Accounting">
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Contact Address"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Invoice Address"/>
                             <field name="warn_customer"/>
                             <newline/>
                             <separator colspan="2" string="Mail Header"/>
