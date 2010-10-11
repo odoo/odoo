@@ -90,10 +90,10 @@ class event_event(crm.crm_case, osv.osv):
                 #send reminder that will confirm the event for all the people that were already confirmed
                 reg_ids = register_pool.search(cr, uid, [
                                ('event_id', '=', event.id),
-                               ('state', 'not in', ['draft', 'cancel'])])
+                               ('state', 'not in', ['draft', 'cancel'])], context=context)
                 register_pool.mail_user_confirm(cr, uid, reg_ids)
 
-        return self.write(cr, uid, ids, {'state': 'confirm'})
+        return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
 
     def button_confirm(self, cr, uid, ids, context=None):
         """This Function Confirm Event.
@@ -116,7 +116,7 @@ class event_event(crm.crm_case, osv.osv):
                 unconfirmed_ids.append(event.id)
         if unconfirmed_ids:
             view_id = data_pool._get_id(cr, uid, 'event', 'view_event_confirm')
-            view_data = data_pool.browse(cr, uid, view_id)
+            view_data = data_pool.browse(cr, uid, view_id, context=context)
             view_id = view_data.res_id
             context['event_ids'] = unconfirmed_ids
             return {
@@ -143,7 +143,7 @@ class event_event(crm.crm_case, osv.osv):
         """
         register_pool = self.pool.get('event.registration')
         res = {}
-        for event in self.browse(cr, uid, ids, context):
+        for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = {}
             for field in fields:
                 res[event.id][field] = False
@@ -155,11 +155,11 @@ class event_event(crm.crm_case, osv.osv):
 
             reg_ids = register_pool.search(cr, uid, [
                         ('event_id', '=', event.id),
-                       ('state', 'in', state)])
+                       ('state', 'in', state)], context=context)
 
             number = 0.0
             if reg_ids:
-                cr.execute('select sum(nb_register) from event_registration where id IN %s', (tuple(reg_ids),))
+                cr.execute('SELECT SUM(nb_register) FROM event_registration WHERE id IN %s', (tuple(reg_ids),))
                 number = cr.fetchone()
             if 'register_current' in fields:
                 res[event.id]['register_current'] = number and number[0]
@@ -194,8 +194,8 @@ class event_event(crm.crm_case, osv.osv):
                     register_values['description'] = vals['mail_confirm']
 
                 if register_values:
-                    reg_ids = register_pool.search(cr, uid, [('event_id', '=', event.id)])
-                    register_pool.write(cr, uid, reg_ids, register_values)
+                    reg_ids = register_pool.search(cr, uid, [('event_id', '=', event.id)], context=context)
+                    register_pool.write(cr, uid, reg_ids, register_values, context=context)
         return res
 
     _columns = {
@@ -231,7 +231,7 @@ class event_event(crm.crm_case, osv.osv):
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True, states={'draft': [('readonly', False)]}, help="Pricelist version for current event."),
         'unit_price': fields.related('product_id', 'list_price', type='float', string='Registration Cost', readonly=True, states={'draft':[('readonly',False)]}, help="This will be the default price used as registration cost when invoicing this event. Note that you can specify for each registration a specific amount if you want to", digits_compute=dp.get_precision('Sale Price')),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who are giving speech on event."),
-        'speaker_ids':fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
+        'speaker_ids': fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
         'address_id': fields.many2one('res.partner.address','Location Address', readonly=False, states={'done': [('readonly', True)]}),
         'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
         'country_id': fields.related('address_id', 'country_id',
@@ -239,7 +239,6 @@ class event_event(crm.crm_case, osv.osv):
         'language': fields.char('Language',size=64, readonly=False, states={'done': [('readonly', True)]}),
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
-
     }
 
     _defaults = {
@@ -256,7 +255,7 @@ class event_event(crm.crm_case, osv.osv):
         level = 100
 
         while len(ids):
-            cr.execute('select distinct parent_id from event_event where id IN %s', (tuple(ids),))
+            cr.execute('SELECT DISTINCT parent_id FROM event_event WHERE id IN %s', (tuple(ids),))
             ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
@@ -359,7 +358,7 @@ class event_registration(osv.osv):
         val_invoice = inv_pool.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
         val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
 
-        inv_lines_pool.product_id_change(cr, uid, [], reg.event_id.product_id.id, uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
+        inv_lines_pool.product_id_change(cr, uid, [], reg.event_id.product_id.id, uom=False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
 
         val_invoice['value'].update({
                 'origin': reg.event_product,
@@ -368,7 +367,7 @@ class event_registration(osv.osv):
                 'comment': "",
                 'date_invoice': context.get('date_inv', False)
             })
-        inv_id = inv_pool.create(cr, uid, val_invoice['value'])
+        inv_id = inv_pool.create(cr, uid, val_invoice['value'], context=context)
         inv_pool.button_compute(cr, uid, [inv_id])
         self.history(cr, uid, [reg], _('Invoiced'))
         return inv_id
@@ -469,12 +468,12 @@ class event_registration(osv.osv):
         for registration in self.browse(cr, uid, ids, context=context):
             total_confirmed = registration.event_id.register_current + registration.nb_register
             if total_confirmed <= registration.event_id.register_max or registration.event_id.register_max == 0:
-                self.do_open(cr, uid, [registration.id], context)
+                self.do_open(cr, uid, [registration.id], context=context)
             else:
                 unconfirmed_ids.append(registration.id)
         if unconfirmed_ids:
             view_id = data_pool._get_id(cr, uid, 'event', 'view_event_confirm_registration')
-            view_data = data_pool.browse(cr, uid, view_id)
+            view_data = data_pool.browse(cr, uid, view_id, context=context)
             view_id = view_data.res_id
             context['registration_ids'] = unconfirmed_ids
             return {
@@ -502,10 +501,10 @@ class event_registration(osv.osv):
             if registration.tobe_invoiced and not registration.invoice_id:
                 unclosed_ids.append(registration.id)
             else:
-                self.do_close(cr, uid, [registration.id])
+                self.do_close(cr, uid, [registration.id], context=context)
         if unclosed_ids:
             view_id = data_pool._get_id(cr, uid, 'event', 'view_event_make_invoice')
-            view_data = data_pool.browse(cr, uid, view_id)
+            view_data = data_pool.browse(cr, uid, view_id, context=context)
             view_id = view_data.res_id
             context['active_ids'] = unclosed_ids
             return {
@@ -561,10 +560,10 @@ class event_registration(osv.osv):
                     body = regestration.event_id.mail_confirm
             if subject or body:
                 tools.email_send(src, email_to, subject, body, email_cc = email_cc, openobject_id = regestration.id)
-                self.history(cr, uid, [regestration], subject, history=True, \
-                        email=email_to, details=body, \
-                        subject=subject, email_from=src, \
-                        email_cc=', '.join(email_cc))
+                self.history(cr, uid, [regestration], subject, history = True, \
+                        email = email_to, details = body, \
+                        subject = subject, email_from = src, \
+                        email_cc = ', '.join(email_cc))
 
         return True
 
@@ -620,12 +619,17 @@ class event_registration(osv.osv):
         res_obj = self.pool.get('res.partner')
 
         data_event =  event_obj.browse(cr, uid, event_id)
-        res = {'value': {'unit_price': False, 'event_product': False, 'user_id': False,
-                        'date': data_event.date_begin, 'date_deadline': data_event.date_end, 'description': data_event.note, 'name': data_event.name,
-                        'section_id': data_event.section_id and data_event.section_id.id or False,
+        res = {'value': {'unit_price': False,
+                         'event_product': False,
+                         'user_id': False,
+                         'date': data_event.date_begin,
+                         'date_deadline': data_event.date_end,
+                         'description': data_event.note,
+                         'name': data_event.name,
+                         'section_id': data_event.section_id and data_event.section_id.id or False,
                         }}
         if data_event.user_id.id:
-            res['value'].update({'user_id':data_event.user_id.id})
+            res['value'].update({'user_id': data_event.user_id.id})
         if data_event.product_id:
             pricelist_id = data_event.pricelist_id and data_event.pricelist_id.id or False
             if partner_invoice_id:
@@ -653,7 +657,7 @@ class event_registration(osv.osv):
         data['contact_id'], data['partner_invoice_id'], data['email_from'] = (False, False, False)
         if not part:
             return {'value': data}
-        data['partner_invoice_id']=part
+        data['partner_invoice_id'] = part
         # this calls onchange_partner_invoice_id
         d = self.onchange_partner_invoice_id(cr, uid, ids, event_id, part)
         # this updates the dictionary
@@ -677,8 +681,8 @@ class event_registration(osv.osv):
         @param event_id: Event ID
         @param partner_invoice_id: Partner Invoice ID
         """
-        data={}
-        context={}
+        data = {}
+        context = {}
         event_obj = self.pool.get('event.event')
         prod_obj = self.pool.get('product.product')
         res_obj = self.pool.get('res.partner')
@@ -686,7 +690,7 @@ class event_registration(osv.osv):
         data['unit_price']=False
         if not event_id:
             return {'value': data}
-        data_event =  event_obj.browse(cr, uid, event_id)
+        data_event =  event_obj.browse(cr, uid, event_id, context=context)
         if data_event.product_id:
             data['event_product'] = data_event.product_id.name
             pricelist_id = data_event.pricelist_id and data_event.pricelist_id.id or False
