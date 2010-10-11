@@ -104,8 +104,8 @@ Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07''')
 We suggest you to put bank information here:
 IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
         'logo':fields.binary('Logo'),
-        'account_no':fields.char('Account No', size=64),
-        'website': fields.char('Company Website', size=64, help="Exemple: http://openerp.com"),
+        'account_no':fields.char('Bank Account No', size=64),
+        'website': fields.char('Company Website', size=64, help="Example: http://openerp.com"),
     }
 
     def execute(self, cr, uid, ids, context=None):

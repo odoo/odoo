@@ -2473,14 +2473,14 @@ class account_tax_template(osv.osv):
 
 account_tax_template()
 
-# Fiscal Mapping Templates
+# Fiscal Position Templates
 
 class account_fiscal_position_template(osv.osv):
     _name = 'account.fiscal.position.template'
-    _description = 'Template for Fiscal Mapping'
+    _description = 'Template for Fiscal Position'
 
     _columns = {
-        'name': fields.char('Fiscal Mapping Template', size=64, translate=True, required=True),
+        'name': fields.char('Fiscal Position Template', size=64, translate=True, required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping')
@@ -2490,11 +2490,11 @@ account_fiscal_position_template()
 
 class account_fiscal_position_tax_template(osv.osv):
     _name = 'account.fiscal.position.tax.template'
-    _description = 'Template Tax Fiscal Mapping'
+    _description = 'Template Tax Fiscal Position'
     _rec_name = 'position_id'
 
     _columns = {
-        'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Mapping', required=True, ondelete='cascade'),
+        'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Position', required=True, ondelete='cascade'),
         'tax_src_id': fields.many2one('account.tax.template', 'Tax Source', required=True),
         'tax_dest_id': fields.many2one('account.tax.template', 'Replacement Tax')
     }
@@ -2722,7 +2722,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # Bank Journals
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
-        data = obj_pool.browse(cr, uid, data_id[0])
+        data = obj_data.browse(cr, uid, data_id[0])
         view_id_cash = data.res_id
 
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view_multi')])

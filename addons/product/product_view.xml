@@ -89,7 +89,7 @@
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
                                 <field name="type"/>
-                                <field name="procure_method"/>
+                                <field name="procure_method" groups="base.group_extended"/>
                                 <field name="supply_method"/>
                             </group>
 
@@ -110,7 +110,7 @@
                             <group colspan="2" col="2" name="uom">
                                 <separator string="Unit of Measure" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" widget="selection"/>
-                                <field name="uom_po_id" widget="selection"/>
+                                <field name="uom_po_id" widget="selection" groups="base.group_extended"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
@@ -147,12 +147,10 @@
                             <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                             <field name="list_price"/>
                             <newline/>
-                            <field name="price_margin" groups="base.group_extended"/>
-                            <field name="price_extra" groups="base.group_extended"/>
+                            <field name="price_margin" groups="product.group_product_variant"/>
+                            <field name="price_extra" groups="product.group_product_variant"/>
                             <newline/>
                             <field groups="base.group_extended" name="cost_method"/>
-                            <newline/>
-                            <field groups="base.group_extended" name="seller_id"/>
                             <newline/>
                             <field colspan="4" name="seller_ids" nolabel="1"/>
                         </page>
@@ -306,9 +304,7 @@
                 <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="uom_type"/>
                     <field name="factor"/>
-                    <field name="rounding"/>
                 </tree>
             </field>
         </record>
@@ -462,7 +458,6 @@
                     <field name="product_code" groups="base.group_extended"/>
                     <field name="min_qty"/>
                     <field name="product_uom" widget="selection"/>
-                    <field name="qty"/>
                     <field name="delay"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field colspan="4" groups="base.group_extended" name="pricelist_ids" nolabel="1" widget="one2many_list">
@@ -487,7 +482,7 @@
                     <field name="sequence" string="Seq"/>
                     <field name="name"/>
                     <field name="delay"/>
-                    <field name="qty"/>
+                    <field name="min_qty"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
@@ -559,7 +554,7 @@
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
                                 <field name="type"/>
-                                <field name="procure_method"/>
+                                <field name="procure_method" groups="base.group_extended"/>
                                 <field name="supply_method"/>
                             </group>
 
@@ -580,7 +575,7 @@
                             <group colspan="2" col="2" name="uom">
                                 <separator string="UOM" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
-                                <field name="uom_po_id"/>
+                                <field name="uom_po_id" groups="base.group_extended"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
