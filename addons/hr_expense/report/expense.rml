@@ -115,9 +115,9 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_header_Centre">HR Expenses [[ o.name or '' ]]</para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
+    <para style="terp_header_Centre">HR Expenses</para>
+    <para style="terp_tblheader_General_Centre">
+      <font face="Helvetica" size="9.0">[[ o.name or '' ]]</font>
     </para>
     <para style="terp_default_8">
       <font color="white"> </font>
@@ -166,10 +166,10 @@
           <para style="terp_tblheader_Details_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Qty</para>
+          <para style="terp_tblheader_Details_Right">Qty</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Total Price([[ o.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Right">Total Price</para>
         </td>
       </tr>
     </blockTable>
@@ -181,7 +181,7 @@
       <blockTable colWidths="49.0,204.0,46.0,79.0,53.0,92.0" style="Table_expense_line">
         <tr>
           <td>
-            <para style="terp_default_9">[[ formatLang(line.date_value,date = True) ]]</para>
+            <para style="terp_default_9">[[ formatLang(line.date_value,date=True) ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ line.name or '' ]] [[ line.description or '' ]]</para>
@@ -259,7 +259,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">[[ setTag('para','xpre') ]] [[ o.note or '' ]] </para>
+    <para style="terp_default_9">[[ o.note or '' ]] [[ setTag('para','xpre') ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>

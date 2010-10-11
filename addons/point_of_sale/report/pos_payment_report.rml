@@ -161,10 +161,10 @@
           <para style="terp_tblheader_Details_Right">Disc. (%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Unit Price ([[ company.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Total ([[ company.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Right">Total</para>
         </td>
      </tr>
     </blockTable>
@@ -175,10 +175,10 @@
       <blockTable colWidths="198.0,81.0,87.0,87.0,83.0" style="Tableau7">
         <tr>
           <td>
-            <para style="terp_default_9">[[ line_ids['name'] ]]</para>
+            <para style="terp_default_9">[ [[ line_ids['code'] ]] ] [[ line_ids['name'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]] [[line_ids['uom'] ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line_ids['discount']) ]]</para>
@@ -212,7 +212,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Net Total </para>
+          <para style="terp_tblheader_Details">Net Total:</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang(pos_payment_total(o)) or removeParentNode('blockTable')]] [[ company.currency_id.symbol ]]</para>
