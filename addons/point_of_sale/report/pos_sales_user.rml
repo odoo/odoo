@@ -2,7 +2,7 @@
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Sales Report" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+      <frame id="first" x1="27.0" y1="57.0" width="512" height="728"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -41,7 +41,7 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table5">
+    <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
@@ -54,8 +54,7 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="6.0" leading="8" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -98,11 +97,11 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <para style="P3">Sales Report</para>
-    <para style="P3">
+    <para style="P2">Sales Report</para>
+    <para style="P2">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="241.0,241.0" style="Table1">
+    <blockTable colWidths="256.0,256.0" style="Table1">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Company</para>
@@ -112,7 +111,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="241.0,241.0" style="Table2">
+    <blockTable colWidths="256.0,256.0" style="Table2">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ company.name ]]</para>
@@ -128,7 +127,7 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="141.0,111.0,92.0,61.0,77.0" style="Table3">
+    <blockTable colWidths="150.0,118.0,97.0,64.0,82.0" style="Table3">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Name</para>
@@ -148,8 +147,8 @@
       </tr>
     </blockTable>
     <section>
-      <para style="P2">[[ repeatIn(get_data(data['form']), 'line_ids')]]</para>
-      <blockTable colWidths="141.0,111.0,92.0,61.0,77.0" style="Table5">
+      <para style="terp_default_1">[[ repeatIn(get_data(data['form']), 'line_ids')]]</para>
+      <blockTable colWidths="150.0,118.0,97.0,64.0,82.0" style="Table4">
         <tr>
           <td>
             <para style="terp_default_8">[[ line_ids['pos'] ]]</para>
@@ -168,12 +167,9 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_8">
+      <para style="terp_default_1">
         <font color="white"> </font>
       </para>
     </section>
-    <para style="Standard">
-      <font color="white"> </font>
-    </para>
   </story>
 </document>
