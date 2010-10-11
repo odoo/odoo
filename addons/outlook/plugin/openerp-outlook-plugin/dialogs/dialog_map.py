@@ -31,7 +31,7 @@ import addin
 from dialogs import ShowDialog, MakePropertyPage
 
 import win32ui
-
+import webbrowser
 import commctrl
 import win32con
 import win32gui
@@ -168,6 +168,19 @@ global name
 name=''
 global email
 email=''
+global web_server
+web_server = 'localhost'
+global web_server_port
+web_server_port = '8080'
+global country_ref
+country_ref = ""
+global state_ref
+state_ref = ""
+global new_con_country
+new_con_country= ""
+global new_con_state
+new_con_state= ""
+
 
 def check():
     server = NewConn.getitem('_server')
@@ -251,7 +264,6 @@ class OKButtonProcessor(ButtonProcessor):
         try:
             port = int(win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[1]))
         except ValueError, e:
-            print "Exception : %s"%str(e)
             win32ui.MessageBox("Port should be an integer", "OpenERP Connection", flag_excl)
             return
         except Exception,e:
@@ -275,6 +287,27 @@ class DoneButtonProcessor(ButtonProcessor):
     def OnClicked(self, id):
         getConnAttributes(self.window.manager)
         self.window.manager.SaveConfig()
+        win32gui.EndDialog(self.window.hwnd, id)
+
+class WEBOKButtonProcessor(ButtonProcessor):
+    def __init__(self, window, control_ids):
+        self.mngr = window.manager
+        ControlProcessor.__init__(self, window, control_ids)
+
+    def OnClicked(self, id):
+        global web_server
+        global web_server_port
+        server = win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[0])
+        try:
+            port = int(win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[1]))
+        except ValueError, e:
+            win32ui.MessageBox("Port should be an integer", "OpenERP Connection", flag_excl)
+            return
+        if server.strip() == "" or server.strip() == "http:\\\\":
+            win32ui.MessageBox("Invalid web Server address.", "OpenERP Connection", flag_excl)
+            return
+        web_server = server
+        web_server_port = port
         win32gui.EndDialog(self.window.hwnd, id)
 
 class MessageProcessor(ControlProcessor):
@@ -403,6 +436,7 @@ def TestConnection(btnProcessor,*args):
     if not dbname:
         win32ui.MessageBox("No database found on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return
+
 
     uname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
     pwd = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[2])
@@ -646,17 +680,21 @@ def CreateCase(btnProcessor,*args):
             for rec in r:
                 if rec[0] == 'res.partner':
                     partner_ids.append(rec[1])
-
+            f = False
             #Create new case
             try:
-                NewConn.CreateCase(str(section), mail, partner_ids)
+                f = NewConn.CreateCase(str(section), mail, partner_ids)
                 msg="New Document created."
                 flag=flag_info
             except Exception,e:
                 msg="New Document not created \n\n"+str(e)
                 flag=flag_error
-            win32ui.MessageBox(msg, "Create Document", flag)
-            return
+            if f:
+                win32ui.MessageBox(msg, "Create Document", flag)
+                return
+            else:
+                win32ui.MessageBox("Error While creating document.\n Document can not be created.", "Create Document", flag_error)
+                return
         else:
             win32ui.MessageBox("Document can not be created. CRM not installed", "Create Object", flag_info)
     except Exception, e:
@@ -784,6 +822,8 @@ def CreateContact(btnProcessor,*args):
     street2 = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[6])
     city = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[7])
     zip = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[8])
+    state = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[10])
+    country = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[11])
     if not name:
         win32ui.MessageBox("Please enter name.", "Create Contact", flag_stop)
         return
@@ -798,9 +838,10 @@ def CreateContact(btnProcessor,*args):
            'street':ustr(street),
            'street2':ustr(street2),
            'city':ustr(city),
-           'zip':ustr(zip)
+           'zip':ustr(zip),
+           'state_id':ustr(state),
+           'country_id':ustr(country)
        }
-
     try:
         id = NewConn.CreateContact(str(res))
         if not partner:
@@ -818,6 +859,10 @@ def CreateContact(btnProcessor,*args):
 
 def SetAllText(txtProcessor,*args):
     # Set values for url, uname, pwd from config file
+    global web_server
+    global web_server_port
+    serverBox = txtProcessor.GetControl(txtProcessor.other_ids[2])
+    win32gui.SendMessage(serverBox, win32con.WM_SETTEXT, 0, "http:\\\\"+str(web_server)+":"+str(web_server_port))
     url = NewConn.getitem('_uri')
     tbox = txtProcessor.GetControl()
     win32gui.SendMessage(tbox, win32con.WM_SETTEXT, 0, str(url))
@@ -893,10 +938,26 @@ def SetDefaultContact(txtProcessor,*args):
     global name
     global email
     global partner_ref
-    win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[1],partner_ref)
+    global new_con_country
+    global new_con_state
+    state = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[2])
+    country = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[3])
     if txtProcessor.init_done:
+        if new_con_country == "":
+            new_con_country = country
+        if new_con_state == "":
+            new_con_state = state
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[1],partner_ref)
         win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.control_id,name)
         win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0],email)
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[2],new_con_state)
+        state_val = NewConn.FindCountryForState(str(state_ref))
+        if state_val == None:
+            new_con_country = country
+        new_con_country =  state_val
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[3],new_con_country)
+        new_con_country = ""
+        new_con_state = ""
         return
     #
     try:
@@ -978,7 +1039,7 @@ def CreatePartner(btnProcessor,*args):
     b = check()
     if not b:
         return
-
+    global partner_ref
     partner_name = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
     if not partner_name:
         win32ui.MessageBox("Please enter Partner name.", "Create Partner", flag_excl)
@@ -992,6 +1053,7 @@ def CreatePartner(btnProcessor,*args):
         return
     if id:
         win32ui.MessageBox("New Partner '%s' created."%partner_name, "Create Partner", flag_info)
+        partner_ref = str(partner_name)
         win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.id)
     else:
         win32ui.MessageBox("Partner '%s' already Exists."%partner_name, "Create Partner", flag_info)
@@ -1010,13 +1072,37 @@ def set_name_email(dialogProcessor,*args):
     name = win32gui.GetDlgItemText(dialogProcessor.window.hwnd, dialogProcessor.other_ids[0])
     email = win32gui.GetDlgItemText(dialogProcessor.window.hwnd, dialogProcessor.other_ids[1])
 
+#Function for Getting default mail when dialog is loaded and finding contact related to this
+#setting values to the appropriate text areas
 def GetDefaultEmail(txtProcessor,*args):
 
     from win32com.client import Dispatch
     import win32con
     b = check()
     global partner_ref
+    global country_ref
+    global state_ref
+    partner_n = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0])
+    state_n = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[10])
+    country_n = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[11])
+    if partner_ref == "":
+        partner_ref = partner_n
+    if country_ref == "":
+        country_ref = country_n
+    if state_ref == "":
+        state_ref = state_n
     win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0], ustr(partner_ref))
+    win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[10], ustr(state_ref))
+    state_val = NewConn.FindCountryForState(str(state_ref))
+    partner_ref = ""
+    country_ref = ""
+    state_ref = ""
+
+    if state_val == None:
+        country_ref = country_n
+    country_ref = state_val
+    win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[11], ustr(country_ref))
+
     if not b:
         return
     #Acquiring control of the text box
@@ -1167,6 +1253,8 @@ def WritePartner(btnProcessor,*args):
     street = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[2])
     street2 = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[3])
     city = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[4])
+    state = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[5])
+    country = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[6])
     phone = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[7])
     mobile = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[8])
     fax = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[9])
@@ -1185,6 +1273,9 @@ def WritePartner(btnProcessor,*args):
     new_vals.append(['email',email])
     new_vals.append(['fax',fax])
     new_vals.append(['zip',zip])
+    new_vals.append(['state',state])
+    new_vals.append(['country',country])
+    new_vals.append(['state',state])
     flag = 0
     try:
         #writing the updated values to the Server.
@@ -1198,7 +1289,7 @@ def WritePartner(btnProcessor,*args):
     elif flag == 0:
         win32ui.MessageBox("Error in Updating the Changes.\n Please check the Database Connection.", "Open Contact", flag_error)
     elif flag == -1:
-        win32ui.MessageBox("Contact can not be Save.\nFirst select contact using Search.","Open Contact", flag_info)
+        win32ui.MessageBox("Contact can not be Save.\nFirst select partner using Search.","Open Contact", flag_info)
 
 def SetPartnerNameColumn(listProcessor,*args):
     hwndList = listProcessor.GetControl()
@@ -1235,7 +1326,7 @@ def SelectPartnerFromList(btnProcessor,*args):
                 sel_text = nombre[0:size]
         global partner_ref
         if str(sel_text).strip() == "":
-            win32ui.MessageBox("Invalid Partner Selected.","Search Partner")
+            win32ui.MessageBox("Invalid partner selected.","Search Partner")
             return
         try:
             partner_ref = str(sel_text)
@@ -1244,10 +1335,10 @@ def SelectPartnerFromList(btnProcessor,*args):
         win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
         return
     elif sel_count < 1:
-        win32ui.MessageBox("You should Select atleast one partner.","Search Partner")
+        win32ui.MessageBox("You should select one partner.","Search Partner")
         return
     else:
-        win32ui.MessageBox("Multiple Selection is not allowded.","Search Partner")
+        win32ui.MessageBox("Multiple Selection is not allowed.","Search Partner")
         return
 
 def SearchPartnerList(btnProcessor,*args):
@@ -1275,82 +1366,352 @@ def SearchPartnerList(btnProcessor,*args):
         win32ui.MessageBox(msg, "Search Partner", flag_error)
         pass
 
+def ConnectWebServer(btnProcessor, *args):
+	b = check()
+	if not b:
+		return
+	server = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
+	webbrowser.open_new(str(server)+"\\openerp\\")
+
+
+def OpenPartnerForm(txtProcessor,*args):
+    from win32com.client import Dispatch
+    import win32con
+    b = check()
+    if not b:
+    	return
+    #Acquiring control of the text box
+    partner_link = txtProcessor.GetControl()
+    #Reading Current Selected Email.
+    ex = txtProcessor.window.manager.outlook.ActiveExplorer()
+    assert ex.Selection.Count == 1
+    mail = ex.Selection.Item(1)
+    partner_text = ""
+    try:
+    	partner_text = ustr(mail.SenderName).encode('iso-8859-1')
+    except Exception,e:
+    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< Error in reading email.>")
+    	pass
+    vals = NewConn.SearchPartner(partner_text)
+    if vals == None:
+    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< No Partner with named "+str(partner_text)+" found.>")
+    	txtProcessor.init_done=True
+    	return
+    global web_server
+    global web_server_port
+    if web_server.strip() == "" or web_server.strip() == "http:\\\\":
+    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, " <Invalid Server Address>")
+    	txtProcessor.init_done=True
+    	return
+    try:
+    	linktopartner = "http:\\\\"+web_server+":"+str(web_server_port)+"\\openerp\\form\\view?model=res.partner&id="+str(vals)
+    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, linktopartner)
+    except Exception,e:
+    	win32ui.MessageBox("Error While Opening Partner.\n"+str(e),"Open Partner", flag_error)
+    webbrowser.open_new(linktopartner)
+    txtProcessor.init_done=True
+
+def SerachOpenDocuemnt(txtProcessor,*args):
+    from win32com.client import Dispatch
+    import win32con
+    import win32ui
+    b = check()
+    if not b:
+        return
+    global web_server
+    global web_server_port
+    ex = txtProcessor.window.manager.outlook.ActiveExplorer()
+    assert ex.Selection.Count == 1
+    mail = ex.Selection.Item(1)
+    link_box = None
+    #Acquiring control of the text box
+    try:
+        link_box = txtProcessor.GetControl()
+    except Exception,e:
+        win32ui.MessageBox(str(e),"Excet")
+    if web_server.strip() == "" or web_server.strip() == "http:\\\\":
+        win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, " <Invalid Server Address>")
+        txtProcessor.init_done=True
+        return
+    linktodoc = ""
+    #Reading Current Selected Email.
+    win32ui.MessageBox(str(mail),"mail")
+    try:
+        vals = NewConn.SearchEmailResources(mail)
+    except Exception,e:
+        win32ui.MessageBox(str(e),"Excep")
+    if vals == None:
+        win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, "< Mail is still not archived.>")
+        txtProcessor.init_done=True
+        return
+    try:
+        linktodoc = web_server+":"+str(web_server_port)+"\\openerp\\form\\view?model="+vals[0][1]+"&id="+str(vals[1][1])
+        win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, linktodoc)
+    except Exception,e:
+        win32ui.MessageBox("Error While Opening Document.\n"+str(e),"Open Document", flag_error)
+    webbrowser.open_new(linktodoc)
+    txtProcessor.init_done=True
+
+def SearchCountry(btnProcessor, *args):
+    b = check()
+    if not b:
+        return
+    try :
+        search_country = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
+        if not search_country:
+            win32ui.MessageBox("Please enter country name to search for.", "Search Country", flag_excl)
+            return
+        #Searching the contact.
+        hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
+        countries = list(NewConn.GetCountry(search_country))
+        win32gui.SendMessage(hwndList, commctrl.LVM_DELETEALLITEMS)
+        if not countries:
+            win32gui.SetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0],"<enter text to search>")
+            win32ui.MessageBox("No country found with name {0}.".format(search_country),"Search Country",flag_error)
+        for country in countries:
+            num_items = win32gui.SendMessage(hwndList, commctrl.LVM_GETITEMCOUNT)
+            item = LVITEM(text=country[1],iItem = num_items)
+            win32gui.SendMessage(hwndList, commctrl.LVM_INSERTITEM, 0, item.toparam())
+    except Exception,e:
+        msg = getMessage(e)
+        win32ui.MessageBox(msg, "Search Country", flag_error)
+        pass
+
+def SetCountryList(listProcessor,*args):
+
+    hwndList = listProcessor.GetControl()
+    child_ex_style = win32gui.SendMessage(hwndList, commctrl.LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0)
+    child_ex_style |= commctrl.LVS_EX_FULLROWSELECT
+    win32gui.SendMessage(hwndList, commctrl.LVM_SETEXTENDEDLISTVIEWSTYLE, 0, child_ex_style)
+
+    # set header row
+    lvc =  LVCOLUMN(
+                    mask = commctrl.LVCF_FMT | commctrl.LVCF_WIDTH | \
+                    commctrl.LVCF_TEXT | commctrl.LVCF_SUBITEM
+                    )
+    lvc.fmt = commctrl.LVCFMT_LEFT
+    lvc.iSubItem = 1
+    lvc.text = "Country Name"
+    lvc.cx = 275
+    win32gui.SendMessage(hwndList, commctrl.LVM_INSERTCOLUMN, 0, lvc.toparam())
+    listProcessor.init_done = True
+
+def SelectCountryFromList(btnProcessor,*args):
+
+    hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
+    sel_count = win32gui.SendMessage(hwndList, commctrl.LVM_GETSELECTEDCOUNT)
+    sel_text = ''
+    if sel_count == 1:
+        sel=-1
+        for i in range(0,sel_count):
+            sel = win32gui.SendMessage(hwndList, commctrl.LVM_GETNEXTITEM, sel, commctrl.LVNI_SELECTED)
+            buf,extra = win32gui_struct.EmptyLVITEM(1, 0)
+            size = win32gui.SendMessage(hwndList, commctrl.LVM_GETITEMTEXT, sel, buf)
+            sel_text = ''
+            for n in extra:
+                nombre = n.tostring()
+                sel_text = nombre[0:size]
+        global country_ref
+        global new_con_country
+        if str(sel_text).strip() == "":
+            win32ui.MessageBox("Invalid country selected.","Search Country")
+            return
+        try:
+            country_ref = str(sel_text)
+            new_con_country = str(sel_text)
+        except Exception,e:
+            pass
+        win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
+        return
+    elif sel_count < 1:
+        win32ui.MessageBox("You must one country.","Search Country")
+        return
+    else:
+        win32ui.MessageBox("Multiple selection is not allowed.","Search Country")
+        return
+
+def SearchState(btnProcessor, *args):
+    b = check()
+    if not b:
+        return
+    try :
+        search_state = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
+        if not search_state:
+            win32ui.MessageBox("Please enter state name to search for.", "Search Fed.State", flag_excl)
+            return
+        #Searching the contact.
+        hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
+        states = list(NewConn.GetStates(search_state))
+        win32gui.SendMessage(hwndList, commctrl.LVM_DELETEALLITEMS)
+        if not states:
+            win32gui.SetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0],"<enter text to search>")
+            win32ui.MessageBox("No state found with name {0}.".format(search_state),"Search Fed.State",flag_error)
+        for state in states:
+            num_items = win32gui.SendMessage(hwndList, commctrl.LVM_GETITEMCOUNT)
+            item = LVITEM(text=state[1],iItem = num_items)
+            win32gui.SendMessage(hwndList, commctrl.LVM_INSERTITEM, 0, item.toparam())
+    except Exception,e:
+        msg = getMessage(e)
+        win32ui.MessageBox(msg, "Search Fed.State", flag_error)
+        pass
+
+def SetStateList(listProcessor,*args):
+    hwndList = listProcessor.GetControl()
+    child_ex_style = win32gui.SendMessage(hwndList, commctrl.LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0)
+    child_ex_style |= commctrl.LVS_EX_FULLROWSELECT
+    win32gui.SendMessage(hwndList, commctrl.LVM_SETEXTENDEDLISTVIEWSTYLE, 0, child_ex_style)
+
+    # set header row
+    lvc =  LVCOLUMN(
+                    mask = commctrl.LVCF_FMT | commctrl.LVCF_WIDTH | \
+                    commctrl.LVCF_TEXT | commctrl.LVCF_SUBITEM
+                    )
+    lvc.fmt = commctrl.LVCFMT_LEFT
+    lvc.iSubItem = 1
+    lvc.text = "Fed.State Name"
+    lvc.cx = 275
+    win32gui.SendMessage(hwndList, commctrl.LVM_INSERTCOLUMN, 0, lvc.toparam())
+    listProcessor.init_done = True
+
+def SelectStateFromList(btnProcessor,*args):
+
+    hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
+    sel_count = win32gui.SendMessage(hwndList, commctrl.LVM_GETSELECTEDCOUNT)
+    sel_text = ''
+    if sel_count == 1:
+        sel=-1
+        for i in range(0,sel_count):
+            sel = win32gui.SendMessage(hwndList, commctrl.LVM_GETNEXTITEM, sel, commctrl.LVNI_SELECTED)
+            buf,extra = win32gui_struct.EmptyLVITEM(1, 0)
+            size = win32gui.SendMessage(hwndList, commctrl.LVM_GETITEMTEXT, sel, buf)
+            sel_text = ''
+            for n in extra:
+                nombre = n.tostring()
+                sel_text = nombre[0:size]
+        global state_ref
+        global new_con_state
+        if str(sel_text).strip() == "":
+            win32ui.MessageBox("Invalid fed. state selected.","Search Fed.State")
+            return
+        try:
+            state_ref = str(sel_text)
+            new_con_state = str(sel_text)
+            win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
+        except Exception,e:
+            pass
+
+        return
+    elif sel_count < 1:
+        win32ui.MessageBox("You must select state.","Search Fed.State")
+        return
+    else:
+        win32ui.MessageBox("Multiple selection is not allowed.","Search Fed.State")
+        return
+
+
 
 dialog_map = {
-            "IDD_MANAGER" :            (
-                (CancelButtonProcessor,    "IDCANCEL", resetConnAttribs, ()),
-                (TabProcessor,             "IDC_TAB IDC_LIST",
-                                           """IDD_GENERAL IDD_OBJECT_SETTINGS IDD_ABOUT"""),
-                (DoneButtonProcessor,      "ID_DONE"),
-            ),
+                "IDD_MANAGER" :            (
+                    (CancelButtonProcessor,    "IDCANCEL", resetConnAttribs, ()),
+                    (TabProcessor,             "IDC_TAB IDC_LIST",
+                                               """IDD_GENERAL IDD_OBJECT_SETTINGS IDD_ABOUT"""),
+                    (DoneButtonProcessor,      "ID_DONE"),
+                ),
 
-            "IDD_GENERAL":             (
-                (DBComboProcessor,          "ID_DB_DROPDOWNLIST", GetConn, ()),
-                (TextProcessor,             "ID_SERVER_PORT ID_USERNAME ID_PASSWORD", SetAllText, ()),
-                (CommandButtonProcessor,    "ID_BUT_TESTCONNECTION ID_DB_DROPDOWNLIST ID_USERNAME \
-                                            ID_PASSWORD", TestConnection, ()),
-                (CommandButtonProcessor,    "IDC_RELOAD", ReloadAllControls, ()),
-                (DialogCommand,             "IDC_BUT_SET_SERVER_PORT", "IDD_SERVER_PORT_DIALOG"),
-            ),
+                "IDD_GENERAL":             (
+                    (DBComboProcessor,          "ID_DB_DROPDOWNLIST", GetConn, ()),
+                    (TextProcessor,             "ID_SERVER_PORT ID_USERNAME ID_PASSWORD IDET_WED_SERVER", SetAllText, ()),
+                    (CommandButtonProcessor,    "ID_BUT_TESTCONNECTION ID_DB_DROPDOWNLIST ID_USERNAME \
+                                                ID_PASSWORD", TestConnection, ()),
+                    (CommandButtonProcessor,    "IDC_RELOAD", ReloadAllControls, ()),
+                    (DialogCommand,             "IDC_BUT_SET_SERVER_PORT", "IDD_SERVER_PORT_DIALOG"),
+                    (DialogCommand,            "ID_SET_WEB_CONNECTION", "IDD_WEB_SERVER_PORT_DIALOG" ),
+                	(CommandButtonProcessor,	"IDPB_WEB_CONNECTION IDET_WED_SERVER",  ConnectWebServer, ()),
+                ),
 
-            "IDD_OBJECT_SETTINGS" :    (
-                (CommandButtonProcessor,   "IDC_BUT_LOAD_IMAGE IDC_IMAGE_PATH", GetImagePath, ()),
-                (CommandButtonProcessor,   "IDC_BUT_SAVE_OBJECT IDC_OBJECT_TITLE IDC_OBJECT_NAME \
-                                            IDC_IMAGE_PATH IDC_LIST", AddNewObject, ()),
-                (CommandButtonProcessor,   "IDC_BUT_DEL_OBJECT IDC_LIST", DeleteSelectedObjects, ()),
-                (ListBoxProcessor,         "IDC_LIST", SetDefaultList, ())
-            ),
+                "IDD_OBJECT_SETTINGS" :    (
+                    (CommandButtonProcessor,   "IDC_BUT_LOAD_IMAGE IDC_IMAGE_PATH", GetImagePath, ()),
+                    (CommandButtonProcessor,   "IDC_BUT_SAVE_OBJECT IDC_OBJECT_TITLE IDC_OBJECT_NAME \
+                                                IDC_IMAGE_PATH IDC_LIST", AddNewObject, ()),
+                    (CommandButtonProcessor,   "IDC_BUT_DEL_OBJECT IDC_LIST", DeleteSelectedObjects, ()),
+                    (ListBoxProcessor,         "IDC_LIST", SetDefaultList, ())
+                ),
 
-            "IDD_ABOUT" :              (
-                (ImageProcessor,          "IDB_OPENERPLOGO"),
-                (MessageProcessor,        "IDC_ABOUT"),
-            ),
+                "IDD_ABOUT" :              (
+                    (ImageProcessor,          "IDB_OPENERPLOGO"),
+                    (MessageProcessor,        "IDC_ABOUT"),
+                ),
 
-            "IDD_SERVER_PORT_DIALOG" : (
-                (CloseButtonProcessor,    "IDCANCEL"),
-                (OKButtonProcessor,  "IDOK ID_SERVER ID_PORT IDR_XML_PROTOCOL"),
-                (RadioButtonProcessor, "IDR_XML_PROTOCOL", GetConn, ()),
-                (RadioButtonProcessor, "IDR_XMLS_PROTOCOL", GetConn, ()),
-                (RadioButtonProcessor, "IDR_NETRPC_PROTOCOL", GetConn, ()),
-            ),
+                "IDD_SERVER_PORT_DIALOG" : (
+                    (CloseButtonProcessor,    "IDCANCEL"),
+                    (OKButtonProcessor,  "IDOK ID_SERVER ID_PORT IDR_XML_PROTOCOL"),
+                ),
 
-            "IDD_SYNC" :               (
-                (CommandButtonProcessor,    "ID_SEARCH ID_SEARCH_TEXT IDC_NAME_LIST", SearchObjectsForText,()),
-                (GroupProcessor,            "IDC_STATIC_GROUP", setCheckList, ()),
-                (CSComboProcessor,          "ID_ATT_METHOD_DROPDOWNLIST", GetConn,()),
-                (TextProcessor,             "ID_SEARCH_TEXT", GetSearchText, ()),
-                (DialogCommand,             "ID_CREATE_CONTACT ID_SEARCH_TEXT", "IDD_NEW_CONTACT_DIALOG", set_search_text, ()),
-                (CloseButtonProcessor,      "IDCANCEL"),
-                (CommandButtonProcessor,    "ID_MAKE_ATTACHMENT IDC_NAME_LIST IDD_SYNC", MakeAttachment, ()),
-                (CommandButtonProcessor,    "ID_CREATE_CASE ID_ATT_METHOD_DROPDOWNLIST IDC_NAME_LIST", CreateCase, ()),
-                (ListBoxProcessor,          "IDC_NAME_LIST", SetNameColumn, ())
-            ),
+                "IDD_SYNC" :               (
+                    (CommandButtonProcessor,    "ID_SEARCH ID_SEARCH_TEXT IDC_NAME_LIST", SearchObjectsForText,()),
+                    (GroupProcessor,            "IDC_STATIC_GROUP", setCheckList, ()),
+                    (CSComboProcessor,          "ID_ATT_METHOD_DROPDOWNLIST", GetConn,()),
+                    (TextProcessor,             "ID_SEARCH_TEXT", GetSearchText, ()),
+                    (DialogCommand,             "ID_CREATE_CONTACT ID_SEARCH_TEXT", "IDD_NEW_CONTACT_DIALOG", set_search_text, ()),
+                    (CloseButtonProcessor,      "IDCANCEL"),
+                    (CommandButtonProcessor,    "ID_MAKE_ATTACHMENT IDC_NAME_LIST IDD_SYNC", MakeAttachment, ()),
+                    (CommandButtonProcessor,    "ID_CREATE_CASE ID_ATT_METHOD_DROPDOWNLIST IDC_NAME_LIST", CreateCase, ()),
+                    (ListBoxProcessor,          "IDC_NAME_LIST", SetNameColumn, ())
+                ),
 
-            "IDD_NEW_CONTACT_DIALOG" : (
-                (CloseButtonProcessor,      "IDCANCEL"),
-                (CommandButtonProcessor,    "ID_CONTACT_SAVE_BUTTON ID_CONTACT_NAME_TEXT ID_CONTACT_EMAIL_TEXT ID_CONTACT_OFFICE_TEXT ID_CONTACT_MOBILE_TEXT ID_FAX_TEXT ID_STREET_TEXT ID_STREET2_TEXT ID_PARTNER_CITY_TEXT ID_ZIP_TEXT ID_PARTNER_TEXT", CreateContact, ()),
-                (TextProcessor,             "ID_CONTACT_NAME_TEXT ID_CONTACT_EMAIL_TEXT ID_PARTNER_TEXT" , SetDefaultContact, ()),
-                (DialogCommand,             "ID_NEW_PARTNER_BUTTON", "IDD_SELECT_PARTNER"),
-            ),
+                "IDD_NEW_CONTACT_DIALOG" : (
+                    (CloseButtonProcessor,      "IDCANCEL"),
+                    (CommandButtonProcessor,    "ID_CONTACT_SAVE_BUTTON ID_CONTACT_NAME_TEXT ID_CONTACT_EMAIL_TEXT ID_CONTACT_OFFICE_TEXT ID_CONTACT_MOBILE_TEXT ID_FAX_TEXT ID_STREET_TEXT ID_STREET2_TEXT ID_PARTNER_CITY_TEXT ID_ZIP_TEXT ID_PARTNER_TEXT IDET_NC_PARTNER_STATE IDET_NC_PARTNER_COUNTRY", CreateContact, ()),
+                    (TextProcessor,             "ID_CONTACT_NAME_TEXT ID_CONTACT_EMAIL_TEXT ID_PARTNER_TEXT IDET_NC_PARTNER_STATE IDET_NC_PARTNER_COUNTRY" , SetDefaultContact, ()),
+                    (DialogCommand,             "ID_NEW_PARTNER_BUTTON", "IDD_SELECT_PARTNER"),
+                    (DialogCommand,             "IDPB_NEW_PARTNER_BUTTON", "IDD_NEW_PARTNER_DIALOG"),
+                    (DialogCommand,             "IDPB_NC_SEARCH_STATE1", "IDD_SELECT_STATE"),
+                    (DialogCommand,             "IDPB_NC_SEARCH_COUNTRY1", "IDD_SELECT_COUNTRY"),
+                ),
 
-            "IDD_NEW_PARTNER_DIALOG" : (
-                (CloseButtonProcessor,      "IDCANCEL"),
-                (CommandButtonProcessor,    "ID_SAVE_PARTNER_BUTTON ID_PARTNER_NAME_TEXT", CreatePartner, ()),
-            ),
+                "IDD_NEW_PARTNER_DIALOG" : (
+                    (CloseButtonProcessor,      "IDCANCEL"),
+                    (CommandButtonProcessor,    "ID_SAVE_PARTNER_BUTTON ID_PARTNER_NAME_TEXT", CreatePartner, ()),
+                ),
 
-            "IDD_VIEW_PARTNER_DIALOG" : (
-                (TextProcessor,             "IDET_SEARCH_PARTNER IDET_PARTNER IDET_PARTNER_CONTACT_NAME IDET_PARTNER_STREET IDET_PARTNER_STREET2 IDET_PARTNER_CITY IDET_PARTNER_OFFICENO IDET_PARTNER_MOBILENO IDET_PARTNER_EMAIL IDET_PARTNER_FAX IDET_ZIP IDET_PARTNER_STATE IDET_PARTNER_COUNTRY", GetDefaultEmail, ()),
-                (CommandButtonProcessor,    "IDPB_SEARCH_PARTNER IDET_SEARCH_PARTNER IDET_PARTNER IDET_PARTNER_CONTACT_NAME IDET_PARTNER_STREET IDET_PARTNER_STREET2 IDET_PARTNER_CITY IDET_PARTNER_OFFICENO IDET_PARTNER_MOBILENO IDET_PARTNER_EMAIL IDET_PARTNER_FAX IDET_ZIP IDET_PARTNER_STATE IDET_PARTNER_COUNTRY", SearchPartner, ()),
-                (CommandButtonProcessor,    "IDPB_WRITE_CHANGES IDET_PARTNER IDET_PARTNER_CONTACT_NAME IDET_PARTNER_STREET IDET_PARTNER_STREET2 IDET_PARTNER_CITY IDET_PARTNER_STATE IDET_PARTNER_COUNTRY IDET_PARTNER_OFFICENO IDET_PARTNER_MOBILENO IDET_PARTNER_EMAIL IDET_PARTNER_FAX IDET_ZIP", WritePartner, ()),
-                (CloseButtonProcessor,      "IDCANCEL"),
-                (DialogCommand,             "ID_NEW_PART_BUTTON", "IDD_SELECT_PARTNER" ),
-                (DialogCommand,             "IDPB_NEWPARTNER_BUTTON" , "IDD_NEW_CONTACT_DIALOG")
-            ),
-            "IDD_SELECT_PARTNER" : (
-                (CloseButtonProcessor,      "IDCANCEL"),
-                (ListBoxProcessor,          "IDC_LIST_PARTNER" ,SetPartnerNameColumn, ()),
-                (CommandButtonProcessor,    "IDPB_PARTNER_SEARCH IDET_PARTNER_SEARCH_NAME IDC_LIST_PARTNER", SearchPartnerList,()),
-                (CommandButtonProcessor,    "IDPB_SELECT_PARTNER IDC_LIST_PARTNER IDD_SELECT_PARTNER" , SelectPartnerFromList,()),
-                (DialogCommand,             "IDPB_CREATE_NEW_PARTNER" , "IDD_NEW_PARTNER_DIALOG")
-            ),
+                "IDD_VIEW_PARTNER_DIALOG" : (
+                    (TextProcessor,             "IDET_SEARCH_PARTNER IDET_PARTNER IDET_PARTNER_CONTACT_NAME IDET_PARTNER_STREET IDET_PARTNER_STREET2 IDET_PARTNER_CITY IDET_PARTNER_OFFICENO IDET_PARTNER_MOBILENO IDET_PARTNER_EMAIL IDET_PARTNER_FAX IDET_ZIP IDET_PARTNER_STATE IDET_PARTNER_COUNTRY", GetDefaultEmail, ()),
+                    (CommandButtonProcessor,    "IDPB_SEARCH_PARTNER IDET_SEARCH_PARTNER IDET_PARTNER IDET_PARTNER_CONTACT_NAME IDET_PARTNER_STREET IDET_PARTNER_STREET2 IDET_PARTNER_CITY IDET_PARTNER_OFFICENO IDET_PARTNER_MOBILENO IDET_PARTNER_EMAIL IDET_PARTNER_FAX IDET_ZIP IDET_PARTNER_STATE IDET_PARTNER_COUNTRY", SearchPartner, ()),
+                    (CommandButtonProcessor,    "IDPB_WRITE_CHANGES IDET_PARTNER IDET_PARTNER_CONTACT_NAME IDET_PARTNER_STREET IDET_PARTNER_STREET2 IDET_PARTNER_CITY IDET_PARTNER_STATE IDET_PARTNER_COUNTRY IDET_PARTNER_OFFICENO IDET_PARTNER_MOBILENO IDET_PARTNER_EMAIL IDET_PARTNER_FAX IDET_ZIP", WritePartner, ()),
+                    (CloseButtonProcessor,      "IDCANCEL"),
+                    (DialogCommand,             "ID_NEW_PART_BUTTON", "IDD_SELECT_PARTNER" ),
+                    (DialogCommand,             "IDPB_NEWPARTNER_BUTTON" , "IDD_NEW_CONTACT_DIALOG"),
+                    (DialogCommand,             "IDPB_NEW_PART_BUTTON", "IDD_NEW_PARTNER_DIALOG"),
+                    (DialogCommand,             "IDPB_SEARCH_COUNTRY1", "IDD_SELECT_COUNTRY"),
+                    (DialogCommand,             "IDPB_SEARCH_STATE1", "IDD_SELECT_STATE"),
+
+                ),
+                "IDD_SELECT_PARTNER" : (
+                    (ListBoxProcessor,          "IDC_LIST_PARTNER" ,SetPartnerNameColumn, ()),
+                    (CommandButtonProcessor,    "IDPB_PARTNER_SEARCH IDET_PARTNER_SEARCH_NAME IDC_LIST_PARTNER", SearchPartnerList,()),
+                    (CommandButtonProcessor,    "IDPB_SELECT_PARTNER IDC_LIST_PARTNER IDD_SELECT_PARTNER" , SelectPartnerFromList,()),
+                    (DialogCommand,             "IDPB_CREATE_NEW_PARTNER" , "IDD_NEW_PARTNER_DIALOG")
+                ),
+                "IDD_OPEN_PARTNER_DIALOG" : (
+                    (CloseButtonProcessor,      "IDCANCEL"),
+                	(TextProcessor,             "IDET_PARTNER_LINK_TEXT", OpenPartnerForm, ()),
+                ),
+                "IDD_OPEN_DOCUEMNT_DIALOG" : (
+                    (CloseButtonProcessor,      "IDCANCEL"),
+                    (TextProcessor,             "IDEB_OPENDOC_LINK_TEXT", SerachOpenDocuemnt,()),
+                ),
+                "IDD_WEB_SERVER_PORT_DIALOG" :(
+                     (CloseButtonProcessor,      "IDCANCEL"),
+                     (WEBOKButtonProcessor,      "ID_WEB_OK IDET_WEB_SERVER IDET_WEB_PORT")
+                ),
+                "IDD_SELECT_COUNTRY" : (
+                    (CommandButtonProcessor,     "IDPB_SEARCH_COUNTRY IDET_COUNTRY_SEARCH_NAME IDC_LIST_COUNTRY" , SearchCountry, ()),
+                    (ListBoxProcessor,           "IDC_LIST_COUNTRY" ,SetCountryList, ()),
+                    (CommandButtonProcessor,    "IDPB_SELECT_COUNTRY IDC_LIST_COUNTRY IDD_SELECT_COUNTRY" , SelectCountryFromList,()),
+                ),
+                "IDD_SELECT_STATE" : (
+                    (CommandButtonProcessor,     "IDPB_STATE_SEARCH IDET_STATE_SEARCH_NAME IDC_LIST_STATE" , SearchState, ()),
+                    (ListBoxProcessor,           "IDC_LIST_STATE" ,SetStateList, ()),
+                    (CommandButtonProcessor,     "IDPB_SELECT_STATE IDC_LIST_STATE IDD_SELECT_STATE" , SelectStateFromList,()),
+                ),
 }

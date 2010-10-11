@@ -21,7 +21,6 @@
 
 import time
 
-import netsvc
 from osv import osv, fields
 from tools.translate import _
 
@@ -150,12 +149,12 @@ class account_automatic_reconcile(osv.osv_memory):
         for account_id in form['account_ids']:
             params = (account_id,)
             if not allow_write_off:
-                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL 
-                AND state <> 'draft' GROUP BY partner_id 
+                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL
+                AND state <> 'draft' GROUP BY partner_id
                 HAVING ABS(SUM(debit-credit)) = 0.0 AND count(*)>0"""
             else:
-                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL 
-                AND state <> 'draft' GROUP BY partner_id 
+                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL
+                AND state <> 'draft' GROUP BY partner_id
                 HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0"""
                 params += (max_amount,)
             # reconcile automatically all transactions from partners whose balance is 0

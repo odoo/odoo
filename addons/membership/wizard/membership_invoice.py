@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import fields, osv
@@ -27,12 +28,12 @@ import decimal_precision as dp
 
 class membership_invoice(osv.osv_memory):
     """Membership Invoice"""
-    
+
     _name = "membership.invoice"
     _description = "Membership Invoice"
     _columns = {
         'product_id': fields.many2one('product.product','Membership', required=True),
-        'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True),
+        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True),
     }
     def onchange_product(self, cr, uid, ids, product_id):
         """This function returns value of  product's member price based on product id.

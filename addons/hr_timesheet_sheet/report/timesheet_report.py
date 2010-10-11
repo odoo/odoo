@@ -35,7 +35,7 @@ class timesheet_report(osv.osv):
         'name': fields.char('Description', size=64,readonly=True),
         'product_id' : fields.many2one('product.product', 'Product'),
         'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
-        'user_id': fields.many2one('res.users', 'User',readonly=True),
+        'employee_id': fields.many2one('hr.employee', 'Employee',readonly=True),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing',readonly=True),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account',readonly=True),
         'nbr': fields.integer('#Nbr',readonly=True),
@@ -60,8 +60,8 @@ class timesheet_report(osv.osv):
         tools.drop_view_if_exists(cr, 'timesheet_report')
         cr.execute("""
             create or replace view timesheet_report as (
-                    select
-                        min(aal.id) as id,
+                    select 
+			min(aal.id) as id,
                         htss.date_current,
                         htss.name,
                         htss.date_from,
@@ -91,14 +91,14 @@ class timesheet_report(osv.osv):
                             AND day.name = sheet.date_current) where sheet.id=htss.id) as total_attendance,
                         aal.to_invoice,
                         aal.general_account_id,
-                        htss.user_id,
+                        htss.employee_id as employee_id,
                         htss.company_id,
                         htss.department_id,
                         htss.state
-                    from account_analytic_line as aal
-                    left join hr_analytic_timesheet as hat ON (hat.line_id=aal.id)
-                    left join hr_timesheet_sheet_sheet as htss ON (hat.line_id=htss.id)
-                    group by
+		from hr_timesheet_sheet_sheet as htss
+		left join hr_analytic_timesheet as hat ON (hat.create_uid=htss.create_uid)
+		left join account_analytic_line as aal ON (hat.line_id=aal.id)
+		group by
                         to_char(htss.date_current,'YYYY'),
                         to_char(htss.date_current,'MM'),
                         to_char(htss.date_current, 'YYYY-MM-DD'),
@@ -116,7 +116,8 @@ class timesheet_report(osv.osv):
                         htss.state,
                         htss.id,
                         htss.department_id,
-                        htss.user_id
+                        htss.employee_id
+  
             )
         """)
 timesheet_report()

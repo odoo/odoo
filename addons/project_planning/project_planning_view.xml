@@ -54,7 +54,7 @@
                         <field colspan="4" name="planning_account"
                                 nolabel="1" widget="one2many_list" readonly="1">
                             <tree string="Planning By Account (in Days)">
-                                <field name="account_id" groups="base.group_extended"/>
+                                <field name="account_id" groups="analytic.group_analytic_accounting"/>
                                 <field name="tasks" sum="Total Remaining Tasks"/>
                                 <field name="plan_tasks" sum="Total Time Allocation of Tasks"/>
                                 <field name="plan_open" sum="Total Time Allocation without Tasks"/>
@@ -68,7 +68,7 @@
                                 <tree editable="bottom"
                                     string="Planning Lines">
                                     <field name="user_id"/>
-                                    <field name="account_id" groups="base.group_extended"/>
+                                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount" />
                                     <field name="amount_unit" />
                                     <field name="task_ids" />
@@ -78,7 +78,7 @@
                                 </tree>
                                 <form string="Planning Lines">
                                     <field name="user_id" domain="[('id','child_of',[parent.user_id])]"/>
-                                    <field name="account_id" groups="base.group_extended"/>
+                                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount" />
                                     <field name="amount_unit" />
                                        <field name="task_ids" colspan="4" nolabel="1" mode="tree,form">
@@ -180,7 +180,7 @@
                 <tree string="Planning Line">
                     <field name="planning_id"/>
                     <field name="user_id"/>
-                    <field name="account_id" groups="base.group_extended"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="amount" />
                     <field name="amount_unit" />
                     <field name="note" select="1"/>
@@ -197,7 +197,7 @@
                 <form string="Planning Line">
                     <field name="planning_id" select="1"/>
                     <field name="user_id" select="1"/>
-                    <field name="account_id" select="1" groups="base.group_extended"/>
+                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                     <field name="amount" />
                     <field name="amount_unit" />
                     <separator string="Notes" colspan="4" />
@@ -233,7 +233,7 @@
                 <form string="Planning statistics">
                     <field name="planning_id" select="1" />
                     <field name="user_id" select="1" />
-                    <field name="account_id" select="1" groups="base.group_extended"/>
+                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                 </form>
             </field>
         </record>
@@ -248,7 +248,7 @@
                     <field name="planning_id" />
                     <field name="user_id" />
                     <field name="manager_id" />
-                    <field name="account_id" groups="base.group_extended"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="sum_amount" />
                     <field name="sum_amount_real" />
                     <field name="sum_amount_tasks" />
@@ -262,7 +262,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Planning statistics" type="bar">
-                    <field name="account_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="sum_amount" operator="+" />
                     <field name="sum_amount_real" operator="+" />
                     <field name="sum_amount_tasks" operator="+" />
@@ -281,7 +281,7 @@
                         <separator orientation="vertical"/>
                         <field name="planning_id" select="1"/>
                         <field name="user_id" select="1"/>
-                        <field name="account_id" select="1" groups="base.group_extended"/>
+                        <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                     </group>
                 </search>
             </field>
@@ -324,7 +324,7 @@
                             <tree editable="bottom"
                                     string="Planning Lines">
                                     <field name="user_id"/>
-                                    <field name="account_id" groups="base.group_extended"/>
+                                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount" />
                                     <field name="amount_unit" />
                                     <field name="task_ids" />

@@ -37,10 +37,8 @@
     'website':'http://www.openerp.com',
     'depends': [
         'hr',
-        'account',
         'hr_contract',
-        'hr_holidays',
-        'hr_expense'
+        'hr_holidays'
     ],
     'init_xml': [
     ],
@@ -52,15 +50,14 @@
         'hr_paroll_report.xml',
         'hr_payroll_data.xml',
         'security/ir.model.access.csv',
-        'wizard/hr_payroll_create_analytic.xml',
         'wizard/hr_payroll_employees_detail.xml',
         'wizard/hr_payroll_year_salary.xml',
     ],
     'test': [
-         'test/payslip.yml',
-         'test/payment_advice.yml',
-         'test/payroll_register.yml',
-         'test/hr_payroll_report.yml',
+#         'test/payslip.yml',
+#         'test/payment_advice.yml',
+#         'test/payroll_register.yml',
+#         'test/hr_payroll_report.yml',
     ],
     'demo_xml': [
         'hr_payroll_demo.xml'

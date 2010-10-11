@@ -43,6 +43,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             'get_partners':self._get_partners,
             'get_account': self._get_account,
             'get_fiscalyear': self._get_fiscalyear,
+            'get_target_move': self._get_target_move,
         })
 
     def set_context(self, objects, data, ids, report_type=None):

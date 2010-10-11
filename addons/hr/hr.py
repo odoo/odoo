@@ -26,10 +26,28 @@ import tools
 from tools.translate import _
 
 class hr_employee_category(osv.osv):
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
+        res = self.name_get(cr, uid, ids, context)
+        return dict(res)
+
     _name = "hr.employee.category"
     _description = "Employee Category"
     _columns = {
         'name': fields.char("Category", size=64, required=True),
+        'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
         'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories')
     }
@@ -113,12 +131,11 @@ class hr_employee(osv.osv):
         'identification_id': fields.char('Identification No', size=32),
         'gender': fields.selection([('male', 'Male'),('female', 'Female')], 'Gender'),
         'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
-        'bank_account': fields.char('Bank Account', size=64),
-        'partner_id': fields.related('company_id', 'partner_id', type='many2one', relation='res.partner', readonly=True),
         'department_id':fields.many2one('hr.department', 'Department'),
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
-        'work_phone': fields.related('address_id', 'phone', type='char', string='Work Phone', readonly=True),
+        'partner_id': fields.related('address_home_id', 'partner_id', type='many2one', relation='res.partner', readonly=True, help="Partner that is related to the current employee. Accounting transaction will be written on this partner belongs to employee."),
+        'work_phone': fields.related('address_id', 'phone', type='char', size=32, string='Work Phone', readonly=True),
         'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail'),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
@@ -128,28 +145,33 @@ class hr_employee(osv.osv):
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
-        'photo': fields.binary('Photo')
+        'photo': fields.binary('Photo'),
+        'passport_id':fields.char('Passport', size=64)
     }
 
     def onchange_company(self, cr, uid, ids, company, context=None):
         company_id = self.pool.get('res.company').browse(cr,uid,company)
         for address in company_id.partner_id.address:
             return {'value': {'address_id': address.id}}
-        return {'value':{}}
+        return {'value':{'address_id':False}}
 
     def onchange_department(self, cr, uid, ids, department_id, context=None):
-        manager = self.pool.get('hr.department').browse(cr, uid, department_id).manager_id.id
-        return {'value': {'parent_id':manager or False}}
+        if not department_id:
+            return {'value':{'parent_id': False}}
+        manager = self.pool.get('hr.department').browse(cr, uid, department_id).manager_id
+        return {'value': {'parent_id':manager and manager.id or False}}
 
     def onchange_user(self, cr, uid, ids, user_id, context=None):
+        if not user_id:
+            return {'value':{'work_email': False}}
         mail = self.pool.get('res.users').browse(cr,uid,user_id)
-        return {'value': {'work_email':mail.user_email}}          
-        
+        return {'value': {'work_email':mail.user_email}}
+
     def _get_photo(self, cr, uid, context=None):
         return open(os.path.join(
             tools.config['addons_path'], 'hr/image', 'photo.png'),
                     'rb') .read().encode('base64')
-               
+
     _defaults = {
         'active': 1,
         'photo': _get_photo,

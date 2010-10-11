@@ -100,7 +100,6 @@ class report_custom(report_rml):
         today=datetime.datetime.today()
 
         first_date=data['form']['date_from']
-
         som = strToDate(first_date)
         eom = som+datetime.timedelta(59)
         day_diff=eom-som

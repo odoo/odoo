@@ -56,7 +56,7 @@ class account_move_line(osv.osv):
         where_move_lines_by_date = ''
 
         if context.get('date_from', False) and context.get('date_to', False):
-            if initital_bal:
+            if initial_bal:
                 where_move_lines_by_date = " AND " +obj+".move_id in ( select id from account_move  where date < '"+context['date_from']+"')"
             else:
                 where_move_lines_by_date = " AND " +obj+".move_id in ( select id from account_move  where date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
@@ -65,17 +65,27 @@ class account_move_line(osv.osv):
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
 
-        if context.get('period_from', False) and context.get('periof_from', False) and not context.get('periods', False):
+        if context.get('period_from', False) and context.get('period_to', False) and not context.get('periods', False):
             if initial_bal:
-                period_company_id = period_obj.browse(cr, uid, data['form']['period_from'], context=context).company_id.id
-                first_period = self.pool.get('account.period').search(cr, uid, [('company_id', '=', period_company_id)], order='date_start', limit=1)[0]
-                context['periods'] = period_obj.build_ctx_periods(cr, uid, first_period, data['form']['period_from'])
+                period_company_id = fiscalperiod_obj.browse(cr, uid, context['period_from'], context=context).company_id.id
+                first_period = fiscalperiod_obj.search(cr, uid, [('company_id', '=', period_company_id)], order='date_start', limit=1)[0]
+                context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, first_period, context['period_from'])
             else:
-                context['periods'] = period_obj.build_ctx_periods(cr, uid, data['form']['period_from'], data['form']['period_to'])
-
+                context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, context['period_from'], context['period_to'])
         if context.get('periods', False):
-            ids = ','.join([str(x) for x in context['periods']])
-            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
+            if initial_bal:
+                query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
+                period_ids = fiscalperiod_obj.search(cr, uid, [('id', 'in', context['periods'])], order='date_start', limit=1)
+                if period_ids and period_ids[0]:
+                    first_period = fiscalperiod_obj.browse(cr, uid, period_ids[0], context=context)
+                    # Find the old periods where date start of those periods less then Start period
+                    periods = fiscalperiod_obj.search(cr, uid, [('date_start', '<', first_period.date_start)])
+                    periods = ','.join([str(x) for x in periods])
+                    if periods:
+                        query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) OR id in (%s)) %s %s" % (fiscalyear_clause, periods, where_move_state, where_move_lines_by_date)
+            else:
+                ids = ','.join([str(x) for x in context['periods']])
+                query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
         else:
             query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
 
@@ -87,40 +97,6 @@ class account_move_line(osv.osv):
             query += ' AND '+obj+'.account_id in (%s)' % ','.join(map(str, child_ids))
 
         query += company_clause
-
-        if context.get('period_manner','') == 'created':
-            #the query have to be build with no reference to periods but thanks to the creation date
-            if context.get('periods',False):
-                #if one or more period are given, use them
-                fiscalperiod_ids = fiscalperiod_obj.search(cr, uid, [('id','in',context['periods'])])
-            else:
-                fiscalperiod_ids = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id','in',fiscalyear_ids)])
-
-            #remove from the old query the clause related to the period selection
-            res = ''
-            count = 1
-            clause_list = query.split('AND')
-            ref_string = ' '+obj+'.period_id in'
-            for clause in clause_list:
-                if count != 1 and not clause.startswith(ref_string):
-                    res += "AND"
-                if not clause.startswith(ref_string):
-                    res += clause
-                    count += 1
-
-            #add to 'res' a new clause containing the creation date criterion
-            count = 1
-            res += " AND ("
-            periods = self.pool.get('account.period').read(cr, uid, p_ids, ['date_start','date_stop'])
-            for period in periods:
-                if count != 1:
-                    res += " OR "
-                #creation date criterion: the creation date of the move_line has to be
-                # between the date_start and the date_stop of the selected periods
-                res += "("+obj+".create_date between to_date('" + period['date_start']  + "','yyyy-mm-dd') and to_date('" + period['date_stop']  + "','yyyy-mm-dd'))"
-                count += 1
-            res += ")"
-            return res
 
         return query
 
@@ -927,7 +903,6 @@ class account_move_line(osv.osv):
         fld = sorted(fld, key=itemgetter(1))
 
         widths = {
-            'ref': 50,
             'statement_id': 50,
             'state': 60,
             'tax_code_id': 50,

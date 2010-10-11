@@ -818,13 +818,10 @@
             <field name="arch" type="xml">
                 <search string="Search Taxes">
                     <group col="10" colspan="4">
-                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="description"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By...">
-                    </group>
                 </search>
             </field>
         </record>
@@ -1569,7 +1566,7 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="account_id"/>
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="partner_id"/>
                     <field name="debit"/>
                     <field name="credit"/>
@@ -1588,7 +1585,7 @@
                     <field colspan="4" name="name" select="1"/>
                     <field name="sequence"/>
                     <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="partner_id"/>
                     <field name="debit" select="1"/>
                     <field name="credit" select="1"/>
