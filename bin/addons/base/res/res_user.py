@@ -327,8 +327,9 @@ class users(osv.osv):
         return ids and ids[0] or False
 
     def _get_group(self,cr, uid, context=None):
-        dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id(cr, 1, 'base', 'group_user')
+        data_pool = self.pool.get('ir.model.data')
+        res = data_pool.get_object_reference(cr, 1, 'base', 'group_user')
+        data_id = res and res[1] or False
         return data_id and [data_id] or False
 
     _defaults = {
