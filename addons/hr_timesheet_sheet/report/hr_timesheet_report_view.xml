@@ -26,7 +26,7 @@
                     <field name="company_id" invisible="1"/>
                     <field name="journal_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
-                    <field name="account_id" invisible="1"/>
+                    <field name="account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
                     <field name="general_account_id" invisible="1"/>
 
                     <field name="quantity" sum="Hours"/>
@@ -54,8 +54,8 @@
                             domain="[('date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
                             help="Timesheet of last month"/>
                         <separator orientation="vertical"/>
-                            <field name="account_id"/>
-                            <field name="user_id" />
+                            <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                            <field name="user_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters..." groups="base.group_extended">
@@ -71,8 +71,8 @@
                     <group expand="1" string="Group By...">
                         <filter string="User" name="group_user_id" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
+                        <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
+                        <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
                         <filter string="General Account" icon="terp-folder-orange" context="{'group_by':'general_account_id'}"/>
                         <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
@@ -80,7 +80,7 @@
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Group by month of date"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of date"/>
                     </group>
-                    
+
                 </search>
             </field>
         </record>

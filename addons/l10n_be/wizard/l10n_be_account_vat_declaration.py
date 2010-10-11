@@ -39,8 +39,8 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)]),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
-        'ask_resitution': fields.boolean('Ask Restitution'),
-        'ask_payment': fields.boolean('Ask Payment'),
+        'ask_resitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
+        'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to made or not?'),
         'client_nihil': fields.boolean('Last Declaration of Enterprise',help='Tick this case only if it concerns only the last statement on the civil or cessation of activity'),
     }
     _defaults = {
@@ -65,7 +65,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
             obj_company = data_tax.tax_code_id.company_id
         else:
             obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
-        user_cmpny = obj_company.name
         vat_no = obj_company.partner_id.vat
         if not vat_no:
             raise osv.except_osv(_('Data Insufficient'), _('No VAT Number Associated with Main Company!'))
@@ -78,10 +77,8 @@ class l10n_be_vat_declaration(osv.osv_memory):
 
         address = post_code = city = country_code = ''
         city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
-        year_id = obj_fyear.find(cr, uid)
 
         account_period = obj_acc_period.browse(cr, uid, data['period_id'], context=context)
-        period_code = account_period.code
 
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
         data_of_file = '<?xml version="1.0"?>\n<VATSENDING xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-14.xml">'

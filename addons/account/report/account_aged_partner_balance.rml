@@ -132,7 +132,7 @@
           <para style="terp_tblheader_General_Centre">Analysis Direction</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Printing Date</para>
+          <para style="terp_tblheader_General_Centre">Target Moves</para>
         </td>
       </tr>
         <tr>
@@ -155,7 +155,7 @@
           <para style="terp_default_Centre_8">[[ data['form']['direction_selection'] ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True)]]</para>
+          <para style="terp_default_Centre_8">[[ get_target_move(data) ]]</para>
         </td>
       </tr>
       </blockTable>
@@ -168,22 +168,22 @@
           <para style="terp_tblheader_Details">Partners</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]]<font size="8.0"></font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['4']['name'] ]]<font size="8.0"></font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['4']['name'] ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['3']['name'] ]]<font size="8.0"></font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['3']['name'] ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['2']['name'] ]]<font size="8.0"></font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['2']['name'] ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['1']['name'] ]]<font size="8.0"></font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['1']['name'] ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['0']['name'] ]]<font size="8.0"></font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['0']['name'] ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Total</para>

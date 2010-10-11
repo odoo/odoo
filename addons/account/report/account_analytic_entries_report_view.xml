@@ -16,7 +16,7 @@
                 <field name="partner_id" invisible="1"/>
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="currency_id" invisible="1"/>
-                <field name="account_id" invisible="1"/>
+                <field name="account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
                 <field name="general_account_id" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
@@ -49,7 +49,7 @@
                             help="Analytic Entries during last 7 days"/>
                     <separator orientation="vertical"/>
                     <field name="date" />
-                    <field name="account_id" />
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id" />
                     <field name="user_id">
                     <filter icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
@@ -63,7 +63,7 @@
                     <field name="journal_id" widget="selection"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
-                    <field name="account_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </group>
                 <newline/>
@@ -72,7 +72,7 @@
                     <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
-                    <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
+                    <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
                     <filter string="General Account" icon="terp-folder-green" context="{'group_by':'general_account_id'}"/>
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <separator orientation="vertical"/>
@@ -108,7 +108,10 @@
         <field name="help">A tool search lets you know statistics on your analytics records that match your needs.</field>
     </record>
 
-    <menuitem action="action_analytic_entries_report" id="menu_action_analytic_entries_report" parent="account.menu_finance_statistic_report_statement" sequence="4"/>
+    <menuitem action="action_analytic_entries_report" 
+        id="menu_action_analytic_entries_report"
+        groups="analytic.group_analytic_accounting"
+        parent="account.menu_finance_statistic_report_statement" sequence="4"/>
 
 </data>
 </openerp>

@@ -5,17 +5,12 @@
     Resource: product.category 
     -->
         
-        <record id="cat0" model="product.category">
-            <field name="parent_id" ref="null"/>
-            <field name="name">All products</field>
-            <field name="type">view</field>
-        </record>
         <record id="cat1" model="product.category">
-            <field name="parent_id" ref="cat0"/>
+            <field name="parent_id" ref="product.cat0"/>
             <field name="name">Sellable</field>
         </record>
         <record id="cat2" model="product.category">
-            <field name="parent_id" ref="cat0"/>
+            <field name="parent_id" ref="product.cat0"/>
             <field name="name">Private</field>
         </record>
         <record id="product_category_3" model="product.category">

@@ -199,7 +199,7 @@
     <td><para style="terp_tblheader_General_Centre">Display Account</para></td>
         <td><para style="terp_tblheader_General_Centre">Filter By  [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
          <td><para style="terp_tblheader_General_Centre">Entries Sorted By</para></td>
-        <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
+        <td><para style="terp_tblheader_General_Centre">Target Moves</para></td>
       </tr>
   <tr>
      <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
@@ -230,7 +230,7 @@
            </blockTable>
           </td>
         <td><para style="terp_default_Centre_8">[[ get_sortby(data) ]]</para></td>
-  <td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]] </para></td>
+  <td><para style="terp_default_Centre_8">[[ get_target_move(data) ]] </para></td>
   </tr>
   </blockTable>
     <para style="terp_default_8">

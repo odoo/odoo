@@ -67,7 +67,7 @@
                     	icon="terp-document-new"
                     	domain="[('state','=','draft')]"
                     	help = "Draft recruitment"/>
-	                <filter string="Current"
+	                <filter string="In progress"
 	                	icon="terp-check"
 	                	domain="[('state', '=' ,'open')]"
 	                	help = "In progress recruitment"/>
@@ -91,36 +91,33 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                    <field name="job_id" widget="selection"/>
-                    <field name="type_id" widget="selection"/>
+                    <!--field name="job_id"/-->
                     <field name="priority"/>
                     <field name="stage_id" widget="selection"/>
-                    <field name="state"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="date"/>
+                    <field name="date" string="Creation Date"/>
                     <field name="date_closed"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By ...">
                    <filter string="Responsible" name='User' icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                    <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                   <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}" />
+                   <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}" />
                    <separator orientation="vertical"/>
                     <filter string="Jobs" name="job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                    <filter string="Department" name="department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                    <separator orientation="vertical"/>
                    <filter string="Degree" name="degree" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'type_id'}"/>
             	   <separator orientation="vertical"/>
+            	   <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}" />
                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                   <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}" />
                    <separator orientation="vertical"/>
-            	   <filter string="Day" name = "day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}"/>
-            	   <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}"/>
-            	   <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}"/>
+            	   <filter string="Day" name = "day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}" help="Creation Date"/>
+            	   <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Creation Date"/>
+            	   <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}" help="Creation Date"/>
                 </group>
 
-                
+
                 </search>
         </field>
     </record>

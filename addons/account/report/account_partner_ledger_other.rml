@@ -188,12 +188,12 @@
     <blockTableStyle id="Table9">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-  		<lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table10">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-  		<lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_header">
       <blockAlignment value="LEFT"/>
@@ -222,7 +222,7 @@
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0, 0" stop="0,-2"/>
     </blockTableStyle>
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
@@ -261,7 +261,7 @@
     <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="0,-2"/>
     </blockTableStyle>
     <blockTableStyle id="Table7">
       <blockAlignment value="LEFT"/>
@@ -320,13 +320,14 @@
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Left_9" fontName="Helvetica" fontSize="8.3" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0" />
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_Bold_Right_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Table index 1" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica"/>
     <paraStyle name="Table" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Table index heading" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="16.0" leading="20" spaceBefore="12.0" spaceAfter="6.0"/>
-	<paraStyle name="terp_default_Right_1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+  <paraStyle name="terp_default_Right_1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <images/>
   </stylesheet>
   <story>
@@ -368,7 +369,7 @@
                 <para style="P9">Partner's</para>
               </td>
               <td>
-                <para style="P9">Printing Date</para>
+                <para style="P9">Target Moves</para>
               </td>
             </tr>
             <tr>
@@ -421,7 +422,7 @@
                 <para style="terp_default_Centre_8">[[ get_partners() ]]</para>
               </td>
               <td>
-                <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]]</para>
+                <para style="terp_default_Centre_8">[[ get_target_move(data) ]]</para>
               </td>
             </tr>
           </blockTable>
@@ -459,8 +460,8 @@
         </td>
       </tr>
     </blockTable>
-	<section>
-	<para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
+  <section>
+  <para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
     <blockTable colWidths="349.0,60.0,60.0,60.0" style="Table2">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
 
       <tr>
@@ -479,7 +480,7 @@
       </tr>
       <tr>
     <td>[[ display_initial_balance(data)  or  removeParentNode('tr') ]]
-          <para style="P2">Initial Balance</para>
+          <para style="terp_default_Left_9">Initial Balance</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][0])]]</para>
@@ -581,7 +582,7 @@
       </tr>
         <tr>
         <td>[[ data['form']['initial_balance'] or  removeParentNode('tr') ]]
-         <para style="P2">Initial Balance</para>
+         <para style="terp_default_Left_9">Initial Balance</para>
         </td>
          <td>
           <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][0]) ]]</para>
@@ -592,7 +593,7 @@
         <td>
           <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][2]) ]] [[ company.currency_id.symbol ]]</para>
         </td>
-   		<td>
+       <td>
           <para style="terp_default_Right_9"></para>
         </td>
         </tr>

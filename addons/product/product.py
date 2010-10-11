@@ -247,7 +247,11 @@ class product_template(osv.osv):
         'warranty': fields.float('Warranty (months)'),
         'sale_ok': fields.boolean('Can be Sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
-        'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'State', help="Tells the user if he can use the product or not."),
+        'state': fields.selection([('',''),
+            ('draft', 'In Development'),
+            ('sellable','Normal'),
+            ('end','End of Lifecycle'),
+            ('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
         'uom_id': fields.many2one('product.uom', 'Default Unit Of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
@@ -274,7 +278,9 @@ class product_template(osv.osv):
     def _default_category(self, cr, uid, context={}):
         if 'categ_id' in context and context['categ_id']:
             return context['categ_id']
-        return False
+        md = self.pool.get('ir.model.data')
+        res = md.get_object_reference(cr, uid, 'product', 'cat0') or False
+        return res and res[1] or False
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
         if uom_id and uom_po_id:

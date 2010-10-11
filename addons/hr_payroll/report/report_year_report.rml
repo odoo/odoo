@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(1120.0,770.0)" title="Yearly Salary Details" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(1120.0,770.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="1064" height="714"/>
     </pageTemplate>
@@ -141,7 +141,7 @@
       <font color="white"> </font>
     </para>
     <para style="terp_header_Centre">Yearly Salary Details </para>
-    <para style="terp_default_Centre_9">For [[ get_fiscalyear(data['form']['fiscalyear_id']) ]]</para>
+    <para style="terp_default_Centre_9">From [[ formatLang(data['form']['date_from'], date=True) ]] To [[ formatLang(data['form']['date_to'], date=True) ]]</para>
     <para style="terp_default_space">
       <font color="white"> </font>
     </para>
@@ -247,7 +247,7 @@
       </section>
     </section>
     <section>
-      <para style="terp_default_1">[[ repeatIn(get_months_tol(),'t') ]]</para>
+      <para style="P1">[[ repeatIn(get_months_tol(),'t') ]]</para>
       <blockTable colWidths="99.0,73.0,69.0,74.0,70.0,75.0,74.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table6">
         <tr>
           <td>
