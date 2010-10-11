@@ -40,6 +40,23 @@
 
         <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="6"/>
 
+        <record id="view_payment_mode_search" model="ir.ui.view">
+            <field name="name">payment.mode.search</field>
+            <field name="model">payment.mode</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <form string="Payment Mode">
+                    <field name="name"/>
+                    <field name="journal" widget='selection'/>
+                    <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                      <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal'}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="view_payment_mode_tree" model="ir.ui.view">
             <field name="name">payment.mode.tree</field>
             <field name="model">payment.mode</field>
@@ -52,6 +69,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_payment_mode_form" model="ir.ui.view">
             <field name="name">payment.mode.form</field>
             <field name="model">payment.mode</field>
@@ -69,7 +87,8 @@
             <field name="name">Payment Mode</field>
             <field name="res_model">payment.mode</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,search</field>
+            <field name="search_view_id" ref="view_payment_mode_search"/>
         </record>
 
         <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="account.menu_configuration_misc"/>
