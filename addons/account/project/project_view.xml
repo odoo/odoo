@@ -182,6 +182,7 @@
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" invisible="not context.get('to_invoice', False)"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
+                    <field name="user_id" invisible="1" />
                 </tree>
             </field>
         </record>
