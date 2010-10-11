@@ -2159,7 +2159,8 @@ class orm_memory(orm_template):
                 'create_date': create_date,
                 'write_uid': False,
                 'write_date': False,
-                'id': id
+                'id': id,
+                'xmlid' : False,
             })
         return result
 
@@ -3168,12 +3169,8 @@ class orm(orm_template):
 
     def perm_read(self, cr, user, ids, context=None, details=True):
         """
-        Read the permission for record of the given ids
+        Returns some metadata about the given records.
 
-        :param cr: database cursor
-        :param user: current user id
-        :param ids: id or list of ids
-        :param context: context arguments, like lang, time zone
         :param details: if True, \*_uid fields are replaced with the name of the user
         :return: list of ownership dictionaries for each requested record
         :rtype: list of dictionaries with the following keys:
@@ -3183,7 +3180,7 @@ class orm(orm_template):
                     * create_date: date when the record was created
                     * write_uid: last user who changed the record
                     * write_date: date of the last change to the record
-
+                    * xmlid: XML ID to use to refer to this record (if there is one), in format ``module.name``
         """
         if not context:
             context = {}
@@ -3193,18 +3190,25 @@ class orm(orm_template):
         uniq = isinstance(ids, (int, long))
         if uniq:
             ids = [ids]
-        fields = 'id'
+        fields = ['id']
         if self._log_access:
-            fields += ', create_uid, create_date, write_uid, write_date'
-        query = 'SELECT %s FROM "%s" WHERE id IN %%s' % (fields, self._table)
-        cr.execute(query, (tuple(ids),))
+            fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
+        quoted_table = '"%s"' % self._table
+        fields_str = ",".join('%s.%s'%(quoted_table, field) for field in fields)
+        query = '''SELECT %s, __imd.module, __imd.name
+                   FROM %s LEFT JOIN ir_model_data __imd
+                       ON (__imd.model = %%s and __imd.res_id = %s.id)
+                   WHERE %s.id IN %%s''' % (fields_str, quoted_table, quoted_table, quoted_table)
+        cr.execute(query, (self._name, tuple(ids)))
         res = cr.dictfetchall()
         for r in res:
             for key in r:
                 r[key] = r[key] or False
-                if key in ('write_uid', 'create_uid', 'uid') and details:
+                if details and key in ('write_uid', 'create_uid'):
                     if r[key]:
                         r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
+            r['xmlid'] = ("%(module)s.%(name)s" % r) if r['name'] else False
+            del r['name'], r['module']
         if uniq:
             return res[ids[0]]
         return res
