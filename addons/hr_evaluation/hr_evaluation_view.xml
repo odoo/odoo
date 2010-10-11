@@ -183,14 +183,14 @@
                     <newline/>
                     <group col="6" colspan="4">
                     <field name="state"/>
+                    <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"
+                            icon="gtk-cancel"/>
                     <button name="button_plan_in_progress" string="Start Evaluation" states="draft" type="object"
                             icon="gtk-execute"/>
                     <button name="button_final_validation" string="Validate Evaluation" states="wait" type="object"
                             icon="gtk-execute"/>
                     <button name="button_done" string="Done" states="progress" type="object"
                             icon="gtk-jump-to"/>
-                    <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"
-                            icon="gtk-cancel"/>
                     </group>
               </form>
             </field>

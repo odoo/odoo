@@ -165,7 +165,7 @@ class report_invoice_created(osv.osv):
         'amount_untaxed': fields.float('Untaxed', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'date_invoice': fields.date('Date Invoiced', readonly=True),
+        'date_invoice': fields.date('Invoice Date', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'residual': fields.float('Residual', readonly=True),
         'state': fields.selection([

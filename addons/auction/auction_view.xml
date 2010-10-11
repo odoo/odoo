@@ -14,8 +14,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Artists">
-	            <field name="name"/>
-	            <field name="birth_death_dates"/>
+                <field name="name"/>
+                <field name="birth_death_dates"/>
             </tree>
         </field>
     </record>
@@ -27,10 +27,10 @@
             <form string="Artists">
                 <separator string="Author/Artist" colspan="4"/>
                 <group colspan="4" col="6">
-	                <field name="name" colspan="4" string="Name"/>
-	                <newline/>
-	                <field name="pseudo"/>
-	                <field name="birth_death_dates"/>
+                    <field name="name" colspan="4" string="Name"/>
+                    <newline/>
+                    <field name="pseudo"/>
+                    <field name="birth_death_dates"/>
                 </group>
                 <separator string="Biography" colspan="4"/>
                 <field name="biography" nolabel="1" colspan="4"/>
@@ -109,15 +109,15 @@
                     <page string="Auction Dates">
                         <group colspan="4" col="4">
                             <group colspan="2" col="2">
-		                        <separator string="Exposition Dates" colspan="4"/>
-		                        <field name="expo1"/>
-		                        <field name="expo2"/>
-		                    </group>
-		                    <group colspan="2" col="2">
-				                <separator string="Auction Dates" colspan="4"/>
-		                        <field name="auction1" select="1"/>
-		                        <field name="auction2" select="1"/>
-		                    </group>
+                                <separator string="Exposition Dates" colspan="4"/>
+                                <field name="expo1"/>
+                                <field name="expo2"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Auction Dates" colspan="4"/>
+                                <field name="auction1" select="1"/>
+                                <field name="auction2" select="1"/>
+                            </group>
                         </group>
                         <separator string="" colspan="4"/>
                         <field name="state"/>
@@ -126,16 +126,16 @@
                     <page string="Accounting" >
                         <group colspan="4" col="4">
                             <group colspan="2" col="2">
-		                        <separator string="Accounting" colspan="4"/>
-		                        <field name="acc_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-		                        <field name="acc_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-	                        </group>
-	                        <group colspan="2" col="2">
-		                        <separator string="Analytic" colspan="4"/>
-		                        <field name="journal_id"/>
-		                        <field name="journal_seller_id"/>
-		                        <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
-		                    </group>
+                                <separator string="Accounting" colspan="4"/>
+                                <field name="acc_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                <field name="acc_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Analytic" colspan="4"/>
+                                <field name="journal_id"/>
+                                <field name="journal_seller_id"/>
+                                <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                            </group>
                         </group>
                     </page>
                     <page string="Commissions">
@@ -157,14 +157,14 @@
                                 <field name="buyer_invoice_history" nolabel="1" widget="one2many_list"
                                         height="400">
                                     <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
-					                    <field name="date_invoice"/>
-					                    <field name="number"/>
-					                    <field name="partner_id" groups="base.group_user"/>
-					                    <field name="name"/>
-					                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-					                    <field name="user_id"/>
-					                    <field name="date_due"/>
-					                    <field name="origin"/>
+                                        <field name="date_invoice"/>
+                                        <field name="number"/>
+                                        <field name="partner_id" groups="base.group_user"/>
+                                        <field name="name"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="user_id"/>
+                                        <field name="date_due"/>
+                                        <field name="origin"/>
                                         <field name="state"/>
                                     </tree>
                                 </field>
@@ -509,14 +509,14 @@
         <field name="arch" type="xml">
             <form string="Deposit Border Form">
                 <group colspan="4" col="6">
-	               <field name="name" string="Reference"/>
-	               <field name="date_dep"/>
-	               <field name="partner_id"/>
-	               <newline/>
-	               <field name="method"/>
-	               <field name="tax_id" domain="[('domain','=','auction'),('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-	               <field name="transfer"/>
-	            </group>
+                   <field name="name" string="Reference"/>
+                   <field name="date_dep"/>
+                   <field name="partner_id"/>
+                   <newline/>
+                   <field name="method"/>
+                   <field name="tax_id" domain="[('domain','=','auction'),('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                   <field name="transfer"/>
+                </group>
                <notebook colspan="4">
                 <page string="General Information">
                  <field name="lot_id" colspan="4" mode="tree,graph" nolabel="1">
@@ -691,11 +691,11 @@
         <field name="arch" type="xml">
             <form string="Bids">
                 <group colspan="4" col="6">
-	                <field name="name"/>
-	                <field name="auction_id"/>
-	                <field name="contact_tel"/>
-	                <newline/>
-	                <field name="partner_id" on_change="onchange_contact(partner_id)" colspan="4"/>
+                    <field name="name"/>
+                    <field name="auction_id"/>
+                    <field name="contact_tel"/>
+                    <newline/>
+                    <field name="partner_id" on_change="onchange_contact(partner_id)" colspan="4"/>
                 </group>
                 <field name="bid_lines" colspan="4" nolabel="1">
                     <tree string="Bids Lines" editable="bottom">

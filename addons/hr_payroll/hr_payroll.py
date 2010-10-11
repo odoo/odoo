@@ -1470,7 +1470,6 @@ class hr_employee(osv.osv):
     
     _columns = {
         'passport_id':fields.many2one('hr.passport', 'Passport', required=False, domain="[('employee_id','=',active_id), ('address_id','=',address_home_id)]", help="Employee Passport Information"),
-        'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account', domain="[('partner_id','=',partner_id)]", help="Employee bank salary account"),
         'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'otherid': fields.char('Other Id', size=64),

@@ -47,8 +47,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('draft');black:state in ('confirm','accepted','invoiced','paid');gray:state in('cancelled')"  string="Expenses" editable="top">
-                    <field name="date"/>
                     <field name="employee_id"/>
+                    <field name="date"/>
                     <field name="department_id" groups="base.group_extended"/>
                     <field name="ref"/>
                     <field name="name"/>
@@ -96,12 +96,11 @@
                             </field>
                             <field name="state"/>
                             <group col="6" colspan="2">
-                                <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
-                                <button name="cancel" states="cancel" string="Cancel" type="workflow" icon="gtk-cancel"/>
                                 <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert"/>
-                                <button name="validate" states="confirm" string="Approve" type="workflow" icon="terp-camera_test"/>
+                                <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_manager" />
+                                <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
                                 <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-execute"/>
-                                <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_manager" />
+                                <button name="validate" states="confirm" string="Approve" type="workflow" icon="terp-camera_test"/>
                             </group>
                         </page>
                         <page string="Other Info" groups="base.group_extended">
@@ -143,14 +142,14 @@
                               domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
                       <separator orientation="vertical"/>
                       <field name="employee_id" select='1'/>
-                      <field name="name" select='1'/>
                       <field name="date" select='1'/>
+                      <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
+                   <filter icon="terp-personal+" context="{'invisible_department': False}" domain="[('department_id','=',context.get('department_id',False))]" help="My Department"/>
+                      <field name="name" select='1'/>
                       <field name="user_id"  string="User" invisible="True">
                       <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>
-                      <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
-                   <filter icon="terp-personal+" context="{'invisible_department': False}" domain="[('department_id','=',context.get('department_id',False))]" help="My Department"/>
                </field>
                 </group>
                 <newline />

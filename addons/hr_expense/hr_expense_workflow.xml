@@ -83,12 +83,6 @@
             <field name="signal">refuse</field>
         </record>
 
-        <record id="t5" model="workflow.transition">
-            <field name="act_from" ref="act_draft"/>
-            <field name="act_to" ref="act_refused"/>
-            <field name="signal">refuse</field>
-        </record>
-
         <record id="t6" model="workflow.transition">
             <field name="act_from" ref="act_accepted"/>
             <field name="act_to" ref="act_refused"/>
