@@ -239,8 +239,6 @@ class ir_model_access(osv.osv):
         grouparr  = group.split('.')
         if not grouparr:
             return False
-        print grouparr
-
         cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN (select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))
         return bool(cr.fetchone())
 
