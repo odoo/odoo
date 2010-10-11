@@ -157,34 +157,19 @@ class procurement_order(osv.osv):
         """ Checks product type.
         @return: True or False
         """
-        for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.type in ('product', 'consu'):
-                return True
-        return False
+        return all(procurement.product_id.type in ('product', 'consu') for procurement in self.browse(cr, uid, ids))
 
     def check_move_cancel(self, cr, uid, ids, context={}):
         """ Checks if move is cancelled or not.
         @return: True or False.
         """
-        res = True
-        ok = False
-        for procurement in self.browse(cr, uid, ids, context):
-            if procurement.move_id:
-                ok = True
-                if not procurement.move_id.state == 'cancel':
-                    res = False
-        return res and ok
+        return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids))
 
     def check_move_done(self, cr, uid, ids, context={}):
         """ Checks if move is done or not.
         @return: True or False.
         """
-        res = True
-        for proc in self.browse(cr, uid, ids, context):
-            if proc.move_id:
-                if not proc.move_id.state == 'done':
-                    res = False
-        return res
+        return all(procurement.move_id.state == 'done' for procurement in self.browse(cr, uid, ids))
 
     #
     # This method may be overrided by objects that override procurement.order
@@ -343,7 +328,7 @@ class procurement_order(osv.osv):
                         'product_id': procurement.product_id.id,
                         'product_qty': procurement.product_qty,
                         'product_uom': procurement.product_uom.id,
-                        'date_planned': procurement.date_planned,
+                        'date_expected': procurement.date_planned,
                         'state': 'draft',
                         'company_id': procurement.company_id.id,
                     })

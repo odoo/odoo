@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from osv import fields,osv,orm
+from osv import fields,osv
 from tools.translate import _
 import crm
 import time
@@ -121,7 +120,7 @@ class crm_opportunity(osv.osv):
         """
         res = super(crm_opportunity, self).case_reset(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'stage_id': False})
-        return True
+        return res
    
  
     def case_open(self, cr, uid, ids, *args):

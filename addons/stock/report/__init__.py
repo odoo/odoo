@@ -24,7 +24,6 @@ import ups
 import picking
 import lot_overview_all
 import report_stock
-import report_stock_picking
 import report_stock_move
 import stock_inventory_move_report
 import lot_overview

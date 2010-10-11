@@ -861,7 +861,7 @@ class mrp_production(osv.osv):
             source = production.product_id.product_tmpl_id.property_stock_production.id
             data = {
                 'name':'PROD:' + production.name,
-                'date_planned': production.date_planned,
+                'date': production.date_planned,
                 'product_id': production.product_id.id,
                 'product_qty': production.product_qty,
                 'product_uom': production.product_uom.id,
@@ -883,7 +883,7 @@ class mrp_production(osv.osv):
                 if line.product_id.type in ('product', 'consu'):
                     res_dest_id = move_obj.create(cr, uid, {
                         'name':'PROD:' + production.name,
-                        'date_planned': production.date_planned,
+                        'date': production.date_planned,
                         'product_id': line.product_id.id,
                         'product_qty': line.product_qty,
                         'product_uom': line.product_uom.id,
@@ -904,7 +904,7 @@ class mrp_production(osv.osv):
                         'product_uom': line.product_uom.id,
                         'product_uos_qty': line.product_uos and line.product_uos_qty or False,
                         'product_uos': line.product_uos and line.product_uos.id or False,
-                        'date_planned': newdate,
+                        'date': newdate,
                         'move_dest_id': res_dest_id,
                         'location_id': production.location_src_id.id,
                         'location_dest_id': routing_loc or production.location_src_id.id,
