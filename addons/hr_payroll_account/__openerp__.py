@@ -24,7 +24,7 @@
     'version': '1.0',
     'category': 'Generic Modules/Human Resources',
     'description': """Generic Payroll system Integrated with Accountings
-    * Expanse Encoding
+    * Expense Encoding
     * Payment Encoding
     * Company Contribution Management
     """,
