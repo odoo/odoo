@@ -43,6 +43,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             'get_partners':self._get_partners,
             'get_account': self._get_account,
             'get_fiscalyear': self._get_fiscalyear,
+            'get_target_move': self._get_target_move,
         })
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -78,6 +79,8 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
         #
         # Build a string like (1,2,3) for easy use in SQL query
         partner_ids = [x['id'] for x in partners]
+        if not partner_ids:
+            return []
         # This dictionary will store the debit-credit for all partners, using partner_id as key.
         move_state = ['draft','posted']
         if self.target_move == 'posted':

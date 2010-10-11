@@ -21,7 +21,6 @@
 
 import installer
 import todo
-import gtk_contact_form
 import wizard
 import os
 import base64

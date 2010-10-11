@@ -1964,6 +1964,14 @@ class stock_move(osv.osv):
             partial_datas=partial_obj.read(cr,uid,partial_id)[0]
         if context is None:
             context = {}
+
+        todo = []
+        for move in self.browse(cr, uid, ids):
+            if move.state=="draft":
+                todo.append(move.id)
+        if todo:
+            self.action_confirm(cr, uid, todo, context=context)
+
         for move in self.browse(cr, uid, ids):
             if move.picking_id:
                 picking_ids.append(move.picking_id.id)

@@ -237,7 +237,7 @@
             <para style="terp_default_Right_9">[[formatLang(line.amount) or '-' ]] [[get_company_currency_symbol()]] </para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line.amount_currency) ]] [[ line.currency.name ]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(line.amount_currency) ]] [[get_company_currency_symbol()]]  </para>
           </td>
         </tr>
       </blockTable>
@@ -256,7 +256,7 @@
           <para style="terp_default_Right_9">[[ formatLang(get_amount_total(o)) or '' ]] [[get_company_currency_symbol()]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(get_amount_total_in_currency(o)) or '' ]] [[ line.currency.name ]] </para>
+          <para style="terp_default_Right_9">[[ formatLang(get_amount_total_in_currency(o)) or '' ]] [[get_company_currency_symbol()]]  </para>
         </td>
       </tr>
     </blockTable>

@@ -46,7 +46,7 @@
                                 <separator colspan="4" string="Contacts"/>
                                 <group colspan="2">
                                     <field name="partner_id" select="1"
-                                        on_change="onchange_partner_id(partner_id, email_from)"
+                                        on_change="onchange_partner_id(partner_id, email_from)" string="Customer"
                                         colspan="2" />
                                     <button name="%(action_crm_lead2partner)d"
                                         icon="gtk-index" type="action"
@@ -74,6 +74,9 @@
                             <separator colspan="4"/>
                             <group col="10" colspan="4">
                                 <field name="state"/>
+                                <button name="case_cancel" string="Cancel"
+                                    states="draft" type="object"
+                                    icon="gtk-close" />
                                 <button name="case_reset" string="Reset to Draft"
                                     states="done,cancel" type="object"
                                     icon="gtk-convert" />
@@ -87,9 +90,6 @@
                                     states="open,pending" type="object"
                                     groups="base.group_extended"
                                     icon="gtk-go-up" />
-                                <button name="case_cancel" string="Cancel"
-                                    states="draft" type="object"
-                                    icon="gtk-close" />
                                 <button name="case_mark_lost" string="Mark Lost"
                                     states="open,pending" type="object"
                                     icon="gtk-cancel" />
@@ -101,9 +101,9 @@
                         <page string="Lead">
                             <group colspan="2" col="4">
                                 <separator string="Contact" colspan="4" col="4"/>
-                                <field name="partner_name" string="Partner Name" colspan="4"/>
+                                <field name="partner_name" string="Customer Name" colspan="4"/>
                                 <newline/>
-                                <field domain="[('domain', '=', 'contact')]" name="title"/>
+                                <field domain="[('domain', '=', 'contact')]" name="title" widget="selection"/>
                                 <field name="function" />
                                 <field name="street" colspan="4"/>
                                 <field name="street2" colspan="4"/>
@@ -216,7 +216,7 @@
                         <field name="date_deadline" invisible="1"/>
                         <field name="create_date"/>
                         <field name="name" string="Opportunity"/>
-                        <field name="partner_id"/>
+                        <field name="partner_id" string="Customer"/>
                         <field name="country_id" invisible="context.get('invisible_country', True)" />
                         <field name="date_action"/>
                         <field name="title_action" />
@@ -284,7 +284,7 @@
                             domain="[('state','=','pending')]"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Opportunity"/>
-                        <field name="partner_id"/>
+                        <field name="partner_id" string="Customer"/>
                         <field name="user_id">
                             <filter icon="terp-personal-"
                                 domain="[('user_id','=', False)]"
