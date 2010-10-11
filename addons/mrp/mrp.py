@@ -456,7 +456,7 @@ class mrp_production(osv.osv):
         'date_planned_date': fields.function(_production_date, method=True, type='date', string='Scheduled Date'),
         'date_planned': fields.datetime('Scheduled date', required=True, select=1),
         'date_start': fields.datetime('Start Date'),
-        'date_finnished': fields.datetime('End Date'),
+        'date_finished': fields.datetime('End Date'),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan future loads on workcenters based on production plannification."),
@@ -658,7 +658,7 @@ class mrp_production(osv.osv):
         """
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
-        return self.write(cr, uid, ids, {'state': 'done', 'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def test_production_done(self, cr, uid, ids):
         """ Tests whether production is done or not.

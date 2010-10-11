@@ -59,8 +59,7 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica" fontSize="6.0" leading="8" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -103,8 +102,8 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <para style="P2">Payment By User </para>
-    <para style="P2">
+    <para style="P1">Payment By User </para>
+    <para style="P1">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="241.0,241.0" style="Table1">
@@ -153,14 +152,14 @@
       </tr>
     </blockTable>
     <section>
-      <para style="P1">[[ repeatIn(pos_payment_user(data['form']), 'line_ids') ]]</para>
+      <para style="terp_default_1">[[ repeatIn(pos_payment_user(data['form']), 'line_ids') ]]</para>
       <blockTable colWidths="241.0,55.0,61.0,61.0,64.0" style="Table6">
         <tr>
           <td>
-            <para style="terp_default_9">[[ line_ids['name'] ]]</para>
+            <para style="terp_default_9">[ [[ line_ids['code'] ]] ] [[ line_ids['name'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]] [[line_ids['uom'] ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line_ids['discount']) ]]</para>

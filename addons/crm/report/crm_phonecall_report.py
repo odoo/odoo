@@ -47,7 +47,6 @@ class crm_phonecall_report(osv.osv):
             @param context: A standard dictionary for contextual values """
 
         res = {}
-        state_perc = 0.0
         avg_ans = 0.0
 
         for case in self.browse(cr, uid, ids, context):
@@ -140,7 +139,4 @@ class crm_phonecall_report(osv.osv):
                 from
                     crm_phonecall c
             )""")
-
 crm_phonecall_report()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,7 +7,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Timesheet" type="bar">
-                    <field name="user_id" />
+                    <field name="employee_id" />
                     <field name="quantity" operator = "+"/>
                     <field name="state" group = "True"/>
                 </graph>
@@ -21,7 +21,7 @@
                 <tree colors="blue:state in ('draft');black:state in ('confirm','new');gray:state in('cancel')" string="Timesheet">
                     <field name="date_current" invisible="1"/>
                     <field name="name" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
+                    <field name="employee_id" invisible="1"/>
                     <field name="date_from" invisible="1"/>
                     <field name="date_to" invisible="1"/>
                     <field name="state" invisible="1"/>
@@ -29,7 +29,7 @@
                     <field name="company_id" invisible="1"/>
                     <field name="to_invoice" invisible="1"/>
                     <field name="product_id" invisible="1"/>
-                    <field name="account_id" invisible="1"/>
+                    <field name="account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
                     <field name="general_account_id" invisible="1"/>
                     <field name="year" invisible="1"/>
                     <field name="day" invisible="1"/>
@@ -71,7 +71,7 @@
                                     string="Done"
                                     domain="[('state','=','done')]"/>
                         <separator orientation="vertical"/>
-                        <field name="account_id"/>
+                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
                       <field name="user_id" />
                     </group>
                     <newline/>
@@ -90,14 +90,14 @@
                     </group>
                     <newline/>
                     <group expand="1" string="Group By...">
-                        <filter string="User" name="User_id" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                        <filter string="Employee" name="Employee_id" icon="terp-personal" context="{'group_by':'employee_id'}"/>
                         <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Type of Invoicing" icon="terp-stock_symbol-selection" context="{'group_by':'to_invoice'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
+                        <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
                         <filter string="General Account" icon="terp-folder-orange" context="{'group_by':'general_account_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
@@ -117,7 +117,7 @@
             <field name="res_model">timesheet.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_month':1,'search_default_User_id':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_month':1,'search_default_Employee_id':1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="search_view_id" ref="view_timesheet_report_search"/>
         </record>
         <menuitem action="action_timesheet_report_stat_all" id="menu_timesheet_report_all"

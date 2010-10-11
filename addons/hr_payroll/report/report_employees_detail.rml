@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(1120.0,770.0)" title="Employees Salary Details" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(1120.0,770.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="1064" height="714"/>
     </pageTemplate>
@@ -246,15 +246,12 @@
     <images/>
   </stylesheet>
   <story>
-    <para style="terp_default_8">[[ repeatIn(get_employee(data['form']), 'o') ]] [[ get_employee_detail(o) ]]</para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
+    <para style="terp_default_8">[[ repeatIn(get_employee(data['form']), 'o') ]] </para>
     <blockTable colWidths="1063.0" style="Table12">
       <tr>
         <td>
           <para style="P2">Employees Salary Details </para>
-          <para style="terp_default_Centre_9">For [[ get_fiscalyear(data['form']['fiscalyear_id']) ]]</para>
+          <para style="terp_default_Centre_9">From [[ formatLang(data['form']['date_from'], date=True) ]] To [[ formatLang(data['form']['date_to'], date=True) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -292,7 +289,7 @@
           <para style="terp_default_9">[[ o.name ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">PAN No.</para>
+          <para style="terp_tblheader_Details">Other No.</para>
         </td>
         <td>
           <para style="terp_default_9">[[ o.pan_no or ' ']]</para>
@@ -331,7 +328,7 @@
       <font color="white"> </font>
     </para>
     <section>
-      <para style="terp_default_8">[[ repeatIn(get_periods(data['form']),'m') ]]</para>
+      <para style="terp_default_8">[[ repeatIn(get_periods(data['form']),'m') ]] [[ get_employee_detail(o) ]]</para>
       <blockTable colWidths="99.0,73.0,69.0,74.0,71.0,73.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table4">
         <tr>
           <td>
@@ -387,7 +384,7 @@
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_1">[[ repeatIn(get_allow(),'e1') ]]</para>
+          <para style="terp_default_9">[[ repeatIn(get_allow(),'e1') ]]</para>
           <blockTable colWidths="99.0,73.0,69.0,74.0,70.0,74.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table6">
             <tr>
               <td>
@@ -443,7 +440,8 @@
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_1">[[ repeatIn(get_deduct(),'e2') ]]</para>
+
+          <para style="terp_default_9">[[ repeatIn(get_deduct(),'e2') ]]</para>
           <blockTable colWidths="99.0,73.0,69.0,74.0,70.0,74.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table8">
             <tr>
               <td>
@@ -499,7 +497,7 @@
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_1">[[ repeatIn(get_other(),'e3') ]]</para>
+          <para style="terp_default_9">[[ repeatIn(get_other(),'e3') ]]</para>
           <blockTable colWidths="99.0,73.0,69.0,74.0,70.0,74.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table9">
             <tr>
               <td>

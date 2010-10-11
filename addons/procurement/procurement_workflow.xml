@@ -187,7 +187,7 @@
         <record id="trans_make_done_done" model="workflow.transition">
             <field name="act_from" ref="act_make_done"/>
             <field name="act_to" ref="act_done"/>
-            <field name="condition">action_check_finnished()</field>
+            <field name="condition">action_check_finished()</field>
 			<field name="trigger_model">stock.move</field>
             <field name="trigger_expr_id">[move_id.id]</field>            
         </record>

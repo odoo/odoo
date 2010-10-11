@@ -767,7 +767,7 @@ class stock_picking(osv.osv):
         self.log_picking(cr, uid, ids, context=context)
         return True
 
-    def test_finnished(self, cr, uid, ids):
+    def test_finished(self, cr, uid, ids):
         """ Tests whether the move is in done or cancel state or not.
         @return: True or False
         """
@@ -1881,6 +1881,14 @@ class stock_move(osv.osv):
         move_obj = self.pool.get('account.move')
         if context is None:
             context = {}
+
+        todo = []
+        for move in self.browse(cr, uid, ids):
+            if move.state=="draft":
+                todo.append(move.id)
+        if todo:
+            self.action_confirm(cr, uid, todo, context=context)
+
         for move in self.browse(cr, uid, ids):
             if move.picking_id:
                 picking_ids.append(move.picking_id.id)

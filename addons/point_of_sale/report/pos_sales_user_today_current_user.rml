@@ -2,7 +2,7 @@
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Todays Sales By Current User" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+      <frame id="first" x1="27.0" y1="57.0" width="512" height="728"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -65,8 +65,7 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="6.0" leading="8" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -109,11 +108,11 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="P3">Today's Sales By Current User</para>
+    <para style="P2">Today's Sales By Current User</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="161.0,161.0,161.0" style="Table1">
+    <blockTable colWidths="170.0,170.0,170.0" style="Table1">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Company</para>
@@ -126,7 +125,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="161.0,161.0,161.0" style="Table2">
+    <blockTable colWidths="170.0,170.0,170.0" style="Table2">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ company.name ]]</para>
@@ -145,7 +144,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="282.0,72.0,65.0,63.0" style="Table3">
+    <blockTable colWidths="299.0,76.0,69.0,67.0" style="Table3">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Name</para>
@@ -162,8 +161,8 @@
       </tr>
     </blockTable>
     <section>
-      <para style="P2">[[ repeatIn(get_data_current_user(user), 'line_ids')]]</para>
-      <blockTable colWidths="282.0,72.0,65.0,63.0" style="Table6">
+      <para style="terp_default_1">[[ repeatIn(get_data_current_user(user), 'line_ids')]]</para>
+      <blockTable colWidths="299.0,76.0,69.0,67.0" style="Table6">
         <tr>
           <td>
             <para style="terp_default_9">[[ line_ids['name'] ]]</para>
@@ -180,7 +179,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="282.0,72.0,65.0,63.0" style="Table5">
+    <blockTable colWidths="299.0,76.0,69.0,67.0" style="Table5">
       <tr>
         <td>
           <para style="P1">

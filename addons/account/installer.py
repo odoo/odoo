@@ -61,7 +61,7 @@ class account_installer(osv.osv_memory):
         'date_stop': fields.date('End Date', required=True),
         'period':fields.selection([('month','Monthly'), ('3months','3 Monthly')],
                                   'Periods', required=True),
-        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts',required=True),
+        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Your Bank and Cash Accounts',required=True),
         'sale_tax':fields.float('Sale Tax(%)'),
         'purchase_tax':fields.float('Purchase Tax(%)'),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -123,6 +123,8 @@ class account_installer(osv.osv_memory):
         result = mod_obj._get_id(cr, uid, 'account', 'configurable_chart_template')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         obj_multi = self.pool.get('account.chart.template').browse(cr, uid, id)
+
+        record = self.browse(cr, uid, ids, context=context)[0]
 
         if context is None:
             context = {}
@@ -239,7 +241,6 @@ class account_installer(osv.osv_memory):
 
                 view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal View')])[0] #why fixed name here?
                 view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #Why Fixed name here?
-                ref_acc_bank = obj_multi.bank_account_view_id
 
                 cash_result = mod_obj._get_id(cr, uid, 'account', 'conf_account_type_cash')
                 cash_type_id = mod_obj.read(cr, uid, [cash_result], ['res_id'])[0]['res_id']
@@ -250,7 +251,7 @@ class account_installer(osv.osv_memory):
                 check_result = mod_obj._get_id(cr, uid, 'account', 'conf_account_type_chk')
                 check_type_id = mod_obj.read(cr, uid, [check_result], ['res_id'])[0]['res_id']
 
-                record = self.browse(cr, uid, ids, context=context)[0]
+#                record = self.browse(cr, uid, ids, context=context)[0]
                 code_cnt = 1
                 vals_seq = {
                         'name': _('Bank Journal '),
@@ -443,7 +444,6 @@ class account_installer(osv.osv_memory):
         # Bank Journals
         view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal View')])[0] #TOFIX: Why put fixed name ?
         view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #TOFIX: why put fixed name?
-        ref_acc_bank = obj_multi.bank_account_view_id
 
 
         #create the properties
@@ -485,8 +485,8 @@ class account_installer(osv.osv_memory):
             for position in obj_fiscal_position_template.browse(cr, uid, fp_ids):
 
                 vals_fp = {
-                           'company_id' : company_id.id,
-                           'name' : position.name,
+                           'company_id': company_id.id,
+                           'name': position.name,
                            }
                 new_fp = obj_fiscal_position.create(cr, uid, vals_fp)
 
@@ -495,17 +495,17 @@ class account_installer(osv.osv_memory):
 
                 for tax in position.tax_ids:
                     vals_tax = {
-                                'tax_src_id' : tax_template_ref[tax.tax_src_id.id],
-                                'tax_dest_id' : tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                                'position_id' : new_fp,
+                                'tax_src_id': tax_template_ref[tax.tax_src_id.id],
+                                'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
+                                'position_id': new_fp,
                                 }
                     obj_tax_fp.create(cr, uid, vals_tax)
 
                 for acc in position.account_ids:
                     vals_acc = {
-                                'account_src_id' : acc_template_ref[acc.account_src_id.id],
-                                'account_dest_id' : acc_template_ref[acc.account_dest_id.id],
-                                'position_id' : new_fp,
+                                'account_src_id': acc_template_ref[acc.account_src_id.id],
+                                'account_dest_id': acc_template_ref[acc.account_dest_id.id],
+                                'position_id': new_fp,
                                 }
                     obj_ac_fp.create(cr, uid, vals_acc)
 
@@ -646,7 +646,7 @@ class account_installer(osv.osv_memory):
                         obj_acc.write(cr, uid, default_account_ids, {'tax_ids':[(6,0,[purchase_tax])]})
                     tax_val.update({'supplier_taxes_id':[(6,0,[purchase_tax])]})
                     default_tax.append(('supplier_taxes_id',purchase_tax))
-                if len(tax_val):
+                if tax_val:
                     product_ids = obj_product.search(cr, uid, [])
                     for product in obj_product.browse(cr, uid, product_ids):
                         obj_product.write(cr, uid, product.id, tax_val)
