@@ -23,7 +23,7 @@ from osv import fields, osv
 from locale import localeconv
 import tools
 from tools.safe_eval import safe_eval as eval
-
+from tools.translate import _
 class lang(osv.osv):
     _name = "res.lang"
     _description = "Languages"
@@ -75,6 +75,23 @@ class lang(osv.osv):
         for lang_id in ids :
             self._lang_data_get.clear_cache(cr.dbname,lang_id= lang_id)
         return super(lang, self).write(cr, uid, ids, vals, context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        languages = self.read(cr, uid, ids, ['code','active'], context=context)
+        for language in languages:
+            lang = context.get('lang')
+            if language['code']=='en_US':
+                raise osv.except_osv(_('User Error'), _("Base Language 'en_US' can not be deleted !"))
+            if lang and (language['code']==lang):
+                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is User's Preferred Language !"))
+            if language['active']:
+                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is Active !\nPlease de-activate the language first."))
+            trans_obj = self.pool.get('ir.translation')
+            trans_ids = trans_obj.search(cr, uid, [('lang','=',language['code'])], context=context)
+            trans_obj.unlink(cr, uid, trans_ids, context=context)
+        return super(lang, self).unlink(cr, uid, ids, context=context)
 
     def _group(self, cr, uid, ids, s, monetary=False, grouping=False, thousands_sep=''):
         grouping = eval(grouping)
