@@ -58,8 +58,7 @@
                     <field name="writeoff_acc_id" domain="[('type', '&lt;&gt;', 'view')]"/>
                     <field name="date_p"/>
                     <field name="comment"/>
-                    <separator string="Analytic" colspan="4"/>
-                    <field name="analytic_id"/>
+                    <field name="analytic_id" groups="analytic.group_analytic_accounting"/>
                     <group colspan="4" col="6">
                         <label string ="" colspan="2"/>
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>

@@ -21,17 +21,8 @@
             <field name="context">{'journal_type':'sale','view_mode':False}</field>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_account_moves_sale" sequence="16" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL" groups="group_account_user,group_account_manager"/>
-
-<!--        <record id="action_account_moves_purchase_refund" model="ir.actions.act_window">-->
-<!--            <field name="name">Journal Refund Items</field>-->
-<!--            <field name="res_model">account.move.journal</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="view_id" ref="view_account_move_journal_form"/>-->
-<!--            <field name="context">{'journal_type':'purchase_refund'}</field>-->
-<!--            <field name="target">new</field>-->
-<!--        </record>-->
-<!--        <menuitem action="action_account_moves_purchase_refund" sequence="5" id="menu_eaction_account_moves_purchase_refund" parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL"/>-->
+        <menuitem action="action_account_moves_sale" sequence="16" id="menu_eaction_account_moves_sale"
+            parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL" groups="group_account_user,group_account_manager"/>
 
         <record id="action_account_moves_purchase" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
@@ -47,16 +38,6 @@
             icon="STOCK_JUSTIFY_FILL"
             sequence="16"
             groups="group_account_user,group_account_manager"/>
-
-<!--        <record id="action_account_moves_sale_refund" model="ir.actions.act_window">-->
-<!--            <field name="name">Journal Refund Items</field>-->
-<!--            <field name="res_model">account.move.journal</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="view_id" ref="view_account_move_journal_form"/>-->
-<!--            <field name="context">{'journal_type':'sale_refund'}</field>-->
-<!--            <field name="target">new</field>-->
-<!--        </record>-->
-<!--        <menuitem action="action_account_moves_sale_refund" sequence="5" id="menu_eaction_account_moves_sale_refund" parent="menu_finance_payables" icon="STOCK_JUSTIFY_FILL"/>-->
 
         <record id="action_account_moves_bank" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
