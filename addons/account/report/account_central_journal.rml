@@ -304,7 +304,7 @@
     </blockTable>
     <blockTable colWidths="50.0,250.0,70.0,70.0,70.0,50.0" style="Table_Final_Total_currency">[[ display_currency(data) or removeParentNode('blockTable') ]]
       <tr>
-        <td><para style="terp_default_Bold_9">Total:([[ company.currency_id.code]])</para></td>
+        <td><para style="terp_default_Bold_9">Total:</para></td>
         <td><para style="terp_default_Bold_9"><font color="white"> </font></para></td>
         <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit(o.period_id.id, o.journal_id.id)) ]]</para></td>
         <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit(o.period_id.id, o.journal_id.id)) ]]</para></td>
