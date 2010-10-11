@@ -273,15 +273,11 @@ class WebKitParser(report_sxw):
         body_mako_tpl = Template(template ,input_encoding='utf-8')
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
         html = body_mako_tpl.render(
-                                    objects=self.parser_instance.localcontext['objects'], 
-                                    company=company, 
-                                    time=time, 
-                                    helper=helper, 
-                                    css=css,
-                                    formatLang=self.formatLang,
-                                    setLang=self.setLang,
-                                    _=self.translate_call,
-                                    )
+                                        helper=helper, 
+                                        css=css,
+                                        _=self.translate_call,
+                                        **self.parser_instance.localcontext
+                                        )
         head_mako_tpl = Template(header, input_encoding='utf-8')
         head = head_mako_tpl.render(
                                     company=company, 
