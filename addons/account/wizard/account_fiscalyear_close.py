@@ -65,9 +65,9 @@ class account_fiscalyear_close(osv.osv_memory):
             context = {}
         fy_id = data[0]['fy_id']
 
-        cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)" , (str(data[0]['fy2_id']),))
+        cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)", (str(data[0]['fy2_id']),))
         fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
-        cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)" , (str(fy_id),))
+        cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)", (str(fy_id),))
         fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
         period = obj_acc_period.browse(cr, uid, data[0]['period_id'], context=context)

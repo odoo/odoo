@@ -71,7 +71,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
-        self.cr.execute('SELECT a.currency_id ,a.code, a.name, c.code AS currency_code,l.currency_id ,l.amount_currency ,SUM(debit) AS debit, SUM(credit) AS credit  \
+        self.cr.execute('SELECT a.currency_id ,a.code, a.name, c.code AS currency_code, l.currency_id, l.amount_currency, SUM(debit) AS debit, SUM(credit) AS credit  \
                         from account_move_line l  \
                         LEFT JOIN account_move am ON (l.move_id=am.id) \
                         LEFT JOIN account_account a ON (l.account_id=a.id) \

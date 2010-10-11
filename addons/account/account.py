@@ -2722,7 +2722,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # Bank Journals
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
-        data = obj_pool.browse(cr, uid, data_id[0])
+        data = obj_data.browse(cr, uid, data_id[0])
         view_id_cash = data.res_id
 
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view_multi')])

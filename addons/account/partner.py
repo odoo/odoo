@@ -52,7 +52,7 @@ class account_fiscal_position(osv.osv):
         return result
 
     def map_account(self, cr, uid, fposition_id, account_id, context={}):
-        if not fposition_id :
+        if not fposition_id:
             return account_id
         for pos in fposition_id.account_ids:
             if pos.account_src_id.id == account_id:
@@ -116,7 +116,7 @@ class res_partner(osv.osv):
         return res
 
     def _asset_difference_search(self, cr, uid, obj, name, type, args, context=None):
-        if not len(args):
+        if not args:
             return []
         having_values = tuple(map(itemgetter(2), args))
         where = ' AND '.join(
@@ -133,7 +133,7 @@ class res_partner(osv.osv):
                     'GROUP BY partner_id HAVING '+where),
                    (type,) + having_values)
         res = cr.fetchall()
-        if not len(res):
+        if not res:
             return [('id','=','0')]
         return [('id','in',map(itemgetter(0), res))]
 

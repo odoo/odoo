@@ -33,7 +33,7 @@ class account_move_journal(osv.osv_memory):
         """
         ids = self.pool.get('account.period').find(cr, uid, context=context)
         period_id = False
-        if len(ids):
+        if ids:
             period_id = ids[0]
         return period_id
 
