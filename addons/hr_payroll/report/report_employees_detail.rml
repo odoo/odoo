@@ -184,6 +184,20 @@
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="8,0" stop="8,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="9,0" stop="9,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="10,0" stop="10,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="11,0" stop="11,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="12,0" stop="12,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="13,0" stop="13,0"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -329,46 +343,46 @@
     </para>
     <section>
       <para style="terp_default_8">[[ repeatIn(get_periods(data['form']),'m') ]] [[ get_employee_detail(o) ]]</para>
-      <blockTable colWidths="99.0,73.0,69.0,74.0,71.0,73.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table4">
+      <blockTable colWidths="137.0,64.0,62.0,64.0,68.0,69.0,76.0,71.0,80.0,75.0,79.0,78.0,70.0,70.0" style="Table4">
         <tr>
           <td>
             <para style="terp_tblheader_Details">Title</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[0] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[0] != 'None' and m[0] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[1] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[1] != 'None' and m[1] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[2] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[2] != 'None' and m[2] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[3] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[3] != 'None' and m[3] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[4] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[4] != 'None' and m[4] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[5] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[5] != 'None' and m[5] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[6] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[6] != 'None' and m[6] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[7] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[7] != 'None' and m[7] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[8] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[8] != 'None' and m[8] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[9] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[9] != 'None' and m[9] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[10] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[10] != 'None' and m[10] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[11] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[11] != 'None' and m[11] or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Right">Total</para>
@@ -379,9 +393,6 @@
         <font color="white"> </font>
       </para>
       <section>
-        <para style="terp_default_9">
-          <font color="white"> </font>
-        </para>
         <blockTable colWidths="1063.0" style="Table7">
           <tr>
             <td>
@@ -390,8 +401,8 @@
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_9">[[ repeatIn(get_allow(),'e1') ]]</para>
-          <blockTable colWidths="99.0,73.0,69.0,74.0,70.0,74.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table6">
+          <para style="terp_default_1">[[ repeatIn(get_allow(),'e1') ]]</para>
+          <blockTable colWidths="138.0,62.0,62.0,64.0,68.0,70.0,75.0,70.0,80.0,75.0,79.0,77.0,71.0,70.0" style="Table6">
             <tr>
               <td>
                 <para style="terp_default_9">[[ e1[0] ]]</para>
@@ -437,9 +448,6 @@
               </td>
             </tr>
           </blockTable>
-          <para style="terp_default_1">
-            <font color="white"> </font>
-          </para>
         </section>
         <blockTable colWidths="1063.0" style="Table10">
           <tr>
@@ -449,8 +457,8 @@
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_9">[[ repeatIn(get_deduct(),'e2') ]]</para>
-          <blockTable colWidths="99.0,73.0,69.0,74.0,70.0,74.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table8">
+          <para style="terp_default_1">[[ repeatIn(get_deduct(),'e2') ]]</para>
+          <blockTable colWidths="137.0,63.0,62.0,63.0,70.0,69.0,76.0,71.0,79.0,76.0,79.0,77.0,73.0,70.0" style="Table8">
             <tr>
               <td>
                 <para style="terp_default_9">[[ e2[0] ]]</para>
@@ -496,9 +504,6 @@
               </td>
             </tr>
           </blockTable>
-          <para style="terp_default_1">
-            <font color="white"> </font>
-          </para>
         </section>
         <blockTable colWidths="1063.0" style="Table11">
           <tr>
@@ -508,8 +513,8 @@
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_9">[[ repeatIn(get_other(),'e3') ]]</para>
-          <blockTable colWidths="99.0,73.0,69.0,74.0,70.0,74.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table9">
+          <para style="terp_default_1">[[ repeatIn(get_other(),'e3') ]]</para>
+          <blockTable colWidths="137.0,62.0,64.0,62.0,69.0,70.0,77.0,70.0,78.0,77.0,79.0,77.0,73.0,69.0" style="Table9">
             <tr>
               <td>
                 <para style="terp_default_9">[[ e3[0] ]]</para>
@@ -555,18 +560,9 @@
               </td>
             </tr>
           </blockTable>
-          <para style="terp_default_1">
-            <font color="white"> </font>
-          </para>
         </section>
-        <para style="terp_default_1">
-          <font color="white"> </font>
-        </para>
       </section>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
-      <blockTable colWidths="101.0,73.0,68.0,74.0,70.0,74.0,74.0,73.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table1">
+      <blockTable colWidths="137.0,62.0,64.0,62.0,60.0,78.0,78.0,70.0,78.0,77.0,78.0,77.0,74.0,68.0" style="Table1">
         <tr>
           <td>
             <para style="terp_tblheader_Details">[[ get_monthly_total()[0] ]]</para>
@@ -616,9 +612,6 @@
         <font color="white"> </font>
       </para>
     </section>
-    <para style="terp_default_1">
-      <font color="white"> </font>
-    </para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
