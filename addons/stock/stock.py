@@ -1655,6 +1655,11 @@ class stock_move(osv.osv):
                     self.write(cr, uid, [m.id], {
                         'date': newdate,
                         'location_dest_id': dest[0].id})
+                    if m.picking_id and (dest[3] or dest[5]):
+                        self.pool.get('stock.picking').write(cr, uid, [m.picking_id.id], {
+                            'stock_journal_id': dest[3] or m.picking_id.stock_journal_id.id,
+                            'type': dest[5] or m.picking_id.type
+                        }, context=context)
                     m.location_dest_id = dest[0]
                     res2 = self._chain_compute(cr, uid, [m], context=context)
                     for pick_id in res2.keys():
