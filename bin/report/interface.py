@@ -70,6 +70,7 @@ class report_rml(report_int):
     def __init__(self, name, table, tmpl, xsl):
         super(report_rml, self).__init__(name)
         self.table = table
+        self.internal_header=False
         self.tmpl = tmpl
         self.xsl = xsl
         self.bin_datas = {}
@@ -110,6 +111,7 @@ class report_rml(report_int):
         return self.post_process_xml_data(cr, uid, xml, context)
 
     def post_process_xml_data(self, cr, uid, xml, context=None):
+
         if not context:
             context={}
         # find the position of the 3rd tag
@@ -136,6 +138,8 @@ class report_rml(report_int):
     # TODO: The translation doesn't work for "<tag t="1">textext<tag> tex</tag>text</tag>"
     #
     def create_rml(self, cr, xml, uid, context=None):
+        if self.tmpl=='' and not self.internal_header:
+            self.internal_header=True
         if not context:
             context={}
         pool = pooler.get_pool(cr.dbname)
@@ -174,6 +178,9 @@ class report_rml(report_int):
         return xml
 
     def create_pdf(self, rml, localcontext = None, logo=None, title=None):
+        if not localcontext:
+           localcontext={}
+        localcontext.update({'internal_header':self.internal_header})
         if logo:
             self.bin_datas['logo'] = logo
         else:
