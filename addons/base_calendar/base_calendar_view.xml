@@ -313,6 +313,11 @@
                         <separator colspan="4" string="" />
                            <group col="5" colspan="4">
                                <field name="state" select="2" />
+                               <button name="do_cancel"
+                                   string="Cancel"
+                                   states="tentative,confirmed"
+                                   type="object"
+                                   icon="gtk-cancel" />
                                <button name="do_tentative"
                                    states="confirmed,cancelled"
                                    string="Uncertain"
@@ -323,11 +328,6 @@
                                    states="tentative,cancelled"
                                    type="object"
                                    icon="gtk-apply" />
-                               <button name="do_cancel"
-                                   string="Cancel"
-                                   states="tentative,confirmed"
-                                   type="object"
-                                   icon="gtk-cancel" />
                            </group>
                         </page>
                         <page string="Invitation Detail">
@@ -475,7 +475,7 @@
                             <separator orientation="vertical" />
                             <filter string="Date" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'date'}" />
-                            
+
                         </group>
                 </search>
             </field>
