@@ -146,7 +146,7 @@ class account_analytic_account(osv.osv):
                             from account_analytic_line \
                             where account_id IN %s \
                                 and invoice_id is null \
-                            GROUP BY account_analytic_line.account_id" ,(parent_ids,))
+                            GROUP BY account_analytic_line.account_id", (parent_ids,))
                     for account_id, lwd in cr.fetchall():
                         if account_id not in res:
                             res[account_id] = {}
@@ -258,7 +258,7 @@ class account_analytic_account(osv.osv):
                         on account_analytic_line.journal_id = account_analytic_journal.id  \
                     where account_analytic_line.account_id IN %s \
                         and account_analytic_journal.type = 'sale' \
-                    group by account_analytic_line.account_id" ,(parent_ids,))
+                    group by account_analytic_line.account_id", (parent_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
 
@@ -436,7 +436,7 @@ class account_analytic_account_summary_user(osv.osv):
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'unit_amount': fields.function(_unit_amount, method=True, type='float',
             string='Total Time'),
-        'user' : fields.many2one('res.users', 'User'),
+        'user': fields.many2one('res.users', 'User'),
     }
 
     def init(self, cr):
@@ -484,7 +484,7 @@ class account_analytic_account_summary_user(osv.osv):
         if fields==None:
             fields = self._columns.keys()
 
-        # construct a clause for the rules :
+        # construct a clause for the rules:
         d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
@@ -493,7 +493,7 @@ class account_analytic_account_summary_user(osv.osv):
         res = []
         cr.execute('SELECT MAX(id) FROM res_users')
         max_user = cr.fetchone()[0]
-        if len(fields_pre) :
+        if fields_pre:
             fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
@@ -661,14 +661,14 @@ class account_analytic_account_summary_month(osv.osv):
         if fields==None:
             fields = self._columns.keys()
 
-        # construct a clause for the rules :
+        # construct a clause for the rules:
         d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
 
         res = []
-        if len(fields_pre) :
+        if fields_pre:
             fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]

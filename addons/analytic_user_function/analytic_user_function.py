@@ -40,7 +40,7 @@ class account_analytic_account(osv.osv):
 
     _inherit = "account.analytic.account"
     _columns = {
-        'user_product_ids' : fields.one2many('analytic_user_funct_grid', 'account_id', 'Users/Products Rel.'),
+        'user_product_ids': fields.one2many('analytic_user_funct_grid', 'account_id', 'Users/Products Rel.'),
     }
 
 account_analytic_account()

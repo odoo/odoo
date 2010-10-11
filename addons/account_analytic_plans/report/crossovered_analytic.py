@@ -29,8 +29,8 @@ class crossovered_analytic(report_sxw.rml_parse):
         self.localcontext.update( {
             'time': time,
             'lines': self._lines,
-            'ref_lines' : self._ref_lines,
-            'find_children':self.find_children,
+            'ref_lines': self._ref_lines,
+            'find_children': self.find_children,
         })
         self.base_amount = 0.00
 
@@ -99,7 +99,7 @@ class crossovered_analytic(report_sxw.rml_parse):
         if selected_ids:
             query="SELECT sum(aal.amount) AS amt, sum(aal.unit_amount) AS qty FROM account_analytic_line AS aal, account_analytic_account AS aaa \
                     WHERE aal.account_id=aaa.id AND aal.id IN ("+','.join(map(str,selected_ids))+") AND (aal.journal_id " + journal +") AND aal.date>='"+ str(form['date1']) +"'"" AND aal.date<='" + str(form['date2']) + "'"
-    
+
             self.cr.execute(query)
             info=self.cr.dictfetchall()
 
@@ -133,7 +133,7 @@ class crossovered_analytic(report_sxw.rml_parse):
         for acc_id in self.final_list:
             selected_ids = line_pool.search(self.cr,self.uid,[('account_id','=',acc_id),('move_id','in',self.dict_acc_ref[form['ref']])])
             if selected_ids:
-                query="SELECT aaa.code as code , sum(aal.amount) AS amt, sum(aal.unit_amount) AS qty,aaa.name as acc_name,aal.account_id as id  FROM account_analytic_line AS aal, account_analytic_account AS aaa \
+                query="SELECT aaa.code as code, sum(aal.amount) AS amt, sum(aal.unit_amount) AS qty,aaa.name as acc_name,aal.account_id as id  FROM account_analytic_line AS aal, account_analytic_account AS aaa \
                 WHERE aal.account_id=aaa.id AND aal.id IN ("+','.join(map(str,selected_ids))+") AND (aal.journal_id " + journal +") AND aal.date>='"+ str(form['date1']) +"'"" AND aal.date<='" + str(form['date2']) + "'"" GROUP BY aal.account_id,aaa.name,aaa.code ORDER BY aal.account_id"
 
                 self.cr.execute(query)
