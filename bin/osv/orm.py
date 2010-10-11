@@ -1283,7 +1283,6 @@ class orm_template(object):
                     'fields': xfields
                 }
                 attrs = {'views': views}
-                view = False
                 fields = views.get('field', False) and views['field'].get('fields', False)
             if node.get('name'):
                 attrs = {}
@@ -2218,7 +2217,6 @@ class orm(orm_template):
 
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
-        sum = {}
         flist = ''
         group_by = groupby
         if groupby:
@@ -3922,7 +3920,7 @@ class orm(orm_template):
         return True
 
     def _apply_ir_rules(self, cr, uid, query, mode='read', context=None):
-        """Add what's missing in ``query`` to implement all appropriate ir.rules 
+        """Add what's missing in ``query`` to implement all appropriate ir.rules
           (using the ``model_name``'s rules or the current model's rules if ``model_name`` is None)
 
            :param query: the current query object
@@ -3978,7 +3976,7 @@ class orm(orm_template):
             # extract the first field name, to be able to qualify it and add desc/asc
             m2o_order = m2o_order.split(",",1)[0].strip().split(" ",1)[0]
 
-        # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here 
+        # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
         src_table, src_field = qualified_field.replace('"','').split('.', 1)
         query.join((src_table, dest_model._table, src_field, 'id'), outer=True)

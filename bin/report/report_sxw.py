@@ -19,24 +19,18 @@
 #
 ##############################################################################
 from lxml import etree
-import traceback, sys
 import StringIO
 import cStringIO
 import base64
-import copy
-import locale
 from datetime import datetime
 import os
 import re
 import time
 from interface import report_rml
 import preprocess
-import ir
 import netsvc
-import osv
 import pooler
 import tools
-import warnings
 import zipfile
 import common
 from osv.fields import float as float_class, function as function_class
@@ -210,13 +204,10 @@ class rml_parse(object):
                 return res['datas']
             else :
                 return ''
-        except Exception,e:
+        except Exception:
             return ''
 
     def setLang(self, lang):
-        if not lang or self.default_lang.has_key(lang):
-            if not lang:
-                key = 'en_US'
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
         for obj in self.objects:
@@ -437,8 +428,6 @@ class report_sxw(report_rml, preprocess.report):
                         )
                         cr.commit()
                 except Exception,e:
-                     import traceback, sys
-                     tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                      netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,str(e))
                 results.append(result)
             if results:
@@ -512,7 +501,6 @@ class report_sxw(report_rml, preprocess.report):
                               xml_declaration=True)
 
         rml_dom =  etree.XML(rml)
-        body = rml_dom[-1]
         elements = []
         key1 = rml_parser.localcontext['name_space']["text"]+"p"
         key2 = rml_parser.localcontext['name_space']["text"]+"drop-down"
