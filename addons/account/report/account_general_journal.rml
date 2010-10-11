@@ -373,7 +373,7 @@
           <td><para style="terp_default_Right_9">[[ formatLang(line['debit'] )]]</para></td>
           <td><para style="terp_default_Right_9">[[ formatLang(line['credit']) ]]</para></td>
 		  <td><para style="terp_default_Right_9">[[ formatLang(line['credit']-line['debit'] ) ]] [[ company.currency_id.symbol ]]</para></td>
-          <td><para style="terp_default_Right_9">[[ line['currency_id'] and formatLang(line['amount_currency'] ) ]] [[ line['currency_code'] or '' ]]</para></td>
+          <td><para style="terp_default_Right_9"><font>[[ (line['currency_id']==None or line['amount_currency']==None) and removeParentNode('font') ]] [[ formatLang(line['amount_currency'] ) ]] [[ line['currency_code'] or '' ]]</font></para></td>
         </tr>
       </blockTable>
       </section>
