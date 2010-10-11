@@ -29,8 +29,9 @@ from tools.translate import _
 
 class account_move_line(osv.osv):
     _inherit = 'account.move.line'
+
     def _unreconciled(self, cr, uid, ids, prop, unknow_none, context):
-        res={}
+        res = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.debit - line.credit
             if line.reconcile_partial_id:
@@ -43,9 +44,11 @@ class account_move_line(osv.osv):
     _columns = {
         'amount_unreconciled': fields.function(_unreconciled, method=True, string='Unreconciled Amount'),
     }
+
 account_move_line()
 
 class account_voucher(osv.osv):
+
     def _get_type(self, cr, uid, ids, context={}):
         return context.get('type', False)
 
@@ -92,7 +95,7 @@ class account_voucher(osv.osv):
         journal_id = context.get('journal_id', False)
         if journal_id:
             journal = journal_pool.browse(cr, uid, journal_id)
-            currency_id = journal.company_id.currency_id.id
+#            currency_id = journal.company_id.currency_id.id
             if journal.currency:
                 return journal.currency.id
         return False
@@ -114,7 +117,7 @@ class account_voucher(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         if not view_id and context.get('invoice_type',False):
             mod_obj = self.pool.get('ir.model.data')
-            if context.get('invoice_type') in ('out_invoice','out_refund'):
+            if context.get('invoice_type') in ('out_invoice', 'out_refund'):
                 result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
             else:
                 result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_payment_form')
