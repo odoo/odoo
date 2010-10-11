@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 from tools.translate import _
-import decimal_precision as dp
 import time
 
 
