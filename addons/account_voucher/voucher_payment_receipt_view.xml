@@ -219,7 +219,7 @@
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
-                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
@@ -257,7 +257,7 @@
             <field name="model">account.voucher</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Payment">
+                <form string="Customer Payment">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" string="Customer"/>
                         <field name="journal_id"
@@ -326,7 +326,7 @@
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
-                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
@@ -334,7 +334,7 @@
         </record>
 
         <record id="action_vendor_receipt" model="ir.actions.act_window">
-            <field name="name">Sales Payment</field>
+            <field name="name">Customer Payment</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>
