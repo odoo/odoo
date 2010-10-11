@@ -211,7 +211,7 @@
           <para style="terp_tblheader_Details_Right">Disc.(%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Price</para>
+          <para style="terp_tblheader_Details_Right">Price</para>
         </td>
       </tr>
     </blockTable>
@@ -229,7 +229,7 @@
             <para style="terp_default_Right_9">[[ formatLang(l.quantity)]] [[ (l.uos_id and l.uos_id.name) or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]][[ o.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(l.discount, digits=get_digits(dp='Account')) ]] </para>
