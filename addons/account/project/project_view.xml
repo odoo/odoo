@@ -180,6 +180,7 @@
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)" invisible="not context.get('to_invoice', False)"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total Quantity" invisible="not context.get('to_invoice', False)"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" invisible="not context.get('to_invoice', False)"/>
+                    <field name="user_id" invisible="1"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
                     <field name="user_id" invisible="1" />
@@ -431,13 +432,13 @@
             </field>
         </record>
 
-        <act_window 
+        <act_window
             context="{'search_default_account_id': [active_id], 'search_default_user_id': False}"
-            id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal" 
-            name="All Analytic Entries" 
-            res_model="account.analytic.line" 
-            src_model="account.analytic.account" 
-            view_mode="tree,form" 
+            id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal"
+            name="All Analytic Entries"
+            res_model="account.analytic.line"
+            src_model="account.analytic.account"
+            view_mode="tree,form"
             view_type="form"/>
 
         <record id="view_account_journal_1" model="ir.ui.view">
