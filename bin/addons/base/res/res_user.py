@@ -350,6 +350,12 @@ class users(osv.osv):
     # User can write to a few of her own fields (but not her groups for example)
     SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email']
 
+    def create(self, cr, uid, vals, context=None):
+        if (not vals.get('company_ids',[])):
+            company_ids = self._get_companies(cr, uid, context=context)
+            if company_ids and len(company_ids): vals['company_ids'] = [(6, 0, company_ids)]
+        return super(users, self).create(cr, uid, vals, context=context)
+        
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
