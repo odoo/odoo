@@ -273,13 +273,12 @@ def get_module_resource(module, *args):
     res = a and opj(a, *args) or False
     if zipfile.is_zipfile( a +'.zip') :
         zip = zipfile.ZipFile( a + ".zip")
-        files = [opj(a,'/'.join(f.split('/')[1:])) for f in zip.namelist()]
+        files = ['/'.join(f.split('/')[1:]) for f in zip.namelist()]
+        res = '/'.join(args)
         if res in files:
-            return res
-    else:
-        if os.path.isfile(res):
-            return res
-    
+            return opj(a, res)
+    elif os.path.isfile(res):
+        return res
     return False
 
 
