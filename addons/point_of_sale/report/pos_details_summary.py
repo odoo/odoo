@@ -24,6 +24,23 @@ from report import report_sxw
 
 
 class pos_details_summary(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context):
+        super(pos_details_summary, self).__init__(cr, uid, name, context=context)
+        self.total = 0.0
+        self.localcontext.update({
+            'time': time,
+            'strip_name': self._strip_name,
+            'getpayments': self._get_payments,
+            'getqtytotal': self._get_qty_total,
+            'getsumdisc': self._get_sum_discount,
+            'getpaidtotal': self._paid_total,
+            'gettotalofthaday': self._total_of_the_day,
+            'getsuminvoice': self._sum_invoice,
+            'gettaxamount': self._get_tax_amount,
+            'getsalestotal': self._get_sales_total,
+            'getperiod': self._get_period,
+            'getcompany':self.get_company
+        })
 
     def get_company(self,objects):
         comp=[obj.company_id.name for obj in objects]
@@ -61,10 +78,10 @@ class pos_details_summary(report_sxw.rml_parse):
 
         result = {}
         for obj in objects:
-            for payment in obj.payments:
-                if gift_journal_id and gift_journal_id == payment.journal_id.id:
+            for payment in obj.statement_ids:
+                if gift_journal_id and gift_journal_id == payment.statement_id.journal_id.id:
                     continue
-                result[payment.journal_id.name] = result.get(payment.journal_id.name, 0.0) + payment.amount
+                result[payment.statement_id.journal_id.name] = result.get(payment.statement_id.journal_id.name, 0.0) + payment.amount
         return result
 
     def _paid_total(self, objects):
@@ -111,23 +128,7 @@ class pos_details_summary(report_sxw.rml_parse):
         else:
             return '%s - %s' % (min_date, max_date)
 
-    def __init__(self, cr, uid, name, context):
-        super(pos_details_summary, self).__init__(cr, uid, name, context)
-        self.total = 0.0
-        self.localcontext.update({
-            'time': time,
-            'strip_name': self._strip_name,
-            'getpayments': self._get_payments,
-            'getqtytotal': self._get_qty_total,
-            'getsumdisc': self._get_sum_discount,
-            'getpaidtotal': self._paid_total,
-            'gettotalofthaday': self._total_of_the_day,
-            'getsuminvoice': self._sum_invoice,
-            'gettaxamount': self._get_tax_amount,
-            'getsalestotal': self._get_sales_total,
-            'getperiod': self._get_period,
-            'getcompany':self.get_company
-        })
+
 
 report_sxw.report_sxw('report.pos.details_summary',
                                             'pos.order',

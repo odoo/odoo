@@ -175,9 +175,8 @@ class pos_order(osv.osv):
             cur_obj = self.pool.get('res.currency')
             cur = order.pricelist_id.currency_id
             for payment in order.statement_ids:
-                 res[order.id]['amount_paid'] +=  payment.amount
-            for payment in order.payments:
-                res[order.id]['amount_return']  += (payment.amount < 0 and payment.amount or 0)
+                res[order.id]['amount_paid'] +=  payment.amount
+                res[order.id]['amount_return'] += (payment.amount < 0 and payment.amount or 0)
             for line in order.lines:
                 if order.price_type!='tax_excluded':
                     res[order.id]['amount_tax'] = reduce(lambda x, y: x+round(y['amount'], 2),
@@ -221,7 +220,6 @@ class pos_order(osv.osv):
             default = {}
         default.update({
             'state': 'draft',
-            'payments': [],
             'partner_id': False,
             'invoice_id': False,
             'account_move': False,
@@ -285,7 +283,6 @@ class pos_order(osv.osv):
             ('tax_excluded','Tax excluded')
         ], 'Price method', required=True),
         'statement_ids': fields.one2many('account.bank.statement.line','pos_statement_id','Payments',states={'draft': [('readonly', False)]},readonly=True),
-        'payments': fields.one2many('pos.payment', 'order_id', 'Order Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one( 'res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
         'state': fields.selection([('draft', 'Quotation'), ('payment', 'Payment'),
@@ -1046,6 +1043,7 @@ class pos_order_line(osv.osv):
                     tax_amount = 0.0
                     taxes = [t for t in line.product_id.taxes_id]
                     if line.qty == 0.0:
+                        res[line.id][f] = 0.0
                         continue
                     computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
                     for tax in computed_taxes:
@@ -1264,55 +1262,6 @@ class pos_order_line(osv.osv):
         }
 
 pos_order_line()
-
-
-class pos_payment(osv.osv):
-    _name = 'pos.payment'
-    _description = 'Pos Payment'
-
-    def _journal_get(self, cr, uid, context=None):
-        obj = self.pool.get('account.journal')
-        ids = obj.search(cr, uid, [('type', '=', 'cash')])
-        res = obj.read(cr, uid, ids, ['id', 'name'], context)
-        res = [(r['id'], r['name']) for r in res]
-        return res
-
-    def _journal_default(self, cr, uid, context=None):
-        journal_list = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')])
-        if journal_list:
-            return journal_list[0]
-        else:
-            return False
-
-    _columns = {
-        'name': fields.char('Description', size=64),
-        'order_id': fields.many2one('pos.order', 'Order Ref', required=True, ondelete='cascade'),
-        'journal_id': fields.many2one('account.journal', "Journal", required=True),
-        'payment_id': fields.many2one('account.payment.term','Payment Term', select=True),
-        'payment_nb': fields.char('Piece Number', size=32),
-        'payment_name': fields.char('Payment Name', size=32),
-        'payment_date': fields.date('Payment Date', required=True),
-        'amount': fields.float('Amount', required=True),
-    }
-    _defaults = {
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.payment'),
-        'journal_id': _journal_default,
-        'payment_date':  lambda *a: time.strftime('%Y-%m-%d'),
-    }
-
-    def create(self, cr, user, vals, context=None):
-        if vals.get('journal_id') and vals.get('amount'):
-            return super(pos_payment, self).create(cr, user, vals, context)
-        return False
-
-    def write(self, cr, user, ids, values, context=None):
-        if 'amount' in values and not values['amount']:
-            return False
-        if 'journal_id' in values and not values['journal_id']:
-            return False
-        return super(pos_payment, self).write(cr, user, ids, values, context)
-
-pos_payment()
 
 class product_product(osv.osv):
     _inherit = 'product.product'

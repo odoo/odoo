@@ -8,6 +8,13 @@
     <record id="group_pos_user" model="res.groups">
         <field name="name">Point of Sale / User</field>
     </record>
+    
+    <record model="ir.rule" id="pos_cash_statement_rule">
+        <field name="name">Registers</field>
+        <field name="model_id" search="[('model','=','account.bank.statement')]" model="ir.model"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('user_id','!=',['base.user_root'])]</field>
+    </record>
 
 </data>
 </openerp>

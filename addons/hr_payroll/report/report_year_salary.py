@@ -95,7 +95,7 @@ class year_salary_report(rml_parse.rml_parse):
               self.total += item[count]
         return self.total
 
-report_sxw.report_sxw('report.year.salary', 'hr.payslip', 'hr_payroll/report/report_year_report.rml', parser=year_salary_report,header=3)
+report_sxw.report_sxw('report.year.salary', 'hr.payslip', 'hr_payroll/report/report_year_report.rml', parser=year_salary_report,header='internal landscape')
 
 
 

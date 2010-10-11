@@ -62,7 +62,6 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 
     def _get_lines(self, form):
         res = []
-        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         self.cr.execute('SELECT DISTINCT res_partner.id AS id,\
                     res_partner.name AS name \
                 FROM res_partner,account_move_line AS l, account_account\
@@ -219,7 +218,6 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 
     def _get_lines_with_out_partner(self, form):
         res = []
-        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']

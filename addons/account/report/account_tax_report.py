@@ -190,7 +190,6 @@ class tax_report(rml_parse.rml_parse):
                 bcl_rup_ind = ind - 1
 
                 while (bcl_current_level >= int(accounts[bcl_rup_ind]['level']) and bcl_rup_ind >= 0 ):
-                    tot_elem = copy.copy(accounts[bcl_rup_ind], context=context)
                     res_tot = { 'code': accounts[bcl_rup_ind]['code'],
                         'name': '',
                         'debit': 0,

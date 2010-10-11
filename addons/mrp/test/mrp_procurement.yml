@@ -178,17 +178,7 @@
     wf_service = netsvc.LocalService("workflow")
     for p_id in purch_ids:
     	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
--
-  I get the approval from the supplier. So I approve my purchase orders.
--
-  !python {model: purchase.order}: |
-    from tools.translate import _
-    import netsvc
-    purch_ids = self.search(cr, uid, [('state','=','confirmed')])
-    assert purch_ids, _('No Confirmed Purchase Orders found!')
-    wf_service = netsvc.LocalService("workflow")
-    for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_approve', cr)
+
 -
   I confirm purchase order for Buttons.
 -
@@ -198,17 +188,7 @@
     wf_service = netsvc.LocalService("workflow")
     for p_id in purch_ids:
     	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
--
-  I get the approval from the supplier. So I approve my purchase orders.
--
-  !python {model: purchase.order}: |
-    from tools.translate import _
-    import netsvc
-    purch_ids = self.search(cr, uid, [('state','=','confirmed')])
-    assert purch_ids, _('No Confirmed Purchase Orders found!')
-    wf_service = netsvc.LocalService("workflow")
-    for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_approve', cr)
+
 -
   I Check incoming shipments for cloth. And receive products.
 -
