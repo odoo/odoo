@@ -49,7 +49,7 @@
                                         on_change="onchange_partner_id(partner_id, email_from)" string="Customer"
                                         colspan="2" />
                                     <button name="%(action_crm_lead2partner)d"
-                                        icon="gtk-index" type="action"
+                                        icon="terp-partner" type="action"
                                         string="Create"
                                         attrs="{'invisible':[('partner_id','!=',False)]}"/>
                                 </group>
@@ -74,6 +74,9 @@
                             <separator colspan="4"/>
                             <group col="10" colspan="4">
                                 <field name="state"/>
+                                <button name="case_cancel" string="Cancel"
+                                    states="draft" type="object"
+                                    icon="gtk-close" />
                                 <button name="case_reset" string="Reset to Draft"
                                     states="done,cancel" type="object"
                                     icon="gtk-convert" />
@@ -87,9 +90,6 @@
                                     states="open,pending" type="object"
                                     groups="base.group_extended"
                                     icon="gtk-go-up" />
-                                <button name="case_cancel" string="Cancel"
-                                    states="draft" type="object"
-                                    icon="gtk-close" />
                                 <button name="case_mark_lost" string="Mark Lost"
                                     states="open,pending" type="object"
                                     icon="gtk-cancel" />

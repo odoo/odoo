@@ -61,7 +61,7 @@ class account_installer(osv.osv_memory):
         'date_stop': fields.date('End Date', required=True),
         'period':fields.selection([('month','Monthly'), ('3months','3 Monthly')],
                                   'Periods', required=True),
-        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts',required=True),
+        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Your Bank and Cash Accounts',required=True),
         'sale_tax':fields.float('Sale Tax(%)'),
         'purchase_tax':fields.float('Purchase Tax(%)'),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -241,7 +241,6 @@ class account_installer(osv.osv_memory):
 
                 view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal View')])[0] #why fixed name here?
                 view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #Why Fixed name here?
-                ref_acc_bank = obj_multi.bank_account_view_id
 
                 cash_result = mod_obj._get_id(cr, uid, 'account', 'conf_account_type_cash')
                 cash_type_id = mod_obj.read(cr, uid, [cash_result], ['res_id'])[0]['res_id']
@@ -445,7 +444,6 @@ class account_installer(osv.osv_memory):
         # Bank Journals
         view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal View')])[0] #TOFIX: Why put fixed name ?
         view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #TOFIX: why put fixed name?
-        ref_acc_bank = obj_multi.bank_account_view_id
 
 
         #create the properties
