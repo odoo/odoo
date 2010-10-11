@@ -151,15 +151,14 @@ class account_cash_statement(osv.osv):
             res[r] = round(res[r], 2)
         return res
 
-    def _get_company(self, cr, uid, context={}):
+    def _get_company(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
         company_pool = self.pool.get('res.company')
-        user = user_pool.browse(cr, uid, uid, context)
-        company_id = user.company_id and user.company_id.id
+        user = user_pool.browse(cr, uid, uid, context=context)
+        company_id = user.company_id
         if not company_id:
-            company_id = company_pool.search(cr, uid, [])[0]
-
-        return company_id
+            company_id = company_pool.search(cr, uid, [])
+        return company_id and company_id[0] or False
 
     def _get_cash_open_box_lines(self, cr, uid, context={}):
         res = []
