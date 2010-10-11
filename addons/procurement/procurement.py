@@ -331,6 +331,7 @@ class procurement_order(osv.osv):
                         'date_expected': procurement.date_planned,
                         'state': 'draft',
                         'company_id': procurement.company_id.id,
+                        'auto_validate': True,
                     })
                     move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
