@@ -15,26 +15,20 @@ class year_salary_report(rml_parse.rml_parse):
             'get_employee' : self.get_employee,
             'get_periods'  : self.get_periods,
             'get_months_tol' : self.get_months_tol,
-            'get_fiscalyear' : self.get_fiscalyear,
             'get_total' : self.get_total,
         })
 
         self.mnths =[]
         self.mnths_tol = []
-        self.curr_fiscal_year_name=''
         self.total=0.0
 
     def get_periods(self,form):
-        fiscalyear = pooler.get_pool(self.cr.dbname).get('account.fiscalyear')
-        curr_fiscalyear_id = form['fiscalyear_id']
-        curr_fiscalyear = fiscalyear.read(self.cr,self.uid,[form['fiscalyear_id']],['date_start','date_stop'])[0]
-
 #       Get start year-month-date and end year-month-date
-        fy = int(curr_fiscalyear['date_start'][0:4])
-        ly = int(curr_fiscalyear['date_stop'][0:4])
+        fy = int(form['date_from'][0:4])
+        ly = int(form['date_to'][0:4])
 
-        fm = int(curr_fiscalyear['date_start'][5:7])
-        lm = int(curr_fiscalyear['date_stop'][5:7])
+        fm = int(form['date_from'][5:7])
+        lm = int(form['date_to'][5:7])
         no_months = (ly-fy)*12+lm-fm + 1
         cm = fm
         cy = fy
@@ -51,11 +45,6 @@ class year_salary_report(rml_parse.rml_parse):
             cm = cm +1
         return [mnth_name]
 
-    def get_fiscalyear(self,fiscalyear_id):
-        fiscalyear_obj = pooler.get_pool(self.cr.dbname).get('account.fiscalyear')
-        return fiscalyear_obj.read(self.cr,self.uid,[fiscalyear_id],['name'])[0]['name']
-
-
     def get_employee(self,form):
         ls1=[]
         ls = []
@@ -64,11 +53,6 @@ class year_salary_report(rml_parse.rml_parse):
         emp = pooler.get_pool(self.cr.dbname).get('hr.employee')
         emp_ids = form['employee_ids']
         empll  = emp.browse(self.cr,self.uid, emp_ids)
-        fiscalyear_obj = pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear_id'])
-        period_ids_l = fiscalyear_obj.period_ids
-        for period in period_ids_l:
-            periods.append(period.id)
-        periods_ids = ','.join(map(str, periods))
         cnt = 1
         for emp_id in empll:
             ls1.append(emp_id.name)
@@ -76,7 +60,7 @@ class year_salary_report(rml_parse.rml_parse):
             for mnth in self.mnths:
                 if len(mnth) != 7:
                     mnth = '0' + str(mnth)
-                query = "select net from hr_payslip where employee_id = "+str(emp_id.id)+" and to_char(date,'mm-yyyy') like '%"+mnth+"%' and state = 'done' and period_id in "+"("+ periods_ids +")" +""
+                query = "select net from hr_payslip where employee_id = "+str(emp_id.id)+" and to_char(date,'mm-yyyy') like '%"+mnth+"%' and state = 'done' "
                 self.cr.execute(query)
                 sal = self.cr.fetchall()
                 try:

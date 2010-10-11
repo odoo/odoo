@@ -140,7 +140,7 @@
         <field name="arch" type="xml">
             <form string="Analytic Distribution Line">
                 <field name="plan_id"/>
-                <field name="analytic_account_id" groups="base.group_extended"/>
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                 <field name="rate"/>
             </form>
         </field>
@@ -153,7 +153,7 @@
         <field name="arch" type="xml">
             <tree string="Analytic Distribution Lines">
                 <field name="plan_id" select="1"/>
-                <field name="analytic_account_id" select="1" groups="base.group_extended"/>
+                <field name="analytic_account_id" select="1" groups="analytic.group_analytic_accounting"/>
                 <field name="rate"/>
             </tree>
         </field>
@@ -210,7 +210,7 @@
             <form string="Analytic Plan Line">
                 <field name="name"/>
                 <field name="sequence"/>
-                <field name="root_analytic_id"/>
+                <field name="root_analytic_id" groups="analytic.group_analytic_accounting"/>
                 <newline/>
                 <field name="min_required"/>
                 <field name="max_required"/>
@@ -226,7 +226,7 @@
             <tree string="Analytic Plan Lines">
                 <field name="name" select="1"/>
                 <field name="sequence"/>
-                <field name="root_analytic_id"/>
+                <field name="root_analytic_id" groups="analytic.group_analytic_accounting"/>
                 <field name="min_required"/>
                 <field name="max_required"/>
             </tree>

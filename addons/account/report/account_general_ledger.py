@@ -87,6 +87,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'get_sortby': self._get_sortby,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
+            'get_target_move': self._get_target_move,
         })
         self.context = context
 

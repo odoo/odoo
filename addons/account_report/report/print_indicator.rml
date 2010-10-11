@@ -106,10 +106,10 @@
 	<section>
 		<blockTable colWidths="528.0" style="Table7">
 		<tr>
-			<td><para style="P11"><font color="white">[['.....'*(o['level']) ]]</font><font>[[ o['type']=='view' and setTag('para','para',{'fontName':'Helvetica-Bold','fontSize':'10.5'}) ]]</font>(<seq/>)<font>[[ o['name'] ]]  ([[ o['code'] ]])</font></para></td>
+			<td><para style="P11"><font color="white">[['.....'*(o['level']) ]]</font><font>[[ o['type']&lt;&gt;'view' and setTag('para','para',{'fontName':'Helvetica-Bold','fontSize':'10.5'}) ]]</font>(<seq/>)<font>[[ o['name'] ]]  ([[ o['code'] ]])</font></para></td>
 		</tr>
 		</blockTable>
-		<para style="P1">[[ o['disp_tree'] and setTag('para','image',{'file':gettree(data['form'],o)}) or removeParentNode('para') ]]</para>
+		<para style="P1">[[ o['disp_tree'] and setTag('para','image',{'width':'450.00','height':'215.00','file':gettree(data['form'],o)}) or removeParentNode('para') ]]</para>
 		<para style="P1">[[ o['disp_graph'] and setTag('para','image',{'width':'450.00','height':'215.00','file':getgraph(data['form'],o)}) or removeParentNode('para') ]]</para>
 		<para style="P3"><font color="white"> </font></para>
 		<blockTable colWidths="528.0" repeatRows="1" style="Table7">
