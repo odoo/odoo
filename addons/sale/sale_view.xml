@@ -56,7 +56,7 @@
             <field name="model">sale.order</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
-                <calendar string="Sales orders" color="state" date_start="date_order">
+                <calendar string="Sales Orders" color="state" date_start="date_order">
                     <field name="partner_id"/>
                     <field name="amount_total"/>
                 </calendar>
@@ -67,7 +67,7 @@
             <field name="model">sale.order</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Sales orders" type="bar">
+                <graph string="Sales Orders" type="bar">
                     <field name="partner_id"/>
                     <field name="amount_total" operator="+"/>
                 </graph>
@@ -79,15 +79,15 @@
             <field name="model">sale.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Sales orders" colors="grey:state=='done'">
+                <tree string="Sales Orders" colors="grey:state=='done'">
                     <field name="name"/>
                     <field name="date_order"/>
                     <field name="partner_id"/>
                     <field name="user_id" />
                     <field name="picked_rate" widget="progressbar"/>
                     <field name="invoiced_rate" widget="progressbar"/>
-                    <field name="amount_untaxed" sum="Total Untaxed amount"/>
-                    <field name="amount_total" sum="Total amount"/>
+                    <field name="amount_untaxed" sum="Total Tax Excluded"/>
+                    <field name="amount_total" sum="Total Tax Included"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -98,7 +98,7 @@
             <field name="model">sale.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales order">
+                <form string="Sales Order">
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
@@ -181,7 +181,7 @@
                                         </page>
                                     </notebook>
                                 </form>
-                                <tree string="Sales order lines">
+                                <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
                                     <field name="product_uom_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM"/>
@@ -344,7 +344,7 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="model">sale.order.line</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Sales order lines">
+                <graph string="Sales Order Lines">
                     <field name="product_id"/>
                     <field name="price_subtotal" operator="+"/>
                 </graph>
@@ -356,14 +356,14 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="model">sale.order.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Sales order lines">
+                <tree string="Sales Order Lines">
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="UoM"/>
                     <field name="salesman_id"/>
-                    <field name="price_subtotal"/>
+                    <field name="price_subtotal" sum="Total"/>
                     <field name="state"/>
                     <field name="invoiced"/>
                 </tree>
@@ -517,7 +517,8 @@ to your configuration: from the sales order, from the pickings, etc.
         src_model="product.product"
         groups="base.group_extended"/>
 
-        <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="5"/>
+        <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="5"
+		groups="base.group_extended"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2" groups="base.group_sale_salesman,base.group_sale_manager"/>
         <!-- configartion view -->
 

@@ -79,6 +79,8 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
         #
         # Build a string like (1,2,3) for easy use in SQL query
         partner_ids = [x['id'] for x in partners]
+        if not partner_ids:
+            return []
         # This dictionary will store the debit-credit for all partners, using partner_id as key.
         move_state = ['draft','posted']
         if self.target_move == 'posted':

@@ -8,12 +8,10 @@
           <field name="model">crm.make.sale</field>
           <field name="type">form</field>
           <field name="arch" type="xml">
-            <form string="Create a Sale Order" >
+            <form string="Convert to Quotation" >
                 <group colspan="4">
                     <field name="partner_id" required="1"/>
                     <field name="shop_id" required="1" widget="selection"/>
-                    <field name="analytic_account" domain="[('type','=','normal')]"
-                        groups="base.group_extended"/>
                     <field name="close"/>
                 </group>
                 <newline/>

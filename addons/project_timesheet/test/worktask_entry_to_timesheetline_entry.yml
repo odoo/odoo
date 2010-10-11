@@ -1,5 +1,5 @@
 - 
-  Create an user 'HR Manager'
+  Create a user 'HR Manager'
 - 
   !record {model: res.users, id: res_users_hrmanager0}:
     company_id: base.main_company
@@ -9,7 +9,7 @@
     password: hr
             
 - 
-  Create a product with type service used to specifies employees designation
+  Create a product with type service used to specify employees designation
 - 
   !record {model: product.product, id: product_product_hrmanger0}:
     categ_id: product.product_category_services
@@ -45,7 +45,7 @@
     journal_id: account_analytic_journal_hrtimesheet0
         
 - 
-  Create a timesheet sheet for hr manager
+  Create a timesheet sheet for HR manager
 - 
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0}:
     date_current: '2010-06-03'
@@ -86,7 +86,7 @@
       False, "active_id": ref("project_project_timesheetmanagement0"), })
 
 - 
-  Make a work task entry 'Get work calendar of all employees' of 10 hours done by hr manager 
+  Make a work task entry 'Get work calendar of all employees' of 10 hours done by HR manager 
 - 
   !record {model: project.task, id: project_task_getalltimesheetrecords0}:
     work_ids:
@@ -96,7 +96,7 @@
         user_id: res_users_hrmanager0
 
 -
-  Check for timesheet_ids in hr manager's timesheet
+  Check for timesheet_ids in HR manager's timesheet
 -
   !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0, string: After hr manager's work task, length of timesheet line of current timesheet must be greater then 1}:
      - len(timesheet_ids) > 0             

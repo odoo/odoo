@@ -130,8 +130,11 @@
                     <separator string="Description" colspan="4" />
                     <field name="description" nolabel="1" colspan="4" />
                     <separator colspan="4"/>
-                    <group col="8" colspan="4">
+                    <group col="8" colspan="4" groups="base.group_extended">
                         <field name="state" />
+                        <button name="case_cancel" string="Cancel"
+                            states="draft,open" type="object"
+                            icon="gtk-cancel" />
                         <button name="case_close" string="Done"
                             states="open" type="object"
                             icon="gtk-jump-to" />
@@ -141,9 +144,6 @@
                         <button name="case_open" string="Confirm"
                             states="draft" type="object"
                             icon="gtk-go-forward" />
-                        <button name="case_cancel" string="Cancel"
-                            states="draft,open" type="object"
-                            icon="gtk-cancel" />
                     </group>
                     </page>
                     <page string="Invitation Detail">
@@ -241,7 +241,7 @@
                 <field name="location" />
                 <field name="categ_id" string="Meeting Type"/>
                 <field name="class" string="Privacy"/>
-                <field name="state"/>
+                <field name="state" groups="base.group_extended"/>
                 <field name="user_id" invisible="1"/>
                 <field name="show_as" invisible="1" string="Show time as"/>
                 <button name="case_reset" string="Reset to Unconfirmed"
@@ -303,6 +303,7 @@
                        <group col="12" colspan="4">
                            <filter icon="terp-check" name="current" string="Current"
                                 domain="[('state','in',('draft', 'open'))]"
+				groups="base.group_extended"
                                 help="Current Meetings"/>
                            <separator orientation="vertical"/>
                            <field name="name" select="1" string="Subject"/>

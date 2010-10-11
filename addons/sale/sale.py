@@ -250,7 +250,7 @@ class sale_order(osv.osv):
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
         'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Picking', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
-        'shipped': fields.boolean('Picked', readonly=True, help="It indicates that a picking has been done. It will be set to True if the ordered quantities are available and the picking is done. If the ordered quantities are not available Procurement generates a Purchase/Manufacturing order. Unless its Picking and Purchase/Manufacturing order are not in the done state it wont be set to True"),
+        'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sale order has been delivered. This field is updated only after the scheduler have been launched !"),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
@@ -911,7 +911,7 @@ class sale_order_line(osv.osv):
                 else:
                     a = self.pool.get('ir.property').get(cr, uid,
                             'property_account_income_categ', 'product.category',
-                            context=context)
+                            context=context).id
                 uosqty = _get_line_qty(line)
                 uos_id = _get_line_uom(line)
                 pu = 0.0
