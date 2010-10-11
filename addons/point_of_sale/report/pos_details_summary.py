@@ -69,27 +69,28 @@ class pos_details_summary(report_sxw.rml_parse):
                                     objects,
                                     0.0 )
 
-    def _get_payments(self, objects, ignore_gift=False):
-        gift_journal_id = None
-        if ignore_gift:
-            config_journal_ids = self.pool.get("pos.config.journal").search(self.cr, self.uid, [('code', '=', 'GIFT')])
-            if len(config_journal_ids):
-                config_journal = self.pool.get("pos.config.journal").browse(self.cr, self.uid, config_journal_ids, {})[0]
-                gift_journal_id = config_journal.journal_id.id
+    def _get_payments(self, objects):
+#        gift_journal_id = None
+#        if ignore_gift:
+#            config_journal_ids = self.pool.get("pos.config.journal").search(self.cr, self.uid, [('code', '=', 'GIFT')])
+#            if len(config_journal_ids):
+#                config_journal = self.pool.get("pos.config.journal").browse(self.cr, self.uid, config_journal_ids, {})[0]
+#                gift_journal_id = config_journal.journal_id.id
 
         result = {}
         for obj in objects:
-            for payment in obj.payments:
-                if gift_journal_id and gift_journal_id == payment.journal_id.id:
-                    continue
-                result[payment.journal_id.name] = result.get(payment.journal_id.name, 0.0) + payment.amount
+            for statement in obj.statement_ids:
+                if statement.journal_id:
+                    result[statement.journal_id] = result.get(statement.journal_id, 0.0) + statement.amount
+
+        print "===================================",result.items()        
         return result
 
     def _paid_total(self, objects):
-        return sum(self._get_payments(objects, True).values(), 0.0)
+        return sum(self._get_payments(objects).values(), 0.0)
 
     def _total_of_the_day(self, objects):
-        total_paid = sum(self._get_payments(objects, True).values(), 0.0)
+        total_paid = self._paid_total(objects)
         total_invoiced = self._sum_invoice(objects)
         return total_paid - total_invoiced
 
