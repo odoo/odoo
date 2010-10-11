@@ -163,7 +163,7 @@ class procurement_order(osv.osv):
         """ Checks if move is cancelled or not.
         @return: True or False.
         """
-        return all(procurement.move_id.state != 'cancel' for procurement in self.browse(cr, uid, ids))
+        return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids))
 
     def check_move_done(self, cr, uid, ids, context={}):
         """ Checks if move is done or not.
