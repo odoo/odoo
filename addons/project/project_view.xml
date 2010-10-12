@@ -390,6 +390,8 @@
                         <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
+                        <field name="type_id" widget="selection"/>
+                        <separator orientation="vertical"/>
                         <field name="project_id" select="1">
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                         </field>
