@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import osv, fields
@@ -118,11 +119,10 @@ class payment_order(osv.osv):
                 self.write(cr, uid, order['id'],{'reference':reference})
         return True
 
-    def set_done(self, cr, uid, id, *args):
-        self.write(cr,uid,id,{'date_done': time.strftime('%Y-%m-%d'),
-            'state': 'done',})
+    def set_done(self, cr, uid, ids, *args):
         wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'payment.order', id, 'done', cr)
+        self.write(cr, uid, ids, {'date_done': time.strftime('%Y-%m-%d')})
+        wf_service.trg_validate(uid, 'payment.order', ids[0], 'done', cr)
         return True
 
     def copy(self, cr, uid, id, default={}, context=None):
@@ -161,7 +161,6 @@ payment_order()
 class payment_line(osv.osv):
     _name = 'payment.line'
     _description = 'Payment Line'
-
 
     def translate(self, orig):
         return {
@@ -330,14 +329,14 @@ class payment_line(osv.osv):
         'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text", help='Address of the Main Partner'),
         'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text", help='Address of the Ordering Customer.'),
         'date': fields.date('Payment Date', help="If no payment date is specified, the bank will treat this payment line directly"),
-        'create_date': fields.datetime('Created' , readonly=True),
+        'create_date': fields.datetime('Created', readonly=True),
         'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True),
         'bank_statement_line_id': fields.many2one('account.bank.statement.line', 'Bank statement line')
     }
     _defaults = {
         'name': lambda obj, cursor, user, context: obj.pool.get('ir.sequence'
             ).get(cursor, user, 'payment.line'),
-        'state': lambda *args: 'normal',
+        'state': 'normal',
         'currency': _get_currency,
         'company_currency': _get_currency,
         'date': _get_date,
@@ -439,4 +438,3 @@ class payment_line(osv.osv):
 payment_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

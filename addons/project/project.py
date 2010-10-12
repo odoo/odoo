@@ -315,7 +315,7 @@ class project(osv.osv):
             if child_ids:
                 self.setActive(cr, uid, child_ids, value, context=None)
         return True
-    
+
 project()
 
 class users(osv.osv):
@@ -418,7 +418,7 @@ class task(osv.osv):
         'active': fields.function(_is_template, method=True, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', size=128, required=True),
         'description': fields.text('Description'),
-        'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Priority'),
+        'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Priority'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage',),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
@@ -526,7 +526,7 @@ class task(osv.osv):
         if not project_id: return False
         task = self.browse(cr, uid, project_id, context=context)
         project = task.project_id
-        res = self.do_close(cr, uid, [project_id], context=context) 
+        res = self.do_close(cr, uid, [project_id], context=context)
         if project.warn_manager or project.warn_customer:
            return {
                 'name': _('Send Email after close task'),
@@ -537,7 +537,7 @@ class task(osv.osv):
                 'target': 'new',
                 'nodestroy': True,
                 'context': {'active_id': task.id}
-           } 
+           }
         return res
 
     def do_close(self, cr, uid, ids, context=None):
@@ -678,7 +678,7 @@ class task(osv.osv):
             if types:
                 if not typeid:
                     self.write(cr, uid, task.id, {'type_id': types[0]})
-                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
+                elif typeid and typeid in types and types.index(typeid) != len(types)-1:
                     index = types.index(typeid)
                     self.write(cr, uid, task.id, {'type_id': types[index+1]})
         return True

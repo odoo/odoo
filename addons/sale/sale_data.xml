@@ -2,16 +2,16 @@
 <openerp>
     <data noupdate="1">
         <!--
-	Requests Links
-	-->
+    Requests Links
+    -->
         <record id="req_link_sale_order" model="res.request.link">
             <field name="name">Sale Order</field>
             <field name="object">sale.order</field>
         </record>
         
         <!--
-	Resource: sale.shop
-	-->
+    Resource: sale.shop
+    -->
         <record id="shop" model="sale.shop">
             <field model="res.company" name="name" search="[]" use="name"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>

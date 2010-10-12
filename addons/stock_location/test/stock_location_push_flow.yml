@@ -47,12 +47,12 @@
     path_ids:
       - auto: auto
         invoice_state: none
-        location_dest_id: stock_location.stock_location_input0
+        location_dest_id: stock.stock_location_stock
         location_from_id: stock.stock_location_suppliers
       - auto: auto
         invoice_state: none
         location_dest_id: stock_location.stock_location_qualitytest0
-        location_from_id: stock_location.stock_location_input0
+        location_from_id: stock.stock_location_stock
       - auto: auto
         invoice_state: none
         location_dest_id: stock.stock_location_stock
@@ -73,7 +73,7 @@
     invoice_state: none
     move_lines:
       - date_expected: '2010-10-08 15:36:53'
-        location_dest_id: stock_location.stock_location_input0
+        location_dest_id: stock.stock_location_stock
         location_id: stock.stock_location_suppliers
         name: 'HP CD writers'
         product_id: product_product_hpcdwriters0

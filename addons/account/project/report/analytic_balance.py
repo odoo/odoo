@@ -119,12 +119,12 @@ class account_analytic_balance(report_sxw.rml_parse):
         return (debit-credit)
 
     def _sum_all(self, accounts, date1, date2, option):
+        account_analytic_obj = self.pool.get('account.analytic.account')
         ids = map(lambda x: x['id'], accounts)
         if not ids:
             return 0.0
 
         if not self.acc_sum_list:
-            account_analytic_obj = self.pool.get('account.analytic.account')
             ids2 = account_analytic_obj.search(self.cr, self.uid,[('parent_id', 'child_of', ids)])
             self.acc_sum_list = ids2
         else:

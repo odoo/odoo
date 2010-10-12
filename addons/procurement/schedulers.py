@@ -170,8 +170,8 @@ class procurement_order(osv.osv):
                 else:
                     continue
                 proc_id = proc_obj.create(cr, uid, {
-                    'name': 'Automatic OP: %s' % product.name,
-                    'origin': 'SCHEDULER',
+                    'name': _('Automatic OP: %s') % (product.name,),
+                    'origin': _('SCHEDULER'),
                     'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                     'product_id': product.id,
                     'product_qty': -product.virtual_available,
@@ -236,7 +236,7 @@ class procurement_order(osv.osv):
                         continue
                     if op.product_id.type not in ('consu'):
                         proc_id = procurement_obj.create(cr, uid, {
-                            'name': 'OP:' + str(op.id),
+                            'name': op.name,
                             'date_planned': newdate.strftime('%Y-%m-%d'),
                             'product_id': op.product_id.id,
                             'product_qty': qty,

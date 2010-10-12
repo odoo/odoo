@@ -74,19 +74,29 @@ Technically, Pull flows allow to process procurement orders differently, not onl
 the product being considered, but also depending on which location holds the "need" for that
 product (i.e. the destination location of that procurement order).
 
+Use-Case
+--------
+
+You can use the demo data as follow:
+  CPU1: Sell some CPU1 from Shop 1 and run the scheduler
+     - Warehouse: delivery order, Shop 1: reception
+  CPU3:
+     - When receiving the product, it goes to Quality Control location then stored to shelf 2.
+     - When delivering the customer: Pick List -> Packing -> Delivery Order from Gate A
     """,
     'author': 'OpenERP SA',
-    'depends': ['procurement','stock'],
+    'depends': ['procurement','stock','sale'],
     'init_xml': [],
     'update_xml': ['stock_location_view.xml', 'security/ir.model.access.csv', 'mrp_pull_workflow.xml'],
-    'demo_xml': ['stock_location_demo.xml',],
-    
+    'demo_xml': [
+        'stock_location_demo_cpu1.xml',
+        'stock_location_demo_cpu3.yml',
+    ],
     'installable': True,
-    'test':[''
-            'test/stock_location_pull_flow.yml',
-            'test/stock_location_push_flow.yml',
-            ],
+    'test':[
+#            'test/stock_location_pull_flow.yml',
+#            'test/stock_location_push_flow.yml',
+    ],
     'active': False,
     'certificate': '0046505115101',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
