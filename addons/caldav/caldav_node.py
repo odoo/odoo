@@ -21,6 +21,7 @@
 
 import time
 from document_webdav import nodes
+import logging
 import StringIO
 
 # TODO: implement DAV-aware errors, inherit from IOError
@@ -205,6 +206,7 @@ class node_calendar(nodes.node_class):
         res = []
         if not filters:
             return res
+        _log = logging.getLogger('caldav.query')
         if filters.localName == 'calendar-query':
             res = []
             for filter_child in filters.childNodes:
@@ -220,10 +222,26 @@ class node_calendar(nodes.node_class):
                                     if vevent_filter.nodeType == vevent_filter.TEXT_NODE:
                                         continue
                                     if vevent_filter.localName == 'comp-filter':
-                                        if vevent_filter.getAttribute('name') == 'VEVENT':
-                                            res = [('type','=','vevent')]
-                                        if vevent_filter.getAttribute('name') == 'VTODO':
-                                            res = [('type','=','vtodo')]
+                                        if vevent_filter.getAttribute('name'):
+                                            res = [('type','=',vevent_filter.getAttribute('name').lower() )]
+                                            
+                                        for cfe in vevent_filter.childNodes:
+                                            if cfe.localName == 'time-range':
+                                                if cfe.getAttribute('start'):
+                                                    _log.warning("Ignore start.. ")
+                                                    # No, it won't work in this API
+                                                    #val = cfe.getAttribute('start')
+                                                    #res += [('dtstart','=', cfe)]
+                                                elif cfe.getAttribute('end'):
+                                                    _log.warning("Ignore end.. ")
+                                            else:
+                                                _log.debug("Unknown comp-filter: %s", cfe.localName)
+                                    else:
+                                        _log.debug("Unknown comp-filter: %s", vevent_filter.localName)
+                        else:
+                            _log.debug("Unknown filter element: %s", vcalendar_filter.localName)
+                else:
+                    _log.debug("Unknown calendar-query element: %s", filter_child.localName)
             return res
         elif filters.localName == 'calendar-multiget':
             names = []
@@ -238,8 +256,12 @@ class node_calendar(nodes.node_class):
                     if len(caluri):
                         caluri = caluri[-2]
                         if caluri not in names : names.append(caluri)
+                else:
+                    _log.debug("Unknonwn multiget element: %s", filter_child.localName)
             res = [('name','in',names)]
             return res
+        else:
+            _log.debug("Unknown element in REPORT: %s", filters.localName)
         return res
 
     def children(self, cr, domain=None):
