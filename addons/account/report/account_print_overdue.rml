@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Overdue Payment" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Overdue Payments" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="42.0" y1="28.0" width="511" height="786"/>
     </pageTemplate>
@@ -97,7 +97,7 @@
           <para style="terp_default_9">[[ repeatIn(adr_get(o, 'invoice'),'addr') ]]</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.name ]]</para>
+          <para style="terp_default_9">[[ o.title.name or '' ]] [[ o.name ]]</para>
           <para style="terp_default_9">[[ addr['street'] ]]</para>
           <para style="terp_default_9">[[ addr['street2'] or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[ addr['zip'] ]] [[ addr['city'] ]]</para>
@@ -138,7 +138,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="56.0,136.0,51.0,72.0,54.0,56.0,66.0,18.0" style="Table1">
+    <blockTable colWidths="57.0,136.0,51.0,72.0,54.0,56.0,66.0,18.0" style="Table1">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -168,7 +168,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[repeatIn(getLines(o), 'line') ]]</para>
-      <blockTable colWidths="56.0,136.0,52.0,71.0,55.0,56.0,66.0,17.0" style="Table3">
+      <blockTable colWidths="57.0,136.0,52.0,71.0,55.0,56.0,66.0,17.0" style="Table3">
         <tr>
           <td>
             <para style="terp_default_9">[[ formatLang(line['date'],date=True) ]]</para>
@@ -197,7 +197,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="244.0,71.0,56.0,56.0,66.0,17.0" style="Table2">
+    <blockTable colWidths="245.0,71.0,56.0,56.0,66.0,17.0" style="Table2">
       <tr>
         <td>
           <para style="terp_default_8">
