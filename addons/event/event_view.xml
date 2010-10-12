@@ -76,10 +76,10 @@
                         <field name="note" colspan="4" nolabel="1"/>
                         <field name="state" select="1"/>
                         <group col="4" colspan="2">
-                           <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                            <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
+                           <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                            <button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
-                           <button string="Set To Draft" name="button_draft" states="confirm,cancel,done" type="object" icon="gtk-convert"/>
+                           <button string="Set To Draft" name="button_draft" states="cancel" type="object" icon="gtk-convert"/>
                         </group>
                     </page>
                     <page string="Speakers">
@@ -319,8 +319,8 @@
                         <field name="event_id" on_change="onchange_event(event_id, partner_invoice_id)" domain="[('state','in',('draft','confirm'))]"/>
                         <field name="create_date" string="Registration Date"/>
                         <field name="name"/>
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
-                        <field name="user_id"/>
+                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
+                        <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}" />
                         <field name="tobe_invoiced"/>
                     </group>
                     <notebook colspan="4">
