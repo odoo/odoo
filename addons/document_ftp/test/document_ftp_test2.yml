@@ -196,10 +196,15 @@
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
-        ftp.mkd("Test-Folder2")
+        ftp.mkd("Test-Folder3")
         # TODO move
 -
     I remove the 'Test-Folder3'
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
+        ftp.rmd("Test-Folder3")
 -
     I check that test3.txt is removed.
 -
@@ -228,3 +233,22 @@
 -
     I move the 200 files to 'Test-Folder2'
     # TODO
+
+-
+    I delete the 200 files
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
+        # TODO speed
+        ftp.delete('test3.txt')
+        for i in range(0, 200):
+            ftp.delete('test-name%s.txt' %i)
+-
+    I remove the 'Test-Folder2'
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
+        ftp.rmd("Test-Folder2")

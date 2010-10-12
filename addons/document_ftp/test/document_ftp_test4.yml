@@ -118,3 +118,11 @@
 - |
     Bonus Piste:
     I create a 'Partner3' under 'all'
+-
+    I delete the Partners Testing folder
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
+        ftp.rmd('Partners Testing')
