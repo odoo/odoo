@@ -293,7 +293,7 @@ class document_directory_dctx(osv.osv):
     _name = 'document.directory.dctx'
     _description = 'Directory Dynamic Context'
     _columns = {
-        'dir_id': fields.many2one('document.directory', 'Directory', required=True),
+        'dir_id': fields.many2one('document.directory', 'Directory', required=True, ondelete="cascade"),
         'field': fields.char('Field', size=20, required=True, select=1, help="The name of the field. Note that the prefix \"dctx_\" will be prepended to what is typed here."),
         'expr': fields.char('Expression', size=64, required=True, help="A python expression used to evaluate the field.\n" + \
                 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"),
