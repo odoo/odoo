@@ -579,8 +579,8 @@
                         <page string="Consumed Products">
                             <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)" />
                             <field name="routing_id" groups="base.group_extended" select="1"/>
-                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
-                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)" widget="selection"/>
+                            <field name="location_dest_id" domain="[('usage','=','internal')]" widget="selection"/>
                             <separator string="" colspan="4"/>
 
                             <field colspan="2" name="move_lines" nolabel="1" widget="one2many_list"
@@ -628,11 +628,11 @@
                             <group col="9" colspan="4">
                                 <field name="state"/>
                                 <button name="action_compute" states="draft" string="Compute Data" type="object" icon="terp-stock_format-scientific"/>
+                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
                                 <button name="button_produce" states="ready" string="Start Production" icon="terp-gtk-jump-to-ltr"/>
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
                                 <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
-                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
                                 <button name="button_recreate" states="picking_except" string="Recreate Picking" icon="terp-document-new"/>
                             </group>
                         </page>
@@ -673,7 +673,7 @@
                             <field colspan="4" name="workcenter_lines" nolabel="1">
                                 <form string="Production Work Centers">
                                     <field colspan="4" name="name"/>
-                                    <field colspan="4" name="workcenter_id"/>
+                                    <field name="workcenter_id" widget="selection"/>
                                     <field name="sequence"/>
                                     <field name="cycle"/>
                                     <field name="hour"/>
@@ -681,7 +681,7 @@
                                 <tree string="Production Work Centers">
                                     <field name="sequence"/>
                                     <field name="name"/>
-                                    <field name="workcenter_id"/>
+                                    <field name="workcenter_id" widget="selection"/>
                                     <field name="cycle"/>
                                     <field name="hour"/>
                                 </tree>
