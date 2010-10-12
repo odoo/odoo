@@ -288,26 +288,27 @@ class openerp_dav_handler(dav_interface):
         result = []
         node = self.uri2object(cr, uid, pool, uri2[:])
 
-        if not node:
-            if cr: cr.close()
-            raise DAV_NotFound2(uri2)
-        else:
-            fp = node.full_path()
-            if fp and len(fp):
-                self.parent.log_message('childs: @%s' % fp)
-                fp = '/'.join(fp)
+        try:
+            if not node:
+                raise DAV_NotFound2(uri2)
             else:
-                fp = None
-            domain = None
-            if filters:
-                domain = node.get_domain(cr, filters)
-            for d in node.children(cr, domain):
-                self.parent.log_message('child: %s' % d.path)
-                if fp:
-                    result.append( self.urijoin(dbname,fp,d.path) )
+                fp = node.full_path()
+                if fp and len(fp):
+                    self.parent.log_message('childs: @%s' % fp)
+                    fp = '/'.join(fp)
                 else:
-                    result.append( self.urijoin(dbname,d.path) )
-        if cr: cr.close()
+                    fp = None
+                domain = None
+                if filters:
+                    domain = node.get_domain(cr, filters)
+                for d in node.children(cr, domain):
+                    self.parent.log_message('child: %s' % d.path)
+                    if fp:
+                        result.append( self.urijoin(dbname,fp,d.path) )
+                    else:
+                        result.append( self.urijoin(dbname,d.path) )
+        finally:
+            if cr: cr.close()
         return result
 
     def uri2local(self, uri):
