@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 import nodes
+from tools import config
 
 class document_davdir(osv.osv):
     _inherit = 'document.directory'
@@ -30,12 +31,15 @@ class document_davdir(osv.osv):
         'dav_prop_ids': fields.one2many('document.webdav.dir.property', 'dir_id', 'DAV properties'),
         }
 
-    def get_node_class(self, cr, uid, ids, dbro=None, context=None):
+    def get_node_class(self, cr, uid, ids, dbro=None, dynamic=False, context=None):
         # Note: in this function, nodes come from document_webdav/nodes.py !
         if dbro is None:
             dbro = self.browse(cr, uid, ids, context=context)
 
-        if dbro.type == 'directory':
+        if dynamic:
+            assert dbro.type == 'directory'
+            return nodes.node_res_obj
+        elif dbro.type == 'directory':
             return nodes.node_dir
         elif dbro.type == 'ressource':
             return nodes.node_res_dir
@@ -44,6 +48,14 @@ class document_davdir(osv.osv):
 
     def _prepare_context(self, cr, uid, nctx, context):
         nctx.node_file_class = nodes.node_file
+        # We can fill some more fields, but avoid any expensive function
+        # that might be not worth preparing.
+        nctx.extra_ctx['webdav_path'] = '/'+config.get_misc('webdav','vdir','webdav')
+        usr_obj = self.pool.get('res.users')
+        res = usr_obj.read(cr, uid, uid, ['login'])
+        if res:
+            nctx.extra_ctx['username'] = res['login']
+        # TODO group
         return
 
     def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):

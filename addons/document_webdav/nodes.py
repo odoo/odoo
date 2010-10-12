@@ -24,6 +24,19 @@ from document import nodes
 from tools.safe_eval import safe_eval as eval
 import urllib
 
+def dict_filter(srcdic, keys, res=None):
+    ''' Return a copy of srcdic that has only keys set.
+    If any of keys are missing from srcdic, the result won't have them, 
+    either.
+    @param res If given, result will be updated there, instead of a new dict.
+    '''
+    if res is None:
+        res = {}
+    for k in keys:
+        if k in srcdic:
+            res[k] = srcdic[k]
+    return res
+    
 class node_acl_mixin(object):
     def _get_dav_owner(self, cr):
         return self.uuser
@@ -53,6 +66,9 @@ class node_acl_mixin(object):
             uid = self.context.uid
             ctx = self.context.context.copy()
             ctx.update(self.dctx)
+            # Not really needed because we don't do eval here:
+            # ctx.update({'uid': uid, 'dbname': self.context.dbname })
+            # dict_filter(self.context.extra_ctx, ['username', 'groupname', 'webdav_path'], ctx)
             sdomain = [(prop_ref_field, '=', False),]
             if res_id:
                 sdomain = ['|', (prop_ref_field, '=', res_id)] + sdomain
@@ -88,6 +104,9 @@ class node_acl_mixin(object):
             uid = self.context.uid
             ctx = self.context.context.copy()
             ctx.update(self.dctx)
+            ctx.update({'uid': uid, 'dbname': self.context.dbname })
+            ctx['node_classname'] = "%s.%s" % (self.__class__.__module__, self.__class__.__name__)
+            dict_filter(self.context.extra_ctx, ['username', 'groupname', 'webdav_path'], ctx)
             sdomain = [(prop_ref_field, '=', False),('namespace', '=', ns), ('name','=', prop)]
             if res_id:
                 sdomain = ['|', (prop_ref_field, '=', res_id)] + sdomain
@@ -197,6 +216,11 @@ class node_res_dir(node_acl_mixin, nodes.node_res_dir):
         return self._get_dav_eprop_hlpr(cr, ns, prop, nodes.node_res_dir,
                 'document.webdav.dir.property', 'dir_id', self.dir_id)
 
+# Some copies, so that this module can replace 'from document import nodes'
+get_node_context = nodes.get_node_context
+node_context = nodes.node_context
+node_class = nodes.node_class
+node_descriptor = nodes.node_descriptor
 
 
 #eof
