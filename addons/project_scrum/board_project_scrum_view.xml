@@ -26,23 +26,23 @@
              	</tree>
             </field>
         </record>
-        <record id="view_project_task_graph" model="ir.ui.view">
+        <record id="view_task_progress_graph" model="ir.ui.view">
             <field name="name">project.task.graph</field>
             <field name="model">project.task</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Task Progress" type="bar">
-                    <field name="project_id"/>
-                    <field name="planned_hours" operator="+"/>
-                    <field name="delay_hours" operator="+"/>
+                    <field name="sprint_id"/>
+                    <field name="effective_hours" operator="+"/>
                 </graph>
             </field>
         </record>
-        <record id="action_view_project_task_graph" model="ir.actions.act_window">
+        <record id="action_view_task_progress_graph" model="ir.actions.act_window">
             <field name="name">Task Progress</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_task_progress_graph"/>
         </record>
 
         <record id="view_backlog_progress_graph" model="ir.ui.view">
@@ -82,7 +82,7 @@
                              <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" string="Burndown Chart" type="action" icon="gtk-print"/>
                         </child1>
                         <child2>
-                             <action colspan="4" height="220" name="%(action_view_project_task_graph)d" string="Task Progress" width="510"/>
+                             <action colspan="4" height="220" name="%(action_view_task_progress_graph)d" string="Task Progress" width="510"/>
                              <action colspan="4" height="220" name="%(action_view_backlog_progress_graph)d" string="Backlog Progress" width="510"/>
                         </child2>
                     </hpaned>

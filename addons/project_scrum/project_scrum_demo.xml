@@ -13,6 +13,24 @@
             <field model="res.users" name="product_owner_id" search="[('login','=','demo')]"/>
         </record>
 
+        <record id="scrum_project_2" model="project.project">
+            <!-- FIXME !!! -->
+            <field name="tasks">[24, 25, 28, 26, 27, 29, 30, 31, 32, 33, 34, 35, 37, 36, 38]</field>
+            <field model="res.users" name="manager" search="[('login','=','admin')]"/>
+            <field name="expected_hours">200</field>
+            <field name="name">OpenERP - MRP branch</field>
+            <field model="res.users" name="product_owner_id" search="[('login','=','admin')]"/>
+        </record>
+
+        <record id="scrum_project_3" model="project.project">
+            <!-- FIXME !!! -->
+            <field name="tasks">[24, 25, 28, 26, 27, 29, 30, 31, 32, 33, 34, 35, 37, 36, 38]</field>
+            <field model="res.users" name="manager" search="[('login','=','admin')]"/>
+            <field name="expected_hours">98</field>
+            <field name="name">OpenERP - CRM branch</field>
+            <field model="res.users" name="product_owner_id" search="[('login','=','admin')]"/>
+        </record>
+
         <!-- Resource: project_scrum.sprint -->
 
         <record id="scrum_sprint_0" model="project.scrum.sprint">
@@ -21,6 +39,133 @@
             <field model="res.users" name="scrum_master_id" search="[('login','=','demo')]"/>
             <field name="product_owner_id" ref="base.user_root"/>
             <field name="project_id" ref="scrum_project_1"/>
+            <field name="state">open</field>
+        </record>
+       <record id="scrum_sprint_1" model="project.scrum.sprint">
+            <field name="name">sprint 1</field>
+            <field name="date_start">2010-01-01</field>
+            <field name="date_stop">2010-01-15</field>
+            <field name="project_id" ref="scrum_project_2"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','admin')]"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="scrum_sprint_2" model="project.scrum.sprint">
+            <field name="name">sprint 2</field>
+            <field name="date_start">2010-01-16</field>
+            <field name="date_stop">2010-01-30</field>
+            <field name="expected_hours">100.0</field>
+            <field name="project_id" ref="scrum_project_3"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','demo')]"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="scrum_sprint_3" model="project.scrum.sprint">
+            <field name="name">sprint 3</field>
+            <field name="date_start">2010-02-01</field>
+            <field name="date_stop">2010-02-15</field>
+            <field name="expected_hours">89.0</field>
+            <field name="project_id" ref="scrum_project_1"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','demo')]"/>
+            <field name="state">open</field>
+        </record>
+
+         <record id="scrum_sprint_4" model="project.scrum.sprint">
+            <field name="name">sprint 4</field>
+            <field name="date_start">2010-02-16</field>
+            <field name="date_stop">2010-02-28</field>
+            <field name="expected_hours">125.0</field>
+            <field name="project_id" ref="scrum_project_2"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','admin')]"/>
+            <field name="state">open</field>
+        </record>
+
+         <record id="scrum_sprint_5" model="project.scrum.sprint">
+            <field name="name">sprint 5</field>
+            <field name="date_start">2010-03-01</field>
+            <field name="date_stop">2010-03-15</field>
+            <field name="expected_hours">178.0</field>
+            <field name="project_id" ref="scrum_project_3"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','demo')]"/>
+            <field name="state">open</field>
+        </record>
+
+         <record id="scrum_sprint_6" model="project.scrum.sprint">
+            <field name="name">sprint 6</field>
+            <field name="date_start">2010-03-16</field>
+            <field name="date_stop">2010-01-30</field>
+            <field name="project_id" ref="scrum_project_1"/>
+            <field name="expected_hours">200.0</field>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','admin')]"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="scrum_sprint_7" model="project.scrum.sprint">
+            <field name="name">sprint 7</field>
+            <field name="date_start">2010-04-01</field>
+            <field name="date_stop">2010-04-15</field>
+            <field name="expected_hours">175.0</field>
+            <field name="project_id" ref="scrum_project_2"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','demo')]"/>
+            <field name="state">open</field>
+        </record>
+
+         <record id="scrum_sprint_8" model="project.scrum.sprint">
+            <field name="name">sprint 8</field>
+            <field name="date_start">2010-04-16</field>
+            <field name="date_stop">2010-04-30</field>
+            <field name="project_id" ref="scrum_project_3"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field name="expected_hours">122.0</field>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','admin')]"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="scrum_sprint_9" model="project.scrum.sprint">
+            <field name="name">sprint 9</field>
+            <field name="date_start">2010-05-01</field>
+            <field name="date_stop">2010-05-15</field>
+            <field name="project_id" ref="scrum_project_1"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','demo')]"/>
+            <field name="state">open</field>
+        </record>
+
+         <record id="scrum_sprint_10" model="project.scrum.sprint">
+            <field name="name">sprint 10</field>
+            <field name="date_start">2010-05-16</field>
+            <field name="date_stop">2010-05-30</field>
+            <field name="expected_hours">78.0</field>
+            <field name="project_id" ref="scrum_project_2"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','admin')]"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="scrum_sprint_11" model="project.scrum.sprint">
+            <field name="name">sprint 11</field>
+            <field name="date_start">2010-06-01</field>
+            <field name="date_stop">2010-06-15</field>
+            <field name="project_id" ref="scrum_project_3"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','demo')]"/>
+            <field name="state">open</field>
+        </record>
+
+         <record id="scrum_sprint_12" model="project.scrum.sprint">
+            <field name="name">sprint 12</field>
+            <field name="date_start">2010-06-16</field>
+            <field name="date_stop">2010-06-30</field>
+            <field name="project_id" ref="scrum_project_1"/>
+            <field name="product_owner_id" ref="base.user_root"/>
+            <field model="res.users" name="scrum_master_id" search="[('login','=','admin')]"/>
             <field name="state">open</field>
         </record>
 
@@ -40,53 +185,99 @@
             <field name="name">New accounting module</field>
             <field name="expected_hours">111.0</field>
             <field name="note">The accounting module of OpenERP (financial accounting and management accounting) is being reshaped. New functionalities will be added: intangible assets, a new way of presenting ledgers and bookings, new stock valuation calculation, and lots of predefined reports. </field>
-            <field name="sprint_id" ref="scrum_sprint_0"/>
+            <field name="sprint_id" ref="scrum_sprint_1"/>
 			<field name="state">open</field>
-            <field name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_2"/>
         </record>
         <record id="scrum_product_backlog_2" model="project.scrum.product.backlog">
             <field name="priority">3</field>
             <field name="name">Automated Plugin System to install/uninstall modules</field>
             <field name="expected_hours">4.0</field>
             <field name="note">We have to develop a plug-in system which will enable to install/remove modules. The basic version of OpenERP will include only the required minimum, and you will select the modules thanks to the plug-in manager. This allows you to limit your system to your real needs: quality management, localisations, project and service management, marketing campaigns, and so on... </field>
-            <field name="sprint_id" ref="scrum_sprint_0"/>
+            <field name="sprint_id" ref="scrum_sprint_2"/>
             <field name="state">open</field>
-            <field name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_3"/>
         </record>
         <record id="scrum_product_backlog_3" model="project.scrum.product.backlog">
             <field name="name">Review all terms</field>
             <field name="expected_hours">8.0</field>
-            <field name="sprint_id" ref="scrum_sprint_0"/>
+            <field name="sprint_id" ref="scrum_sprint_3"/>
             <field name="state">done</field>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
         <record id="scrum_product_backlog_4" model="project.scrum.product.backlog">
             <field name="name">Bugfixes</field>
             <field name="expected_hours">6.0</field>
-            <field name="sprint_id" ref="scrum_sprint_0"/>
+            <field name="sprint_id" ref="scrum_sprint_4"/>
             <field name="state">open</field>
-            <field name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_2"/>
         </record>
         <record id="scrum_product_backlog_5" model="project.scrum.product.backlog">
             <field name="name">Test for 3.2.0 Publishing</field>
             <field name="expected_hours">5.0</field>
             <field name="note">Test OpenERP to release stable 3.2.0 version. (may be 3.2.0-pre1 ?)</field>
-            <field name="sprint_id" ref="scrum_sprint_0"/>
-            <field name="project_id" ref="scrum_project_1"/>
+            <field name="sprint_id" ref="scrum_sprint_5"/>
+            <field name="project_id" ref="scrum_project_3"/>
         </record>
         <record id="scrum_product_backlog_6" model="project.scrum.product.backlog">
             <field name="name">Reshape the complete menu</field>
             <field name="expected_hours">4.0</field>
             <field name="note">Restructure the OpenERP menu to be more like other ERPs.</field>
-            <field name="sprint_id" ref="scrum_sprint_0"/>
+            <field name="sprint_id" ref="scrum_sprint_6"/>
           	<field name="state">open</field>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
+
         <record id="scrum_product_backlog_7" model="project.scrum.product.backlog">
             <field name="name">Editable Trees</field>
             <field name="expected_hours">12.0</field>
             <field name="note">Editable trees in list and one2many_list widgets.</field>
-            <field name="sprint_id" ref="scrum_sprint_0"/>
+            <field name="sprint_id" ref="scrum_sprint_7"/>
+            <field name="project_id" ref="scrum_project_2"/>
+        </record>
+
+        <record id="scrum_product_backlog_8" model="project.scrum.product.backlog">
+            <field name="name">Reshape the complete menu</field>
+            <field name="expected_hours">3.0</field>
+            <field name="note">Restructure the OpenERP menu to be more like other ERPs.</field>
+            <field name="sprint_id" ref="scrum_sprint_8"/>
+            <field name="state">open</field>
+            <field name="project_id" ref="scrum_project_3"/>
+        </record>
+
+        <record id="scrum_product_backlog_9" model="project.scrum.product.backlog">
+            <field name="name">Analysis Product phase</field>
+            <field name="expected_hours">10.0</field>
+            <field name="note">Restructure the OpenERP menu to be more like other ERPs.</field>
+            <field name="sprint_id" ref="scrum_sprint_9"/>
+            <field name="state">open</field>
+            <field name="project_id" ref="scrum_project_1"/>
+        </record>
+
+        <record id="scrum_product_backlog_10" model="project.scrum.product.backlog">
+            <field name="name">Rearrange the Menu</field>
+            <field name="expected_hours">9.0</field>
+            <field name="note">Restructure the OpenERP menu to be more like other ERPs.</field>
+            <field name="sprint_id" ref="scrum_sprint_10"/>
+            <field name="state">open</field>
+            <field name="project_id" ref="scrum_project_2"/>
+        </record>
+
+        <record id="scrum_product_backlog_11" model="project.scrum.product.backlog">
+            <field name="name">Complete change in list view</field>
+            <field name="expected_hours">8.0</field>
+            <field name="note">Restructure the OpenERP menu to be more like other ERPs.</field>
+            <field name="sprint_id" ref="scrum_sprint_11"/>
+            <field name="state">open</field>
+            <field name="project_id" ref="scrum_project_3"/>
+        </record>
+
+        <record id="scrum_product_backlog_12" model="project.scrum.product.backlog">
+            <field name="name">Reshape the complete menu</field>
+            <field name="expected_hours">2.0</field>
+            <field name="note">Set rule for Tax according to 2010-2011 Rules</field>
+            <field name="sprint_id" ref="scrum_sprint_12"/>
+            <field name="state">open</field>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
 
