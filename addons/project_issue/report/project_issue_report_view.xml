@@ -7,7 +7,7 @@
             <field name="model">project.issue.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Project Issue">
+                <tree string="Issues Analysis">
                     <field name="name" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="project_id" invisible="1"/>
@@ -152,7 +152,7 @@
         </record>
 
         <record id="action_project_issue_report" model="ir.actions.act_window">
-            <field name="name">Issue Analysis</field>
+            <field name="name">Issues Analysis</field>
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
               <field name="view_mode">graph,tree</field>
