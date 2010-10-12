@@ -79,7 +79,7 @@ class StockMove(osv.osv):
                     proc_id = procurement_obj.create(cr, uid, {
                         'name': (move.picking_id.origin or ''),
                         'origin': (move.picking_id.origin or ''),
-                        'date_planned': move.date_planned,
+                        'date_planned': move.date,
                         'product_id': line['product_id'],
                         'product_qty': line['product_qty'],
                         'product_uom': line['product_uom'],

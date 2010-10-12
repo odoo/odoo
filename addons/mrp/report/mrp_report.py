@@ -71,7 +71,7 @@ class report_mrp_inout(osv.osv):
             create or replace view report_mrp_inout as (
                 select
                     min(sm.id) as id,
-                    to_char(sm.date_planned,'YYYY:IW') as date,
+                    to_char(sm.date,'YYYY:IW') as date,
                     sum(case when (sl.usage='internal') then
                         pt.standard_price * sm.product_qty
                     else
@@ -94,7 +94,7 @@ class report_mrp_inout(osv.osv):
                 where
                     sm.state in ('waiting','confirmed','assigned')
                 group by
-                    to_char(sm.date_planned,'YYYY:IW')
+                    to_char(sm.date,'YYYY:IW')
             )""")
 
 report_mrp_inout()

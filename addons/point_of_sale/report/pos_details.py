@@ -177,7 +177,7 @@ class pos_details(report_sxw.rml_parse):
         return form['date_end']
 
     def __init__(self, cr, uid, name, context):
-        super(pos_details, self).__init__(cr, uid, name, context)
+        super(pos_details, self).__init__(cr, uid, name, context=context)
         self.total = 0.0
         self.qty = 0.0
         self.invoice_id = ''

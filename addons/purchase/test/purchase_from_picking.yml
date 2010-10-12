@@ -56,7 +56,7 @@
  I check that the order which was initially in the draft state has transit to confirm state.
 -
   !assert {model: purchase.order, id: purchase_order_po2}:
-    - state == 'confirmed'  
+    - state == 'approved'  
 -
   I check that an entry gets created in the "Lines to Invoice" of Invoice Control on the basis of purchase order line.
 -
@@ -101,10 +101,6 @@
     account_obj = self.pool.get('account.invoice')
     ids = account_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
     assert ids, _('Pending Invoice is not created!')
--
-  Supplier approve the purchase order.
--
-  !workflow {model: purchase.order, action: purchase_approve, ref: purchase_order_po2}
 -
  I check that the order which was initially in the confirmed state has transit to approved state.
 -
