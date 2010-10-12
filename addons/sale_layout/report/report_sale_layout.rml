@@ -191,7 +191,7 @@
       <tr>
         <td>
           <para style="terp_default_Bold_9">Shipping address :</para>
-          <para style="terp_default_9">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ o.partner_id.title.name or '' ]] [[ o.partner_id.name ]]</para>
           <para style="terp_default_9">[[ o.partner_shipping_id.street ]]</para>
           <para style="terp_default_9">[[ o.partner_shipping_id.street2 or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[ o.partner_shipping_id.city or '' ]] [[ o.partner_shipping_id.zip or '' ]]</para>
@@ -214,7 +214,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ o.partner_id.title.name or '' ]] [[ o.partner_id.name ]]</para>
           <para style="terp_default_9">[[ o.partner_order_id.street ]]</para>
           <para style="terp_default_9">[[ o.partner_order_id.street2 or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[ o.partner_order_id.zip or '' ]] [[ o.partner_order_id.city or '' ]]</para>
@@ -293,7 +293,7 @@
           <para style="terp_tblheader_Details_Right">Disc.(%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Price([[ o.pricelist_id.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Right">Price</para>
         </td>
       </tr>
     </blockTable>
