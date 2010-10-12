@@ -112,7 +112,7 @@
                        <field name="name" string="Project Name"/>
                        <field name="user_id" string="Project Manager" default="1">
                             <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manage" icon="terp-personal"/>
-                       </field> 
+                       </field>
                        <field name="partner_id" string="Partner"/>
                    </group>
                    <newline />
@@ -380,7 +380,7 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft, In Progress and Pending Tasks" icon="terp-check" default="1"/>
+                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress tasks" icon="terp-check" default="1"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
