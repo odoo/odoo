@@ -184,6 +184,16 @@ class openerp_dav_handler(dav_interface):
             cr.close()
             return ret
 
+    def reduce_useragent(self):
+        ua = self.parent.headers.get('User-Agent', False)
+        ctx = {}
+        if ua:
+            if 'iPhone' in ua:
+                ctx['DAV-client'] = 'iPhone'
+            elif 'Konqueror' in ua:
+                ctx['DAV-client'] = 'GroupDAV'
+        return ctx
+
     def get_prop(self, uri, ns, propname):
         """ return the value of a given property
 
@@ -342,7 +352,8 @@ class openerp_dav_handler(dav_interface):
     def uri2object(self, cr, uid, pool, uri):
         if not uid:
             return None
-        return pool.get('document.directory').get_object(cr, uid, uri)
+        context = self.reduce_useragent()
+        return pool.get('document.directory').get_object(cr, uid, uri, context=context)
 
     def get_data(self,uri, rrange=None):
         self.parent.log_message('GET: %s' % uri)
