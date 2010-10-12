@@ -53,12 +53,7 @@
     <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="1,0" stop="1,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table3">
@@ -70,12 +65,7 @@
     <blockTableStyle id="Table9">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="1,0" stop="1,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table8">
@@ -115,9 +105,9 @@
     <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
     <paraStyle name="P2" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT"/>
     <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="P5" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P6" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P4" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P5" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P6" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -156,14 +146,14 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="P3">
+    <para style="terp_default_9">
       <font color="white"> </font>
     </para>
     <para style="P3">Details of Sales</para>
-    <para style="P4">
-      <font color="white"> </font>
+    <para style="P3">
+      <font face="Helvetica" size="9.0"/>
     </para>
-    <blockTable colWidths="170.0,170.0,85.0,85.0" style="Table1">
+    <blockTable colWidths="167.0,115.0,115.0,115.0" style="Table1">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Company</para>
@@ -179,7 +169,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="170.0,170.0,85.0,85.0" style="Table2">
+    <blockTable colWidths="166.0,116.0,115.0,115.0" style="Table2">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ '%s' % getcompany(objects)]]</para>
@@ -215,7 +205,7 @@
       <blockTable colWidths="256.0,256.0" style="Table6">
         <tr>
           <td>
-            <para style="P6">[[ p[0] ]]</para>
+            <para style="P5">[[ p[0] ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9_Bold">[[ p[1] ]] [[company.currency_id.symbol]]</para>
@@ -243,7 +233,7 @@
       <blockTable colWidths="256.0,256.0" style="Table9">
         <tr>
           <td>
-            <para style="P5">[[ t[0] ]]</para>
+            <para style="P4">[[ t[0] ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9_Bold">[[ '%.2f' % (t[1],) ]] [[company.currency_id.symbol]]</para>
