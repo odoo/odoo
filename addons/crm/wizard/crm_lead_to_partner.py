@@ -69,7 +69,6 @@ class crm_lead2partner(osv.osv_memory):
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
-        rec_ids = context and context.get('active_ids', [])
         partner_id = False
 
         data = context and context.get('active_ids', []) or []
@@ -207,12 +206,13 @@ class crm_lead2partner(osv.osv_memory):
 
                 partner_ids.append(partner_id)
 
-                vals = {}
-                if partner_id:
-                    vals.update({'partner_id': partner_id})
-                if contact_id:
-                    vals.update({'partner_address_id': contact_id})
-                lead_obj.write(cr, uid, [lead.id], vals)
+                if data.action<>'no':
+                    vals = {}
+                    if partner_id:
+                        vals.update({'partner_id': partner_id})
+                    if contact_id:
+                        vals.update({'partner_address_id': contact_id})
+                    lead_obj.write(cr, uid, [lead.id], vals)
         return partner_ids
 
     def make_partner(self, cr, uid, ids, context=None):

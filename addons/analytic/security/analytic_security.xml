@@ -7,9 +7,7 @@
         <field eval="True" name="global"/>
         <field name="domain_force">[('company_id','=',user.company_id.id)]</field>
     </record>
-    
-    <record id="group_analytic_accounting" model="res.groups">
-        <field name="name">Analytic Accounting</field>
+    <record id="group_analytic_accounting" model="res.groups" context="{'noadmin':True}">
+        <field name="name">Useability / Analytic Accounting</field>
     </record>
-    
 </data></openerp>

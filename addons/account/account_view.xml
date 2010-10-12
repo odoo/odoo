@@ -347,10 +347,10 @@
             <field name="arch" type="xml">
                 <tree string="Search Account Journal">
                     <group>
-                    <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Customer Journals" icon="terp-sale"/>
-                    <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Vendor Journals" icon="terp-purchase"/>
-                   <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity Journals" icon="terp-dolar"/>
-                    <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Global Journals" icon="terp-stock"/>
+                    <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-sale"/>
+                    <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Purchase" icon="terp-purchase"/>
+                   <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
+                    <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Others" icon="terp-stock"/>
                     <separator orientation="vertical"/>
                     <field name="code"/>
                     <field name="name"/>
@@ -897,13 +897,6 @@
         </record>
 
         <!--
-        <menuitem
-            action="action_tax_code_tree"
-            id="menu_action_tax_code_tree"
-            parent="menu_finance_charts"
-            sequence="12"/> --> <!-- move to wizard -->
-
-        <!--
     Entries lines
     -->
 
@@ -1390,6 +1383,7 @@
             action="action_move_journal_line"
             id="menu_action_move_journal_line_form"
             parent="account.menu_finance_entries"
+            groups="group_account_user"
             sequence="5"/>
 
         <record id="action_move_line_form" model="ir.actions.act_window">
@@ -1428,8 +1422,6 @@
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="action_move_line_search"/>
         </record>
-
-        <menuitem id="menu_finance_charts" name="Charts" parent="account.menu_finance" sequence="4"/>
 
         <record id="view_bank_statement_reconcile_form" model="ir.ui.view">
             <field name="name">account.bank.statement.form</field>
@@ -1503,8 +1495,8 @@
 
 
         <menuitem
-                name="Manual Reconcilication" icon="STOCK_EXECUTE"
-                action="action_account_manual_reconcile"
+             name="Manual Reconcilication" icon="STOCK_EXECUTE"
+             action="action_account_manual_reconcile"
              id="menu_manual_reconcile"
              parent="account.periodical_processing_reconciliation"/>
 
@@ -1656,7 +1648,9 @@
             <field name="view_mode">tree,form,search</field>
             <field name="search_view_id" ref="view_model_search"/>
         </record>
-        <menuitem action="action_model_form" id="menu_action_model_form" sequence="5" parent="account.menu_configuration_misc" groups="base.group_extended"/>
+        <menuitem
+            action="action_model_form" id="menu_action_model_form" sequence="5"
+            parent="account.menu_configuration_misc" groups="base.group_extended"/>
 
         <!--
             # Payment Terms
@@ -1742,7 +1736,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_payment_term_form" id="menu_action_payment_term_form" parent="menu_configuration_misc"/>
+        <menuitem action="action_payment_term_form"
+            id="menu_action_payment_term_form" parent="menu_configuration_misc"
+            groups="group_account_manager"/>
 
         <!--
         # Account Subscriptions
@@ -1854,7 +1850,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_subscription_search"/>
         </record>
-        <menuitem name="Define Recurring Entries" action="action_subscription_form" id="menu_action_subscription_form" sequence="1" parent="account.menu_finance_recurrent_entries"/>
+        <menuitem
+            name="Define Recurring Entries" action="action_subscription_form"
+            groups="base.group_extended"
+            id="menu_action_subscription_form" sequence="1"
+            parent="account.menu_finance_recurrent_entries"/>
 
         <record id="action_subscription_form_running" model="ir.actions.act_window">
             <field name="name">Running Subscriptions</field>
@@ -2075,7 +2075,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,search</field>
         </record>
-
 
         <menuitem action="action_account_template_form" id="menu_action_account_template_form" parent="account_template_accounts"/>
 
@@ -2369,7 +2368,9 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem name="New Company Financial Setting" parent="account.account_template_folder" action="account.action_account_configuration_installer" id="menu_wizard"/>
+        <menuitem name="New Company Financial Setting" parent="account.account_template_folder"
+            groups="group_account_manager"
+            action="account.action_account_configuration_installer" id="menu_wizard"/>
 
         <record id="account_account_graph" model="ir.ui.view">
             <field name="name">account.account.graph</field>
@@ -2383,14 +2384,14 @@
             </field>
          </record>
 
-         <!-- Fiscal Mapping Templates -->
+         <!-- Fiscal Position Templates -->
 
         <record id="view_account_position_template_form" model="ir.ui.view">
             <field name="name">account.fiscal.position.template.form</field>
             <field name="model">account.fiscal.position.template</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Fiscal Mapping Template">
+                <form string="Fiscal Position Template">
                     <field name="name" select="1"/>
                     <field name="chart_template_id"/>
                     <newline/>
@@ -2422,14 +2423,14 @@
             <field name="model">account.fiscal.position.template</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Fiscal Mapping">
+                <tree string="Fiscal Position">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
 
         <record id="action_account_fiscal_position_template_form" model="ir.actions.act_window">
-            <field name="name">Fiscal Mapping Templates</field>
+            <field name="name">Fiscal Position Templates</field>
             <field name="res_model">account.fiscal.position.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -2605,6 +2606,8 @@
             <field name="view_id" ref="account_cash_statement_graph"/>
             <field name="act_window_id" ref="action_view_bank_statement_tree"/>
         </record>
-        <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"/>
+        <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"
+            groups="group_account_user"/>
+
     </data>
 </openerp>

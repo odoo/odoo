@@ -438,6 +438,7 @@ def TestConnection(btnProcessor,*args):
         return
 
 
+
     uname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
     pwd = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[2])
 
@@ -630,6 +631,8 @@ def GetSelectedItems(hwndList):
 
 def MakeAttachment(btnProcessor,*args):
     #Check if server running or user logged in
+    from win32com.client import Dispatch
+    import win32com
     b = check()
     if not b:
         return
@@ -637,7 +640,6 @@ def MakeAttachment(btnProcessor,*args):
     assert ex.Selection.Count == 1
     mail = ex.Selection.Item(1)
     mail = GetMail(btnProcessor)
-
     #get selected records
     hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
     r = GetSelectedItems(hwndList)
@@ -940,6 +942,8 @@ def SetDefaultContact(txtProcessor,*args):
     global partner_ref
     global new_con_country
     global new_con_state
+    global state_ref
+    global country_ref
     state = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[2])
     country = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[3])
     if txtProcessor.init_done:
@@ -958,6 +962,8 @@ def SetDefaultContact(txtProcessor,*args):
         win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[3],new_con_country)
         new_con_country = ""
         new_con_state = ""
+        state_ref = ""
+        country_ref =""
         return
     #
     try:
@@ -1082,6 +1088,8 @@ def GetDefaultEmail(txtProcessor,*args):
     global partner_ref
     global country_ref
     global state_ref
+    global new_con_country
+    global new_con_state
     partner_n = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0])
     state_n = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[10])
     country_n = win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[11])
@@ -1097,10 +1105,13 @@ def GetDefaultEmail(txtProcessor,*args):
     partner_ref = ""
     country_ref = ""
     state_ref = ""
-
+    new_con_country = ""
+    new_con_state = ""
     if state_val == None:
         country_ref = country_n
     country_ref = state_val
+    if country_ref == None:
+        country_ref = ""
     win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[11], ustr(country_ref))
 
     if not b:
@@ -1415,38 +1426,57 @@ def SerachOpenDocuemnt(txtProcessor,*args):
     from win32com.client import Dispatch
     import win32con
     import win32ui
+    import win32com
+    from win32com.mapi import mapi, mapiutil, mapitags
+    import pythoncom
     b = check()
     if not b:
         return
     global web_server
     global web_server_port
+    #Reading Current Selected Email.
     ex = txtProcessor.window.manager.outlook.ActiveExplorer()
     assert ex.Selection.Count == 1
     mail = ex.Selection.Item(1)
-    link_box = None
     #Acquiring control of the text box
-    try:
-        link_box = txtProcessor.GetControl()
-    except Exception,e:
-        win32ui.MessageBox(str(e),"Excet")
+    link_box = txtProcessor.GetControl()
+    #Checking for the web server Parameters
     if web_server.strip() == "" or web_server.strip() == "http:\\\\":
         win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, " <Invalid Server Address>")
         txtProcessor.init_done=True
         return
     linktodoc = ""
-    #Reading Current Selected Email.
-    win32ui.MessageBox(str(mail),"mail")
+    message_id = None
     try:
-        vals = NewConn.SearchEmailResources(mail)
+        outlook = win32com.client.Dispatch("Outlook.Application")
+        session = win32com.client.Dispatch("MAPI.session")
+        session.Logon('Outlook')
+        objMessage = session.GetMessage(mail.EntryID, mail.Parent.StoreID)
+        objFields = objMessage.Fields
+        strheader = objFields.Item(mapitags.PR_TRANSPORT_MESSAGE_HEADERS)
+        strheader = ustr(strheader).encode('iso-8859-1')
+        headers = {}
+        strheader = strheader.replace("\n ", " ").splitlines()
+        for line in strheader:
+            split_here = line.find(":")
+            headers[line[:split_here]] = line[split_here:]
+        temp1 = headers.get('Message-ID')
+        temp2 = headers.get('Message-Id')
+        if temp1 == None:    message_id = temp2
+        if temp2 == None:    message_id = temp1
+        startCut = message_id.find("<")
+        endCut = message_id.find(">")
+        message_id = message_id[startCut:endCut+1]
     except Exception,e:
-        win32ui.MessageBox(str(e),"Excep")
+        win32ui.MessageBox(str(e),"Open Document")
+    vals = NewConn.SearchEmailResources(message_id)
     if vals == None:
         win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, "< Mail is still not archived.>")
         txtProcessor.init_done=True
         return
     try:
-        linktodoc = web_server+":"+str(web_server_port)+"\\openerp\\form\\view?model="+vals[0][1]+"&id="+str(vals[1][1])
-        win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, linktodoc)
+        linktodoc = "http:\\\\" +web_server+ ":"+str(web_server_port)+"\\openerp\\form\\view?model="+vals[0][1]+"&id="+str(vals[1][1])
+        win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, str(linktodoc))
     except Exception,e:
         win32ui.MessageBox("Error While Opening Document.\n"+str(e),"Open Document", flag_error)
     webbrowser.open_new(linktodoc)

@@ -27,7 +27,9 @@ import pythoncom
 import time
 from manager import ustr
 import email
-
+from win32com.mapi import mapi, mapiutil, mapitags
+import pythoncom
+import win32com
 waittime = 10
 wait_count = 0
 wait_limit = 12
@@ -136,13 +138,42 @@ class XMLRpcConn(object):
         import win32ui, win32con
         conn = xmlrpclib.ServerProxy(self._uri + '/xmlrpc/object')
         import eml
+        flag = False
         new_msg = files = ext_msg =""
+        message_id = referances  = None
+        try:
+            outlook = win32com.client.Dispatch("Outlook.Application")
+            session = win32com.client.Dispatch("MAPI.session")
+            session.Logon('Outlook')
+            objMessage = session.GetMessage(mail.EntryID, mail.Parent.StoreID)
+            objFields = objMessage.Fields
+            strheader = objFields.Item(mapitags.PR_TRANSPORT_MESSAGE_HEADERS)
+            strheader = ustr(strheader).encode('iso-8859-1')
+            headers = {}
+            strheader = strheader.replace("\n ", " ").splitlines()
+            for line in strheader:
+                split_here = line.find(":")
+                headers[line[:split_here]] = line[split_here:]
+            temp1 = headers.get('Message-ID')
+            temp2 = headers.get('Message-Id')
+            referances = headers.get('References')
+            if temp1 == None:    message_id = temp2
+            if temp2 == None:    message_id = temp1
+            startCut = message_id.find("<")
+            endCut = message_id.find(">")
+            message_id = message_id[startCut:endCut+1]
+            if not referances == None:
+                startCut = referances.find("<")
+                endCut = referances.find(">")
+                referances = referances[startCut:endCut+1]
+        except Exception,e:
+            win32ui.MessageBox(str(e),"Archive To OpenERP")
+            return
         new_mail=eml.generateEML(mail)
         attachments=mail.Attachments
         for rec in recs: #[('res.partner', 3, 'Agrolait')]
             model = rec[0]
             res_id = rec[1]
-
             #Check if mailgate installed
             object_id = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=','mailgate.message')])
             if not object_id:
@@ -154,13 +185,12 @@ class XMLRpcConn(object):
 
             #Reading the Object ir.model Name
 
-            ext_ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'mailgate.message','search',[('message_id','=',mail.EntryID),('model','=',model),('res_id','=',res_id)])
+            ext_ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'mailgate.message','search',[('message_id','=',message_id),('model','=',model),('res_id','=',res_id)])
             if ext_ids:
                 name = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,model,'read',res_id,['name'])['name']
-                ext_msg += """This mail is already archived to {1} '{2}'.
-""".format(object_name,name)
+                ext_msg += """This mail is already archived to {0} '{1}'.\n""".format(object_name,name)
+                flag = True
                 continue
-
             msg = {
                 'subject':mail.Subject,
                 'date':str(mail.ReceivedTime),
@@ -168,8 +198,8 @@ class XMLRpcConn(object):
                 'cc':mail.CC,
                 'from':mail.SenderEmailAddress,
                 'to':mail.To,
-                'message-id':str(new_mail.get('Message-Id')),
-                'references':str(new_mail.get('References')),
+                'message-id':message_id,
+                'references':ustr(referances),
             }
             result = {}
             if attachments:
@@ -180,8 +210,8 @@ class XMLRpcConn(object):
             flag = True
 
         if flag:
-            t = ext_msg
-            t += """Mail archived Successfully with attachments.\n"""+new_msg
+            t = """Mail archived Successfully with attachments.\n"""+ext_msg
+            t += "\n"+new_msg
             win32ui.MessageBox(t,"Archived to OpenERP",win32con.MB_ICONINFORMATION)
         return flag
 
@@ -240,13 +270,35 @@ class XMLRpcConn(object):
     def CreateCase(self, section, mail, partner_ids, with_attachments=True):
         import win32ui
         import eml
-        section=str(section)
         flag = False
         id = -1
         try:
             conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
             email=eml.generateEML(mail)
-            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, email)
+            message_id = referances  = None
+            outlook = win32com.client.Dispatch("Outlook.Application")
+            session = win32com.client.Dispatch("MAPI.session")
+            session.Logon('Outlook')
+            objMessage = session.GetMessage(mail.EntryID, mail.Parent.StoreID)
+            objFields = objMessage.Fields
+            strheader = objFields.Item(mapitags.PR_TRANSPORT_MESSAGE_HEADERS)
+            strheader = ustr(strheader).encode('iso-8859-1')
+            headers = {}
+            strheader = strheader.replace("\n ", " ").splitlines()
+            for line in strheader:
+                split_here = line.find(":")
+                headers[line[:split_here]] = line[split_here:]
+            temp1 = headers.get('Message-ID')
+            temp2 = headers.get('Message-Id')
+            if temp1 == None:    message_id = temp2
+            if temp2 == None:    message_id = temp1
+            startCut = message_id.find("<")
+            endCut = message_id.find(">")
+            message_id = message_id[startCut:endCut+1]
+
+            email.replace_header('Message-Id',message_id)
+            win32ui.MessageBox(str(email),"Mail ")
+            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(email))
             if id > 0:
                 flag = True
                 return flag
@@ -398,21 +450,13 @@ class XMLRpcConn(object):
         	return None
         return partner_id[0]
 
-    def SearchEmailResources(self, mail):
+    def SearchEmailResources(self, message_id):
         import win32ui
         import eml
 
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         sub = ""
         res_vals = []
-
-        try:
-#            new_mail = eml.generateEML(mail)
-            email.SaveAs()
-            message_id = str(new_mail.get('message-id'))
-        except Exception,e:
-            win32ui.MessageBox(str(e),"Mail Reading Error")
-            return None
         mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message', 'search', [('message_id','=',message_id)])
         if not mail_id:
             return None

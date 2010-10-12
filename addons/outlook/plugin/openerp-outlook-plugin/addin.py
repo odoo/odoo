@@ -61,14 +61,14 @@ def GetConn():
     return d
 
 class ButtonEvent:
-	def OnClick(self, button, cancel):
-		import win32ui
-		try:
-			mngr = manager.GetManager()
-			mngr.ShowManager()
-		except Exception,e:
-			win32ui.MessageBox("Fail to Initialize dialog.\n"+str(e),"OpenERP Configuration", win32con.MB_ICONERROR)
-		return cancel
+    def OnClick(self, button, cancel):
+        import win32ui
+        try:
+            mngr = manager.GetManager()
+            mngr.ShowManager()
+        except Exception,e:
+        	win32ui.MessageBox("Fail to Initialize dialog.\n"+str(e),"OpenERP Configuration", win32con.MB_ICONERROR)
+        return cancel
 #
 class ViewPartners:
     def OnClick(self, button, cancel):
@@ -202,11 +202,11 @@ class OutlookAddin:
             item.Enabled = True
 
 
-#            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
-#            item = self.toolbarButtonOpenDocument = DispatchWithEvents(item, OpenDocument)
-#            item.Caption = "Open Document"
-#            item.TooltipText = "Click to Open Document that ha been pushed to server."
-#            item.Enabled = True
+            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
+            item = self.toolbarButtonOpenDocument = DispatchWithEvents(item, OpenDocument)
+            item.Caption = "Open Document"
+            item.TooltipText = "Click to Open Document that ha been pushed to server."
+            item.Enabled = True
 
             # Hook events for the item
             item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)

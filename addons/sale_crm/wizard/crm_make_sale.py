@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 from tools.translate import _
-import decimal_precision as dp
 import time
 
 
@@ -54,10 +53,6 @@ class crm_make_sale(osv.osv_memory):
     def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
             context = {}
-        if context.get('active_ids', False) and context['active_ids']:
-            for line in self.pool.get('crm.lead').browse(cr, uid, context['active_ids']):
-                if not line.section_id:
-                    raise osv.except_osv(_('Warning !'), _(' Sales Team is not specified.'))
         return super(crm_make_sale, self).view_init(cr, uid, fields_list, context=context)
 
     def makeOrder(self, cr, uid, ids, context=None):

@@ -56,7 +56,6 @@ class crm_lead2opportunity(osv.osv_memory):
 
         lead_obj = self.pool.get('crm.lead')
         data_obj = self.pool.get('ir.model.data')
-        model_obj = self.pool.get('ir.model')
 
         # Get Opportunity views
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
@@ -156,7 +155,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner'), 
-        'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner')], 'Action'), 
+        'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner'), ('no','Do not create a partner')], 'Action'), 
     }
 
     def make_partner(self, cr, uid, ids, context=None):
@@ -174,8 +173,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             context = {}
         
         partner_ids = self._create_partner(cr, uid, ids, context)
-        mod_obj = self.pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         value = {}
         data_obj = self.pool.get('ir.model.data')
         data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_action')
