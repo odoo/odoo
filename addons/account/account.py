@@ -278,7 +278,7 @@ class account_account(osv.osv):
             # ON l.account_id = tmp.id
             # or make _get_children_and_consol return a query and join on that
             request = ("SELECT l.account_id as id, " +\
-                       ' , '.join(map(mapping.__getitem__, field_names)) +
+                       ', '.join(map(mapping.__getitem__, field_names)) +
                        " FROM account_move_line l" \
                        " WHERE l.account_id IN %s " \
                             + filters +
@@ -1538,7 +1538,7 @@ class account_tax_code(osv.osv):
         if context is None:
             context = {}
         move_state = ('posted', )
-        if context.get('state', False) == 'all':
+        if context.get('state', 'all') == 'all':
             move_state = ('draft', 'posted', )
         if context.get('fiscalyear_id', False):
             fiscalyear_id = context['fiscalyear_id']

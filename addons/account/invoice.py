@@ -1078,7 +1078,9 @@ class account_invoice(osv.osv):
 
     def refund(self, cr, uid, ids, date=None, period_id=None, description=None, journal_id=None):
         invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id'])
-
+        obj_invoice_line = self.pool.get('account.invoice.line')
+        obj_invoice_tax = self.pool.get('account.invoice.tax')
+        obj_journal = self.pool.get('account.journal')
         new_ids = []
         for invoice in invoices:
             del invoice['id']
@@ -1090,18 +1092,18 @@ class account_invoice(osv.osv):
                 'in_refund': 'in_invoice',   # Supplier Refund
             }
 
-            invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
+            invoice_lines = obj_invoice_line.read(cr, uid, invoice['invoice_line'])
             invoice_lines = self._refund_cleanup_lines(cr, uid, invoice_lines)
 
-            tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
+            tax_lines = obj_invoice_tax.read(cr, uid, invoice['tax_line'])
             tax_lines = filter(lambda l: l['manual'], tax_lines)
             tax_lines = self._refund_cleanup_lines(cr, uid, tax_lines)
             if journal_id:
                 refund_journal_ids = [journal_id]
             elif invoice['type'] == 'in_invoice':
-                refund_journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase_refund')])
+                refund_journal_ids = obj_journal.search(cr, uid, [('type','=','purchase_refund')])
             else:
-                refund_journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','sale_refund')])
+                refund_journal_ids = obj_journal.search(cr, uid, [('type','=','sale_refund')])
 
             if not date:
                 date = time.strftime('%Y-%m-%d')

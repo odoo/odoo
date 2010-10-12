@@ -62,12 +62,12 @@ account_move_line()
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
-        'follow_up_msg' : fields.text('Follow-up Message', translate=True),
+        'follow_up_msg': fields.text('Follow-up Message', translate=True),
     }
 
     _defaults = {
         'overdue_msg': '''
-Date : %(date)s
+Date: %(date)s
 
 Dear %(partner_name)s,
 
