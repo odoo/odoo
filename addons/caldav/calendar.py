@@ -71,7 +71,8 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
             r_id = cr.fetchone()
             if r_id:
                 return (id, r_id[0])
-        
+            else:
+                return (False, None)
         cr.execute(qry)
         ids = map(lambda x: str(x[0]), cr.fetchall())
         if id in ids:

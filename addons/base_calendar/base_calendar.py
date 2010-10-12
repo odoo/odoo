@@ -1017,7 +1017,8 @@ class calendar_event(osv.osv):
         elif int(val.get('interval')) > 1: #If interval is other than 1 rule is custom
             rrule_type = 'custom'
 
-        qry = "UPDATE %(table)s set rrule_type=\'%(rule_type)s\' "
+        qry = "UPDATE \"%s\" set rrule_type=%%s " % self._table
+        qry_args = [ rrule_type, ]
 
         if rrule_type == 'custom':
             new_val = val.copy()
@@ -1055,17 +1056,12 @@ class calendar_event(osv.osv):
                     new_val.pop('bymonth')
 
             for k, v in new_val.items():
-                temp = ", %s='%s'" % (k, v)
-                qry += temp
+                qry += ", %s=%%s" % k
+                qry_args.append(v)
 
-        whr = " where id=%(id)s"
-        qry = qry + whr
-        val.update({
-            'table': self._table,
-            'rule_type': rrule_type,
-            'id': id,
-        })
-        cr.execute(qry, val) # Hopefully psycopg2 works with dicts. But, FIXME
+        qry = qry + " where id=%s"
+        qry_args.append(id)
+        cr.execute(qry, qry_args)
         return True
 
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
