@@ -64,13 +64,16 @@ class node_context(object):
     """ This is the root node, representing access to some particular
         context """
     cached_roots = {}
+    node_file_class = None
 
     def __init__(self, cr, uid, context=None):
         self.dbname = cr.dbname
         self.uid = uid
         self.context = context
         self._dirobj = pooler.get_pool(cr.dbname).get('document.directory')
+        self.node_file_class = node_file
         assert self._dirobj
+        self._dirobj._prepare_context(cr, uid, self, context=context)
         self.rootdir = False #self._dirobj._get_root_directory(cr,uid,context)
 
     def __eq__(self, other):
@@ -104,14 +107,10 @@ class node_context(object):
         """Create (or locate) a node for a directory
             @param dbro a browse object of document.directory
         """
-        fullpath = self._dirobj.get_full_path(cr, self.uid, dbro.id, self.context)
-        if dbro.type == 'directory':
-            return node_dir(fullpath, None ,self, dbro)
-        elif dbro.type == 'ressource':
-            assert dbro.ressource_parent_type_id == False
-            return node_res_dir(fullpath, None, self, dbro)
-        else:
-            raise ValueError("dir node for %s type", dbro.type)
+        
+        fullpath = dbro.get_full_path(context=self.context)
+        klass = dbro.get_node_class(dbro, context=self.context)
+        return klass(fullpath, None ,self, dbro)
 
     def get_file_node(self, cr, fbro):
         """ Create or locate a node for a static file
@@ -121,7 +120,7 @@ class node_context(object):
         if fbro.parent_id:
             parent = self.get_dir_node(cr, fbro.parent_id)
 
-        return node_file(fbro.name, parent, self, fbro)
+        return self.node_file_class(fbro.name, parent, self, fbro)
 
 
 class node_descriptor(object):
@@ -438,22 +437,20 @@ class node_database(node_class):
         if not domain:
             domain = []
 
-        where2 = where + domain + [('type', '=', 'directory')]
+        where2 = where + domain + ['|', ('type', '=', 'directory'), \
+                    '&', ('type', '=', 'ressource'), ('ressource_parent_type_id','=',False)]
         ids = dirobj.search(cr, uid, where2, context=ctx)
         res = []
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
-            res.append(node_dir(dirr.name, self, self.context,dirr))
-
-        where2 = where + domain + [('type', '=', 'ressource'), ('ressource_parent_type_id','=',False)]
-        ids = dirobj.search(cr, uid, where2, context=ctx)
-        for dirr in dirobj.browse(cr, uid, ids, context=ctx):
-            res.append(node_res_dir(dirr.name, self, self.context, dirr))
+            klass = dirr.get_node_class(dirr, context=ctx)
+            res.append(klass(dirr.name, self, self.context,dirr))
 
         fil_obj = dirobj.pool.get('ir.attachment')
         ids = fil_obj.search(cr, uid, where, context=ctx)
         if ids:
             for fil in fil_obj.browse(cr, uid, ids, context=ctx):
-                res.append(node_file(fil.name, self, self.context, fil))
+                klass = self.context.node_file_class
+                res.append(klass(fil.name, self, self.context, fil))
         return res
 
     def _file_get(self,cr, nodename=False):
@@ -910,6 +907,7 @@ class node_res_obj(node_class):
         where = [('directory_id','=',self.dir_id) ]
         ids = cntobj.search(cr,uid,where,context=ctx)
         for content in cntobj.browse(cr, uid, ids, context=ctx):
+            # TODO: remove relic of GroupDAV
             if content.extension == '.ics': # FIXME: call the content class!
                 return ('vevent-collection','http://groupdav.org/')
         return None
@@ -944,6 +942,7 @@ class node_res_obj(node_class):
                 res_name = getattr(bo, namefield)
                 if not res_name:
                     continue
+                # TODO Revise
                 res.append(node_res_obj(res_name, self.dir_id, self, self.context, self.res_model, res_bo = bo))
 
 
@@ -956,9 +955,6 @@ class node_res_obj(node_class):
                 # child resources can be controlled by properly set dctx
                 res.append(node_res_dir(dirr.name,self,self.context, dirr, {'active_id': self.res_id}))
 
-
-
-
         fil_obj = dirobj.pool.get('ir.attachment')
         if self.res_find_all:
             where2 = where
@@ -967,7 +963,8 @@ class node_res_obj(node_class):
         ids = fil_obj.search(cr, uid, where3, context=ctx)
         if ids:
             for fil in fil_obj.browse(cr, uid, ids, context=ctx):
-                res.append(node_file(fil.name, self, self.context, fil))
+                klass = self.context.node_file_class
+                res.append(klass(fil.name, self, self.context, fil))
 
 
         # Get Child Ressource Directories
@@ -1038,7 +1035,8 @@ class node_res_obj(node_class):
 
         fil_id = fil_obj.create(cr, uid, val, context=ctx)
         fil = fil_obj.browse(cr, uid, fil_id, context=ctx)
-        fnode = node_file(path, self, self.context, fil)
+        klass = self.context.node_file_class
+        fnode = klass(path, self, self.context, fil)
         if data is not None:
             fnode.set_data(cr, data, fil)
         return fnode

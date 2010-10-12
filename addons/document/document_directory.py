@@ -175,6 +175,38 @@ class document_directory(osv.osv):
             
         return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
 
+    def get_node_class(self, cr, uid, ids, dbro=None, context=None):
+        """Retrieve the class of nodes for this directory
+           
+           This function can be overriden by inherited classes ;)
+           @param dbro The browse object, if caller already has it
+        """
+        if dbro is None:
+            dbro = self.browse(cr, uid, ids, context=context)
+
+        if dbro.type == 'directory':
+            return nodes.node_dir
+        elif dbro.type == 'ressource':
+            assert not dbro.ressource_parent_type_id, \
+                "resource and parent_id at #%d: %r" % (dbro.id, dbro.ressource_parent_type_id)
+            return nodes.node_res_dir
+        else:
+            raise ValueError("dir node for %s type", dbro.type)
+
+    def _prepare_context(self, cr, uid, nctx, context):
+        """ Fill nctx with properties for this database
+        @param nctx instance of nodes.node_context, to be filled
+        @param context ORM context (dict) for us
+        
+        Note that this function is called *without* a list of ids, 
+        it should behave the same for the whole database (based on the
+        ORM instance of document.directory).
+        
+        Some databases may override this and attach properties to the
+        node_context. See WebDAV, CalDAV.
+        """
+        return
+
     def get_dir_permissions(self, cr, uid, ids ):
         """Check what permission user 'uid' has on directory 'id'
         """
