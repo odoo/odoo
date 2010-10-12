@@ -22,7 +22,11 @@
 
 from document import nodes
 from tools.safe_eval import safe_eval as eval
-from tools.dict_tools import dict_filter
+try:
+    from tools.dict_tools import dict_filter
+except ImportError:
+    from document.dict_tools import dict_filter
+
 import urllib
 
     

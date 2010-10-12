@@ -37,7 +37,10 @@ import urllib
 from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 from cache import memoize
 from tools import misc
-from tools.dict_tools import dict_merge2
+try:
+    from tools.dict_tools import dict_merge2
+except ImportError:
+    from document.dict_tools import dict_merge2
 
 CACHE_SIZE=20000
 

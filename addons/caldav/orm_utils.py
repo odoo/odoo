@@ -41,8 +41,7 @@ if True: # we need this indentation level ;)
 
         cr.execute('SELECT MAX(COALESCE("%s".write_date, "%s".create_date)) FROM ' % (self._table, self._table) + 
                     from_clause + where_str ,
-                    where_clause_params,
-                    debug=self._debug)
+                    where_clause_params)
         res = cr.fetchall()
         return res[0][0]
 

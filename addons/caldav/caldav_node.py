@@ -26,7 +26,10 @@ import logging
 import StringIO
 from orm_utils import get_last_modified
 
-from tools.dict_tools import dict_merge, dict_merge2
+try:
+    from tools.dict_tools import dict_merge, dict_merge2
+except ImportError:
+    from document.dict_tools import dict_merge, dict_merge2
 
 # TODO: implement DAV-aware errors, inherit from IOError
 
