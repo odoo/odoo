@@ -25,7 +25,7 @@ from report import report_sxw
 class pos_user_product(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(pos_user_product, self).__init__(cr, uid, name, context=context)
+        super(pos_user_product, self).__init__(cr, uid, name, context)
         self.total = 0.0
         self.localcontext.update({
             'time': time,
@@ -43,7 +43,7 @@ class pos_user_product(report_sxw.rml_parse):
         for r in data:
             a_l.append(r['id'])
         if len(a_l):
-            sql2="""SELECT sum(qty) as qty,l.price_unit*sum(l.qty) as amt,t.name as name from product_product p, product_template t, pos_order_line l where order_id IN %s and p.product_tmpl_id=t.id and l.product_id=p.id group by t.name, l.price_unit""",(tuple(a_l),)
+            sql2="""SELECT sum(qty) as qty,l.price_unit*sum(l.qty) as amt,t.name as name from product_product p, product_template t, pos_order_line l where order_id = %d and p.product_tmpl_id=t.id and l.product_id=p.id group by t.name, l.price_unit"""%(o.id)
             self.cr.execute(sql2)
             data = self.cr.dictfetchall()
         for d in data:
