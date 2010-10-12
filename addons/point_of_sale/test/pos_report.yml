@@ -12,7 +12,7 @@
 -
   !python {model: pos.order}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.invoice').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    (data, format) = netsvc.LocalService('report.pos.invoice').create(cr, uid, [ref('point_of_sale.pos_order_pos11')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-invoice report'+format), 'wb+').write(data)
 
@@ -52,7 +52,7 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt without reimbursement report'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on a Point Of Sale, we will print a POS Payment Report Report
+  In order to test the PDF reports defined on a Point Of Sale, we will print a POS Payment Report
 -
   !python {model: ir.ui.menu}: |
     import netsvc, tools, os, time
@@ -84,6 +84,13 @@
     balance_end_real: 0.0
     date: '2010-05-19'
     journal_id: account_journal_cash0
+    line_ids:
+        - name: statement
+          date: "2010-10-13"
+          type: customer
+          account_id: account_account_sales0
+          amount: 100
+          partner_id: base.res_partner_agrolait
     period_id: account.period_5
     state: 'draft'
 -
@@ -133,7 +140,7 @@
 -
   !python {model: pos.order}: |
     import netsvc, tools, os, time
-    (data, format) = netsvc.LocalService('report.pos.payment.report').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    (data, format) = netsvc.LocalService('report.pos.payment.report').create(cr, uid, [ref('point_of_sale.pos_order_pos0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-payment_report'+format), 'wb+').write(data)
 -

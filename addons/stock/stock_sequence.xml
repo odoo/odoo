@@ -20,14 +20,9 @@
             <field name="code">stock.picking.internal</field>
         </record>
 
-        <record id="seq_type_picking_delivery" model="ir.sequence.type">
-            <field name="name">Picking Delivery</field>
-            <field name="code">stock.picking.delivery</field>
-        </record>
-
-		<!--
-    		Sequences for pickings
-    	-->
+        <!--
+            Sequences for pickings
+        -->
 
         <record id="seq_picking_in" model="ir.sequence">
             <field name="name">Picking IN</field>
@@ -47,13 +42,6 @@
             <field name="name">Picking INT</field>
             <field name="code">stock.picking.internal</field>
             <field name="prefix">INT/</field>
-            <field name="padding">5</field>
-        </record>
-
-        <record id="seq_picking_delivery" model="ir.sequence">
-            <field name="name">Picking DLV</field>
-            <field name="code">stock.picking.delivery</field>
-            <field name="prefix">DLV/</field>
             <field name="padding">5</field>
         </record>
 

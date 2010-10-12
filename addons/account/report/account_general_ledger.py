@@ -117,15 +117,15 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             sold_account = self._sum_balance_account(child_account)
             self.sold_accounts[child_account.id] = sold_account
             if self.display_account == 'bal_movement':
-                if child_account.type != 'view' and num_entry <> 0 :
+                if child_account.type != 'view' and num_entry <> 0:
                     res.append(child_account)
             elif self.display_account == 'bal_solde':
-                if child_account.type != 'view' and num_entry <> 0 :
+                if child_account.type != 'view' and num_entry <> 0:
                     if ( sold_account <> 0.0):
                         res.append(child_account)
             else:
                 res.append(child_account)
-        if not len(res):
+        if not res:
             return [account]
         return res
 
@@ -161,7 +161,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         else:
             sql_sort='l.date'
         sql = """
-            SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.amount_currency,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id AS lperiod_id, l.partner_id AS lpartner_id,
+            SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.currency_id,l.amount_currency,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id AS lperiod_id, l.partner_id AS lpartner_id,
             m.name AS move_name, m.id AS mmove_id,
             c.symbol AS currency_code,
             i.id AS invoice_id, i.type AS invoice_type, i.number AS invoice_number,

@@ -5,9 +5,8 @@
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" parent="" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager,base.group_system" sequence="8"/>
 
-        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
-        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
+
 
         <menuitem name="Master Data"
                   id="menu_mrp_bom"
@@ -488,23 +487,8 @@
         </record>
 
         <!--
-        Procurement
-        -->
-
-        <menuitem action="procurement.procurement_action" id="base.menu_mrp_procurement_action"
-                  parent="mrp.menu_mrp_manufacturing" sequence="3" />
-        <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="3"/>
-        <menuitem action="procurement.action_compute_schedulers" id="base.mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager"/>
-
-        <!--
-        Order Point
-        -->
-        <menuitem action="procurement.action_orderpoint_form" id="menu_action_orderpoint_form" parent="mrp.menu_mrp_reordering"/>
-
-        <!--
         Production Management
         -->
-
         <record id="mrp_production_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
@@ -545,7 +529,7 @@
             <field name="model">mrp.production</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-                <gantt color="product_id" date_stop="date_finnished" date_start="date_start" string="Productions">
+                <gantt color="product_id" date_stop="date_finished" date_start="date_start" string="Productions">
                     <level object="mrp.routing" link="routing_id" domain="[]">
                         <field name="name"/>
                         <field name="origin"/>
@@ -604,8 +588,8 @@
                                 <tree colors="blue:state in ('draft');black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
-                                    <field name="product_uom"  string="UOM"/>
-                                    <field name="location_id"  string="Source Loc."/>
+                                    <field name="product_uom"  string="UOM" widget="selection"/>
+                                    <field name="location_id"  string="Source Loc." widget="selection"/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_consume)d"
                                         string="Consume Products" type="action"
@@ -623,8 +607,8 @@
                                    <tree colors="red:scrapped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Consumed Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                       <field name="product_uom" readonly="1" string="UOM"/>
-                                       <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
+                                       <field name="product_uom" readonly="1" string="UOM" widget="selection"/>
+                                       <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
                                        <field name="prodlot_id" />
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
@@ -658,8 +642,8 @@
                                 <tree string="Products to Finish">
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
-                                    <field name="product_uom"  string="UOM"/>
-                                    <field name="location_id"  string="Source Loc."/>
+                                    <field name="product_uom"  string="UOM" widget="selection"/>
+                                    <field name="location_id"  string="Source Loc." widget="selection"/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
@@ -673,8 +657,8 @@
                                    <tree colors="red:scrapped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                       <field name="product_uom" readonly="1" string="UOM"/>
-                                       <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
+                                       <field name="product_uom" readonly="1" string="UOM" widget="selection"/>
+                                       <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
                                        <field name="prodlot_id" />
                                        <field name="scrapped" invisible="1"/>
                                        <button name="%(stock.track_line)d"
@@ -711,7 +695,7 @@
                             <field name="priority" groups="base.group_extended"/>
                             <newline/>
                             <field name="date_start"/>
-                            <field name="date_finnished"/>
+                            <field name="date_finished"/>
                             <field name="picking_id" groups="base.group_extended"/>
                             <field name="move_prod_id" groups="base.group_extended"/>
                         </page>

@@ -175,22 +175,6 @@
             </field>
         </record>
 
-        <record id="view_picking_withcarrier_delivery_form" model="ir.ui.view">
-            <field name="name">delivery.stock.picking_withcarrier.delivery.form.view</field>
-            <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_delivery_form"/>
-            <field name="arch" type="xml">
-                <field name="address_id" position="after">
-                    <field name="carrier_id"/>
-                    <field name="carrier_tracking_ref" groups="base.group_extended"/>
-                    <field name="number_of_packages" groups="base.group_extended"/>
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </field>
-            </field>
-        </record>
-
         <record id="action_picking_tree4" model="ir.actions.act_window">
             <field name="name">Picking to be invoiced</field>
             <field name="res_model">stock.picking</field>
@@ -242,19 +226,6 @@
             </field>
         </record>
 
-        <record id="view_picking_withcarrier_delivery_move_form" model="ir.ui.view">
-            <field name="name">delivery.stock.picking_withcarrier.delivery.move.form.view</field>
-            <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_delivery_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_move_withweight_form" model="ir.ui.view">
             <field name="name">stock.move.form.weight</field>
             <field name="type">form</field>
@@ -287,7 +258,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                     <xpath expr="/form/notebook/page[@string='Sales Order']/group[1]/button[@name='button_dummy']" position="after">
-                         <button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-add" context="{'order_id':id}"/>                    
+                         <button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-add" context="{'order_id':active_id}"/>                    
                     </xpath>
             </field>
         </record>

@@ -58,7 +58,7 @@
 		                <filter icon="terp-go-week"
 	                            string="Month -1"
 	                            separator="1"
-	                            domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                            domain="[('month','=',(datetime.date.today() - datetime.timedelta(365/12)).strftime('%%m'))]"
 	                            help="Production during last month"/>
                       <separator orientation="vertical"/>
                         <filter string="Current" icon="terp-check" domain="[('state','in',('open','draft'))]"/>
@@ -80,7 +80,7 @@
                       <newline/>
                         <field name="date_start"/>
                       <field name="date_planned"/>
-                      <field name="date_finnished"/>
+                      <field name="date_finished"/>
                     </group>
                    <newline/>
                    <group expand="1" string="Group By...">

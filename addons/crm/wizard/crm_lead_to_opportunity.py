@@ -207,7 +207,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             context = {}
         
         partner_ids = self._create_partner(cr, uid, ids, context)
-        mod_obj = self.pool.get('ir.model.data')
         value = {}
         data_obj = self.pool.get('ir.model.data')
         data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_action')

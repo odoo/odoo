@@ -461,6 +461,34 @@ class sale_order(osv.osv):
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 
+    def manual_invoice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        inv_ids = set()
+        inv_ids1 = set()
+        for id in ids:
+            for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
+                inv_ids.add(record.id)
+        # inv_ids would have old invoices if any
+        for id in ids:
+            wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
+            for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
+                inv_ids1.add(record.id)
+        inv_ids = list(inv_ids1.difference(inv_ids))
+
+        result = {
+            'name': 'Invoices',
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'account.invoice',
+            'view_id': False,
+            'context': "{'type':'out_refund'}",
+            'type': 'ir.actions.act_window',
+            'res_id': inv_ids[0],
+            'nodestroy' :True
+                  }
+
+        return result
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}
@@ -684,7 +712,7 @@ class sale_order(osv.osv):
                         'name': line.name[:64],
                         'picking_id': picking_id,
                         'product_id': line.product_id.id,
-                        'date_planned': date_planned,
+                        'date': date_planned,
                         'date_expected': date_planned,
                         'product_qty': line.product_uom_qty,
                         'product_uom': line.product_uom.id,
@@ -1206,11 +1234,6 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
             if o.step == 'one':
                 md = self.pool.get('ir.model.data')
-                group_id = md._get_id(cr, uid, 'base', 'group_no_one')
-                group_id = md.browse(cr, uid, group_id, context=context).res_id
-                menu_id = md._get_id(cr, uid, 'stock', 'menu_action_picking_tree_delivery')
-                menu_id = md.browse(cr, uid, menu_id, context=context).res_id
-                self.pool.get('ir.ui.menu').write(cr, uid, [menu_id], {'groups_id': [(6, 0, [group_id])]})
                 location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
                 location_id = md.browse(cr, uid, location_id, context=context).res_id
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
