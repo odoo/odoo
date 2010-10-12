@@ -552,6 +552,33 @@ class CalDAV(object):
             self.ical_reset('value')
         return res
 
+if True: # we need this indentation level ;)
+
+    def get_last_modified(self, cr, user, args, context=None, access_rights_uid=None):
+        """Return the last modification date of objects in 'domain'
+        This function has similar semantics to orm.search(), apart from the
+        limit, offset and order arguments, which make no sense here.
+        It is useful when we want to find if the table (aka set of records)
+        has any modifications we should update at the client.
+        """
+        if context is None:
+            context = {}
+        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read', context=context)
+
+        query = self._where_calc(cr, user, args, context=context)
+        self._apply_ir_rules(cr, user, query, 'read', context=context)
+        from_clause, where_clause, where_clause_params = query.get_sql()
+
+        where_str = where_clause and (" WHERE %s" % where_clause) or ''
+
+        cr.execute('SELECT MAX(COALESCE("%s".write_date, "%s".create_date)) FROM ' % (self._table, self._table) + 
+                    from_clause + where_str ,
+                    where_clause_params,
+                    debug=self._debug)
+        res = cr.fetchall()
+        return res[0][0]
+
+
 class Calendar(CalDAV, osv.osv):
     _name = 'basic.calendar'
     _calname = 'calendar'
@@ -609,6 +636,32 @@ class Calendar(CalDAV, osv.osv):
                         continue
                     node = res_node_calendar('%s.ics' %data.id, parent, ctx, data, line.object_id.model, data.id)
                     res.append(node)
+        return res
+        
+
+    def get_cal_max_modified(self, cr, uid, ids, parent=None, domain=None, context=None):
+        if not context:
+            context = {}
+        if not domain:
+            domain = []
+        res = None
+        ctx_res_id = context.get('res_id', None)
+        ctx_model = context.get('model', None)
+        for cal in self.browse(cr, uid, ids):
+            for line in cal.line_ids:
+                if ctx_model and ctx_model != line.object_id.model:
+                    continue
+                if line.name in ('valarm', 'attendee'):
+                    continue
+                line_domain = eval(line.domain or '[]', context)
+                line_domain += domain
+                if ctx_res_id:
+                    line_domain += [('id','=',ctx_res_id)]
+                mod_obj = self.pool.get(line.object_id.model)
+                max_data = get_last_modified(mod_obj, cr, uid, line_domain, context=context)
+                if res and res > max_data:
+                    continue
+                res = max_data
         return res
 
     def export_cal(self, cr, uid, ids, vobj='vevent', context=None):

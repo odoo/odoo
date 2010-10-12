@@ -21,32 +21,13 @@
 
 import time
 from document_webdav import nodes
+from document.nodes import _str2time
 import logging
 import StringIO
 
+from tools.dict_tools import dict_merge, dict_merge2
+
 # TODO: implement DAV-aware errors, inherit from IOError
-
-def dict_merge(*dicts):
-    """ Return a dict with all values of dicts
-    """
-    res = {}
-    for d in dicts:
-        res.update(d)
-    return res
-
-def dict_merge2(*dicts):
-    """ Return a dict with all values of dicts.
-        If some key appears twice and contains iterable objects, the values
-        are merged (instead of overwritten).
-    """
-    res = {}
-    for d in dicts:
-        for k in d.keys():
-            if k in res and isinstance(res[k], (list, tuple)):
-                res[k] = res[k] + d[k]
-            else:
-                res[k] = d[k]
-    return res
 
 # Assuming that we have set global properties right, we mark *all* 
 # directories as having calendar-access.
@@ -186,10 +167,18 @@ class node_calendar(nodes.node_class):
         self.content_length = 0
         self.displayname = calendar.name
         self.cal_type = calendar.type
+        # TODO owner
+        
 
     def _get_dav_getctag(self, cr):
-        result = self._get_ttag(cr) + ':' + str(time.time())
-        return str(result)
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+
+        bc_obj = dirobj.pool.get('basic.calendar')
+        res = bc_obj.get_cal_max_modified(cr, uid, [self.calendar_id], self, domain=[], context=ctx)
+        return _str2time(res)
 
     def _get_dav_user_state(self, cr):
         #TODO
@@ -295,11 +284,9 @@ class node_calendar(nodes.node_class):
         if not domain:
             domain = []
 
-        fil_obj = dirobj.pool.get('basic.calendar')
-        ids = fil_obj.search(cr, uid, domain)
-        res = []
-        if self.calendar_id in ids:
-            res = fil_obj.get_calendar_objects(cr, uid, [self.calendar_id], self, domain=where, context=ctx)
+        bc_obj = dirobj.pool.get('basic.calendar')
+        # we /could/ be supplying an invalid calendar id to bc_obj, it has to check
+        res = bc_obj.get_calendar_objects(cr, uid, [self.calendar_id], self, domain=where, context=ctx)
         return res
 
     def create_child(self, cr, path, data):
