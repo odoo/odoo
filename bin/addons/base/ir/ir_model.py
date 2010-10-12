@@ -432,7 +432,7 @@ class ir_model_data(osv.osv):
         if not context:
             context = {}
         if xml_id and ('.' in xml_id):
-            assert len(xml_id.split('.'))==2, _('"%s" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id') % (xml_id)
+            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
             warning = False
             module, xml_id = xml_id.split('.')
         if (not xml_id) and (not self.doinit):
