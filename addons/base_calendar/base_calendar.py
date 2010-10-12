@@ -1065,7 +1065,7 @@ class calendar_event(osv.osv):
             'rule_type': rrule_type,
             'id': id,
         })
-        cr.execute(qry % val)
+        cr.execute(qry, val) # Hopefully psycopg2 works with dicts. But, FIXME
         return True
 
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
@@ -1682,7 +1682,7 @@ class calendar_todo(osv.osv):
         @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
         @param context: A standard dictionary for contextual values
         """
-
+        
         assert name == 'date'
         return self.write(cr, uid, id, { 'date_start': value }, context=context)
 
