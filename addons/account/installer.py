@@ -256,7 +256,7 @@ class account_installer(osv.osv_memory):
                 vals_seq = {
                         'name': _('Bank Journal '),
                         'code': 'account.journal',
-                        'prefix': 'BAN/',
+                        'prefix': 'BNK/%(year)s/',
                         'padding': 5
                         }
                 seq_id = obj_sequence.create(cr,uid,vals_seq)
@@ -284,13 +284,10 @@ class account_installer(osv.osv_memory):
                     seq_padding = 5
                     if val.account_type == 'cash':
                         type = cash_type_id
-                        seq_prefix = "CSH/"
                     elif val.account_type == 'bank':
                         type = bank_type_id
-                        seq_prefix = "BAN/"
                     elif val.account_type == 'check':
                         type = check_type_id
-                        seq_prefix = "CHK/"
                     else:
                         type = check_type_id
                         seq_padding = None
@@ -304,9 +301,9 @@ class account_installer(osv.osv_memory):
                         'company_id': company_id.id }
                     child_bnk_acc = obj_acc.create(cr, uid, vals_bnk)
                     vals_seq_child = {
-                        'name': _(vals_bnk['name']),
+                        'name': _(vals_bnk['name'] + ' ' + 'Journal'),
                         'code': 'account.journal',
-                        'prefix': seq_prefix,
+                        'prefix': _((vals_bnk['name'][:3].upper()) + '/%(year)s/'),
                         'padding': seq_padding
                         }
                     seq_id = obj_sequence.create(cr, uid, vals_seq_child)
@@ -314,7 +311,7 @@ class account_installer(osv.osv_memory):
                     #create the bank journal
                     vals_journal = {}
                     vals_journal['name']= vals_bnk['name'] + ' Journal'
-                    vals_journal['code']= _(vals_bnk['name'][:3])
+                    vals_journal['code']= _(vals_bnk['name'][:3]).upper()
                     vals_journal['sequence_id'] = seq_id
                     vals_journal['type'] = 'cash'
                     if vals.get('currency_id', False):
@@ -327,7 +324,6 @@ class account_installer(osv.osv_memory):
                     vals_journal['analytic_journal_id'] = analitical_journal_bank
                     obj_journal.create(cr,uid,vals_journal)
                     code_cnt += 1
-
 
         #reactivate the parent_store functionality on account_account
         self.pool._init = False
@@ -352,21 +348,37 @@ class account_installer(osv.osv_memory):
             seq_sale = {
                         'name': 'Sale Journal',
                         'code': 'account.journal',
-                        'prefix': '%(year)s/',
+                        'prefix': 'SAJ/%(year)s/',
                         'padding': 3
                         }
             seq_id_sale = obj_sequence.create(cr, uid, seq_sale)
             seq_purchase = {
                         'name': 'Purchase Journal',
                         'code': 'account.journal',
-                        'prefix': '%(year)s/',
+                        'prefix': 'EXJ/%(year)s/',
                         'padding': 3
                         }
             seq_id_purchase = obj_sequence.create(cr, uid, seq_purchase)
+            seq_refund_sale = {
+                        'name': 'Sales Refund Journal',
+                        'code': 'account.journal',
+                        'prefix': 'SCNJ/%(year)s/',
+                        'padding': 3
+                        }
+            seq_id_sale_refund = obj_sequence.create(cr, uid, seq_refund_sale)
+            seq_refund_purchase = {
+                        'name': 'Purchase Refund Journal',
+                        'code': 'account.journal',
+                        'prefix': 'ECNJ/%(year)s/',
+                        'padding': 3
+                        }
+            seq_id_purchase_refund = obj_sequence.create(cr, uid, seq_refund_purchase)
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
-
+            seq_id_sale_refund = seq_id
+            seq_id_purchase_refund = seq_id
+            
         vals_journal['view_id'] = view_id
 
         #Sales Journal
@@ -407,9 +419,6 @@ class account_installer(osv.osv_memory):
         data_id = mod_obj.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_refund_journal_view')])
         data = mod_obj.browse(cr, uid, data_id[0])
         view_id = data.res_id
-
-        seq_id_sale_refund = seq_id_sale
-        seq_id_purchase_refund = seq_id_purchase
 
         vals_journal['view_id'] = view_id
 
