@@ -27,7 +27,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Administration">
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="2" groups="base.group_extended">
                                 <separator colspan="2" string="Scheduling"/>
                                 <field name="priority"/>
                                 <field name="active"/>
@@ -67,16 +67,18 @@
                                 </tree>
                             </field>
                         </page>
-                        <page groups="base.group_extended" string="Accounting">
-                            <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
+                        <page string="Billing" groups="account.group_account_invoice">
+                            <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>
                             <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Invoice Address"/>
                             <field name="warn_customer"/>
                             <newline/>
-                            <separator colspan="2" string="Mail Header"/>
-                            <separator colspan="2" string="Mail Footer"/>
-                            <field name="warn_header" nolabel="1" colspan="2"/>
-                            <field name="warn_footer" nolabel="1" colspan="2"/>
-                            <group col="3" colspan="4">
+                            <group colspan="4" col="4" groups="base.group_extended">
+                                <separator colspan="2" string="Mail Header"/>
+                                <separator colspan="2" string="Mail Footer"/>
+                                <field name="warn_header" nolabel="1" colspan="2"/>
+                                <field name="warn_footer" nolabel="1" colspan="2"/>
+                            </group>
+                            <group col="3" colspan="4" groups="base.group_extended">
                                 <separator string="Automatic variables for headers and footer. Use exactly the same notation." colspan="4"/>
                                 <label string="Task: %%(name)s"/>
                                 <label string="User: %%(user_id)s"/>
