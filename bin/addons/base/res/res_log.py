@@ -33,11 +33,11 @@ class res_log(osv.osv_memory):
         'res_id': fields.integer('Object ID'),
         'secondary': fields.boolean('Secondary Log', help='Do not display this log if it belongs to the same object the user is working on'),
         'create_date': fields.datetime('Created Date', readonly=True),
-        'read': field.boolean('Read status', help="If this log item has been read, get() should not send it to the client")
+        'read': fields.boolean('Read status', help="If this log item has been read, get() should not send it to the client")
     }
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid,
-        'create_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'create_date': fields.datetime.now,
         'context': "{}",
         'read': False
     }
@@ -51,7 +51,7 @@ class res_log(osv.osv_memory):
         unread_logs = self.read(cr, uid, unread_log_ids,
                                 ['name','res_model','res_id'],
                                 context=context)
-        self.write(cr, uid, ids, {'read': True}, context=context)
+        self.write(cr, uid, unread_log_ids, {'read': True}, context=context)
         return unread_logs
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -64,5 +64,4 @@ class res_log(osv.osv_memory):
             logs.update({log.res_model: res_dict})
         res = map(lambda x: x.values(), logs.values())
         return tools.flatten(res)
-
 res_log()
