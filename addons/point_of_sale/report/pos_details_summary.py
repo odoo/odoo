@@ -121,8 +121,10 @@ class pos_details_summary(report_sxw.rml_parse):
 
     def _get_start_period(self, objects):
         date_orders = [obj.date_order for obj in objects]
+        print "=========================",date_orders
         min_date = min(date_orders)
         max_date = max(date_orders)
+        print "========================",min_date
         if min_date == max_date:
             return '%s' % min_date
         else:
