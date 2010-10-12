@@ -477,7 +477,7 @@
     <blockTable colWidths="539.0" style="Table_Payment_Terms">
       <tr>
         <td>
-          <para style="terp_default_9">[[ o.payment_term and o.payment_term.name + “ :\n” + format(o.payment_term.note or '') or removeParentNode('blockTable') ]]</para>
+          <para style="terp_default_9"><font face="Helvetica" size="10.0">[[ o.payment_term and o.payment_term.name ]] </font>: <font face="Helvetica" size="10.0">[[ (o.payment_term and o.payment_term.note and format(o.payment_term.note)) or removeParentNode('blockTable') ]]</font></para>
         </td>
       </tr>
     </blockTable>
