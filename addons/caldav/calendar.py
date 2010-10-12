@@ -32,6 +32,7 @@ import tools
 import time
 import logging
 from caldav_node import res_node_calendar
+from tools.safe_eval import safe_eval as eval
 
 try:
     import vobject
@@ -595,7 +596,7 @@ class Calendar(CalDAV, osv.osv):
                     continue
                 if line.name in ('valarm', 'attendee'):
                     continue
-                line_domain = eval(line.domain or '[]')
+                line_domain = eval(line.domain or '[]', context)
                 line_domain += domain
                 if ctx_res_id:
                     line_domain += [('id','=',ctx_res_id)]
@@ -627,7 +628,7 @@ class Calendar(CalDAV, osv.osv):
                     continue
                 if line.name in ('valarm', 'attendee'):
                     continue
-                domain = eval(line.domain or '[]')
+                domain = eval(line.domain or '[]', context)
                 if ctx_res_id:
                     domain += [('id','=',ctx_res_id)]
                 mod_obj = self.pool.get(line.object_id.model)

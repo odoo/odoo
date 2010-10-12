@@ -20,41 +20,41 @@
 ##############################################################################
 
 import time
-from document import nodes
+from document_webdav import nodes
 import StringIO
 
-class node_database(nodes.node_database):
-    def _child_get(self, cr, name=False, parent_id=False, domain=None):
-        dirobj = self.context._dirobj
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        if not domain:
-            domain = []
-        domain2 = domain + [('calendar_collection','=', False)]
-        res = super(node_database, self)._child_get(cr, name=name, parent_id=parent_id, domain=domain2)
-        where = [('parent_id','=',parent_id)]
-        domain2 = domain + [('calendar_collection','=', True)]
-        if name:
-            where.append(('name','=',name))
-        if domain2:
-            where += domain2
+def dict_merge(*dicts):
+    """ Return a dict with all values of dicts
+    """
+    res = {}
+    for d in dicts:
+        res.update(d)
+    return res
 
-        where2 = where + [('type', '=', 'directory')]
-        ids = dirobj.search(cr, uid, where2, context=ctx)
-        for dirr in dirobj.browse(cr,uid,ids,context=ctx):
-            res.append(node_calendar_collection(dirr.name,self,self.context,dirr))
-        return res
+def dict_merge2(*dicts):
+    """ Return a dict with all values of dicts.
+        If some key appears twice and contains iterable objects, the values
+        are merged (instead of overwritten).
+    """
+    res = {}
+    for d in dicts:
+        for k in d.keys():
+            if k in res and isinstance(res[k], (list, tuple)):
+                res[k] = res[k] + d[k]
+            else:
+                res[k] = d[k]
+    return res
+
+# Assuming that we have set global properties right, we mark *all* 
+# directories as having calendar-access.
+nodes.node_dir.http_options = dict_merge2(nodes.node_dir.http_options,
+            { 'DAV': ['calendar-access',] })
 
 class node_calendar_collection(nodes.node_dir):
-    DAV_PROPS = {
-            "http://calendarserver.org/ns/" : ('getctag',),
-            }
-    DAV_M_NS = {
-           "http://calendarserver.org/ns/" : '_get_dav',
-           }
-
-    http_options = { 'DAV': ['calendar-access'] }
+    DAV_PROPS = dict_merge2(nodes.node_dir.DAV_PROPS,
+            { "http://calendarserver.org/ns/" : ('getctag',), } )
+    DAV_M_NS = dict_merge2(nodes.node_dir.DAV_M_NS,
+            { "http://calendarserver.org/ns/" : '_get_dav', } )
 
     def _file_get(self,cr, nodename=False):
         return []
@@ -96,26 +96,77 @@ class node_calendar_collection(nodes.node_dir):
         result = self.get_etag(cr)
         return str(result)
 
+class node_calendar_res_col(nodes.node_res_obj):
+    """ Calendar collection, as a dynamically created node
+    
+    This class shall be used instead of node_calendar_collection, when the
+    node is under dynamic ones.
+    """
+    DAV_PROPS = dict_merge2(nodes.node_res_obj.DAV_PROPS,
+            { "http://calendarserver.org/ns/" : ('getctag',), } )
+    DAV_M_NS = dict_merge2(nodes.node_res_obj.DAV_M_NS,
+            { "http://calendarserver.org/ns/" : '_get_dav', } )
+
+    def _file_get(self,cr, nodename=False):
+        return []
+
+    def _child_get(self, cr, name=False, parent_id=False, domain=None):
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('collection_id','=',self.dir_id)]
+        ext = False
+        if name and name.endswith('.ics'):
+            name = name[:-4]
+            ext = True
+        if name:
+            where.append(('name','=',name))
+        if not domain:
+            domain = []
+        where = where + domain
+        fil_obj = dirobj.pool.get('basic.calendar')
+        ids = fil_obj.search(cr,uid,where,context=ctx)
+        res = []
+        # TODO: shall we use any of our dynamic information??
+        for cal in fil_obj.browse(cr, uid, ids, context=ctx):
+            if (not name) or not ext:
+                res.append(node_calendar(cal.name, self, self.context, cal))
+            if (not name) or ext:
+                res.append(res_node_calendar(cal.name+'.ics', self, self.context, cal))
+            # May be both of them!
+        return res
+
+    def _get_ttag(self, cr):
+        return 'calen-dir-%d' % self.dir_id
+
+    def _get_dav_getctag(self, cr):
+        result = self.get_etag(cr)
+        return str(result)
+
 class node_calendar(nodes.node_class):
     our_type = 'collection'
     DAV_PROPS = {
-            "DAV:": ('principal-collection-set'),
-            "http://cal.me.com/_namespace/" : ('user-state'),
+            "olDAV:": ('principal-collection-set',
+                    'principal-URL',
+                    'supported-report-set'),
+            # "http://cal.me.com/_namespace/" : ('user-state',),
             "http://calendarserver.org/ns/" : (
-                    'dropbox-home-URL',
-                    'notification-URL',
+                    # 'dropbox-home-URL',
+                    # 'notification-URL',
                     'getctag',),
             'http://groupdav.org/': ('resourcetype',),
             "urn:ietf:params:xml:ns:caldav" : (
                     'calendar-description',
                     'calendar-data',
-                    'calendar-home-set',
-                    'calendar-user-address-set',
-                    'schedule-inbox-URL',
-                    'schedule-outbox-URL',)}
+                    # 'calendar-home-set',
+                    # 'calendar-user-address-set',
+                    # 'schedule-inbox-URL',
+                    #'schedule-outbox-URL',
+                    )}
     DAV_M_NS = {
            "DAV:" : '_get_dav',
-           "http://cal.me.com/_namespace/": '_get_dav', 
+           # "http://cal.me.com/_namespace/": '_get_dav', 
            'http://groupdav.org/': '_get_gdav',
            "http://calendarserver.org/ns/" : '_get_dav',
            "urn:ietf:params:xml:ns:caldav" : '_get_caldav'}
@@ -136,7 +187,7 @@ class node_calendar(nodes.node_class):
         result = self._get_ttag(cr) + ':' + str(time.time())
         return str(result)
 
-    def _get_dav_dropbox_home_URL(self, cr):
+    def _get_dav_dropbox_home_URL(self, cr): #Depr
         import urllib
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -147,7 +198,7 @@ class node_calendar(nodes.node_class):
         url = urllib.quote('/%s/%s' % (cr.dbname, res))
         return url
     
-    def _get_dav_notification_URL(self, cr):
+    def _get_dav_notification_URL(self, cr): # Depr
         import urllib
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -160,8 +211,7 @@ class node_calendar(nodes.node_class):
 
     def _get_dav_user_state(self, cr):
         #TODO
-        return True
-
+        return 'online'
 
     def get_dav_resourcetype(self, cr):
         res = [ ('collection', 'DAV:'),
@@ -269,6 +319,8 @@ class node_calendar(nodes.node_class):
             fnodes = fil_obj.get_calendar_objects(cr, uid, [self.calendar_id], self,
                     domain=[('id','=',res[0])], context=ctx)
             return fnodes[0]
+        # If we reach this line, it means that we couldn't import any useful
+        # (and matching type vs. our node kind) data from the iCal content.
         return None
 
 
@@ -287,7 +339,6 @@ class node_calendar(nodes.node_class):
     def rmcol(self, cr):
         return False
 
-    
     def _get_caldav_calendar_data(self, cr):
         res = []
         for child in self.children(cr):
@@ -299,11 +350,13 @@ class node_calendar(nodes.node_class):
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
-        return calendar.description
+        try:
+            calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
+            return calendar.description or calendar.name
+        except Exception, e:
+            return None
 
     def _get_dav_principal_collection_set(self, cr):
-        import xml
         import urllib
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -311,74 +364,45 @@ class node_calendar(nodes.node_class):
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
         calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
         res = '%s/%s' %(calendar.collection_id.name, calendar.name)
-        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
-        href = doc.documentElement
-        href.tagName = 'D:href'
-        huri = doc.createTextNode(urllib.quote('/%s/%s' % (cr.dbname, res)))
-        href.appendChild(huri)
-        return href
-
-    def _get_caldav_calendar_home_set(self, cr):
-        import xml.dom.minidom
-        import urllib
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
-
-        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
-        huri = doc.createTextNode(urllib.quote('/%s/%s' % (cr.dbname, calendar.collection_id.name)))
-        href = doc.documentElement
-        href.tagName = 'D:href'
-        href.appendChild(huri)
-        return href
+        return ('href', 'DAV:', urllib.quote('/%s/%s' % (cr.dbname, res)))
 
     def _get_caldav_calendar_user_address_set(self, cr):
-        import xml.dom.minidom
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         user_obj = self.context._dirobj.pool.get('res.users')
         user = user_obj.browse(cr, uid, uid, context=ctx)
-        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
-        href = doc.documentElement
-        href.tagName = 'D:href'
-        huri = doc.createTextNode('MAILTO:' + str(user.email) or str(user.name))
-        href.appendChild(huri)
-        return href
+        return ('href', 'DAV:', 'MAILTO:' + str(user.email) or str(user.name))
 
     def _get_caldav_schedule_outbox_URL(self, cr):
         return self._get_caldav_schedule_inbox_URL(cr)
 
     def _get_caldav_schedule_inbox_URL(self, cr):
-        import xml.dom.minidom
         import urllib
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
         calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
-        res = '%s/%s' %(calendar.collection_id.name, calendar.name)
-        doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
-        href = doc.documentElement
-        href.tagName = 'D:href'
-        huri = doc.createTextNode(urllib.quote('/%s/%s' % (cr.dbname, res)))
-        href.appendChild(huri)
-        return href
+        res = '/webdav/%s/%s/%s' %(cr.dbname, calendar.collection_id.name, calendar.name)
+        
+        return ('href', 'DAV:', res)
 
+    def _get_dav_supported_report_set(self, cr):
+        return '' # TODO
 
 class res_node_calendar(nodes.node_class):
     our_type = 'file'
     DAV_PROPS = {
-            "http://calendarserver.org/ns/" : ('getctag'),
+            "http://calendarserver.org/ns/" : ('getctag',),
             "urn:ietf:params:xml:ns:caldav" : (
                     'calendar-description',
                     'calendar-data',
-                    'calendar-home-set',
-                    'calendar-user-address-set',
-                    'schedule-inbox-URL',
-                    'schedule-outbox-URL',)}
+                    # 'calendar-home-set',
+                    # 'calendar-user-address-set',
+                    #'schedule-inbox-URL',
+                    # 'schedule-outbox-URL',
+                    )}
     DAV_M_NS = {
            "http://calendarserver.org/ns/" : '_get_dav',
            "urn:ietf:params:xml:ns:caldav" : '_get_caldav'}
@@ -414,6 +438,7 @@ class res_node_calendar(nodes.node_class):
         uid = self.context.uid
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
         context = self.context.context.copy()
+        context.update(self.dctx)
         context.update({'model': self.model, 'res_id':self.res_id})
         res = calendar_obj.export_cal(cr, uid, [self.calendar_id], context=context)
         return res
@@ -426,8 +451,11 @@ class res_node_calendar(nodes.node_class):
 
     def set_data(self, cr, data, fil_obj = None):
         uid = self.context.uid
+        context = self.context.context.copy()
+        context.update(self.dctx)
+        context.update({'model': self.model, 'res_id':self.res_id})
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        res =  calendar_obj.import_cal(cr, uid, data, self.calendar_id)
+        res =  calendar_obj.import_cal(cr, uid, data, self.calendar_id, context=context)
         return res
 
     def _get_ttag(self,cr):
