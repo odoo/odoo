@@ -61,8 +61,11 @@ def get_node_context(cr, uid, context):
     return node_context(cr, uid, context)
 
 class node_context(object):
-    """ This is the root node, representing access to some particular
-        context """
+    """ This is the root node, representing access to some particular context
+    
+    A context is a set of persistent data, which may influence the structure
+    of the nodes. All other transient information during a data query should
+    be passed down with function arguments.
     cached_roots = {}
     node_file_class = None
 
@@ -92,6 +95,9 @@ class node_context(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+    
+    def get(self, name, default=None):
+        return self.context.get(name, default)
 
     def get_uri(self, cr,  uri):
         """ Although this fn passes back to doc.dir, it is needed since
@@ -272,7 +278,7 @@ class node_class(object):
         """ Return the modification time as a unique, compact string """
         return str(_str2time(self.write_date)).replace('.','')
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         """ Get a unique tag for this type/id of object.
             Must be overriden, so that each node is uniquely identified.
         """
