@@ -260,22 +260,9 @@ class node_calendar(nodes.node_class):
                     _log.debug("Unknown calendar-query element: %s", filter_child.localName)
             return res
         elif filters.localName == 'calendar-multiget':
-            names = []
-            for filter_child in filters.childNodes:
-                if filter_child.nodeType == filter_child.TEXT_NODE:
-                    continue
-                if filter_child.localName == 'href':
-                    if not filter_child.firstChild:
-                        continue
-                    uri = filter_child.firstChild.data
-                    caluri = uri.split('/')
-                    if len(caluri):
-                        caluri = caluri[-2]
-                        if caluri not in names : names.append(caluri)
-                else:
-                    _log.debug("Unknonwn multiget element: %s", filter_child.localName)
-            res = [('name','in',names)]
-            return res
+            # this is not the place to process, as it wouldn't support multi-level
+            # hrefs. So, the code is moved to document_webdav/dav_fs.py
+            pass
         else:
             _log.debug("Unknown element in REPORT: %s", filters.localName)
         return res

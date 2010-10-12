@@ -31,6 +31,7 @@ from osv import osv
 try:
     from DAV import utils
     from DAV.propfind import PROPFIND
+    from DAV.report import REPORT
 except ImportError:
     raise osv.except_osv('PyWebDAV Import Error!','Please install PyWebDAV \
 from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/')
@@ -257,3 +258,18 @@ def mk_propname_response(self,uri,propnames,doc):
 PROPFIND.mk_prop_response = mk_prop_response
 PROPFIND.mk_propname_response = mk_propname_response
 
+super_create_prop = REPORT.create_prop
+
+def create_prop(self):
+    try:
+        if (self.filter is not None) and self._depth == "0":
+            hrefs = self.filter.getElementsByTagNameNS('DAV:', 'href')
+            if hrefs:
+                self._depth = "1"
+    except Exception:
+        pass
+    return super_create_prop(self)
+
+REPORT.create_prop = create_prop
+
+#eof

@@ -309,12 +309,36 @@ class openerp_dav_handler(dav_interface):
                 domain = None
                 if filters:
                     domain = node.get_domain(cr, filters)
+                    
+                    if hasattr(filters, 'getElementsByTagNameNS'):
+                        hrefs = filters.getElementsByTagNameNS('DAV:', 'href')
+                        if hrefs:
+                            ul = self.parent.davpath + self.uri2local(uri)
+                            for hr in hrefs:
+                                turi = ''
+                                for tx in hr.childNodes:
+                                    if tx.nodeType == hr.TEXT_NODE:
+                                        turi += tx.data
+                                        
+                                if turi.startswith(ul):
+                                    result.append( turi[len(self.parent.davpath):])
+                                else:
+                                    self.parent.log_error("ignore href %s because it is not under request path", turi)
+                            return result
+                            # We don't want to continue with the children found below
+                            # Note the exceptions and that 'finally' will close the
+                            # cursor
                 for d in node.children(cr, domain):
                     self.parent.log_message('child: %s' % d.path)
                     if fp:
                         result.append( self.urijoin(dbname,fp,d.path) )
                     else:
                         result.append( self.urijoin(dbname,d.path) )
+        except DAV_Error:
+            raise
+        except Exception:
+            self.parent.log_error("cannot get_childs: "+ str(e))
+            raise
         finally:
             if cr: cr.close()
         return result
