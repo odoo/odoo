@@ -47,7 +47,7 @@ class account_move_line(osv.osv):
         return r
 
     def _to_pay_search(self, cr, uid, obj, name, args, context):
-        if not len(args):
+        if not args:
             return []
         line_obj = self.pool.get('account.move.line')
         query = line_obj._query_get(cr, uid, context={})
@@ -63,17 +63,17 @@ class account_move_line(osv.osv):
         ) %(operator)s %%s ''' % {'operator': x[1]}, args))
         sql_args = tuple(map(itemgetter(2), args))
 
-        cr.execute(('''select id
-            from account_move_line l
-            where account_id in (select id
-                from account_account
-                where type=%s and active)
-            and reconcile_id is null
-            and credit > 0
-            and ''' + where + ' and ' + query), ('payable',)+sql_args )
+        cr.execute(('''SELECT id
+            FROM account_move_line l
+            WHERE account_id IN (select id
+                FROM account_account
+                WHERE type=%s AND active)
+            AND reconcile_id IS null
+            AND credit > 0
+            AND ''' + where + ' and ' + query), ('payable',)+sql_args )
 
         res = cr.fetchall()
-        if not len(res):
+        if not res:
             return [('id','=','0')]
         return [('id','in',map(lambda x:x[0], res))]
 
@@ -110,7 +110,7 @@ class account_move_line(osv.osv):
         return line2bank
 
     _columns = {
-        'amount_to_pay' : fields.function(amount_to_pay, method=True,
+        'amount_to_pay': fields.function(amount_to_pay, method=True,
             type='float', string='Amount to pay', fnct_search=_to_pay_search),
     }
 
