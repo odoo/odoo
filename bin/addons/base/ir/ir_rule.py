@@ -138,6 +138,7 @@ class ir_rule(osv.osv):
     def domain_get(self, cr, uid, model_name, mode='read', context={}):
         dom = self._compute_domain(cr, uid, model_name, mode=mode)
         if dom:
+            print 'Domain', dom, model_name
             query = self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
             return query.where_clause, query.where_clause_params, query.tables
         return [], [], ['"'+self.pool.get(model_name)._table+'"']
