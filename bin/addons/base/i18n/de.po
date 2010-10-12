@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-09-09 17:58+0000\n"
-"Last-Translator: Anup (OpenERP) <ach@tinyerp.com>\n"
+"PO-Revision-Date: 2010-10-11 17:20+0000\n"
+"Last-Translator: Ferdinand @ ChriCar <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-10-12 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -8062,75 +8062,76 @@ msgstr "2 Benuzter können nicht den gleichen Login Code haben!"
 #. module: base
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "Die Feldlänge kann niemals kleiner als 1 sein!"
 
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
 msgid "Shortcut for this menu already exists!"
-msgstr ""
+msgstr "Die Verknüpfung existiert bereits für dieses Menü!"
 
 #. module: base
 #: sql_constraint:ir.model.data:0
 msgid ""
 "You cannot have multiple records with the same id for the same module !"
 msgstr ""
+"Mehrere Datensätze dürfen nicht die selbe ID für dasselbe Modul besitzen!"
 
 #. module: base
 #: sql_constraint:maintenance.contract:0
 msgid "Your maintenance contract is already subscribed in the system !"
-msgstr ""
+msgstr "Ihr Wartungsvertrag wurde bereits in Ihrem System registriert!"
 
 #. module: base
 #: sql_constraint:ir.module.module:0
 #: sql_constraint:ir.module.web:0
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Der Name des Moduls muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Die Zertifikats-ID muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.partner.function:0
 msgid "The Code of the Partner Function must be unique !"
-msgstr ""
+msgstr "Der Code der Partnerfunktion muss eindeutig sein."
 
 #. module: base
 #: sql_constraint:res.partner:0
 msgid "The name of the Partner must be unique !"
-msgstr ""
+msgstr "Der Name des Partners muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr ""
+msgstr "Der Name des Landes muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
-msgstr ""
+msgstr "Der Code des Landes muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr ""
+msgstr "Der Name der Sprache muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The code of the language must be unique !"
-msgstr ""
+msgstr "Der Code  der Sprache muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr ""
+msgstr "Der Name der Gruppe muss eindeutig sein!"
 
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Constraint Error"
-msgstr ""
+msgstr "Abhängigkeitsfehler"
 
 #. module: base
 #: code:addons/osv/osv.py:0
@@ -8141,6 +8142,12 @@ msgid ""
 "reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
+"Die Aktion kann nicht fertiggestellt werden, wahrscheinlich aufgrund einer "
+"der folgenden Fehler:\n"
+"- Löschen: Sie versuchen einen Datensatz zu löschen, auf den noch andere "
+"Datensätze referenzieren\n"
+"- Neu/Aktualisierung: Ein Pflicht-Feld wurde nicht oder nicht richtig "
+"ausgefüllt"
 
 #. module: base
 #: code:addons/osv/osv.py:0
@@ -8150,36 +8157,45 @@ msgid ""
 "\n"
 "[object with reference: %s - %s]"
 msgstr ""
+"\n"
+"\n"
+"[Objekt mit Referenz: %s - %s]"
 
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Integrity Error"
-msgstr ""
+msgstr "Datenintegritäts Fehler"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:0
 #, python-format
 msgid "User Error"
-msgstr ""
+msgstr "Benutzerfehler"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:0
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
-msgstr ""
+msgstr "Basis Sprache 'en_US' kann nicht gelöscht werden !"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:0
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
 msgstr ""
+"Eine Sprache, die in einer Benutzereinstellung definiert ist, kann nicht "
+"gelöscht werden."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:0
 #, python-format
-msgid "You cannot delete the language which is Active !\nPlease de-activate the language first."
+msgid ""
+"You cannot delete the language which is Active !\n"
+"Please de-activate the language first."
 msgstr ""
+"Eine aktive Sprache kann nicht gelöscht werden !\n"
+"Bitte diese vorher deaktivieren."
 
 #~ msgid "Attached ID"
 #~ msgstr "Sie können dieses Dokument nicht lesen ! (%s)"
