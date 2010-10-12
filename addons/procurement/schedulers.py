@@ -25,6 +25,7 @@ from mx import DateTime
 from osv import osv
 import netsvc
 import pooler
+from tools.translate import _
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
