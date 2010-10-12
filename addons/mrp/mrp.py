@@ -456,7 +456,7 @@ class mrp_production(osv.osv):
         'date_planned_date': fields.function(_production_date, method=True, type='date', string='Scheduled Date'),
         'date_planned': fields.datetime('Scheduled date', required=True, select=1),
         'date_start': fields.datetime('Start Date'),
-        'date_finnished': fields.datetime('End Date'),
+        'date_finished': fields.datetime('End Date'),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan future loads on workcenters based on production plannification."),
@@ -658,7 +658,7 @@ class mrp_production(osv.osv):
         """
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
-        return self.write(cr, uid, ids, {'state': 'done', 'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def test_production_done(self, cr, uid, ids):
         """ Tests whether production is done or not.
@@ -861,7 +861,7 @@ class mrp_production(osv.osv):
             source = production.product_id.product_tmpl_id.property_stock_production.id
             data = {
                 'name':'PROD:' + production.name,
-                'date_planned': production.date_planned,
+                'date': production.date_planned,
                 'product_id': production.product_id.id,
                 'product_qty': production.product_qty,
                 'product_uom': production.product_uom.id,
@@ -883,7 +883,7 @@ class mrp_production(osv.osv):
                 if line.product_id.type in ('product', 'consu'):
                     res_dest_id = move_obj.create(cr, uid, {
                         'name':'PROD:' + production.name,
-                        'date_planned': production.date_planned,
+                        'date': production.date_planned,
                         'product_id': line.product_id.id,
                         'product_qty': line.product_qty,
                         'product_uom': line.product_uom.id,
@@ -904,7 +904,7 @@ class mrp_production(osv.osv):
                         'product_uom': line.product_uom.id,
                         'product_uos_qty': line.product_uos and line.product_uos_qty or False,
                         'product_uos': line.product_uos and line.product_uos.id or False,
-                        'date_planned': newdate,
+                        'date': newdate,
                         'move_dest_id': res_dest_id,
                         'location_id': production.location_src_id.id,
                         'location_dest_id': routing_loc or production.location_src_id.id,

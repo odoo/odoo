@@ -21,13 +21,13 @@
 
 from osv import fields, osv
 from tools.translate import _
-
+import decimal_precision as dp
 
 class stock_split_into(osv.osv_memory):
     _name = "stock.split.into"
     _description = "Split into"
     _columns = {
-        'quantity': fields.float('Quantity', digits=(16,2)),
+        'quantity': fields.float('Quantity',digits_compute=dp.get_precision('Product UOM')),
     }
     _defaults = {
         'quantity': lambda *x: 0,
@@ -41,14 +41,14 @@ class stock_split_into(osv.osv_memory):
         quantity = self.browse(cr, uid, data[0], context).quantity or 0.0
         for move in move_obj.browse(cr, uid, rec_id):
             quantity_rest = move.product_qty - quantity
-            if move.tracking_id :
-                raise osv.except_osv(_('Error!'),  _('The current move line is already assigned to a pack, please remove it first if you really want to change it ' \
-                                    'for this product: "%s" (id: %d)') % \
-                                    (move.product_id.name, move.product_id.id,))                  
+            #if move.tracking_id :
+            #    raise osv.except_osv(_('Error!'),  _('The current move line is already assigned to a pack, please remove it first if you really want to change it ' \
+            #                        'for this product: "%s" (id: %d)') % \
+            #                        (move.product_id.name, move.product_id.id,))
             if quantity > move.product_qty:
                 raise osv.except_osv(_('Error!'),  _('Total quantity after split exceeds the quantity to split ' \
                                     'for this product: "%s" (id: %d)') % \
-                                    (move.product_id.name, move.product_id.id,))              
+                                    (move.product_id.name, move.product_id.id,))
             if quantity > 0:
                 move_obj.setlast_tracking(cr, uid, [move.id], context=context)
                 move_obj.write(cr, uid, [move.id], {
@@ -63,12 +63,12 @@ class stock_split_into(osv.osv_memory):
                     move_obj.write(cr, uid, [move.id], {'tracking_id': tracking_id})
                 else:    
                     default_val = {
-                    'product_qty': quantity_rest,
-                    'product_uos_qty': quantity_rest,
-                    'tracking_id': tracking_id,
-                    'state': move.state,
-                    'product_uos': move.product_uom.id
-                }
+                        'product_qty': quantity_rest,
+                        'product_uos_qty': quantity_rest,
+                        'tracking_id': tracking_id,
+                        'state': move.state,
+                        'product_uos': move.product_uom.id
+                    }
                     move_obj.copy(cr, uid, move.id, default_val)
         return {}
 stock_split_into()

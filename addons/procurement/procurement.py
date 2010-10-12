@@ -157,34 +157,19 @@ class procurement_order(osv.osv):
         """ Checks product type.
         @return: True or False
         """
-        for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.type in ('product', 'consu'):
-                return True
-        return False
+        return all(procurement.product_id.type in ('product', 'consu') for procurement in self.browse(cr, uid, ids))
 
     def check_move_cancel(self, cr, uid, ids, context={}):
         """ Checks if move is cancelled or not.
         @return: True or False.
         """
-        res = True
-        ok = False
-        for procurement in self.browse(cr, uid, ids, context):
-            if procurement.move_id:
-                ok = True
-                if not procurement.move_id.state == 'cancel':
-                    res = False
-        return res and ok
+        return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids))
 
     def check_move_done(self, cr, uid, ids, context={}):
         """ Checks if move is done or not.
         @return: True or False.
         """
-        res = True
-        for proc in self.browse(cr, uid, ids, context):
-            if proc.move_id:
-                if not proc.move_id.state == 'done':
-                    res = False
-        return res
+        return all(procurement.move_id.state == 'done' for procurement in self.browse(cr, uid, ids))
 
     #
     # This method may be overrided by objects that override procurement.order
@@ -337,15 +322,16 @@ class procurement_order(osv.osv):
                     if procurement.procure_method == 'make_to_order':
                         source = procurement.product_id.product_tmpl_id.property_stock_procurement.id
                     id = move_obj.create(cr, uid, {
-                        'name': 'PROC:' + procurement.name,
+                        'name': procurement.name,
                         'location_id': source,
                         'location_dest_id': procurement.location_id.id,
                         'product_id': procurement.product_id.id,
                         'product_qty': procurement.product_qty,
                         'product_uom': procurement.product_uom.id,
-                        'date_planned': procurement.date_planned,
+                        'date_expected': procurement.date_planned,
                         'state': 'draft',
                         'company_id': procurement.company_id.id,
+                        'auto_validate': True,
                     })
                     move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
@@ -388,10 +374,6 @@ class procurement_order(osv.osv):
                             "Not enough stock and no minimum orderpoint rule defined.") % \
                             procurement.name
                     self.log(cr, uid, procurement.id, message)
-            if procurement.state=='exception' and procurement.message=='':
-                cr.execute('update procurement_order set message=%s where id=%s',
-                        (_('Not enough stock '), procurement.id) )
-
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):
@@ -439,7 +421,7 @@ class procurement_order(osv.osv):
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
         return True
 
-    def action_check_finnished(self, cr, uid, ids):
+    def action_check_finished(self, cr, uid, ids):
         return self.check_move_done(cr, uid, ids)
 
     def action_check(self, cr, uid, ids):
@@ -492,9 +474,9 @@ procurement_order()
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
 
-    def test_finnished(self, cursor, user, ids):
+    def test_finished(self, cursor, user, ids):
         wf_service = netsvc.LocalService("workflow")
-        res = super(StockPicking, self).test_finnished(cursor, user, ids)
+        res = super(StockPicking, self).test_finished(cursor, user, ids)
         for picking in self.browse(cursor, user, ids):
             for move in picking.move_lines:
                 if move.state == 'done' and move.procurements:

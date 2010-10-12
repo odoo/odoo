@@ -18,13 +18,8 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import tools
-import ir
-import pooler
+from osv import osv
 import netsvc
-from mx import DateTime
-import time
 from tools.translate import _
 
 class procurement_order(osv.osv):
@@ -32,7 +27,6 @@ class procurement_order(osv.osv):
     def check_buy(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids):
             for line in procurement.product_id.flow_pull_ids:
-                
                 if line.location_id==procurement.location_id:
                     return line.type_proc=='buy'
         return super(procurement_order, self).check_buy(cr, uid, ids)
@@ -56,7 +50,7 @@ class procurement_order(osv.osv):
     def action_move_create(self, cr, uid, ids,context=None):
         proc_obj = self.pool.get('procurement.order')
         move_obj = self.pool.get('stock.move')
-        location_obj = self.pool.get('stock.location')
+        picking_obj=self.pool.get('stock.picking')
         wf_service = netsvc.LocalService("workflow")
         for proc in proc_obj.browse(cr, uid, ids, context=context):
             line = None
@@ -65,7 +59,7 @@ class procurement_order(osv.osv):
                     break
             assert line, 'Line can not be False if we are on this state of the workflow'
             origin = (proc.origin or proc.name or '').split(':')[0] +':'+line.name
-            picking_id = self.pool.get('stock.picking').create(cr, uid, {
+            picking_id =picking_obj.create(cr, uid, {
                 'origin': origin,
                 'company_id': line.company_id and line.company_id.id or False,
                 'type': line.picking_type,
@@ -75,12 +69,12 @@ class procurement_order(osv.osv):
                 'note': line.name, # TODO: note on procurement ?
                 'invoice_state': line.invoice_state,
             })
-            move_id = self.pool.get('stock.move').create(cr, uid, {
+            move_id =move_obj.create(cr, uid, {
                 'name': line.name,
                 'picking_id': picking_id,
                 'company_id':  line.company_id and line.company_id.id or False,
                 'product_id': proc.product_id.id,
-                'date_planned': proc.date_planned,
+                'date': proc.date_planned,
                 'product_qty': proc.product_qty,
                 'product_uom': proc.product_uom.id,
                 'product_uos_qty': (proc.product_uos and proc.product_uos_qty)\
@@ -97,10 +91,10 @@ class procurement_order(osv.osv):
                 'note': line.name, # TODO: same as above
             })
             if proc.move_id and proc.move_id.state in ('confirmed'):
-                self.pool.get('stock.move').write(cr,uid, [proc.move_id.id],  {
+                move_obj.write(cr,uid, [proc.move_id.id],  {
                     'state':'waiting'
                 }, context=context)
-            proc_id = self.pool.get('procurement.order').create(cr, uid, {
+            proc_id = proc_obj.create(cr, uid, {
                 'name': line.name,
                 'origin': origin,
                 'company_id':  line.company_id and line.company_id.id or False,
@@ -120,7 +114,7 @@ class procurement_order(osv.osv):
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
             if proc.move_id:
-                self.pool.get('stock.move').write(cr, uid, [proc.move_id.id],
+                move_obj.write(cr, uid, [proc.move_id.id],
                     {'location_id':proc.location_id.id})
 
             self.write(cr, uid, [proc.id], {'state':'running','message':_('Moved from other location')})

@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import osv
 from osv import fields
 
@@ -32,11 +31,11 @@ class account_voucher_unreconcile(osv.osv_memory):
     }
     
     _defaults = {
-        'remove': lambda *a: True,
+        'remove': True,
     }
     
     def trans_unrec(self, cr, uid, ids, context=None):
-        res = self.browse(cr, uid, ids[0])
+#        res = self.browse(cr, uid, ids[0])
         if context is None:
             context = {}
         voucher_pool = self.pool.get('account.voucher')

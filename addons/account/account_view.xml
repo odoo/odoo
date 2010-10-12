@@ -129,7 +129,7 @@
             <field name="arch" type="xml">
                 <search string="Search Period">
                     <group>
-                        <filter string="Draft" name="draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="To Close" name="draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="code"/>
@@ -1640,7 +1640,7 @@
                     <filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
                     <separator orientation="vertical"/>
                       <field name="name"/>
-                      <field name="journal_id"/>
+                      <field name="journal_id" widget="selection"/>
                       <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
@@ -2348,7 +2348,7 @@
                 <group string="res_config_contents" position="replace">
                   <field name="company_id" widget="selection"/>
                   <field name ="code_digits" />
-                  <field name="chart_template_id"/>
+                  <field name="chart_template_id" widget="selection"/>
                   <field name ="seq_journal" />
                   <field colspan="4" mode="tree" name="bank_accounts_id"
                          nolabel="1" widget="one2many_list">
@@ -2590,7 +2590,7 @@
             </field>
          </record>
         <record id="action_view_bank_statement_tree" model="ir.actions.act_window">
-            <field name="name">Cash Register</field>
+            <field name="name">Cash Registers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>

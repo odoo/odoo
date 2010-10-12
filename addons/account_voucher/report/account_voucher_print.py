@@ -35,10 +35,10 @@ class report_voucher_print(report_sxw.rml_parse):
         })
 
     def convert(self, amount, cur):
-        amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur);
+        amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur)
         return amt_en
 
-    def get_lines(self,voucher):
+    def get_lines(self, voucher):
         result = []
         if voucher.type in ('payment','receipt'):
             type = voucher.line_ids and voucher.line_ids[0].type or False

@@ -149,7 +149,7 @@
               <td>
                 <para style="terp_default_9">[[ repeatIn(o.dest_address_id and [o.dest_address_id] or [],'addr') ]]</para>
                 <para style="terp_default_Bold_9">Shipping address :</para>
-                <para style="terp_default_9">[[ addr.partner_id.title or '' ]] [[ addr.partner_id.name ]]</para>
+                <para style="terp_default_9">[[ addr.partner_id.title.name or '' ]] [[ addr.partner_id.name ]]</para>
                 <para style="terp_default_9">[[ addr.street ]]</para>
                 <para style="terp_default_9">[[ addr.street2 or removeParentNode('para') ]]</para>
                 <para style="terp_default_9">[[ addr.zip or '' ]] [[ addr.city or '' ]]</para>
@@ -168,7 +168,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ o.partner_id.title.name or '' ]] [[ o.partner_id.name ]]</para>
           <para style="terp_default_9">[[ o.partner_address_id.street ]]</para>
           <para style="terp_default_9">[[ o.partner_address_id.street2 or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[ o.partner_address_id.zip or '' ]] [[ o.partner_address_id.city or '' ]]</para>
@@ -232,7 +232,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="179.0,82.0,73.0,64.0,56.0,79.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
+    <blockTable colWidths="179.0,83.0,73.0,64.0,56.0,79.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -250,7 +250,7 @@
           <para style="terp_tblheader_Details_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Net Price([[ o.pricelist_id.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Right">Net Price</para>
         </td>
       </tr>
     </blockTable>
@@ -309,7 +309,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="391.0,55.0,88.0" style="Table_All_Total_Detail">
+    <blockTable colWidths="391.0,55.0,89.0" style="Table_All_Total_Detail">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -333,7 +333,7 @@
           <para style="terp_default_9">Taxes :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax, digits=get_digits(dp='Purchase Price')) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
       <tr>

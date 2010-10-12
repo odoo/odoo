@@ -60,10 +60,9 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace">
-                    <label string="Cost Price:" align="1.0" colspan="1"/>
-                    <group col="2" colspan="1">
-                        <field name="standard_price" nolabel="1" attrs="{'readonly':[('valuation','=','real_time')]}"/>
-                        <button name="%(action_view_change_standard_price)d" string="Update" type="action" icon="gtk-execute" attrs="{'invisible':[('valuation','=','manual_periodic')]}"/>
+                    <group col="4" colspan="2">
+                        <field name="standard_price" readonly="True"/>
+                        <button name="%(action_view_change_standard_price)d" string="Change Price" type="action" icon="gtk-execute"/>
                     </group>
                 </field>
             </field>
@@ -76,10 +75,21 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="priority">26</field>
             <field name="arch" type="xml">
-                <field name="property_account_expense" position="after">
-                    <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended" attrs="{'invisible':[('valuation','=','manual_periodic')]}"/>
-                    <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended" attrs="{'invisible':[('valuation','=','manual_periodic')]}"/>
-                </field>
+                <xpath expr="/form/notebook/page/group[@name='properties']" position="before">
+                    <group groups="base.group_extended">
+                        <separator string="Inventory Valuation" colspan="4"/>
+                        <group colspan="2" col="2">
+                            <field name="valuation"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="property_stock_account_input" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
+                            <field name="property_stock_account_output" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
+                        </group>
+                    </group>
+                    <newline/>
+                </xpath>
             </field>
         </record>
 
@@ -122,17 +132,17 @@
             </field>
         </record>
 
-        <record id="view_product_valuation_form" model="ir.ui.view">
+<!--        <record id="view_product_valuation_form" model="ir.ui.view">
             <field name="name">product.valuation.stock.form.inherit</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="cost_method" position="after">
-                    <field name="valuation" groups="base.group_extended"/>
+                    <field name="valuation"/>
                 </field>
             </field>
-        </record>
+        </record>-->
 
     </data>
 </openerp>
