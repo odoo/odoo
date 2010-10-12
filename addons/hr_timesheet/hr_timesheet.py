@@ -33,6 +33,31 @@ class hr_employee(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', help="Specifies employee's designation as a product with type 'service'."),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal')
     }
+    
+    def _getAnalyticJournal(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        id = self.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
+        if id:
+            journal = self.browse(cr, uid, id[0], context=context)
+            if journal.journal_id:
+                return journal.journal_id.id
+        return False
+    
+    def _getEmployeeProduct(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        id = self.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
+        if id:
+            prod = self.browse(cr, uid, id[0], context=context)
+            if prod.product_id:
+                return prod.product_id.id
+        return False
+        
+    _defaults = {
+        'journal_id' : _getAnalyticJournal,
+        'product_id' : _getEmployeeProduct    
+    }
 hr_employee()
 
 

@@ -10,13 +10,17 @@
             <form string="Invoice analytic lines">
                 <notebook colspan="4">
                     <page string="Billing Data">
-                        <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
-                        <field name="date"/>
-                        <field name="time"/>
-                        <field name="name"/>
-                        <field name="price"/>
-                        <separator string="Force to use a specific product" colspan="4"/>
-                        <field name="product"/>
+	                   <group col="4" colspan="4">
+	                       <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
+		                        <field name="date"/>
+		                        <field name="time"/>
+		                        <field name="name"/>
+		                        <field name="price"/>
+	                       </group>
+	                    <group col="2" colspan="4" groups="base.group_extended">
+	                        <separator string="Force to use a specific product" colspan="4" />
+	                        <field name="product"/>
+	                    </group>
                     </page>
                     <page string="Filter on Accounts" groups="base.group_extended">
                         <separator string="Choose accounts you want to invoice" colspan="4"/>
@@ -26,7 +30,7 @@
                 <separator colspan="4"/>
                 <group col="2" colspan="4">
                     <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="do_create" string="Create Invoices" colspan="1" type="object" icon="gtk-execute"/>
+                    <button name="do_create" string="Create Invoices" colspan="1" type="object" icon="terp-gtk-go-back-rtl"/>
                 </group>
             </form>
             </field>
