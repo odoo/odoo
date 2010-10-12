@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
+import time
+
 from crm import crm
 from osv import fields, osv
 from tools.translate import _
-import time
 import tools
 import decimal_precision as dp
 
@@ -34,6 +35,7 @@ class event_type(osv.osv):
     _columns = {
         'name': fields.char('Event type', size=64, required=True),
     }
+
 event_type()
 
 class event_event(osv.osv):
@@ -715,4 +717,3 @@ class event_registration_badge(osv.osv):
 event_registration_badge()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
