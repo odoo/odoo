@@ -38,8 +38,6 @@ class document_davdir(osv.osv):
         if dbro.type == 'directory':
             return nodes.node_dir
         elif dbro.type == 'ressource':
-            assert not dbro.ressource_parent_type_id, \
-                "resource and parent_id at #%d: %r" % (dbro.id, dbro.ressource_parent_type_id)
             return nodes.node_res_dir
         else:
             raise ValueError("dir node for %s type", dbro.type)

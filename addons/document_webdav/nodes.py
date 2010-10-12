@@ -157,5 +157,46 @@ class node_database(nodes.node_database):
         return self._get_dav_eprop_hlpr(cr, nodes.node_dir, ns, prop,
                 'document.webdav.dir.property', 'dir_id', False)
 
+class node_res_obj(node_acl_mixin, nodes.node_res_obj):
+    DAV_PROPS = { "DAV:": ('owner', 'group', 
+                            'supported-privilege-set', 
+                            'current-user-privilege-set'), 
+                }
+    DAV_M_NS = { "DAV:" : '_get_dav',}
+    http_options = { 'DAV': ['access-control',] }
+
+    def get_dav_resourcetype(self, cr):
+        return ('collection', 'DAV:')
+
+    def get_dav_props(self, cr):
+        return self._get_dav_props_hlpr(cr, nodes.node_res_obj, 
+                'document.webdav.dir.property', 'dir_id', self.dir_id)
+
+    def get_dav_eprop(self, cr, ns, prop):
+        return self._get_dav_eprop_hlpr(cr, ns, prop, nodes.node_res_obj,
+                'document.webdav.dir.property', 'dir_id', self.dir_id)
+
+
+class node_res_dir(node_acl_mixin, nodes.node_res_dir):
+    DAV_PROPS = { "DAV:": ('owner', 'group', 
+                            'supported-privilege-set', 
+                            'current-user-privilege-set'), 
+                }
+    DAV_M_NS = { "DAV:" : '_get_dav',}
+    http_options = { 'DAV': ['access-control',] }
+    res_obj_class = node_res_obj
+
+    def get_dav_resourcetype(self, cr):
+        return ('collection', 'DAV:')
+
+    def get_dav_props(self, cr):
+        return self._get_dav_props_hlpr(cr, nodes.node_res_dir, 
+                'document.webdav.dir.property', 'dir_id', self.dir_id)
+
+    def get_dav_eprop(self, cr, ns, prop):
+        return self._get_dav_eprop_hlpr(cr, ns, prop, nodes.node_res_dir,
+                'document.webdav.dir.property', 'dir_id', self.dir_id)
+
+
 
 #eof
