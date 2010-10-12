@@ -356,11 +356,13 @@ class users(osv.osv):
         if ids == [uid]:
             for key in values.keys():
                 if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
+                    print 'Not Found', key
                     break
             else:
-                # check that user is not selecting an invalid company_id
-                if 'company_id' not in values or (values.get('company_id') in self.read(cr, uid, uid, ['company_ids'], context=context)['company_ids']):
-                    uid = 1 # safe fields only, so we write as super-user to bypass access rights
+                if 'company_id' in values:
+                    if not (values['company_id'] in self.read(cr, uid, uid, ['company_ids'], context=context)['company_ids']):
+                        del values['company_id']
+                uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
         res = super(users, self).write(cr, uid, ids, values, context=context)
 
