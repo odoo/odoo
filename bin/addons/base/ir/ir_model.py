@@ -235,7 +235,6 @@ class ir_model_access(osv.osv):
     }
 
     def check_groups(self, cr, uid, group):
-        res = False
         grouparr  = group.split('.')
         if not grouparr:
             return False
@@ -427,13 +426,11 @@ class ir_model_data(osv.osv):
         return id
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
-        warning = True
         model_obj = self.pool.get(model)
         if not context:
             context = {}
         if xml_id and ('.' in xml_id):
             assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
-            warning = False
             module, xml_id = xml_id.split('.')
         if (not xml_id) and (not self.doinit):
             return False
@@ -520,7 +517,6 @@ class ir_model_data(osv.osv):
         return True
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
-        obj = self.pool.get('ir.values')
         if type(models[0])==type([]) or type(models[0])==type(()):
             model,res_id = models[0]
         else:
