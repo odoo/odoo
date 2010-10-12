@@ -216,6 +216,7 @@ class assertion_report(object):
         return res
 
 class xml_import(object):
+    __logger = logging.getLogger('tools.convert.xml_import')
     @staticmethod
     def nodeattr2bool(node, attr, default=False):
         if not node.get(attr):
@@ -847,7 +848,10 @@ form: module.record_id""" % (xml_id,)
                         try:
                             self._tags[rec.tag](self.cr, rec, n)
                         except:
-                            self.logger.notifyChannel("init", netsvc.LOG_ERROR, '\n'+etree.tostring(rec))
+                            self.__logger.error('Parse error in %s:%d: \n%s',
+                                                rec.getroottree().docinfo.URL,
+                                                rec.sourceline,
+                                                etree.tostring(rec).strip())
                             self.cr.rollback()
                             raise
         return True
