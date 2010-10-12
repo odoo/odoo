@@ -22,6 +22,8 @@
 
 import xml.dom.minidom
 domimpl = xml.dom.minidom.getDOMImplementation()
+from xml.dom.minicompat import StringTypes
+
 import urlparse
 import urllib
 from osv import osv
@@ -34,6 +36,21 @@ except ImportError:
 from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/')
 
 import tools
+
+class Text2(xml.dom.minidom.Text):
+    def writexml(self, writer, indent="", addindent="", newl=""):
+        data = "%s%s%s" % (indent, self.data, newl)
+        data = data.replace("&", "&amp;").replace("<", "&lt;")
+        data = data.replace(">", "&gt;")
+        writer.write(data)
+
+def createText2Node(doc, data):
+    if not isinstance(data, StringTypes):
+        raise TypeError, "node contents must be a string"
+    t = Text2()
+    t.data = data
+    t.ownerDocument = doc
+    return t
 
 
 super_mk_prop_response = PROPFIND.mk_prop_response
@@ -116,7 +133,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
                     # ( 'elem', 'ns:', [('sub-elem1', 'ns1'), ...]
                     _prop_elem_child(ve, v[1], v[2], ns_prefix)
                 else:
-                    vt =doc.createTextNode(tools.ustr(v[2]))
+                    vt=createText2Node(doc,tools.ustr(v[2]))
                     ve.appendChild(vt)
             if len(v) > 3 and v[3]:
                 assert isinstance(v[3], dict)
@@ -124,7 +141,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
                     ve.setAttribute(ak, av)
             pnode.appendChild(ve)
         else:
-            ve=doc.createTextNode(tools.ustr(v))
+            ve=createText2Node(doc, tools.ustr(v))
             pnode.appendChild(ve)
 
     # write href information
@@ -143,6 +160,10 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     ps=doc.createElement("D:propstat")
     if good_props:
         re.appendChild(ps)
+    s=doc.createElement("D:status")
+    t=doc.createTextNode("HTTP/1.1 200 OK")
+    s.appendChild(t)
+    ps.appendChild(s)
 
     gp=doc.createElement("D:prop")
     for ns in good_props.keys():
@@ -156,10 +177,6 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
             _prop_child(gp, ns, p, v)
 
     ps.appendChild(gp)
-    s=doc.createElement("D:status")
-    t=doc.createTextNode("HTTP/1.1 200 OK")
-    s.appendChild(t)
-    ps.appendChild(s)
     re.appendChild(ps)
 
     # now write the errors!
@@ -169,6 +186,10 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
         for ecode in bad_props.keys():
             ps=doc.createElement("D:propstat")
             re.appendChild(ps)
+            s=doc.createElement("D:status")
+            t=doc.createTextNode(utils.gen_estring(ecode))
+            s.appendChild(t)
+            ps.appendChild(s)
             bp=doc.createElement("D:prop")
             ps.appendChild(bp)
 
@@ -182,10 +203,6 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
                 pe=doc.createElement(ns_prefix+str(p))
                 bp.appendChild(pe)
 
-            s=doc.createElement("D:status")
-            t=doc.createTextNode(utils.gen_estring(ecode))
-            s.appendChild(t)
-            ps.appendChild(s)
             re.appendChild(ps)
 
     # return the new response element
