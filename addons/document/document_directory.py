@@ -126,6 +126,10 @@ class document_directory(osv.osv):
     def get_full_path(self, cr, uid, dir_id, context=None):
         """ Return the full path to this directory, in a list, root first
         """
+        if isinstance(dir_id, (tuple, list)):
+            assert len(dir_id) == 1
+            dir_id = dir_id[0]
+
         def _parent(dir_id, path):
             parent=self.browse(cr, uid, dir_id)
             if parent.parent_id and not parent.ressource_parent_type_id:
