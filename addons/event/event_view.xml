@@ -319,8 +319,8 @@
                         <field name="event_id" on_change="onchange_event(event_id, partner_invoice_id)" domain="[('state','in',('draft','confirm'))]"/>
                         <field name="create_date" string="Registration Date"/>
                         <field name="name"/>
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
-                        <field name="user_id"/>
+                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
+                        <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}" />
                         <field name="tobe_invoiced"/>
                     </group>
                     <notebook colspan="4">
