@@ -558,7 +558,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page[@string='Extra Info']/group/field[@name='sequence']" position="after">
-                    <field name="sprint_id" domain="[('state', 'in', ['draft', 'open'])]" />
+                    <field name="sprint_id" domain="[('state', 'in', ['draft', 'open'])]" readonly="1"/>
                 </xpath>
             </field>
         </record>
