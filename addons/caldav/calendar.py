@@ -30,6 +30,7 @@ import pytz
 import re
 import tools
 import time
+import logging
 from caldav_node import res_node_calendar
 
 try:
@@ -232,6 +233,7 @@ def map_data(cr, uid, obj, context=None):
 
 class CalDAV(object):
     __attribute__ = {}
+    _logger = logging.getLogger('document.caldav')
 
     def ical_set(self, name, value, type):
         """ set calendar Attribute
@@ -294,6 +296,7 @@ class CalDAV(object):
 
         att_data = []
         exdates = []
+        _server_tzinfo = pytz.timezone(tools.get_server_timezone())
 
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
@@ -668,6 +671,15 @@ class Calendar(CalDAV, osv.osv):
                 val = self.parse_ics(cr, uid, child, cal_children=cal_children, context=context)
                 vals.append(val)
                 objs.append(cal_children[child.name.lower()])
+            elif child.name.upper() == 'CALSCALE':
+                if child.value.upper() != 'GREGORIAN':
+                    self._logger.warning('How do I handle %s calendars?',child.value)
+            elif child.name.upper() in ('PRODID', 'VERSION'):
+                pass
+            elif child.name.upper().startswith('X-'):
+                self._logger.debug("skipping custom node %s", child.name)
+            else:
+                self._logger.debug("skipping node %s", child.name)
         
         res = []
         for obj_name in list(set(objs)):
