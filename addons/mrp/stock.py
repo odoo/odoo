@@ -19,13 +19,9 @@
 #
 ##############################################################################
 
-from mx import DateTime
 from osv import fields
 from osv import osv
-from tools.translate import _
-import ir
 import netsvc
-import time
 
 
 class StockMove(osv.osv):

@@ -64,7 +64,6 @@ class procurement_order(osv.osv):
         report_total = 0
         report_except = 0
         report_later = 0
-        allids = self.search(cr, uid, [])
         while True:
             cr.execute('select id from procurement_order where state=%s and procure_method=%s order by priority,date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
             ids = map(lambda x: x[0], cr.fetchall())
@@ -226,12 +225,6 @@ class procurement_order(osv.osv):
                         qty += op.qty_multiple - reste
                     newdate = DateTime.now() + DateTime.RelativeDateTime(
                             days = int(op.product_id.seller_delay))
-                    if op.product_id.supply_method == 'buy':
-                        location_id = op.warehouse_id.lot_input_id
-                    elif op.product_id.supply_method == 'produce':
-                        location_id = op.warehouse_id.lot_stock_id
-                    else:
-                        continue
                     if qty <= 0:
                         continue
                     if op.product_id.type not in ('consu'):
