@@ -84,9 +84,10 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         addr, port = self.server.server_name, self.server.server_port
         server_proto = getattr(self.server,'proto', 'http').lower()
         try:
-            addr, port = self.request.getsockname()
+            if hasattr(self.request, 'getsockname'):
+                addr, port = self.request.getsockname()
         except Exception, e:
-            self.log_error("Cannot calculate own address:" , e)
+            self.log_error("Cannot calculate own address: %s" , e)
         # Too early here to use self.headers
         self.baseuri = "%s://%s:%d/"% (server_proto, addr, port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
