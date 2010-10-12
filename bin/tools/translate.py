@@ -605,7 +605,7 @@ def trans_generate(lang, modules, dbname=None):
             if fname and obj.report_type in ('pdf', 'xsl'):
                 try:
                     d = etree.parse(tools.file_open(fname))
-                    for t in parse_func(d):
+                    for t in parse_func(d.iter()):
                         push_translation(module, report_type, name, 0, t)
                 except (IOError, etree.XMLSyntaxError):
                     logging.getLogger("i18n").exception("couldn't export translation for report %s %s %s", name, report_type, fname)
