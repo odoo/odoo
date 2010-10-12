@@ -25,6 +25,11 @@ import nodes
 class document_davdir(osv.osv):
     _inherit = 'document.directory'
 
+    _columns = {
+        # Placed here just for a reference
+        'dav_prop_ids': fields.one2many('document.webdav.dir.property', 'dir_id', 'DAV properties'),
+        }
+
     def get_node_class(self, cr, uid, ids, dbro=None, context=None):
         # Note: in this function, nodes come from document_webdav/nodes.py !
         if dbro is None:
@@ -43,5 +48,40 @@ class document_davdir(osv.osv):
         nctx.node_file_class = nodes.node_file
         return
 
+    def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
+        """ try to locate the node in uri,
+            Return a tuple (node_dir, remaining_path)
+        """
+        return (nodes.node_database(context=ncontext), uri)
+
 document_davdir()
+
+class dav_dir_property(osv.osv):
+    """ Arbitrary WebDAV properties, attached to document.directories.
+    
+    Some DAV properties have to be settable at directories, depending
+    on the database directory structure.
+    
+    Example would be the principal-URL.
+    
+    There _can_ be properties without a directory, which means that they
+    globally apply to all the directories (aka. collections) of the
+    present database.
+    """
+    _name = 'document.webdav.dir.property'
+    
+    _columns = {
+        'dir_id': fields.many2one('document.directory', 'Directory', required=False, select=1),
+        'namespace': fields.char('Namespace', size=127, required=True),
+        'name': fields.char('Name', size=64, required=True),
+        'value': fields.text('Value'),
+        'do_subst': fields.boolean('Substitute', required=True),
+        }
+        
+    _defaults = {
+        'do_subst': False,
+        }
+        
+dav_dir_property()
+
 #eof

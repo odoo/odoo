@@ -30,7 +30,7 @@
 
 {
 	"name" : "WebDAV server for Document Management",
-	"version" : "2.0",
+	"version" : "2.1",
 	"author" : "OpenERP SA",
 	"category" : "Generic Modules/Others",
 	"website": "http://www.openerp.com",
@@ -41,7 +41,7 @@
 """,
 	"depends" : ["base", "document"],
 	"init_xml" : [],
-	"update_xml" : [],
+	"update_xml" : ['security/ir.model.access.csv', "webdav_view.xml", ],
 	"demo_xml" : [],
 	"active": False,
 	"installable": True

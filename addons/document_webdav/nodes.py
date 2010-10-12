@@ -21,6 +21,8 @@
 
 
 from document import nodes
+from tools.safe_eval import safe_eval as eval
+import urllib
 
 class node_acl_mixin(object):
     def _get_dav_owner(self, cr):
@@ -35,13 +37,93 @@ class node_acl_mixin(object):
     def _get_dav_current_user_privilege_set(self, cr):
         return '' # TODO
 
+    def _get_dav_props_hlpr(self, cr, par_class, prop_model, 
+                            prop_ref_field, res_id):
+        """ Helper for dav properties, usable in subclasses
+        
+        @param par_class The parent class
+        @param prop_model The name of the orm model holding the properties
+        @param prop_ref_field The name of the field at prop_model pointing to us
+        @param res_id the id of self in the corresponing orm table, that should
+                        match prop_model.prop_ref_field
+        """
+        ret = par_class.get_dav_props(self, cr)
+        if prop_model:
+            propobj = self.context._dirobj.pool.get(prop_model)
+            uid = self.context.uid
+            ctx = self.context.context.copy()
+            ctx.update(self.dctx)
+            sdomain = [(prop_ref_field, '=', False),]
+            if res_id:
+                sdomain = ['|', (prop_ref_field, '=', res_id)] + sdomain
+            prop_ids = propobj.search(cr, uid, sdomain, context=ctx)
+            if prop_ids:
+                ret = ret.copy()
+                for pbro in propobj.browse(cr, uid, prop_ids, context=ctx):
+                    ret[pbro.namespace] = ret.get(pbro.namespace, ()) + \
+                        (pbro.name,)
+                    # Note that we cannot have properties to conditionally appear
+                    # on the context, yet.
+                
+        return ret
+
+    def _get_dav_eprop_hlpr(self, cr, ns, prop,
+                            par_class, prop_model, 
+                            prop_ref_field, res_id):
+        """ Helper for get dav eprop, usable in subclasses
+        
+        @param namespace the one to search for
+        @param name Name to search for
+        @param par_class The parent class
+        @param prop_model The name of the orm model holding the properties
+        @param prop_ref_field The name of the field at prop_model pointing to us
+        @param res_id the id of self in the corresponing orm table, that should
+                        match prop_model.prop_ref_field
+        """
+        ret = par_class.get_dav_eprop(self, cr, ns, prop)
+        if ret is not None:
+            return ret
+        if prop_model:
+            propobj = self.context._dirobj.pool.get(prop_model)
+            uid = self.context.uid
+            ctx = self.context.context.copy()
+            ctx.update(self.dctx)
+            sdomain = [(prop_ref_field, '=', False),('namespace', '=', ns), ('name','=', prop)]
+            if res_id:
+                sdomain = ['|', (prop_ref_field, '=', res_id)] + sdomain
+            prop_ids = propobj.search(cr, uid, sdomain, context=ctx)
+            if prop_ids:
+                pbro = propobj.browse(cr, uid, prop_ids[0], context=ctx)
+                val = pbro.value
+                if pbro.do_subst:
+                    if val.startswith("('") and val.endswith(")"):
+                        glbls = { 'urlquote': urllib.quote, }
+                        val = eval(val, glbls, ctx)
+                    else:
+                        val = val % ctx
+                return val
+        return None
+
 class node_dir(node_acl_mixin, nodes.node_dir):
+    """ override node_dir and add DAV functionality
+    """
     DAV_PROPS = { "DAV:": ('owner', 'group', 
                             'supported-privilege-set', 
                             'current-user-privilege-set'), 
                 }
     DAV_M_NS = { "DAV:" : '_get_dav',}
     http_options = { 'DAV': ['access-control',] }
+
+    def get_dav_resourcetype(self, cr):
+        return ('collection', 'DAV:')
+
+    def get_dav_props(self, cr):
+        return self._get_dav_props_hlpr(cr, nodes.node_dir, 
+                'document.webdav.dir.property', 'dir_id', self.dir_id)
+
+    def get_dav_eprop(self, cr, ns, prop):
+        return self._get_dav_eprop_hlpr(cr, ns, prop, nodes.node_dir,
+                'document.webdav.dir.property', 'dir_id', self.dir_id)
 
 
 class node_file(node_acl_mixin, nodes.node_file):
@@ -52,6 +134,28 @@ class node_file(node_acl_mixin, nodes.node_file):
     DAV_M_NS = { "DAV:" : '_get_dav',}
     http_options = { 'DAV': ['access-control', ] }
     pass
+
+    def get_dav_resourcetype(self, cr):
+        return ''
+
+    def get_dav_props(self, cr):
+        return self._get_dav_props_hlpr(cr, nodes.node_dir, 
+                None, 'file_id', self.file_id)
+                #'document.webdav.dir.property', 'dir_id', self.dir_id)
+
+    #def get_dav_eprop(self, cr, ns, prop):
+
+class node_database(nodes.node_database):
+    def get_dav_resourcetype(self, cr):
+        return ('collection', 'DAV:')
+
+    def get_dav_props(self, cr):
+        return self._get_dav_props_hlpr(cr, nodes.node_dir,
+                'document.webdav.dir.property', 'dir_id', False)
+
+    def get_dav_eprop(self, cr, ns, prop):
+        return self._get_dav_eprop_hlpr(cr, nodes.node_dir, ns, prop,
+                'document.webdav.dir.property', 'dir_id', False)
 
 
 #eof
