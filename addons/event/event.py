@@ -461,6 +461,8 @@ class event_registration(osv.osv):
         """
         if not context:
             context = {}
+        if type(ids) in (int, long,):
+            ids = [ids]
         data_pool = self.pool.get('ir.model.data')
         unconfirmed_ids = []
         for registration in self.browse(cr, uid, ids, context=context):
