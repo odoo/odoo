@@ -421,7 +421,7 @@ class res_node_calendar(nodes.node_class):
         self.calendar_id = hasattr(parent, 'calendar_id') and parent.calendar_id or False
         if res_obj:
             if not self.calendar_id: self.calendar_id = res_obj.id
-            pr = res_obj.perm_read()[0]
+            pr = res_obj.perm_read(context=context, details=False)[0]
             self.create_date = pr.get('create_date')
             self.write_date = pr.get('write_date') or pr.get('create_date')
             self.displayname = res_obj.name

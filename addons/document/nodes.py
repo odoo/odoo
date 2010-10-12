@@ -66,6 +66,7 @@ class node_context(object):
     A context is a set of persistent data, which may influence the structure
     of the nodes. All other transient information during a data query should
     be passed down with function arguments.
+    """
     cached_roots = {}
     node_file_class = None
 
@@ -101,7 +102,8 @@ class node_context(object):
 
     def get_uri(self, cr,  uri):
         """ Although this fn passes back to doc.dir, it is needed since
-        it is a potential caching point """
+            it is a potential caching point.
+        """
         (ndir, duri) =  self._dirobj._locate_child(cr, self.uid, self.rootdir, uri, None, self)
         while duri:
             ndir = ndir.child(cr, duri[0])
@@ -495,7 +497,10 @@ class node_dir(node_database):
         self.write_date = dirr and (dirr.write_date or dirr.create_date) or False
         self.content_length = 0
         self.unixperms = 040750
-        self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        try:
+            self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        except Exception:
+            self.uuser = 'nobody'
         self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
         self.uidperms = dirr.get_dir_permissions()
         if dctx:
@@ -692,7 +697,10 @@ class node_res_dir(node_class):
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
         self.unixperms = 040750
-        self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        try:
+            self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        except Exception:
+            self.uuser = 'nobody'
         self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
         self.uidperms = dirr.get_dir_permissions()
         self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
@@ -1003,9 +1011,9 @@ class node_res_obj(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        res_obj = dirobj.pool.get(self.context.context['res_model'])
+        res_obj = dirobj.pool.get(self.res_model)
 
-        object2 = res_obj.browse(cr, uid, self.context.context['res_id']) or False
+        object2 = res_obj.browse(cr, uid, self.res_id) or False
 
         obj = dirobj.browse(cr, uid, self.dir_id)
         if obj and (obj.type == 'ressource') and not object2:
@@ -1079,7 +1087,10 @@ class node_file(node_class):
             elif not parent.check_perms('w'):
                 self.uidperms = 4
     
-        self.uuser = (fil.user_id and fil.user_id.login) or 'nobody'
+        try:
+            self.uuser = (fil.user_id and fil.user_id.login) or 'nobody'
+        except Exception:
+            self.uuser = 'nobody'
         self.ugroup = mkdosname(fil.company_id and fil.company_id.name, default='nogroup')
 
         # This only propagates the problem to get_data. Better
