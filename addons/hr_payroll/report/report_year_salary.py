@@ -43,6 +43,9 @@ class year_salary_report(rml_parse.rml_parse):
                 cm = 0
                 cy = ly
             cm = cm +1
+        for c in range(0,(12-no_months)):
+            mnth_name.append('None')
+            self.mnths.append('None')
         return [mnth_name]
 
     def get_employee(self,form):
@@ -58,11 +61,14 @@ class year_salary_report(rml_parse.rml_parse):
             ls1.append(emp_id.name)
             tol = 0.0
             for mnth in self.mnths:
-                if len(mnth) != 7:
-                    mnth = '0' + str(mnth)
-                query = "select net from hr_payslip where employee_id = "+str(emp_id.id)+" and to_char(date,'mm-yyyy') like '%"+mnth+"%' and state = 'done' "
-                self.cr.execute(query)
-                sal = self.cr.fetchall()
+                if mnth <> 'None':
+                    if len(mnth) != 7:
+                        mnth = '0' + str(mnth)
+                    query = "select net from hr_payslip where employee_id = "+str(emp_id.id)+" and to_char(date,'mm-yyyy') like '%"+mnth+"%' and state = 'done' "
+                    self.cr.execute(query)
+                    sal = self.cr.fetchall()
+                else:
+                    sal = [(0.0,)]
                 try:
                     ls1.append(sal[0][0])
                 except:
@@ -89,7 +95,7 @@ class year_salary_report(rml_parse.rml_parse):
               self.total += item[count]
         return self.total
 
-report_sxw.report_sxw('report.year.salary', 'hr.payslip', 'hr_payroll/report/report_year_report.rml', parser=year_salary_report,header=3)
+report_sxw.report_sxw('report.year.salary', 'hr.payslip', 'hr_payroll/report/report_year_report.rml', parser=year_salary_report,header='internal landscape')
 
 
 

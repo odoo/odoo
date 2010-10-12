@@ -127,7 +127,7 @@
 -
   !python {model: stock.picking }: |
     from tools.translate import _   
-    picking_id = self.search(cr, uid, [('origin','=','TEST/TENDER/0001'),('type','=','delivery')])
+    picking_id = self.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
     if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       assert (pick.state =='confirmed'),_('Picking  is  not in confirm state.')

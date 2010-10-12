@@ -76,7 +76,6 @@
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'purchase.order',proc_ids.purchase_id.id,'purchase_confirm', cr)  
-    wf_service.trg_validate(uid, 'purchase.order',proc_ids.purchase_id.id,'purchase_approve', cr)  
 -   
   I receive the order of the supplier ASUStek from the Incoming Shipments menu.
 -   

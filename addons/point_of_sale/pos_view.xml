@@ -706,7 +706,7 @@
         </record>
 
         <menuitem name="Configuration" parent="menu_point_root"
-            id="menu_point_config_product" sequence="25" groups="base.group_system"/>
+            id="menu_point_config_product" sequence="25" groups="base.group_system,group_pos_manager"/>
 
         <record model="ir.actions.act_window" id="action_product_input">
             <field name="name">Products</field>
@@ -732,7 +732,7 @@
                     parent="menu_point_config_product"
                     action="action_product_input"
                     id="products_for_input_operations"
-                    groups="base.group_system"/>
+                    groups="base.group_system,group_pos_manager"/>
 
         <record model="ir.actions.act_window" id="action_product_output">
             <field name="name">Products</field>
@@ -758,7 +758,7 @@
                     parent="menu_point_config_product"
                     action="action_product_output"
                     id="products_for_output_operations"
-                    groups="base.group_system"/>
+                    groups="base.group_system,group_pos_manager"/>
 
         <menuitem
             name="Input Operations" parent="menu_point_of_sale"

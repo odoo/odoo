@@ -186,13 +186,14 @@
     </record>
 
 	<record id="open_view_project_vs_remaining_hours_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_project_vs_remaining_hours_tree"/>
+
             <field name="act_window_id" ref="action_project_vs_remaining_hours_graph"/>
    </record>
    <record id="open_view_project_vs_remaining_hours_graph" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
+            <field eval="1" name="sequence"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
             <field name="act_window_id" ref="action_project_vs_remaining_hours_graph"/>
@@ -240,7 +241,7 @@
         <field name="model">project.vs.hours</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Project Vs Planned and Total Hours" colors="pink:state=='draft';blue:state=='pending';black:state=='open';red:state=='cancelled';grey:state=='close';yellow:state=='template'">
+            <tree string="Project vs Planned and Total Hours" colors="pink:state=='draft';blue:state=='pending';black:state=='open';red:state=='cancelled';grey:state=='close';yellow:state=='template'">
                 <field name="project"/>
                 <field name="planned_hours"/>
                 <field name="total_hours"/>
@@ -253,7 +254,7 @@
          <field name="model">project.vs.hours</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Project Vs Planned and Total Hours" type="bar">
+             <graph string="Project vs Planned and Total Hours" type="bar">
                  <field name="project"/>
                  <field name="planned_hours" operator="+"/>
                  <field name="total_hours" operator="+"/>
@@ -262,6 +263,7 @@
     </record>
 
     <record id="action_project_vs_planned_total_hours_graph" model="ir.actions.act_window">
+
         <field name="name">Projects: Planned Vs Total hours</field>
         <field name="res_model">project.vs.hours</field>
         <field name="view_type">form</field>
@@ -277,7 +279,7 @@
             <field name="act_window_id" ref="action_project_vs_planned_total_hours_graph"/>
     </record>
     <record id="open_view_project_vs_planned_total_hours_graph" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
+            <field eval="1" name="sequence"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
             <field name="act_window_id" ref="action_project_vs_planned_total_hours_graph"/>

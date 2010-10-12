@@ -86,16 +86,16 @@
                 <form string="My Board">
                     <hpaned>
                         <child1>
-                            <action colspan="4"  name="%(action_view_task_tree)d" string="My Open Tasks" width="510"/>
-                            <action colspan="4"  name="%(action_view_delegate_task_tree)d" string="My Delegated Tasks" width="510"/>
+                            <action colspan="4"  height="100" name="%(action_view_task_tree)d" string="My Open Tasks" width="510"/>
+                            <action colspan="4"  height="100" name="%(action_view_delegate_task_tree)d" string="My Delegated Tasks" width="510"/>
                    		</child1>
                         <child2>
                         <vpaned>
                         	<child1>
-                        		<action colspan="4"  name="%(project.action_project_vs_remaining_hours_graph)d" string="Remaining Hours Per Project" />
+                        		<action colspan="4"  height="100" name="%(project.action_project_vs_planned_total_hours_graph)d" string="My Projects: Planned vs Total Hours" />
                         	</child1>
                         	<child2>
-                        		<action colspan="4"  name="%(project.action_project_vs_planned_total_hours_graph)d" string="My Projects: Planned Vs Total Hours" />
+                        		<action colspan="4"  height="100" name="%(project.action_project_vs_remaining_hours_graph)d" string="My Remaining Hours by Project" />
                         	</child2>
                         </vpaned>
                         </child2>

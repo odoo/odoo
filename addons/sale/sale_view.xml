@@ -2,7 +2,8 @@
 <openerp>
     <data>
             
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,base.group_partner_manager"/>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0"
+            groups="base.group_sale_salesman,base.group_sale_manager,base.group_system"/>
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
@@ -205,7 +206,7 @@
                                 <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-ok"/>
                                 <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-apply"/>
                                 <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
-                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="gtk-go-forward"/>
+                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="gtk-go-forward" type="object"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                 <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
@@ -375,22 +376,22 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Order Lines">
-				    <group colspan="4" col="6">
-						<field name="order_id"/>
-						<field name="product_id" readonly="1"/>
-						<field name="invoiced"/>
-						<field name="product_uom_qty" readonly="1"/>
-						<field groups="product.group_uos" name="product_uos_qty"/>
-						<field name="product_uom"/>
-						<field colspan="4" name="name" groups="base.group_extended"/>
-						<field name="company_id" groups="base.group_multi_company" readonly="1"/>
-						<field name="order_partner_id" readonly="1" invisible="1"/>
-				    </group>
+                    <group colspan="4" col="6">
+                        <field name="order_id"/>
+                        <field name="product_id" readonly="1"/>
+                        <field name="invoiced"/>
+                        <field name="product_uom_qty" readonly="1"/>
+                        <field groups="product.group_uos" name="product_uos_qty"/>
+                        <field name="product_uom"/>
+                        <field colspan="4" name="name" groups="base.group_extended"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        <field name="order_partner_id" readonly="1" invisible="1"/>
+                    </group>
                     <separator colspan="4" string="Price"/>
                     <group colspan="4" col="6">
-	                    <field name="price_unit"/>
-	                    <field name="discount"/>
-	                    <field name="price_subtotal"/>
+                        <field name="price_unit"/>
+                        <field name="discount"/>
+                        <field name="price_subtotal"/>
                     </group>
                     <separator colspan="4" string="Notes"/>
                     <field colspan="4" name="notes" nolabel="1"/>
@@ -518,7 +519,7 @@ to your configuration: from the sales order, from the pickings, etc.
         groups="base.group_extended"/>
 
         <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="5"
-		groups="base.group_extended"/>
+            groups="base.group_extended"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2" groups="base.group_sale_salesman,base.group_sale_manager"/>
         <!-- configartion view -->
 

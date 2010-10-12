@@ -28,7 +28,7 @@ class payment_order_create(osv.osv_memory):
     Create a payment object with lines corresponding to the account move line
     to pay according to the date and the mode provided by the user.
     Hypothesis:
-    - Small number of non-reconcilied move line , payment mode and bank account type,
+    - Small number of non-reconcilied move line, payment mode and bank account type,
     - Big number of partner and bank account.
 
     If a type is given, unsuitable account Entry lines are ignored.

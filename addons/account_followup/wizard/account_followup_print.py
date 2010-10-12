@@ -61,12 +61,12 @@ class account_followup_print(osv.osv_memory):
             'views': [(resource_id,'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
-            }
+    }
 
     _defaults = {
          'date': time.strftime('%Y-%m-%d'),
          'followup_id': _get_followup,
-                 }
+    }
 
 account_followup_print()
 
@@ -80,7 +80,7 @@ class account_followup_print_all(osv.osv_memory):
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
         'email_body': fields.text('Email body'),
         'summary': fields.text('Summary', required=True, readonly=True)
-                }
+    }
     def _get_summary(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -285,13 +285,13 @@ class account_followup_print_all(osv.osv_memory):
              'ids': [],
              'model': 'account_followup.followup',
              'form': data
-                 }
+        }
 
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account_followup.followup.print',
             'datas': datas,
-            }
+        }
 
 account_followup_print_all()
 

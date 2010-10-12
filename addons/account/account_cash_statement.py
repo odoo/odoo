@@ -151,15 +151,14 @@ class account_cash_statement(osv.osv):
             res[r] = round(res[r], 2)
         return res
 
-    def _get_company(self, cr, uid, context={}):
+    def _get_company(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
         company_pool = self.pool.get('res.company')
-        user = user_pool.browse(cr, uid, uid, context)
-        company_id = user.company_id and user.company_id.id
+        user = user_pool.browse(cr, uid, uid, context=context)
+        company_id = user.company_id
         if not company_id:
-            company_id = company_pool.search(cr, uid, [])[0]
-
-        return company_id
+            company_id = company_pool.search(cr, uid, [])
+        return company_id and company_id[0] or False
 
     def _get_cash_open_box_lines(self, cr, uid, context={}):
         res = []
@@ -229,7 +228,7 @@ class account_cash_statement(osv.osv):
         'balance_end_cash': fields.function(_balance_end_cash, method=True, store=True, string='Balance', help="Closing balance based on cashBox"),
         'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
         'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
-        'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then / , its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'),
+        'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'),
         'user_id':fields.many2one('res.users', 'Responsible', required=False),
     }
     _defaults = {

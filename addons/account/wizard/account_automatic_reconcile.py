@@ -170,7 +170,7 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND reconcile_id IS NULL",
                     (account_id, partner_id))
                 line_ids = [id for (id,) in cr.fetchall()]
-                if len(line_ids):
+                if line_ids:
                     reconciled += len(line_ids)
                     if allow_write_off:
                         move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
