@@ -121,8 +121,7 @@
 -
     I delete the Partners Testing folder
 -
-    !python {model: ir.attachment}: |
-        from document_ftp import test_easyftp as te
-        from cStringIO import StringIO
-        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
-        ftp.rmd('Partners Testing')
+    !python {model: document.directory}: |
+        self.unlink(cr, uid, [ref('dir_tests2')])
+        self.unlink(cr, uid, [ref('dir_respart1')])
+        cr.commit()
