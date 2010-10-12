@@ -67,6 +67,8 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
                     string: text node
                     tuple ('elem', 'ns') for empty sub-node <ns:elem />
                     tuple ('elem', 'ns', sub-elems) for sub-node with elements
+                    tuple ('elem', 'ns', sub-elems, {attrs}) for sub-node with 
+                            optional elements and attributes
                     list, of above tuples
         """
         if ns == 'DAV:':
@@ -108,14 +110,18 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
             ve=doc.createElement(ns_prefix+v[0])
             if need_ns:
                 ve.setAttribute("xmlns:ns"+str(nsnum), v[1])
-            if len(v) > 2:
-                if isinstance(v[2], list):
+            if len(v) > 2 and v[2] is not None:
+                if isinstance(v[2], (list, tuple)):
                     # support nested elements like:
                     # ( 'elem', 'ns:', [('sub-elem1', 'ns1'), ...]
                     _prop_elem_child(ve, v[1], v[2], ns_prefix)
                 else:
                     vt =doc.createTextNode(tools.ustr(v[2]))
                     ve.appendChild(vt)
+            if len(v) > 3 and v[3]:
+                assert isinstance(v[3], dict)
+                for ak, av in v[3].items():
+                    ve.setAttribute(ak, av)
             pnode.appendChild(ve)
         else:
             ve=doc.createTextNode(tools.ustr(v))
