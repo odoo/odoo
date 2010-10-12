@@ -170,8 +170,8 @@ class GettextAlias(object):
                 cr.execute('SELECT value FROM ir_translation WHERE lang=%s AND type IN (%s, %s) AND src=%s', (lang, 'code','sql_constraint', source))
                 res_trans = cr.fetchone()
                 res = res_trans and res_trans[0] or source
-        except:
-            logger.warn('translation went wrong for string %s', repr(source))
+        except Exception:
+            logger.debug('translation went wrong for string %s', repr(source))
         finally:
             if is_new_cr:
                 cr.close()
