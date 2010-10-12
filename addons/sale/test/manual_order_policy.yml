@@ -110,7 +110,7 @@
   !python {model: stock.picking }: |
    sale_order_obj = self.pool.get('sale.order')
    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','delivery')])
+   picking_id = self.search(cr, uid, [('origin','=',so.name)])
    assert (picking_id),"Delivery order has not been generated"
 -
   I verify that a procurement has been generated for so
@@ -282,7 +282,7 @@
    import time
    sale_order_obj = self.pool.get('sale.order')
    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','delivery')])
+   picking_id = self.search(cr, uid, [('origin','=',so.name)])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       pick.force_assign(cr, uid)
@@ -304,7 +304,7 @@
   !python {model: stock.picking }: |
    sale_order_obj = self.pool.get('sale.order')
    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','delivery')])
+   picking_id = self.search(cr, uid, [('origin','=',so.name)])
    pick = self.browse(cr,uid,picking_id[0])
    assert (pick.state) =='done', "Picking for SO is not in done state."
 -

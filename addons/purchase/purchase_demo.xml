@@ -3,19 +3,17 @@
     <data noupdate="1">
     
     <!--Resource: purchase.order-->
-    	
-		<record id="order_purchase1" model="purchase.order">
+        
+        <record id="order_purchase1" model="purchase.order">
             <field model="stock.location" name="location_id" search="[]"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field name="user_id" ref="base.user_root"/>
             <field model="res.partner" name="partner_id" search="[]"/>
             <field model="res.partner.address" name="partner_address_id" search="[]"/>
-		</record>
-		
-		<record id="order_purchase2" model="purchase.order">
+        </record>
+        
+        <record id="order_purchase2" model="purchase.order">
             <field model="stock.location" name="location_id" search="[]"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field name="user_id" ref="base.user_demo"/>
             <field model="res.partner" name="partner_id" search="[]"/>
             <field model="res.partner.address" name="partner_address_id" search="[]"/>
         </record>
@@ -30,7 +28,6 @@
             <field model="product.uom" name="product_uom" search="[]"/>
             <field name="price_unit">150</field>
             <field name="product_qty">5</field>
-            <field name="type">make_to_stock</field>
         </record>
         
         <record id="line2_purchase" model="purchase.order.line">
