@@ -183,6 +183,8 @@
                             </field>
                             <group col="9" colspan="4">
                                 <field name="state"/>
+                                <button name="survey_cancel"
+                                    string="Cancel" states="open" type="object" icon="gtk-cancel"/>
                                 <button name="survey_draft"
                                     string="Set to draft" states="cancel,close" type="object"
                                     icon="gtk-new"/>
@@ -190,8 +192,6 @@
                                     states="draft" type="object" icon="gtk-go-forward"/>
                                 <button name="survey_close"
                                     string="Close" states="open" type="object" icon="gtk-close"/>
-                                <button name="survey_cancel"
-                                    string="Cancel" states="open" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Other">
