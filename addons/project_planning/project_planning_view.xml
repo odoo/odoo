@@ -220,7 +220,7 @@
             parent="base.menu_main_pm" />
 
         <menuitem action="action_account_analytic_planning_form"
-            id="menu_report_account_analytic_planning" parent="base.menu_project_long_term" sequence="3" groups="project.group_project_user,project.group_project_manager,base.group_system"/>
+            id="menu_report_account_analytic_planning" parent="base.menu_project_long_term" sequence="3" groups="project.group_project_user,project.group_project_manager,base.group_system,project.group_project_finance_user"/>
 
         <!--
             Planning statistics
@@ -293,7 +293,7 @@
             <field name="res_model">report_account_analytic.planning.stat</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="context">{"search_default_user_id":uid}</field>
+            <!-- <field name="context">{"search_default_user_id":uid}</field> -->
             <field name="search_view_id" ref="account_analytic_planning_stat_view_search"/>
         </record>
         <menuitem id="next_id_85" name="Planning"
