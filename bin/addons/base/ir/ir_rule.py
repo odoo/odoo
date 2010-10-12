@@ -34,8 +34,7 @@ class ir_rule(osv.osv):
         res = {}
         for rule in self.browse(cr, uid, ids, context):
             eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
-                            'time':time}
-            print rule.domain_force
+                              'time':time}
             res[rule.id] = eval(rule.domain_force, eval_user_data)
         return res
 
@@ -138,7 +137,6 @@ class ir_rule(osv.osv):
     def domain_get(self, cr, uid, model_name, mode='read', context={}):
         dom = self._compute_domain(cr, uid, model_name, mode=mode)
         if dom:
-            print 'Domain', dom, model_name
             query = self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
             return query.where_clause, query.where_clause_params, query.tables
         return [], [], ['"'+self.pool.get(model_name)._table+'"']
