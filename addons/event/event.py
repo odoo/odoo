@@ -22,8 +22,6 @@
 from crm import crm
 from osv import fields, osv
 from tools.translate import _
-import netsvc
-import pooler
 import time
 import tools
 import decimal_precision as dp
@@ -354,12 +352,6 @@ class event_registration(osv.osv):
 
         val_invoice = inv_pool.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
         val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
-        partner_address_id = val_invoice['value']['address_invoice_id']
-
-        value = inv_lines_pool.product_id_change(cr, uid, [], reg.event_id.product_id.id, uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
-
-        l = inv_lines_pool.read(cr, uid, lines)
-
         val_invoice['value'].update({
                 'origin': reg.event_product,
                 'reference': False,
@@ -595,7 +587,6 @@ class event_registration(osv.osv):
         addr_obj = self.pool.get('res.partner.address')
         job_obj = self.pool.get('res.partner.job')
 
-        contact_id = contact_obj.browse(cr, uid, contact)
         if partner:
             partner_addresses = addr_obj.search(cr, uid, [('partner_id', '=', partner)])
             job_ids = job_obj.search(cr, uid, [('contact_id', '=', contact), ('address_id', 'in', partner_addresses)])

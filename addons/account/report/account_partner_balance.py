@@ -49,6 +49,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
             'get_partners':self._get_partners,
+            'get_target_move': self._get_target_move,
         })
 
     def set_context(self, objects, data, ids, report_type=None):

@@ -37,22 +37,34 @@ class report_payroll_register(report_sxw.rml_parse):
         self.deduct += line.deduction
         self.net += line.net
         
-    def get_basic(self):
+    def get_basic(self,obj):
+        for line in obj.line_ids:
+            self.basic += line.basic
         return self.basic
     
-    def get_other(self):
+    def get_other(self,obj):
+        for line in obj.line_ids:
+            self.other += line.other_pay
         return self.other
         
-    def get_allow(self):
+    def get_allow(self,obj):
+        for line in obj.line_ids:
+            self.allow += line.allounce
         return self.allow
         
-    def get_grows(self):
+    def get_grows(self,obj):
+        for line in obj.line_ids:
+            self.grows += line.grows
         return self.grows
     
-    def get_deduct(self):
+    def get_deduct(self,obj):
+        for line in obj.line_ids:
+            self.deduct += line.deduction
         return self.deduct
         
-    def get_net(self):
+    def get_net(self,obj):
+        for line in obj.line_ids:
+            self.net += line.net
         return self.net
         
     def get_month(self, indate):

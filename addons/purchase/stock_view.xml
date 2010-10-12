@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+       <record id="stock_move_purchase" model="ir.ui.view">
+            <field name="name">stock.move.form</field>
+            <field name="model">stock.move</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="/form/group/field[@name='tracking_id']" position="before">
+                    <field name="purchase_line_id" colspan="2" />
+                </xpath>
+            </field>
+        </record>      
         <record id="stock_picking_inherit_purchase" model="ir.ui.view">
             <field name="name">Picking list</field>
             <field name="model">stock.picking</field>
@@ -17,8 +27,9 @@
         <act_window
             domain="[('purchase_id', '=', active_id)]"
             id="act_purchase_order_2_stock_picking"
-            name="Picking"
+            name="Receptions"
             res_model="stock.picking"
+	    groups="base.group_extended"
             src_model="purchase.order"
             context="{'contact_display': 'partner'}" />
        

@@ -27,7 +27,7 @@ import pooler
 class decimal_precision(osv.osv):
     _name = 'decimal.precision'
     _columns = {
-        'name': fields.char('Usage', size=50, required=True),
+        'name': fields.char('Usage', size=50, select=True, required=True),
         'digits': fields.integer('Digits', required=True),
     }
     _defaults = {
@@ -35,7 +35,7 @@ class decimal_precision(osv.osv):
     }
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', """The Usage of the decimal precision must be unique!"""),
+        ('name_uniq', 'unique (name)', """Only one value can be defined for each given usage!"""),
     ]
 
     @cache(skiparg=3)

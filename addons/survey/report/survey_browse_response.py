@@ -273,7 +273,7 @@ class survey_browse_response(report_rml):
                                         style = 'tbl_white'
                                     else:
                                         style = 'tbl_gainsboro'
-                                    i +=1 
+                                    i +=1
                                     rml += """<blockTable colWidths=" """ + str(colWidths) + """ " style='"""+style+"""'><tr>"""
                                     table_data = col_heading.browse(cr, uid, col_heading.search(cr, uid, [('response_table_id', '=', answer[0].id), ('name', '=', row)]))
                                     for column in matrix_ans:
@@ -521,7 +521,6 @@ class survey_browse_response(report_rml):
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
-
         return (pdf, report_type)
 
 survey_browse_response('report.survey.browse.response', 'survey','','')

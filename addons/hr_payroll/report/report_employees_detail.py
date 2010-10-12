@@ -16,7 +16,6 @@ class employees_salary_report(rml_parse.rml_parse):
             'get_employee_detail' : self.get_employee_detail,
             'cal_monthly_amt':self.cal_monthly_amt,
             'get_periods'  : self.get_periods,
-            'get_fiscalyear' : self.get_fiscalyear,
             'get_total' : self.get_total,
             'get_allow':self.get_allow,
             'get_deduct':self.get_deduct,
@@ -29,22 +28,16 @@ class employees_salary_report(rml_parse.rml_parse):
         self.deduct_list = []
         self.other_list = []
         self.month_total_list =[]
-        self.curr_fiscal_year_name=''
-        self.period_ids = []
         self.total=0.00
 
     def get_periods(self,form):
         self.mnths =[]
-        fiscalyear = pooler.get_pool(self.cr.dbname).get('account.fiscalyear')
-        curr_fiscalyear_id = form['fiscalyear_id']
-        curr_fiscalyear = fiscalyear.read(self.cr,self.uid,[form['fiscalyear_id']],['date_start','date_stop'])[0]
-
 #       Get start year-month-date and end year-month-date
-        fy = int(curr_fiscalyear['date_start'][0:4])
-        ly = int(curr_fiscalyear['date_stop'][0:4])
+        fy = int(form['date_from'][0:4])
+        ly = int(form['date_to'][0:4])
 
-        fm = int(curr_fiscalyear['date_start'][5:7])
-        lm = int(curr_fiscalyear['date_stop'][5:7])
+        fm = int(form['date_from'][5:7])
+        lm = int(form['date_to'][5:7])
         no_months = (ly-fy)*12+lm-fm + 1
         cm = fm
         cy = fy
@@ -61,21 +54,12 @@ class employees_salary_report(rml_parse.rml_parse):
             cm = cm +1
         return [mnth_name]
 
-    def get_fiscalyear(self,fiscalyear_id):
-        fiscalyear_obj = pooler.get_pool(self.cr.dbname).get('account.fiscalyear')
-        return fiscalyear_obj.read(self.cr,self.uid,[fiscalyear_id],['name'])[0]['name']
-
     def get_employee(self,form):
         result = []
         periods = []
         emp = pooler.get_pool(self.cr.dbname).get('hr.employee')
         emp_ids = form['employee_ids']
         result = emp.browse(self.cr,self.uid, emp_ids)
-        fiscalyear_obj = pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear_id'])
-        period_ids_l = fiscalyear_obj.period_ids
-        for period in period_ids_l:
-            periods.append(period.id)
-        self.period_ids = ','.join(map(str, periods))
         return result
 
     def get_employee_detail(self,obj):
@@ -89,12 +73,12 @@ class employees_salary_report(rml_parse.rml_parse):
         self.total = 0.00
         payment_category = self.pool.get('hr.allounce.deduction.categoty')
         payslip = self.pool.get('hr.payslip')
-        allowance_cat_ids = payment_category.search( self.cr, self.uid, [('type','=','allow')])
-        deduction_cat_ids = payment_category.search( self.cr, self.uid, [('type','=','deduct')])
-        other_cat_ids = payment_category.search( self.cr, self.uid, [('type','=','other')])
+        allowance_cat_ids = payment_category.search( self.cr, self.uid, [('type','=','allowance')])
+        deduction_cat_ids = payment_category.search( self.cr, self.uid, [('type','=','deduction')])
+        other_cat_ids = payment_category.search( self.cr, self.uid, [('type','in',('advance','loan','installment','otherpay','otherdeduct'))])
         #for Basic Salary
         res = []
-        res = self.cal_monthly_amt(obj.id,None)
+        res = self.cal_monthly_amt(obj.id,False)
         self.total += res[len(res)-1]
         basic_flag = False
         for i in range(1,len(res)):
@@ -152,7 +136,7 @@ class employees_salary_report(rml_parse.rml_parse):
         for mnth in self.mnths:
             if len(mnth) != 7:
                 mnth = '0' + str(mnth)
-            query = "select id from hr_payslip where employee_id = "+str(emp_id)+" and to_char(date,'mm-yyyy') like '%"+mnth+"%' and state = 'done' and period_id in "+"("+ self.period_ids +")" +""
+            query = "select id from hr_payslip where employee_id = "+str(emp_id)+" and to_char(date,'mm-yyyy') like '%"+mnth+"%' and state = 'done' "
             self.cr.execute(query)
             payslip_id = self.cr.dictfetchone()
             if payslip_id:
@@ -166,7 +150,7 @@ class employees_salary_report(rml_parse.rml_parse):
                     append_index = 0
                     for line in payslip_obj.line_ids:
                         if line.category_id.id == category:
-                            if category_name['type'] == 'allow':
+                            if category_name['type'] == 'allowance':
                                 if res:
                                     self.month_total_list[cnt] = self.month_total_list[cnt] + line.total
                                     result[append_index] += line.total
@@ -178,7 +162,7 @@ class employees_salary_report(rml_parse.rml_parse):
                                     res[mnth] = line.total
                                     append_index = len(result) - 1
                                     result.append(line.total)
-                            if category_name['type'] == 'deduct':
+                            if category_name['type'] == 'deduction':
                                 if res:
                                     self.month_total_list[cnt] = self.month_total_list[cnt] - line.total
                                     result[append_index] += line.total
@@ -190,7 +174,7 @@ class employees_salary_report(rml_parse.rml_parse):
                                     res[mnth] = line.total
                                     append_index = len(result) - 1
                                     result.append(line.total)
-                            if category_name['type'] == 'other':
+                            if category_name['type'] in ('advance','loan','installment','otherpay','otherdeduct'):
                                 if res:
                                     result[append_index] += line.total
                                     tot += line.total
@@ -227,7 +211,7 @@ class employees_salary_report(rml_parse.rml_parse):
     def get_monthly_total(self):
         return self.month_total_list
 
-report_sxw.report_sxw('report.employees.salary', 'hr.payslip', 'hr_payroll/report/report_employees_detail.rml', parser=employees_salary_report,header=3)
+report_sxw.report_sxw('report.employees.salary', 'hr.payslip', 'hr_payroll/report/report_employees_detail.rml', parser=employees_salary_report,header='internal landscape')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

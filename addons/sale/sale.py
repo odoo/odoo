@@ -75,7 +75,7 @@ class sale_order(osv.osv):
             context = {}
         val = 0.0
         for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id)['taxes']:
-            val += c['amount']
+            val += c.get('amount', 0.0)
         return val
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
@@ -250,7 +250,7 @@ class sale_order(osv.osv):
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
         'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Picking', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
-        'shipped': fields.boolean('Picked', readonly=True, help="It indicates that a picking has been done. It will be set to True if the ordered quantities are available and the picking is done. If the ordered quantities are not available Procurement generates a Purchase/Manufacturing order. Unless its Picking and Purchase/Manufacturing order are not in the done state it wont be set to True"),
+        'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sale order has been delivered. This field is updated only after the scheduler have been launched !"),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
@@ -461,6 +461,34 @@ class sale_order(osv.osv):
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 
+    def manual_invoice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        inv_ids = set()
+        inv_ids1 = set()
+        for id in ids:
+            for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
+                inv_ids.add(record.id)
+        # inv_ids would have old invoices if any
+        for id in ids:
+            wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
+            for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
+                inv_ids1.add(record.id)
+        inv_ids = list(inv_ids1.difference(inv_ids))
+
+        result = {
+            'name': 'Invoices',
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'account.invoice',
+            'view_id': False,
+            'context': "{'type':'out_refund'}",
+            'type': 'ir.actions.act_window',
+            'res_id': inv_ids[0],
+            'nodestroy' :True
+                  }
+
+        return result
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}
@@ -507,6 +535,7 @@ class sale_order(osv.osv):
                     if order.order_policy == 'picking':
                         picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
+
         return res
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
@@ -558,7 +587,7 @@ class sale_order(osv.osv):
             #
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
-            
+
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -683,7 +712,7 @@ class sale_order(osv.osv):
                         'name': line.name[:64],
                         'picking_id': picking_id,
                         'product_id': line.product_id.id,
-                        'date_planned': date_planned,
+                        'date': date_planned,
                         'date_expected': date_planned,
                         'product_qty': line.product_uom_qty,
                         'product_uom': line.product_uom.id,
@@ -730,7 +759,7 @@ class sale_order(osv.osv):
             if picking_id:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-                
+
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
 
@@ -911,7 +940,7 @@ class sale_order_line(osv.osv):
                 else:
                     a = self.pool.get('ir.property').get(cr, uid,
                             'property_account_income_categ', 'product.category',
-                            context=context)
+                            context=context).id
                 uosqty = _get_line_qty(line)
                 uos_id = _get_line_uom(line)
                 pu = 0.0
@@ -1175,7 +1204,7 @@ class sale_config_picking_policy(osv.osv_memory):
         'picking_policy': fields.selection([
             ('direct', 'Direct Delivery'),
             ('one', 'All at Once')
-        ], 'Picking Default Policy', required=True, help="The Shipping Policy is used to synchronise invoices and delivery operations."),
+        ], 'Picking Default Policy', required=True, help="The Shipping Policy is used to configure per order if you want to deliver as soon as possible when one product is available or you wait that all products are available.."),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
