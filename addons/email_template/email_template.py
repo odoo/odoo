@@ -31,10 +31,8 @@ TEMPLATE_ENGINES = []
 
 from osv import osv, fields
 from tools.translate import _
-from mako.template import Template  #For backward combatibility
 try:
     from mako.template import Template as MakoTemplate
-    from mako import exceptions
     TEMPLATE_ENGINES.append(('mako', 'Mako Templates'))
 except:
     LOGGER.notifyChannel(
@@ -302,7 +300,6 @@ This is useful for CRM leads for example"),
 
     def unlink_action(self, cr, uid, ids, context):
         for template in self.browse(cr, uid, ids, context):
-            obj = self.pool.get(template.object_name.model)
             try:
                 if template.ref_ir_act_window:
                     self.pool.get('ir.actions.act_window').unlink(cr, uid, template.ref_ir_act_window.id, context)

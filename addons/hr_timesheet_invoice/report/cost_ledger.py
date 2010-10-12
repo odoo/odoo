@@ -167,7 +167,7 @@ report_sxw.report_sxw(
         'report.hr.timesheet.invoice.account.analytic.account.cost_ledger',
         'account.analytic.account',
         'addons/hr_timesheet_invoice/report/cost_ledger.rml',
-        parser=account_analytic_cost_ledger, header=False)
+        parser=account_analytic_cost_ledger, header='internal')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -26,7 +26,7 @@ from report import report_sxw
 class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
     #TOFIX: sql injection problem: SQL Request must be pass from sql injection...
     def __init__(self, cr, uid, name, context):
-        super(all_closed_cashbox_of_the_day, self).__init__(cr, uid, name, context)
+        super(all_closed_cashbox_of_the_day, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
                 'time': time,
                 'get_data':self._get_data,
