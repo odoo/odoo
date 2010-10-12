@@ -22,20 +22,9 @@
 
 from document import nodes
 from tools.safe_eval import safe_eval as eval
+from tools.dict_tools import dict_filter
 import urllib
 
-def dict_filter(srcdic, keys, res=None):
-    ''' Return a copy of srcdic that has only keys set.
-    If any of keys are missing from srcdic, the result won't have them, 
-    either.
-    @param res If given, result will be updated there, instead of a new dict.
-    '''
-    if res is None:
-        res = {}
-    for k in keys:
-        if k in srcdic:
-            res[k] = srcdic[k]
-    return res
     
 class node_acl_mixin(object):
     def _get_dav_owner(self, cr):

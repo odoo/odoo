@@ -57,7 +57,7 @@ def OpenDAVConfig(**kw):
 class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
     protocol_version = 'HTTP/1.1'
-    _HTTP_OPTIONS= { 'DAV' : ['1',],
+    _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
                     'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT',
                             'PROPFIND', 'PROPPATCH', 'OPTIONS', 'MKCOL',
                             'DELETE', 'TRACE', 'REPORT', ]
@@ -265,8 +265,7 @@ try:
         handler.debug = config.get_misc('webdav','debug',True)
         _dc = { 'verbose' : verbose,
                 'directory' : directory,
-                'lockemulation' : False,
-
+                'lockemulation' : True,
                 }
 
         conf = OpenDAVConfig(**_dc)

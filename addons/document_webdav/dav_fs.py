@@ -26,8 +26,6 @@ import os
 import time
 from string import joinfields, split, lower
 
-from service import security
-
 import netsvc
 import urlparse
 
@@ -39,6 +37,8 @@ import urllib
 from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 from cache import memoize
 from tools import misc
+from tools.dict_tools import dict_merge2
+
 CACHE_SIZE=20000
 
 #hack for urlparse: add webdav in the net protocols
@@ -95,8 +95,7 @@ class openerp_dav_handler(dav_interface):
             return props
         node = self.uri2object(cr, uid, pool, uri2)
         if node:
-            props = props.copy()
-            props.update(node.get_dav_props(cr))
+            props = dict_merge2(props, node.get_dav_props(cr))
         cr.close()
         return props
 
@@ -133,11 +132,11 @@ class openerp_dav_handler(dav_interface):
             self.parent.log_message("Exc: %s",traceback.format_exc())
             raise default_exc("Operation failed")
 
-    def _get_dav_lockdiscovery(self, uri):
-        raise DAV_NotFound
+    #def _get_dav_lockdiscovery(self, uri):
+    #    raise DAV_NotFound
 
-    def _get_dav_supportedlock(self, uri):
-        raise DAV_NotFound
+    #def A_get_dav_supportedlock(self, uri):
+    #    raise DAV_NotFound
 
     def match_prop(self, uri, match, ns, propname):
         if self.M_NS.has_key(ns):
@@ -293,8 +292,8 @@ class openerp_dav_handler(dav_interface):
             else:
                 fp = node.full_path()
                 if fp and len(fp):
-                    self.parent.log_message('childs: @%s' % fp)
                     fp = '/'.join(fp)
+                    self.parent.log_message('childs for: %s' % fp)
                 else:
                     fp = None
                 domain = None
