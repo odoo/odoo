@@ -24,7 +24,7 @@ import decimal_precision as dp
 
 import math
 from _common import rounding
-
+import re  
 from tools.translate import _
 
 def is_pair(x):
@@ -501,6 +501,11 @@ class product_product(osv.osv):
             if not len(ids):
                 ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
                 ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+            if not len(ids):
+               ptrn=re.compile('(\[(.*?)\])')
+               res = ptrn.search(str(name))
+               if res:
+                   ids = self.search(cr, user, [('default_code','ilike',res.group(2))]+ args, limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context)
