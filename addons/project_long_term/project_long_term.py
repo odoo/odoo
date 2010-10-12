@@ -91,7 +91,7 @@ class project_phase(osv.osv):
        model_data_obj = self.pool.get('ir.model.data')
        model_data_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
        return model_data_obj.read(cr, uid, [model_data_id], ['res_id'])[0]['res_id']
-    
+
     def _compute(self, cr, uid, ids, context=None):
         res = {}
         if not ids:
@@ -145,7 +145,7 @@ class project_phase(osv.osv):
             project_id = project_obj.browse(cr, uid, project, context=context)
             result['date_start'] = project_id.date_start
         return {'value': result}
-    
+
     def onchange_days(self, cr, uid, ids, project, context=None):
         result = {}
         for id in ids:
@@ -221,7 +221,7 @@ class project_phase(osv.osv):
                 cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
                 if cal_id:
                     calendar_id = cal_id
-        
+
             avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
             # Change the date_start and date_end
             # for previous and next phases respectively based on valid condition
@@ -234,7 +234,7 @@ class project_phase(osv.osv):
                     if prv_phase.id == phase.id:
                         continue
                     self._check_date_start(cr, uid, prv_phase, dt_start, context=context)
-                        
+
             if vals.get('date_end', False) and vals['date_end'] > phase.date_end:
                 dt_end = datetime.strptime(vals['date_end'], '%Y-%m-%d')
                 work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
@@ -244,7 +244,7 @@ class project_phase(osv.osv):
                     if next_phase.id == phase.id:
                         continue
                     self._check_date_end(cr, uid, next_phase, dt_end, context=context)
-                    
+
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -295,7 +295,7 @@ class project_phase(osv.osv):
         Schedule phase with the start date till all the next phases are completed.
         @param: start_dsate : start date for the phase
         @param: calendar_id : working calendar of the project
-        """ 
+        """
         if context is None:
             context = {}
         resource_pool = self.pool.get('resource.resource')
@@ -306,7 +306,7 @@ class project_phase(osv.osv):
         for phase in self.browse(cr, uid, ids, context=context):
             if not phase.responsible_id:
                 raise osv.except_osv(_('No responsible person assigned !'),_("You must assign a responsible person for phase '%s' !") % (phase.name,))
-            
+
             phase_resource_obj = resource_pool.generate_resources(cr, uid, [phase.responsible_id.id], calendar_id, context=context)
             avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
             duration = str(avg_hours) + 'H'
@@ -371,7 +371,7 @@ class project_phase(osv.osv):
             if not start_date and phase.project_id.date_start:
                 start_date = phase.project_id.date_start
             if not start_date:
-                start_date = datetime.now().strftime("%Y-%m-%d")                    
+                start_date = datetime.now().strftime("%Y-%m-%d")
             resources = resources_list.get(phase.id, [])
             calendar_id = phase.project_id.resource_calendar_id.id
             task_ids = map(lambda x : x.id, (filter(lambda x : x.state in ['open', 'draft', 'pending'] , phase.task_ids)))
@@ -398,7 +398,7 @@ class project_resource_allocation(osv.osv):
         'user_id': fields.related('resource_id', 'user_id', type='many2one', relation="res.users", string='User'),
         'date_start': fields.date('Start Date', help="Starting Date"),
         'date_end': fields.date('End Date', help="Ending Date"),
-        'useability': fields.float('Usability', help="Usability of this resource for this project phase in percentage (=50%)"),
+        'useability': fields.float('Availability', help="Usability of this resource for this project phase in percentage (=50%)"),
     }
     _defaults = {
         'useability': 100,
@@ -460,19 +460,19 @@ class project(osv.osv):
         resource_pool = self.pool.get('resource.resource')
         if context is None:
             context = {}
-        
+
         resources_list = self.generate_members(cr, uid, ids, context=context)
         return_msg = {}
         for project in self.browse(cr, uid, ids, context=context):
             start_date = project.date_start
             if not start_date:
-                start_date = datetime.now().strftime("%Y-%m-%d")                    
+                start_date = datetime.now().strftime("%Y-%m-%d")
             resources = resources_list.get(project.id, [])
             calendar_id = project.resource_calendar_id.id
             task_ids = task_pool.search(cr, uid, [('project_id', '=', project.id),
                                               ('state', 'in', ['draft', 'open', 'pending'])
                                               ])
-            
+
 
             if task_ids:
                 task_pool.generate_schedule(cr, uid, task_ids, resources, calendar_id, start_date, context=context)
@@ -483,7 +483,7 @@ class project(osv.osv):
                 else:
                     return_msg["warning"] = return_msg["warning"] + "\n" + warning_msg
 
-        return return_msg    
+        return return_msg
 
 project()
 
@@ -506,7 +506,7 @@ class project_task(osv.osv):
     _columns = {
         'phase_id': fields.many2one('project.phase', 'Project Phase'),
     }
-    
+
     def generate_schedule(self, cr, uid, ids, resources, calendar_id, start_date, context=None):
         """
         Schedule the tasks according to resource available and priority.
@@ -556,10 +556,10 @@ class project_task(osv.osv):
                         if task_resource.__name__ == task_resource:
                             real_resource = task_resource
                             break
-                
+
                 task = create_tasks(task_number, hours, priorty, real_resource)
                 task_number += 1
-        
+
 
         face_projects = Task.BalancedProject(Project)
         loop_no = 0

@@ -81,9 +81,9 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">
-                        <filter name="resource" string="Resource" icon="terp-folder-blue" domain="[]" context="{'group_by':'resource_id'}"/>
+                        <filter name="resource" string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
                     </group>
                 </search>
@@ -111,21 +111,18 @@
             <field name="arch" type="xml">
                 <form string="Project Phase">
                     <group colspan="6" col="6">
-	                    <group colspan="2" col="2">
-	                        <field name="name" select="1"/>
-	                        <field name="date_start"/>
-	                    </group>
-	                    <group colspan="2" col="4">
-	                       <field name="project_id" on_change="onchange_project(project_id)" colspan="4"/>
-                           <newline/>
-	                       <field name="duration" colspan="1" on_change="onchange_days(project_id)" />
-                           <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
-	                    </group>
-	                    <group colspan="2" col="2">
-	                       <field name="responsible_id"/>
-	                       <field name="date_end"/>
-                    	</group>
-					</group>
+                        <group colspan="6" col="6" >
+                            <field name="name" select="1"/>
+                            <field name="project_id" on_change="onchange_project(project_id)"/>
+                            <field name="responsible_id"/>
+                        </group>
+                        <group colspan="6" col="6">
+                            <field name="date_start"/>
+                            <field name="duration"  on_change="onchange_days(project_id)" />
+                            <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
+                            <field name="date_end"/>
+                        </group>
+                     </group>
                     <notebook colspan="4">
                         <page string="Resource Allocation">
                             <field colspan="4" name="resource_ids" nolabel="1">
@@ -274,7 +271,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
-                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'responsible_id'}"/>
+                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'responsible_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}" name="project"/>
                         <separator orientation="vertical"/>
@@ -291,7 +288,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar</field>
-            <field name="context">{'search_default_responsible_id':uid}</field>
+            <field name="context">{'search_default_responsible_id':uid,'group_by':'project_id'}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
             <field name="help">You can subdivide your larger projects into several phases. For each phase, you can define your resources allocation (humans or engine), describe de differend task and link your phase with previous and next one, add constraints date and scheduling. A gantt view of your project phase is also available from this menu. Gantt view is a graphically draw of the project plan; it includes any task dependencies by visually adjusting task durations and priorities, and by linking tasks to each other.</field>
         </record>
@@ -301,7 +298,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
- 			<field name="context">{'search_default_responsible_id':uid}</field>
+ 			<field name="context">{'search_default_responsible_id':uid,'group_by':'project_id'}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
