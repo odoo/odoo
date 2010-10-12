@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import time
-
 from crm import crm
 from osv import fields, osv
 from tools.translate import _
@@ -38,7 +36,7 @@ class event_type(osv.osv):
     }
 event_type()
 
-class event_event(crm.crm_case, osv.osv):
+class event_event(osv.osv):
     """Event"""
     _name = 'event.event'
     _description = __doc__
@@ -56,7 +54,6 @@ class event_event(crm.crm_case, osv.osv):
             'registration_ids': False,
         })
         return super(event_event, self).copy(cr, uid, id, default=default, context=context)
-
     def onchange_product(self, cr, uid, ids, product_id):
         """This function returns value of  product's unit price based on product id.
         @param self: The object pointer
@@ -158,14 +155,11 @@ class event_event(crm.crm_case, osv.osv):
                         ('event_id', '=', event.id),
                        ('state', 'in', state)])
 
-            number = 0.0
-            if reg_ids:
-                cr.execute('select sum(nb_register) from event_registration where id IN %s', (tuple(reg_ids),))
-                number = cr.fetchone()
             if 'register_current' in fields:
-                res[event.id]['register_current'] = number and number[0]
+                res[event.id]['register_current'] = len(reg_ids)
             if 'register_prospect' in fields:
-                res[event.id]['register_prospect'] = number and number[0]
+                res[event.id]['register_prospect'] = len(reg_ids)
+
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -239,7 +233,7 @@ class event_event(crm.crm_case, osv.osv):
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}),
         'language': fields.char('Language',size=64, readonly=False, states={'done': [('readonly', True)]}),
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
-        'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
+        'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
 
     }
 
@@ -247,7 +241,6 @@ class event_event(crm.crm_case, osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
-        'section_id': crm.crm_case._get_section,
     }
 
     def _check_recursion(self, cr, uid, ids):
@@ -342,8 +335,8 @@ class event_registration(osv.osv):
     _defaults = {
         'nb_register': 1,
         'tobe_invoiced':  True,
-        'state': 'draft',
-        'active': True,
+        'state': lambda *a: 'draft',
+        'active': lambda *a: 1,
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
@@ -359,9 +352,6 @@ class event_registration(osv.osv):
 
         val_invoice = inv_pool.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
         val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
-
-        inv_lines_pool.product_id_change(cr, uid, [], reg.event_id.product_id.id, uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
-
         val_invoice['value'].update({
                 'origin': reg.event_product,
                 'reference': False,
@@ -593,6 +583,7 @@ class event_registration(osv.osv):
         data ={}
         if not contact:
             return data
+        contact_obj = self.pool.get('res.partner.contact')
         addr_obj = self.pool.get('res.partner.address')
         job_obj = self.pool.get('res.partner.job')
 
@@ -667,6 +658,7 @@ class event_registration(osv.osv):
                     data['contact_id'] = job_obj.browse(cr, uid, job_ids[0]).contact_id.id
                     d = self.onchange_contact_id(cr, uid, ids, data['contact_id'], part)
                     data.update(d['value'])
+        partner_data = res_obj.browse(cr, uid, part)
         return {'value': data}
 
     def onchange_partner_invoice_id(self, cr, uid, ids, event_id, partner_invoice_id):
@@ -714,3 +706,4 @@ class event_registration_badge(osv.osv):
 event_registration_badge()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

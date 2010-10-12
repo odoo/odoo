@@ -21,13 +21,13 @@
 
 from osv import fields, osv
 from tools.translate import _
-
+import decimal_precision as dp
 
 class stock_split_into(osv.osv_memory):
     _name = "stock.split.into"
     _description = "Split into"
     _columns = {
-        'quantity': fields.float('Quantity', digits=(16,2)),
+        'quantity': fields.float('Quantity',digits_compute=dp.get_precision('Product UOM')),
     }
     _defaults = {
         'quantity': lambda *x: 0,
