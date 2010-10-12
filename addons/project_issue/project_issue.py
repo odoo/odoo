@@ -177,7 +177,7 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('object_id.model', '=', 'project.issue')]"),
+        'type_id': fields.many2one ('project.task.type', 'Resolution'),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
