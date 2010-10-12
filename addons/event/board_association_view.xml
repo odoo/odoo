@@ -49,18 +49,16 @@
                                 name="%(act_event_view)d"
                                 colspan="4"/>
                             <action
-                                string="Unpaid Invoices"
-                                name="%(account.action_invoice_tree)d"
+                                string="Unconfirmed Registrations"
+                                name="%(event.act_event_list_register_event)d"
                                 colspan="4"
-                                domain="[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','out_invoice')]"/>
+                                domain="[('state','=','draft')]"/>
                         </child1>
                         <child2>
                             <action string="Register Events"
                                 name="%(act_event_reg)d"
                                 colspan="4"/>
-
                         </child2>
-
                     </hpaned>
                 </form>
             </field>
