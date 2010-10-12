@@ -23,6 +23,8 @@ import time
 from document_webdav import nodes
 import StringIO
 
+# TODO: implement DAV-aware errors, inherit from IOError
+
 def dict_merge(*dicts):
     """ Return a dict with all values of dicts
     """
@@ -147,23 +149,24 @@ class node_calendar_res_col(nodes.node_res_obj):
 class node_calendar(nodes.node_class):
     our_type = 'collection'
     DAV_PROPS = {
-            "olDAV:": ('principal-collection-set',
-                    'principal-URL',
-                    'supported-report-set'),
+            "DAV:": ('supported-report-set',),
             # "http://cal.me.com/_namespace/" : ('user-state',),
-            "http://calendarserver.org/ns/" : (
-                    # 'dropbox-home-URL',
-                    # 'notification-URL',
-                    'getctag',),
+            "http://calendarserver.org/ns/" : ( 'getctag',),
             'http://groupdav.org/': ('resourcetype',),
             "urn:ietf:params:xml:ns:caldav" : (
-                    'calendar-description',
-                    'calendar-data',
-                    # 'calendar-home-set',
-                    # 'calendar-user-address-set',
-                    # 'schedule-inbox-URL',
-                    #'schedule-outbox-URL',
+                    'calendar-description', 
+                    'supported-calendar-component-set',
                     )}
+    DAV_PROPS_HIDDEN = {
+            "urn:ietf:params:xml:ns:caldav" : (
+                    'calendar-data',
+                    'calendar-timezone',
+                    'supported-calendar-data',
+                    'max-resource-size',
+                    'min-date-time',
+                    'max-date-time',
+                    )}
+
     DAV_M_NS = {
            "DAV:" : '_get_dav',
            # "http://cal.me.com/_namespace/": '_get_dav', 
@@ -186,28 +189,6 @@ class node_calendar(nodes.node_class):
     def _get_dav_getctag(self, cr):
         result = self._get_ttag(cr) + ':' + str(time.time())
         return str(result)
-
-    def _get_dav_dropbox_home_URL(self, cr): #Depr
-        import urllib
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
-        res = '%s/%s' %(calendar.collection_id.name, calendar.name)
-        url = urllib.quote('/%s/%s' % (cr.dbname, res))
-        return url
-    
-    def _get_dav_notification_URL(self, cr): # Depr
-        import urllib
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
-        res = '%s/%s' %(calendar.collection_id.name, calendar.name)
-        url = urllib.quote('/%s/%s' % (cr.dbname, res))
-        return url
 
     def _get_dav_user_state(self, cr):
         #TODO
@@ -356,40 +337,33 @@ class node_calendar(nodes.node_class):
         except Exception, e:
             return None
 
-    def _get_dav_principal_collection_set(self, cr):
-        import urllib
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
-        res = '%s/%s' %(calendar.collection_id.name, calendar.name)
-        return ('href', 'DAV:', urllib.quote('/%s/%s' % (cr.dbname, res)))
-
-    def _get_caldav_calendar_user_address_set(self, cr):
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        user_obj = self.context._dirobj.pool.get('res.users')
-        user = user_obj.browse(cr, uid, uid, context=ctx)
-        return ('href', 'DAV:', 'MAILTO:' + str(user.email) or str(user.name))
-
-    def _get_caldav_schedule_outbox_URL(self, cr):
-        return self._get_caldav_schedule_inbox_URL(cr)
-
-    def _get_caldav_schedule_inbox_URL(self, cr):
-        import urllib
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
-        res = '/webdav/%s/%s/%s' %(cr.dbname, calendar.collection_id.name, calendar.name)
-        
-        return ('href', 'DAV:', res)
-
     def _get_dav_supported_report_set(self, cr):
-        return '' # TODO
+        
+        return ('supported-report', 'DAV:', 
+                    ('report','DAV:',
+                            ('principal-match','DAV:')
+                    )
+                )
+
+    def _get_caldav_supported_calendar_component_set(self, cr):
+        return ('comp', 'urn:ietf:params:xml:ns:caldav', None,
+                    {'name': self.cal_type.upper()} )
+        
+    def _get_caldav_calendar_timezone(self, cr):
+        return None #TODO
+        
+    def _get_caldav_supported_calendar_data(self, cr):
+        return ('calendar-data', 'urn:ietf:params:xml:ns:caldav', None,
+                    {'content-type': "text/calendar", 'version': "2.0" } )
+        
+    def _get_caldav_max_resource_size(self, cr):
+        return 65535
+
+    def _get_caldav_min_date_time(self, cr):
+        return "19700101T000000Z"
+
+    def _get_caldav_max_date_time(self, cr):
+        return "21001231T235959Z" # I will be dead by then
 
 class res_node_calendar(nodes.node_class):
     our_type = 'file'
@@ -398,10 +372,6 @@ class res_node_calendar(nodes.node_class):
             "urn:ietf:params:xml:ns:caldav" : (
                     'calendar-description',
                     'calendar-data',
-                    # 'calendar-home-set',
-                    # 'calendar-user-address-set',
-                    #'schedule-inbox-URL',
-                    # 'schedule-outbox-URL',
                     )}
     DAV_M_NS = {
            "http://calendarserver.org/ns/" : '_get_dav',
