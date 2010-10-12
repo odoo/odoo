@@ -1441,7 +1441,7 @@ class stock_move(osv.osv):
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'date': fields.datetime('Date', required=True, help="Move date: scheduled date until move is done, then date of actual move processing", readonly=True),
-        'date_expected': fields.datetime('Scheduled Date', required=True, help="Scheduled date for the processing of this move"),
+        'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
 
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True,states={'done': [('readonly', True)]}),
