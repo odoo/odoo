@@ -35,6 +35,7 @@ class ir_rule(osv.osv):
         for rule in self.browse(cr, uid, ids, context):
             eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
                             'time':time}
+            print rule.domain_force
             res[rule.id] = eval(rule.domain_force, eval_user_data)
         return res
 

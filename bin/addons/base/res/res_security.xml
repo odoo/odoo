@@ -17,7 +17,7 @@
         <field name="name">company rule</field>
         <field model="ir.model" name="model_id" ref="model_res_company"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|', ('child_ids', 'child_of', [company_id]), ('parent_id', 'child_of', [company_id])]</field>
+        <field name="domain_force">['|', ('child_ids', 'child_of', [user.company_id.id]), ('parent_id', 'child_of', [user.company_id.id])]</field>
     </record>
 
     <!-- Record Rule For User -->
