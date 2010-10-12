@@ -175,7 +175,7 @@ class document_directory(osv.osv):
             
         return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
 
-    def get_node_class(self, cr, uid, ids, dbro=None, context=None):
+    def get_node_class(self, cr, uid, ids, dbro=None, dynamic=False, context=None):
         """Retrieve the class of nodes for this directory
            
            This function can be overriden by inherited classes ;)
@@ -184,7 +184,10 @@ class document_directory(osv.osv):
         if dbro is None:
             dbro = self.browse(cr, uid, ids, context=context)
 
-        if dbro.type == 'directory':
+        if dynamic:
+            assert dbro.type == 'directory'
+            return nodes.node_res_obj
+        elif dbro.type == 'directory':
             return nodes.node_dir
         elif dbro.type == 'ressource':
             return nodes.node_res_dir

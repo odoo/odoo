@@ -72,6 +72,7 @@ class node_context(object):
         self.context = context
         self._dirobj = pooler.get_pool(cr.dbname).get('document.directory')
         self.node_file_class = node_file
+        self.extra_ctx = {} # Extra keys for context, that do _not_ trigger inequality
         assert self._dirobj
         self._dirobj._prepare_context(cr, uid, self, context=context)
         self.rootdir = False #self._dirobj._get_root_directory(cr,uid,context)
@@ -944,7 +945,7 @@ class node_res_obj(node_class):
                 if not res_name:
                     continue
                 # TODO Revise
-                klass = self.__class__
+                klass = directory.get_node_class(directory, dynamic=True, context=ctx)
                 res.append(klass(res_name, self.dir_id, self, self.context, self.res_model, res_bo = bo))
 
 
@@ -952,7 +953,7 @@ class node_res_obj(node_class):
         ids = dirobj.search(cr, uid, where2, context=ctx)
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             if dirr.type == 'directory':
-                klass = self.__class__
+                klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
                 res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
             elif dirr.type == 'ressource':
                 # child resources can be controlled by properly set dctx
@@ -980,7 +981,7 @@ class node_res_obj(node_class):
             dirids = dirids + dirobj.search(cr,uid, where5)
             for dirr in dirobj.browse(cr, uid, dirids, context=ctx):
                 if dirr.type == 'directory' and not dirr.parent_id:
-                    klass = self.__class__
+                    klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
                     res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
                 if dirr.type == 'ressource':
                     klass = dirr.get_node_class(dirr, context=ctx)
