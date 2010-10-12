@@ -194,7 +194,12 @@ class openerp_dav_handler(dav_interface):
             pname        -- name of the property
          """
         if self.M_NS.has_key(ns):
-            return dav_interface.get_prop(self, uri, ns, propname)
+            try:
+                # if it's not in the interface class, a "DAV:" property
+                # may be at the node class. So shouldn't give up early.
+                return dav_interface.get_prop(self, uri, ns, propname)
+            except DAV_NotFound:
+                pass
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()

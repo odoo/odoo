@@ -48,7 +48,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     re=doc.createElement("D:response")
     # append namespaces to response
     nsnum=0
-    namespaces = self.namespaces
+    namespaces = self.namespaces[:]
     if 'DAV:' in namespaces:
         namespaces.remove('DAV:')
     for nsname in namespaces:
@@ -108,10 +108,14 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
             ve=doc.createElement(ns_prefix+v[0])
             if need_ns:
                 ve.setAttribute("xmlns:ns"+str(nsnum), v[1])
-            if len(v) > 2 and isinstance(v[2], list):
-                # support nested elements like:
-                # ( 'elem', 'ns:', [('sub-elem1', 'ns1'), ...]
-                _prop_elem_child(ve, v[1], v[2], ns_prefix)
+            if len(v) > 2:
+                if isinstance(v[2], list):
+                    # support nested elements like:
+                    # ( 'elem', 'ns:', [('sub-elem1', 'ns1'), ...]
+                    _prop_elem_child(ve, v[1], v[2], ns_prefix)
+                else:
+                    vt =doc.createTextNode(tools.ustr(v[2]))
+                    ve.appendChild(vt)
             pnode.appendChild(ve)
         else:
             ve=doc.createTextNode(tools.ustr(v))
@@ -141,7 +145,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
         else:
             ns_prefix="ns"+str(namespaces.index(ns))+":"
         for p,v in good_props[ns].items():
-            if not v:
+            if v is None:
                 continue
             _prop_child(gp, ns, p, v)
 

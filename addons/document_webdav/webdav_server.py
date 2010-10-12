@@ -208,8 +208,9 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         if self.headers.has_key("Content-Type"):
             ct=self.headers['Content-Type']
         try:
-            location = dc.put(uri,body,ct)
+            location = dc.put(uri, body, ct)
         except DAV_Error, (ec,dd):
+            self._logger.warning("Cannot PUT to %s: %s", uri, dd, exc_info=True)
             return self.send_status(ec)
 
         headers = {}
