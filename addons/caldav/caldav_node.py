@@ -24,6 +24,7 @@ from document_webdav import nodes
 from document.nodes import _str2time
 import logging
 import StringIO
+from orm_utils import get_last_modified
 
 from tools.dict_tools import dict_merge, dict_merge2
 
@@ -64,21 +65,24 @@ class node_calendar_collection(nodes.node_dir):
         for cal in fil_obj.browse(cr, uid, ids, context=ctx):
             if (not name) or not ext:
                 res.append(node_calendar(cal.name, self, self.context, cal))
-            if (not name) or ext:
+            if cal.has_webcal and (not name) or ext:
                 res.append(res_node_calendar(cal.name+'.ics', self, self.context, cal))
             # May be both of them!
         return res
-
-    def _get_dav_owner(self, cr):
-        # Todo?
-        return False
 
     def _get_ttag(self, cr):
         return 'calen-dir-%d' % self.dir_id
 
     def _get_dav_getctag(self, cr):
-        result = self.get_etag(cr)
-        return str(result)
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('collection_id','=',self.dir_id)]
+        bc_obj = dirobj.pool.get('basic.calendar')
+        
+        res = get_last_modified(bc_obj, cr, uid, where, context=ctx)
+        return _str2time(res)
 
 class node_calendar_res_col(nodes.node_res_obj):
     """ Calendar collection, as a dynamically created node
@@ -116,7 +120,7 @@ class node_calendar_res_col(nodes.node_res_obj):
         for cal in fil_obj.browse(cr, uid, ids, context=ctx):
             if (not name) or not ext:
                 res.append(node_calendar(cal.name, self, self.context, cal))
-            if (not name) or ext:
+            if cal.has_webcal and (not name) or ext:
                 res.append(res_node_calendar(cal.name+'.ics', self, self.context, cal))
             # May be both of them!
         return res
@@ -125,8 +129,15 @@ class node_calendar_res_col(nodes.node_res_obj):
         return 'calen-dir-%d' % self.dir_id
 
     def _get_dav_getctag(self, cr):
-        result = self.get_etag(cr)
-        return str(result)
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('collection_id','=',self.dir_id)]
+        bc_obj = dirobj.pool.get('basic.calendar')
+        
+        res = get_last_modified(bc_obj, cr, uid, where, context=ctx)
+        return _str2time(res)
 
 class node_calendar(nodes.node_class):
     our_type = 'collection'
@@ -138,7 +149,9 @@ class node_calendar(nodes.node_class):
             "urn:ietf:params:xml:ns:caldav" : (
                     'calendar-description', 
                     'supported-calendar-component-set',
-                    )}
+                    ),
+            "http://apple.com/ns/ical/": ("calendar-color", "calendar-order"),
+            }
     DAV_PROPS_HIDDEN = {
             "urn:ietf:params:xml:ns:caldav" : (
                     'calendar-data',
@@ -154,7 +167,9 @@ class node_calendar(nodes.node_class):
            # "http://cal.me.com/_namespace/": '_get_dav', 
            'http://groupdav.org/': '_get_gdav',
            "http://calendarserver.org/ns/" : '_get_dav',
-           "urn:ietf:params:xml:ns:caldav" : '_get_caldav'}
+           "urn:ietf:params:xml:ns:caldav" : '_get_caldav',
+           "http://apple.com/ns/ical/": '_get_apple_cal',
+           }
 
     http_options = { 'DAV': ['calendar-access'] }
 
@@ -167,8 +182,12 @@ class node_calendar(nodes.node_class):
         self.content_length = 0
         self.displayname = calendar.name
         self.cal_type = calendar.type
-        # TODO owner
-        
+        self.cal_color = calendar.calendar_color or None
+        self.cal_order = calendar.calendar_order or None
+        try:
+            self.uuser = (calendar.user_id and calendar.user_id.login) or 'nobody'
+        except Exception:
+            self.uuser = 'nobody'
 
     def _get_dav_getctag(self, cr):
         dirobj = self.context._dirobj
@@ -186,8 +205,9 @@ class node_calendar(nodes.node_class):
 
     def get_dav_resourcetype(self, cr):
         res = [ ('collection', 'DAV:'),
+                ('calendar', 'urn:ietf:params:xml:ns:caldav'),
                 (str(self.cal_type + '-collection'), 'http://groupdav.org/'),
-                ('calendar', 'urn:ietf:params:xml:ns:caldav') ]
+                ]
         return res
 
     def get_domain(self, cr, filters):
@@ -373,6 +393,12 @@ class node_calendar(nodes.node_class):
 
     def _get_caldav_max_date_time(self, cr):
         return "21001231T235959Z" # I will be dead by then
+    
+    def _get_apple_cal_calendar_color(self, cr):
+        return self.cal_color
+
+    def _get_apple_cal_calendar_order(self, cr):
+        return self.cal_order
 
 class res_node_calendar(nodes.node_class):
     our_type = 'file'
@@ -444,7 +470,6 @@ class res_node_calendar(nodes.node_class):
         elif self.calendar_id:
             res = '%d' % (self.calendar_id)
         return res
-
 
     def rm(self, cr):
         uid = self.context.uid

@@ -32,6 +32,7 @@ import tools
 import time
 import logging
 from caldav_node import res_node_calendar
+from orm_utils import get_last_modified
 from tools.safe_eval import safe_eval as eval
 
 try:
@@ -552,33 +553,6 @@ class CalDAV(object):
             self.ical_reset('value')
         return res
 
-if True: # we need this indentation level ;)
-
-    def get_last_modified(self, cr, user, args, context=None, access_rights_uid=None):
-        """Return the last modification date of objects in 'domain'
-        This function has similar semantics to orm.search(), apart from the
-        limit, offset and order arguments, which make no sense here.
-        It is useful when we want to find if the table (aka set of records)
-        has any modifications we should update at the client.
-        """
-        if context is None:
-            context = {}
-        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read', context=context)
-
-        query = self._where_calc(cr, user, args, context=context)
-        self._apply_ir_rules(cr, user, query, 'read', context=context)
-        from_clause, where_clause, where_clause_params = query.get_sql()
-
-        where_str = where_clause and (" WHERE %s" % where_clause) or ''
-
-        cr.execute('SELECT MAX(COALESCE("%s".write_date, "%s".create_date)) FROM ' % (self._table, self._table) + 
-                    from_clause + where_str ,
-                    where_clause_params,
-                    debug=self._debug)
-        res = cr.fetchall()
-        return res[0][0]
-
-
 class Calendar(CalDAV, osv.osv):
     _name = 'basic.calendar'
     _calname = 'calendar'
@@ -607,6 +581,13 @@ class Calendar(CalDAV, osv.osv):
             'create_date': fields.datetime('Created Date', readonly=True),
             'write_date': fields.datetime('Modifided Date', readonly=True),
             'description': fields.text("description"),
+            'calendar_color': fields.char('Color', size=20, help="For supporting clients, the color of the calendar entries"),
+            'calendar_order': fields.integer('Order', help="For supporting clients, the order of this folder among the calendars"),
+            'has_webcal': fields.boolean('WebCal', required=True, help="Also export a <name>.ics entry next to the calendar folder, with WebCal content."),
+    }
+    
+    _defaults = {
+        'has_webcal': False,
     }
 
     def get_calendar_objects(self, cr, uid, ids, parent=None, domain=None, context=None):
