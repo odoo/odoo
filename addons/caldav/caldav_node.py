@@ -65,6 +65,9 @@ class node_calendar_collection(nodes.node_dir):
         for cal in fil_obj.browse(cr, uid, ids, context=ctx):
             if (not name) or not ext:
                 res.append(node_calendar(cal.name, self, self.context, cal))
+            if self.context.get('DAV-client', '') in ('iPhone', 'iCalendar'):
+                # these ones must not see the webcal entry.
+                continue
             if cal.has_webcal and (not name) or ext:
                 res.append(res_node_calendar(cal.name+'.ics', self, self.context, cal))
             # May be both of them!
@@ -120,6 +123,9 @@ class node_calendar_res_col(nodes.node_res_obj):
         for cal in fil_obj.browse(cr, uid, ids, context=ctx):
             if (not name) or not ext:
                 res.append(node_calendar(cal.name, self, self.context, cal))
+            if self.context.get('DAV-client', '') in ('iPhone', 'iCalendar'):
+                # these ones must not see the webcal entry.
+                continue
             if cal.has_webcal and (not name) or ext:
                 res.append(res_node_calendar(cal.name+'.ics', self, self.context, cal))
             # May be both of them!
@@ -206,8 +212,9 @@ class node_calendar(nodes.node_class):
     def get_dav_resourcetype(self, cr):
         res = [ ('collection', 'DAV:'),
                 ('calendar', 'urn:ietf:params:xml:ns:caldav'),
-                (str(self.cal_type + '-collection'), 'http://groupdav.org/'),
                 ]
+        if self.context.get('DAV-client', '') == 'GroupDAV':
+            res.append((str(self.cal_type + '-collection'), 'http://groupdav.org/'))
         return res
 
     def get_domain(self, cr, filters):
@@ -350,6 +357,11 @@ class node_calendar(nodes.node_class):
         return False
 
     def _get_caldav_calendar_data(self, cr):
+        if self.context.get('DAV-client', '') in ('iPhone', 'iCalendar'):
+            # Never return collective data to iClients, they get confused
+            # because they do propfind on the calendar node with Depth=1
+            # and only expect the childrens' data
+            return None
         res = []
         for child in self.children(cr):
             res.append(child._get_caldav_calendar_data(cr))
