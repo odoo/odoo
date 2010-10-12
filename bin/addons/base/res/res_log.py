@@ -38,7 +38,7 @@ class res_log(osv.osv_memory):
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid,
         'create_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-        'context': lambda *args: "{}",
+        'context': "{}",
         'read': False
     }
     _order='create_date desc'
@@ -66,4 +66,3 @@ class res_log(osv.osv_memory):
         return tools.flatten(res)
 
 res_log()
-
