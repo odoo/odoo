@@ -266,18 +266,18 @@ class node_class(object):
         """ Get a tag, unique per object + modification.
 
             see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
-        return self._get_ttag(cr) + ':' + self._get_wtag(cr)
+        return '"%s-%s"' % (self._get_ttag(cr), self._get_wtag(cr))
 
     def _get_wtag(self, cr):
         """ Return the modification time as a unique, compact string """
-        return str(_str2time(self.write_date))
+        return str(_str2time(self.write_date)).replace('.','')
 
     def _get_ttag(self,cr):
         """ Get a unique tag for this type/id of object.
             Must be overriden, so that each node is uniquely identified.
         """
         print "node_class.get_ttag()",self
-        raise NotImplementedError("get_etag stub()")
+        raise NotImplementedError("get_ttag stub()")
 
     def get_dav_props(self, cr):
         """ If this class has special behaviour for GroupDAV etc, export
@@ -883,7 +883,7 @@ class node_res_obj(node_class):
 
         return res
 
-    def get_dav_props(self, cr):
+    def get_dav_props_DEPR(self, cr):
         # Deprecated! (but document_ics must be cleaned, first)
         res = {}
         cntobj = self.context._dirobj.pool.get('document.directory.content')
@@ -897,7 +897,7 @@ class node_res_obj(node_class):
                 res['http://groupdav.org/'] = ('resourcetype',)
         return res
 
-    def get_dav_eprop(self, cr, ns, prop):
+    def get_dav_eprop_DEPR(self, cr, ns, prop):
         # Deprecated!
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
             logger.warning("Who asked for %s:%s?" % (ns, prop))
