@@ -139,7 +139,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_8">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+          <para style="terp_default_8">[[ o.partner_id.title.name or '' ]] [[ o.partner_id.name ]]</para>
           <para style="terp_default_8">[[ o.address_invoice_id.street ]]</para>
           <para style="terp_default_8">[[ o.address_invoice_id.street2 or removeParentNode('para') ]]</para>
           <para style="terp_default_8">[[ o.address_invoice_id.zip or '' ]] [[ o.address_invoice_id.city or '' ]]</para>
@@ -205,7 +205,7 @@
           <para style="terp_tblheader_Details_Centre">Quantity</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Unit Price</para>
+          <para style="terp_tblheader_Details_Right">Unit Price </para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Disc.(%)</para>
@@ -232,10 +232,10 @@
             <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.discount, digits=get_digits(dp='Account')) ]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(l.discount) ]] </para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal) ]] [[ o.currency_id.symbol ]]</para>
           </td>
         </tr>
         <tr>
@@ -294,7 +294,7 @@
           <para style="terp_default_9">Taxes:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]] [[ o.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -311,17 +311,19 @@
         </td>
       </tr>
     </blockTable>
-    <para style="Text body"/>
-    <blockTable colWidths="167.0,59.0,56.0,247.0" style="Table9">
+    <para style="Text body">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="167.0,59.0,56.0,248.0" style="Table9">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Tax</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Base</para>
+          <para style="terp_tblheader_Details_Right">Base </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Amount</para>
+          <para style="terp_tblheader_Details_Right">Amount </para>
         </td>
         <td>
           <para style="terp_default_8">
@@ -338,7 +340,7 @@
             <para style="terp_default_8">[[ t.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_8">[[ formatLang(t.base, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_8">[[ formatLang(t.base) ]] [[ o.currency_id.symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_8">[[ (t.tax_code_id and t.tax_code_id.notprintable) and removeParentNode('blockTable') or '' ]] [[ formatLang(t.amount) ]] [[ o.currency_id.symbol ]]</para>
@@ -362,7 +364,7 @@
     <blockTable colWidths="120.0,410.0" style="Table1">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Fiscal Position: </para>
+          <para style="terp_default_Bold_9">Fiscal Position Remark : </para>
         </td>
         <td>
           <para style="terp_default_9">[[ (o.fiscal_position.note and format(o.fiscal_position and o.fiscal_position.note)) or removeParentNode('blockTable') ]]</para>
