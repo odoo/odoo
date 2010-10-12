@@ -356,7 +356,6 @@ class users(osv.osv):
         if ids == [uid]:
             for key in values.keys():
                 if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
-                    print 'Not Found', key
                     break
             else:
                 if 'company_id' in values:
