@@ -785,6 +785,8 @@ class stock_picking(osv.osv):
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
             for move_line in picking.move_lines:
+                if move_line.state == 'cancel':
+                    continue
                 origin = move_line.picking_id.name
                 if move_line.picking_id.origin:
                     origin += ':' + move_line.picking_id.origin
