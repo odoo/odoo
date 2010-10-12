@@ -25,30 +25,6 @@
                 </tree>
             </field>
         </record>
-        <record id="view_budget_post_dotation_form" model="ir.ui.view">
-            <field name="name">account.budget.post.dotation.form</field>
-            <field name="model">account.budget.post.dotation</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Budget Dotation">
-                    <field name="period_id"/>
-                    <field name="amount"/>
-                    <field name="tot_planned" />
-                </form>
-            </field>
-        </record>
-        <record id="view_budget_post_dotation_tree" model="ir.ui.view">
-            <field name="name">account.budget.post.dotation.tree</field>
-            <field name="model">account.budget.post.dotation</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Budget Dotations">
-                    <field name="period_id"/>
-                    <field name="amount"/>
-                    <field name="tot_planned" />
-                </tree>
-            </field>
-        </record>
 
         <record id="open_budget_post_form" model="ir.actions.act_window">
             <field name="name">Budgetary Positions</field>
