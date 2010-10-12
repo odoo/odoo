@@ -461,6 +461,34 @@ class sale_order(osv.osv):
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 
+    def manual_invoice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        inv_ids = set()
+        inv_ids1 = set()
+        for id in ids:
+            for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
+                inv_ids.add(record.id)
+        # inv_ids would have old invoices if any
+        for id in ids:
+            wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
+            for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
+                inv_ids1.add(record.id)
+        inv_ids = list(inv_ids1.difference(inv_ids))
+
+        result = {
+            'name': 'Invoices',
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'account.invoice',
+            'view_id': False,
+            'context': "{'type':'out_refund'}",
+            'type': 'ir.actions.act_window',
+            'res_id': inv_ids[0],
+            'nodestroy' :True
+                  }
+
+        return result
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}

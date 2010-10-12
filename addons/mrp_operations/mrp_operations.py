@@ -67,7 +67,7 @@ class mrp_production_workcenter_line(osv.osv):
         @return: Dictionary of values.
         """
         ops = self.browse(cr, uid, ids, context=context)
-        date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops]
+        date_and_hours_by_cal = [(op.production_id.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops]
         intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
 
         res = {}
@@ -95,7 +95,7 @@ class mrp_production_workcenter_line(osv.osv):
        'date_planned': fields.datetime('Scheduled Date'),
        'date_planned_end': fields.function(_get_date_end, method=True, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
-       'date_finnished': fields.datetime('End Date'),
+       'date_finished': fields.datetime('End Date'),
        'delay': fields.float('Working Hours',help="This is lead time between operation start and stop in this workcenter",readonly=True),
        'production_state':fields.related('production_id','state',
             type='selection',
@@ -179,7 +179,7 @@ class mrp_production_workcenter_line(osv.osv):
         delay += (date_finished-date_start).days * 24
         delay += (date_finished-date_start).seconds / float(60*60)
         
-        self.write(cr, uid, ids, {'state':'done', 'date_finnished': date_now,'delay':delay})
+        self.write(cr, uid, ids, {'state':'done', 'date_finished': date_now,'delay':delay})
         self.modify_production_order_state(cr,uid,ids,'done')
         return True
 
@@ -288,7 +288,7 @@ class mrp_production(osv.osv):
                     dt_end = datetime.strptime(wc.date_planned_end, '%Y-%m-%d %H:%M:%S')
                 old = wc.sequence or 0
             super(mrp_production, self).write(cr, uid, [po.id], {
-                'date_finnished': dt_end
+                'date_finished': dt_end
             })
         return dt_end
 
@@ -306,7 +306,7 @@ class mrp_production(osv.osv):
                 if l.state in ('done','cancel','draft'):
                     continue
                 todo += l.move_dest_id_lines
-                if l.production_id and (l.production_id.date_finnished > dt):
+                if l.production_id and (l.production_id.date_finished > dt):
                     if l.production_id.state not in ('done','cancel'):
                         for wc in l.production_id.workcenter_lines:
                             i = self.pool.get('resource.calendar').interval_min_get(
@@ -335,8 +335,8 @@ class mrp_production(osv.osv):
                         break
                     if l.production_id.state in ('done','cancel'):
                         break
-                    if l.production_id and (l.production_id.date_start < po.date_finnished):
-                        self.write(cr, uid, [l.production_id.id], {'date_start': po.date_finnished})
+                    if l.production_id and (l.production_id.date_start < po.date_finished):
+                        self.write(cr, uid, [l.production_id.id], {'date_start': po.date_finished})
                         break
 
 
@@ -511,7 +511,7 @@ class mrp_operations_operation(osv.osv):
             if code.start_stop=='done':
                 self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,wc_op_id)
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_done', cr)
-                self.pool.get('mrp.production').write(cr,uid,vals['production_id'],{'date_finnished':datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
+                self.pool.get('mrp.production').write(cr,uid,vals['production_id'],{'date_finished':datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
 
             if code.start_stop=='pause':
                 self.pool.get('mrp.production.workcenter.line').action_pause(cr,uid,wc_op_id)
@@ -532,7 +532,7 @@ class mrp_operations_operation(osv.osv):
         line_vals['delay'] = delay
         if vals.get('date_start',False):
             if code.start_stop == 'done':
-                line_vals['date_finnished'] = vals['date_start']
+                line_vals['date_finished'] = vals['date_start']
             elif code.start_stop == 'start':    
                 line_vals['date_start'] = vals['date_start']
 

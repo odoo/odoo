@@ -241,7 +241,7 @@ class procurement_order(osv.osv):
                             'product_id': op.product_id.id,
                             'product_qty': qty,
                             'product_uom': op.product_uom.id,
-                            'location_id': op.warehouse_id.lot_input_id.id,
+                            'location_id': op.location_id.id,
                             'procure_method': 'make_to_order',
                             'origin': op.name
                         })

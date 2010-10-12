@@ -589,14 +589,14 @@
                </field>
         </record>
 
-      <act_window name="Unreceived Products"            
+      <act_window name="Unreceived Products"
             res_model="stock.picking.move.wizard"
             src_model="stock.picking"
             view_mode="form"
-            target="new"        
+            target="new"
             key2="client_action_multi"
-            id="act_stock_picking_move_wizard"/>        
-                
+            id="act_stock_picking_move_wizard"/>
+
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
             <field name="model">stock.picking</field>
@@ -660,7 +660,7 @@
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned" 
+                                        states="draft,waiting,confirmed,assigned"
                                         groups="base.group_extended"/>
                                     <field name="scrapped" invisible="1"/>
                                     <field name="prodlot_id" groups="base.group_extended"/>
@@ -849,7 +849,7 @@
                                    <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned" 
+                                        states="draft,waiting,confirmed,assigned"
                                         groups="base.group_extended"/>
                                     <field name="scrapped" invisible="1"/>
                                     <field name="prodlot_id" groups="base.group_extended"/>
@@ -1016,7 +1016,7 @@
         </record>
         <menuitem action="action_picking_tree_delivery" id="menu_action_picking_tree_delivery" parent="menu_stock_warehouse_mgmt" sequence="7"/>
 
-        <!-- 
+        <!--
         #
         # Sending Products
         #
@@ -1156,7 +1156,7 @@
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-apply"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Done" type="action" icon="gtk-execute"/>
-                                <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>                                
+                                <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -1287,7 +1287,7 @@
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned" 
+                                        states="draft,waiting,confirmed,assigned"
                                         groups="base.group_extended"/>
                                     <field name="scrapped" invisible="1"/>
                                     <field name="prodlot_id" groups="base.group_extended"/>
@@ -1371,7 +1371,7 @@
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Products Received" type="action" icon="gtk-ok"/>
-                                <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>                                
+                                <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -1951,8 +1951,6 @@
             <field eval="'ir.actions.act_window,%d'%action_view_stock_location_product" name="value"/>
             <field eval="True" name="object"/>
         </record>
-
-
         <record id="action_picking_tree_out" model="ir.actions.act_window">
             <field name="name">Customers Packings</field>
             <field name="res_model">stock.picking</field>

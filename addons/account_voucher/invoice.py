@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import fields, osv
+from osv import osv
 from tools.translate import _
 
 class invoice(osv.osv):

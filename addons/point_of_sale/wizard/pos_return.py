@@ -123,7 +123,7 @@ class pos_return(osv.osv_memory):
                    <button icon='gtk-cancel' special="cancel"
                                string="Cancel" />
                                    <button icon='gtk-ok' name= "create_returns"
-                       string="Return with Echange" type="object"/>
+                       string="Return with Exchange" type="object"/>
                                    <button icon='gtk-ok' name="create_returns2"
                         string="Refund Without Exchange" type="object"/>
                 </form>"""
@@ -208,7 +208,8 @@ class pos_return(osv.osv_memory):
                             'name': '%s (return)' %order_id.name,
                             'date': date_cur
                         })
-                        line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
+                        if qty != 0.0:
+                            line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
                 statementl_obj.create(cr, uid, {
                                                 'name': 'Refund %s'%order_id.name,
                                                 'statement_id': order_id.statement_ids[0].statement_id.id,
