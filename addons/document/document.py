@@ -28,6 +28,7 @@ import os
 import tools
 from tools.translate import _
 import nodes
+import logging
 
 DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['root_path'], 'filestore'))
 
@@ -107,7 +108,7 @@ class document_file(osv.osv):
         'parent_id': __get_def_directory
     }
     _sql_constraints = [
-        ('filename_uniq', 'unique (name,parent_id,res_id,res_model)', 'The file name must be unique !')
+        # filename_uniq is not possible in pure SQL
     ]
     def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
         name = vals.get('name', False)
@@ -260,6 +261,9 @@ class document_file(osv.osv):
                 r = stor.prepare_unlink(cr, uid, storage_id, f)
                 if r:
                     unres.append(r)
+            else:
+                logging.getLogger('document').warning("Unlinking attachment #%s %s that has no storage",
+                                                f.id, f.name)
         res = super(document_file, self).unlink(cr, uid, ids, context)
         stor.do_unlink(cr, uid, unres)
         return res

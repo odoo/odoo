@@ -187,8 +187,6 @@ class document_directory(osv.osv):
         if dbro.type == 'directory':
             return nodes.node_dir
         elif dbro.type == 'ressource':
-            assert not dbro.ressource_parent_type_id, \
-                "resource and parent_id at #%d: %r" % (dbro.id, dbro.ressource_parent_type_id)
             return nodes.node_res_dir
         else:
             raise ValueError("dir node for %s type", dbro.type)
@@ -248,6 +246,7 @@ class document_directory(osv.osv):
                     name=directory.name
                 if not parent_id:
                     parent_id=directory.parent_id and directory.parent_id.id or False
+                # TODO fix algo
                 if not ressource_parent_type_id:
                     ressource_parent_type_id=directory.ressource_parent_type_id and directory.ressource_parent_type_id.id or False
                 if not ressource_id:
@@ -268,8 +267,11 @@ class document_directory(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr, uid, vals):
             raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
-        if vals.get('name',False) and (vals.get('name').find('/')+1 or vals.get('name').find('@')+1 or vals.get('name').find('$')+1 or vals.get('name').find('#')+1) :
-            raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
+        newname = vals.get('name',False)
+        if newname:
+            for illeg in ('/', '@', '$', '#'):
+                if illeg in newname:
+                    raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
     # TODO def unlink(...
