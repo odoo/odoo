@@ -23,7 +23,7 @@ from osv import fields, osv
 import tools
 import time
 
-class res_log(osv.osv_memory):
+class res_log(osv.osv):
     _name = 'res.log'
     _columns = {
         'name': fields.char('Message', size=128, help='The logging message.', required=True),
@@ -37,11 +37,19 @@ class res_log(osv.osv_memory):
     }
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid,
-        'create_date': fields.datetime.now,
         'context': "{}",
         'read': False
     }
     _order='create_date desc'
+
+    _index_name = 'res_log_uid_read'
+    def _auto_init(self, cr, context={}):
+        super(res_log, self)._auto_init(cr, context)
+        cr.execute('SELECT 1 FROM pg_indexes WHERE indexname=%s',
+                   (self._index_name,))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX %s ON res_log (user_id, read)' %
+                       self._index_name)
 
     # TODO: do not return secondary log if same object than in the model (but unlink it)
     def get(self, cr, uid, context=None):
