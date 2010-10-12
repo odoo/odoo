@@ -390,7 +390,6 @@ class survey_form(report_rml):
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
-
         return (pdf, report_type)
 
 survey_form('report.survey.form', 'survey','','')

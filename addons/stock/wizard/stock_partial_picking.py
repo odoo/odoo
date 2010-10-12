@@ -97,7 +97,6 @@ class stock_partial_picking(osv.osv_memory):
                             'string': _('Production Lot'),
                             'type': 'many2one',
                             'relation': 'stock.production.lot',
-                            'readonly': True,
                         }
                     })
 
@@ -106,8 +105,8 @@ class stock_partial_picking(osv.osv_memory):
                         <field name="move%s_product_id" nolabel="1"/>
                         <field name="move%s_product_qty" string="Qty" />
                         <field name="move%s_product_uom" nolabel="1" />
-                        <field name="move%s_prodlot_id" />
-                    """%(m.id, m.id, m.id, m.id)
+                        <field name="move%s_prodlot_id" domain="[('product_id','=',move%s_product_id)]" groups="base.group_extended" />
+                    """%(m.id, m.id, m.id, m.id,m.id)
                     if (m.product_id.cost_method == 'average'):
                         _moves_fields.update({
                             'move%s_product_price'%(m.id) : {
@@ -171,20 +170,9 @@ class stock_partial_picking(osv.osv_memory):
                     res['move%s_product_uom'%(m.id)] = m.product_uom.id
                 if 'move%s_prodlot_id'%(m.id) in fields:
                     res['move%s_prodlot_id'%(m.id)] = m.prodlot_id.id
-
                 if (m.product_id.cost_method == 'average'):
                     currency = False
-                    price = 0
-                    if (pick.type == 'in') and 'purchase_id' in pick._columns.keys():
-                        if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
-                            price = m.purchase_line_id.price_unit
-                        if hasattr(pick, 'purchase_id') and pick.purchase_id:
-                            currency = pick.purchase_id.pricelist_id.currency_id.id
-                    if (pick.type == 'out') and 'sale_id' in pick._columns.keys():
-                        if hasattr(m, 'sale_line_id') and m.sale_line_id:
-                            price = m.sale_line_id.price_unit
-                        if hasattr(pick, 'sale_id') and pick.sale_id:
-                            currency = pick.sale_id.pricelist_id.currency_id.id
+                    price = m.product_id.standard_price
                     if 'move%s_product_price'%(m.id) in fields:
                         res['move%s_product_price'%(m.id)] = price
                     if 'move%s_product_currency'%(m.id) in fields:
