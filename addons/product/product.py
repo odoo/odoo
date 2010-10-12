@@ -69,15 +69,15 @@ class product_uom(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
             help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
-        'factor': fields.float('Ratio', digits=(12, 6), required=True,
+        'factor': fields.float('Ratio', required=True,digits=(12, 6),
             help='How many times this UoM is smaller than the reference UoM in this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
-        'factor_inv': fields.function(_factor_inv, digits=(12, 6),
+        'factor_inv': fields.function(_factor_inv, digits_compute=dp.get_precision('Product UoM'),
             fnct_inv=_factor_inv_write,
             method=True, string='Ratio',
             help='How many times this UoM is bigger than the reference UoM in this category:\n'\
                     '1 * (this unit) = ratio * (reference unit)', required=True),
-        'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
+        'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Product UoM'), required=True,
             help="The computed quantity will be a multiple of this value. "\
                  "Use 1.0 for a UoM that cannot be further split, such as a piece."),
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),

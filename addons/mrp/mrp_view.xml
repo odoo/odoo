@@ -5,9 +5,8 @@
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" parent="" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager,base.group_system" sequence="8"/>
 
-        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
-        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
+
 
         <menuitem name="Master Data"
                   id="menu_mrp_bom"
@@ -488,23 +487,8 @@
         </record>
 
         <!--
-        Procurement
-        -->
-
-        <menuitem action="procurement.procurement_action" id="base.menu_mrp_procurement_action"
-                  parent="mrp.menu_mrp_manufacturing" sequence="3" />
-        <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="3"/>
-        <menuitem action="procurement.action_compute_schedulers" id="base.mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager"/>
-
-        <!--
-        Order Point
-        -->
-        <menuitem action="procurement.action_orderpoint_form" id="menu_action_orderpoint_form" parent="mrp.menu_mrp_reordering"/>
-
-        <!--
         Production Management
         -->
-
         <record id="mrp_production_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>

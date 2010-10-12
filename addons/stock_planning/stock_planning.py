@@ -691,7 +691,7 @@ class stock_planning(osv.osv):
                         'name': _('MPS(') + str(user.login) +') '+ obj.period_id.name,
                         'picking_id': picking_id,
                         'product_id': obj.product_id.id,
-                        'date_planned': obj.period_id.date_start,
+                        'date': obj.period_id.date_start,
                         'product_qty': uom_qty,
                         'product_uom': uom,
                         'product_uos_qty': uos_qty,

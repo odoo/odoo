@@ -206,8 +206,7 @@ class pos_return(osv.osv_memory):
                             'product_id': line.product_id.id,
                             'location_dest_id': stock_dest_id,
                             'name': '%s (return)' %order_id.name,
-                            'date': date_cur,
-                            'date_planned': date_cur
+                            'date': date_cur
                         })
                         if qty != 0.0:
                             line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
@@ -294,8 +293,7 @@ class add_product(osv.osv_memory):
                                 'product_id':prod_id.id,
                                 'location_dest_id':stock_dest_id,
                                 'name':'%s (return)' %order_id.name,
-                                'date':date_cur,
-                                'date_planned':date_cur
+                                'date':date_cur
                             })
 
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
@@ -371,7 +369,6 @@ class add_product(osv.osv_memory):
                         'location_dest_id':stock_dest_id,
                         'name':'%s (return)' % order_id.name,
                         'date':date_cur,
-                        'date_planned':date_cur
                     })
             wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [new_picking], context)
