@@ -20,12 +20,12 @@
         <record id="board_hr_expense_form" model="ir.ui.view">
             <field name="name">board.hr.expense.form</field>
             <field name="model">board.board</field>
-			<field name="inherit_id" ref="hr.board_hr_form"/>              
+            <field name="inherit_id" ref="hr.board_hr_form"/>              
             <field name="type">form</field>
             <field name="arch" type="xml">
-      		<xpath expr="/form/hpaned/child1" position="inside"> 
-				 <action colspan="4" height="220" name="%(action_my_expense)d" string="My Expenses" />
-			</xpath>
+                <xpath expr="/form/hpaned/child1" position="inside"> 
+                     <action colspan="4" height="220" name="%(action_my_expense)d" string="My Expenses" />
+                </xpath>
             </field>
         </record>
 

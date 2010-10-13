@@ -62,7 +62,7 @@ class survey_name_wiz(osv.osv_memory):
             for sur in surv_obj.browse(cr, uid, [context.get('survey_id',False)]):
                 result.append((sur.id, sur.title))
             return result
-        group_id = self.pool.get('res.groups').search(cr, uid, [('name', 'in', ('Tools / Manager','Tools / User'))])
+        group_id = self.pool.get('res.groups').search(cr, uid, [('name', 'in', ('Tools / Manager','Tools / User','Survey / User'))])
         user_obj = self.pool.get('res.users')
         user_rec = user_obj.read(cr, uid, uid)
         for sur in surv_obj.browse(cr, uid, surv_obj.search(cr, uid, [])):

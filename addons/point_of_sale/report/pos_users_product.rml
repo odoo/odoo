@@ -165,7 +165,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="370.0,55.0,95.0" style="Table3">
+    <blockTable colWidths="356.0,68.0,95.0" style="Table3">
       <tr>
         <td>
           <para style="terp_tblheader_General">Product</para>
@@ -182,7 +182,7 @@
       <para style="terp_default_1">[[ repeatIn(get_data(statement), 'line_ids') and ' ' or removeParentNode('blockTable') ]]</para>
       <section>
         <para style="terp_default_1">[[ repeatIn(get_data(statement), 'line_ids')]]</para>
-        <blockTable colWidths="371.0,55.0,95.0" style="Table6">
+        <blockTable colWidths="356.0,69.0,95.0" style="Table6">
           <tr>
             <td>
               <para style="terp_default_9">[ [[line_ids['code'] ]] ] [[ line_ids['name'] ]]</para>
@@ -191,13 +191,13 @@
               <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]] [[line_ids['uom'] ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9_Bold">[[ formatLang(line_ids['amt']) ]] [[ company.currency_id.symbol ]]</para>
+              <para style="terp_default_Right_9">[[ formatLang(line_ids['amt']) ]] [[ company.currency_id.symbol ]]</para>
             </td>
           </tr>
         </blockTable>
       </section>
     </section>
-    <blockTable colWidths="371.0,55.0,94.0" style="Table5">
+    <blockTable colWidths="357.0,69.0,94.0" style="Table5">
       <tr>
         <td>
           <para style="P1">
@@ -208,7 +208,7 @@
           <para style="terp_tblheader_General_Right">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(get_total(statement)) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(get_total(statement)) ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
