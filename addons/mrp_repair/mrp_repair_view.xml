@@ -2,24 +2,24 @@
 <openerp>
     <data>
 
-	<record id="view_repair_order_tree" model="ir.ui.view">
-            <field name="name">mrp.repair.tree</field>
-            <field name="model">mrp.repair</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Repairs order" colors="gray:state in ('done','cancel');black:state not in ('done','cancel');blue:state=='draft'">
-                     <field name="name" select="1" />
-                     <field name="product_id" select="1" />
-                     <field name="move_id"/>
-                     <field name="partner_id"/>
-                     <field name="address_id"/>
-                     <field name="location_id"/>
-                     <field name="location_dest_id"/>
-                     <field name="guarantee_limit"/>
-                     <field name="state"/>
-                </tree>
-            </field>
-        </record>
+    <record id="view_repair_order_tree" model="ir.ui.view">
+        <field name="name">mrp.repair.tree</field>
+        <field name="model">mrp.repair</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Repairs order" colors="gray:state in ('done','cancel');black:state not in ('done','cancel');blue:state=='draft'">
+                <field name="name" select="1" />
+                <field name="product_id" select="1" />
+                <field name="move_id"/>
+                <field name="partner_id"/>
+                <field name="address_id"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
+                <field name="guarantee_limit"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
 
     <record id="view_repair_order_form" model="ir.ui.view">
         <field name="name">mrp.repair.form</field>
@@ -177,30 +177,30 @@
           <field name="type">search</field>
           <field name="arch" type="xml">
               <search string="Search Reair Orders">
-              	<group col='4' colspan='4'>
-              	       <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>   
+                  <group col='4' colspan='4'>
+                       <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>   
                        <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" name="current" />
                        <filter icon="terp-emblem-important" string="Ready To Repair" domain="[('state','=','ready')]"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-dolar" string="invoiced" domain="[('invoiced','=',True)]"/>
                        <separator orientation="vertical"/>
-	              		<field name="name"/>
-	                    <field name="product_id"/>
-	                    <field name="partner_id"/>
-	                    <field name="state" />
-              	</group>
-              	<newline/>
-                  <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
-                      <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                       <field name="name"/>
+                       <field name="product_id"/>
+                       <field name="partner_id"/>
+                       <field name="state" />
+                  </group>
+                  <newline/>
+                  <group expand="0" string="Group By..." colspan="10" col="8">
+                      <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                       <separator orientation="vertical"/>
                       <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                       <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                       <separator orientation="vertical"/>
-                      <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'guarantee_limit'}"/>
+                      <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'guarantee_limit'}" help="Guarantee limit"/>
                   </group>
              </search>
           </field>
-	</record>
+    </record>
 
         
 
