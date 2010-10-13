@@ -139,7 +139,7 @@
                         help="Expenses to Invoice"/>
                       <separator orientation="vertical"/>
                       <filter icon="terp-go-month" string="This Month" name="this"
-                              domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                              domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                       <separator orientation="vertical"/>
                       <field name="employee_id" select='1'/>
                       <field name="date" select='1'/>

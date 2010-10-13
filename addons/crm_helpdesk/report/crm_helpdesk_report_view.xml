@@ -80,7 +80,7 @@
                             domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                             help="Helpdesk requests occurred in current year"/>
                         <filter string="   Month   " icon="terp-go-month" name="this_month"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                            domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Helpdesk requests occurred in current month"/>
                         <filter icon="terp-go-month" string="    Month-1    " separator="1"
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"

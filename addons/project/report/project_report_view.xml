@@ -63,7 +63,7 @@
 	                    	    help="Current Year"/>
 	                    <filter icon="terp-go-month" string="   Month   "
 	                    		name="month"
-	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;=',time.strftime('%%Y-%%m-01'))]"
+	                    		domain="[('date_start','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_start','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
 	                    		help="Current Month"/>
 		                <filter icon="terp-go-week"
 	                            string="    Month-1    "
