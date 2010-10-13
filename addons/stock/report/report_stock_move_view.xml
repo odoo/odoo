@@ -74,7 +74,6 @@
                 <filter icon="terp-go-month"
                  string="Month-1"
                  name="month-1"
-                 separator="1"
                  domain="[('date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
                  help="Last month"/>
                 <filter icon="terp-go-month" string="Month"
@@ -96,7 +95,6 @@
                 <filter icon="terp-go-home" name="in" string="Incoming" domain="[('type','=','in')]"/>
                 <filter icon="terp-go-home" name="internal" string="Internal" domain="[('type','=','internal')]"/>
                 <filter icon="terp-go-home" name="out" string="Outgoing" domain="[('type','=','out')]"/>
-                <filter icon="terp-go-home" name="delivery" string="Deliveries" domain="[('type','=','delivery')]"/>
                 <separator orientation="vertical"/>
                 <field name="product_id" default_focus="1"/>
                 <field name="partner_id" context="{'contact_display':'partner'}"/>

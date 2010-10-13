@@ -83,7 +83,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         full_account = []
         result_tmp = 0.0
         self.cr.execute(
-            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code ,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
+            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
                     "CASE WHEN sum(debit) > sum(credit) " \
                         "THEN sum(debit) - sum(credit) " \
                         "ELSE 0 " \
@@ -254,7 +254,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 "JOIN account_move am ON (am.id = l.move_id)" \
                 "WHERE l.account_id IN %s"  \
                     "AND am.state IN %s" \
-                    "AND " + self.query + "" ,
+                    "AND " + self.query + "",
                     (tuple(self.account_ids), tuple(move_state)))
         temp_res = float(self.cr.fetchone()[0] or 0.0)
         return temp_res
@@ -273,7 +273,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 "JOIN account_move am ON (am.id = l.move_id)" \
                 "WHERE l.account_id IN %s" \
                     "AND am.state IN %s" \
-                    "AND " + self.query + "" ,
+                    "AND " + self.query + "",
                     (tuple(self.account_ids), tuple(move_state)))
         temp_res = float(self.cr.fetchone()[0] or 0.0)
         return temp_res

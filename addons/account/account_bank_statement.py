@@ -21,9 +21,7 @@
 
 import time
 
-import netsvc
 from osv import fields, osv
-from tools.misc import currency
 from tools.translate import _
 import decimal_precision as dp
 

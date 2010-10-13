@@ -56,6 +56,24 @@
                     </field>
                 </group>
                 <newline/>
+                <group expand="0" string="Group By...">
+                    <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
+                    <filter string="General Account" icon="terp-folder-green" context="{'group_by':'general_account_id'}"/>
+                    <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                    <filter string="Product UOM" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
+                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
+                    <filter string="Month" name="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                </group>
+                <newline/>
                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
                     <field name="currency_id" widget="selection"/>
                     <field name="general_account_id" widget="selection"/>
@@ -65,23 +83,6 @@
                     <field name="name"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                </group>
-                <newline/>
-                <group expand="1" string="Group By...">
-                    <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
-                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
-                    <filter string="General Account" icon="terp-folder-green" context="{'group_by':'general_account_id'}"/>
-                    <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <filter string="Product UOM" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
-                    <filter string="Month" name="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>
