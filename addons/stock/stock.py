@@ -1694,23 +1694,23 @@ class stock_move(osv.osv):
         """
         moves = self.browse(cr, uid, ids)
         self.write(cr, uid, ids, {'state': 'confirmed'})
-        i = 0
+        res_obj = self.pool.get('res.company')
+        location_obj = self.pool.get('stock.location')
+        move_obj = self.pool.get('stock.move')
+        wf_service = netsvc.LocalService("workflow")
 
         def create_chained_picking(self, cr, uid, moves, context=None):
             new_moves = []
-            res_obj = self.pool.get('res.company')
-            picking_obj = self.pool.get('stock.picking')
-            move_obj = self.pool.get('stock.move')
             if context is None:
                 context = {}
             for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
-                ptype = todo[0][1][5] and todo[0][1][5] or self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
+                ptype = todo[0][1][5] and todo[0][1][5] or location_obj.picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
                 pick_name = picking.name or ''
                 if picking:
                     pickid = self._create_chained_picking(cr, uid, pick_name,picking,ptype,todo,context)
                 else:
                     pickid = False
-                for move, (loc, auto, delay, journal, company_id, ptype) in todo:
+                for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:
                     new_id = move_obj.copy(cr, uid, move.id, {
                         'location_id': move.location_dest_id.id,
                         'location_dest_id': loc.id,
@@ -1728,7 +1728,6 @@ class stock_move(osv.osv):
                     })
                     new_moves.append(self.browse(cr, uid, [new_id])[0])
                 if pickid:
-                    wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
             if new_moves:
                 create_chained_picking(self, cr, uid, new_moves, context)
