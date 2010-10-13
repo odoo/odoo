@@ -22,7 +22,6 @@
 from osv import osv,fields
 from osv.orm import except_orm
 import pickle
-from tools.translate import _
 
 class ir_values(osv.osv):
     _name = 'ir.values'
@@ -205,7 +204,7 @@ class ir_values(osv.osv):
                         pos+=1
                 try:
                     datas = self.pool.get(model).read(cr, uid, [id], fields, context)
-                except except_orm, e:
+                except except_orm:
                     return False
                 datas= datas and datas[0] or None
                 if not datas:
