@@ -349,7 +349,7 @@ class account_move_line(osv.osv):
         return res
 
     def name_get(self, cr, uid, ids, context={}):
-        if not len(ids):
+        if not ids:
             return []
         result = []
         for line in self.browse(cr, uid, ids, context):
@@ -363,18 +363,18 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
 
-        if not len(args):
+        if not args:
             return []
         where = ' and '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
         cursor.execute('select id, sum(debit-credit) from account_move_line \
                      group by id, debit, credit having '+where)
         res = cursor.fetchall()
-        if not len(res):
+        if not res:
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
 
     def _invoice_search(self, cursor, user, obj, name, args, context):
-        if not len(args):
+        if not args:
             return []
         invoice_obj = self.pool.get('account.invoice')
 
@@ -407,7 +407,7 @@ class account_move_line(osv.osv):
                     qu2 += x[2]
                 else:
                     qu1.append(' (False)')
-        if len(qu1):
+        if qu1:
             qu1 = ' AND' + ' AND'.join(qu1)
         else:
             qu1 = ''
@@ -415,7 +415,7 @@ class account_move_line(osv.osv):
                 'FROM account_move_line l, account_invoice i ' \
                 'WHERE l.move_id = i.move_id ' + qu1, qu2)
         res = cursor.fetchall()
-        if not len(res):
+        if not res:
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
 
@@ -985,7 +985,7 @@ class account_move_line(osv.osv):
         part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
         unlink_ids += rec_ids
         unlink_ids += part_rec_ids
-        if len(unlink_ids):
+        if unlink_ids:
             obj_move_rec.unlink(cr, uid, unlink_ids)
         return True
 

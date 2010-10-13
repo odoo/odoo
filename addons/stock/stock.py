@@ -186,7 +186,7 @@ class stock_location(osv.osv):
                 "validated automatically. With 'Manual Operation', the stock move has to be validated "\
                 "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
             ),
-        'chained_picking_type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', help="Shipping Type of the Picking List that will contain the chained move (leave empty to automatically detect the type based on the source and destination locations)."),
+        'chained_picking_type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', help="Shipping Type of the Picking List that will contain the chained move (leave empty to automatically detect the type based on the source and destination locations)."),
         'chained_company_id': fields.many2one('res.company', 'Chained Company', help='The company the Picking List containing the chained move will belong to (leave empty to use the default company determination rules'),
         'chained_delay': fields.integer('Chaining Lead Time',help="Delay between original move and chained move in days"),
         'address_id': fields.many2one('res.partner.address', 'Location Address',help="Address of  customer or supplier."),
@@ -242,7 +242,7 @@ class stock_location(osv.osv):
         """
         result = 'internal'
         if (from_location.usage=='internal') and (to_location and to_location.usage in ('customer', 'supplier')):
-            result = 'delivery'
+            result = 'out'
         elif (from_location.usage in ('supplier', 'customer')) and (to_location.usage == 'internal'):
             result = 'in'
         return result
@@ -602,7 +602,7 @@ class stock_picking(osv.osv):
         'name': fields.char('Reference', size=64, select=True),
         'origin': fields.char('Origin', size=64, help="Reference of the document that produced this picking.", select=True),
         'backorder_id': fields.many2one('stock.picking', 'Back Order of', help="If this picking was split this field links to the picking that contains the other part that has been processed already.", select=True),
-        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
+        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'note': fields.text('Notes'),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True),
         'location_id': fields.many2one('stock.location', 'Location', help="Keep empty if you produce at the location where the finished products are needed." \
@@ -633,7 +633,7 @@ class stock_picking(osv.osv):
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'auto_picking': fields.boolean('Auto-Picking'),
         'address_id': fields.many2one('res.partner.address', 'Address', help="Address of partner"),
-        'partner_id': fields.related('address_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True),        
+        'partner_id': fields.related('address_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
@@ -1063,14 +1063,14 @@ class stock_picking(osv.osv):
                 if move.state not in ('cancel',):
                     return False
         return True
-   
+
     def allow_cancel(self, cr, uid, ids, context={}):
         for pick in self.browse(cr, uid, ids, context=context):
             if not pick.move_lines:
                 return True
             for move in pick.move_lines:
                 if move.state == 'done':
-                    raise osv.except_osv(_('Error'), _('You cannot cancel picking because stock move is in done state !'))                    
+                    raise osv.except_osv(_('Error'), _('You cannot cancel picking because stock move is in done state !'))
         return True
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
@@ -1165,7 +1165,7 @@ class stock_picking(osv.osv):
 
                         # Record the values that were chosen in the wizard, so they can be
                         # used for inventory valuation if real-time valuation is enabled.
-                        move_obj.write(cr, uid, [move.id], 
+                        move_obj.write(cr, uid, [move.id],
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency})
 
@@ -1251,7 +1251,6 @@ class stock_picking(osv.osv):
                 'out':'Picking List',
                 'in':'Reception',
                 'internal': 'Internal picking',
-                'delivery': 'Delivery order'
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or 'n/a') + "' "
             if pick.min_date:
@@ -1337,7 +1336,7 @@ class stock_production_lot(osv.osv):
         'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL [INT_REF]"),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'date': fields.datetime('Creation Date', required=True),
-        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select=True, 
+        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select=True,
             help="Current quantity of products with this Production Lot Number available in company warehouses",
             digits_compute=dp.get_precision('Product UoM')),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
@@ -1652,10 +1651,20 @@ class stock_move(osv.osv):
             )
             if dest:
                 if dest[1] == 'transparent':
+                    newdate = (datetime.strptime(m.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=dest[2] or 0)).strftime('%Y-%m-%d')
                     self.write(cr, uid, [m.id], {
-                        'date': (datetime.strptime(m.date, '%Y-%m-%d %H:%M:%S') + \
-                            relativedelta(days=dest[2] or 0)).strftime('%Y-%m-%d'),
+                        'date': newdate,
                         'location_dest_id': dest[0].id})
+                    if m.picking_id and (dest[3] or dest[5]):
+                        self.pool.get('stock.picking').write(cr, uid, [m.picking_id.id], {
+                            'stock_journal_id': dest[3] or m.picking_id.stock_journal_id.id,
+                            'type': dest[5] or m.picking_id.type
+                        }, context=context)
+                    m.location_dest_id = dest[0]
+                    res2 = self._chain_compute(cr, uid, [m], context=context)
+                    for pick_id in res2.keys():
+                        result.setdefault(pick_id, [])
+                        result[pick_id] += res2[pick_id]
                 else:
                     result.setdefault(m.picking_id, [])
                     result[m.picking_id].append( (m, dest) )
@@ -1695,16 +1704,10 @@ class stock_move(osv.osv):
             for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
                 ptype = todo[0][1][5] and todo[0][1][5] or self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
                 pick_name = picking.name or ''
-                if ptype == 'delivery':
-                    pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.delivery')
-                check_picking_ids = picking_obj.search(cr, uid, [('name','=',picking.name),('origin','=',str(picking.origin or '')),('type','=',ptype),('move_type','=',picking.move_type)])
-                if check_picking_ids:
-                    pickid = check_picking_ids[0]
+                if picking:
+                    pickid = self._create_chained_picking(cr, uid, pick_name,picking,ptype,todo,context)
                 else:
-                    if picking:
-                        pickid = self._create_chained_picking(cr, uid, pick_name,picking,ptype,todo,context)
-                    else:
-                        pickid = False
+                    pickid = False
                 for move, (loc, auto, delay, journal, company_id, ptype) in todo:
                     new_id = move_obj.copy(cr, uid, move.id, {
                         'location_id': move.location_dest_id.id,
@@ -1851,7 +1854,7 @@ class stock_move(osv.osv):
         """
         Return the accounts and journal to use to post Journal Entries for the real-time
         valuation of the move.
-        
+
         :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
         :raise: osv.except_osv() is any mandatory account or journal is not defined.
         """
@@ -1893,13 +1896,13 @@ class stock_move(osv.osv):
         default_uom = move.product_id.uom_id.id
         qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
 
-        # if product is set to average price and a specific value was entered in the picking wizard, 
+        # if product is set to average price and a specific value was entered in the picking wizard,
         # we use it
         if move.product_id.cost_method == 'average' and move.price_unit:
             reference_amount = qty * move.price_unit
             reference_currency_id = move.price_currency_id.id or reference_currency_id
 
-        # Otherwise we default to the company's valuation price type, considering that the values of the 
+        # Otherwise we default to the company's valuation price type, considering that the values of the
         # valuation field are expressed in the default currency of the move's company.
         else:
             if context is None:
@@ -1941,7 +1944,7 @@ class stock_move(osv.osv):
 
             move_obj = self.pool.get('account.move')
             for j_id, move_lines in account_moves:
-                move_obj.create(cr, uid, 
+                move_obj.create(cr, uid,
                         {'name': move.name,
                          'journal_id': j_id,
                          'line_id': move_lines,
@@ -2006,10 +2009,10 @@ class stock_move(osv.osv):
 
     def _create_account_move_line(self, cr, uid, move, src_account_id, dest_account_id, reference_amount, reference_currency_id, context=None):
         """
-        Generate the account.move.line values to post to track the stock valuation difference due to the 
+        Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given stock move.
         """
-        # prepare default values considering that the destination accounts have the reference_currency_id as their main currency 
+        # prepare default values considering that the destination accounts have the reference_currency_id as their main currency
         partner_id = (move.picking_id.address_id and move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id) or False
         debit_line_vals = {
                     'name': move.name,
@@ -2033,7 +2036,7 @@ class stock_move(osv.osv):
         }
 
         # if we are posting to accounts in a different currency, provide correct values in both currencies correctly
-        # when compatible with the optional secondary currency on the account. 
+        # when compatible with the optional secondary currency on the account.
         # Financial Accounts only accept amounts in secondary currencies if there's no secondary currency on the account
         # or if it's the same as that of the secondary amount being posted.
         account_obj = self.pool.get('account.account')
@@ -2310,7 +2313,7 @@ class stock_move(osv.osv):
 
                     # Record the values that were chosen in the wizard, so they can be
                     # used for inventory valuation if real-time valuation is enabled.
-                    self.write(cr, uid, [move.id], 
+                    self.write(cr, uid, [move.id],
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency,
                                 })

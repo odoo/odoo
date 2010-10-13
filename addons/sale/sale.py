@@ -1233,11 +1233,6 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
             if o.step == 'one':
                 md = self.pool.get('ir.model.data')
-                group_id = md._get_id(cr, uid, 'base', 'group_no_one')
-                group_id = md.browse(cr, uid, group_id, context=context).res_id
-                menu_id = md._get_id(cr, uid, 'stock', 'menu_action_picking_tree_delivery')
-                menu_id = md.browse(cr, uid, menu_id, context=context).res_id
-                self.pool.get('ir.ui.menu').write(cr, uid, [menu_id], {'groups_id': [(6, 0, [group_id])]})
                 location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
                 location_id = md.browse(cr, uid, location_id, context=context).res_id
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})

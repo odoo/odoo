@@ -38,7 +38,7 @@ class stock_partial_move(osv.osv_memory):
             context={}
         for m in move_obj.browse(cr, uid, context.get('active_ids', [])):
             if m.state in ('done', 'cancel'):
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delivery products  which are already delivered !'))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot deliver products which are already delivered !'))
 
 
             if 'move%s_product_id'%(m.id) not in self._columns:

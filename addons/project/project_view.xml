@@ -7,7 +7,7 @@
             name="Project" sequence="10"
             groups="group_project_manager,group_project_user,base.group_system,group_project_finance_user"/>
 
-        <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
+        <menuitem id="menu_project_management" name="Project Management" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60" groups="base.group_system,group_project_finance_user"/>
 
         <!-- Project -->
@@ -112,7 +112,7 @@
                        <field name="name" string="Project Name"/>
                        <field name="user_id" string="Project Manager" default="1">
                             <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manage" icon="terp-personal"/>
-                       </field> 
+                       </field>
                        <field name="partner_id" string="Partner"/>
                    </group>
                    <newline />

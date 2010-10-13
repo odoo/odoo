@@ -33,8 +33,8 @@ It allows creating tasks as soon as a new mail arrives in our configured mail se
 Moreover, it keeps track of all further communications and task states.  
     """,
     "init_xml": [],
-    "update_xml": [
-        "project_mailgate_view.xml",
+    "update_xml": ["security/ir.model.access.csv",
+                   "project_mailgate_view.xml",
     ],
     'demo_xml': [
     ],

@@ -63,7 +63,7 @@ class stock_partial_picking(osv.osv_memory):
         _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
                         <group colspan="4" col="4">
-                    	<field name="date"/>
+                        <field name="date"/>
                         </group>
                         <separator colspan="4" string="Move Detail"/>
                         """
