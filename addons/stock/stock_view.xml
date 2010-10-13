@@ -394,7 +394,7 @@
                     <field name="date" string="Date"/>
                     <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
+                    <button name="action_done" states="confirmed,assigned" string="Validate" type="object" icon="gtk-jump-to"/>
                 </tree>
             </field>
         </record>
@@ -873,7 +873,7 @@
                                     <field name="date"/>
                                     <field name="state"/>
                                     <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
-                                    <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
+                                    <button name="action_done" states="confirmed,assigned" string="Validate" type="object" icon="gtk-go-forward"/>
                                 </tree>
                                 <form string="Stock Moves">
                                     <group colspan="2" col="4">
@@ -937,7 +937,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-apply"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="%(action_partial_picking)d" states="assigned" string="Done" type="action" icon="gtk-go-forward"/>
+                                <button name="%(action_partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward"/>
                                 <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
                                 
                             </group>
@@ -1330,7 +1330,7 @@
                     <field name="date"/>
                     <field name="date_expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-ok"/>
+                    <button name="action_done" states="confirmed,assigned" string="Validate" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1398,7 +1398,7 @@
                         <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                         <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
+                        <button name="action_done" states="assigned" string="Validate" type="object" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>
@@ -1502,7 +1502,7 @@
                     <field name="state"/>
                     <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                     <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
-                    <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
+                    <button name="action_done" states="confirmed,assigned" string="gtk-go-forward" type="object" icon="tk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1520,7 +1520,7 @@
                     <field name="product_qty" />
                     <field name="product_uom" string="UoM"/>
                     <field name="date"/>
-                    <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
+                    <button name="action_done" states="confirmed,assigned" string="Validate" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1586,7 +1586,7 @@
                         <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="%(action_partial_move)d" states="assigned,confirmed" string="Partial" type="action" icon="gtk-justify-fill"/>
-                        <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
+                        <button name="action_done" states="assigned" string="Validate" type="object" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>
