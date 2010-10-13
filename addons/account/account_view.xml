@@ -482,8 +482,8 @@
                     <field name="balance_end_real"/>
                     <field name="balance_end" invisible="1"/>
                     <field name="state"/>
-                    <button type="object" string="Confirm" name="button_confirm_bank" states="draft" icon="terp-camera_test"/>
                     <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="gtk-cancel"/>
+                    <button type="object" string="Confirm" name="button_confirm_bank" states="draft" icon="terp-camera_test"/>
                 </tree>
             </field>
         </record>
@@ -564,9 +564,9 @@
                     <group col="8" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                         <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -596,9 +596,9 @@
                     <group col="8" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                         <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -1334,8 +1334,8 @@
                             <field name="narration" colspan="4" nolabel="1" height="50"/>
                             <group col="4" colspan="4">
                                 <field name="state" select="1"/>
-                                <button name="button_validate" states="draft" string="Approve" type="object" icon="terp-camera_test"/>
                                 <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
+                                <button name="button_validate" states="draft" string="Approve" type="object" icon="terp-camera_test"/>
                             </group>
                         </page>
                     </notebook>
@@ -1481,9 +1481,9 @@
                     <group col="7" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                         <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-camera_test"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -2466,9 +2466,9 @@
                     <field name="balance_end_real"/>
                     <field name="balance_end"/>
                     <field name="state"/>
+                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="gtk-cancel"/>
                     <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
                     <button type="object" string="Confirm" name="button_confirm_bank" states="open" icon="terp-gtk-go-back-rtl"/>
-                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
@@ -2570,9 +2570,9 @@
                     </group>
                     <group col="8" colspan="4">
                         <field name="state" colspan="4"/>
+                        <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object" groups="base.group_extended"/>
                         <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-dialog-close" type="object"/>
                         <button name="button_open" states="draft" string="Open CashBox" icon="terp-document-new" type="object"/>
-                        <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object" groups="base.group_extended"/>
                     </group>
                 </form>
             </field>
