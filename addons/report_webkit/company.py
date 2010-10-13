@@ -50,7 +50,7 @@ class ResCompany(osv.osv):
                                                     'html_id', 
                                                     'Available html',
                                                 ),
-                'lib_path' : fields.char('Webkit Executable Path', size=264, help="Complete (Abolute) path to the wkhtmltopdf executable."),
+                'lib_path' : fields.char('Webkit Executable Path', size=264, help="Complete (Absolute) path to the wkhtmltopdf executable."),
 
     }   
     _defaults = {
