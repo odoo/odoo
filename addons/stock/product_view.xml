@@ -61,8 +61,8 @@
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace">
                     <group col="4" colspan="2">
-                        <field name="standard_price" readonly="True"/>
-                        <button name="%(action_view_change_standard_price)d" string="Change Price" type="action" icon="gtk-execute"/>
+                        <field name="standard_price" readonly="1"/>
+                        <button name="%(action_view_change_standard_price)d" string="Change Price" type="action" icon="gtk-execute" attrs="{'readonly':[('cost_method','=','average')]}"/>
                     </group>
                 </field>
             </field>

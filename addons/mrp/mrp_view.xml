@@ -604,7 +604,7 @@
 
                             <field colspan="2" name="move_lines2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                                        widget="one2many_list" mode="tree,form" height="275">
-                                   <tree colors="red:scrapped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Consumed Products" editable="bottom">
+                                   <tree colors="red:scrapped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel') " string="Consumed Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                        <field name="product_uom" readonly="1" string="UOM" widget="selection"/>
@@ -627,12 +627,12 @@
                             <separator colspan="4"/>
                             <group col="9" colspan="4">
                                 <field name="state"/>
+                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
                                 <button name="action_compute" states="draft" string="Compute Data" type="object" icon="terp-stock_format-scientific"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
                                 <button name="button_produce" states="ready" string="Start Production" icon="terp-gtk-jump-to-ltr"/>
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
                                 <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
-                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
                                 <button name="button_recreate" states="picking_except" string="Recreate Picking" icon="terp-document-new"/>
                             </group>
                         </page>

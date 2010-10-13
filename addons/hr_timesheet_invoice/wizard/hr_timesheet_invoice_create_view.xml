@@ -10,23 +10,23 @@
             <form string="Invoice analytic lines">
                 <notebook colspan="4">
                     <page string="Billing Data">
-                        <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
-                        <field name="date"/>
-                        <field name="time"/>
-                        <field name="name"/>
-                        <field name="price"/>
-                        <separator string="Force to use a specific product" colspan="4"/>
-                        <field name="product"/>
-                    </page>
-                    <page string="Filter on Accounts" groups="base.group_extended">
-                        <separator string="Choose accounts you want to invoice" colspan="4"/>
-                        <field name="accounts" colspan="4" nolabel="1"/>
+                       <group col="4" colspan="4">
+                           <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
+                                <field name="date"/>
+                                <field name="time"/>
+                                <field name="name"/>
+                                <field name="price" groups="base.group_extended"/>
+                           </group>
+                        <group col="2" colspan="4" groups="base.group_extended">
+                            <separator string="Force to use a specific product" colspan="4" />
+                            <field name="product"/>
+                        </group>
                     </page>
                 </notebook>
                 <separator colspan="4"/>
                 <group col="2" colspan="4">
                     <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="do_create" string="Create Invoices" colspan="1" type="object" icon="gtk-execute"/>
+                    <button name="do_create" string="Create Invoices" colspan="1" type="object" icon="terp-gtk-go-back-rtl"/>
                 </group>
             </form>
             </field>
