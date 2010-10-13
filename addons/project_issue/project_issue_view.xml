@@ -84,10 +84,10 @@
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                             <field name="state" />
+                            <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                             <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                             <button name="case_close" string="Close" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                            <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                             <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                             <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
                             </group>
@@ -191,9 +191,9 @@
                     <field name="assigned_to"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
                     <field name="state"/>
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" help="To Do"/>
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                     <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
@@ -290,9 +290,9 @@
                     <field name="version_id"/>
                     <field name="user_id"/>
                     <field name="state"/>
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                     <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
@@ -326,6 +326,19 @@
     # Project
     # ------------------------------------------------------
 
+        <record id="project.view_project_resource_form1" model="ir.ui.view">
+            <field name="name">Project Resource Calendar View</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <field name="priority" position="before">
+                    <field name="resource_calendar_id"/>
+                </field>
+
+            </field>
+       </record>
+
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>
             <field name="model">project.project</field>
@@ -333,7 +346,6 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <field name="priority" position="before">
-                    <field name="resource_calendar_id"/>
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>
                 </field>

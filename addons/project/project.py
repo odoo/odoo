@@ -637,6 +637,7 @@ class task(osv.osv):
         if context is None:
             context = {}
         request = self.pool.get('res.request')
+
         for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
             if project and project.warn_manager and project.user_id.id and (project.user_id.id != uid):
@@ -651,6 +652,7 @@ class task(osv.osv):
                 })
 
             self.write(cr, uid, [task.id], {'state': 'open'})
+
         return True
 
     def do_cancel(self, cr, uid, ids, *args):

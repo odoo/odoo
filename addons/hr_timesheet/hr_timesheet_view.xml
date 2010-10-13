@@ -102,6 +102,7 @@
 
     <menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
     <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
+    <menuitem id="menu_partner_invc" parent="base.menu_project_management_time_tracking" action="account.action_invoice_tree1"/>
 
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>
@@ -111,7 +112,7 @@
                 <page string="Categories" position="after">
                     <page string="Timesheets">
                         <field name="product_id" domain="[('type','=','service')]"/>
-                        <field name="journal_id"/>
+                        <field name="journal_id" widget="selection"/>
                     </page>
                 </page>
             </field>

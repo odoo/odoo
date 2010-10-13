@@ -58,8 +58,7 @@
                 <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
-                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
                     <filter string="General Account" icon="terp-folder-green" context="{'group_by':'general_account_id'}"/>
@@ -67,6 +66,8 @@
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <filter string="Product UOM" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
+                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" name="Month" icon="terp-go-month" context="{'group_by':'month'}"/>

@@ -308,6 +308,7 @@ class product_template(osv.osv):
         'uos_coeff' : lambda *a: 1.0,
         'mes_type' : lambda *a: 'fixed',
         'categ_id' : _default_category,
+        'type' : lambda *a: 'consu',
     }
 
     def _check_uom(self, cursor, user, ids):

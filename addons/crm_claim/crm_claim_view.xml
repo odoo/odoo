@@ -53,6 +53,9 @@
                     <field name="categ_id" string="Type" select="1"/>
                     <field name="stage_id" invisible="1"/>
                     <field name="state"/>
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
@@ -62,9 +65,6 @@
                     <button name="case_close" string="Close"
                         states="open,draft,pending" type="object"
                         icon="gtk-close" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object" icon="gtk-convert" />
                 </tree>
@@ -129,6 +129,9 @@
                                 <separator colspan="4" string=""/>
                                 <group col="8" colspan="4">
                                     <field name="state" select="1"/>
+                                    <button name="case_cancel" string="Cancel"
+                                    states="draft,open,pending" type="object"
+                                    icon="gtk-cancel" />
                                     <button name="case_open" string="Open"
                                     states="draft,pending" type="object"
                                     icon="gtk-go-forward" />
@@ -138,9 +141,6 @@
                                     <button name="case_close" string="Done"
                                     states="open,draft,pending" type="object"
                                     icon="gtk-jump-to" />
-                                    <button name="case_cancel" string="Cancel"
-                                    states="draft,open,pending" type="object"
-                                    icon="gtk-cancel" />
                                     <button name="case_reset"
                                     string="Reset to Draft" states="done,cancel"
                                     type="object" icon="gtk-convert" />

@@ -148,6 +148,7 @@
                 <field name="name"/>
                 <field name="type"/>
                 <field name="user_id"/>
+                <field name="storage_id"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
             </tree>
@@ -291,7 +292,7 @@
                  <field name="parent_id" />
                  <field name="user_id">
                     <filter icon="terp-personal"
-                        domain="[('user_id','=', False)]"
+                        domain="[('user_id','=',uid)]"
                         help="Filter on my documents" />
                  </field>
                 <field name="partner_id"/>
@@ -333,7 +334,7 @@
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
         <field name="search_view_id" ref="view_attach_filter"/>
-        <field name="help">Documents give your access to all attached documents; it's a repository of all attached documents (mails, documents attached to a project, etc.)</field>
+        <field name="help">The Documents repository gives you access to all attachments, such as mails, project documents, invoices etc.</field>
     </record>
     <menuitem name="Documents" id="menu_document_doc" parent="knowledge.menu_document" sequence="0"/>
     <menuitem
@@ -403,12 +404,11 @@
         src_model="res.partner"
         groups="base.group_extended"/>
 
-    <act_window 
-    	context="{'search_default_parent_id': [active_id]}"
-        id="zoom_directory" name="Related Documents"
+    <act_window
+        domain="[('parent_id', '=', active_id)]"
+    	id="zoom_directory" name="Related Documents"
         res_model="ir.attachment"
         src_model="document.directory"/>
-
 </data>
 </openerp>
 

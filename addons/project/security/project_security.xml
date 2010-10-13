@@ -53,7 +53,7 @@
         <field name="groups" eval="[(6, 0, [ref('group_project_manager')])]"/>
         <field name="domain_force">[('members','in',[user.id])]</field>
     </record>
-    
+
      <record model="ir.rule" id="project_user_rule">
         <field name="name" >Projects According to Members</field>
         <field name="model_id" ref="model_project_project"/>

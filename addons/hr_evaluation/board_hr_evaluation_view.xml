@@ -14,19 +14,14 @@
         <record id="board_hr_evaluation_form" model="ir.ui.view">
             <field name="name">board.hr.evaluation.form</field>
             <field name="model">board.board</field>
-			<field name="inherit_id" ref="hr.board_hr_form"/>              
+            <field name="inherit_id" ref="hr.board_hr_form"/>              
             <field name="type">form</field>
             <field name="arch" type="xml">
-      		<xpath expr="/form/hpaned/child1" position="inside"> 
-				<action colspan="4" height="220" name="%(act_hr_evaluation_tree)d" string="My Evaluation Remaining"  width="510"/>
-			</xpath>
+            <xpath expr="/form/hpaned/child1" position="inside"> 
+                <action colspan="4" height="220" name="%(act_hr_evaluation_tree)d" string="My Evaluation Remaining"  width="510"/>
+            </xpath>
             </field>
         </record>
-        <menuitem
-            action="hr.open_board_hr"
-            icon="terp-graph"
-            id="base.menu_hr_project"
-            parent="base.menu_hr_dasboard"
-            sequence="4"/>
+
     </data>
 </openerp>

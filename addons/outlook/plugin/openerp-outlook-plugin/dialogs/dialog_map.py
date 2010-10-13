@@ -180,7 +180,8 @@ global new_con_country
 new_con_country= ""
 global new_con_state
 new_con_state= ""
-
+global search_country
+search_country = None
 
 def check():
     server = NewConn.getitem('_server')
@@ -955,10 +956,6 @@ def SetDefaultContact(txtProcessor,*args):
         win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.control_id,name)
         win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0],email)
         win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[2],new_con_state)
-        state_val = NewConn.FindCountryForState(str(state_ref))
-        if state_val == None:
-            new_con_country = country
-        new_con_country =  state_val
         win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[3],new_con_country)
         new_con_country = ""
         new_con_state = ""
@@ -1101,19 +1098,14 @@ def GetDefaultEmail(txtProcessor,*args):
         state_ref = state_n
     win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0], ustr(partner_ref))
     win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[10], ustr(state_ref))
-    state_val = NewConn.FindCountryForState(str(state_ref))
+    win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[11], ustr(country_ref))
     partner_ref = ""
     country_ref = ""
     state_ref = ""
     new_con_country = ""
     new_con_state = ""
-    if state_val == None:
-        country_ref = country_n
-    country_ref = state_val
     if country_ref == None:
         country_ref = ""
-    win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[11], ustr(country_ref))
-
     if not b:
         return
     #Acquiring control of the text box
@@ -1174,6 +1166,8 @@ def GetDefaultEmail(txtProcessor,*args):
 
             if val[0] == 'country_id' and val[1] != False :
                 win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[11], ustr(val[1][1]))
+                global search_country
+                search_country =  ustr(val[1][1])
 
             if val[0] == 'phone' and val[1] != False :
                 win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[5], ustr(val[1]))
@@ -1237,6 +1231,8 @@ def SearchPartner(btnProcessor,*args):
 
                 if val[0] == 'country_id' and val[1] != False :
                     win32gui.SetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[12], ustr(val[1][1]))
+                    global search_country
+                    search_country =  ustr(val[1][1])
 
                 if val[0] == 'phone' and val[1] != False :
                     win32gui.SetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[6], ustr(val[1]))
@@ -1543,12 +1539,14 @@ def SelectCountryFromList(btnProcessor,*args):
                 sel_text = nombre[0:size]
         global country_ref
         global new_con_country
+        global search_country
         if str(sel_text).strip() == "":
             win32ui.MessageBox("Invalid country selected.","Search Country")
             return
         try:
             country_ref = str(sel_text)
             new_con_country = str(sel_text)
+            search_country = str(sel_text)
         except Exception,e:
             pass
         win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
@@ -1565,13 +1563,15 @@ def SearchState(btnProcessor, *args):
     if not b:
         return
     try :
+        global new_con_country
+        global search_country
         search_state = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
         if not search_state:
             win32ui.MessageBox("Please enter state name to search for.", "Search Fed.State", flag_excl)
             return
         #Searching the contact.
         hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
-        states = list(NewConn.GetStates(search_state))
+        states = list(NewConn.GetStates(search_state, search_country))
         win32gui.SendMessage(hwndList, commctrl.LVM_DELETEALLITEMS)
         if not states:
             win32gui.SetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0],"<enter text to search>")

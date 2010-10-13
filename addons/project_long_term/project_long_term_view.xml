@@ -81,9 +81,9 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">
-                        <filter name="resource" string="Resource" icon="terp-folder-blue" domain="[]" context="{'group_by':'resource_id'}"/>
+                        <filter name="resource" string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
                     </group>
                 </search>
@@ -110,22 +110,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project Phase">
-                    <group colspan="8" col="7">
-	                    <group colspan="8">
-	                        <field name="name" select="1"/>
-                            <field name="total_hours"/>
-	                        <field name="project_id" on_change="onchange_project(project_id)" colspan="2"/>
-                            <field name="responsible_id" colspan="2"/>
-	                    </group>
-						<newline/>
-	                    <group colspan="2">
-                             <field name="date_start"/>
-                             <field name="date_end"/>
+                    <group colspan="6" col="6">
+                        <group colspan="6" col="6" >
+                            <field name="name" select="1"/>
+                            <field name="project_id" on_change="onchange_project(project_id)"/>
+                            <field name="responsible_id"/>
                         </group>
-                        <group colspan="2">
-	                       <field name="duration"  on_change="onchange_days(project_id)"/>	                       
-                           <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
-                    	</group>
+                        <group colspan="6" col="6">
+                            <field name="date_start"/>
+                            <field name="duration"  on_change="onchange_days(project_id)" />
+                            <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
+                            <field name="date_end"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Resource Allocation">
@@ -146,11 +142,11 @@
                             <separator string="" colspan="4"/>
                             <group col="12" colspan="4">
                                 <field name="state" select="1"/>
+                                <button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
                                 <button string="Draft" name="set_draft" states="open" icon="gtk-indent"/>
                                 <button string="Pending" name="set_pending" states="open" icon="gtk-media-pause"/>
                                 <button string="Done" name="set_done" states="pending,open" icon="terp-dialog-close"/>
                                 <button string="Start Phase" name="set_open" states="pending,draft" icon="gtk-execute"/>
-                                <button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Task Detail">
@@ -275,7 +271,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
-                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'responsible_id'}"/>
+                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'responsible_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}" name="project"/>
                         <separator orientation="vertical"/>
@@ -292,7 +288,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar</field>
-            <field name="context">{'search_default_responsible_id':uid}</field>
+            <field name="context">{'search_default_responsible_id':uid,'group_by':'project_id'}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
             <field name="help">You can subdivide your larger projects into several phases. For each phase, you can define your resources allocation (humans or engine), describe de differend task and link your phase with previous and next one, add constraints date and scheduling. A gantt view of your project phase is also available from this menu. Gantt view is a graphically draw of the project plan; it includes any task dependencies by visually adjusting task durations and priorities, and by linking tasks to each other.</field>
         </record>
@@ -302,7 +298,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
- 			<field name="context">{'search_default_responsible_id':uid}</field>
+ 			<field name="context">{'search_default_responsible_id':uid,'group_by':'project_id'}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
@@ -311,8 +307,8 @@
     # Project
     # ------------------------------------------------------
 
-        <record id="view_phase_project_form1" model="ir.ui.view">
-            <field name="name">phase.project.form1</field>
+        <record id="project.view_project_resource_form1" model="ir.ui.view">
+            <field name="name">Project Resource Calendar View</field>
             <field name="model">project.project</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
@@ -327,7 +323,7 @@
     # ------------------------------------------------------
     # Project Task
     # ------------------------------------------------------
-    
+
         <record id="view_phase_task_form2" model="ir.ui.view">
             <field name="name">phase.task.form2</field>
             <field name="model">project.task</field>
@@ -349,8 +345,8 @@
                     <field name="phase_id" select="1"/>
                 </field>
             </field>
-        </record>   
-    
+        </record>
+
     <act_window
         id="project_phase_task_list"
         name="Related Tasks"
