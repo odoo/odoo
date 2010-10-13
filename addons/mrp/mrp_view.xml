@@ -645,6 +645,10 @@
                                     <field name="product_uom"  string="UOM" widget="selection"/>
                                     <field name="location_id"  string="Source Loc." widget="selection"/>
                                     <field name="state" invisible="1"/>
+                                    <button name="%(stock.action_partial_move)d" 
+                                        string="Partial" 
+                                        type="action" states="confirmed,assigned" 
+                                        icon="gtk-justify-fill"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
