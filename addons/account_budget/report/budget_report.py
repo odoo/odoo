@@ -20,12 +20,9 @@
 ##############################################################################
 
 import time
-import datetime
-
-import pooler
 from report import report_sxw
-import operator
-import osv
+
+tot = {}
 
 class budget_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -56,7 +53,6 @@ class budget_report(report_sxw.rml_parse):
         acc_analytic_obj = self.pool.get('account.analytic.account')
         for budget_id in budgets:
             res = {}
-            budget_lines = []
             budget_ids = []
             d_from = form['date_from']
             d_to = form['date_to']
@@ -66,7 +62,6 @@ class budget_report(report_sxw.rml_parse):
 
             if not budget_ids:
                 return []
-
             self.cr.execute('SELECT DISTINCT(analytic_account_id) FROM crossovered_budget_lines WHERE id = ANY(%s)',(budget_ids,))
             an_ids = self.cr.fetchall()
 
