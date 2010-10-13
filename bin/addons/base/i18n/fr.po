@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-09-29 08:01+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-10-12 07:54+0000\n"
+"Last-Translator: Anup (OpenERP) <ach@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:37+0000\n"
+"X-Launchpad-Export-Date: 2010-10-13 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -1408,8 +1408,14 @@ msgstr ""
 
 #. module: base
 #: help:ir.actions.server,expression:0
-msgid "Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."
-msgstr "Entrez le champ/expression qui retournera la liste. Exemple: sélectionnez la commande client dans l'objet, et vous pourrez boucler sur les lignes de commandes client. Expression = `object.order_line`."
+msgid ""
+"Enter the field/expression that will return the list. E.g. select the sale "
+"order in Object, and you can have loop on the sales order line. Expression = "
+"`object.order_line`."
+msgstr ""
+"Entrez le champ/expression qui retournera la liste. Exemple: sélectionnez la "
+"commande client dans l'objet, et vous pourrez boucler sur les lignes de "
+"commandes client. Expression = `object.order_line`."
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -3249,7 +3255,9 @@ msgstr "Grouper par"
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
-msgid "'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id"
+msgid ""
+"'%s' contains too many dots. XML ids should not contain dots ! These are "
+"used to refer to other modules data, as in module.reference_id"
 msgstr ""
 "\"%s\" contient trop de points. Les ids XML ne devraient pas contenir de "
 "points! Les points sont utilisés pour faire référence à des données d'autres "
@@ -8065,75 +8073,77 @@ msgstr "Vous ne pouvez pas avoir deux utilsiateurs avec le même login !"
 #. module: base
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "La taille du champ ne doit jamais être inférieure à 1 !"
 
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
 msgid "Shortcut for this menu already exists!"
-msgstr ""
+msgstr "Un raccourci pour ce menu existe déjà !"
 
 #. module: base
 #: sql_constraint:ir.model.data:0
 msgid ""
 "You cannot have multiple records with the same id for the same module !"
 msgstr ""
+"Vous ne pouvez pas avoir plusieurs enregistrements avec le même identifiant "
+"pour le même module !"
 
 #. module: base
 #: sql_constraint:maintenance.contract:0
 msgid "Your maintenance contract is already subscribed in the system !"
-msgstr ""
+msgstr "Votre contrat de maintenance est déjà enregistré dans le système !"
 
 #. module: base
 #: sql_constraint:ir.module.module:0
 #: sql_constraint:ir.module.web:0
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Le nom d'un module doit être unique !"
 
 #. module: base
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "L'ID du certificat pour un module doit être unique !"
 
 #. module: base
 #: sql_constraint:res.partner.function:0
 msgid "The Code of the Partner Function must be unique !"
-msgstr ""
+msgstr "Le Code de la Fonction du Partenaire doit être unique !"
 
 #. module: base
 #: sql_constraint:res.partner:0
 msgid "The name of the Partner must be unique !"
-msgstr ""
+msgstr "Le nom du Partenaire doit être unique !"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr ""
+msgstr "Le nom du pays doit être unique !"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
-msgstr ""
+msgstr "Le code du pays doit être unique !"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr ""
+msgstr "Le nom de la langue doit être unique !"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The code of the language must be unique !"
-msgstr ""
+msgstr "Le code de la langue doit être unique"
 
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr ""
+msgstr "Le nom du groupe doit être unique !"
 
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Constraint Error"
-msgstr ""
+msgstr "Erreur de contrainte"
 
 #. module: base
 #: code:addons/osv/osv.py:0
@@ -8144,6 +8154,10 @@ msgid ""
 "reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
+"L'opération n'a pas pu être terminée, probablement à la suite d'une :\n"
+"- suppression : vous avez essayer de supprimer un enregistrement auquel "
+"d'autres enregistrements font référence\n"
+"- création/modification : un champ requis n'a pas été correctement rempli"
 
 #. module: base
 #: code:addons/osv/osv.py:0
@@ -8153,36 +8167,45 @@ msgid ""
 "\n"
 "[object with reference: %s - %s]"
 msgstr ""
+"\n"
+"\n"
+"[objet ayant pour référence : %s - %s]"
 
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Integrity Error"
-msgstr ""
+msgstr "Erreur d'intégrité"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:0
 #, python-format
 msgid "User Error"
-msgstr ""
+msgstr "Erreur Utilisateur"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:0
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
-msgstr ""
+msgstr "Langue de base 'en_US' ne peut pas être supprimée !"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:0
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
 msgstr ""
+"Vous ne pouvez pas supprimer une langue qui est utilisée par un des "
+"utilisateurs !"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:0
 #, python-format
-msgid "You cannot delete the language which is Active !\nPlease de-activate the language first."
+msgid ""
+"You cannot delete the language which is Active !\n"
+"Please de-activate the language first."
 msgstr ""
+"Vous ne pouvez pas supprimer une langue qui est Active !\n"
+"Veuillez désactiver cette langue."
 
 #~ msgid "Others Partners"
 #~ msgstr "Autres partenaires"
