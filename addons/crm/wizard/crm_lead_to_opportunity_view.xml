@@ -11,7 +11,7 @@
               <form string="Convert To Opportunity">
                 <field name="name"/>
                 <group attrs="{'invisible':[('partner_id','=',False)]}" col="2" colspan="2">
-                	<field name="partner_id"/>
+                    <field name="partner_id"/>
                 </group>
                 <newline/>
                 <field name="planned_revenue"/>
@@ -20,7 +20,7 @@
                 <group col="4" colspan="4">
                     <label string="" colspan="2"/>
                     <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    <button name="action_apply" string="Create Opportunity" type="object" icon="gtk-ok"/>
+                    <button name="action_apply" string="Create Opportunity" type="object" icon="gtk-go-forward"/>
                 </group>
             </form>
           </field>
@@ -46,6 +46,9 @@
                <form string="Create a Partner">
                 <label string="Are you sure you want to create a partner based on this lead ?" colspan="4"/>
                 <label string="You may have to verify that this partner does not exist already." colspan="4"/>
+                <group colspan="4" col="1" attrs="{'invisible':[('msg','=',False)]}">
+                    <field name="msg" colspan="4" nolabel="1"  height="50"/>
+                </group>
                 <newline />
                 <field name="action"/>
                 <group attrs="{'invisible':[('action','!=','exist')]}">
@@ -54,7 +57,6 @@
                 <separator string="" colspan="4" />
                 <group col="4" colspan="4">
                     <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    <button special="cancel" name="action_skip" string="_Skip" type="object" icon="gtk-goto-last"/>
                     <button name="make_partner" string="Continue" type="object" icon="gtk-ok"/>
                 </group>
             </form>

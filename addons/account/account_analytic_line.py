@@ -31,12 +31,12 @@ class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
     _columns = {
-        'product_uom_id' : fields.many2one('product.uom', 'UoM'),
-        'product_id' : fields.many2one('product.product', 'Product'),
-        'general_account_id' : fields.many2one('account.account', 'General Account', required=True, ondelete='cascade'),
-        'move_id' : fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
-        'journal_id' : fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='cascade', select=True),
-        'code' : fields.char('Code', size=8),
+        'product_uom_id': fields.many2one('product.uom', 'UoM'),
+        'product_id': fields.many2one('product.product', 'Product'),
+        'general_account_id': fields.many2one('account.account', 'General Account', required=True, ondelete='cascade'),
+        'move_id': fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
+        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='cascade', select=True),
+        'code': fields.char('Code', size=8),
         'ref': fields.char('Ref.', size=64),
         'currency_id': fields.related('move_id', 'currency_id', type='many2one', relation='res.currency', string='Account currency', store=True, help="The related account currency if not equal to the company one.", readonly=True),
         'amount_currency': fields.related('move_id', 'amount_currency', type='float', string='Amount currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
@@ -75,6 +75,9 @@ class account_analytic_line(osv.osv):
             unit=False, journal_id=False, context=None):
         if context==None:
             context={}
+        if not journal_id:
+            j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=','purchase')])
+            j_id = j_ids and j_ids[0] or False
         if not journal_id or not prod_id:
             return {}
         product_obj = self.pool.get('product.product')
@@ -85,8 +88,8 @@ class account_analytic_line(osv.osv):
             company_id = j_id.company_id.id
         result = 0.0
         is_purchase = False
-        
-        if j_id.type == 'purchase':
+
+        if j_id.type <> 'sale':
             a = prod.product_tmpl_id.property_account_expense.id
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id
@@ -109,13 +112,29 @@ class account_analytic_line(osv.osv):
                                 (prod.name, prod_id,))
             amount_unit = prod.price_get('list_price', context)[prod_id]
 
-        prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        amount = amount_unit * quantity or 1.0
-        result = round(amount, prec)
-        if is_purchase:
-            result *= -1
-        return {
-            'value': {
+        if not company_id:
+            company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
+            flag = False
+            # Compute based on pricetype
+            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context)
+            pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
+            if journal_id:
+                journal = analytic_journal_obj.browse(cr, uid, journal_id)
+                if journal.type == 'sale':
+                    product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context)
+                    if product_price_type_ids:
+                        pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
+            # Take the company currency as the reference one
+            if pricetype.field == 'list_price':
+                flag = True
+            amount_unit = prod.price_get(pricetype.field, context)[prod.id]
+            amount = amount_unit*unit_amount or 1.0
+            prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+            amount = amount_unit*unit_amount or 1.0
+            result = round(amount, prec)
+            if not flag:
+                result *= -1
+            return {'value': {
                 'amount': result,
                 'general_account_id': a,
             }

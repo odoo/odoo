@@ -37,6 +37,7 @@ class account_pl_report(osv.osv_memory):
     _defaults = {
         'display_type': True,
         'journal_ids': [],
+        'target_move': False
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -47,13 +48,17 @@ class account_pl_report(osv.osv_memory):
         for node in nodes:
             node.set('readonly', '1')
             node.set('required', '0')
+        nodes = doc.xpath("//field[@name='target_move']")
+        for node in nodes:
+            node.set('readonly', '1')
+            node.set('required', '0')
         res['arch'] = etree.tostring(doc)
         return res
 
-    def _print_report(self, cr, uid, ids, data, query_line, context=None):
+    def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['display_type'])[0])
         if data['form']['display_type']:
             return {

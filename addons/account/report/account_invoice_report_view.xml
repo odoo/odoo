@@ -78,14 +78,14 @@
                             domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"
                             help="Customer Invoices And Refunds"/>
                     <filter icon="terp-purchase"
-                            string="Vendor"
+                            string="supplier"
                             separator="1"
                             domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"
-                            help="Vendor Invoices And Refunds"/>
+                            help="Supplier Invoices And Refunds"/>
                    <separator orientation="vertical"/>
                    <filter icon="terp-dolar" string="Invoice"
                             domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"
-                            help="Customer And Vendor Invoices"/>
+                            help="Customer And Supplier Invoices"/>
                    <filter icon="terp-dolar_ok!"
                             string="Refund"
                             separator="1"
@@ -94,7 +94,7 @@
                    <separator orientation="vertical"/>
                    <field name="partner_id"/>
                    <field name="user_id" />
-                   <field name="date" string="Date Invoiced"/>
+                   <field name="date" string="Invoice Date"/>
                    <field name="categ_id" />
                 </group>
                 <newline/>

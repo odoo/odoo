@@ -92,7 +92,7 @@ class project_phase(osv.osv):
        model_data_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
        return model_data_obj.read(cr, uid, [model_data_id], ['res_id'])[0]['res_id']
 
-    def _compute(self, cr, uid, ids, context=None):
+    def _compute(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         if not ids:
             return res
@@ -100,9 +100,7 @@ class project_phase(osv.osv):
             tot = 0.0
             for task in phase.task_ids:
                 tot += task.planned_hours
-            res[phase.id] = {
-                'total_hours' : tot
-            }
+            res[phase.id] = tot
         return res
 
     _columns = {

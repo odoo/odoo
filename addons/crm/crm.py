@@ -538,7 +538,7 @@ class crm_case_section(osv.osv):
         'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16,2 )), 
-        'stage_ids':fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
+        'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
     }
 
     _defaults = {
@@ -628,6 +628,14 @@ class crm_case_categ(osv.osv):
 crm_case_categ()
 
 
+class crm_case_stage(osv.osv):
+    _inherit = "crm.case.stage"
+    _columns = {
+        'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', 'Sections'),
+    }
+crm_case_stage()
+
+
 class crm_case_resource_type(osv.osv):
     """ Resource Type of case """
     _name = "crm.case.resource.type"
@@ -670,85 +678,3 @@ class res_partner(osv.osv):
     }
 res_partner()
 
-
-class crm_case_section_custom(osv.osv):
-    _name = "crm.case.section.custom"
-    _description = 'Custom CRM Case Teams' 
-    _columns = {
-        'name': fields.char('Case Team',size=64, required=True, translate=True),
-        'code': fields.char('Team Code',size=8),
-        'active': fields.boolean('Active'),
-        'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
-        'sequence': fields.integer('Sequence'),
-        'user_id': fields.many2one('res.users', 'Responsible User'),
-        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this section"),
-        'parent_id': fields.many2one('crm.case.section.custom', 'Parent Team'), 
-        'note': fields.text('Notes'),
-    }
-
-    _defaults = {
-        'active': 1,
-        'allow_unlink': 1,
-    }
-
-    _sql_constraints = [
-        ('code_uniq', 'unique (code)', 'The code of the team must be unique !')
-    ]
-
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('SELECT DISTINCT parent_id FROM crm_case_section_custom '\
-                       'WHERE id IN %s',
-                       (tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-    _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive sections.', ['parent_id'])
-    ]
-
-crm_case_section_custom()
-
-
-class crm_case_custom(osv.osv, crm_case):
-    _name = 'crm.case.custom'
-    _inherit = 'mailgate.thread'
-    _description = "Custom CRM Case"
-
-    _columns = {
-            'id': fields.integer('ID', readonly=True),
-            'name': fields.char('Name',size=64,required=True),
-            'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-            'active': fields.boolean('Active'),
-            'description': fields.text('Description'),
-            'section_id': fields.many2one('crm.case.section.custom', 'Team', required=True, select=True),
-            'probability': fields.float('Probability (%)'),
-            'email_from': fields.char('Partner Email', size=128),
-            'email_cc': fields.char('CC', size=252),
-            'partner_id': fields.many2one('res.partner', 'Partner'),
-            'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
-            'date': fields.datetime('Date'),
-            'create_date': fields.datetime('Created' ,readonly=True),
-            'date_deadline': fields.datetime('Deadline'),
-            'date_closed': fields.datetime('Closed', readonly=True),
-            'user_id': fields.many2one('res.users', 'Responsible'),
-            'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
-            'ref' : fields.reference('Reference', selection=_links_get, size=128),
-            'date_action_last': fields.datetime('Last Action', readonly=1),
-            'date_action_next': fields.datetime('Next Action', readonly=1),
-        }
-
-    _defaults = {
-        'active': 1,
-        'state': 'draft',
-        'priority': AVAILABLE_PRIORITIES[2][0],
-        'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-    }
-
-crm_case_custom()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -199,7 +199,7 @@
     <td><para style="terp_tblheader_General_Centre">Display Account</para></td>
         <td><para style="terp_tblheader_General_Centre">Filter By  [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
          <td><para style="terp_tblheader_General_Centre">Entries Sorted By</para></td>
-        <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
+        <td><para style="terp_tblheader_General_Centre">Target Moves</para></td>
       </tr>
   <tr>
      <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
@@ -230,7 +230,7 @@
            </blockTable>
           </td>
         <td><para style="terp_default_Centre_8">[[ get_sortby(data) ]]</para></td>
-  <td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]] </para></td>
+  <td><para style="terp_default_Centre_8">[[ get_target_move(data) ]] </para></td>
   </tr>
   </blockTable>
     <para style="terp_default_8">
@@ -263,13 +263,13 @@
       	<tr>
         	<td>
           		<blockTable colWidths="404.0,335.0,79,73.5,72.5,79.00" style="Table5">
-	        		<tr>
+	   	     		<tr>
 		    			<td><para style="Standard"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para></td>
 		    			<td><para style="Standard"></para></td>
-					  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o)) ]]</u></para></td>
-					  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o)) ]]</u></para></td>
-			  			<td><para style="P9b"><u>[[formatLang(sum_balance_account(o)) ]] [[ company.currency_id.symbol ]]</u></para></td>
-			  			<td><para style="P9b"><u>[[ o.currency_id and sum_currency_amount_account(o) +o.currency_id.code or '' ]]</u></para></td>
+					  	<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_debit_account(o), dp='Account') ]]</u></para></td>
+					  	<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_credit_account(o), dp='Account') ]]</u></para></td>
+			  			<td><para style="P9b"><u>[[ formatLang(sum_balance_account(o), dp='Account') ]] [[ company.currency_id.symbol ]]</u></para></td>
+			  			<td><para style="P9b"><u>[[ o.currency_id and formatLang(sum_currency_amount_account(o), dp='Account') + o.currency_id.code or '' ]]</u></para></td>
 		   			</tr>
 	    		</blockTable>
 	    	</td>
@@ -292,10 +292,10 @@
 			<td><para style="P2_content">[[ line['move'] ]]</para></td>
 			<td><para style="P3_content">[[ line['lname'] ]]</para></td>
 			<td><para style="P3_content_center">[[ strip_name(line['line_corresp'].replace(', ',','),40) ]]</para></td>
-			<td><para style="P4_content">[[ formatLang(line['debit']) ]]</para></td>
-			<td><para style="P4_content">[[ formatLang(line['credit']) ]]</para></td>
-			<td><para style="P4_content">[[ formatLang(line['progress']) ]] [[ company.currency_id.symbol ]]</para></td>
-			<td><para style="P4_content">[[  formatLang(line['amount_currency'] or '')]] [[  line['currency_code'] or '' ]]</para></td>
+			<td><para style="P4_content">[[ formatLang(line['debit'], dp='Account') ]]</para></td>
+			<td><para style="P4_content">[[ formatLang(line['credit'], dp='Account') ]]</para></td>
+			<td><para style="P4_content">[[ formatLang(line['progress'], dp='Account') ]] [[ company.currency_id.symbol ]]</para></td>
+			<td><para style="P4_content"><font>[[ (line['currency_id']==None or line['amount_currency']==None) and removeParentNode('font') ]] [[  formatLang(line['amount_currency'])]] [[  line['currency_code'] or '']]</font></para></td>
 		</tr>
 	  </blockTable>
 
@@ -327,9 +327,9 @@
 						<tr>
 			 	 			<td><para style="Standard"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para></td>
 			  				<td><para style="Standard"></para></td>
-						  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o)) ]]</u></para></td>
-					  		<td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o)) ]]</u></para></td>
-			  				<td><para style="P9b"><u>[[formatLang(sum_balance_account(o)) ]] [[ company.currency_id.symbol ]]</u></para></td>
+						  	<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_debit_account(o), digits=get_digits(dp='Account')) ]]</u></para></td>
+					  		<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_credit_account(o), digits=get_digits(dp='Account')) ]]</u></para></td>
+			  				<td><para style="P9b"><u>[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</u></para></td>
 						</tr>
 					</blockTable>
 		 		</td>
@@ -352,9 +352,9 @@
 				<td><para style="P2_content">[[ line['move'] ]]</para></td>
 				<td><para style="P3_content">[[ line['lname'] ]]</para></td>
 				<td><para style="P3_content_center">[[ strip_name(line['line_corresp'],15) ]]</para></td>
-				<td><para style="P4_content">[[ formatLang(line['debit']) ]] </para></td>
-				<td><para style="P4_content">[[ formatLang(line['credit']) ]]</para></td>
-				<td><para style="P4_content">[[ formatLang(line['progress']) ]] [[ company.currency_id.symbol ]]</para></td>
+				<td><para style="P4_content">[[ formatLang(line['debit'], dp='Account') ]] </para></td>
+				<td><para style="P4_content">[[ formatLang(line['credit'], dp='Account') ]]</para></td>
+				<td><para style="P4_content">[[ formatLang(line['progress'], dp='Account') ]] [[ company.currency_id.symbol ]]</para></td>
 			</tr>
 		</blockTable>
 

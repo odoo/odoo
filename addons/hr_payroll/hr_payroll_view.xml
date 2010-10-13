@@ -2,8 +2,8 @@
 <openerp>
     <data>
         <!-- Root Menus -->
-        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" groups="base.group_system,group_hr_payroll" sequence="9"/>
-        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_system"/>
+        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="9"/>
+        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_hr_manager"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
         <!-- Passport Views    -->
@@ -32,7 +32,7 @@
                             <separator string="Description" colspan="2"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Contracts">
+                        <page string="Contracts" groups="base.group_extended">
                             <field name="contracts_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
@@ -87,6 +87,18 @@
         <!-- End Passport Views -->
 
         <!-- Employee View -->
+        <record id="view_employee_bank_form" model="ir.ui.view">
+            <field name="name">res.partner.bank.form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="replace">
+                    <field name="partner_id" invisible="context.get('display_partner', False)"/>
+                </field>
+            </field>
+        </record>
+        
         <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
             <field name="model">hr.employee</field>
@@ -97,8 +109,7 @@
                     <page string="Miscellaneous">
                         <group colspan="2" col="2">
                             <separator string="Personal Info" colspan="2"/>
-                            <field name="otherid" select="1"/>
-                            <field name="bank_account_id"/>
+                            <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
                             <field name="place_of_birth"/>
                             <field name="children"/>
                         </group>
@@ -107,21 +118,10 @@
                             <field name="manager" select="1"/>
                             <field name="vehicle" select="1"/>
                             <field name="vehicle_distance" select="1"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="ESI Information"/>
-                            <field name="esi_account" string="Account"/>
-                            <field name="hospital_id" string="Hospital"/>
                             <field name="medic_exam" select="1" string="Medical Examination"/>
-                            <field name="esp_account" select="1"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="Providend Fund"/>
-                            <field name="pf_account" string="Account"/>
-                            <field name="pg_joining" string="Join Date"/>
                         </group>
                     </page>
-                    <page string="Contracts">
+                    <page string="Contracts" groups="base.group_extended">
                         <field colspan="4" mode="form,tree" name="contract_ids" nolabel="1">
                             <tree string="Contracts">
                                 <field name="name"/>
@@ -142,7 +142,7 @@
                                     <field name="type_id" widget="selection"/>
                                 </group>
                                 <notebook colspan="4">
-                                    <page string="Main Data">
+                                    <page string="Contract Details">
                                         <group col="2" colspan="2">
                                             <separator colspan="2" string="Duration"/>
                                             <field name="date_start" select="1"/>
@@ -152,70 +152,108 @@
                                         <group col="2" colspan="2">
                                             <separator colspan="2" string="Advantages"/>
                                             <field name="struct_id" select="1"/>
-                                            <field name="advantages_net"/>
                                             <field name="advantages_gross"/>
+                                            <field name="advantages_net"/>
                                             <field name="advantages" nolabel="1" colspan="2"/>
                                         </group>
                                     </page>
                                     <page string="Work Permit">
                                         <group col="2" colspan="2">
                                             <separator colspan="2" string="Passport"/>
-                                            <field name="passport_id"/>
+                                            <field name="passport_id" domain="[('employee_id','=',parent.id)]"/>
                                         </group>
                                         <group col="2" colspan="2">
                                             <separator colspan="2" string="Valid for"/>
-                                            <field name="visa_no"/>
-                                            <field name="permit_no"/>
-                                            <field name="visa_expire"/>
+                                            <field name="visa_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
+                                            <field name="permit_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
+                                            <field name="visa_expire" attrs="{'required': [('passport_id','!=',False), ]}"/>
                                         </group>
                                     </page>
+                                    <separator colspan="4" string="Notes"/>
+                                    <field colspan="4" name="notes" nolabel="1"/>
                                 </notebook>
-                                <separator colspan="4" string="Notes"/>
-                                <field colspan="4" name="notes" nolabel="1"/>
                             </form>
                         </field>
                     </page>
                 </xpath>
                 <xpath expr="/form/notebook/page[@string='Notes']" position="before">
-                    <page string="Salary Structure">
+                    <page string="Salary Structure" groups="base.group_extended">
+                        <group col="10" colspan="4">
+                            <separator string="Salary Computation" colspan="10"/>
+                            <field name="basic"/>
+                            <field name="advantages_gross"/>
+                            <field name="gross"/>
+                            <field name="advantages_net"/>
+                            <field name="net"/>
+                        </group>
+                        <separator string="Employee specific allowances and deductions" colspan="4"/>
                         <field name="line_ids" nolabel="1" colspan="4" string="Salary Structure">
                             <tree string="Salary Structure" editable="bottom">
                                 <field name="category_id" on_change="onchange_category(category_id)"/>
-                                <field name="sequence"/>
+                                <field name="sequence" groups="base.group_extended"/>
                                 <field name="name"/>
                                 <field name="code"/>
                                 <field name="type"/>
                                 <field name="amount_type"/>
                                 <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
-                                <field name="account_id"/>
-                                <field name="analytic_account_id" groups="base.group_extended"/>
                             </tree>
+                            <form string="Payslip Line">
+                                <group col="6" colspan="4">
+                                    <field name="name" colspan="4" select="1"/>
+                                    <field name="code" select="1"/>
+                                </group>
+                                <group col="2" colspan="2">
+                                    <separator colspan="4" string="Calculations"/>
+                                    <field name="category_id" on_change="onchange_category(category_id)"/>
+                                    <field name="type"/>
+                                    <field name="amount_type"/>
+                                    <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                    <field name="sequence" groups="base.group_extended"/>
+                                </group>
+                                <group col="2" colspan="2">
+                                    <separator colspan="4" string="Company contribution"/>
+                                    <field name="company_contrib"/>
+                                </group>
+                                <notebook colspan="4">
+                                    <page string="Function">
+                                        <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
+                                            <tree string="Function Arguments" editable="bottom">
+                                                <field name="name"/>
+                                                <field name="sequence" groups="base.group_extended"/>
+                                                <field name="from_val"/>
+                                                <field name="to_val"/>
+                                                <field name="amount_type"/>
+                                                <field name="value"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                    <page string="Description">
+                                        <separator colspan="4" string="Description"/>
+                                        <field name="note" colspan="4" nolabel="1"/>
+                                    </page>
+                                </notebook>
+                            </form>
                         </field>
-                    </page>
-                    <page string="Accounting">
-                        <field name="property_bank_account"/>
-                        <field name="salary_account"/>
-                        <field name="employee_account"/>
-                        <field name="analytic_account" groups="base.group_extended"/>
-                        <field name="slip_ids" colspan="4" nolabel="1"/>
                     </page>
                 </xpath>
             </data>
             </field>
         </record>
-
         <record id="view_employee_passport_form" model="ir.ui.view">
             <field name="name">hr.employee.passport.form</field>
             <field name="model">hr.employee</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="identification_id" position="after">
+                <field name="passport_id" position="replace">
                     <field name="passport_id"/>
+                    <field name="otherid"/>
                 </field>
             </field>
         </record>
+        
         <!-- End Employee View -->
+        
         <!-- Contract View -->
         <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
@@ -225,7 +263,7 @@
                 <form string="Contract">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
-                        <field name="employee_id" select="1" on_change="on_change_employee_id(employee_id)"/>
+                        <field name="employee_id" select="1"/>
                         <field name="job_id"/>
                         <field name="wage"/>
                         <field name="wage_type_id" widget="selection"/>
@@ -246,21 +284,21 @@
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Advantages"/>
                                 <field name="struct_id" select="1"/>
-                                <field name="advantages_net"/>
                                 <field name="advantages_gross"/>
+                                <field name="advantages_net"/>
                                 <field name="advantages" nolabel="1" colspan="2"/>
                             </group>
                         </page>
                         <page string="Work Permit">
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Passport"/>
-                                <field name="passport_id"/>
+                                <field name="passport_id" domain="[('employee_id','=',employee_id)]"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Valid for"/>
-                                <field name="visa_no"/>
-                                <field name="permit_no"/>
-                                <field name="visa_expire"/>
+                                <field name="visa_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
+                                <field name="permit_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
+                                <field name="visa_expire" attrs="{'required': [('passport_id','!=',False), ]}"/>
                             </group>
                         </page>
                     </notebook>
@@ -269,7 +307,7 @@
                 </form>
             </field>
         </record>
-        <menuitem action="hr_contract.action_hr_contract" id="hr_menu_contract" parent="payroll_configure" name="Contracts" sequence="4"/>
+        <!--menuitem action="hr_contract.action_hr_contract" id="hr_menu_contract" parent="payroll_configure" name="Contracts" sequence="4"/-->
         <!-- End Contract View-->
 
         <!-- Salary structure -->
@@ -282,7 +320,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="line_ids"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -296,12 +334,48 @@
                     <group col="6" colspan="4">
                         <field name="name" colspan="4" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="account_id" select="1" groups="base.group_extended"/>
-                        <field name="company_id"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Salary Structure">
-                            <field name="line_ids" nolabel="1" colspan="4"/>
+                            <field name="line_ids" nolabel="1" colspan="4">
+                                <form string="Payslip Line">
+                                    <group col="6" colspan="4">
+                                        <field name="name" colspan="4" select="1"/>
+                                        <field name="code" select="1"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="4" string="Calculations"/>
+                                        <field name="category_id" on_change="onchange_category(category_id)"/>
+                                        <field name="type"/>
+                                        <field name="amount_type"/>
+                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="4" string="Company contribution"/>
+                                        <field name="company_contrib"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Function">
+                                            <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
+                                                <tree string="Function Arguments" editable="bottom">
+                                                    <field name="name"/>
+                                                    <field name="sequence" groups="base.group_extended"/>
+                                                    <field name="from_val"/>
+                                                    <field name="to_val"/>
+                                                    <field name="amount_type"/>
+                                                    <field name="value"/>
+                                                </tree>
+                                            </field>
+                                        </page>
+                                        <page string="Description">
+                                            <separator colspan="4" string="Description"/>
+                                            <field name="note" colspan="4" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
                         </page>
                     </notebook>
                 </form>
@@ -328,18 +402,17 @@
             <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="color_name" position="after">
-                    <group col="2" colspan="2">
-                        <separator colspan="4" string="Payroll Accounting"/>
-                        <field name="company_id" widget="selection" select="2"/>
-                        <field name="code"/>
-                        <field name="analytic_account_id" groups="base.group_extended"/>
-                        <field name="account_id"/>
-                    </group>
+                <field name="double_validation" position="replace">
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Payroll Configurtion"/>
                         <field name="type"/>
                         <field name="head_id"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/>
+                        <field name="code" readonly="True"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="4" string="Validation"/>
+                        <field name="double_validation"/>
                     </group>
                 </field>
             </field>
@@ -354,14 +427,12 @@
             <field name="arch" type="xml">
                 <tree string="Salary Structure" editable="bottom">
                     <field name="category_id" on_change="onchange_category(category_id)"/>
-                    <field name="sequence"/>
+                    <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="type"/>
                     <field name="amount_type"/>
                     <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
-                    <field name="account_id"/>
-                    <field name="analytic_account_id" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -384,12 +455,9 @@
                         <field name="type"/>
                         <field name="amount_type"/>
                         <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
-                        <field name="sequence"/>
+                        <field name="sequence" groups="base.group_extended"/>
                     </group>
                     <group col="2" colspan="2">
-                        <separator colspan="4" string="Accounting Informations"/>
-                        <field name="account_id"/>
-                        <field name="analytic_account_id" groups="base.group_extended"/>
                         <separator colspan="4" string="Company contribution"/>
                         <field name="company_contrib"/>
                     </group>
@@ -398,7 +466,7 @@
                             <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
                                 <tree string="Function Arguments" editable="bottom">
                                     <field name="name"/>
-                                    <field name="sequence"/>
+                                    <field name="sequence" groups="base.group_extended"/>
                                     <field name="from_val"/>
                                     <field name="to_val"/>
                                     <field name="amount_type"/>
@@ -420,7 +488,7 @@
             <field name="model">hr.payslip</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payslip">
+                <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state in ('new');gray:state in('cancel')" string="Payslip">
                     <field name="number"/>
                     <field name="employee_id"/>
                     <field name="register_id" invisible="1"/>
@@ -429,7 +497,7 @@
                     <field name="grows"/>
                     <field name="net"/>
                     <field name="state"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -444,54 +512,82 @@
                         <field name="employee_id"/>
                         <field name="name"/>
                         <field name="number" select="1"/>
-                        <field name="journal_id"/>
-                        <field name="bank_journal_id" domain="[('type','=','cash')]"/>
                         <field name="date"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Salary Detail">
+                        <page string="Salary Computation">
                             <field name="line_ids" colspan="4" nolabel="1">
                                 <tree string="Salary Structure" editable="bottom">
                                     <field name="category_id" on_change="onchange_category(category_id)"/>
-                                    <field name="sequence"/>
+                                    <field name="sequence" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="code"/>
                                     <field name="type"/>
                                     <field name="amount_type"/>
                                     <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
                                     <field name="total"/>
-                                    <field name="account_id"/>
-                                    <field name="analytic_account_id" groups="base.group_extended"/>
                                 </tree>
+                                <form string="Payslip Line">
+                                    <group col="6" colspan="4">
+                                        <field name="name" colspan="4" select="1"/>
+                                        <field name="code" select="1"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="4" string="Calculations"/>
+                                        <field name="category_id" on_change="onchange_category(category_id)"/>
+                                        <field name="type"/>
+                                        <field name="amount_type"/>
+                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="4" string="Company contribution"/>
+                                        <field name="company_contrib"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Function">
+                                            <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
+                                                <tree string="Function Arguments" editable="bottom">
+                                                    <field name="name"/>
+                                                    <field name="sequence" groups="base.group_extended"/>
+                                                    <field name="from_val"/>
+                                                    <field name="to_val"/>
+                                                    <field name="amount_type"/>
+                                                    <field name="value"/>
+                                                </tree>
+                                            </field>
+                                        </page>
+                                        <page string="Description">
+                                            <separator colspan="4" string="Description"/>
+                                            <field name="note" colspan="4" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                </form>
                             </field>
-
                             <group col="6" colspan="4">
                                 <separator string="Computation Overview" colspan="6"/>
                                 <field name="working_days"/>
                                 <field name="holiday_days"/>
                                 <field name="worked_days"/>
-
                                 <field name="basic_before_leaves"/>
                                 <field name="leaves"/>
                                 <field name="basic"/>
-
                                 <field name="allounce"/>
                                 <field name="deduction"/>
                                 <field name="other_pay"/>
-
                                 <field name="grows"/>
                                 <field name="net"/>
                                 <field name="total_pay"/>
                             </group>
                         </page>
-                        <page string="Accounting Details">
+                        <page string="Other Informations">
                             <group col="2" colspan="1">
                                 <separator colspan="2" string="Other Informations"/>
                                 <field name="paid" readonly="1"/>
-                                <field name="company_id"/>
-                                <field name="register_id"/>
-                                <field name="deg_id"/>
-                                <field name="contract_id" domain="[('employee_id','=',employee_id)]"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="register_id" groups="base.group_extended"/>
+                                <field name="deg_id" groups="base.group_extended"/>
+                                <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]"/>
                             </group>
                             <newline/>
                             <separator colspan="4" string="Description"/>
@@ -550,8 +646,6 @@
         </record>
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
 
-
-
         <!-- Payment Heads -->
         <record id="hr_allounce_deduction_categoty_form" model="ir.ui.view">
             <field name="name">hr.allounce.deduction.categoty.form</field>
@@ -578,7 +672,42 @@
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
                         <page string="Contribution">
-                            <field name="contribute_ids" colspan="4" nolabel="1" height="300"/>
+                            <field name="contribute_ids" colspan="4" nolabel="1" height="300">
+                                <form string="Company Contribution">
+                                    <group col="6" colspan="6">
+                                        <field name="name" select="1"/>
+                                        <field name="code" select="1"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="2" string="Contributions"/>
+                                        <field name="amount_type" attrs="{'required': [('contribute','=',True)]}"/>
+                                        <field name="contribute_per" attrs="{'required': [('contribute','=',True)], 'readonly':[(('amount_type','=','func'))]}"/>
+                                        <field name="register_id" attrs="{'required': [('contribute','=',True)]}"/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <separator colspan="2" string="Other Information"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection" select="1"/>
+                                        <field name="active" select="1"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">
+                                            <field name="line_ids" colspan="4" nolabel="1">
+                                                <tree string="Function Arguments" editable="bottom">
+                                                    <field name="name"/>
+                                                    <field name="sequence"/>
+                                                    <field name="from_val"/>
+                                                    <field name="to_val"/>
+                                                    <field name="amount_type"/>
+                                                    <field name="value"/>
+                                                </tree>
+                                            </field>
+                                        </page>
+                                        <page string="Description">
+                                            <field name="note" colspan="4" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
                         </page>
                     </notebook>
                 </form>
@@ -655,7 +784,7 @@
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Other Information"/>
-                        <field name="company_id" select="1"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection" select="1"/>
                         <field name="active" select="1"/>
                     </group>
                     <notebook colspan="4">
@@ -694,7 +823,7 @@
             </field>
         </record>
 
-    <record id="view_hr_company_contribution_filter" model="ir.ui.view">
+        <record id="view_hr_company_contribution_filter" model="ir.ui.view">
             <field name="name">company.contribution.select</field>
              <field name="model">company.contribution</field>
             <field name="type">search</field>
@@ -737,10 +866,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Bank Advice">
+                    <field name="number" select="1"/>
                     <field name="name" select="1"/>
                     <field name="date" select="1"/>
-                    <field name="number" select="1"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -753,11 +882,9 @@
                 <form string="Bank Advice">
                     <group col="6" colspan="4">
                         <field name="name" colspan="4" select="1"/>
-                        <field name="account_id" select="1"/>
-                        <newline/>
-                        <field name="date" select="1"/>
                         <field name="number" select="1"/>
                         <field name="register_id"/>
+                        <field name="bank_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Paymeny Lines">
@@ -773,9 +900,9 @@
                         </page>
                         <page string="Letter Content">
                             <group colspan="4" col="6">
-                              <field name="company_id" on_change="onchange_company_id(company_id)"/>
+                              <field name="company_id" on_change="onchange_company_id(company_id)" groups="base.group_multi_company" widget="selection"/>
                               <field name="chaque_nos"/>
-                              <field name="bank"/>
+                              <field name="date" select="1"/>
                             </group>
                             <separator colspan="4" string="Letter Details"/>
                             <field name="note" colspan="4" nolabel="1"/>
@@ -812,8 +939,6 @@
                     <field name="number"/>
                     <field name="name"/>
                     <field name="date"/>
-                    <field name="journal_id"/>
-                    <field name="bank_journal_id"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -825,12 +950,10 @@
             <field name="arch" type="xml">
                 <form string="Payroll Register">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="date" select="1"/>
+                        <field name="name" colspan="4" select="1"/>
                         <field name="number" select="1"/>
-                        <field name="journal_id"/>
-                        <field name="bank_journal_id"/>
-                        <field name="active"/>
+                        <field name="bank_id"/>
+                        <field name="date" select="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Payslips">
@@ -862,11 +985,11 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state"/>
+                        <button string="Cancel" name="cancel_sheet" icon="gtk-cancel" states="draft,hr_check,accont_check,confirm" type="object"/>
                         <button string="Compute" name="compute_sheet" states="new" icon="terp-document-new" type="object"/>
                         <button string="Verify Sheet" icon="gtk-ok" name="verify_sheet" states="draft" type="object"/>
                         <button string="Complete HR Checking"  icon="gtk-apply" name="final_verify_sheet" type="object" states="hr_check"/>
                         <button string="Pay Salary" icon="gtk-apply"  name="process_sheet" states="confirm" type="object" />
-                        <button string="Cancel" name="cancel_sheet" icon="gtk-cancel" states="draft,hr_check,accont_check,confirm" type="object"/>
                         <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert" />
                     </group>
                 </form>
@@ -894,11 +1017,9 @@
             <field name="arch" type="xml">
                 <tree string="Contribution Registers">
                     <field name="name" select="1"/>
-                    <field name="company_id" select="1"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <field name="monthly_total_by_emp"/>
                     <field name="monthly_total_by_comp"/>
-                    <field name="yearly_total_by_emp"/>
-                    <field name="yearly_total_by_comp"/>
                 </tree>
             </field>
         </record>
@@ -909,16 +1030,14 @@
             <field name="arch" type="xml">
                 <form string="Contribution">
                     <field name="name" select="1"/>
-                    <field name="account_id"/>
-                    <field name="analytic_account_id" groups="base.group_extended"/>
-                    <field name="company_id" select="1"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <notebook colspan="4">
                         <page string="Contribution Lines">
                             <field colspan="4" name="register_line_ids" nolabel="1" select="1">
                                 <tree string="Register Lines" editable="top">
                                     <field name="code"/>
+                                    <field name="name"/>
                                     <field name="employee_id"/>
-                                    <field name="period_id"/>
                                     <field name="emp_deduction"/>
                                     <field name="comp_deduction"/>
                                     <field name="total"/>
@@ -930,11 +1049,6 @@
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="2" colspan="2">
-                        <separator colspan="4" string="Year"/>
-                        <field name="yearly_total_by_emp"/>
-                        <field name="yearly_total_by_comp"/>
-                    </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Month"/>
                         <field name="monthly_total_by_emp"/>
@@ -963,27 +1077,20 @@
                       <field name="name"/>
                       <field name="code"/>
                       <field name="employee_id"/>
-                      <field name="period_id"/>
                       <field name="emp_deduction"/>
                       <field name="comp_deduction"/>
                       <field name="total"/>
                 </form>
             </field>
         </record>
-
-        <record id="hr_payslip_line_condition_tree" model="ir.ui.view">
-            <field name="name">hr.payslip.line.condition.tree</field>
-            <field name="model">hr.payslip.line.condition</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <form string="Condition">
-                    <field name="name"/>
-                    <field name="date_start"/>
-                    <field name="date_end"/>
-                    <field name="state"/>
-                </form>
-            </field>
-        </record>
+        
+        <!--  Shortcuts -->
+        <act_window name="Payslips"
+            domain="[('employee_id', '=', active_id)]"
+            res_model="hr.payslip"
+            src_model="hr.employee"
+            view_id ="eval('view_hr_payslip_tree')"
+            id="act_hr_employee_payslip_list"/>
     </data>
 </openerp>
 

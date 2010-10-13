@@ -151,7 +151,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="114.0,93.0,194.0,138.0" style="Table4">
+    <blockTable colWidths="70.0,103.0,256.0,109.0" style="Table4">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Location</para>
@@ -172,7 +172,7 @@
     </para>
     <section>
       <para style="terp_default_9">[[ repeatIn(o.inventory_line_id, 'p') ]]</para>
-      <blockTable colWidths="114.0,93.0,194.0,138.0" style="Table8">
+      <blockTable colWidths="70.0,105.0,255.0,109.0" style="Table8">
         <tr>
           <td>
             <para style="terp_default_9">[[ p.location_id.name ]]</para>
@@ -181,7 +181,7 @@
             <para style="terp_default_Centre_9">[[ p.prod_lot_id and p.prod_lot_id.name or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ p.product_id.name ]]</para>
+            <para style="terp_default_9">[ [[ p.product_id.code ]] ] [[ p.product_id.name ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(p.product_qty) ]] [[ p.product_uom.name ]]</para>
@@ -189,7 +189,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="402.0,137.0" style="Table7">
+    <blockTable colWidths="430.0,109.0" style="Table7">
       <tr>
         <td>
           <para style="terp_default_Bold_9">Total:</para>

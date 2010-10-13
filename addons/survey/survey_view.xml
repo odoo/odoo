@@ -3,12 +3,11 @@
     <data>
 
             <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28"/>
-            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools"
-                        groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user" sequence="2"/>
+            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,group_survey_user"/>
             <menuitem name="Define Surveys" id="menu_define_survey"
-                 groups="base.group_tool_manager,base.group_tool_user,base.group_system"
+                 groups="base.group_tool_manager"
                  parent="menu_surveys" />
-            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user"/>
+            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_user,base.group_tool_manager,group_survey_user"/>
             <menuitem name="Reporting" parent="base.menu_tools"
                 id="base.menu_lunch_reporting" sequence="6"/>
             <menuitem name="Surveys" id="menu_reporting" parent="base.menu_lunch_reporting" sequence="2"/>
@@ -25,9 +24,10 @@
                     <field name="title" select="1"/>
                     <group col="6" colspan="6">
                         <field name="responsible_id"/>
+                        <field name="id" invisible="1"/>
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
                             string="Test Survey" type="action" icon="gtk-new"
-                            context="{'active':True,'survey_id': active_id}"/>
+                            context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
                             string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
@@ -183,6 +183,8 @@
                             </field>
                             <group col="9" colspan="4">
                                 <field name="state"/>
+                                <button name="survey_cancel"
+                                    string="Cancel" states="open" type="object" icon="gtk-cancel"/>
                                 <button name="survey_draft"
                                     string="Set to draft" states="cancel,close" type="object"
                                     icon="gtk-new"/>
@@ -190,8 +192,6 @@
                                     states="draft" type="object" icon="gtk-go-forward"/>
                                 <button name="survey_close"
                                     string="Close" states="open" type="object" icon="gtk-close"/>
-                                <button name="survey_cancel"
-                                    string="Cancel" states="open" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Other">
@@ -265,7 +265,7 @@
                         <field name="title" select="1"/>
                         <field name="type" select="1" widget="selection"/>
                         <field name="responsible_id" select="1" default="1">
-                            <filter string="MY" icon="terp-partner" domain="[('responsible_id','=',uid)]"/>
+                            <filter string="MY" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
                         </field>
                    </group>
                    <newline/>
@@ -291,7 +291,7 @@
 
         <menuitem name="Surveys" id="menu_survey_form"
             action="action_survey_form1" parent="menu_define_survey"
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
+            groups="base.group_tool_manager"/>
 
         <!--
             Survey Pages
@@ -491,7 +491,7 @@
 
         <menuitem name="Survey Pages" id="menu_survey_page_form1"
             action="action_survey_page_form" parent='menu_define_survey'
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
+            groups="base.group_tool_manager"/>
 
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
@@ -1075,7 +1075,7 @@
             <field name="model">survey.request</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Evaluation Plan Phase">
+                <tree string="Evaluation Plan Phase" colors="red:date_deadline&lt;current_date">
                     <field name="date_deadline"/>
                     <field name="user_id"/>
                     <field name="survey_id"/>
@@ -1114,7 +1114,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_survey_request_tree">
-            <field name="name">Survey Request</field>
+            <field name="name">Survey Requests</field>
             <field name="res_model">survey.request</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1125,7 +1125,7 @@
 
         <menuitem name="Survey Requests" id="menu_survey_type_form1"
             action="action_survey_request_tree" parent='menu_answer_surveys'
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
+            groups="base.group_tool_manager"/>
 
         <!--
             Survey Type
@@ -1192,8 +1192,7 @@
             src_model="survey.question"/>
 
         <menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
-            action="action_view_survey_name" parent="menu_answer_surveys"
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user" icon="STOCK_INDEX"/>
+            action="action_view_survey_name" parent="menu_answer_surveys"            groups="base.group_tool_user,base.group_tool_manager,group_survey_user" icon="STOCK_INDEX"/>
 
     </data>
 </openerp>

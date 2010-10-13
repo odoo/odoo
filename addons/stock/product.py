@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 from tools.translate import _
+import decimal_precision as dp
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -228,16 +229,25 @@ class product_product(osv.osv):
         results = []
         results2 = []
 
-        from_date=context.get('from_date',False)
-        to_date=context.get('to_date',False)
-        date_str=False
+        from_date = context.get('from_date',False)
+        to_date = context.get('to_date',False)
+        date_str = False
+        date_values = False
+        where = [tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states)]
         if from_date and to_date:
-            date_str="date_planned>='%s' and date_planned<='%s'"%(from_date,to_date)
+            date_str = "date>=%s and date<=%s"
+            where.append(tuple([from_date]))
+            where.append(tuple([to_date]))
         elif from_date:
-            date_str="date_planned>='%s'"%(from_date)
+            date_str = "date>=%s"
+            date_values = [from_date] 
         elif to_date:
-            date_str="date_planned<='%s'"%(to_date)
+            date_str = "date<=%s"
+            date_values = [to_date]
 
+       
+        if date_values:
+            where.append(tuple(date_values))
         if 'in' in what:
             # all moves from a location out of the set to a location in the set
             cr.execute(
@@ -247,8 +257,7 @@ class product_product(osv.osv):
                 'and location_dest_id IN %s'\
                 'and product_id IN %s'\
                 'and state IN %s' + (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom',(tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states),)
-            )
+                'group by product_id,product_uom',tuple(where))
             results = cr.fetchall()
         if 'out' in what:
             # all moves from a location in the set to a location out of the set
@@ -259,8 +268,7 @@ class product_product(osv.osv):
                 'and location_dest_id NOT IN %s '\
                 'and product_id  IN %s'\
                 'and state in %s' + (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom',(tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states),)
-            )
+                'group by product_id,product_uom',tuple(where))
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')
         uoms = map(lambda x: x[2], results) + map(lambda x: x[2], results2)
@@ -309,16 +317,19 @@ class product_product(osv.osv):
         return res
 
     _columns = {
-        'qty_available': fields.function(_product_available, method=True, type='float', string='Real Stock', help="Current quantities of products in selected locations or all internal if none have been selected.", multi='qty_available'),
-        'virtual_available': fields.function(_product_available, method=True, type='float', string='Virtual Stock', help="Future stock for this product according to the selected locations or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming.", multi='qty_available'),
-        'incoming_qty': fields.function(_product_available, method=True, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected.", multi='qty_available'),
-        'outgoing_qty': fields.function(_product_available, method=True, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected.", multi='qty_available'),
+        'qty_available': fields.function(_product_available, method=True, type='float', string='Real Stock', help="Current quantities of products in selected locations or all internal if none have been selected.", multi='qty_available', digits_compute=dp.get_precision('Product UoM')),
+        'virtual_available': fields.function(_product_available, method=True, type='float', string='Virtual Stock', help="Future stock for this product according to the selected locations or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming.", multi='qty_available', digits_compute=dp.get_precision('Product UoM')),
+        'incoming_qty': fields.function(_product_available, method=True, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected.", multi='qty_available', digits_compute=dp.get_precision('Product UoM')),
+        'outgoing_qty': fields.function(_product_available, method=True, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected.", multi='qty_available', digits_compute=dp.get_precision('Product UoM')),
         'track_production': fields.boolean('Track Manufacturing Lots' , help="Forces to specify a Production Lot for all moves containing this product and generated by a Manufacturing Order"),
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to specify a Production Lot for all moves containing this product and coming from a Supplier Location"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Production Lot for all moves containing this product and going to a Customer Location"),
         'location_id': fields.dummy(string='Stock Location', relation='stock.location', type='many2one'),
-        'valuation':fields.selection([('manual_periodic', 'Periodic (manual)'),
-                                        ('real_time','Real Time (automatized)'),], 'Stock Valuation', help="Decide if the system must automatically creates account moves based on stock moves", required=True),
+        'valuation':fields.selection([('manual_periodic', 'Periodical (manual)'),
+                                        ('real_time','Real Time (automated)'),], 'Inventory Valuation', 
+                                        help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
+                                             "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
+                                        , required=True),
     }
 
     _defaults = {
@@ -404,11 +415,11 @@ class product_template(osv.osv):
         'property_stock_account_input': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Input Account', method=True, view_load=True,
-            help='This account will be used, instead of the default one, to value input stock'),
+            help='When doing real-time inventory valuation, counterpart Journal Items for all incoming stock moves will be posted in this account. If not set on the product, the one from the product category is used.'),
         'property_stock_account_output': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Output Account', method=True, view_load=True,
-            help='This account will be used, instead of the default one, to value output stock'),
+            help='When doing real-time inventory valuation, counterpart Journal Items for all outgoing stock moves will be posted in this account. If not set on the product, the one from the product category is used.'),
     }
 
 product_template()
@@ -420,21 +431,21 @@ class product_category(osv.osv):
         'property_stock_journal': fields.property('account.journal',
             relation='account.journal', type='many2one',
             string='Stock journal', method=True, view_load=True,
-            help="This journal will be used for the accounting move generated by stock move"),
+            help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."),
         'property_stock_account_input_categ': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Input Account', method=True, view_load=True,
-            help='This account will be used to value the input stock'),
+            help='When doing real-time inventory valuation, counterpart Journal Items for all incoming stock moves will be posted in this account. This is the default value for all products in this category, it can also directly be set on each product.'),
         'property_stock_account_output_categ': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Output Account', method=True, view_load=True,
-            help='This account will be used to value the output stock'),
+            help='When doing real-time inventory valuation, counterpart Journal Items for all outgoing stock moves will be posted in this account. This is the default value for all products in this category, it can also directly be set on each product.'),
         'property_stock_variation': fields.property('account.account',
             type='many2one',
             relation='account.account',
             string="Stock Variation Account",
             method=True, view_load=True,
-            help="This account will be used in product when valuation type is real-time valuation ",),
+            help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
     }
 
 product_category()

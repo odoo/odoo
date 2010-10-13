@@ -162,7 +162,7 @@ class hr_payslip(osv.osv):
             for line in slip.line_ids:
                 if line.type == 'otherpay' and line.expanse_id.invoice_id:
                     if not line.expanse_id.invoice_id.move_id:
-                        raise osv.except_osv(_('Warning !'), _('Please Confirm all Expanse Invoice appear for Reimbursement'))
+                        raise osv.except_osv(_('Warning !'), _('Please Confirm all Expense Invoice appear for Reimbursement'))
                     invids = [line.expanse_id.invoice_id.id]
                     amount = line.total
                     acc_id = slip.bank_journal_id.default_credit_account_id and slip.bank_journal_id.default_credit_account_id.id
@@ -487,7 +487,7 @@ class account_move_link_slip(osv.osv):
     _description = 'Account Move Link to Pay Slip'
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=False),
-        'move_id':fields.many2one('account.move', 'Expanse Entries', required=False, readonly=True),
+        'move_id':fields.many2one('account.move', 'Expense Entries', required=False, readonly=True),
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=False),
         'sequence': fields.integer('Sequence'),
     }

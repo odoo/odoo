@@ -53,7 +53,7 @@
         'board_association_view.xml',
         'res_partner_view.xml',
     ],
-    'demo_xml': ['event_demo.xml', 'board_association_demo.xml'],
+    'demo_xml': ['event_demo.xml'],
     'test': ['test/test_event.yml'],
     'installable': True,
     'active': False,

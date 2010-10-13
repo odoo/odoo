@@ -4,6 +4,10 @@
         <!--
 	Resource: product.uom.categ
 	-->
+        <record id="cat0" model="product.category">
+            <field name="name">All products</field>
+        </record>
+
         <record id="product_uom_categ_unit" model="product.uom.categ">
             <field name="name">Unit</field>
         </record>
@@ -140,12 +144,6 @@ parameter) will see those record just disappear.
             <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
         </record>
 
-        <record forcecreate="True" id="property_valuation_price_type" model="ir.property">
-            <field name="name">property_valuation_price_type</field>
-            <field name="fields_id" search="[('model','=','res.company'),('name','=','property_valuation_price_type')]"/>
-            <field eval="'product.price.type,'+str(ref('standard_price'))" name="value"/>
-        </record>
-
         <record forcecreate="True" id="decimal_sale" model="decimal.precision">
             <field name="name">Sale Price</field>
             <field name="digits">2</field>
@@ -162,6 +160,9 @@ parameter) will see those record just disappear.
             <field name="name">Stock Weight</field>
             <field name="digits">2</field>
         </record>
-       
+        <record forcecreate="True" id="decimal_product_uom" model="decimal.precision">
+            <field name="name">Product UoM</field>
+            <field name="digits" eval="3"/>
+        </record>
     </data>
 </openerp>

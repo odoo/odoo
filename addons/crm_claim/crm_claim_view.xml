@@ -53,6 +53,9 @@
                     <field name="categ_id" string="Type" select="1"/>
                     <field name="stage_id" invisible="1"/>
                     <field name="state"/>
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
@@ -62,9 +65,6 @@
                     <button name="case_close" string="Close"
                         states="open,draft,pending" type="object"
                         icon="gtk-close" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object" icon="gtk-convert" />
                 </tree>
@@ -107,11 +107,10 @@
                                 <group colspan="4" col="6">
                                     <field name="user_id" string="Responsible"/>
                                     <field name="section_id" widget="selection"/>
-                                    <label string="Stage: " align="1.0"/>
-                                    <group colspan="1" col="3">
-                                        <field name="stage_id" nolabel="1" readonly="1"
+                                    <group colspan="2" col="4">
+                                        <field name="stage_id"
                                             on_change="onchange_stage_id(stage_id)"
-                                            domain="[('object_id.model', '=', 'crm.claim')]" />
+                                            domain="[('object_id.model', '=', 'crm.claim'), ('section_ids', '=', section_id)]" />
                                         <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
                                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                                     </group>
@@ -130,6 +129,9 @@
                                 <separator colspan="4" string=""/>
                                 <group col="8" colspan="4">
                                     <field name="state" select="1"/>
+                                    <button name="case_cancel" string="Cancel"
+                                    states="draft,open,pending" type="object"
+                                    icon="gtk-cancel" />
                                     <button name="case_open" string="Open"
                                     states="draft,pending" type="object"
                                     icon="gtk-go-forward" />
@@ -139,9 +141,6 @@
                                     <button name="case_close" string="Done"
                                     states="open,draft,pending" type="object"
                                     icon="gtk-jump-to" />
-                                    <button name="case_cancel" string="Cancel"
-                                    states="draft,open,pending" type="object"
-                                    icon="gtk-cancel" />
                                     <button name="case_reset"
                                     string="Reset to Draft" states="done,cancel"
                                     type="object" icon="gtk-convert" />
@@ -251,66 +250,66 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                   <filter icon="terp-check" string="Current" name="current"
-                       domain="[('state','in',('draft', 'open'))]"
-                       separator="1" help="Draft and Open Claims" default="1"
-                   />
-                   <filter icon="terp-camera_test"
-                       string="In Progress"
-                       domain="[('state','=','open')]"
-                       separator="1" help="In Progress Claims"
-                   />
-                   <filter icon="terp-gtk-media-pause"
-                       string="Pending"
-                       domain="[('state','=','pending')]"
-                       separator="1" help="All pending Claims"
-                   />
-                   <separator orientation="vertical"/>
-                   <field name="name" select='1'/>
-                   <field name="partner_id" select="1"/>
-                   <field name="user_id" select="1" widget="selection">
-                           <filter icon="terp-personal-"
-                               domain="[('user_id','=', False)]"
-                               help="Unassigned Claims" />
-                   </field>
-                   <field name="section_id" select="1"
-                       widget="selection">
-                       <filter icon="terp-personal+"
-                            domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                            help="My section" />
+                    <filter icon="terp-check" string="Current" name="current"
+                        domain="[('state','in',('draft', 'open'))]"
+                        separator="1" help="Draft and Open Claims" default="1"
+                    />
+                    <filter icon="terp-camera_test"
+                        string="In Progress"
+                        domain="[('state','=','open')]"
+                        separator="1" help="In Progress Claims"
+                    />
+                    <filter icon="terp-gtk-media-pause"
+                        string="Pending"
+                        domain="[('state','=','pending')]"
+                        separator="1" help="All pending Claims"
+                    />
+                    <separator orientation="vertical"/>
+                    <field name="name" select='1'/>
+                    <field name="partner_id" select="1"/>
+                    <field name="user_id" select="1" widget="selection">
+                            <filter icon="terp-personal-"
+                                domain="[('user_id','=', False)]"
+                                help="Unassigned Claims" />
                     </field>
-                   <newline/>
-                   <group expand="0" string="Group By...">
+                    <field name="section_id" select="1"
+                        widget="selection">
+                        <filter icon="terp-personal+" groups="base.group_extended"
+                            domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                            help="My Sales Team(s)" />
+                    </field>
+                    <newline/>
+                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"
-                           domain="[]" help="Partner"
-                           context="{'group_by':'partner_id'}" />
+                            domain="[]" help="Partner"
+                            context="{'group_by':'partner_id'}" />
                         <filter string="Responsible" icon="terp-personal"
-                           domain="[]" help="Responsible User"
-                           context="{'group_by':'user_id'}" />
+                            domain="[]" help="Responsible User"
+                            context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
-                           domain="[]" help="Sales Team"
-                           context="{'group_by':'section_id'}" />
+                            domain="[]" help="Sales Team"
+                            context="{'group_by':'section_id'}" />
                         <separator orientation="vertical"/>
                         <filter string="Stage" icon="terp-stage"
                             domain="[]" context="{'group_by':'stage_id'}" />
                         <filter string="Type" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'categ_id'}" />
-                       <filter string="State"
+                        <filter string="State"
                             icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical"/>
                         <filter string="Claim Date" icon="terp-go-month"
-                           domain="[]" help="Claim Date"
-                           context="{'group_by':'date'}" />
-                       <filter string="Deadline" icon="terp-go-month"
-                           domain="[]"
-                           context="{'group_by':'date_deadline'}" />
-                       <filter string="Closure" icon="terp-go-month"
-                           domain="[]" help="Date Closed"
-                           context="{'group_by':'date_closed'}" />
-                   </group>
-               </search>
-           </field>
+                            domain="[]" help="Claim Date"
+                            context="{'group_by':'date'}" />
+                        <filter string="Deadline" icon="terp-go-month"
+                            domain="[]"
+                            context="{'group_by':'date_deadline'}" />
+                        <filter string="Closure" icon="terp-go-month"
+                            domain="[]" help="Date Closed"
+                            context="{'group_by':'date_closed'}" />
+                    </group>
+                </search>
+            </field>
         </record>
 
         <act_window

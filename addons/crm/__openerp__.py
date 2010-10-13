@@ -119,7 +119,6 @@ Create dashboard for CRM that includes:
         'crm_meeting_demo.xml',
         'crm_opportunity_demo.xml',
         'crm_phonecall_demo.xml',
-        'board_crm_demo.xml',
     ],
     'test': [
             'test/test_crm_lead.yml',

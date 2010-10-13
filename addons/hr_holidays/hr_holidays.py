@@ -110,9 +110,9 @@ class hr_holidays_status(osv.osv):
 
     # To do: we can add remaining_leaves_category field to display remaining leaves for particular type
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Leave Type', size=64, required=True, translate=True),
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Category', domain="[('object_id.model', '=', 'crm.meeting')]", help='If you link this type of leave with a category in the CRM, it will synchronize each leave asked with a case in this category, to display it in the company shared calendar for example.'),
-        'color_name': fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
+        'color_name': fields.selection([('red', 'Red'),('blue','Blue'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
         'limit': fields.boolean('Allow to Override Limit', help='If you tick this checkbox, the system will allow, for this section, the employees to take more leaves than the available ones.'),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
         'max_leaves': fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
@@ -141,7 +141,7 @@ class hr_holidays(osv.osv):
         return False
 
     _columns = {
-        'name': fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Description', required=True, size=64),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'), ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')], 'State', readonly=True, help='When the holiday request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Approval\'.\
             If the admin accepts it, the state is \'Approved\'. If it is refused, the state is \'Refused\'.'),
         'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}),
@@ -162,7 +162,7 @@ class hr_holidays(osv.osv):
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
         'category_id': fields.many2one('hr.employee.category', "Category", help='Category Of employee'),
-        'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Allocation Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category'),
+        'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Allocation Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category', required=True),
         'manager_id2': fields.many2one('hr.employee', 'Second Approval', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
     }
 

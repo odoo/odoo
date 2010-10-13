@@ -169,20 +169,6 @@
 
         </record>
 
-        <record model="ir.actions.act_window" id="action_pos_order_tobinvoiced">
-            <field name="name">Uninvoiced Sales</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_pos_order_tree"/>
-            <field name="domain">[('state','not in', ('invoiced','done')),('invoice_id','=',False)]</field>
-            <field name="context">{"search_default_user_id":uid}</field>
-            <field name="search_view_id" ref="view_pos_order_filter"/>
-
-        </record>
-        <menuitem name="Invoicing" id="menu_point_of_sale_invoicing" parent="menu_point_root" sequence="5" />
-        <menuitem name="Uninvoiced Sales" action="action_pos_order_tobinvoiced" id="menu_point_of_sale_tobinvoiced" parent="menu_point_of_sale_invoicing"/>
         <record model="ir.actions.act_window" id="action_pos_order_accepted">
             <field name="name">Accepted Sales</field>
             <field name="type">ir.actions.act_window</field>
@@ -720,7 +706,7 @@
         </record>
 
         <menuitem name="Configuration" parent="menu_point_root"
-            id="menu_point_config_product" sequence="25" groups="base.group_system"/>
+            id="menu_point_config_product" sequence="25" groups="base.group_system,group_pos_manager"/>
 
         <record model="ir.actions.act_window" id="action_product_input">
             <field name="name">Products</field>
@@ -746,7 +732,7 @@
                     parent="menu_point_config_product"
                     action="action_product_input"
                     id="products_for_input_operations"
-                    groups="base.group_system"/>
+                    groups="base.group_system,group_pos_manager"/>
 
         <record model="ir.actions.act_window" id="action_product_output">
             <field name="name">Products</field>
@@ -772,7 +758,7 @@
                     parent="menu_point_config_product"
                     action="action_product_output"
                     id="products_for_output_operations"
-                    groups="base.group_system"/>
+                    groups="base.group_system,group_pos_manager"/>
 
         <menuitem
             name="Input Operations" parent="menu_point_of_sale"

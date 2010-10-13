@@ -27,7 +27,7 @@ class hr_so_project(osv.osv_memory):
     _name = 'hr.sign.out.project'
     _description = 'Sign Out By Project'
     _columns = {
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, domain=[('type','=','normal')]),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('type','=','normal')]),
         'info': fields.char('Work Description', size=256, required=True),
         'date_start': fields.datetime('Starting Date', readonly=True),
         'date': fields.datetime('Closing Date'),
@@ -81,7 +81,7 @@ class hr_so_project(osv.osv_memory):
 
         if not res['product_uom_id']:
             raise osv.except_osv(_('UserError'), _('No cost unit defined for this employee !'))
-        up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour, res['product_uom_id'])['value']
+        up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour,False, res['product_uom_id'])['value']
 
         res['name'] = data['info']
         res['account_id'] = data['account_id'].id
@@ -172,7 +172,7 @@ class hr_si_project(osv.osv_memory):
             context = {}
         for data in self.browse(cr, uid, ids, context=context):
             emp_id = data.emp_id.id
-            success = emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data.date or False)
+            emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data.date or False)
         return {}
 
     def default_get(self, cr, uid, fields_list, context=None):

@@ -142,9 +142,38 @@ class project_issue(crm.crm_case, osv.osv):
                     res[issue.id][field] = abs(float(duration))
         return res
 
+    def _get_issue_task(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        issues = []
+        issue_pool = self.pool.get('project.issue')
+        for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
+            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])            
+        return issues
+
+    def _get_issue_work(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        issues = []
+        issue_pool = self.pool.get('project.issue')
+        for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
+            if work.task_id:
+                issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
+        return issues
+
+    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
+        task_pool = self.pool.get('project.task')
+        res = {}
+        for issue in self.browse(cr, uid, ids, context=context):
+            progress = 0.0
+            if issue.task_id:
+                progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
+            res[issue.id] = {'progress' : progress}     
+        return res        
+
     _columns = {
         'id': fields.integer('ID'),
-        'name': fields.char('Name', size=128, required=True),
+        'name': fields.char('Issue', size=128, required=True),
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Update Date', readonly=True),
@@ -172,12 +201,12 @@ class project_issue(crm.crm_case, osv.osv):
         'canal_id': fields.many2one('res.partner.canal', 'Channel', help="The channels represent the different communication modes available with the customer." \
                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Severity'),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
+        'type_id': fields.many2one ('project.task.type', 'Resolution'),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -193,7 +222,12 @@ class project_issue(crm.crm_case, osv.osv):
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'progress': fields.related('task_id', 'progress', string='Progress (%)',group_operator="avg", store=True),
+        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
+            store = {
+                'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
+                'project.task': (_get_issue_task, ['progress'], 10),
+                'project.task.work': (_get_issue_work, ['hours'], 10),
+            }),
     }
 
     def _get_project(self, cr, uid, context):
@@ -281,15 +315,28 @@ class project_issue(crm.crm_case, osv.osv):
     def convert_to_bug(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
-        if context is None:
-            context = {}
-        if not stage_id:
-            return {'value':{}}
-        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
-        if not stage.on_change:
-            return {'value':{}}
-        return {'value':{}}
+    def next_type(self, cr, uid, ids, *args):
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id.type_ids or [])
+            if types:
+                if not typeid:
+                    self.write(cr, uid, task.id, {'type_id': types[0]})
+                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
+                    index = types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': types[index+1]})
+        return True
+
+    def prev_type(self, cr, uid, ids, *args):
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
+            if types:
+                if typeid and typeid in types:
+                    index = types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
+        return True
+
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         if context is None:
@@ -371,31 +418,6 @@ class project_issue(crm.crm_case, osv.osv):
             self.pool.get('ir.attachment').create(cr, uid, data_attach)
 
         return res
-
-    def get_stage_dict(self, cr, uid, ids, context=None):
-        """This function gives dictionary for stage according to stage levels
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param context: A standard dictionary for contextual values"""
-        if not context:
-            context = {}
-        stage_obj = self.pool.get('crm.case.stage')
-        domain = [('object_id.model', '=', self._name)]
-        if 'force_domain' in context and context['force_domain']:
-            domain += context['force_domain']
-        sid = stage_obj.search(cr, uid, domain, context=context)
-        s = {}
-        previous = {}
-        section = self._name
-
-        for stage in stage_obj.browse(cr, uid, sid, context=context):
-            s.setdefault(section, {})
-            s[section][previous.get(section, False)] = stage.id
-            previous[section] = stage.id
-        return s
-
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
         if context is None:

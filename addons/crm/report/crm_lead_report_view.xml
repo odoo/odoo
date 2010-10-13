@@ -29,7 +29,6 @@
                 <field name="email" sum="# Mails"/>
                 <field name="delay_open"/>
                 <field name="delay_close"/>
-                <field name="avg_answers"/>
              </tree>
             </field>
         </record>
@@ -99,10 +98,10 @@
                         <field name="section_id"
                             default="context.get('section_id', False)"
                             context="{'invisible_section': False}">
-                            <filter icon="terp-personal+"
+                            <filter icon="terp-personal+" groups="base.group_extended"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id','=',uid)]"
-                                help="My team" />
+                                help="My Sales Team(s)" />
                         </field>
                         <field name="user_id" string="Salesman">
                             <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
@@ -128,7 +127,7 @@
                         <filter string="Salesman" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
-                            domain="[]"
+                            domain="[]" 
                             context="{'group_by':'section_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />

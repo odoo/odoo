@@ -75,18 +75,10 @@
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_accepted"/>
             <field name="signal">validate</field>
-            <field name="role_id" ref="HR"/>
         </record>
 
         <record id="t4" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
-            <field name="act_to" ref="act_refused"/>
-            <field name="signal">refuse</field>
-            <field name="role_id" ref="HR"/>
-        </record>
-
-        <record id="t5" model="workflow.transition">
-            <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_refused"/>
             <field name="signal">refuse</field>
         </record>
@@ -95,21 +87,18 @@
             <field name="act_from" ref="act_accepted"/>
             <field name="act_to" ref="act_refused"/>
             <field name="signal">refuse</field>
-            <field name="role_id" ref="HR"/>
         </record>
 
         <record id="t7" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">draft</field>
-            <field name="role_id" ref="HR"/>
         </record>
 
         <record id="t8" model="workflow.transition">
             <field name="act_from" ref="act_accepted"/>
             <field name="act_to" ref="act_invoice"/>
             <field name="signal">invoice</field>
-            <field name="role_id" ref="HR_INV"/>
         </record>
 
         <record id="t9" model="workflow.transition">
@@ -128,7 +117,6 @@
             <field name="act_from" ref="act_refused"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">draft</field>
-            <field name="role_id" ref="HR"/>
         </record>
 
     </data>

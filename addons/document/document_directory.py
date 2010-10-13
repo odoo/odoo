@@ -29,7 +29,7 @@ from tools.translate import _
 class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Directory'
-    _order = 'name desc'
+    _order = 'name'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
@@ -49,8 +49,7 @@ class document_directory(osv.osv):
             ('ressource','Folders per resource'),
             ],
             'Type', required=True, select=1,
-            help="Defines directory's behaviour."),
-
+            help="Each directory can either have the type Static or be linked to another resource. A static directory, as with Operating Systems, is the classic directory that can contain a set of files. The directories linked to systems resources automatically possess sub-directories for each of resource types defined in the parent directory."),
         'ressource_type_id': fields.many2one('ir.model', 'Resource model',
             help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),

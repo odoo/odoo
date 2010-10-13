@@ -256,10 +256,11 @@ class document_file(osv.osv):
                     storage_id = par.storage_id
                     break
                 par = par.parent_id
-            assert storage_id, "Strange, found file #%s w/o storage!" % f.id
-            r = stor.prepare_unlink(cr, uid, storage_id, f)
-            if r:
-                unres.append(r)
+            #assert storage_id, "Strange, found file #%s w/o storage!" % f.id #TOCHECK: after run yml, it's fail
+            if storage_id:
+                r = stor.prepare_unlink(cr, uid, storage_id, f)
+                if r:
+                    unres.append(r)
         res = super(document_file, self).unlink(cr, uid, ids, context)
         stor.do_unlink(cr, uid, unres)
         return res

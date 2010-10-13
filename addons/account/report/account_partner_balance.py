@@ -22,6 +22,7 @@
 import time
 import re
 import copy
+
 from tools.translate import _
 from report import report_sxw
 from common_report_header import common_report_header
@@ -48,12 +49,13 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
             'get_partners':self._get_partners,
+            'get_target_move': self._get_target_move,
         })
 
     def set_context(self, objects, data, ids, report_type=None):
         self.display_partner = data['form'].get('display_partner', 'non-zero_balance')
-        self.query = data['form'].get('query_line', '')
-        self.init_query = data['form'].get('initial_bal_query', '')
+        obj_move = self.pool.get('account.move.line')
+        self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
         self.result_selection = data['form'].get('result_selection')
         self.target_move = data['form'].get('target_move', 'all')
 
@@ -81,7 +83,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         full_account = []
         result_tmp = 0.0
         self.cr.execute(
-            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code ,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
+            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
                     "CASE WHEN sum(debit) > sum(credit) " \
                         "THEN sum(debit) - sum(credit) " \
                         "ELSE 0 " \
@@ -116,7 +118,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         for rec in full_account:
             if not rec.get('name', False):
                 rec.update({'name': _('Unknown Partner')})
-                
+
         ## We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
         return subtotal_row
@@ -141,8 +143,8 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 new_header['ref'] = ''
                 new_header['name'] = r['account_name']
                 new_header['code'] = r['code']
-                new_header['debit'] = r['debit'] 
-                new_header['credit'] = r['credit'] 
+                new_header['debit'] = r['debit']
+                new_header['credit'] = r['credit']
                 new_header['scredit'] = tot_scredit
                 new_header['sdebit'] = tot_sdebit
                 new_header['enlitige'] = tot_enlitige
@@ -252,7 +254,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 "JOIN account_move am ON (am.id = l.move_id)" \
                 "WHERE l.account_id IN %s"  \
                     "AND am.state IN %s" \
-                    "AND " + self.query + "" ,
+                    "AND " + self.query + "",
                     (tuple(self.account_ids), tuple(move_state)))
         temp_res = float(self.cr.fetchone()[0] or 0.0)
         return temp_res
@@ -271,7 +273,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 "JOIN account_move am ON (am.id = l.move_id)" \
                 "WHERE l.account_id IN %s" \
                     "AND am.state IN %s" \
-                    "AND " + self.query + "" ,
+                    "AND " + self.query + "",
                     (tuple(self.account_ids), tuple(move_state)))
         temp_res = float(self.cr.fetchone()[0] or 0.0)
         return temp_res

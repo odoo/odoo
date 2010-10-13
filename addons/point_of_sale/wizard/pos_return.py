@@ -123,9 +123,9 @@ class pos_return(osv.osv_memory):
                    <button icon='gtk-cancel' special="cancel"
                                string="Cancel" />
                                    <button icon='gtk-ok' name= "create_returns"
-                       string="Return goods and Exchange" type="object"/>
+                       string="Return with Exchange" type="object"/>
                                    <button icon='gtk-ok' name="create_returns2"
-                        string="Return without Refund" type="object"/>
+                        string="Refund Without Exchange" type="object"/>
                 </form>"""
 
             result['arch'] = _moves_arch_lst
@@ -162,6 +162,7 @@ class pos_return(osv.osv_memory):
         stock_move_obj = self.pool.get('stock.move')
         property_obj= self.pool.get("ir.property")
         uom_obj =self. pool.get('product.uom')
+        statementl_obj = self.pool.get('account.bank.statement.line')
         wf_service = netsvc.LocalService("workflow")
         #Todo :Need to clean the code
         if active_id:
@@ -171,7 +172,9 @@ class pos_return(osv.osv_memory):
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
                 val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
-                cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
+                cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
+                            "WHERE w.lot_stock_id=s.id AND w.id=%s ", 
+                            (order_id.shop_id.warehouse_id.id,))
                 res = cr.fetchone()
                 location_id = res and res[0] or None
                 stock_dest_id = val.id
@@ -185,10 +188,13 @@ class pos_return(osv.osv_memory):
                                                               'lines':[],
                                                               'statement_ids':[],
                                                               'picking_id':[]})
+                account_def = property_obj.get(cr, uid, 'property_account_payable', 'res.partner', context=context)
+                amount = 0.0
                 for line in order_id.lines:
                     if line.id:
                         try:
                             qty = data['return%s' %line.id]
+                            amount += qty * line.price_unit
                         except :
                             qty = line.qty
                         stock_move_obj.create(cr, uid, {
@@ -200,10 +206,19 @@ class pos_return(osv.osv_memory):
                             'product_id': line.product_id.id,
                             'location_dest_id': stock_dest_id,
                             'name': '%s (return)' %order_id.name,
-                            'date': date_cur,
-                            'date_planned': date_cur
+                            'date': date_cur
                         })
-                        line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
+                        if qty != 0.0:
+                            line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
+                statementl_obj.create(cr, uid, {
+                                                'name': 'Refund %s'%order_id.name,
+                                                'statement_id': order_id.statement_ids[0].statement_id.id,
+                                                'pos_statement_id': new_order,
+                                                'date': time.strftime('%Y-%m-%d'),
+                                                'account_id': order_id.partner_id and order_id.partner_id.property_account_payable \
+                                                             and order_id.partner_id.property_account_payable.id or account_def.id,
+                                                'amount': -amount,
+                                                })
                 order_obj.write(cr,uid, [active_id,new_order], {'state': 'done'})
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
@@ -254,7 +269,9 @@ class add_product(osv.osv_memory):
                 qty=data['quantity']
                 prop_ids = property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
                 val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
-                cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
+                cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
+                            "WHERE w.lot_stock_id=s.id AND w.id=%s ",
+                            (order_id.shop_id.warehouse_id.id,))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
                 stock_dest_id = val.id
@@ -276,8 +293,7 @@ class add_product(osv.osv_memory):
                                 'product_id':prod_id.id,
                                 'location_dest_id':stock_dest_id,
                                 'name':'%s (return)' %order_id.name,
-                                'date':date_cur,
-                                'date_planned':date_cur
+                                'date':date_cur
                             })
 
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
@@ -316,7 +332,9 @@ class add_product(osv.osv_memory):
         for order_id in order_obj.browse(cr, uid, active_ids, context=context):
             prop_ids =property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
             val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
-            cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
+            cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
+                        " WHERE w.lot_stock_id=s.id AND w.id=%s ",
+                        (order_id.shop_id.warehouse_id.id,))
             res=cr.fetchone()
             location_id=res and res[0] or None
             stock_dest_id = val.id
@@ -331,13 +349,13 @@ class add_product(osv.osv_memory):
                             'date':date_cur
                         })
             for line in order_id.lines:
-                key=('return%s') %line.id
+                key= 'return%s' % line.id
                 if line.id: 
                     if data.has_key(key):
-                        qty = data['return%s' %line.id]
+                        qty = data[key]
                         lines_obj.write(cr,uid,[line.id], {
-                                'qty_rfd':(line.qty or 0.0) + data['return%s' %line.id],
-                                'qty':line.qty-(data['return%s' %line.id] or 0.0)
+                                'qty_rfd':(line.qty or 0.0) + data[key],
+                                'qty':line.qty-(data[key] or 0.0)
                         })
                     else:
                         qty = line.qty
@@ -349,9 +367,8 @@ class add_product(osv.osv_memory):
                         'location_id':location_id,
                         'product_id':line.product_id.id,
                         'location_dest_id':stock_dest_id,
-                        'name':'%s (return)' %order_id.name,
+                        'name':'%s (return)' % order_id.name,
                         'date':date_cur,
-                        'date_planned':date_cur
                     })
             wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [new_picking], context)

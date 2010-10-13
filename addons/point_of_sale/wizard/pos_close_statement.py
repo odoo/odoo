@@ -35,12 +35,11 @@ class pos_close_statement(osv.osv_memory):
              @param context: A standard dictionary
              @return : Blank Dictionary
         """
-        company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        list_statement = []
         mod_obj = self.pool.get('ir.model.data')
         statement_obj = self.pool.get('account.bank.statement')
         journal_obj = self.pool.get('account.journal')
-        cr.execute("""select DISTINCT journal_id from pos_journal_users where user_id=%d order by journal_id"""%(uid))
+        cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users "
+                    "WHERE user_id=%s ORDER BY journal_id", (uid,))
         j_ids = map(lambda x1: x1[0], cr.fetchall())
         journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)])
         ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', journal_ids)])

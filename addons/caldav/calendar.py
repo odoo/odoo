@@ -61,13 +61,14 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
         model_obj = pooler.get_pool(cr.dbname).get(model)
         if (not model == oomodel) or (not dbname == cr.dbname):
             return (False, None)
-        qry = 'select distinct(id) from %s' % model_obj._table
+        qry = 'SELECT DISTINCT(id) FROM %s' % model_obj._table
         if rdate:
-            qry += " where recurrent_id='%s'" % (rdate)
+            qry += " where recurrent_id='%s'" % (rdate) #TOFIX: sql injection
             cr.execute(qry)
             r_id = cr.fetchone()
             if r_id:
                 return (id, r_id[0])
+        
         cr.execute(qry)
         ids = map(lambda x: str(x[0]), cr.fetchall())
         if id in ids:
@@ -364,8 +365,8 @@ class CalDAV(object):
                         model_obj = self.pool.get(model)
                         r_ids = []
                         if model_obj._columns.get('recurrent_uid', None):
-                            cr.execute('select id from %s  where recurrent_uid=%s'
-                                           % (model_obj._table, data[map_field]))
+                            cr.execute('SELECT id FROM %s WHERE recurrent_uid=%%s' % model_obj._table,
+                                        (data[map_field],))
                             r_ids = map(lambda x: x[0], cr.fetchall())
                         if r_ids:
                             r_datas = model_obj.read(cr, uid, r_ids, context=context)
@@ -715,8 +716,9 @@ class basic_calendar_line(osv.osv):
             @param context: A standard dictionary for contextual values
         """
 
-        cr.execute("Select count(id) from basic_calendar_lines \
-                                where name='%s' and calendar_id=%s" % (vals.get('name'), vals.get('calendar_id')))
+        cr.execute("SELECT COUNT(id) FROM basic_calendar_lines \
+                                WHERE name=%s AND calendar_id=%s", 
+                                (vals.get('name'), vals.get('calendar_id')))
         res = cr.fetchone()
         if res:
             if res[0] > 0:
@@ -797,8 +799,8 @@ class basic_calendar_fields(osv.osv):
             @param context: A standard dictionary for contextual values
         """
 
-        cr.execute('select name from basic_calendar_attributes \
-                            where id=%s' % (vals.get('name')))
+        cr.execute('SELECT name FROM basic_calendar_attributes \
+                            WHERE id=%s', (vals.get('name'),))
         name = cr.fetchone()
         name = name[0]
         if name in ('valarm', 'attendee'):

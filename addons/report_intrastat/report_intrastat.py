@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 from tools.sql import drop_view_if_exists
+from decimal_precision import decimal_precision as dp
 
 
 class res_country(osv.osv):
@@ -69,7 +70,7 @@ class report_intrastat(osv.osv):
         'code': fields.char('Country code', size=2, readonly=True),
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
         'weight': fields.float('Weight', readonly=True),
-        'value': fields.float('Value', readonly=True),
+        'value': fields.float('Value', readonly=True, digits_compute=dp.get_precision('Account')),
         'type': fields.selection([('import', 'Import'), ('export', 'Export')], 'Type'),
         'currency_id': fields.many2one('res.currency', "Currency", readonly=True),
     }

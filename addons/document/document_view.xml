@@ -148,6 +148,7 @@
                 <field name="name"/>
                 <field name="type"/>
                 <field name="user_id"/>
+                <field name="storage_id"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
             </tree>
@@ -404,14 +405,10 @@
         groups="base.group_extended"/>
 
     <act_window
-    	context="{'search_default_parent_id': [active_id]}"
-        id="zoom_directory" name="Related Documents"
+        domain="[('parent_id', '=', active_id)]"
+    	id="zoom_directory" name="Related Documents"
         res_model="ir.attachment"
         src_model="document.directory"/>
-
-
-
-
 </data>
 </openerp>
 

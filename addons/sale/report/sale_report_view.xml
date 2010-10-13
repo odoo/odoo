@@ -26,7 +26,7 @@
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay" sum="Commitment Delay"/>
                 <field name="state" invisible="1"/>
-                <field name="analytic_account_id" invisible="1" groups="base.group_extended"/>
+                <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
             </tree>
         </field>
     </record>
@@ -101,9 +101,9 @@
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
                     <filter string="Default UoM" icon="terp-mrp" context="{'group_by':'uom_name'}"/>
                     <filter string="Category of Product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}"/>
-                    <separator orientation="vertical"/>
+                    <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
+                    <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
+                    <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Shop" icon="terp-go-home" context="{'group_by':'shop_id'}"/>
@@ -129,7 +129,7 @@
     </record>
 
     <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="11"/>
-    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="1"/>
+    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="1" groups="base.group_sale_manager"/>
 
     <!--This views used in board_sale module -->
     <record id="view_sales_by_partner_tree" model="ir.ui.view">
@@ -226,7 +226,7 @@
         <field name="model">sale.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Sales by Products">
+            <tree string="Sales by Product Category">
                 <field name="product_id"/>
                 <field name="price_total"/>
             </tree>
@@ -238,15 +238,15 @@
          <field name="model">sale.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Sales by Products" type="bar">
-                 <field name="product_id" />
+             <graph string="Sales by Product Category" type="bar">
+                 <field name="categ_id" />
                  <field name="price_total" operator="+"/>
              </graph>
          </field>
     </record>
 
    <record id="action_sales_product_total_price" model="ir.actions.act_window">
-        <field name="name">Sales by Products</field>
+        <field name="name">Sales by Product's Category</field>
         <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
@@ -293,7 +293,7 @@
             <field name="model">sale.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Top Quotations">
+                <tree string="Quotations">
                     <field name="date_order"/>
                     <field name="name"/>
                     <field name="partner_id"/>
@@ -305,7 +305,7 @@
         </record>
 
     <record id="action_quotation_for_sale" model="ir.actions.act_window">
-        <field name="name">Top Quotations</field>
+        <field name="name">Quotations</field>
         <field name="res_model">sale.order</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
