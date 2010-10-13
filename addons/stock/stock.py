@@ -731,21 +731,29 @@ class stock_picking(osv.osv):
                 'button_confirm', cr)
         return True
 
-    def draft_validate(self, cr, uid, ids, *args):
+    def draft_validate(self, cr, uid, ids, context=None):
         """ Validates picking directly from draft state.
         @return: True
         """
+        if context is None:
+            context = {}
         wf_service = netsvc.LocalService("workflow")
         self.draft_force_assign(cr, uid, ids)
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
-
-            self.action_move(cr, uid, [pick.id])
-            wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
-        return True
-
+        context.update({'active_ids':ids})
+        return {
+                'name': 'Make Picking',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.partial.picking',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy': True,
+                'context':context
+            }
     def cancel_assign(self, cr, uid, ids, *args):
         """ Cancels picking and moves.
         @return: True
