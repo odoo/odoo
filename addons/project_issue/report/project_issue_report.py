@@ -105,33 +105,7 @@ class project_issue_report(osv.osv):
                     (SELECT count(id) FROM mailgate_message WHERE model='project.issue' AND res_id=c.id) AS email
                 FROM
                     project_issue c
-<<<<<<< TREE
-                where c.categ_id in (select res_id from ir_model_data where name='bug_categ')
-                group by
-                    to_char(c.create_date, 'YYYY'),
-                    to_char(c.create_date, 'MM'),
-                    to_char(c.create_date, 'YYYY-MM-DD'),
-                    c.state,
-                    to_char(c.date_open, 'YYYY-MM-DD'),
-                    to_char(c.date_closed, 'YYYY-mm-dd'),
-                    c.user_id,
-                    c.section_id,
-                    c.categ_id,
-                    c.stage_id,
-                    c.company_id,
-                    c.priority,
-                    c.working_hours_open,
-                    c.working_hours_close,
-                    c.project_id,
-                    to_char(c.date_closed, 'YYYY-MM-DD'),
-                    c.type_id,
-                    c.working_hours_open,
-                    c.working_hours_close,
-                    date_trunc('day',c.create_date),
-                    c.assigned_to,
-                    c.partner_id,
-                    c.canal_id,
-                    c.task_id
+                WHERE c.categ_id IN (select res_id from ir_model_data WHERE model = 'crm.case.categ' and name='bug_categ')
             )""")
 
 project_issue_report()

@@ -92,11 +92,7 @@ class report_project_task_user(osv.osv):
                     (extract('epoch' from (t.date_deadline-t.date_end)))/(3600*24)  as delay_endings_days
               FROM project_task t
 
-<<<<<<< TREE
-                group by
-=======
                 GROUP BY
->>>>>>> MERGE-SOURCE
                     t.id,
                     remaining_hours,
                     t.effective_hours,
