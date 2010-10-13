@@ -1689,7 +1689,7 @@ class stock_move(osv.osv):
         def create_chained_picking(self, cr, uid, moves, context=None):
             new_moves = []
             res_obj = self.pool.get('res.company')
-            picking_obj = self.pool.get('stock.picking')
+            move_obj = self.pool.get('stock.move')
             if context is None:
                 context = {}
             for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
