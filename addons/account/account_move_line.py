@@ -26,6 +26,7 @@ from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
 import tools
+from operator import itemgetter
 
 class account_move_line(osv.osv):
     _name = "account.move.line"
@@ -901,7 +902,7 @@ class account_move_line(osv.osv):
         fields['period_id'] = all_journal
         fields['journal_id'] = all_journal
 
-        from operator import itemgetter
+
         fld = sorted(fld, key=itemgetter(1))
 
         widths = {

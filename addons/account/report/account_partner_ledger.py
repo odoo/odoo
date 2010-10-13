@@ -286,7 +286,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #            return 0.0
 #        result_tmp = 0.0
 #        result_init = 0.0
-#        if self.reconcil :
+#        if self.reconcil:
 #            RECONCILE_TAG = " "
 #        else:
 #            RECONCILE_TAG = "AND reconcile_id IS NULL"
@@ -317,7 +317,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #                    "AND m.state IN %s "
 #                    "AND account_id IN %s" \
 #                    " " + RECONCILE_TAG + " " \
-#                    "AND " + self.query + " " ,
+#                    "AND " + self.query + " ",
 #                    (tuple(self.partner_ids), tuple(move_state) ,tuple(self.account_ids),))
 #        contemp = self.cr.fetchone()
 #        if contemp != None:
@@ -335,7 +335,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #            return 0.0
 #        result_tmp = 0.0
 #        result_init = 0.0
-#        if self.reconcil :
+#        if self.reconcil:
 #            RECONCILE_TAG = " "
 #        else:
 #            RECONCILE_TAG = "AND reconcile_id IS NULL"
@@ -366,7 +366,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #                    "AND m.state IN %s "
 #                    "AND account_id IN %s" \
 #                    " " + RECONCILE_TAG + " " \
-#                    "AND " + self.query + " " ,
+#                    "AND " + self.query + " ",
 #                    (tuple(self.partner_ids), tuple(move_state), tuple(self.account_ids),))
 #        contemp = self.cr.fetchone()
 #        if contemp != None:
