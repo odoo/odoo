@@ -1268,8 +1268,8 @@ class product_product(osv.osv):
     _columns = {
         'income_pdt': fields.boolean('Product for Input'),
         'expense_pdt': fields.boolean('Product for expenses'),
-        'am_out': fields.boolean('Controle for Output Operations'),
-        'disc_controle': fields.boolean('Discount Controle '),
+        'am_out': fields.boolean('Control for Output Operations'),
+        'disc_controle': fields.boolean('Discount Control'),
     }
     _defaults = {
         'disc_controle': lambda *a: True,
