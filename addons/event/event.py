@@ -354,8 +354,6 @@ class event_registration(osv.osv):
         if context is None:
             context = {}
         inv_pool = self.pool.get('account.invoice')
-        inv_lines_pool = self.pool.get('account.invoice.line')
-
         val_invoice = inv_pool.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
         val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
         val_invoice['value'].update({
@@ -591,7 +589,6 @@ class event_registration(osv.osv):
         data ={}
         if not contact:
             return data
-        contact_obj = self.pool.get('res.partner.contact')
         addr_obj = self.pool.get('res.partner.address')
         job_obj = self.pool.get('res.partner.job')
 
@@ -671,7 +668,6 @@ class event_registration(osv.osv):
                     data['contact_id'] = job_obj.browse(cr, uid, job_ids[0]).contact_id.id
                     d = self.onchange_contact_id(cr, uid, ids, data['contact_id'], part)
                     data.update(d['value'])
-        partner_data = res_obj.browse(cr, uid, part)
         return {'value': data}
 
     def onchange_partner_invoice_id(self, cr, uid, ids, event_id, partner_invoice_id):

@@ -280,7 +280,6 @@ class account_installer(osv.osv_memory):
                 obj_journal.create(cr,uid,vals_journal)
 
                 for val in record.bank_accounts_id:
-                    seq_prefix = None
                     seq_padding = 5
                     if val.account_type == 'cash':
                         type = cash_type_id
@@ -378,7 +377,7 @@ class account_installer(osv.osv_memory):
             seq_id_purchase = seq_id
             seq_id_sale_refund = seq_id
             seq_id_purchase_refund = seq_id
-            
+
         vals_journal['view_id'] = view_id
 
         #Sales Journal
