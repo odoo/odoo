@@ -20,14 +20,12 @@
 ##############################################################################
 
 import time
-from operator import itemgetter
-import decimal_precision as dp
 from lxml import etree
+import decimal_precision as dp
 
 import netsvc
 from osv import fields, osv, orm
 import pooler
-from tools import config
 from tools.translate import _
 
 class account_invoice(osv.osv):
@@ -148,7 +146,7 @@ class account_invoice(osv.osv):
             res[id] = []
             if not invoice.move_id:
                 continue
-            data_lines = invoice.move_id.line_id
+            data_lines = [x for x in invoice.move_id.line_id if x.account_id.id == invoice.account_id.id]
             partial_ids = []
             for line in data_lines:
                 ids_line = []
@@ -253,7 +251,7 @@ class account_invoice(osv.osv):
             \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
             \n* The \'Paid\' state is set automatically when invoice is paid.\
             \n* The \'Cancelled\' state is used when user cancel invoice.'),
-        'date_invoice': fields.date('Date Invoiced', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]}, help="Keep empty to use the current date"),
+        'date_invoice': fields.date('Invoice Date', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]}, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]},
             help="If you use payment terms, the due date will be computed automatically at the generation "\
                 "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. The payment term may compute several due dates, for example 50% now, 50% in one month."),
@@ -304,7 +302,7 @@ class account_invoice(osv.osv):
             }, help="The Journal Entry of the invoice have been totally reconciled with one or several Journal Entries of payment."),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
             help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Partner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
-        'move_lines':fields.function(_get_lines , method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
+        'move_lines':fields.function(_get_lines, method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 50),
@@ -317,7 +315,7 @@ class account_invoice(osv.osv):
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Mapping', readonly=True, states={'draft':[('readonly',False)]})
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]})
     }
     _defaults = {
         'type': _get_type,
@@ -349,6 +347,16 @@ class account_invoice(osv.osv):
             if field == 'journal_id':
                 journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
+
+        if view_type == 'tree':
+            doc = etree.XML(res['arch'])
+            nodes = doc.xpath("//field[@name='partner_id']")
+            partner_string = 'Customer'
+            if context.get('type', 'out_invoice') in ('in_invoice', 'in_refund'):
+                partner_string = _('Supplier')
+            for node in nodes:
+                node.set('string', partner_string)
+            res['arch'] = etree.tostring(doc)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -536,7 +544,7 @@ class account_invoice(osv.osv):
                                 if not result_id:
                                     raise osv.except_osv(_('Configuration Error !'),
                                         _('Can not find account chart for this company in invoice line account, Please Create account.'))
-                                r_id = self.pool.get('account.invoice.line').write(cr, uid, [line.id], {'account_id': result_id[0]})
+                                self.pool.get('account.invoice.line').write(cr, uid, [line.id], {'account_id': result_id[0]})
             else:
                 if invoice_line:
                     for inv_line in invoice_line:
@@ -577,7 +585,7 @@ class account_invoice(osv.osv):
             else:
                 val['currency_id'] = company.currency_id.id
 
-        return {'value' : val, 'domain': dom }
+        return {'value': val, 'domain': dom }
 
     # go from canceled state to draft state
     def action_cancel_draft(self, cr, uid, ids, *args):
@@ -586,16 +594,6 @@ class account_invoice(osv.osv):
         for inv_id in ids:
             wf_service.trg_create(uid, 'account.invoice', inv_id, cr)
         return True
-
-    def finalize_invoice_move_lines(self, cr, uid, invoice_browse, move_lines):
-        """finalize_invoice_move_lines(cr, uid, invoice, move_lines) -> move_lines
-        Hook method to be overridden in additional modules to verify and possibly alter the
-        move lines to be created by an invoice, for special cases.
-        :param invoice_browse: browsable record of the invoice that is generating the move lines
-        :param move_lines: list of dictionaries with the account.move.lines (as for create())
-        :return: the (possibly updated) final move_lines to create for this invoice
-        """
-        return move_lines
 
     # Workflow stuff
     #################
@@ -650,18 +648,19 @@ class account_invoice(osv.osv):
         return ok
 
     def button_reset_taxes(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
+        ctx = context.copy()
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
             cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))
-            partner = self.browse(cr, uid, id, context=context).partner_id
+            partner = self.browse(cr, uid, id, context=ctx).partner_id
             if partner.lang:
-                context.update({'lang': partner.lang})
-            for taxe in ait_obj.compute(cr, uid, id, context=context).values():
+                ctx.update({'lang': partner.lang})
+            for taxe in ait_obj.compute(cr, uid, id, context=ctx).values():
                 ait_obj.create(cr, uid, taxe)
         # Update the stored value (fields.function), so we write to trigger recompute
-        self.pool.get('account.invoice').write(cr, uid, ids, {'invoice_line':[]}, context=context)
+        self.pool.get('account.invoice').write(cr, uid, ids, {'invoice_line':[]}, context=ctx)
         return True
 
     def button_compute(self, cr, uid, ids, context=None, set_total=False):
@@ -816,7 +815,6 @@ class account_invoice(osv.osv):
                 self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')})
             company_currency = inv.company_id.currency_id.id
             # create the analytical lines
-            line_ids = self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id)
             # check if taxes are all computed
@@ -900,7 +898,7 @@ class account_invoice(osv.osv):
                     'name': name,
                     'price': total,
                     'account_id': acc_id,
-                    'date_maturity' : inv.date_due or False,
+                    'date_maturity': inv.date_due or False,
                     'amount_currency': diff_currency_p \
                             and total_currency or False,
                     'currency_id': diff_currency_p \
@@ -911,7 +909,7 @@ class account_invoice(osv.osv):
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
             part = inv.partner_id.id
 
-            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context={})) ,iml)
+            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context={})),iml)
 
             line = self.group_lines(cr, uid, iml, line, inv)
 
@@ -934,7 +932,7 @@ class account_invoice(osv.osv):
             period_id = inv.period_id and inv.period_id.id or False
             if not period_id:
                 period_ids = self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d'))])
-                if len(period_ids):
+                if period_ids:
                     period_id = period_ids[0]
             if period_id:
                 move['period_id'] = period_id
@@ -1020,7 +1018,7 @@ class account_invoice(osv.osv):
                 account_move_obj.unlink(cr, uid, [i['move_id'][0]])
             if i['payment_ids']:
                 account_move_line_obj = self.pool.get('account.move.line')
-                pay_ids = account_move_line_obj.browse(cr, uid , i['payment_ids'])
+                pay_ids = account_move_line_obj.browse(cr, uid, i['payment_ids'])
                 for move_line in pay_ids:
                     if move_line.reconcile_partial_id and move_line.reconcile_partial_id.line_partial_ids:
                         raise osv.except_osv(_('Error !'), _('You cannot cancel the Invoice which is Partially Paid! You need to unreconcile concerned payment entries!'))
@@ -1045,7 +1043,7 @@ class account_invoice(osv.osv):
         return True
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
+        if not ids:
             return []
         types = {
                 'out_invoice': 'CI: ',
@@ -1080,7 +1078,9 @@ class account_invoice(osv.osv):
 
     def refund(self, cr, uid, ids, date=None, period_id=None, description=None, journal_id=None):
         invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id'])
-
+        obj_invoice_line = self.pool.get('account.invoice.line')
+        obj_invoice_tax = self.pool.get('account.invoice.tax')
+        obj_journal = self.pool.get('account.journal')
         new_ids = []
         for invoice in invoices:
             del invoice['id']
@@ -1092,20 +1092,20 @@ class account_invoice(osv.osv):
                 'in_refund': 'in_invoice',   # Supplier Refund
             }
 
-            invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
+            invoice_lines = obj_invoice_line.read(cr, uid, invoice['invoice_line'])
             invoice_lines = self._refund_cleanup_lines(cr, uid, invoice_lines)
 
-            tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
+            tax_lines = obj_invoice_tax.read(cr, uid, invoice['tax_line'])
             tax_lines = filter(lambda l: l['manual'], tax_lines)
             tax_lines = self._refund_cleanup_lines(cr, uid, tax_lines)
             if journal_id:
                 refund_journal_ids = [journal_id]
             elif invoice['type'] == 'in_invoice':
-                refund_journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase_refund')])
+                refund_journal_ids = obj_journal.search(cr, uid, [('type','=','purchase_refund')])
             else:
-                refund_journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','sale_refund')])
+                refund_journal_ids = obj_journal.search(cr, uid, [('type','=','sale_refund')])
 
-            if not date :
+            if not date:
                 date = time.strftime('%Y-%m-%d')
             invoice.update({
                 'type': type_dict[invoice['type']],
@@ -1116,11 +1116,11 @@ class account_invoice(osv.osv):
                 'tax_line': tax_lines,
                 'journal_id': refund_journal_ids
             })
-            if period_id :
+            if period_id:
                 invoice.update({
                     'period_id': period_id,
                 })
-            if description :
+            if description:
                 invoice.update({
                     'name': description,
                 })
@@ -1389,8 +1389,6 @@ class account_invoice_line(osv.osv):
         if a:
             result['account_id'] = a
 
-        taxep = None
-        tax_obj = self.pool.get('account.tax')
         if type in ('out_invoice', 'out_refund'):
             taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
             tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
@@ -1410,7 +1408,7 @@ class account_invoice_line(osv.osv):
         result['uos_id'] = res.uom_id.id or uom or False
         if result['uos_id']:
             res2 = res.uom_id.category_id.id
-            if res2 :
+            if res2:
                 domain = {'uos_id':[('category_id','=',res2 )]}
 
         result['categ_id'] = res.categ_id.id
@@ -1443,13 +1441,10 @@ class account_invoice_line(osv.osv):
 
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = []
-        tax_grouped = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
-        ait_obj = self.pool.get('account.invoice.tax')
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
         company_currency = inv.company_id.currency_id.id
-        cur = inv.currency_id
 
         for line in inv.invoice_line:
             mres = self.move_line_get_item(cr, uid, line, context)
@@ -1544,8 +1539,8 @@ class account_invoice_tax(osv.osv):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
-        'factor_base' : fields.function(_count_factor, method=True, string='Multipication factor for Base code', type='float', multi="all"),
-        'factor_tax' : fields.function(_count_factor, method=True, string='Multipication factor Tax code', type='float', multi="all")
+        'factor_base': fields.function(_count_factor, method=True, string='Multipication factor for Base code', type='float', multi="all"),
+        'factor_tax': fields.function(_count_factor, method=True, string='Multipication factor Tax code', type='float', multi="all")
     }
 
     def base_change(self, cr, uid, ids, base, currency_id=False, company_id=False, date_invoice=False):
@@ -1621,6 +1616,7 @@ class account_invoice_tax(osv.osv):
                     tax_grouped[key]['tax_amount'] += val['tax_amount']
 
         for t in tax_grouped.values():
+            t['base'] = cur_obj.round(cr, uid, cur, t['base'])
             t['amount'] = cur_obj.round(cr, uid, cur, t['amount'])
             t['base_amount'] = cur_obj.round(cr, uid, cur, t['base_amount'])
             t['tax_amount'] = cur_obj.round(cr, uid, cur, t['tax_amount'])

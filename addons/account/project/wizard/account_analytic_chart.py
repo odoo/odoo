@@ -40,9 +40,9 @@ class account_analytic_chart(osv.osv_memory):
         result = act_obj.read(cr, uid, [id], context=context)[0]
         data = self.read(cr, uid, ids, [])[0]
         if data['from_date']:
-            result_context.update({'from_date' : data['from_date']})
+            result_context.update({'from_date': data['from_date']})
         if data['to_date']:
-            result_context.update({'to_date' : data['to_date']})
+            result_context.update({'to_date': data['to_date']})
         result['context'] = str(result_context)
         return result
 

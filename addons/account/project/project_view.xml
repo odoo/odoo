@@ -172,19 +172,17 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="top" string="Analytic Entries">
-                    <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <field name="date"/>
+                    <field name="ref" invisible="context.get('to_invoice', False)"/>
                     <field name="name"/>
-                    <field name="journal_id"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total quantity"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
-                    <field domain="[('type','=','normal')]" name="account_id" groups="base.group_extended"/>
-                    <field invisible="True" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                    <field name="amount" sum="Total amount"/>
-                    <field name="general_account_id"/>
-                    <field name="ref"/>
-                    <field name="currency_id" />
-                    <field name="amount_currency" />
-                    <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" groups="base.group_multi_company"/>
+                    <field name="journal_id" invisible="context.get('to_invoice', False)"/>
+                    <field name="amount" sum="Total" invisible="context.get('to_invoice', False)"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)" invisible="not context.get('to_invoice', False)"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total Quantity" invisible="not context.get('to_invoice', False)"/>
+                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" invisible="not context.get('to_invoice', False)"/>
+                    <field domain="[('type','=','normal')]" name="account_id"/>
+                    <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
+                    <field name="user_id" invisible="1" />
                 </tree>
             </field>
         </record>
@@ -195,22 +193,24 @@
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
                     <group col='6' colspan='4'>
-                        <filter string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-sale" help="Analytic Journal Items related to a sale journal."/>
-                        <filter string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
+                        <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-sale" help="Analytic Journal Items related to a sale journal."/>
+                        <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
+                        <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation')]" icon="terp-folder-orange"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Overdue Accounts" domain="[('account_id.date','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Analytic Journal Items related to accounts having a past deadline."/>
-                        <separator orientation="vertical"/>
-                        <field name="date" select="1"/>
-                        <field name="name" select="1"/>
-                        <field name="account_id" select="1"/>
-                        <field name="user_id" widget="selection"/>
+                        <field name="date"/>
+                        <field name="name"/>
+                        <field name="account_id"/>
+                        <field name="user_id">
+                            <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
+                        </field>
                     </group>
                     <newline/>
                     <group string="Group By..." expand="0">
-                        <filter string="Analytic Account" context="{'group_by':'account_id'}" groups="base.group_extended" icon="terp-folder-blue"/>
-                        <filter string="Analytic Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>
+                        <filter string="Account" context="{'group_by':'account_id'}" groups="base.group_extended" icon="terp-folder-blue"/>
+                        <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>
+                        <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
                         <separator orientation="vertical"/>
-                        <filter string="General Account" context="{'group_by':'general_account_id'}" icon="terp-folder-green"/>
+                        <filter string="Fin.Account" context="{'group_by':'general_account_id'}" icon="terp-folder-green"/>
                         <separator orientation="vertical"/>
                         <filter string="Product" context="{'group_by':'product_id'}" icon="terp-accessories-archiver"/>
                     </group>
@@ -431,13 +431,13 @@
             </field>
         </record>
 
-        <act_window 
+        <act_window
             context="{'search_default_account_id': [active_id], 'search_default_user_id': False}"
-            id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal" 
-            name="All Analytic Entries" 
-            res_model="account.analytic.line" 
-            src_model="account.analytic.account" 
-            view_mode="tree,form" 
+            id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal"
+            name="All Analytic Entries"
+            res_model="account.analytic.line"
+            src_model="account.analytic.account"
+            view_mode="tree,form"
             view_type="form"/>
 
         <record id="view_account_journal_1" model="ir.ui.view">

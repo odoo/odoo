@@ -21,9 +21,7 @@
 
 import time
 
-import netsvc
 from osv import fields, osv
-from tools.misc import currency
 from tools.translate import _
 import decimal_precision as dp
 
@@ -55,6 +53,7 @@ class account_bank_statement(osv.osv):
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context.update({'statement_id': ids[0]})
+
         return {
             'name': _('Import Invoice'),
             'context': context,
@@ -222,11 +221,11 @@ class account_bank_statement(osv.osv):
         account_move_line_obj = self.pool.get('account.move.line')
         account_analytic_line_obj = self.pool.get('account.analytic.line')
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-
         st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id, context)
         st = st_line.statement_id
 
         context.update({'date': st_line.date})
+
         move_id = account_move_obj.create(cr, uid, {
             'journal_id': st.journal_id.id,
             'period_id': st.period_id.id,
@@ -242,6 +241,7 @@ class account_bank_statement(osv.osv):
             account_id = st.journal_id.default_credit_account_id.id
         else:
             account_id = st.journal_id.default_debit_account_id.id
+
         acc_cur = ((st_line.amount<=0) and st.journal_id.default_debit_account_id) or st_line.account_id
         amount = res_currency_obj.compute(cr, uid, st.currency.id,
                 company_currency_id, st_line.amount, context=context,
@@ -282,7 +282,7 @@ class account_bank_statement(osv.osv):
                         account=acc_cur)
             val['amount_currency'] = amount_cur
 
-        move_line_id = account_move_line_obj.create(cr, uid, val , context=context)
+        move_line_id = account_move_line_obj.create(cr, uid, val, context=context)
         torec.append(move_line_id)
 
         # Fill the secondary amount/currency

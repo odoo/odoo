@@ -113,12 +113,12 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state" select="1" readonly="1"/>
+                        <button type="object" string="Cancel" name="button_cancel" states="open,pending" icon="gtk-stop"/>
                         <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                         <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
                         <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
-                        <button type="object" string="Cancel" name="button_cancel" states="open,pending" icon="gtk-stop"/>
                     </group>
                 </form>
             </field>
@@ -198,7 +198,7 @@
             <field name="model">project.scrum.sprint</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
-                <calendar string="Scrum Sprint" date_start="date_start">
+                <calendar string="Scrum Sprint" date_start="date_start" date_stop="date_stop">
                     <field name="name"/>
                     <field name="project_id"/>
                 </calendar>
@@ -224,6 +224,8 @@
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                     <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
+                    <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" states="open,draft,close,cancel"
+                                	string="Burndown Chart" type="action" icon="gtk-print"/>
                 </tree>
             </field>
         </record>
@@ -347,7 +349,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="view_scrum_sprint_tree"/>
-            <field name="context">{"search_default_filter_current": 1, "search_default_scrum_master_id":uid}</field>
+            <field name="context">{"search_default_filter_current": 1}</field>
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
         </record>
         <menuitem
@@ -378,7 +380,6 @@
                 <tree string="Scrum Meeting">
                     <field name="date"/>
                     <field name="sprint_id"/>
-                    <field name="project_id"/>
                     <field name="user_id"/>
                 </tree>
             </field>
@@ -558,7 +559,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page[@string='Extra Info']/group/field[@name='sequence']" position="after">
-                    <field name="sprint_id" domain="[('state', 'in', ['draft', 'open'])]" />
+                    <field name="sprint_id" domain="[('state', 'in', ['draft', 'open'])]" readonly="1"/>
                 </xpath>
             </field>
         </record>

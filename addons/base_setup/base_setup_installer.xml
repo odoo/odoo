@@ -25,17 +25,24 @@
           </separator>
             
           <group colspan="8">
-            <field name="crm" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <field name="project" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="knowledge" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <field name="stock" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="mrp" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <field name="account" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="purchase" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <field name="hr" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="point_of_sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <field name="marketing" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="profile_tools" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <field name="report_designer" groups="base.group_extended" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <separator string="Install Specific Industry Sector Applications" colspan="4"/>
-            <field name="association" attrs="{'readonly':['|',('auction','=',True),('product_expiry','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <field name="auction" attrs="{'readonly':['|',('association','=',True),('product_expiry','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <field name="product_expiry" attrs="{'readonly':['|',('association','=',True),('auction','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="crm" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="project" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="knowledge" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="stock" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="mrp" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="account_voucher" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="account_accountant" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="purchase" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="hr" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="profile_tools" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="marketing" groups="base.group_extended" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="point_of_sale" groups="base.group_extended" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="report_designer" groups="base.group_extended" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <separator string="Install Specific Industry Applications" colspan="4"/>
+            <field name="association" attrs="{'readonly':['|',('auction','=',True),('product_expiry','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="auction" attrs="{'readonly':['|',('association','=',True),('product_expiry','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="product_expiry" attrs="{'readonly':['|',('association','=',True),('auction','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
           </group>
         </data>
       </field>
@@ -54,6 +61,7 @@
     <record id="base_setup_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_base_setup_installer"/>
         <field name="sequence">2</field>
+        <field name="restart">always</field>
     </record>
   </data>
 </openerp>

@@ -17,7 +17,7 @@
 		-->
 
 		<record id="process_node_mts0" model="process.node">
-			<field name="menu_id" ref="base.menu_mrp_procurement_action"/>
+			<field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
 			<field name="model_id" ref="mrp.model_procurement_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Assignment from stock.&quot;&quot;&quot;" name="note"/>
@@ -28,7 +28,7 @@
 		</record>
 
 		<record id="process_node_stock0" model="process.node">
-			<field name="menu_id" ref="base.menu_mrp_procurement_action"/>
+			<field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
 			<field name="model_id" ref="mrp.model_procurement_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Assignment from Production or Purchase Order.&quot;&quot;&quot;" name="note"/>
@@ -66,7 +66,6 @@
 		-->
 
 		<record id="process_transition_stockrfq0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;To Buy&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;In case the Supply method of the product is Buy, the system creates a purchase order.&quot;&quot;&quot;" name="note"/>
@@ -75,7 +74,6 @@
 		</record>
 
 		<record id="process_transition_stockproduction0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;To Produce&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;In case the Supply method of the product is Produce, the system creates a production order.&quot;&quot;&quot;" name="note"/>

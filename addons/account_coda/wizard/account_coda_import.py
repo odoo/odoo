@@ -59,12 +59,12 @@ class account_coda_import(osv.osv_memory):
         account_period_obj = self.pool.get('account.period')
         partner_bank_obj = self.pool.get('res.partner.bank')
         bank_statement_obj = self.pool.get('account.bank.statement')
-        move_line_obj = self.pool.get('account.move.line')
         bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         voucher_obj = self.pool.get('account.voucher')
         voucher_line_obj = self.pool.get('account.voucher.line')
         account_coda_obj = self.pool.get('account.coda')
         mod_obj = self.pool.get('ir.model.data')
+        line_obj = self.pool.get('account.move.line')
 
         if not context:
             context = {}
@@ -78,7 +78,6 @@ class account_coda_import(osv.osv_memory):
         def_pay_acc = data['def_payable']
         def_rec_acc = data['def_receivable']
 
-        str_log = ""
         err_log = "Errors:\n------\n"
         nb_err=0
         std_log=''
@@ -206,42 +205,47 @@ class account_coda_import(osv.osv_memory):
                 lines = statement.get('bank_statement_line',False)
                 if lines:
                     for value in lines:
+                        journal = journal_obj.browse(cr, uid, statement['journal_id'], context=context)
                         line = lines[value]
+                        if not line['partner_id']:
+                            line['partner_id'] = journal.company_id.partner_id.id
                         voucher_id = False
+                        rec_id = False
                         if line.get('toreconcile',False): # Fix me
                             name = line['name'][:3] + '/' + line['name'][3:7] + '/' + line['name'][7:]
                             rec_id = self.pool.get('account.move.line').search(cr, uid, [('name', '=', name), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
                             if rec_id:
+                                result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line['partner_id'], journal_id=statement['journal_id'], price=abs(line['amount']), currency_id = journal.company_id.currency_id.id, ttype=(line['amount'] < 0 and 'payment' or 'receipt'), context=context)
                                 voucher_res = { 'type':(line['amount'] < 0 and 'payment' or 'receipt') ,
                                 'name': line['name'],#line.name,
                                 'partner_id': line['partner_id'] ,#line.partner_id.id,
                                 'journal_id': statement['journal_id'], #statement.journal_id.id,
-                                'account_id': line['account_id'],#line.account_id.id,
-                                'company_id': statement['company_id'],#statement.company_id.id,
-                                'currency_id': statement['currency'],#statement.currency.id,
+                                'account_id': result.get('account_id', journal.default_credit_account_id.id),#line.account_id.id,
+                                'company_id': journal.company_id.id,#statement.company_id.id,
+                                'currency_id': journal.company_id.currency_id.id,#statement.currency.id,
                                 'date': line['date'], #line.date,
                                 'amount':abs(line['amount']),
                                 'period_id':statement.get('period_id',False) or period,# statement.period_id.id
                                 }
                                 voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
-    
-                                result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'))
+                                context.update({'move_line_ids': rec_id})
+
                                 voucher_line_dict =  False
                                 if result['value']['line_ids']:
                                     for line_dict in result['value']['line_ids']:
                                         move_line = line_obj.browse(cr, uid, line_dict['move_line_id'], context)
                                         if line.move_id.id == move_line.move_id.id:
                                             voucher_line_dict = line_dict
-    
+
                                 if voucher_line_dict:
                                     voucher_line_dict.update({'voucher_id':voucher_id})
                                     voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
-    
-    #                            reconcile_id = statement_reconcile_obj.create(cr, uid, {
-    #                                'line_ids': [(6, 0, rec_id)]
-    #                                }, context=context)
-    #
-    
+
+        #                            reconcile_id = statement_reconcile_obj.create(cr, uid, {
+        #                                'line_ids': [(6, 0, rec_id)]
+        #                                }, context=context)
+        #
+
                                 mv = self.pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
                                 if mv.partner_id:
                                     line['partner_id'] = mv.partner_id.id
@@ -249,20 +253,20 @@ class account_coda_import(osv.osv_memory):
                                         line['account_id'] = mv.partner_id.property_account_payable.id
                                     else :
                                         line['account_id'] = mv.partner_id.property_account_receivable.id
-                    str_not1 = ''
-                    if line.has_key('contry_name') and line.has_key('cntry_number'):
-                        str_not1="Partner name:%s \n Partner Account Number:%s \n Communication:%s \n Value Date:%s \n Entry Date:%s \n"%(line["contry_name"], line["cntry_number"], line["free_comm"]+line['extra_note'], line["val_date"][0], line["entry_date"][0])
-                    id = bank_statement_line_obj.create(cr, uid, {
-                               'name':line['name'],
-                               'date': line['date'],
-                               'amount': line['amount'],
-                               'partner_id':line['partner_id'] or 0,
-                               'account_id':line['account_id'],
-                               'statement_id': bk_st_id,
-                               'voucher_id': voucher_id,
-                               'note':str_not1,
-                               'ref':line['ref'],
-                               })
+                        str_not1 = ''
+                        if line.has_key('contry_name') and line.has_key('cntry_number'):
+                            str_not1="Partner name:%s \n Partner Account Number:%s \n Communication:%s \n Value Date:%s \n Entry Date:%s \n"%(line["contry_name"], line["cntry_number"], line["free_comm"]+line['extra_note'], line["val_date"][0], line["entry_date"][0])
+                        bank_statement_line_obj.create(cr, uid, {
+                                   'name':line['name'],
+                                   'date': line['date'],
+                                   'amount': line['amount'],
+                                   'partner_id':line['partner_id'],
+                                   'account_id':line['account_id'],
+                                   'statement_id': bk_st_id,
+                                   'voucher_id': voucher_id,
+                                   'note':str_not1,
+                                   'ref':line['ref'],
+                                   })
 
                 str_not = "\n \n Account Number: %s \n Account Holder Name: %s " %(statement["acc_number"], statement["acc_holder"])
                 std_log += "\nStatement : %s , Date  : %s, Starting Balance :  %.2f , Ending Balance : %.2f \n"\
@@ -299,7 +303,6 @@ class account_coda_import(osv.osv_memory):
         test = ''
         test = str_log1 + std_log + err_log
         self.write(cr, uid, ids, {'note': test}, context=context)
-        extraction = { 'statment_ids': bkst_list}
         context.update({ 'statment_ids': bkst_list})
         model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'account_coda_note_view')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
@@ -319,7 +322,7 @@ class account_coda_import(osv.osv_memory):
 
     def action_open_window(self, cr, uid, data, context=None):
         if not context:
-            cotext = {}
+            context = {}
 
         return {
             'domain':"[('id','in',%s)]"%(context.get('statment_ids', False)),

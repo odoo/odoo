@@ -28,7 +28,7 @@ class pos_details(report_sxw.rml_parse):
     def _get_invoice(self,inv_id,user):
         res={}
         if inv_id:
-            self.cr.execute("select name from account_invoice as ac where id = %d" %(inv_id))
+            self.cr.execute("select name from account_invoice as ac where id = %s", (inv_id,))
             res = self.cr.fetchone()
             return res[0]
         else:
@@ -107,14 +107,8 @@ class pos_details(report_sxw.rml_parse):
                                     objects,
                                     0.0)
 
-    def _get_payments(self, form,user, ignore_gift=False):
+    def _get_payments(self, form,user):
         statement_line_obj = self.pool.get("account.bank.statement.line")
-        gift_journal_id = None
-        if ignore_gift:
-            config_journal_ids = self.pool.get("pos.config.journal").search(self.cr, self.uid, [('code', '=', 'GIFT')])
-            if len(config_journal_ids):
-                config_journal = self.pool.get("pos.config.journal").browse(self.cr, self.uid, config_journal_ids, {})[0]
-                gift_journal_id = config_journal.journal_id.id
         pos_ids=self.pool.get("pos.order").search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','=',self.uid)])
         data={}
         if pos_ids:
@@ -162,7 +156,6 @@ class pos_details(report_sxw.rml_parse):
         res = {}
         temp={}
         list_ids = []
-        c=[]
         temp2 = 0.0
         pos_ids=self.pool.get("pos.order").search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','=',self.uid)])
         temp.update({'name':''})
@@ -184,7 +177,7 @@ class pos_details(report_sxw.rml_parse):
         return form['date_end']
 
     def __init__(self, cr, uid, name, context):
-        super(pos_details, self).__init__(cr, uid, name, context)
+        super(pos_details, self).__init__(cr, uid, name, context=context)
         self.total = 0.0
         self.qty = 0.0
         self.invoice_id = ''

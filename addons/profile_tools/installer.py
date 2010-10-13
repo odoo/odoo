@@ -25,15 +25,13 @@ class misc_tools_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     _columns = {
-        'lunch':fields.boolean('Lunch',help='Helps to manage Lunch Orders.'),
-        'subscription':fields.boolean('Recurring Documents',help='Helps to add subscription on documents.'),
-        'survey':fields.boolean('Survey',help='Manages Custom Surveys.'),
-        'idea':fields.boolean('Idea',help='Manages ideas and votes'),
-        'audittrail':fields.boolean('Audit Trail',help="Lets you to track user's operations on specific Objects."),
+        'lunch':fields.boolean('Lunch',help='A simple module to help you to manage Lunch orders.'),
+        'subscription':fields.boolean('Recurring Documents',help='Helps to generate automatically recurring documents.'),
+        'survey':fields.boolean('Survey',help='Allows you to organize surveys.'),
+        'idea':fields.boolean('Ideas Box',help='Promote ideas of the employees, votes and discussion on best ideas.'),
     }
     _defaults = {
         'lunch': True,
     }
-
 misc_tools_installer()
 

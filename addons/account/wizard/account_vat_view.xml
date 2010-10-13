@@ -10,13 +10,13 @@
             <form string="Select Period">
                 <field name="company_id" groups="base.group_multi_company" widget='selection'/>
                 <newline/>
-                <field name="based_on"/>
+                <field name="based_on" invisible="1"/>
                 <newline/>
                 <separator string="Select Period(s)" colspan="4"/>
                 <field name="periods" nolabel="1" colspan="2"/>
                 <group col="2" colspan="4">
                     <button icon='gtk-cancel' special="cancel"  string="Cancel" />
-                    <button name="create_vat" string="Print VAT Decl." colspan="1" type="object" icon="gtk-ok"/>
+                    <button name="create_vat" string="Print Tax Statement" colspan="1" type="object" icon="gtk-ok"/>
                 </group>
             </form>
             </field>

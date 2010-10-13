@@ -8,7 +8,6 @@
             <field name="name">New</field>
             <field eval="'10'" name="probability"/>
             <field eval="'1'" name="sequence"/>
-            <field name="section_id" ref="section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
 
@@ -16,7 +15,6 @@
             <field name="name">Qualification</field>
             <field eval="'20'" name="probability"/>
             <field eval="'2'" name="sequence"/>
-            <field name="section_id" ref="section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
 
@@ -24,7 +22,6 @@
             <field name="name">Proposition</field>
             <field eval="'40'" name="probability"/>
             <field eval="'3'" name="sequence"/>
-            <field name="section_id" ref="section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
 
@@ -32,15 +29,14 @@
             <field name="name">Negotiation</field>
             <field eval="'60'" name="probability"/>
             <field eval="'4'" name="sequence"/>
-            <field name="section_id" ref="section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
 
         <record model="crm.case.stage" id="stage_lead5">
-            <field name="name">Win</field>
+            <field name="name">Won</field>
             <field eval="'100'" name="probability"/>
             <field eval="'5'" name="sequence"/>
-            <field name="section_id" ref="section_sales_department"/>
+            <field eval="1" name="on_change"/>
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
 
@@ -48,8 +44,13 @@
             <field name="name">Lost</field>
             <field eval="'0'" name="probability"/>
             <field eval="'6'" name="sequence"/>
-            <field name="section_id" ref="section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+        </record>
+
+        <record model="crm.case.section" id="section_sales_department">
+            <field name="name">Sales Department</field>
+            <field name="code">Sales</field>
+            <field name="stage_ids" eval="[(4, ref('stage_lead1')), (4, ref('stage_lead2')), (4, ref('stage_lead3')), (4, ref('stage_lead4')), (4, ref('stage_lead5')), (4, ref('stage_lead6'))]"/>
         </record>
 
     <!--        CASE CATEGORY2(category2_id)        -->

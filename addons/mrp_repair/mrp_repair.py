@@ -21,7 +21,7 @@
 
 from osv import fields,osv
 import netsvc
-from datetime import datetime, date
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from tools.translate import _
 import decimal_precision as dp
@@ -679,26 +679,27 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         """
         if not type:
             return {'value': {
-                        'location_id': False,
-                        'location_dest_id': False
-                    }
-            }
-        produc_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
-        if type == 'add':
-            stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
-            to_invoice = False
-            if guarantee_limit and date.today() > datetime.strptime(guarantee_limit, '%Y-%m-%d'):
-                to_invoice=True
-            return {'value': {
-                        'to_invoice': to_invoice,
-                        'location_id': stock_id,
-                        'location_dest_id': produc_id
-                    }
-            }
-        return {'value': {
-                'to_invoice': False,
-                'location_id': produc_id,
+                'location_id': False,
                 'location_dest_id': False
+                }
+            }
+
+        product_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
+        if type != 'add':
+            return {'value': {
+                'to_invoice': False,
+                'location_id': product_id,
+                'location_dest_id': False
+                }
+            }
+
+        stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
+        to_invoice = (guarantee_limit and
+                      datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
+        return {'value': {
+            'to_invoice': to_invoice,
+            'location_id': stock_id,
+            'location_dest_id': product_id
             }
         }
 

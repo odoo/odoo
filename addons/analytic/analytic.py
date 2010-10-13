@@ -25,6 +25,7 @@ import operator
 from osv import fields, osv
 import decimal_precision as dp
 
+
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _description = 'Analytic Account'
@@ -155,7 +156,7 @@ class account_analytic_account(osv.osv):
         return dict([(i, res[i]) for i in ids])
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
+        if not ids:
             return []
         res = []
         for account in self.browse(cr, uid, ids, context=context):
@@ -173,7 +174,7 @@ class account_analytic_account(osv.osv):
         return dict(res)
 
     _columns = {
-        'name' : fields.char('Account Name', size=128, required=True),
+        'name': fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
         'code': fields.char('Account Code', size=24),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type', help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
@@ -181,14 +182,14 @@ class account_analytic_account(osv.osv):
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
-        'balance' : fields.function(_balance_calc, method=True, type='float', string='Balance'),
-        'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit'),
-        'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit'),
+        'balance': fields.function(_balance_calc, method=True, type='float', string='Balance'),
+        'debit': fields.function(_debit_calc, method=True, type='float', string='Debit'),
+        'credit': fields.function(_credit_calc, method=True, type='float', string='Credit'),
         'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity'),
         'quantity_max': fields.float('Maximum Quantity', help='Sets the higher limit of quantity of hours.'),
-        'partner_id' : fields.many2one('res.partner', 'Associated Partner'),
-        'contact_id' : fields.many2one('res.partner.address', 'Contact'),
-        'user_id' : fields.many2one('res.users', 'Account Manager'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'contact_id': fields.many2one('res.partner.address', 'Contact'),
+        'user_id': fields.many2one('res.users', 'Account Manager'),
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -209,10 +210,10 @@ class account_analytic_account(osv.osv):
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'type' : 'normal',
+        'type': 'normal',
         'company_id': _default_company,
-        'state' : 'open',
-        'user_id' : lambda self, cr, uid, ctx : uid,
+        'state': 'open',
+        'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
         'contact_id': lambda self, cr, uid, ctx: ctx.get('contact_id', False),
         'date_start': time.strftime('%Y-%m-%d')
@@ -243,7 +244,7 @@ class account_analytic_account(osv.osv):
             partner = parent['partner_id'][0]
         else:
             partner = False
-        res = {'value' : {}}
+        res = {'value': {}}
         if partner:
             res['value']['partner_id'] = partner
         return res
@@ -270,19 +271,19 @@ class account_analytic_line(osv.osv):
     _description = 'Analytic Line'
 
     _columns = {
-        'name' : fields.char('Description', size=256, required=True),
-        'date' : fields.date('Date', required=True, select=1),
-        'amount' : fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.'),
-        'unit_amount' : fields.float('Quantity', help='Specifies the amount of quantity to count.'),
-        'account_id' : fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True),
-        'user_id' : fields.many2one('res.users', 'User'),
+        'name': fields.char('Description', size=256, required=True),
+        'date': fields.date('Date', required=True, select=1),
+        'amount': fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.', digits_compute=dp.get_precision('Account')),
+        'unit_amount': fields.float('Quantity', help='Specifies the amount of quantity to count.'),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True),
+        'user_id': fields.many2one('res.users', 'User'),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
 
     }
     _defaults = {
         'date': time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
-        'amount' : 0.00
+        'amount': 0.00
     }
 
     _order = 'date desc'

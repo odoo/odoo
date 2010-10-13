@@ -35,10 +35,10 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'lines': self.lines,
             'sum_debit_partner': self._sum_debit_partner,
             'sum_credit_partner': self._sum_credit_partner,
-            'sum_debit': self._sum_debit,
-            'sum_credit': self._sum_credit,
+#            'sum_debit': self._sum_debit,
+#            'sum_credit': self._sum_credit,
             'get_currency': self._get_currency,
-            'comma_me' : self.comma_me,
+            'comma_me': self.comma_me,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
             'get_account': self._get_account,
@@ -53,11 +53,15 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'get_intial_balance':self._get_intial_balance,
             'display_initial_balance':self._display_initial_balance,
             'display_currency':self._display_currency,
+            'get_target_move': self._get_target_move,
         })
 
     def set_context(self, objects, data, ids, report_type=None):
-        self.query = data['form'].get('query_line', '')
-        self.init_query = data['form'].get('initial_bal_query', '')
+        obj_move = self.pool.get('account.move.line')
+        self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
+        ctx2 = data['form'].get('used_context',{}).copy()
+        ctx2.update({'initial_bal': True})
+        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
         self.reconcil = data['form'].get('reconcil', True)
         self.initial_balance = data['form'].get('initial_balance', True)
         self.result_selection = data['form'].get('result_selection', 'customer')
@@ -99,7 +103,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "AND " + self.query +" " \
                     "AND l.account_id IN %s " \
                     " " + PARTNER_REQUEST + " " \
-                    "AND account.active " ,
+                    "AND account.active ",
                 (tuple(move_state), tuple(self.account_ids),))
 
         res = self.cr.dictfetchall()
@@ -111,9 +115,9 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         return super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
 
     def comma_me(self, amount):
-        if type(amount) is float :
+        if type(amount) is float:
             amount = str('%.2f'%amount)
-        else :
+        else:
             amount = str(amount)
         if (amount == '0'):
              return ' '
@@ -181,10 +185,29 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             move_state = ['posted']
 
         result_tmp = 0.0
-        if self.reconcil :
+        result_init = 0.0
+        if self.reconcil:
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
+        if self.initial_balance:
+            self.cr.execute(
+                    "SELECT sum(debit) " \
+                    "FROM account_move_line AS l, " \
+                    "account_move AS m "
+                    "WHERE partner_id = %s" \
+                        "AND m.id = l.move_id " \
+                        "AND m.state IN %s "
+                        "AND account_id IN %s" \
+                        " " + RECONCILE_TAG + " " \
+                        "AND " + self.init_query + " ",
+                    (partner.id, tuple(move_state), tuple(self.account_ids)))
+            contemp = self.cr.fetchone()
+            if contemp != None:
+                result_init = contemp[0] or 0.0
+            else:
+                result_init = result_tmp + 0.0
+
         self.cr.execute(
                 "SELECT sum(debit) " \
                 "FROM account_move_line AS l, " \
@@ -194,7 +217,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "AND m.state IN %s "
                     "AND account_id IN %s" \
                     " " + RECONCILE_TAG + " " \
-                    "AND " + self.query + " " ,
+                    "AND " + self.query + " ",
                 (partner.id, tuple(move_state), tuple(self.account_ids),))
 
         contemp = self.cr.fetchone()
@@ -202,7 +225,8 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             result_tmp = contemp[0] or 0.0
         else:
             result_tmp = result_tmp + 0.0
-        return result_tmp
+
+        return result_tmp  + result_init
 
     def _sum_credit_partner(self, partner):
         move_state = ['draft','posted']
@@ -210,10 +234,29 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             move_state = ['posted']
 
         result_tmp = 0.0
-        if self.reconcil :
+        result_init = 0.0
+        if self.reconcil:
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
+        if self.initial_balance:
+            self.cr.execute(
+                    "SELECT sum(credit) " \
+                    "FROM account_move_line AS l, " \
+                    "account_move AS m  "
+                    "WHERE partner_id = %s" \
+                        "AND m.id = l.move_id " \
+                        "AND m.state IN %s "
+                        "AND account_id IN %s" \
+                        " " + RECONCILE_TAG + " " \
+                        "AND " + self.init_query + " ",
+                    (partner.id, tuple(move_state), tuple(self.account_ids)))
+            contemp = self.cr.fetchone()
+            if contemp != None:
+                result_init = contemp[0] or 0.0
+            else:
+                result_init = result_tmp + 0.0
+
         self.cr.execute(
                 "SELECT sum(credit) " \
                 "FROM account_move_line AS l, " \
@@ -223,7 +266,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "AND m.state IN %s "
                     "AND account_id IN %s" \
                     " " + RECONCILE_TAG + " " \
-                    "AND " + self.query + " " ,
+                    "AND " + self.query + " ",
                 (partner.id, tuple(move_state), tuple(self.account_ids),))
 
         contemp = self.cr.fetchone()
@@ -231,107 +274,107 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             result_tmp = contemp[0] or 0.0
         else:
             result_tmp = result_tmp + 0.0
-        return result_tmp
-
-    def _sum_debit(self):
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted']
-
-        if not self.ids:
-            return 0.0
-        result_tmp = 0.0
-        result_init = 0.0
-        if self.reconcil :
-            RECONCILE_TAG = " "
-        else:
-            RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if self.initial_balance:
-            self.cr.execute(
-                    "SELECT sum(debit) " \
-                    "FROM account_move_line AS l, " \
-                    "account_move AS m "
-                    "WHERE partner_id IN %s" \
-                        "AND m.id = l.move_id " \
-                        "AND m.state IN %s "
-                        "AND account_id IN %s" \
-                        "AND reconcile_id IS NULL " \
-                        "AND " + self.init_query + " ",
-                    (tuple(self.partner_ids), tuple(move_state), tuple(self.account_ids)))
-            contemp = self.cr.fetchone()
-            if contemp != None:
-                result_init = contemp[0] or 0.0
-            else:
-                result_init = result_tmp + 0.0
-
-        self.cr.execute(
-                "SELECT sum(debit) " \
-                "FROM account_move_line AS l, " \
-                "account_move AS m "
-                "WHERE partner_id IN %s" \
-                    "AND m.id = l.move_id " \
-                    "AND m.state IN %s "
-                    "AND account_id IN %s" \
-                    " " + RECONCILE_TAG + " " \
-                    "AND " + self.query + " " ,
-                    (tuple(self.partner_ids), tuple(move_state) ,tuple(self.account_ids),))
-        contemp = self.cr.fetchone()
-        if contemp != None:
-            result_tmp = contemp[0] or 0.0
-        else:
-            result_tmp = result_tmp + 0.0
         return result_tmp  + result_init
 
-    def _sum_credit(self):
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted']
-
-        if not self.ids:
-            return 0.0
-        result_tmp = 0.0
-        result_init = 0.0
-        if self.reconcil :
-            RECONCILE_TAG = " "
-        else:
-            RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if self.initial_balance:
-            self.cr.execute(
-                    "SELECT sum(credit) " \
-                    "FROM account_move_line AS l, " \
-                    "account_move AS m  "
-                    "WHERE partner_id IN %s" \
-                        "AND m.id = l.move_id " \
-                        "AND m.state IN %s "
-                        "AND account_id IN %s" \
-                        "AND reconcile_id IS NULL " \
-                        "AND " + self.init_query + " ",
-                    (tuple(self.partner_ids), tuple(move_state), tuple(self.account_ids)))
-            contemp = self.cr.fetchone()
-            if contemp != None:
-                result_init = contemp[0] or 0.0
-            else:
-                result_init = result_tmp + 0.0
-
-        self.cr.execute(
-                "SELECT sum(credit) " \
-                "FROM account_move_line AS l, " \
-                "account_move AS m "
-                "WHERE partner_id  IN %s" \
-                    "AND m.id = l.move_id " \
-                    "AND m.state IN %s "
-                    "AND account_id IN %s" \
-                    " " + RECONCILE_TAG + " " \
-                    "AND " + self.query + " " ,
-                    (tuple(self.partner_ids), tuple(move_state), tuple(self.account_ids),))
-        contemp = self.cr.fetchone()
-        if contemp != None:
-            result_tmp = contemp[0] or 0.0
-        else:
-            result_tmp = result_tmp + 0.0
-
-        return result_tmp  + result_init
+    # code is deprecated
+#    def _sum_debit(self):
+#        move_state = ['draft','posted']
+#        if self.target_move == 'posted':
+#            move_state = ['posted']
 #
+#        if not self.ids:
+#            return 0.0
+#        result_tmp = 0.0
+#        result_init = 0.0
+#        if self.reconcil :
+#            RECONCILE_TAG = " "
+#        else:
+#            RECONCILE_TAG = "AND reconcile_id IS NULL"
+#        if self.initial_balance:
+#            self.cr.execute(
+#                    "SELECT sum(debit) " \
+#                    "FROM account_move_line AS l, " \
+#                    "account_move AS m "
+#                    "WHERE partner_id IN %s" \
+#                        "AND m.id = l.move_id " \
+#                        "AND m.state IN %s "
+#                        "AND account_id IN %s" \
+#                        "AND reconcile_id IS NULL " \
+#                        "AND " + self.init_query + " ",
+#                    (tuple(self.partner_ids), tuple(move_state), tuple(self.account_ids)))
+#            contemp = self.cr.fetchone()
+#            if contemp != None:
+#                result_init = contemp[0] or 0.0
+#            else:
+#                result_init = result_tmp + 0.0
+#
+#        self.cr.execute(
+#                "SELECT sum(debit) " \
+#                "FROM account_move_line AS l, " \
+#                "account_move AS m "
+#                "WHERE partner_id IN %s" \
+#                    "AND m.id = l.move_id " \
+#                    "AND m.state IN %s "
+#                    "AND account_id IN %s" \
+#                    " " + RECONCILE_TAG + " " \
+#                    "AND " + self.query + " " ,
+#                    (tuple(self.partner_ids), tuple(move_state) ,tuple(self.account_ids),))
+#        contemp = self.cr.fetchone()
+#        if contemp != None:
+#            result_tmp = contemp[0] or 0.0
+#        else:
+#            result_tmp = result_tmp + 0.0
+#        return result_tmp  + result_init
+#
+#    def _sum_credit(self):
+#        move_state = ['draft','posted']
+#        if self.target_move == 'posted':
+#            move_state = ['posted']
+#
+#        if not self.ids:
+#            return 0.0
+#        result_tmp = 0.0
+#        result_init = 0.0
+#        if self.reconcil :
+#            RECONCILE_TAG = " "
+#        else:
+#            RECONCILE_TAG = "AND reconcile_id IS NULL"
+#        if self.initial_balance:
+#            self.cr.execute(
+#                    "SELECT sum(credit) " \
+#                    "FROM account_move_line AS l, " \
+#                    "account_move AS m  "
+#                    "WHERE partner_id IN %s" \
+#                        "AND m.id = l.move_id " \
+#                        "AND m.state IN %s "
+#                        "AND account_id IN %s" \
+#                        "AND reconcile_id IS NULL " \
+#                        "AND " + self.init_query + " ",
+#                    (tuple(self.partner_ids), tuple(move_state), tuple(self.account_ids)))
+#            contemp = self.cr.fetchone()
+#            if contemp != None:
+#                result_init = contemp[0] or 0.0
+#            else:
+#                result_init = result_tmp + 0.0
+#
+#        self.cr.execute(
+#                "SELECT sum(credit) " \
+#                "FROM account_move_line AS l, " \
+#                "account_move AS m "
+#                "WHERE partner_id  IN %s" \
+#                    "AND m.id = l.move_id " \
+#                    "AND m.state IN %s "
+#                    "AND account_id IN %s" \
+#                    " " + RECONCILE_TAG + " " \
+#                    "AND " + self.query + " " ,
+#                    (tuple(self.partner_ids), tuple(move_state), tuple(self.account_ids),))
+#        contemp = self.cr.fetchone()
+#        if contemp != None:
+#            result_tmp = contemp[0] or 0.0
+#        else:
+#            result_tmp = result_tmp + 0.0
+#        return result_tmp  + result_init
+
     def _get_partners(self):
         if self.result_selection == 'customer':
             return 'Receivable Accounts'
@@ -358,7 +401,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
          return False
 
     def _display_currency(self, data):
-         if self.amount_currency :
+         if self.amount_currency:
              return True
          return False
 

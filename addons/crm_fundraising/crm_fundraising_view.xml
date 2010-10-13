@@ -3,8 +3,8 @@
     <data>
            <!-- Fund Raising Configuration Menu -->
         <menuitem id="menu_config_fundrising" name="Fund Raising"
-        groups="base.group_extended"
-        parent="base.menu_base_config" sequence="8" />
+            groups="base.group_extended"
+            parent="base.menu_base_config" sequence="8" />
 
         <!-- Fund Raising Categories Form View -->
 
@@ -54,6 +54,9 @@
                     <field name="user_id" />
                     <field name="state" />
                     <field name="partner_id" invisible="1"/>
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
@@ -66,9 +69,6 @@
                     <button name="case_close" string="Done"
                         states="open,draft,pending" type="object"
                         icon="gtk-close" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object" icon="gtk-convert" />
                 </tree>
@@ -89,7 +89,7 @@
                         <field name="user_id" string="Responsible"/>
                         <field name="date"/>
                         <field name="categ_id" select="1" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
-                        <field name="type_id" string="Payment Mode" select="1" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
+                        <field name="type_id" string="Payment Mode" select="1" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Funds">
@@ -115,6 +115,9 @@
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state"/>
+                                <button name="case_cancel" string="Cancel"
+                                    states="draft,open,pending" type="object"
+                                    icon="gtk-cancel" />
                                 <button name="case_open" string="Open"
                                     states="draft,pending" type="object"
                                     icon="gtk-go-forward" />
@@ -128,9 +131,6 @@
                                 <button name="case_close" string="Done"
                                     states="open,draft,pending" type="object"
                                     icon="gtk-close" />
-                                <button name="case_cancel" string="Cancel"
-                                    states="draft,open,pending" type="object"
-                                    icon="gtk-cancel" />
                                 <button name="case_reset"
                                     string="Reset to Draft" states="done,cancel"
                                     type="object" icon="gtk-convert" />
@@ -273,9 +273,9 @@
                                     help="Unassigned" />
                             </field>
                             <field name="section_id" select="1" widget="selection" string="Sales Team">
-                                <filter icon="terp-personal+"
+                                <filter icon="terp-personal+" groups="base.group_extended"
                                     domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                                    help="My section" />
+                                    help="My Sales Team(s)" />
                             </field>
                         </group>
                         <newline/>

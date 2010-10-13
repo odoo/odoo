@@ -92,7 +92,7 @@
         sequence="1" />
 
     <record id="ir_ui_view_sc_calendar0" model="ir.ui.view_sc">
-        <field name="name">Calendar</field>
+        <field name="name">Meetings</field>
         <field name="resource">ir.ui.menu</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>
@@ -111,7 +111,7 @@
     <menuitem id="menu_attendee_invitations"
             name="Meeting Invitations" parent="crm.menu_meeting_sale"
             sequence="10" action="action_view_attendee_form"
-            groups="base.group_extended" />
+            groups="base.group_extended,base.group_sale_salesman" />
 
 </data>
 </openerp>

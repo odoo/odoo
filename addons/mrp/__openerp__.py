@@ -85,7 +85,6 @@
     ],
     'demo_xml': [
          'mrp_demo.xml',
-         'board_manufacturing_demo.xml'
     ],
     'test': [
          'test/mrp_procurement.yml',

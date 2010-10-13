@@ -65,7 +65,7 @@
     </record>
 
     <menuitem name="Configuration" parent="base.menu_tools"
-         id="base.menu_lunch_survey_root" sequence="20" groups="base.group_system"/>
+         id="base.menu_lunch_survey_root" sequence="20" groups="base.group_tool_manager"/>
 
     <menuitem name="Ideas" parent="base.menu_lunch_survey_root" id="menu_ideas" sequence="3"/>
 
@@ -90,7 +90,8 @@
 
     <menuitem name="Give Vote" parent="menu_ideas1"
         id="menu_give_vote"
-        action="action_idea_select"/>
+        action="action_idea_select"
+        groups="base.group_tool_user"/>
 
 
     <!-- Open Ideas Action  -->
@@ -377,17 +378,17 @@
 <!-- Idea Votes Statistics Action -->
 
     <record model="ir.actions.act_window" id="action_idea_vote_stat">
-        <field name="name">Statistics on Votes</field>
+        <field name="name">Vote Statistics</field>
         <field name="res_model">idea.vote.stat</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
     </record>
-    <menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="6"/>
+    <menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="6" groups="base.group_tool_manager,base.group_tool_user"/>
 
     <menuitem name="Idea" parent="base.menu_lunch_reporting" id="menu_idea_reporting" sequence="3"/>
 
     <menuitem name="Vote Statistics" parent="menu_idea_reporting"
-        id="menu_idea_vote_stat" action="action_idea_vote_stat" groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
+        id="menu_idea_vote_stat" action="action_idea_vote_stat" groups="base.group_tool_user"/>
 
     <!-- Vote For Idea Action  -->
     <record model="ir.actions.act_window" id="action_idea_vote">

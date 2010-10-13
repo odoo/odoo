@@ -3,7 +3,7 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/create.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.createContact()" height="460" width="820">
+	title="&title.label;" onload="myPrefObserver.createContact();" height="460" width="860">
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
@@ -57,7 +57,7 @@
  
     <hbox>
          <label  align="right" id="countryname"  value="&country.value;" width="97" />
-         <menulist id="country" width="190">
+         <menulist id="country" width="190" oncommand= "getAllState();" >
            <menupopup>
 	     <menuitem label="" value=""/>
    	    </menupopup>
@@ -80,19 +80,19 @@
      </vbox>
      <separator class="groove-thin" orient="horizontal" width="94"/> 
      <hbox>
-        <label  align="right" id="office"  value="&office.value;" width="50" />
+        <label  align="right" id="office"  value="&office.value;" width="97" />
 	    <textbox id="txtoffice" align="right" />
     </hbox>
     <hbox>
-        <label  align="right" id="mobile"  value="&mobile.value;" width="50" />
+        <label  align="right" id="mobile"  value="&mobile.value;" width="97" />
 	    <textbox id="txtmobile" align="right"/>
     </hbox> 
     <hbox>
-        <label  align="right" id="fax"  value="&fax.value;" width="50" />
+        <label  align="right" id="fax"  value="&fax.value;" width="97" />
 	    <textbox id="txtfax" align="right" />
     </hbox> 
     <hbox>
-        <label  align="right" id="emailid"  value="&email.value;" width="50" />
+        <label  align="right" id="emailid"  value="&email.value;" width="97" />
 	    <textbox id="txtemail" width="280" align="right"/>
     </hbox>
   </groupbox>

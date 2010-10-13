@@ -223,7 +223,7 @@
           <para style="terp_tblheader_General_Centre">Filter By <font>[[ get_filter(data)!='No Filter' and get_filter(data) ]]</font> </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Printing Date</para>
+          <para style="terp_tblheader_General_Centre">Target Moves</para>
         </td>
       </tr>
       <tr>
@@ -273,7 +273,7 @@
           </blockTable>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True)]]</para>
+          <para style="terp_default_Centre_8">[[ get_target_move(data) ]]</para>
         </td>
       </tr>
     </blockTable>

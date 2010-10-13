@@ -488,7 +488,7 @@
     <blockTable colWidths="530.0" style="Table_Main_Table">
       <tr>
         <td>
-          <para style="terp_default_8">[[ format(o.amount_tax or removeParentNode('blockTable')) ]]</para>
+          <para style="terp_default_8">[[ o.amount_tax and formatLang(o.amount_tax, digits=get_digits(dp='Account')) or removeParentNode('blockTable') ]]</para>
           <blockTable colWidths="54.0,58.0,67.0" style="Table_Tax_Header">
             <tr>
               <td>
@@ -516,10 +516,10 @@
                 <para style="terp_default_Centre_8">[[ t.name ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ formatLang(t.base) ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(t.base, digits=get_digits(dp='Account')) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ formatLang(t.amount) or 0.00 ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(t.amount, digits=get_digits(dp='Account')) ]]</para>
               </td>
             </tr>
           </blockTable>

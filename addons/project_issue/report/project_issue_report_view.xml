@@ -7,11 +7,11 @@
             <field name="model">project.issue.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Project Issue">
+                <tree string="Issues Analysis">
                     <field name="name" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="project_id" invisible="1"/>
-                    <field name="stage_id" invisible="1"/>
+                    <field name="type_id" invisible="1"/>
                     <field name="version_id" string="Version" invisible="1"/>
                     <field name="priority" invisible="1"/>
                     <field name="company_id" invisible="1" groups="base.group_multi_company"/>
@@ -101,7 +101,7 @@
                        <separator orientation="vertical"/>
                        <field name="version_id" widget="selection" />
                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                       <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
+                       <field name="type_id" widget="selection"/>
                        <separator orientation="vertical"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                        <newline/>
@@ -129,7 +129,7 @@
                         <filter string="Version"  icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'version_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical"/>
@@ -138,13 +138,13 @@
                             context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
                         <filter string="Day" icon="terp-go-today"
-                            domain="[]" context="{'group_by':'day'}" help="Current Day"/>
+                            domain="[]" context="{'group_by':'day'}" help="Creation Date"/>
 
                         <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}" help="Current Month"/>
+                            domain="[]" context="{'group_by':'month'}" help="Creation Date"/>
 
                         <filter string="Year" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'name'}" help="Current Year"/>
+                            domain="[]" context="{'group_by':'name'}" help="Creation Date"/>
 
                   </group>
                </search>
@@ -152,7 +152,7 @@
         </record>
 
         <record id="action_project_issue_report" model="ir.actions.act_window">
-            <field name="name">Issue Analysis</field>
+            <field name="name">Issues Analysis</field>
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
               <field name="view_mode">graph,tree</field>

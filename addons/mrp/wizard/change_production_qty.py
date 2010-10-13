@@ -87,10 +87,10 @@ class change_production_qty(osv.osv_memory):
                 factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
                 res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, [])
                 for r in res[0]:
-                    if r['product_id']== move.product_id.id:
-                        move_lines_obj.write(cr, uid,move.id, {'product_qty' :  r['product_qty']})
+                    if r['product_id'] == move.product_id.id:
+                        move_lines_obj.write(cr, uid, [move.id], {'product_qty' :  r['product_qty']})
             for m in prod.move_created_ids:
-                move_lines_obj.write(cr, uid,m.id, {'product_qty': wiz_qty.product_qty})
+                move_lines_obj.write(cr, uid, [m.id], {'product_qty': wiz_qty.product_qty})
     
         return {}
     

@@ -33,6 +33,29 @@ class hr_employee(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', help="Specifies employee's designation as a product with type 'service'."),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal')
     }
+    
+    def _getAnalyticJournal(self, cr, uid, context=None):
+        md = self.pool.get('ir.model.data')
+        try:
+            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
+            return result[1]
+        except ValueError, e:
+            pass
+        return False
+
+    def _getEmployeeProduct(self, cr, uid, context=None):
+        md = self.pool.get('ir.model.data')
+        try:
+            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'product_consultant')
+            return result[1]
+        except ValueError, e:
+            pass
+        return False
+
+    _defaults = {
+        'journal_id' : _getAnalyticJournal,
+        'product_id' : _getEmployeeProduct    
+    }
 hr_employee()
 
 
@@ -57,14 +80,14 @@ class hr_analytic_timesheet(osv.osv):
         return super(hr_analytic_timesheet, self).unlink(cr, uid, ids, context=context)
 
 
-    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit, context=None):
+    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, company_id, unit=False, journal_id=False, context=None):
         if context is None:
             context = {}
         res = {'value':{}}
         if prod_id and unit_amount:
             # find company
             company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context)
-            res.update(self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, context=context))
+            res.update(self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, journal_id, context=context))
         # update unit of measurement
         if prod_id:
             uom = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)

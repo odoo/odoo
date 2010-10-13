@@ -48,22 +48,22 @@ class stock_invoice_onshipping(osv.osv_memory):
         if context is None:
             context = {}
         picking_obj = self.pool.get('stock.picking')
-        usage = 'customer'
+        src_usage = dest_usage = None
         pick = picking_obj.browse(cr, uid, context['active_id'], context=context)
         if pick.invoice_state == 'invoiced':
             raise osv.except_osv(_('UserError'), _('Invoice is already created.'))
         if pick.invoice_state == 'none':
             raise osv.except_osv(_('UserError'), _('This picking does not require any invoicing.'))
         if pick.move_lines:
-            usage = pick.move_lines[0].location_id.usage
-
-        if pick.type == 'out' and usage == 'supplier':
+            src_usage = pick.move_lines[0].location_id.usage
+            dest_usage = pick.move_lines[0].location_dest_id.usage
+        if pick.type == 'out' and dest_usage == 'supplier':
             type = 'in_refund'
-        elif pick.type == 'out' and usage == 'customer':
+        elif pick.type == 'out' and dest_usage == 'customer':
             type = 'out_invoice'
-        elif pick.type == 'in' and usage == 'supplier':
+        elif pick.type == 'in' and src_usage == 'supplier':
             type = 'in_invoice'
-        elif pick.type == 'in' and usage == 'customer':
+        elif pick.type == 'in' and src_usage == 'customer':
             type = 'out_refund'
         else:
             type = 'out_invoice'

@@ -20,15 +20,9 @@
 ##############################################################################
 
 from report import report_sxw
-import xml.dom.minidom
-import os, time
-import osv
-import re
-import tools
-import pooler
-import re
-import sys
 
+from datetime import datetime
+import re
 
 class rml_parse(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -40,7 +34,7 @@ class rml_parse(report_sxw.rml_parse):
             'explode_name' : self._explode_name,
         })
 
-    def comma_me(self,amount):
+    def comma_me(self, amount):
         if not amount:
             amount = 0.0
         if  type(amount) is float :
@@ -48,7 +42,7 @@ class rml_parse(report_sxw.rml_parse):
         else :
             amount = str(amount)
         if (amount == '0'):
-             return ' '
+            return ' '
         orig = amount
         new = re.sub("^(-?\d+)(\d{3})", "\g<1>'\g<2>", amount)
         if orig == new:
@@ -60,19 +54,19 @@ class rml_parse(report_sxw.rml_parse):
         ellipsis = ellipsis or ''
         try:
             return string[:maxlen - len(ellipsis) ] + (ellipsis, '')[len(string) < maxlen]
-        except Exception, e:
+        except:
             return False
 
     def _strip_name(self, name, maxlen=50):
         return self._ellipsis(name, maxlen, '...')
 
-    def _get_and_change_date_format_for_swiss (self,date_to_format):
-        date_formatted=''
+    def _get_and_change_date_format_for_swiss (self, date_to_format):
+        date_formatted = ''
         if date_to_format:
-            date_formatted = strptime (date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
+            date_formatted = datetime.strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
 
-    def _explode_name(self,chaine,length):
+    def _explode_name(self, chaine, length):
         # We will test if the size is less then account
         full_string = ''
         if (len(str(chaine)) <= length):
@@ -92,7 +86,7 @@ class rml_parse(report_sxw.rml_parse):
 
         return full_string
 
-    def makeAscii(self,str):
+    def makeAscii(self, str):
         try:
             Stringer = str.encode("utf-8")
         except UnicodeDecodeError:
@@ -106,7 +100,7 @@ class rml_parse(report_sxw.rml_parse):
             return Stringer
         return Stringer
 
-    def explode_this(self,chaine,length):
+    def explode_this(self, chaine, length):
         chaine = rstrip(chaine)
         ast = list(chaine)
         i = length
@@ -116,7 +110,7 @@ class rml_parse(report_sxw.rml_parse):
         chaine = str("".join(ast))
         return chaine
 
-    def repair_string(self,chaine):
+    def repair_string(self, chaine):
         ast = list(chaine)
         UnicodeAst = []
         _previouslyfound = False
@@ -135,7 +129,7 @@ class rml_parse(report_sxw.rml_parse):
                 i += i + 1
         return "".join(UnicodeAst)
 
-    def ReencodeAscii(self,str):
+    def ReencodeAscii(self, str):
         try:
             Stringer = str.decode("ascii")
         except UnicodeEncodeError:
@@ -146,7 +140,7 @@ class rml_parse(report_sxw.rml_parse):
             return Stringer
 
     def _add_header(self, node, header=1):
-        if header==2:
+        if header == 2:
             rml_head =  self.rml_header2
         else:
             rml_head =  self.rml_header

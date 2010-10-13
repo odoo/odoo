@@ -36,12 +36,18 @@ class account_move_line(osv.osv):
         fiscalperiod_obj = self.pool.get('account.period')
         fiscalyear_ids = []
         fiscalperiod_ids = []
-        if not context.get('fiscalyear', False) and not context.get('empty_fy_allow', False):
+        initial_bal = context.get('initial_bal', False)
+        company_clause = ""
+        if context.get('company_id', False):
+            company_clause = " AND " +obj+".company_id = %s" % context.get('company_id', False)
+        if not context.get('fiscalyear', False):
             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
-        elif context.get('empty_fy_allow', False):
-            fiscalyear_ids = context['fiscalyear']
         else:
-            fiscalyear_ids = [context['fiscalyear']]
+            if initial_bal:
+                fiscalyear_date_start = fiscalyear_obj.read(cr, uid, context['fiscalyear'], ['date_start'])['date_start']
+                fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('date_stop', '<', fiscalyear_date_start), ('state', '=', 'draft')], context=context)
+            else:
+                fiscalyear_ids = [context['fiscalyear']]
 
         fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
         state = context.get('state',False)
@@ -50,15 +56,36 @@ class account_move_line(osv.osv):
         where_move_lines_by_date = ''
 
         if context.get('date_from', False) and context.get('date_to', False):
-            where_move_lines_by_date = " AND " +obj+".move_id in ( select id from account_move  where date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
+            if initial_bal:
+                where_move_lines_by_date = " AND " +obj+".move_id in ( select id from account_move  where date < '"+context['date_from']+"')"
+            else:
+                where_move_lines_by_date = " AND " +obj+".move_id in ( select id from account_move  where date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
 
         if state:
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
 
+        if context.get('period_from', False) and context.get('period_to', False) and not context.get('periods', False):
+            if initial_bal:
+                period_company_id = fiscalperiod_obj.browse(cr, uid, context['period_from'], context=context).company_id.id
+                first_period = fiscalperiod_obj.search(cr, uid, [('company_id', '=', period_company_id)], order='date_start', limit=1)[0]
+                context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, first_period, context['period_from'])
+            else:
+                context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, context['period_from'], context['period_to'])
         if context.get('periods', False):
-            ids = ','.join([str(x) for x in context['periods']])
-            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
+            if initial_bal:
+                query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
+                period_ids = fiscalperiod_obj.search(cr, uid, [('id', 'in', context['periods'])], order='date_start', limit=1)
+                if period_ids and period_ids[0]:
+                    first_period = fiscalperiod_obj.browse(cr, uid, period_ids[0], context=context)
+                    # Find the old periods where date start of those periods less then Start period
+                    periods = fiscalperiod_obj.search(cr, uid, [('date_start', '<', first_period.date_start)])
+                    periods = ','.join([str(x) for x in periods])
+                    if periods:
+                        query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) OR id in (%s)) %s %s" % (fiscalyear_clause, periods, where_move_state, where_move_lines_by_date)
+            else:
+                ids = ','.join([str(x) for x in context['periods']])
+                query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
         else:
             query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
 
@@ -69,41 +96,7 @@ class account_move_line(osv.osv):
             child_ids = self.pool.get('account.account')._get_children_and_consol(cr, uid, [context['chart_account_id']], context=context)
             query += ' AND '+obj+'.account_id in (%s)' % ','.join(map(str, child_ids))
 
-        if context.get('period_manner','') == 'created':
-            #the query have to be build with no reference to periods but thanks to the creation date
-            if context.get('periods',False):
-                #if one or more period are given, use them
-                fiscalperiod_ids = fiscalperiod_obj.search(cr, uid, [('id','in',context['periods'])])
-            else:
-                fiscalperiod_ids = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id','in',fiscalyear_ids)])
-
-
-
-            #remove from the old query the clause related to the period selection
-            res = ''
-            count = 1
-            clause_list = query.split('AND')
-            ref_string = ' '+obj+'.period_id in'
-            for clause in clause_list:
-                if count != 1 and not clause.startswith(ref_string):
-                    res += "AND"
-                if not clause.startswith(ref_string):
-                    res += clause
-                    count += 1
-
-            #add to 'res' a new clause containing the creation date criterion
-            count = 1
-            res += " AND ("
-            periods = self.pool.get('account.period').read(cr, uid, p_ids, ['date_start','date_stop'])
-            for period in periods:
-                if count != 1:
-                    res += " OR "
-                #creation date criterion: the creation date of the move_line has to be
-                # between the date_start and the date_stop of the selected periods
-                res += "("+obj+".create_date between to_date('" + period['date_start']  + "','yyyy-mm-dd') and to_date('" + period['date_stop']  + "','yyyy-mm-dd'))"
-                count += 1
-            res += ")"
-            return res
+        query += company_clause
 
         return query
 
@@ -309,15 +302,27 @@ class account_move_line(osv.osv):
         ml = self.browse(cr, uid, id, context)
         return map(lambda x: x.id, ml.move_id.line_id)
 
-    # TODO: this is false, it does not uses draft and closed periods
-    def _balance(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        res={}
-        # TODO group the foreach in sql
-        for id in ids:
-            cr.execute('SELECT date,account_id FROM account_move_line WHERE id=%s', (id,))
-            dt, acc = cr.fetchone()
-            cr.execute('SELECT SUM(debit-credit) FROM account_move_line WHERE account_id=%s AND (date<%s OR (date=%s AND id<=%s))', (acc,dt,dt,id))
-            res[id] = cr.fetchone()[0]
+    def _balance(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+
+        c = context.copy()
+        c['initital_bal'] = True
+
+        sql = [
+            """select l2.id, sum(l1.debit-l1.credit) from account_move_line l1, account_move_line l2""",
+            """where l2.account_id=l1.account_id""",
+            """and""",
+            """l1.id<=l2.id""",
+            """and""",
+            """l2.id in %s""",
+            """and""",
+            self._query_get(cr, uid, obj='l1', context=c),
+            """ group by l2.id""",
+        ]
+
+        cr.execute('\n'.join(sql), [tuple(ids)])
+        res = dict(cr.fetchall())
         return res
 
     def _invoice(self, cursor, user, ids, name, arg, context=None):
@@ -344,7 +349,7 @@ class account_move_line(osv.osv):
         return res
 
     def name_get(self, cr, uid, ids, context={}):
-        if not len(ids):
+        if not ids:
             return []
         result = []
         for line in self.browse(cr, uid, ids, context):
@@ -358,18 +363,18 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
 
-        if not len(args):
+        if not args:
             return []
         where = ' and '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
         cursor.execute('select id, sum(debit-credit) from account_move_line \
                      group by id, debit, credit having '+where)
         res = cursor.fetchall()
-        if not len(res):
+        if not res:
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
 
     def _invoice_search(self, cursor, user, obj, name, args, context):
-        if not len(args):
+        if not args:
             return []
         invoice_obj = self.pool.get('account.invoice')
 
@@ -402,7 +407,7 @@ class account_move_line(osv.osv):
                     qu2 += x[2]
                 else:
                     qu1.append(' (False)')
-        if len(qu1):
+        if qu1:
             qu1 = ' AND' + ' AND'.join(qu1)
         else:
             qu1 = ''
@@ -410,7 +415,7 @@ class account_move_line(osv.osv):
                 'FROM account_move_line l, account_invoice i ' \
                 'WHERE l.move_id = i.move_id ' + qu1, qu2)
         res = cursor.fetchall()
-        if not len(res):
+        if not res:
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
 
@@ -900,7 +905,6 @@ class account_move_line(osv.osv):
         fld = sorted(fld, key=itemgetter(1))
 
         widths = {
-            'ref': 50,
             'statement_id': 50,
             'state': 60,
             'tax_code_id': 50,
@@ -985,7 +989,7 @@ class account_move_line(osv.osv):
         part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
         unlink_ids += rec_ids
         unlink_ids += part_rec_ids
-        if len(unlink_ids):
+        if unlink_ids:
             obj_move_rec.unlink(cr, uid, unlink_ids)
         return True
 

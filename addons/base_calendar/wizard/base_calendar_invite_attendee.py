@@ -36,11 +36,11 @@ class base_calendar_invite_attendee(osv.osv_memory):
     _columns = {
         'type': fields.selection([('internal', 'Internal User'), \
               ('external', 'External Email'), \
-              ('partner', 'Partner Contacts')], 'Type', required=True),
+              ('partner', 'Partner Contacts')], 'Type', required=True, help="Select whom you want to Invite"),
         'user_ids': fields.many2many('res.users', 'invite_user_rel',
                                   'invite_id', 'user_id', 'Users'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'email': fields.char('Email', size=124),
+        'email': fields.char('Email', size=124, help="Provide external email address who will receive this invitation."),
         'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel',
                                   'invite_id', 'contact_id', 'Contacts'),
         'send_mail': fields.boolean('Send mail?', help='Check this if you want to \
@@ -159,8 +159,8 @@ send an Email to Invited Person')
 
         if not partner_id:
             return {'value': {'contact_ids': []}}
-        cr.execute('select id from res_partner_address \
-                         where partner_id=%s' % (partner_id))
+        cr.execute('SELECT id FROM res_partner_address \
+                         WHERE partner_id=%s', (partner_id,))
         contacts = map(lambda x: x[0], cr.fetchall())
         return {'value': {'contact_ids': contacts}}
 

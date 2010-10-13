@@ -56,7 +56,6 @@ class crm_lead2opportunity(osv.osv_memory):
 
         lead_obj = self.pool.get('crm.lead')
         data_obj = self.pool.get('ir.model.data')
-        model_obj = self.pool.get('ir.model')
 
         # Get Opportunity views
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
@@ -98,7 +97,6 @@ class crm_lead2opportunity(osv.osv_memory):
             'type': 'ir.actions.act_window', 
             'search_view_id': res['res_id']
         }
-        
         return value
 
     _columns = {
@@ -124,9 +122,6 @@ class crm_lead2opportunity(osv.osv_memory):
             if lead.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
 Leads Could not convert into Opportunity"))
-            if lead.state not in ('open', 'pending'):
-                raise osv.except_osv(_('Warning !'), _('Lead should be in \
-\'Open\' or \'Pending\' state before converting to Opportunity.'))
         return False
 
     def default_get(self, cr, uid, fields, context=None):
@@ -160,43 +155,9 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner'), 
-        'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner')], 'Action'), 
+        'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner'), ('no','Do not create a partner')], 'Action'), 
     }
-    
-    def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
 
-        @return : default values of fields.
-        """
-        lead_obj = self.pool.get('crm.lead')
-        partner_obj = self.pool.get('res.partner')
-        contact_obj = self.pool.get('res.partner.address')
-        partner_id = False
-
-        data = context and context.get('active_ids', []) or []
-        res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
-
-        for lead in lead_obj.browse(cr, uid, data, context=context):
-            partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name or lead.name)])
-            if not partner_ids and lead.email_from:
-                address_ids = contact_obj.search(cr, uid, [('email', '=', lead.email_from)])
-                if address_ids:
-                    addresses = contact_obj.browse(cr, uid, address_ids)
-                    partner_ids = addresses and [addresses[0].partner_id.id] or False
-            partner_id = partner_ids and partner_ids[0] or False
-
-            if 'partner_id' in fields:
-                res.update({'partner_id': partner_id})
-            if 'action' in fields:
-                res.update({'action': partner_id and 'exist' or 'create'})
-        return res
-    
     def make_partner(self, cr, uid, ids, context=None):
         """
         This function Makes partner based on action.
@@ -212,8 +173,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             context = {}
         
         partner_ids = self._create_partner(cr, uid, ids, context)
-        mod_obj = self.pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         value = {}
         data_obj = self.pool.get('ir.model.data')
         data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_action')
@@ -284,9 +243,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             if lead.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
 Leads Could not convert into Opportunity"))
-            if lead.state not in ('open', 'pending'):
-                raise osv.except_osv(_('Warning !'), _('Lead should be in \
-\'Open\' or \'Pending\' state before converting to Opportunity.'))
         return False
 
 crm_lead2opportunity_partner()
@@ -297,16 +253,12 @@ class crm_lead2opportunity_action(osv.osv_memory):
     '''
     _name = 'crm.lead2opportunity.action'
     _description = 'Convert/Merge Opportunity'
-    
     _columns = {
         'name': fields.selection([('convert', 'Convert to Opportunity'), ('merge', 'Merge with existing Opportunity')],'Select Action', required=True),
-        
     }
-
     _defaults = {
         'name': 'convert',
-        }
-
+    }
     def do_action(self, cr, uid, ids, context=None):
         """
         This function opens form according to selected Action

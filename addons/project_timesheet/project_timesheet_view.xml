@@ -11,9 +11,9 @@
                     <group colspan="4" col="4">
                         <separator colspan="4" string="Invoicing Data"/>
                         <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection"/>
-                        <field name="to_invoice" widget="selection"/>
-                        <field name="amount_max"/>
-                        <field name="amount_invoiced"/>
+                        <field name="to_invoice" widget="selection" string="Invoice Task Work"/>
+                        <field name="amount_max" groups="base.group_extended"/>
+                        <field name="amount_invoiced" groups="base.group_extended"/>
                     </group>
                 </field>
             </field>
@@ -31,5 +31,10 @@
                 </xpath>
             </field>
         </record>
+
+        <menuitem id="menu_project_billing" name="Billing"
+                  parent="base.menu_main_pm" sequence="5"/>
+        <menuitem id="menu_project_billing_line" name="Bill Tasks Work"
+            parent="menu_project_billing" action="hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree"/>
     </data>
 </openerp>
