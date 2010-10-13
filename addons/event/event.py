@@ -27,7 +27,6 @@ from tools.translate import _
 import tools
 import decimal_precision as dp
 
-
 class event_type(osv.osv):
     """ Event Type """
     _name = 'event.type'
@@ -341,8 +340,8 @@ class event_registration(osv.osv):
     _defaults = {
         'nb_register': 1,
         'tobe_invoiced':  True,
-        'state': lambda *a: 'draft',
-        'active': lambda *a: 1,
+        'state': 'draft',
+        'active': 1,
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
@@ -386,12 +385,9 @@ class event_registration(osv.osv):
             context['date_inv'] = date_inv
 
         for reg in self.browse(cr, uid, ids, context=context):
-
             val_invoice = inv_pool.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
-
             val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
             partner_address_id = val_invoice['value']['address_invoice_id']
-
             if not partner_address_id:
                raise osv.except_osv(_('Error !'),
                         _("Registered partner doesn't have an address to make the invoice."))
@@ -400,7 +396,6 @@ class event_registration(osv.osv):
             product = product_pool.browse(cr, uid, reg.event_id.product_id.id, context=context)
             for tax in product.taxes_id:
                 tax_ids.append(tax.id)
-
             vals = value['value']
             c_name = reg.contact_id and ('-' + contact_pool.name_get(cr, uid, [reg.contact_id.id])[0][1]) or ''
             vals.update({
@@ -412,7 +407,6 @@ class event_registration(osv.osv):
             })
             inv_line_ids = self._create_invoice_lines(cr, uid, [reg.id], vals)
             invoices.setdefault(reg.partner_id.id, []).append((reg, inv_line_ids))
-
         for val in invoices.values():
             res = False
             if grouped:
@@ -524,8 +518,7 @@ class event_registration(osv.osv):
         """
         registrations = self.browse(cr, uid, ids)
         self.history(cr, uid, registrations, _('Cancel'))
-        self.write(cr, uid, ids, {'state': 'cancel'})
-        return True
+        return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, confirm=False, context=None):
         """
@@ -712,6 +705,7 @@ class event_registration_badge(osv.osv):
         "name": fields.char('Name', size=128, required=True),
         "address_id": fields.many2one('res.partner.address', 'Address'),
     }
+
 event_registration_badge()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
