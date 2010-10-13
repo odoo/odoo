@@ -33,6 +33,29 @@ class hr_employee(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', help="Specifies employee's designation as a product with type 'service'."),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal')
     }
+    
+    def _getAnalyticJournal(self, cr, uid, context=None):
+        md = self.pool.get('ir.model.data')
+        try:
+            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
+            return result[1]
+        except ValueError, e:
+            pass
+        return False
+
+    def _getEmployeeProduct(self, cr, uid, context=None):
+        md = self.pool.get('ir.model.data')
+        try:
+            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'product_consultant')
+            return result[1]
+        except ValueError, e:
+            pass
+        return False
+
+    _defaults = {
+        'journal_id' : _getAnalyticJournal,
+        'product_id' : _getEmployeeProduct    
+    }
 hr_employee()
 
 

@@ -985,11 +985,11 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state"/>
+                        <button string="Cancel" name="cancel_sheet" icon="gtk-cancel" states="draft,hr_check,accont_check,confirm" type="object"/>
                         <button string="Compute" name="compute_sheet" states="new" icon="terp-document-new" type="object"/>
                         <button string="Verify Sheet" icon="gtk-ok" name="verify_sheet" states="draft" type="object"/>
                         <button string="Complete HR Checking"  icon="gtk-apply" name="final_verify_sheet" type="object" states="hr_check"/>
                         <button string="Pay Salary" icon="gtk-apply"  name="process_sheet" states="confirm" type="object" />
-                        <button string="Cancel" name="cancel_sheet" icon="gtk-cancel" states="draft,hr_check,accont_check,confirm" type="object"/>
                         <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert" />
                     </group>
                 </form>

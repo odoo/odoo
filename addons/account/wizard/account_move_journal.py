@@ -33,7 +33,7 @@ class account_move_journal(osv.osv_memory):
         """
         ids = self.pool.get('account.period').find(cr, uid, context=context)
         period_id = False
-        if len(ids):
+        if ids:
             period_id = ids[0]
         return period_id
 
@@ -91,9 +91,9 @@ class account_move_journal(osv.osv_memory):
         <form string="Standard entries">
             <separator string="Open Journal Items !" colspan="4"/>
             <group colspan="4" >
-                <label width="300" string="Journal : %s"/>
+                <label width="300" string="Journal: %s"/>
                 <newline/>
-                <label width="300" string="Period :  %s"/>
+                <label width="300" string="Period:  %s"/>
             </group>
             <group colspan="4" col="4">
                 <label string ="" colspan="2"/>

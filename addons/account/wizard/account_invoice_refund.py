@@ -100,7 +100,7 @@ class account_invoice_refund(osv.osv_memory):
                     raise osv.except_osv(_('Error !'), _('Can not %s draft/proforma/cancel invoice.') % (mode))
                 if inv.reconciled and mode in ('cancel', 'modify'):
                     raise osv.except_osv(_('Error !'), _('Can not %s invoice which is already reconciled, invoice should be unreconciled first. You can only Refund this invoice') % (mode))
-                if form['period'] :
+                if form['period']:
                     period = form['period']
                 else:
                     period = inv.period_id and inv.period_id.id or False
@@ -108,9 +108,9 @@ class account_invoice_refund(osv.osv_memory):
                 if not journal_id:
                     journal_id = inv.journal_id.id
 
-                if form['date'] :
+                if form['date']:
                     date = form['date']
-                    if not form['period'] :
+                    if not form['period']:
                             cr.execute("select name from ir_model_fields \
                                             where model = 'account.period' \
                                             and name = 'company_id'")
@@ -128,7 +128,7 @@ class account_invoice_refund(osv.osv_memory):
                                 period = res[0]
                 else:
                     date = inv.date_invoice
-                if form['description'] :
+                if form['description']:
                     description = form['description']
                 else:
                     description = inv.name
@@ -147,18 +147,18 @@ class account_invoice_refund(osv.osv_memory):
                 if mode in ('cancel', 'modify'):
                     movelines = inv.move_id.line_id
                     to_reconcile_ids = {}
-                    for line in movelines :
-                        if line.account_id.id == inv.account_id.id :
+                    for line in movelines:
+                        if line.account_id.id == inv.account_id.id:
                             to_reconcile_ids[line.account_id.id] = [line.id]
-                        if type(line.reconcile_id) != osv.orm.browse_null :
+                        if type(line.reconcile_id) != osv.orm.browse_null:
                             reconcile_obj.unlink(cr, uid, line.reconcile_id.id)
                     wf_service.trg_validate(uid, 'account.invoice', \
                                         refund.id, 'invoice_open', cr)
                     refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
-                    for tmpline in  refund.move_id.line_id :
-                        if tmpline.account_id.id == inv.account_id.id :
+                    for tmpline in  refund.move_id.line_id:
+                        if tmpline.account_id.id == inv.account_id.id:
                             to_reconcile_ids[tmpline.account_id.id].append(tmpline.id)
-                    for account in to_reconcile_ids :
+                    for account in to_reconcile_ids:
                         account_m_line_obj.reconcile(cr, uid, to_reconcile_ids[account],
                                         writeoff_period_id=period,
                                         writeoff_journal_id = inv.journal_id.id,
@@ -214,7 +214,7 @@ class account_invoice_refund(osv.osv_memory):
             return result
 
     def invoice_refund(self, cr, uid, ids, context=None):
-        data_refund = self.read(cr, uid, ids, [] ,context=context)[0]['filter_refund']
+        data_refund = self.read(cr, uid, ids, [],context=context)[0]['filter_refund']
         return self.compute_refund(cr, uid, ids, data_refund, context=context)
 
 account_invoice_refund()

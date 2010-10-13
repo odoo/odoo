@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 from tools.translate import _
 
@@ -29,7 +30,7 @@ class event_make_invoice(osv.osv_memory):
     _description = "Event Make Invoice"
     _columns = {
         'grouped': fields.boolean('Group the invoices'),
-        'invoice_date':fields.date('Invoice Date'),
+        'invoice_date': fields.date('Invoice Date'),
     }
 
     def view_init(self, cr, uid, fields, context=None):
@@ -61,7 +62,7 @@ class event_make_invoice(osv.osv_memory):
                         _("Registration doesn't have any partner to invoice."))
 
     def default_get(self, cr, uid, fields_list, context=None):
-        return super(event_make_invoice, self).default_get(cr, uid, fields_list, context)
+        return super(event_make_invoice, self).default_get(cr, uid, fields_list, context=context)
 
     def make_invoice(self, cr, uid, ids, context=None):
         reg_obj = self.pool.get('event.registration')
@@ -70,7 +71,7 @@ class event_make_invoice(osv.osv_memory):
         if context is None:
             context = {}
 
-        for data in self.browse(cr, uid, ids):
+        for data in self.browse(cr, uid, ids, context=context):
             res = reg_obj.action_invoice_create(cr, uid, context.get(('active_ids'),[]), data.grouped, date_inv = data.invoice_date)
 
         form_id = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
