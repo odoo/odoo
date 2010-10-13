@@ -7,7 +7,7 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
         <!-- Users -->
         
         <record id="res_users_analyst" model="res.users">
-            <field name="name">Phoung</field>
+            <field name="name">Phuong</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
             <field name="login">phu</field>
             <field name="password">phu</field>
@@ -19,7 +19,7 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="password">al</field>
         </record>
         <record id="res_users_technical_leader" model="res.users">
-            <field name="name">Qwintin</field>
+            <field name="name">Quentin</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="login">qdp</field>
             <field name="password">qdp</field>

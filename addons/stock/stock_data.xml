@@ -114,7 +114,13 @@
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_production')]"/>
             <field eval="'stock.location,'+str(location_production)" name="value"/>
         </record>
-        
+
+
+        <record forcecreate="True" id="decimal_shipping_delay" model="decimal.precision">
+            <field name="name">Shipping Delay</field>
+            <field name="digits" eval="2"/>
+        </record>
+
         <!--
     Resource: stock.warehouse
     -->

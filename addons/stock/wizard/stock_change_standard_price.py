@@ -21,12 +21,13 @@
 
 from osv import fields, osv
 from tools.translate import _
+import decimal_precision as dp
 
 class change_standard_price(osv.osv_memory):
     _name = "stock.change.standard.price"
     _description = "Change Standard Price"
     _columns = {
-        'new_price': fields.float('Price', required=True,
+        'new_price': fields.float('Price', required=True, digits_compute=dp.get_precision('Account'),
                                   help="If cost price is increased, stock variation account will be debited "
                                         "and stock output account will be credited with the value = (difference of amount * quantity available).\n"
                                         "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."),

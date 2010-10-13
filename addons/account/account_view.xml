@@ -236,6 +236,17 @@
                 </tree>
             </field>
         </record>
+        <record id="view_treasory_graph" model="ir.ui.view">
+         	<field name="name">account.treasory.graph</field>
+         	<field name="model">account.account</field>
+         	<field name="type">graph</field>
+         	<field name="arch" type="xml">
+             	<graph string="Treasory Analysis" type="bar">
+                	<field name="name"/>
+                	<field name="balance" operator="+"/>
+             	</graph>
+         </field>
+    	</record>
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">Accounts</field>
             <field name="res_model">account.account</field>
@@ -2338,7 +2349,7 @@
                 <group string="res_config_contents" position="replace">
                   <field name="company_id" widget="selection"/>
                   <field name ="code_digits" />
-                  <field name="chart_template_id"/>
+                  <field name="chart_template_id" widget="selection"/>
                   <field name ="seq_journal" />
                   <field colspan="4" mode="tree" name="bank_accounts_id"
                          nolabel="1" widget="one2many_list">

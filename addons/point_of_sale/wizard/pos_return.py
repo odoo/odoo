@@ -123,7 +123,7 @@ class pos_return(osv.osv_memory):
                    <button icon='gtk-cancel' special="cancel"
                                string="Cancel" />
                                    <button icon='gtk-ok' name= "create_returns"
-                       string="Return with Echange" type="object"/>
+                       string="Return with Exchange" type="object"/>
                                    <button icon='gtk-ok' name="create_returns2"
                         string="Refund Without Exchange" type="object"/>
                 </form>"""
@@ -206,10 +206,10 @@ class pos_return(osv.osv_memory):
                             'product_id': line.product_id.id,
                             'location_dest_id': stock_dest_id,
                             'name': '%s (return)' %order_id.name,
-                            'date': date_cur,
-                            'date_planned': date_cur
+                            'date': date_cur
                         })
-                        line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
+                        if qty != 0.0:
+                            line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
                 statementl_obj.create(cr, uid, {
                                                 'name': 'Refund %s'%order_id.name,
                                                 'statement_id': order_id.statement_ids[0].statement_id.id,
@@ -293,8 +293,7 @@ class add_product(osv.osv_memory):
                                 'product_id':prod_id.id,
                                 'location_dest_id':stock_dest_id,
                                 'name':'%s (return)' %order_id.name,
-                                'date':date_cur,
-                                'date_planned':date_cur
+                                'date':date_cur
                             })
 
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
@@ -370,7 +369,6 @@ class add_product(osv.osv_memory):
                         'location_dest_id':stock_dest_id,
                         'name':'%s (return)' % order_id.name,
                         'date':date_cur,
-                        'date_planned':date_cur
                     })
             wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [new_picking], context)

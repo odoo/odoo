@@ -151,10 +151,10 @@ class rml_parse(report_sxw.rml_parse):
             print Stringer
             return Stringer
 
-    def _add_header(self, node, header=1):
-        if header==2:
+    def _add_header(self, node, header='external'):
+        if header=='internal':
             rml_head =  self.rml_header2
-        elif header==3:
+        elif header=='internal landscape':
             rml_head =  self.rml_header3
         else:
             rml_head =  self.rml_header

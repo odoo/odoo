@@ -141,6 +141,35 @@ class project_issue(crm.crm_case, osv.osv):
                 else:
                     res[issue.id][field] = abs(float(duration))
         return res
+
+    def _get_issue_task(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        issues = []
+        issue_pool = self.pool.get('project.issue')
+        for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
+            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])            
+        return issues
+
+    def _get_issue_work(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        issues = []
+        issue_pool = self.pool.get('project.issue')
+        for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
+            if work.task_id:
+                issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
+        return issues
+
+    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
+        task_pool = self.pool.get('project.task')
+        res = {}
+        for issue in self.browse(cr, uid, ids, context=context):
+            progress = 0.0
+            if issue.task_id:
+                progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
+            res[issue.id] = {'progress' : progress}     
+        return res        
     
     _columns = {
         'id': fields.integer('ID'),
@@ -177,7 +206,7 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('object_id.model', '=', 'project.issue')]"),
+        'type_id': fields.many2one ('project.task.type', 'Resolution'),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -193,7 +222,12 @@ class project_issue(crm.crm_case, osv.osv):
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'progress': fields.related('task_id', 'progress', string='Progress (%)',group_operator="avg", store=True),
+        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
+            store = {
+                'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
+                'project.task': (_get_issue_task, ['progress'], 10),
+                'project.task.work': (_get_issue_work, ['hours'], 10),
+            }),
     }
 
     def _get_project(self, cr, uid, context):
