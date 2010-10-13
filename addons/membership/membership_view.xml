@@ -65,13 +65,12 @@
                       <field name="membership_date_from" required="1"/>
                       <field name="membership_date_to" required="1"/>
                       <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                      <field name="membership"/>
                     </group>
                     <notebook colspan="4">
                       <page string="General">
                         <separator string="Accounting Info" colspan="2"/>
                         <separator string="Categorization" colspan="2"/>
-                        <field name="price" />
+                        <field name="list_price" />
                         <field name="type" />
                         <field name="property_account_income"/>
                         <field name="categ_id"/>
