@@ -326,6 +326,19 @@
     # Project
     # ------------------------------------------------------
 
+        <record id="project.view_project_resource_form1" model="ir.ui.view">
+            <field name="name">Project Resource Calendar View</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <field name="priority" position="before">
+                    <field name="resource_calendar_id"/>
+                </field>
+
+            </field>
+       </record>
+
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>
             <field name="model">project.project</field>
@@ -333,7 +346,6 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <field name="priority" position="before">
-                    <field name="resource_calendar_id"/>
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>
                 </field>

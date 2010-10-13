@@ -254,6 +254,7 @@ class project_issue(crm.crm_case, osv.osv):
         data_obj = self.pool.get('ir.model.data')
         task_obj = self.pool.get('project.task')
 
+
         if context is None:
             context = {}
 
@@ -297,6 +298,7 @@ class project_issue(crm.crm_case, osv.osv):
             'nodestroy': True
         }
 
+
     def _convert(self, cr, uid, ids, xml_id, context=None):
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)
@@ -334,6 +336,7 @@ class project_issue(crm.crm_case, osv.osv):
                     index = types.index(typeid)
                     self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
         return True
+
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         if context is None:

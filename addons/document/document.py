@@ -41,7 +41,7 @@ class document_file(osv.osv):
         fbrl = self.browse(cr, uid, ids, context=context)
         nctx = nodes.get_node_context(cr, uid, context={})
         # nctx will /not/ inherit the caller's context. Most of
-        # it would be useless, anyway (like active_id, active_model, 
+        # it would be useless, anyway (like active_id, active_model,
         # bin_size etc.)
         result = {}
         bin_size = context.get('bin_size', False)
@@ -91,10 +91,11 @@ class document_file(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'file_size': fields.integer('File Size', required=True),
         'file_type': fields.char('Content Type', size=128),
-        
+
         # fields used for file storage
         'store_fname': fields.char('Stored Filename', size=200),
     }
+    _order = "create_date desc"
 
     def __get_def_directory(self, cr, uid, context=None):
         dirobj = self.pool.get('document.directory')
@@ -150,7 +151,7 @@ class document_file(osv.osv):
             return False
         if not self._check_duplication(cr, uid, vals, ids, 'write'):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
-        
+
         # if nodes call this write(), they must skip the code below
         from_node = context and context.get('__from_node', False)
         if (('parent_id' in vals) or ('name' in vals)) and not from_node:

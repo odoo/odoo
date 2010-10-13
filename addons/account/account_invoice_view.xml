@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <!--
         Invoices
         -->
@@ -434,6 +433,7 @@
             <field name="help">Most of customer invoices are automatically generated in draft mode by OpenERP flows, following a purchase order for instance. Review, confirm or cancel, pay or refund your customers' invoices here. A manual invoice can be created here.</field>
         </record>
 
+
         <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
@@ -446,6 +446,7 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
+
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
