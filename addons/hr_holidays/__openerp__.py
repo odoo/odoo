@@ -56,6 +56,7 @@
         'security/ir.model.access.csv',
         'hr_holidays_workflow.xml',
         'hr_holidays_view.xml',
+        'hr_holidays_data.xml',
         'hr_holidays_wizard.xml',
         'hr_holidays_report.xml',
         'report/hr_holidays_report_view.xml',

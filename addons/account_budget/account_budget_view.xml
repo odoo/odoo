@@ -147,10 +147,10 @@
                             </field>
                             <field name="state" select="1"/>
                             <group col="4" colspan="2">
+                                <button string="Cancel" name="cancel" states="confirm,validate" type="workflow" icon="gtk-cancel"/>
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-apply" />
                                 <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-ok"/>
                                 <button string="Done" name="done" states="validate" type="workflow"   icon="gtk-jump-to" />
-                                <button string="Cancel" name="cancel" states="confirm,validate" type="workflow" icon="gtk-cancel"/>
                                 <button name="draft" states="cancel" string="Reset to Draft" type="workflow" icon="terp-stock_effects-object-colorize"/>
                             </group>
 

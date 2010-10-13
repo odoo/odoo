@@ -83,7 +83,7 @@ class account_move_line_reconcile(osv.osv_memory):
         data = self.read(cr, uid, ids, context=context)
         date = time.strftime('%Y-%m-%d')
         ids = self.pool.get('account.period').find(cr, uid, dt=date, context=context)
-        if len(ids):
+        if ids:
             period_id = ids[0]
         #stop the reconciliation process by partner (manual reconciliation) only if there is nothing more to reconcile for this partner
         if 'active_ids' in context and context['active_ids']:
@@ -93,10 +93,10 @@ class account_move_line_reconcile(osv.osv_memory):
             credit_ml_ids = account_move_line_obj.search(cr, uid, [('partner_id', '=', partner_id), ('account_id.reconcile', '=', True), ('reconcile_id', '=', False), ('credit', '>', 0)], context=context)
             for ml_id in context['active_ids']:
                 if ml_id in debit_ml_ids:
-                    debit_ml_ids.remove(ml_id) 
+                    debit_ml_ids.remove(ml_id)
                 if ml_id in credit_ml_ids:
                     credit_ml_ids.remove(ml_id)
-            if not (len(debit_ml_ids) and len(credit_ml_ids)):
+            if not debit_ml_ids and credit_ml_ids:
                 context.update({'stop_reconcile': True})
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
                                         period_id, journal_id, context=context)
@@ -161,7 +161,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
             date = context['date_p']
 
         ids = self.pool.get('account.period').find(cr, uid, dt=date, context=context)
-        if len(ids):
+        if ids:
             period_id = ids[0]
 
         context.update({'stop_reconcile': True})

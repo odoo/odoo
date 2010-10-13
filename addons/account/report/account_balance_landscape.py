@@ -139,7 +139,7 @@ class account_balance_landscape(rml_parse.rml_parse):
             ctx['state'] = form['context'].get('state','all')
             tmp = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx.copy())
 
-            if len(tmp):
+            if tmp:
                 accounts.append(tmp)
 
         merged_accounts=zip(*accounts)
@@ -198,7 +198,7 @@ class account_balance_landscape(rml_parse.rml_parse):
             ctx['state'] = form['context'].get('state','all')
             tmp1 = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx.copy())
 
-            if len(tmp1):
+            if tmp1:
                 accounts.append(tmp1)
 
         if level==1:   #if parent is called,done is not empty when called again.

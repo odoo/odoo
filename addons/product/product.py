@@ -308,6 +308,7 @@ class product_template(osv.osv):
         'uos_coeff' : lambda *a: 1.0,
         'mes_type' : lambda *a: 'fixed',
         'categ_id' : _default_category,
+        'type' : lambda *a: 'consu',
     }
 
     def _check_uom(self, cursor, user, ids):
@@ -386,7 +387,7 @@ class product_product(osv.osv):
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context={}):
         for supinfo in product.seller_ids:
             if supinfo.name.id == partner_id:
-                return {'code': supinfo.product_code, 'name': supinfo.product_name, 'variants': ''}
+                return {'code': supinfo.product_code or product.default_code, 'name': supinfo.product_name or product.name, 'variants': ''}
         res = {'code': product.default_code, 'name': product.name, 'variants': product.variants}
         return res
 
