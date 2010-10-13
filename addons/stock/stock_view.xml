@@ -101,7 +101,7 @@
                                     string="Split inventory lines" groups="base.group_extended"
                                     type="action" icon="terp-stock_effects-object-colorize" states="draft"/>
                                 <field colspan="4" domain="[('usage','=','internal')]" name="location_id"/>
-                                <field name="state" />
+                                <field name="state" invisible="True"/>
                             </tree>
                             <form string="Products ">
                                 <field colspan="4" context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" domain="[('type','&lt;&gt;','service')]"/>
@@ -127,7 +127,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date" string="Date"/>
-                                    <field name="state"/>
+                                    <field name="state"  invisible="True"/>
                                 </tree>
                              </field>
                     </page>
@@ -935,7 +935,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-apply"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="%(action_partial_picking)d" states="assigned" string="Done" type="action" icon="gtk-execute"/>
+                                <button name="%(action_partial_picking)d" states="assigned" string="Done" type="action" icon="gtk-go-forward"/>
                                 <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
@@ -1150,7 +1150,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
-                                <button name="%(action_partial_picking)d" states="assigned" string="Products Received" type="action" icon="gtk-ok"/>
+                                <button name="%(action_partial_picking)d" states="assigned" string="Products Received" type="action" icon="gtk-go-forward"/>
                                 <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
