@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Sales Lines" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Payments" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="27.0" y1="57.0" width="512" height="728"/>
     </pageTemplate>
@@ -134,7 +134,7 @@
           <para style="terp_tblheader_Details">Product</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right">Qty</para>
+          <para style="terp_tblheader_General_Centre">Qty</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Right">Disc(%)</para>
@@ -190,7 +190,7 @@
           <para style="terp_tblheader_General_Right">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(pos_payment_date_total(data['form'])) or removeParentNode('blockTable')]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(pos_payment_date_total(data['form'])) or removeParentNode('blockTable')]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
