@@ -322,7 +322,7 @@ class procurement_order(osv.osv):
                     if procurement.procure_method == 'make_to_order':
                         source = procurement.product_id.product_tmpl_id.property_stock_procurement.id
                     id = move_obj.create(cr, uid, {
-                        'name': 'PROC:' + procurement.name,
+                        'name': procurement.name,
                         'location_id': source,
                         'location_dest_id': procurement.location_id.id,
                         'product_id': procurement.product_id.id,
@@ -374,10 +374,6 @@ class procurement_order(osv.osv):
                             "Not enough stock and no minimum orderpoint rule defined.") % \
                             procurement.name
                     self.log(cr, uid, procurement.id, message)
-            if procurement.state=='exception' and procurement.message=='':
-                cr.execute('update procurement_order set message=%s where id=%s',
-                        (_('Not enough stock '), procurement.id) )
-
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):

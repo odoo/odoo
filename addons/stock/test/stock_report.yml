@@ -3,7 +3,7 @@
 -
   !python {model: stock.location}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.lot.stock.overview_all').create(cr, uid, [ref('stock.stock_location_13')], {}, {})
+    (data, format) = netsvc.LocalService('report.lot.stock.overview_all').create(cr, uid, [ref('stock.stock_location_stock')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-overviewall'+format), 'wb+').write(data)
 -
