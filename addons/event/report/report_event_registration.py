@@ -46,7 +46,6 @@ class report_event_registration(osv.osv):
         'speaker_id': fields.many2one('res.partner', 'Speaker', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        "invoice_id": fields.many2one("account.invoice", "Invoice", readonly=True),
         'total': fields.float('Total'),
         'section_id': fields.related('event_id', 'section_id', type='many2one', relation='crm.case.section', string='Sale Team', store=True, readonly=True),
     }
@@ -73,10 +72,9 @@ class report_event_registration(osv.osv):
                 to_char(e.date_begin, 'YYYY-MM-DD') AS day,
                 count(t.id) AS nbevent,
                 t.id AS type,
-                (SELECT SUM(c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type AND state IN ('draft')) AS draft_state,
-                (SELECT SUM(c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type AND state IN ('open')) AS confirm_state,
-                (SELECT SUM(c.invoice_id) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type) AS invoice_id,
-                (SELECT SUM(c.unit_price * c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type) AS total,
+                (SELECT SUM(c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type AND c.state IN ('draft')) AS draft_state,
+                (SELECT SUM(c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type AND c.state IN ('open')) AS confirm_state,
+                (SELECT SUM(c.price_subtotal) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type AND c.state IN ('done')) AS total,
                 e.register_max AS register_max,
                 e.state AS state
                 FROM

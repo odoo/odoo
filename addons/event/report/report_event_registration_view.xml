@@ -23,7 +23,6 @@
                     <field name="register_max" invisible="context.get('max_reg_event_visible', True)"/>
                     <field name="company_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
-                    <field name="invoice_id" invisible="1"/>
                     <field name="section_id" invisible="1"/>
                     <field name="total" invisible="context.get('total_visible', True)" sum="Total"/>
                 </tree>
@@ -69,7 +68,6 @@
                     <filter string="Invoiced"
 						name="invoiced"
 						icon="terp-dolar"
-						domain="[('invoice_id','!=','')]"
 						help = "Invoices" context="{'total_visible':0}"/>
 					<filter icon="terp-check"
 						string="Current Event" name="draft"
@@ -121,7 +119,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_report_event_registration_search"/>
-            <field name="context">{"search_default_invoiced":1, "search_default_event":1,"search_default_365day":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{"search_default_365day":1, "search_default_invoiced":1, "search_default_event":1, 'group_by_no_leaf':1, 'group_by':[]}</field>
         </record>
 
       <record model="ir.actions.act_window.view" id="action_report_event_registration_tree">
