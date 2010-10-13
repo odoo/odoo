@@ -195,7 +195,6 @@
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help">In OpenERP, a product is something you can buy and sell. It can be a raw material, a stockable product, a consumable or a service. The product form contains a detailed information on the products like procurement logistic, sales price, product category, suppliers, etc.</field>
         </record>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_system,group_product_manager"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9" groups="group_product_manager,base.group_sale_salesman,base.group_system"/>
         <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,group_product_manager"/>

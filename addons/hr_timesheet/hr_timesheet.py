@@ -35,25 +35,23 @@ class hr_employee(osv.osv):
     }
     
     def _getAnalyticJournal(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        id = self.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
-        if id:
-            journal = self.browse(cr, uid, id[0], context=context)
-            if journal.journal_id:
-                return journal.journal_id.id
+        md = self.pool.get('ir.model.data')
+        try:
+            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
+            return result[1]
+        except ValueError, e:
+            pass
         return False
-    
+
     def _getEmployeeProduct(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        id = self.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
-        if id:
-            prod = self.browse(cr, uid, id[0], context=context)
-            if prod.product_id:
-                return prod.product_id.id
+        md = self.pool.get('ir.model.data')
+        try:
+            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'product_consultant')
+            return result[1]
+        except ValueError, e:
+            pass
         return False
-        
+
     _defaults = {
         'journal_id' : _getAnalyticJournal,
         'product_id' : _getEmployeeProduct    

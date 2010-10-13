@@ -55,7 +55,7 @@ class account_entries_report(osv.osv):
         'move_line_state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True),
         'reconcile_id': fields.many2one('account.move.reconcile', readonly=True),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),
-        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
         'type': fields.selection([

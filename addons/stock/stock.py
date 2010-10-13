@@ -186,7 +186,7 @@ class stock_location(osv.osv):
                 "validated automatically. With 'Manual Operation', the stock move has to be validated "\
                 "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
             ),
-        'chained_picking_type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', help="Shipping Type of the Picking List that will contain the chained move (leave empty to automatically detect the type based on the source and destination locations)."),
+        'chained_picking_type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', help="Shipping Type of the Picking List that will contain the chained move (leave empty to automatically detect the type based on the source and destination locations)."),
         'chained_company_id': fields.many2one('res.company', 'Chained Company', help='The company the Picking List containing the chained move will belong to (leave empty to use the default company determination rules'),
         'chained_delay': fields.integer('Chaining Lead Time',help="Delay between original move and chained move in days"),
         'address_id': fields.many2one('res.partner.address', 'Location Address',help="Address of  customer or supplier."),
@@ -242,7 +242,7 @@ class stock_location(osv.osv):
         """
         result = 'internal'
         if (from_location.usage=='internal') and (to_location and to_location.usage in ('customer', 'supplier')):
-            result = 'delivery'
+            result = 'out'
         elif (from_location.usage in ('supplier', 'customer')) and (to_location.usage == 'internal'):
             result = 'in'
         return result
@@ -602,7 +602,7 @@ class stock_picking(osv.osv):
         'name': fields.char('Reference', size=64, select=True),
         'origin': fields.char('Origin', size=64, help="Reference of the document that produced this picking.", select=True),
         'backorder_id': fields.many2one('stock.picking', 'Back Order of', help="If this picking was split this field links to the picking that contains the other part that has been processed already.", select=True),
-        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
+        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'note': fields.text('Notes'),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True),
         'location_id': fields.many2one('stock.location', 'Location', help="Keep empty if you produce at the location where the finished products are needed." \
@@ -980,6 +980,8 @@ class stock_picking(osv.osv):
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
             for move_line in picking.move_lines:
+                if move_line.state == 'cancel':
+                    continue
                 origin = move_line.picking_id.name or ''
                 if move_line.picking_id.origin:
                     origin += ':' + move_line.picking_id.origin
@@ -1251,7 +1253,6 @@ class stock_picking(osv.osv):
                 'out':'Picking List',
                 'in':'Reception',
                 'internal': 'Internal picking',
-                'delivery': 'Delivery order'
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or 'n/a') + "' "
             if pick.min_date:
@@ -1652,10 +1653,20 @@ class stock_move(osv.osv):
             )
             if dest:
                 if dest[1] == 'transparent':
+                    newdate = (datetime.strptime(m.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=dest[2] or 0)).strftime('%Y-%m-%d')
                     self.write(cr, uid, [m.id], {
-                        'date': (datetime.strptime(m.date, '%Y-%m-%d %H:%M:%S') + \
-                            relativedelta(days=dest[2] or 0)).strftime('%Y-%m-%d'),
+                        'date': newdate,
                         'location_dest_id': dest[0].id})
+                    if m.picking_id and (dest[3] or dest[5]):
+                        self.pool.get('stock.picking').write(cr, uid, [m.picking_id.id], {
+                            'stock_journal_id': dest[3] or m.picking_id.stock_journal_id.id,
+                            'type': dest[5] or m.picking_id.type
+                        }, context=context)
+                    m.location_dest_id = dest[0]
+                    res2 = self._chain_compute(cr, uid, [m], context=context)
+                    for pick_id in res2.keys():
+                        result.setdefault(pick_id, [])
+                        result[pick_id] += res2[pick_id]
                 else:
                     result.setdefault(m.picking_id, [])
                     result[m.picking_id].append( (m, dest) )
@@ -1695,16 +1706,10 @@ class stock_move(osv.osv):
             for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
                 ptype = todo[0][1][5] and todo[0][1][5] or self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
                 pick_name = picking.name or ''
-                if ptype == 'delivery':
-                    pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.delivery')
-                check_picking_ids = picking_obj.search(cr, uid, [('name','=',picking.name),('origin','=',str(picking.origin or '')),('type','=',ptype),('move_type','=',picking.move_type)])
-                if check_picking_ids:
-                    pickid = check_picking_ids[0]
+                if picking:
+                    pickid = self._create_chained_picking(cr, uid, pick_name,picking,ptype,todo,context)
                 else:
-                    if picking:
-                        pickid = self._create_chained_picking(cr, uid, pick_name,picking,ptype,todo,context)
-                    else:
-                        pickid = False
+                    pickid = False
                 for move, (loc, auto, delay, journal, company_id, ptype) in todo:
                     new_id = move_obj.copy(cr, uid, move.id, {
                         'location_id': move.location_dest_id.id,

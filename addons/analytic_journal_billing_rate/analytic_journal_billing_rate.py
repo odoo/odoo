@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -38,7 +38,7 @@ class account_analytic_account(osv.osv):
 
     _inherit = "account.analytic.account"
     _columns = {
-        'journal_rate_ids' : fields.one2many('analytic_journal_rate_grid', 'account_id', 'Invoicing Rate per Journal'),
+        'journal_rate_ids': fields.one2many('analytic_journal_rate_grid', 'account_id', 'Invoicing Rate per Journal'),
     }
 
 account_analytic_account()
@@ -92,7 +92,7 @@ class hr_analytic_timesheet(osv.osv):
         if to_invoice:
             res.setdefault('value',{})
             res['value']['to_invoice'] = to_invoice[0]
-    
+
         return res
 
 hr_analytic_timesheet()

@@ -48,10 +48,14 @@ class employees_salary_report(rml_parse.rml_parse):
             m = datetime.date(cy, cm, 1).strftime('%b')
             mnth_name.append(m)
             self.mnths.append(str(cm)+'-'+str(cy))
+            
             if cm == 12:
                 cm = 0
                 cy = ly
             cm = cm +1
+        for c in range(0,(12-no_months)):
+            mnth_name.append('None')
+            self.mnths.append('None')
         return [mnth_name]
 
     def get_employee(self,form):
@@ -134,11 +138,14 @@ class employees_salary_report(rml_parse.rml_parse):
             category_name = self.pool.get('hr.allounce.deduction.categoty').read(self.cr, self.uid, [category],['name','type'])[0]
             result.append(category_name['name'])
         for mnth in self.mnths:
-            if len(mnth) != 7:
-                mnth = '0' + str(mnth)
-            query = "select id from hr_payslip where employee_id = "+str(emp_id)+" and to_char(date,'mm-yyyy') like '%"+mnth+"%' and state = 'done' "
-            self.cr.execute(query)
-            payslip_id = self.cr.dictfetchone()
+            if mnth <> 'None':
+                if len(mnth) != 7:
+                    mnth = '0' + str(mnth)
+                query = "select id from hr_payslip where employee_id = "+str(emp_id)+" and to_char(date,'mm-yyyy') like '%"+mnth+"%' and state = 'done' "
+                self.cr.execute(query)
+                payslip_id = self.cr.dictfetchone()
+            else:
+                payslip_id = False
             if payslip_id:
                 payslip_obj = self.pool.get('hr.payslip').browse(self.cr, self.uid, payslip_id['id'])
                 if not category:

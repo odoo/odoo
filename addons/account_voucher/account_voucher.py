@@ -29,8 +29,9 @@ from tools.translate import _
 
 class account_move_line(osv.osv):
     _inherit = 'account.move.line'
+
     def _unreconciled(self, cr, uid, ids, prop, unknow_none, context):
-        res={}
+        res = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.debit - line.credit
             if line.reconcile_partial_id:
@@ -43,9 +44,11 @@ class account_move_line(osv.osv):
     _columns = {
         'amount_unreconciled': fields.function(_unreconciled, method=True, string='Unreconciled Amount'),
     }
+
 account_move_line()
 
 class account_voucher(osv.osv):
+
     def _get_type(self, cr, uid, ids, context={}):
         return context.get('type', False)
 
@@ -92,7 +95,7 @@ class account_voucher(osv.osv):
         journal_id = context.get('journal_id', False)
         if journal_id:
             journal = journal_pool.browse(cr, uid, journal_id)
-            currency_id = journal.company_id.currency_id.id
+#            currency_id = journal.company_id.currency_id.id
             if journal.currency:
                 return journal.currency.id
         return False
@@ -112,15 +115,15 @@ class account_voucher(osv.osv):
         return [(r['id'], (str("%.2f" % r['amount']) or '')) for r in self.read(cr, uid, ids, ['amount'], context, load='_classic_write')]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
-        if not view_id and context.get('invoice_type',False):
+        if not view_id and context.get('invoice_type', False):
             mod_obj = self.pool.get('ir.model.data')
-            if context.get('invoice_type') in ('out_invoice','out_refund'):
+            if context.get('invoice_type') in ('out_invoice', 'out_refund'):
                 result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
             else:
                 result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_payment_form')
             result = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
             view_id = result
-        res = super(account_voucher,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        res = super(account_voucher, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         doc = etree.XML(res['arch'])
         nodes = doc.xpath("//field[@name='partner_id']")
         if context.get('type', 'sale') in ('purchase', 'payment'):
@@ -223,7 +226,7 @@ class account_voucher(osv.osv):
             total_tax = 0.0
 
             if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_amount, 1).get('taxes',[]):
+                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_amount, 1).get('taxes', []):
                     total_tax += tax_line.get('amount', 0.0)
                 total += total_tax
             else:
@@ -231,7 +234,7 @@ class account_voucher(osv.osv):
                     line_total = 0.0
                     line_tax = 0.0
 
-                    for tax_line in tax_pool.compute_all(cr, uid, tax, line.untax_amount or line.amount, 1).get('taxes',[]):
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, line.untax_amount or line.amount, 1).get('taxes', []):
                         line_tax += tax_line.get('amount', 0.0)
                         line_total += tax_line.get('price_unit')
                     total_tax += line_tax
@@ -246,8 +249,8 @@ class account_voucher(osv.osv):
         partner_pool = self.pool.get('res.partner')
         position_pool = self.pool.get('account.fiscal.position')
         res = {
-            'tax_amount':False,
-            'amount':False,
+            'tax_amount': False,
+            'amount': False,
         }
         voucher_total = 0.0
         voucher_line_ids = []
@@ -271,7 +274,7 @@ class account_voucher(osv.osv):
                 tax = tax_pool.browse(cr, uid, taxes)
 
             if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_total, 1).get('taxes',[]):
+                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_total, 1).get('taxes', []):
                     total_tax += tax_line.get('amount')
                 total += total_tax
 
@@ -371,7 +374,7 @@ class account_voucher(osv.osv):
             return default
 
         if not partner_id and ids:
-            line_ids = line_pool.search(cr, uid, [('voucher_id','=',ids[0])])
+            line_ids = line_pool.search(cr, uid, [('voucher_id', '=', ids[0])])
             if line_ids:
                 line_pool.unlink(cr, uid, line_ids)
             return default
@@ -402,7 +405,7 @@ class account_voucher(osv.osv):
             account_type = 'receivable'
 
         if not context.get('move_line_ids', False):
-            ids = move_line_pool.search(cr, uid, [('account_id.type','=', account_type), ('reconcile_id','=', False), ('partner_id','=',partner_id)], context=context)
+            ids = move_line_pool.search(cr, uid, [('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
         else:
             ids = context['move_line_ids']
         ids.reverse()
@@ -469,7 +472,7 @@ class account_voucher(osv.osv):
         @return: Returns a dict which contains new values, and context
         """
         period_pool = self.pool.get('account.period')
-        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
+        pids = period_pool.search(cr, user, [('date_start', '<=', date), ('date_stop', '>=', date)])
         if not pids:
             return {}
         return {
@@ -685,13 +688,13 @@ class account_voucher(osv.osv):
             if not self.pool.get('res.currency').is_zero(cr, uid, inv.currency_id, line_total):
                 diff = line_total
                 move_line = {
-                    'name':name,
-                    'account_id':False,
-                    'move_id':move_id ,
-                    'partner_id':inv.partner_id.id,
-                    'date':inv.date,
-                    'credit':diff>0 and diff or 0.0,
-                    'debit':diff<0 and -diff or 0.0,
+                    'name': name,
+                    'account_id': False,
+                    'move_id': move_id ,
+                    'partner_id': inv.partner_id.id,
+                    'date': inv.date,
+                    'credit': diff > 0 and diff or 0.0,
+                    'debit': diff < 0 and -diff or 0.0,
                 }
                 account_id = False
                 if inv.type in ('sale', 'receipt'):
@@ -792,10 +795,10 @@ class account_voucher_line(osv.osv):
         if move_line_id:
             move_line = move_line_pool.browse(cr, user, move_line_id, context=context)
             if move_line.credit:
-                ttype='dr'
+                ttype = 'dr'
                 amount = move_line.credit
             else:
-                ttype='cr'
+                ttype = 'cr'
             account_id = move_line.account_id.id
             res.update({
                 'account_id':account_id,
