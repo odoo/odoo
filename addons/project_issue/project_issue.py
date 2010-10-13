@@ -170,7 +170,7 @@ class project_issue(crm.crm_case, osv.osv):
                 progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
             res[issue.id] = {'progress' : progress}     
         return res        
-    
+
     _columns = {
         'id': fields.integer('ID'),
         'name': fields.char('Issue', size=128, required=True),
@@ -201,7 +201,7 @@ class project_issue(crm.crm_case, osv.osv):
         'canal_id': fields.many2one('res.partner.canal', 'Channel', help="The channels represent the different communication modes available with the customer." \
                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Severity'),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
@@ -313,7 +313,6 @@ class project_issue(crm.crm_case, osv.osv):
     def convert_to_bug(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
-
     def next_type(self, cr, uid, ids, *args):
         for task in self.browse(cr, uid, ids):
             typeid = task.type_id.id
@@ -339,7 +338,7 @@ class project_issue(crm.crm_case, osv.osv):
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         if context is None:
             context = {}
-        result = {}    
+        result = {}
         if not task_id:
             return {'value':{}}
         task = self.pool.get('project.task').browse(cr, uid, task_id, context)
@@ -464,7 +463,7 @@ class project_issue(crm.crm_case, osv.osv):
             @param **args: Return Dictionary of Keyword Value
         """
         return True
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not context:
             context={}

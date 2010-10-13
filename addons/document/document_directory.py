@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,7 +29,7 @@ from tools.translate import _
 class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Directory'
-    _order = 'name desc'
+    _order = 'name'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
@@ -44,13 +44,13 @@ class document_directory(osv.osv):
         'child_ids': fields.one2many('document.directory', 'parent_id', 'Children'),
         'file_ids': fields.one2many('ir.attachment', 'parent_id', 'Files'),
         'content_ids': fields.one2many('document.directory.content', 'directory_id', 'Virtual Files'),
-        'type': fields.selection([ 
+        'type': fields.selection([
             ('directory','Static Directory'),
             ('ressource','Folders per resource'),
             ],
             'Type', required=True, select=1,
-            help="Defines directory's behaviour."),
-        
+            help="Each directory can either have the type Static or be linked to another resource. A static directory, as with Operating Systems, is the classic directory that can contain a set of files. The directories linked to systems resources automatically possess sub-directories for each of resource types defined in the parent directory."),
+
         'ressource_type_id': fields.many2one('ir.model', 'Resource model',
             help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
@@ -95,13 +95,13 @@ class document_directory(osv.osv):
                 return objid.browse(cr, uid, mid, context=context).res_id
         except Exception:
                 return None
-        
+
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'document.directory', context=c),
         'user_id': lambda self,cr,uid,ctx: uid,
         'domain': lambda self,cr,uid,ctx: '[]',
         'type': lambda *args: 'directory',
-        'ressource_id': lambda *a: 0,        
+        'ressource_id': lambda *a: 0,
         'storage_id': _get_def_storage,
         'resource_find_all': True,
     }
@@ -151,7 +151,7 @@ class document_directory(osv.osv):
     _constraints = [
         (_check_recursion, 'Error! You can not create recursive Directories.', ['parent_id'])
     ]
-    
+
     def __init__(self, *args, **kwargs):
         super(document_directory, self).__init__(*args, **kwargs)
 
@@ -172,7 +172,7 @@ class document_directory(osv.osv):
         """
         if not context:
                 context = {}
-            
+
         return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
 
     def get_dir_permissions(self, cr, uid, ids ):
@@ -180,7 +180,7 @@ class document_directory(osv.osv):
         """
         assert len(ids) == 1
         id = ids[0]
-        
+
         cr.execute( "SELECT count(dg.item_id) AS needs, count(ug.uid) AS has " \
                 " FROM document_directory_group_rel dg " \
                 "   LEFT OUTER JOIN res_groups_users_rel ug " \
@@ -197,7 +197,7 @@ class document_directory(osv.osv):
             Return a tuple (node_dir, remaining_path)
         """
         return (nodes.node_database(context=ncontext), uri)
-        
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default ={}

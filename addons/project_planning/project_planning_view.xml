@@ -276,8 +276,6 @@
             <field name="arch" type="xml">
                 <search string="Planning statistics">
                     <group col="10" colspan="4">
-                        <filter icon="gtk-execute" string="My" domain="[('user_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]" help="My Plannings Statistics"/>
-                        <separator orientation="vertical"/>
                         <field name="planning_id" select="1"/>
                         <field name="user_id" select="1"/>
                         <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
@@ -299,6 +297,10 @@
             parent="hr.menu_hr_reporting" />
         <menuitem action="action_account_analytic_planning_stat_form"
             id="menu_report_account_analytic_planning_stat" parent="next_id_85" />
+            <menuitem  action="action_account_analytic_planning_stat_form"
+                       icon="terp-graph"
+                       id="menu_board_planning"
+                       parent="project.next_id_86"/>
 
 <!--        Analytic account Form -->
 

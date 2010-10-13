@@ -18,11 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import osv
+from osv import fields
 
-import project_scrum_backlog_create_task
-import project_scrum_backlog_sprint
-import project_scrum_backlog_merger
-import project_scrum_postpone
-
+class postpone_wizard(osv.osv_memory):
+    _name = "postpone.wizard"
+    def button_postpone(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}    
+        self.pool.get('project.scrum.product.backlog').button_postpone(cr, uid, context.get('active_ids',[]), context)
+        return {}
+postpone_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
