@@ -92,7 +92,7 @@
     <paraStyle name="P12" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER"/>
     <paraStyle name="P13" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT"/>
     <paraStyle name="P14" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P15" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P15" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -111,30 +111,30 @@
     <images/>
   </stylesheet>
   <story>
-    <para style="Standard">
-      <font color="white"> </font>
-    </para>
+    <para style="P15">[[repeatIn(objects,'o')]]</para>
     <section>
-      <para style="P14">[[repeatIn(objects,'o')]]</para>
+      <para style="P15">
+        <font color="white"> </font>
+      </para>
       <blockTable colWidths="262.0,6.0,260.0" style="Table5">
         <tr>
           <td>
-            <para style="P9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="P9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="P15">[[ o.user_id.address_id.title.name or '' ]] [[ o.user_id.address_id.name ]]</para>
-            <para style="P15">[[ o.user_id.address_id.street ]]</para>
-            <para style="P15">[[ o.user_id.address_id.street2 or removeParentNode('para') ]]</para>
-            <para style="P15">[[ o.user_id.address_id.zip or '' ]] [[ o.user_id.address_id.city or '' ]]</para>
-            <para style="P15">[[ (o.user_id.address_id.state_id and o.user_id.address_id.state_id.name) or removeParentNode('para')]] [[ (o.user_id.address_id.country_id and o.user_id.address_id.country_id.name) or '' ]]</para>
             <para style="P15">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="P9">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="P14">[[ o.user_id.address_id.partner_id.title.name or '' ]] [[ o.user_id.address_id.partner_id.name ]]</para>
+            <para style="P14">[[ o.user_id.address_id.street ]]</para>
+            <para style="P14">[[ o.user_id.address_id.street2 or removeParentNode('para') ]]</para>
+            <para style="P14">[[ o.user_id.address_id.zip or '' ]] [[ o.user_id.address_id.city or '' ]]</para>
+            <para style="P14">[[ (o.user_id.address_id.state_id and o.user_id.address_id.state_id.name) or removeParentNode('para')]] [[ (o.user_id.address_id.country_id and o.user_id.address_id.country_id.name) or '' ]]</para>
+            <para style="P14">
               <font color="white"> </font>
             </para>
           </td>
@@ -179,7 +179,6 @@
     <blockTable colWidths="132.0,153.0,142.0,101.0" style="Table1">
       <tr>
         <td>
-          <para style="P5">[[repeatIn(objects, 'o') ]]</para>
           <para style="P5">[[ o.user_id.name ]]</para>
         </td>
         <td>
