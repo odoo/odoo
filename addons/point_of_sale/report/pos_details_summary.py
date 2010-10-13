@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-import datetime
+from datetime import datetime
 from report import report_sxw
 
 
@@ -127,7 +127,7 @@ class pos_details_summary(report_sxw.rml_parse):
 
 
     def _get_end_period(self, objects):
-        date_orders = [obj.date_order for obj in objects]
+        date_orders = sorted([obj.date_order for obj in objects])
         max_date = date_orders[-1]
         return '%s' % max_date
 
