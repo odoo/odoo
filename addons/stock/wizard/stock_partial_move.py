@@ -50,7 +50,7 @@ class stock_partial_move(osv.osv_memory):
             if 'move%s_prodlot_id'%(m.id) not in self._columns:
                 self._columns['move%s_prodlot_id'%(m.id)] = fields.many2one('stock.production.lot', string="Lot")
                 
-            if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
+            if (m.product_id.cost_method == 'average'):
                 if 'move%s_product_price'%(m.id) not in self._columns:
                     self._columns['move%s_product_price'%(m.id)] = fields.float("Price")
                 if 'move%s_product_currency'%(m.id) not in self._columns:
@@ -106,7 +106,7 @@ class stock_partial_move(osv.osv_memory):
                     <field name="move%s_product_uom" nolabel="1" />
                     <field name="move%s_prodlot_id" domain="[('product_id','=',move%s_product_id)]"  groups="base.group_extended" />                    
                 """%(m.id, m.id, m.id,m.id,m.id)
-                if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
+                if m.product_id.cost_method == 'average':
                     _moves_fields.update({
                         'move%s_product_price'%(m.id) : {
                             'string': _('Price'),
@@ -207,7 +207,7 @@ class stock_partial_move(osv.osv_memory):
                 'prodlot_id' : getattr(partial, 'move%s_prodlot_id'%(m.id)).id                
             }
 
-            if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
+            if m.product_id.cost_method == 'average':
                 partial_datas['move%s'%(m.id)].update({
                     'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
                     'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id
