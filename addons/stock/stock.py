@@ -2541,16 +2541,16 @@ class stock_picking_move_wizard(osv.osv_memory):
     def _get_picking(self, cr, uid, ctx=None):
         if ctx is None:
             ctx = {}
-        if ctx.get('action_id', False):
-            return ctx['action_id']
+        if ctx.get('active_id', False):
+            return ctx['active_id']
         return False
 
     def _get_picking_address(self, cr, uid, context=None):
         picking_obj = self.pool.get('stock.picking')
         if context is None:
             context = {}
-        if context.get('action_id', False):
-            picking = picking_obj.browse(cr, uid, [context['action_id']])[0]
+        if context.get('active_id', False):
+            picking = picking_obj.browse(cr, uid, [context['active_id']])[0]
             return picking.address_id and picking.address_id.id or False
         return False
 
