@@ -396,7 +396,7 @@ class project_resource_allocation(osv.osv):
         'user_id': fields.related('resource_id', 'user_id', type='many2one', relation="res.users", string='User'),
         'date_start': fields.date('Start Date', help="Starting Date"),
         'date_end': fields.date('End Date', help="Ending Date"),
-        'useability': fields.float('Availability', help="Usability of this resource for this project phase in percentage (=50%)"),
+        'useability': fields.float('Availability', help="Availability of this resource for this project phase in percentage (=50%)"),
     }
     _defaults = {
         'useability': 100,
