@@ -29,22 +29,22 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields, osv
+
 class HeaderHTML(osv.osv):
-    """HTML Header alos you to define HTML CSS and Page format"""
+    """HTML Header allows you to define HTML CSS and Page format"""
     
     _name = "ir.header_webkit"
     _columns = {
         'company_id' : fields.many2one('res.company', 'Company'),
-        'html' : fields.text('webkit header'),
-        'footer_html' : fields.text('webkit footer'),
+        'html' : fields.text('webkit header', help="Set Webkit Report Header"),
+        'footer_html' : fields.text('webkit footer', help="Set Webkit Report Footer."),
         'css' : fields.text('Header CSS'),
         'name' : fields.char('Name', size=128, required=True),
         'margin_top' : fields.float('Top Margin (mm)'),
-        'magrin_bottom' : fields.float('Bottom Margin (mm)'),
-        'magrin_left' : fields.float('Left Margin (mm)'),
-        'magrin_right' : fields.float('Right Margin (mm)'),
+        'margin_bottom' : fields.float('Bottom Margin (mm)'),
+        'margin_left' : fields.float('Left Margin (mm)'),
+        'margin_right' : fields.float('Right Margin (mm)'),
         'orientation' : fields.selection(
                         [('Landscape','Landscape'),('Portrait', 'Portrait')],
                         'Orientation'
@@ -84,17 +84,18 @@ class HeaderHTML(osv.osv):
                 ],
                 'Paper size',
                 required=True,
+                help="Select Proper Paper size"
         )
     }    
 HeaderHTML()
 
 class HeaderImage(osv.osv):
-    """Logo alos you to define multiple logo per company"""
+    """Logo allows you to define multiple logo per company"""
     _name = "ir.header_img"
     _columns = {
         'company_id' : fields.many2one('res.company', 'Company'),
         'img' : fields.binary('Image'),
-        'name' : fields.char('Name', size=128, required =True),
-        'extention' : fields.char('extention', size=32, required =True)
+        'name' : fields.char('Name', size=128, required =True, help="Name of Image"),
+        'type' : fields.char('Type', size=32, required =True, help="Image type(png,gif,jpeg)")
     }    
 HeaderImage()

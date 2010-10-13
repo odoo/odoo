@@ -33,10 +33,7 @@ from osv import osv, fields
 import netsvc
 from webkit_report import WebKitParser
 from report.report_sxw import rml_parse
-import base64
-import tools
 from tools.translate import _
-import os
 
 def register_report(name, model, tmpl_path, parser):
     "Register the report into the services"
@@ -84,7 +81,6 @@ class ReportXML(osv.osv):
                                             context
                                         )
         return res
-
 
     def create(self, cursor, user, vals, context=None):
         "Create report and register it"

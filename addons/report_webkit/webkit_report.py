@@ -30,9 +30,8 @@
 ##############################################################################
 
 import commands
-import logging
 import os
-import platform
+#import platform
 import report
 import sys
 import tempfile
@@ -63,21 +62,30 @@ class WebKitParser(report_sxw):
         """Return the lib wkhtml path"""
         #TODO Detect lib in system first
         path = self.pool.get('res.company').read(cursor, uid, company, ['lib_path',])
-        if path['lib_path']:
-            return path['lib_path']
-        else:
-            try:
-                status = commands.getstatusoutput('wkhtmltopdf')
-                if status[0]:
-                    raise
-
-            except Exception:
+        path = path['lib_path']
+        if not path:
+            raise except_osv(
+                             _('Wkhtmltopdf library path is not set in company'),
+                             _('Please install executable on your system'+
+                             ' (sudo apt-get install wkhtmltopdf) or download it from here:'+
+                             ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+
+                             ' path to the executable on the Company form.')
+                            ) 
+        if os.path.isabs(path) :
+            if (os.path.exists(path) and os.access(path, os.X_OK)\
+                and os.path.basename(path).startswith('wkhtmltopdf')):
+                return path
+            else:
                 raise except_osv(
-                                    _('Please install wkhtmltopdf library'),
-                                    _('Please install it on you system (sudo apt-get install wkhtmltopdf) or download it from here: http://code.google.com/p/wkhtmltopdf/downloads/list and set the path to the executable on the Company form.')
-                                    )
-        return False
-
+                                _('Wrong Wkhtmltopdf path set in company'+
+                                'Given path is not executable or path is wrong'),
+                                'for path %s'%(path)
+                                )
+        else :
+            raise except_osv(
+                            _('path to Wkhtmltopdf is not absolute'),
+                            'for path %s'%(path)
+                            )
     def generate_pdf(self, comm_path, report_xml, header, footer, html_list):
         """Call webkit in order to generate pdf"""
         tmp_dir = tempfile.gettempdir()
@@ -88,7 +96,7 @@ class WebKitParser(report_sxw):
         if comm_path:
             command = [comm_path]
         else:
-            command = 'wkhtmltopdf'
+            command = ['wkhtmltopdf']
                 
         command.append('-q')
         if header :
@@ -116,12 +124,12 @@ class WebKitParser(report_sxw):
             
         if report_xml.webkit_header.margin_top :
             command.append('--margin-top %s'%(report_xml.webkit_header.margin_top))
-        if report_xml.webkit_header.magrin_bottom :
-            command.append('--margin-bottom %s'%(report_xml.webkit_header.magrin_bottom))
-        if report_xml.webkit_header.magrin_left :
-            command.append('--margin-left %s'%(report_xml.webkit_header.magrin_left))
-        if report_xml.webkit_header.magrin_right :
-            command.append('--margin-right %s'%(report_xml.webkit_header.magrin_right))
+        if report_xml.webkit_header.margin_bottom :
+            command.append('--margin-bottom %s'%(report_xml.webkit_header.margin_bottom))
+        if report_xml.webkit_header.margin_left :
+            command.append('--margin-left %s'%(report_xml.webkit_header.margin_left))
+        if report_xml.webkit_header.margin_right :
+            command.append('--margin-right %s'%(report_xml.webkit_header.margin_right))
         if report_xml.webkit_header.orientation :
             command.append("--orientation '%s'"%(report_xml.webkit_header.orientation))
         if report_xml.webkit_header.format :
@@ -142,18 +150,13 @@ class WebKitParser(report_sxw):
                                 status[1]
                             )
         except Exception:
-            try:
-                for f_to_del in file_to_del :
-                    os.unlink(f_to_del)
-            except Exception:
-                pass
-
-        pdf = file(out).read()
-        try:
             for f_to_del in file_to_del :
                 os.unlink(f_to_del)
-        except Exception, exc:
-            pass
+
+        pdf = file(out).read()
+        for f_to_del in file_to_del :
+            os.unlink(f_to_del)
+
         os.unlink(out)
         return pdf
     
@@ -203,11 +206,13 @@ class WebKitParser(report_sxw):
     # override needed to keep the attachments' storing procedure
     def create_single_pdf(self, cursor, uid, ids, data, report_xml, context=None):
         """generate the PDF"""
-        if report_xml.report_type != 'webkit':
-            return super(WebKitParser,self).create_single_pdf(self, cursor, uid, ids, data, report_xml, context=context)
-
+        
         if not context:
             context={}
+            
+        if report_xml.report_type != 'webkit':
+            return super(WebKitParser,self).create_single_pdf(cursor, uid, ids, data, report_xml, context=context)
+
         self.parser_instance = self.parser(
                                             cursor, 
                                             uid, 
@@ -224,6 +229,7 @@ class WebKitParser(report_sxw):
 
 
         template =  False
+       
         if report_xml.report_file :
             path = os.path.join(config['addons_path'], report_xml.report_file)
             if os.path.exists(path) :
@@ -235,7 +241,7 @@ class WebKitParser(report_sxw):
         header = report_xml.webkit_header.html
         footer = report_xml.webkit_header.footer_html
         if not header and report_xml.header:
-            raise except_osv(
+          raise except_osv(
                 _('No header defined for this Webkit report!'),
                 _('Please set a header in company settings')
             )
@@ -272,12 +278,11 @@ class WebKitParser(report_sxw):
         #default_filters=['unicode', 'entity'] can be used to set global filter
         body_mako_tpl = Template(template ,input_encoding='utf-8')
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
-        html = body_mako_tpl.render(
-                                        helper=helper, 
-                                        css=css,
-                                        _=self.translate_call,
-                                        **self.parser_instance.localcontext
-                                        )
+        html = body_mako_tpl.render(     helper=helper, 
+                                         css=css,
+                                         _=self.translate_call,
+                                         **self.parser_instance.localcontext
+                                         )
         head_mako_tpl = Template(header, input_encoding='utf-8')
         head = head_mako_tpl.render(
                                     company=company, 

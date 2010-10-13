@@ -29,7 +29,6 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields, osv
 import pooler
 import base64
@@ -43,26 +42,23 @@ class WebKitHelper(object):
         self.pool = pooler.get_pool(self.cursor.dbname)
         self.report_id = report_id
         
-    def embeed_image(self, extention, img, width=0, height=0) :
-        "Transform a DB image into an embeeded HTML image"
-        try:
-            if width :
-                width = 'width="%spx"'%(width)
-            else :
-                width = ' '
-            if height :
-                height = 'width="%spx"'%(height)
-            else :
-                height = ' '
-            toreturn = '<img %s %s src="data:image/%s;base64,%s">'%(
-                width,
-                height,
-                extention, 
-                str(img))
-            return toreturn
-        except Exception, exp:
-            print exp
-            return 'No image'
+    def embed_image(self, type, img, width=0, height=0) :
+        "Transform a DB image into an embedded HTML image"
+
+        if width :
+            width = 'width="%spx"'%(width)
+        else :
+            width = ' '
+        if height :
+            height = 'width="%spx"'%(height)
+        else :
+            height = ' '
+        toreturn = '<img %s %s src="data:image/%s;base64,%s">'%(
+            width,
+            height,
+            type, 
+            str(img))
+        return toreturn
             
             
     def get_logo_by_name(self, name):
@@ -79,10 +75,10 @@ class WebKitHelper(object):
             header_img_id = header_img_id[0]
 
         head = header_obj.browse(self.cursor, self.uid, header_img_id)
-        return (head.img, head.extention)
+        return (head.img, head.type)
             
-    def embeed_logo_by_name(self, name, width=0, height=0) :
-        """Return HTML embeeded logo by name"""
-        img, extention = self.get_logo_by_name(name)
-        return self.embeed_image(extention, img, width, height)
+    def embed_logo_by_name(self, name, width=0, height=0) :
+        """Return HTML embedded logo by name"""
+        img, type = self.get_logo_by_name(name)
+        return self.embed_image(type, img, width, height)
         

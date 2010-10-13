@@ -29,9 +29,7 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields, osv
-
 
 class ResCompany(osv.osv):
     """Override company to add Header object link a company can have many header and logos"""
@@ -43,17 +41,19 @@ class ResCompany(osv.osv):
                                                     'company_img_rel', 
                                                     'company_id', 
                                                     'img_id', 
-                                                    'Available Images'
+                                                    'Available Images',
                                                 ),
                 'header_webkit' : fields.many2many(
                                                     'ir.header_webkit', 
                                                     'company_html_rel', 
                                                     'company_id', 
                                                     'html_id', 
-                                                    'Available html'
+                                                    'Available html',
                                                 ),
-                'lib_path' : fields.char('Webkit Executable Path', size=264, help="Complete path to the wkhtmltopdf executable."),
+                'lib_path' : fields.char('Webkit Executable Path', size=264, help="Complete (Abolute) path to the wkhtmltopdf executable."),
 
     }   
-    
+    _defaults = {
+         'lib_path': lambda *a: 'wkhtmltopdf-0.9.9'
+     }     
 ResCompany()

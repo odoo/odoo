@@ -71,11 +71,13 @@ Web client WYSIWYG
     "author" : "Camptocamp SA - NBessi",
     "category": "Reports/Webkit",
     "url": "http://http://www.camptocamp.com/",
-    "data": [
-                        "company_view.xml",
-                        "header_view.xml",
-                        "ir_report_view.xml",
-                   ],
+    "data": [ "security/ir.model.access.csv", 
+              "data.xml",
+              "wizard/report_webkit_actions_view.xml",
+              "company_view.xml",
+              "header_view.xml",
+              "ir_report_view.xml",
+    ],
     "installable" : True,
     "active" : False,
 }

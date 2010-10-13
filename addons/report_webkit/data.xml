@@ -1,102 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
     <data noupdate="1">
-        <record id="ir_actions_report_xml_webkitinvoice0" model="ir.actions.report.xml">
-            <field eval="[(6,0,[])]" name="groups_id"/>
-            <field eval="0" name="multi"/>
-            <field eval="&quot;&quot;&quot;webkit&quot;&quot;&quot;" name="report_type"/>
-            <field eval="0" name="auto"/>
-            <field name="report_webkit_data"> <![CDATA[<html>
-    <head>
-        <style type="text/css">
-            ${css}
-        </style>
-    </head>
-    <body>
-        %for inv in objects :
-        <% setLang(inv.partner_id.lang) %>
-        <table class="dest_address">
-            <tr><td ><b>${inv.partner_id.title or ''|entity}  ${inv.partner_id.name |entity}</b></td></tr>
-            <tr><td>${inv.address_invoice_id.street or ''|entity}</td></tr>
-            <tr><td>${inv.address_invoice_id.street2 or ''|entity}</td></tr>
-            <tr><td>${inv.address_invoice_id.zip or ''|entity} ${inv.address_invoice_id.city or ''|entity}</td></tr>
-            %if inv.address_invoice_id.country_id :
-            <tr><td>${inv.address_invoice_id.country_id.name or ''|entity} </td></tr>
-            %endif
-            %if inv.address_invoice_id.phone :
-            <tr><td>Tel: ${inv.address_invoice_id.phone|entity}</td></tr>
-            %endif
-            %if inv.address_invoice_id.fax :
-            <tr><td>Fax: ${inv.address_invoice_id.fax|entity}</td></tr>
-            %endif
-            %if inv.address_invoice_id.email :
-            <tr><td>E-mail: ${inv.address_invoice_id.email|entity}</td></tr>
-            %endif
-            %if inv.partner_id.vat :
-            <tr><td>VAT: ${inv.partner_id.vat|entity}</td></tr>
-            %endif
-        </table>
-        <br />
-        %if inv.type == 'out_invoice' :
-        <span class="title">${_("Invoice")} ${inv.number or ''|entity}</span>
-        %elif inv.type == 'in_invoice' :
-        <span class="title">Supplier Invoice ${inv.number or ''|entity}</span>   
-        %elif inv.type == 'out_refund' :
-        <span class="title">Refund ${inv.number or ''|entity}</span> 
-        %elif inv.type == 'in_refund' :
-        <span class="title">Supplier Refund ${inv.number or ''|entity}</span> 
-        %endif
-        <br/>
-        <br/>
-        <table class="basic_table" width="90%">
-            <tr><td>Document</td><td>${_("Invoice Date")}</td><td>Partner Ref.</td></tr>
-            <tr><td>${inv.name}</td><td>${formatLang(inv.date_invoice, date=True)|entity}</td><td>&nbsp;</td></tr>
-        </table>
-        <h1><br /></h1>
-        <table class="list_table"  width="90%">
-            <thead><tr><th>${_("Description")}</th><th class>Taxes</th><th class>QTY</th><th>Unit Price</th><th >Disc.(%)</th><th>Price</th></tr></thead>
-            %for line in inv.invoice_line :
-            <tbody>
-            <tr><td>${line.name|entity}</td><td>${ ', '.join([ tax.name or '' for tax in line.invoice_line_tax_id ])|entity}</td><td>${line.quantity}</td><td style="text-align:right;">${formatLang(line.price_unit)}</td><td  style="text-align:center;">${line.discount|entity}</td><td style="text-align:right;">${formatLang(line.price_subtotal)}</td></tr>
-            %if line.note :
-            <tr><td colspan="6" style="border-style:none"><pre style="font-family:Helvetica;padding-left:20px">${line.note |entity}</pre></td></tr>
-            %endif
-            %endfor
-            <tr><td style="border-style:none"/><td style="border-style:none"/><td style="border-style:none"/><td style="border-style:none"/><td style="border-top:2px solid"><b>Net Total:</b></td><td style="border-top:2px solid;text-align:right">${formatLang(inv.amount_untaxed)}</td></tr>
-            <tr><td style="border-style:none"/><td style="border-style:none"/><td style="border-style:none"/><td style="border-style:none"/><td style="border-style:none"><b>Taxes:</b></td><td style="text-align:right">${formatLang(inv.amount_tax)}</td></tr>
-            <tr><td style="border-style:none"/><td style="border-style:none"/><td style="border-style:none"/><td style="border-style:none"/><td style="border-top:2px solid"><b>Total:</b></td><td style="border-top:2px solid;text-align:right">${formatLang(inv.amount_total)}</td></tr>
-            </tbody>
-        </table>
-
-        <table class="list_table" width="40%">
-            <tr><th>Tax</th><th>Base</th><th>Amount</th></tr>
-           %if inv.tax_line :
-            %for t in inv.tax_line :
-            <tr>
-                <td>${ t.name|entity } </td>
-                <td>${ t.base|entity}</td>
-                <td>${ formatLang(t.amount) }</td>
-            </tr>
-            %endfor
-            %endif
-            <tr>
-                <td style="border-style:none"/>
-                <td style="border-top:2px solid"><b>Total</b></td>
-                <td style="border-top:2px solid">${ formatLang(inv.amount_tax) }</td>
-            </tr>
-        </table>        
-        <p style="page-break-after:always"></p>
-        %endfor
-        <body>
-</html>]]></field>
-            <field eval="&quot;&quot;&quot;webkitaccount.invoice&quot;&quot;&quot;" name="report_name"/>
-            <field eval="0" name="attachment_use"/>
-            <field eval="1" name="header"/>
-            <field eval="0" name="webkit_debug"/>
-            <field eval="&quot;&quot;&quot;account.invoice&quot;&quot;&quot;" name="model"/>
-            <field eval="&quot;&quot;&quot;ir.actions.report.xml&quot;&quot;&quot;" name="type"/>
-            <field eval="&quot;&quot;&quot;WebKit invoice&quot;&quot;&quot;" name="name"/>
-        </record>
         <record id="ir_property_webkitheaderdefault0" model="ir.property">
             <field name="fields_id" ref="field_ir_act_report_xml_webkit_header"/>
             <field eval="&quot;&quot;&quot;webkit_header_default&quot;&quot;&quot;" name="name"/>
@@ -149,7 +53,7 @@
     <body style="border:0; margin: 0;" onload="subst()">
         <table class="header" style="border-bottom: 0px solid black; width: 100%">
             <tr>
-                <td>${helper.embeed_logo_by_name('camptocamp_logo')}</td>
+                <td>${helper.embed_logo_by_name('camptocamp_logo')}</td>
                 <td style="text-align:right"> </td>
             </tr>
             <tr>
@@ -262,7 +166,7 @@ width:50%;
             <field eval="&quot;&quot;&quot;Base Sample&quot;&quot;&quot;" name="name"/>
         </record>
         <record id="ir_header_img_camptocamplogo0" model="ir.header_img">
-            <field eval="&quot;&quot;&quot;png&quot;&quot;&quot;" name="extention"/>
+            <field eval="&quot;&quot;&quot;png&quot;&quot;&quot;" name="type"/>
             <field eval="&quot;&quot;&quot;iVBORw0KGgoAAAANSUhEUgAAAH4AAABaCAYAAAB+HuKoAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAArWSURB
 VHic7Z17cFTVHcc/dzebTciTkDcBDElAhAJahCKoRUWrqOgoiNrxUUcRX1Ar0lLLKKPio6PVGUd0

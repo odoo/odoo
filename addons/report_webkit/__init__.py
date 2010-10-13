@@ -34,3 +34,4 @@ import company
 import report_helper
 import webkit_report
 import ir_report
+import wizard

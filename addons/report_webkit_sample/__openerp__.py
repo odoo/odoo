@@ -44,9 +44,8 @@
     "category": "Reports/Webkit",
     "author" : "Camptocamp SA - NBessi",
     "url": "http://www.camptocamp.com/",
-    "data": [           'data.xml',
-                        "wizard_report_actions_view.xml",
-                        "report_webkit_html_view.xml",
+    "data": ["report_webkit_html_view.xml",
+             
                    ],
     "installable" : True,
     "active" : False,
