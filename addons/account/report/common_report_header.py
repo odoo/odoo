@@ -60,6 +60,13 @@ class common_report_header(object):
             return data['form']['date_from']
         return ''
 
+    def _get_target_move(self, data):
+        if data.get('form', False) and data['form'].get('target_move', False):
+            if data['form']['target_move'] == 'all':
+                return 'All Entries'
+            return 'All Posted Entries'
+        return ''
+
     def _get_end_date(self, data):
         if data.get('form', False) and data['form'].get('date_to', False):
             return data['form']['date_to']

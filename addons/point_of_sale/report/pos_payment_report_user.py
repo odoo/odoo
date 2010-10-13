@@ -24,7 +24,7 @@ from report import report_sxw
 class pos_payment_report_user(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(pos_payment_report_user, self).__init__(cr, uid, name, context)
+        super(pos_payment_report_user, self).__init__(cr, uid, name, context=context)
         self.total = 0.0
         self.localcontext.update({
             'time': time,
@@ -35,10 +35,10 @@ class pos_payment_report_user(report_sxw.rml_parse):
     def __pos_payment_user__(self,form):
         data={}
         ids = form['user_id']
-        sql = "select pt.name,pol.qty,pol.discount,pol.price_unit, " \
+        sql = "select pt.name,pp.default_code as code,pol.qty,pu.name as uom,pol.discount,pol.price_unit, " \
                          "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
-                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
-                         "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
+                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,product_uom as pu " \
+                         "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and pu.id=pt.uom_id " \
                          "and po.state in ('paid','invoiced') and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date " \
                          "and po.user_id IN %s"
         self.cr.execute (sql, (tuple(ids), ))

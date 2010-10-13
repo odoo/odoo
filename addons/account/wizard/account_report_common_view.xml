@@ -10,6 +10,7 @@
             <form string="Report Options">
                    <field name="chart_account_id" widget='selection'/>
                    <field name="fiscalyear_id"/>
+                   <field name="target_move"/>
                        <notebook tabpos="up" colspan="4">
                             <page string="Filters" name="filters">
                                 <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4"/>

@@ -33,7 +33,7 @@ class account_move_journal(osv.osv_memory):
         """
         ids = self.pool.get('account.period').find(cr, uid, context=context)
         period_id = False
-        if len(ids):
+        if ids:
             period_id = ids[0]
         return period_id
 
@@ -43,7 +43,7 @@ class account_move_journal(osv.osv_memory):
         """
 
         journal_id = False
-        
+
         journal_pool = self.pool.get('account.journal')
         if context.get('journal_type', False):
             jids = journal_pool.search(cr, uid, [('type','=', context.get('journal_type'))])
@@ -52,7 +52,7 @@ class account_move_journal(osv.osv_memory):
             journal_id = jids[0]
 
         return journal_id
-        
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """
         Returns views and fields for current model where view will depend on {view_type}.
@@ -62,7 +62,7 @@ class account_move_journal(osv.osv_memory):
         @param view_type: defines a view type. it can be one of (form, tree, graph, calender, gantt, search, mdx)
         @param context: context arguments, like lang, time zone
         @param toolbar: contains a list of reports, wizards, and links related to current model
-        
+
         @return: Returns a dict that contains definition for fields, views, and toolbars
         """
 
@@ -91,9 +91,9 @@ class account_move_journal(osv.osv_memory):
         <form string="Standard entries">
             <separator string="Open Journal Items !" colspan="4"/>
             <group colspan="4" >
-                <label width="300" string="Journal : %s"/>
+                <label width="300" string="Journal: %s"/>
                 <newline/>
-                <label width="300" string="Period :  %s"/>
+                <label width="300" string="Period:  %s"/>
             </group>
             <group colspan="4" col="4">
                 <label string ="" colspan="2"/>
@@ -115,47 +115,47 @@ class account_move_journal(osv.osv_memory):
         @param ids: account move journal’s ID or list of IDs
         @return: dictionary of Open action move line window on given period and  Journal/Payment Mode
         """
-        
+
         period_pool = self.pool.get('account.journal.period')
         data_pool = self.pool.get('ir.model.data')
         journal_pool = self.pool.get('account.journal')
-        
+
         if context is None:
             context = {}
-        
+
         journal_id = self._get_journal(cr, uid, context)
         period_id = self._get_period(cr, uid, context)
 
         name = _("Journal Items")
         if journal_id:
             ids = period_pool.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)], context=context)
-            
-            if not len(ids):
+
+            if not ids:
                 journal = journal_pool.browse(cr, uid, journal_id)
                 period = self.pool.get('account.period').browse(cr, uid, period_id)
-                
+
                 name = journal.name
                 state = period.state
-                
+
                 if state == 'done':
                     raise osv.except_osv(_('UserError'), _('This period is already closed !'))
-                
+
                 company = period.company_id.id
                 res = {
-                    'name': name, 
-                    'period_id': period_id, 
-                    'journal_id': journal_id, 
+                    'name': name,
+                    'period_id': period_id,
+                    'journal_id': journal_id,
                     'company_id': company
                 }
                 period_pool.create(cr, uid, res,context=context)
-            
+
             ids = period_pool.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)],context=context)
             period = period_pool.browse(cr, uid, ids[0], context=context)
             name = (period.journal_id.code or '') + ':' + (period.period_id.code or '')
-        
+
         result = data_pool._get_id(cr, uid, 'account', 'view_account_move_line_filter')
         res_id = data_pool.browse(cr, uid, result, context=context).res_id
-        
+
         return {
             'name': name,
             'view_type': 'form',
@@ -166,7 +166,7 @@ class account_move_journal(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'search_view_id': res_id
         }
-        
+
 account_move_journal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

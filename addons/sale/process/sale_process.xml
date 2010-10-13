@@ -63,7 +63,7 @@
         </record>
 
         <record id="process_node_saleprocurement0" model="process.node">
-            <field name="menu_id" ref="base.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
             <field name="model_id" ref="procurement.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurement Order&quot;&quot;&quot;" name="name"/>
@@ -85,7 +85,6 @@
         </record>
 
         <record id="process_node_deliveryorder0" model="process.node">
-            <field name="menu_id" ref="stock.menu_action_picking_tree_delivery"/>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Delivery Order&quot;&quot;&quot;" name="name"/>
@@ -251,7 +250,7 @@
         </record>
 
         <record id="process_transition_action_validate0" model="process.transition.action">
-            <field eval="&quot;&quot;&quot;test_finnished&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;test_finished&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
             <field eval="&quot;&quot;&quot;Validate&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_deliver0"/>

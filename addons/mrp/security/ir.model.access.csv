@@ -5,12 +5,14 @@
 "access_mrp_bom","mrp.bom","model_mrp_bom","group_mrp_user",1,1,1,0
 "access_mrp_bom_revision","mrp.bom.revision","model_mrp_bom_revision","group_mrp_user",1,0,0,0
 "access_mrp_production","mrp.production user","model_mrp_production","mrp.group_mrp_user",1,1,1,1
+"access_mrp_property_group","mrp.property.group","procurement.model_mrp_property_group","mrp.group_mrp_manager",1,1,1,1
+"access_mrp_property","mrp.property","procurement.model_mrp_property","mrp.group_mrp_manager",1,1,1,1
 "access_mrp_production_product_line","mrp.production.product.line","model_mrp_production_product_line","mrp.group_mrp_user",1,1,1,1
 "access_procurement","procurement.order","model_procurement_order","mrp.group_mrp_user",1,1,1,1
-"access_mrp_workcenter_manager","mrp.workcenter.manager","model_mrp_workcenter","mrp.group_mrp_manager",1,1,1,1
+"access_mrp_workcenter_manager","mrp.workcenter.manager","model_mrp_workcenter","mrp.group_mrp_manager",1,0,0,0
 "access_mrp_routing_manager","mrp.routing.manager","model_mrp_routing","mrp.group_mrp_manager",1,1,1,1
 "access_mrp_routing_workcenter_manager","mrp.routing.workcenter.manager","model_mrp_routing_workcenter","mrp.group_mrp_manager",1,1,1,1
-"access_mrp_bom_manager","mrp.bom.manager","model_mrp_bom","mrp.group_mrp_manager",1,0,0,0
+"access_mrp_bom_manager","mrp.bom.manager","model_mrp_bom","mrp.group_mrp_manager",1,0,0,1
 "access_mrp_bom_revision_manager","mrp.bom.revision.manager","model_mrp_bom_revision","mrp.group_mrp_manager",1,1,1,1
 "access_stock_location_mrp_worker","stock.location mrp_worker","stock.model_stock_location","mrp.group_mrp_user",1,0,0,0
 "access_stock_move_mrp_worker","stock.move mrp_worker","stock.model_stock_move","mrp.group_mrp_user",1,1,1,0
@@ -20,14 +22,15 @@
 "access_account_account","account.account mrp_worker","account.model_account_account","mrp.group_mrp_user",1,0,0,0
 "access_purchase_order_mrp_worker","purchase.order mrp_worker","purchase.model_purchase_order","mrp.group_mrp_user",1,1,1,1
 "access_purchase_order_line_mrp_worker","purchase.order.line mrp_worker","purchase.model_purchase_order_line","mrp.group_mrp_user",1,0,0,0
-"access_hr_timesheet_group_mrp_worker","resource.calendar mrp_worker","resource.model_resource_calendar","base.group_system",1,1,1,1
+"access_hr_timesheet_group_mrp_worker","resource.calendar mrp_manager","resource.model_resource_calendar","mrp.group_mrp_manager",1,1,1,1
 "access_procurement_stock_worker","procurement.order stock_worker","model_procurement_order","stock.group_stock_user",1,1,1,1
 "access_procurement_user","procurement.order.user","model_procurement_order","base.group_user",1,1,1,1
 "access_mrp_production_stock_worker","mrp.production stock_worker","model_mrp_production","stock.group_stock_user",1,0,0,0
 "access_mrp_production_order","mrp.production.order","model_mrp_production_order","mrp.group_mrp_manager",1,1,1,1
-"access_report_workcenter_load","report.workcenter.load","model_report_workcenter_load","mrp.group_mrp_manager",1,0,0,0
-"access_report_mrp_inout","report.mrp.inout","model_report_mrp_inout","mrp.group_mrp_manager",1,0,0,0
-"access_product_product_manager","product.product manager","model_product_product","mrp.group_mrp_manager",1,1,1,1
+"access_report_workcenter_load","report.workcenter.load","model_report_workcenter_load","mrp.group_mrp_manager",1,1,1,1
+"access_report_mrp_inout","report.mrp.inout","model_report_mrp_inout","mrp.group_mrp_manager",1,1,1,1
+"access_product_product_manager","product.product manager","model_product_product","mrp.group_mrp_manager",1,0,0,0
+"access_ir_property_manager","ir.property manager","base.model_ir_property","mrp.group_mrp_manager",1,1,1,1
 "access_account_sequence_fiscalyear","account.sequence.fiscalyear","account.model_account_sequence_fiscalyear","mrp.group_mrp_user",1,1,1,1
 "access_product_product_user","product.product user","model_product_product","mrp.group_mrp_user",1,1,1,1
 "access_product_template_user","product.template user","product.model_product_template","mrp.group_mrp_user",1,1,1,1
@@ -39,6 +42,7 @@
 "access_workcenter_user","mrp.production.workcenter.line.user","model_mrp_production_workcenter_line","mrp.group_mrp_user",1,1,1,1
 "access_resource_calendar_leaves_user","mrp.resource.calendar.leaves.user","resource.model_resource_calendar_leaves","mrp.group_mrp_user",1,1,1,1
 "access_resource_calendar_leaves_manager","mrp.resource.calendar.leaves.manager","resource.model_resource_calendar_leaves","mrp.group_mrp_manager",1,0,0,0
+"access_resource_calendar_attendance_manager","mrp.resource.calendar.attendance.manager","resource.model_resource_calendar_attendance","mrp.group_mrp_manager",1,1,1,1
 "access_product_puom_categ","product.uom.categ","product.model_product_uom_categ","mrp.group_mrp_user",1,1,1,0
 "access_resource_resource","resource.resource","resource.model_resource_resource","mrp.group_mrp_user",1,1,1,0
 "access_board_board_user","mrp.board.board","board.model_board_board","mrp.group_mrp_user",1,1,1,0
@@ -55,7 +59,7 @@
 "access_mrp_production_manager","mrp.production manager","model_mrp_production","mrp.group_mrp_manager",1,0,0,0
 "access_procurement_manager","procurement.order","model_procurement_order","mrp.group_mrp_manager",1,0,0,0
 "access_workcenter_manager","mrp.production.workcenter.line","model_mrp_production_workcenter_line","mrp.group_mrp_manager",1,0,0,0
-"access_stock_move_mrp_manager","stock.move mrp_manager","stock.model_stock_move","mrp.group_mrp_manager",1,0,0,0
+"access_stock_move_mrp_manager","stock.move mrp_manager","stock.model_stock_move","mrp.group_mrp_manager",1,0,0,1
 "access_mrp_production_product_line_manager","mrp.production.product.line manager","model_mrp_production_product_line","mrp.group_mrp_manager",1,0,0,0
 "access_account_sequence_fiscalyear_system","account.sequence.fiscalyear.system","account.model_account_sequence_fiscalyear","mrp.group_mrp_manager",1,0,0,0
 "access_product_template_system","product.template mgr.system","product.model_product_template","base.group_system",1,0,0,0
@@ -87,6 +91,6 @@
 "access_mrp_production_system","mrp.production system","model_mrp_production","base.group_system",1,0,0,0
 "access_stock_production_lot_user","stock.production.lot","stock.model_stock_production_lot","mrp.group_mrp_user",1,1,1,1
 "access_stock_warehouse_orderpoint_manager","stock.warehouse.orderpoint","procurement.model_stock_warehouse_orderpoint","mrp.group_mrp_manager",1,0,0,0
-"access_stock_picking_mrp_manager","stock.picking mrp_manager","stock.model_stock_picking","mrp.group_mrp_manager",1,1,1,1
+"access_stock_picking_mrp_manager","stock.picking mrp_manager","stock.model_stock_picking","mrp.group_mrp_manager",1,0,0,0
 "access_report_mrp_inout_user","report.mrp.inout user","model_report_mrp_inout","mrp.group_mrp_user",1,0,0,0
 "access_report_workcenter_load_user","report.workcenter.load.user","model_report_workcenter_load","mrp.group_mrp_user",1,0,0,0

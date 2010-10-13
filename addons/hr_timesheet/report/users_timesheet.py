@@ -59,7 +59,7 @@ def emp_create_xml(cr, id, som, eom):
     time_xml = ([xml % (day, amount) for day, amount in month.iteritems()])
 
     # Computing the employee
-    cr.execute("select name from res_users where id=%s", (id,))
+    cr.execute("select name from resource_resource where id=%s", (id,))
     emp = cr.fetchone()[0]
 
     # Computing the xml
@@ -91,9 +91,11 @@ class report_custom(report_rml):
         date_xml.append('<cols>2.5cm%s,2cm</cols>\n' % (',0.7cm' * lengthmonth(som.year, som.month)))
 
         emp_xml=''
-        for id in data['form']['user_ids']:
-            emp_xml += emp_create_xml(cr, id, som, eom)
-
+        emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')        
+        for id in data['form']['employee_ids']:
+            user = emp_obj.browse(cr, uid, id).user_id.id
+            if user:
+                emp_xml += emp_create_xml(cr, id, som, eom)
         # Computing the xml
         #Without this, report don't show non-ascii characters (TO CHECK)
         date_xml = '\n'.join(date_xml)
