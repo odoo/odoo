@@ -30,7 +30,7 @@ class document_ftp_configuration(osv.osv_memory):
     _rec_name = 'host'
     _columns = {
         'host': fields.char('Address', size=64,
-                            help="Server address or IP and port to which users should connect to for DMS access", 
+                            help="Server address or IP and port to which users should connect to for DMS access",
                             required=True),
     }
 
