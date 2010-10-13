@@ -35,7 +35,6 @@ class stock_partial_picking(osv.osv_memory):
         pick_obj = self.pool.get('stock.picking')
         if not context:
             context={}
-        moveids = []
         for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):
@@ -155,7 +154,6 @@ class stock_partial_picking(osv.osv_memory):
         pick_obj = self.pool.get('stock.picking')
         if not context:
             context={}
-        moveids = []
         if 'date' in fields:
             res.update({'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
@@ -210,7 +208,7 @@ class stock_partial_picking(osv.osv_memory):
                         'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
                         'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id
                     })
-        res = pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
+        pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
         return {}
 
 stock_partial_picking()
