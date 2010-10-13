@@ -1365,47 +1365,33 @@ class orm_template(object):
 
         return fields
 
-    def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
-        fields_def = self.__view_look_dom(cr, user, node, view_id, context=context)
+    def _disable_workflow_buttons(self, cr, user, node):
+        if user == 1:
+            # admin user can always activate workflow buttons
+            return node
 
-        rolesobj = self.pool.get('res.roles')
+        # TODO handle the case of more than one workflow for a model or multiple
+        # transitions with different groups and same signal
         usersobj = self.pool.get('res.users')
-
         buttons = (n for n in node.getiterator('button') if n.get('type') != 'object')
         for button in buttons:
-            can_click = True
-            if user != 1: # admin user has all roles
-                user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
-                # TODO handle the case of more than one workflow for a model
-                cr.execute("""SELECT DISTINCT t.role_id
-                                FROM wkf
-                          INNER JOIN wkf_activity a ON a.wkf_id = wkf.id
-                          INNER JOIN wkf_transition t ON (t.act_to = a.id)
-                               WHERE wkf.osv = %s
-                                 AND t.signal = %s
-                           """, (self._name, button.get('name'),))
-                roles = cr.fetchall()
-
-                # draft -> valid = signal_next (role X)
-                # draft -> cancel = signal_cancel (no role)
-                #
-                # valid -> running = signal_next (role Y)
-                # valid -> cancel = signal_cancel (role Z)
-                #
-                # running -> done = signal_next (role Z)
-                # running -> cancel = signal_cancel (role Z)
-
-                # As we don't know the object state, in this scenario,
-                #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
-                #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
-                # The verification will be made later in workflow process...
-                if roles:
-                    can_click = any((not role) or rolesobj.check(cr, user, user_roles, role) for (role,) in roles)
-
+            user_groups = usersobj.read(cr, user, [user], ['groups_id'])[0]['groups_id']
+            cr.execute("""SELECT DISTINCT t.group_id
+                        FROM wkf
+                  INNER JOIN wkf_activity a ON a.wkf_id = wkf.id
+                  INNER JOIN wkf_transition t ON (t.act_to = a.id)
+                       WHERE wkf.osv = %s
+                         AND t.signal = %s
+                   """, (self._name, button.get('name')))
+            group_ids = [x[0] for x in cr.fetchall()]
+            can_click = not group_ids or bool(set(user_groups).intersection(group_ids))
             button.set('readonly', str(int(not can_click)))
+        return node
 
+    def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
+        fields_def = self.__view_look_dom(cr, user, node, view_id, context=context)
+        node = self._disable_workflow_buttons(cr, user, node)
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
-
         fields = {}
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':

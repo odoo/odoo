@@ -554,7 +554,7 @@ class ir_model_data(osv.osv):
                 if model=='workflow.activity':
                     cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                     wkf_todo.extend(cr.fetchall())
-                    cr.execute("update wkf_transition set condition='True', role_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
+                    cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
                     cr.execute("delete from wkf_transition where act_to=%s", (res_id,))
 
         for model,id in wkf_todo:

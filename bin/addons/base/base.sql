@@ -159,20 +159,6 @@ CREATE TABLE res_groups (
     primary key(id)
 );
 
-create table res_roles (
-    id serial NOT NULL,
-    parent_id int references res_roles on delete set null,
-    name varchar(64) NOT NULL,
-    primary key(id)
-);
-
-CREATE TABLE res_roles_users_rel (
-    uid integer NOT NULL references res_users on delete cascade,
-    rid integer NOT NULL references res_roles on delete cascade
-);
-create index res_roles_users_rel_uid_idx on res_roles_users_rel (uid);
-create index res_roles_users_rel_rid_idx on res_roles_users_rel (rid);
-
 CREATE TABLE res_groups_users_rel (
     uid integer NOT NULL references res_users on delete cascade,
     gid integer NOT NULL references res_groups on delete cascade
@@ -222,7 +208,7 @@ create table wkf_transition
     trigger_expr_id varchar(128) default NULL,
 
     signal varchar(64) default null,
-    role_id int references res_roles on delete set null,
+    group_id int references res_groups on delete set null,
 
     primary key(id)
 );

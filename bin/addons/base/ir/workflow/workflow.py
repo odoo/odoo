@@ -149,8 +149,8 @@ class wkf_transition(osv.osv):
         'signal': fields.char('Signal (button Name)', size=64, 
                               help="When the operation of transition comes from a button pressed in the client form, "\
                               "signal tests the name of the pressed button. If signal is NULL, no button is necessary to validate this transition."),
-        'role_id': fields.many2one('res.roles', 'Role Required', 
-                                   help="The role that a user must have to validate this transition."),
+        'group_id': fields.many2one('res.groups', 'Group Required', 
+                                   help="The group that a user must have to be authorized to validate this transition."),
         'condition': fields.char('Condition', required=True, size=128, 
                                  help="Expression to be satisfied if we want the transition done."),
         'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True, ondelete='cascade',

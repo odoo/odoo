@@ -82,32 +82,6 @@ class groups(osv.osv):
 
 groups()
 
-class roles(osv.osv):
-    _name = "res.roles"
-    _columns = {
-        'name': fields.char('Role Name', size=64, required=True),
-        'parent_id': fields.many2one('res.roles', 'Parent', select=True,
-            help="The parent role can be used to construct a hierarchy of roles. Parent roles inherit from the roles of their descendants."),
-        'child_id': fields.one2many('res.roles', 'parent_id', 'Children'),
-        'users': fields.many2many('res.users', 'res_roles_users_rel', 'rid', 'uid', 'Users'),
-        'description': fields.text('Description', help="Description of this role and where it is relevant in workflows and processes"),
-        'workflow_transition_ids': fields.one2many('workflow.transition', 'role_id', 'Workflow Transitions',
-            help="The workflow transitions associated with this role"),
-    }
-    def check(self, cr, uid, ids, role_id):
-        """Verifies that the role with id ``role_id`` is granted directly or indirectly to a
-           user that possesses the roles with ids ``ids``. Indirectly means that one of the
-           roles with id in ``ids`` is an ancestor role of the role with id ``role_id``.
-        """
-        if role_id in ids:
-            return True
-        cr.execute('select parent_id from res_roles where id=%s', (role_id,))
-        roles = cr.fetchone()[0]
-        if roles:
-            return self.check(cr, uid, ids, roles)
-        return False
-roles()
-
 def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [('translatable','=',True)])
@@ -236,7 +210,6 @@ class users(osv.osv):
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
-        'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 
         # Special behavior for this field: res.company.search() will only return the companies
         # available to the current user (should be the user's companies?), when the user_preference
