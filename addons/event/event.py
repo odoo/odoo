@@ -304,7 +304,7 @@ class event_registration(osv.osv):
 
     _columns = {
         'name': fields.char('Summary', size=124,  readonly=True, states={'draft': [('readonly', False)]}),
-        'email_cc': fields.text('CC', size=252 , readonly=False, states={'done': [('readonly', True)]}, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
+        'email_cc': fields.text('CC', size=252, readonly=False, states={'done': [('readonly', True)]}, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'nb_register': fields.integer('Quantity', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of Registrations or Tickets"),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
@@ -320,8 +320,8 @@ class event_registration(osv.osv):
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
-        'create_date': fields.datetime('Creation Date' , readonly=True),
-        'write_date': fields.datetime('Write Date' , readonly=True),
+        'create_date': fields.datetime('Creation Date', readonly=True),
+        'write_date': fields.datetime('Write Date', readonly=True),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
@@ -347,7 +347,7 @@ class event_registration(osv.osv):
 
     def _make_invoice(self, cr, uid, reg, lines, context=None):
         """ Create Invoice from Invoice lines
-        @param reg : Model of Event Registration
+        @param reg: Model of Event Registration
         @param lines: Ids of Invoice lines
         """
         if context is None:
@@ -410,13 +410,13 @@ class event_registration(osv.osv):
         for val in invoices.values():
             res = False
             if grouped:
-                res = self._make_invoice(cr, uid, val[0][0], [v for k , v in val], context=context)
+                res = self._make_invoice(cr, uid, val[0][0], [v for k, v in val], context=context)
 
-                for k , v in val:
+                for k, v in val:
                     self.do_close(cr, uid, [k.id], context={'invoice_id': res})
 
             else:
-               for k , v in val:
+               for k, v in val:
                    res = self._make_invoice(cr, uid, k, [v], context=context)
                    self.do_close(cr, uid, [k.id], context={'invoice_id': res})
             if res: new_invoice_ids.append(res)
@@ -571,7 +571,7 @@ class event_registration(osv.osv):
 
     def onchange_contact_id(self, cr, uid, ids, contact, partner):
 
-        """This function returns value of Badge Name , Badge Title based on Partner contact.
+        """This function returns value of Badge Name, Badge Title based on Partner contact.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,

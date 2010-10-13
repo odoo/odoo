@@ -81,11 +81,11 @@ class partner_event_registration(osv.osv_memory):
         for current in self.browse(cr, uid, ids, context=context):
             for partner in res_obj.browse(cr, uid, record_ids, context=context):
                 new_case = reg_obj.create(cr, uid, {
-                        'name' : 'Registration',
-                        'event_id' : current.event_id and current.event_id.id or False,
-                        'unit_price' : current.unit_price,
-                        'partner_id' : partner.id,
-                        'partner_invoice_id' :  partner.id,
+                        'name': 'Registration',
+                        'event_id': current.event_id and current.event_id.id or False,
+                        'unit_price': current.unit_price,
+                        'partner_id': partner.id,
+                        'partner_invoice_id':  partner.id,
                         'event_product': current.event_id.product_id.name,
                         'contact_id': contact_id,
                         'email_from': email,
@@ -98,7 +98,7 @@ class partner_event_registration(osv.osv_memory):
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'event.registration',
-                'res_id' : new_case,
+                'res_id': new_case,
                 'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': res['res_id']
