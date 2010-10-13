@@ -34,7 +34,7 @@ class report_event_registration(osv.osv):
         'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
+        'day': fields.char('Date', size=128, readonly=True),
         'event_id': fields.many2one('event.event', 'Event Related', required=True),
         'draft_state': fields.integer(' # No of draft Registration.', size=20),
         'confirm_state': fields.integer(' # No of Confirm Registration', size=20),
@@ -44,6 +44,11 @@ class report_event_registration(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
         'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
         'speaker_id': fields.many2one('res.partner', 'Speaker', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
+        "invoice_id": fields.many2one("account.invoice", "Invoice", readonly=True),
+        'total': fields.float('Total'),
+        'section_id': fields.related('event_id', 'section_id', type='many2one', relation='crm.case.section', string='Sale Team', store=True, readonly=True),
     }
     _order = 'date desc'
     def init(self, cr):
@@ -59,6 +64,9 @@ class report_event_registration(osv.osv):
                 c.event_id AS event_id,
                 e.date_begin AS date,
                 e.user_id AS user_id,
+                e.section_id AS section_id,
+                e.company_id AS company_id,
+                e.product_id AS product_id,
                 e.main_speaker_id AS speaker_id,
                 to_char(e.date_begin, 'YYYY') AS year,
                 to_char(e.date_begin, 'MM') AS month,
@@ -67,6 +75,8 @@ class report_event_registration(osv.osv):
                 t.id AS type,
                 (SELECT SUM(c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type AND state IN ('draft')) AS draft_state,
                 (SELECT SUM(c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type AND state IN ('open')) AS confirm_state,
+                (SELECT SUM(c.invoice_id) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type) AS invoice_id,
+                (SELECT SUM(c.unit_price * c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type) AS total,
                 e.register_max AS register_max,
                 e.state AS state
                 FROM
@@ -79,7 +89,7 @@ class report_event_registration(osv.osv):
                     to_char(e.date_begin, 'YYYY'),
                     to_char(e.date_begin, 'MM'),
                     t.id, e.id, e.date_begin, e.main_speaker_id,
-                    e.register_max, e.type, e.state, c.event_id, e.user_id,
+                    e.register_max, e.type, e.state, c.event_id, e.user_id,e.company_id,e.product_id,e.section_id,
                     to_char(e.date_begin, 'YYYY-MM-DD')
                 )""")
 
