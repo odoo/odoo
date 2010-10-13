@@ -30,11 +30,11 @@ class Overdue(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(Overdue, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
-            'time' : time,
-            'adr_get' : self._adr_get,
-            'getLines' : self._lines_get,
-            'tel_get' : self._tel_get,
-            'message' : self._message,
+            'time': time,
+            'adr_get': self._adr_get,
+            'getLines': self._lines_get,
+            'tel_get': self._tel_get,
+            'message': self._message,
         })
         self.context = context
     def _adr_get(self, partner, type):
@@ -47,10 +47,10 @@ class Overdue(report_sxw.rml_parse):
                   'name': False,
                   'street': False,
                   'street2': False,
-                  'city' : False,
-                  'zip' : False,
+                  'city': False,
+                  'zip': False,
                   'state_id':False,
-                  'country_id' : False,
+                  'country_id': False,
                  }
         if adr_id:
             result = res_partner_address.read(self.cr, self.uid, [adr_id], context=self.context.copy())

@@ -77,13 +77,13 @@ class account_payment_populate_statement(osv.osv_memory):
 
             if line.partner_id:
 #                line['partner_id'] = mv.partner_id.id
-                if amount < 0 :
+                if amount < 0:
                     account = line.partner_id.property_account_payable.id
-                else :
+                else:
                     account = line.partner_id.property_account_receivable.id
 
             if line.move_line_id:
-                voucher_res = { 'type': 'payment' ,
+                voucher_res = { 'type': 'payment',
                 'name': line.name,
                 'partner_id': line.partner_id.id,
                 'journal_id': statement.journal_id.id,

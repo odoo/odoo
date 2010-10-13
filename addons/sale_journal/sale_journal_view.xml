@@ -213,38 +213,6 @@
             </field>
         </record>
 
-    <!--  Inherit stock picking delivery's form  view.-->
-
-        <record model="ir.ui.view" id="sale_journal_picking_order_del">
-            <field name="name">stock.picking.journal.view.form</field>
-            <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_delivery_form" />
-            <field name="arch" type="xml">
-                <field name="origin" position="after">
-                    <field name="journal_id" select="1"/>
-                    <field name="sale_journal_id" select="1"/>
-                    <field name="invoice_type_id" select="1"/>
-                </field>
-            </field>
-        </record>
-
-    <!--  Inherit stock picking delivery's tree  view.-->
-
-        <record model="ir.ui.view" id="sale_journal_picking_order_tree_del">
-            <field name="name">stock.picking.journal.view.tree</field>
-            <field name="type">tree</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_delivery_tree" />
-            <field name="arch" type="xml">
-                <field name="origin" position="after">
-                    <field name="journal_id" select="1"/>
-                    <field name="invoice_type_id" select="1"/>
-                    <field name="sale_journal_id" select="1"/>
-                </field>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="sale_journal_picking_order_in">
             <field name="name">stock.picking.journal.view.form</field>
             <field name="type">form</field>
@@ -485,18 +453,6 @@
             <field name="name">Picking to invoice</field>
             <field name="value" eval="'ir.actions.act_window,%d'%action_invoice_type_picking_open"/>
             <field name="object" eval="True"/>
-        </record>
-
-        <record id="view_picking_delivery_jorunal_search_form" model="ir.ui.view">
-            <field name="name">stock.picking.journal.search</field>
-            <field name="model">stock.picking</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="stock.view_stock_delivery_filter"/>
-            <field name="arch" type="xml">
-                <xpath expr="/search/group[@string='Group By...']/filter[@string='Partner']" position="after">
-                   	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                </xpath>
-            </field>
         </record>
 
         <record id="view_picking_out_jorunal_search_form" model="ir.ui.view">

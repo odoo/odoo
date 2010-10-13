@@ -31,11 +31,11 @@ class payment_order(report_sxw.rml_parse):
         self.localcontext.update( {
             'time': time,
             'get_invoice_name': self._get_invoice_name,
-            'get_company_currency' : self._get_company_currency,
-            'get_company_currency_symbol': self._get_company_currency_symbol,         
-            'get_amount_total_in_currency' : self._get_amount_total_in_currency,
-            'get_amount_total' : self._get_amount_total,
-            'get_account_name' : self._get_account_name,
+            'get_company_currency': self._get_company_currency,
+            'get_company_currency_symbol': self._get_company_currency_symbol,
+            'get_amount_total_in_currency': self._get_amount_total_in_currency,
+            'get_amount_total': self._get_amount_total,
+            'get_account_name': self._get_account_name,
 
         })
     def _get_invoice_name(self, invoice_id):

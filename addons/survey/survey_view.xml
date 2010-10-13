@@ -3,12 +3,11 @@
     <data>
 
             <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28"/>
-            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools"
-                        groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user,group_survey_user" sequence="2"/>
+            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,group_survey_user"/>
             <menuitem name="Define Surveys" id="menu_define_survey"
-                 groups="base.group_tool_manager,base.group_tool_user,base.group_system,group_survey_user"
+                 groups="base.group_tool_manager"
                  parent="menu_surveys" />
-            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user,group_survey_user"/>
+            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_user,base.group_tool_manager,group_survey_user"/>
             <menuitem name="Reporting" parent="base.menu_tools"
                 id="base.menu_lunch_reporting" sequence="6"/>
             <menuitem name="Surveys" id="menu_reporting" parent="base.menu_lunch_reporting" sequence="2"/>
@@ -184,6 +183,8 @@
                             </field>
                             <group col="9" colspan="4">
                                 <field name="state"/>
+                                <button name="survey_cancel"
+                                    string="Cancel" states="open" type="object" icon="gtk-cancel"/>
                                 <button name="survey_draft"
                                     string="Set to draft" states="cancel,close" type="object"
                                     icon="gtk-new"/>
@@ -191,8 +192,6 @@
                                     states="draft" type="object" icon="gtk-go-forward"/>
                                 <button name="survey_close"
                                     string="Close" states="open" type="object" icon="gtk-close"/>
-                                <button name="survey_cancel"
-                                    string="Cancel" states="open" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Other">
@@ -292,7 +291,7 @@
 
         <menuitem name="Surveys" id="menu_survey_form"
             action="action_survey_form1" parent="menu_define_survey"
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system,group_survey_user"/>
+            groups="base.group_tool_manager"/>
 
         <!--
             Survey Pages
@@ -492,7 +491,7 @@
 
         <menuitem name="Survey Pages" id="menu_survey_page_form1"
             action="action_survey_page_form" parent='menu_define_survey'
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system,group_survey_user"/>
+            groups="base.group_tool_manager"/>
 
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
@@ -1126,7 +1125,7 @@
 
         <menuitem name="Survey Requests" id="menu_survey_type_form1"
             action="action_survey_request_tree" parent='menu_answer_surveys'
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system,group_survey_user"/>
+            groups="base.group_tool_manager"/>
 
         <!--
             Survey Type
@@ -1193,7 +1192,7 @@
             src_model="survey.question"/>
 
         <menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
-            action="action_view_survey_name" parent="menu_answer_surveys"            groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user,group_survey_user" icon="STOCK_INDEX"/>
+            action="action_view_survey_name" parent="menu_answer_surveys"            groups="base.group_tool_user,base.group_tool_manager,group_survey_user" icon="STOCK_INDEX"/>
 
     </data>
 </openerp>

@@ -44,7 +44,7 @@ class account_unreconcile_reconcile(osv.osv_memory):
         rec_ids = context['active_ids']
         if context is None:
             context = {}
-        if len(rec_ids):
+        if rec_ids:
             obj_move_reconcile.unlink(cr, uid, rec_ids)
         return {}
 
