@@ -295,9 +295,7 @@ class XMLRpcConn(object):
             startCut = message_id.find("<")
             endCut = message_id.find(">")
             message_id = message_id[startCut:endCut+1]
-
             email.replace_header('Message-Id',message_id)
-            win32ui.MessageBox(str(email),"Mail ")
             id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(email))
             if id > 0:
                 flag = True
@@ -467,7 +465,6 @@ class XMLRpcConn(object):
 
 
     def GetCountry(self, country_search=''):
-        import win32ui
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         ids=[]
         obj_list=[]
@@ -480,11 +477,17 @@ class XMLRpcConn(object):
             obj_list.sort(lambda x, y: cmp(x[1],y[1]))
         return obj_list
 
-    def GetStates(self, state_search=''):
+    def GetStates(self, state_search='', country=None):
+        import win32ui
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-        ids=[]
-        obj_list=[]
-        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',[('name','ilike',ustr(state_search))])
+        ids = []
+        c_id = []
+        obj_list = []
+        if country == None:
+            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',[('name','ilike',ustr(state_search))])
+        if not country == None:
+            c_id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country','search',[('name','=',ustr(country))])
+            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',[('name','ilike',ustr(state_search)),('country_id','=',c_id[0])])
         if ids:
             ids.sort()
             for id in ids:
