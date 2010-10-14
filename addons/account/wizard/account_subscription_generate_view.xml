@@ -8,17 +8,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Subscription Compute">
-                    <group colspan="4" >
+                    <group colspan="4" height="120" width="225">
                         <separator string="Generate entries before:" colspan="4"/>
                         <field name="date"/>
-                    </group>
-                    <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" />
-                        <button icon="gtk-execute" string="Generate Entries"
-                        name="action_generate" type="object" />
-                    </group>
+                    	<separator colspan="4" />
+                    	<group colspan="4" col="6">
+                    		<label string ="" colspan="2"/>
+                        	<button icon="gtk-cancel" special="cancel" string="Cancel" />
+                        	<button icon="gtk-execute" string="Generate Entries"
+                        	name="action_generate" type="object" />
+                    	</group>
+                	</group>
                </form>
             </field>
         </record>
