@@ -82,7 +82,6 @@ class pos_details(report_sxw.rml_parse):
                          ,(form['date_start'],form['date_end'],str(user.company_id.id),str(self.uid)))
         res2=self.cr.fetchone()
         self.total_invoiced=res2[0]
-        print "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",res2[0]
         return res2[0] or False
 
     def _paid_total_2(self,form,user):
