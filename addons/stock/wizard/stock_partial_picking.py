@@ -36,6 +36,7 @@ class stock_partial_picking(osv.osv_memory):
         if not context:
             context={}
         for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
+            need_product_cost = (pick.type == 'in')
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):
                     continue
@@ -48,11 +49,11 @@ class stock_partial_picking(osv.osv_memory):
                 if 'move%s_prodlot_id'%(m.id) not in self._columns:
                     self._columns['move%s_prodlot_id'%(m.id)] = fields.many2one('stock.production.lot', string="Lot")
 
-                if (m.product_id.cost_method == 'average'):
+                if (need_product_cost and m.product_id.cost_method == 'average'):
                     if 'move%s_product_price'%(m.id) not in self._columns:
-                        self._columns['move%s_product_price'%(m.id)] = fields.float("Price")
+                        self._columns['move%s_product_price'%(m.id)] = fields.float("Cost", help="Unit Cost for this product line")
                     if 'move%s_product_currency'%(m.id) not in self._columns:
-                        self._columns['move%s_product_currency'%(m.id)] = fields.many2one('res.currency',string="Currency")
+                        self._columns['move%s_product_currency'%(m.id)] = fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed")
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
@@ -69,6 +70,7 @@ class stock_partial_picking(osv.osv_memory):
         _moves_fields = result['fields']
         if picking_ids and view_type in ['form']:
             for pick in pick_obj.browse(cr, uid, picking_ids, context):
+                need_product_cost = (pick.type == 'in')
                 for m in pick.move_lines:
                     if m.state in ('done', 'cancel'):
                         continue
@@ -106,17 +108,19 @@ class stock_partial_picking(osv.osv_memory):
                         <field name="move%s_product_uom" nolabel="1" />
                         <field name="move%s_prodlot_id" domain="[('product_id','=',move%s_product_id)]" groups="base.group_extended" />
                     """%(m.id, m.id, m.id, m.id,m.id)
-                    if (m.product_id.cost_method == 'average'):
+
+                    if (need_product_cost and m.product_id.cost_method == 'average'):
                         _moves_fields.update({
                             'move%s_product_price'%(m.id) : {
-                                'string': _('Price'),
+                                'string': _('Cost'),
                                 'type' : 'float',
+                                'help': _('Unit Cost for this product line'),
                             },
                             'move%s_product_currency'%(m.id): {
                                 'string': _('Currency'),
-                                'type' : 'float',
                                 'type' : 'many2one',
                                 'relation': 'res.currency',
+                                'help': _("Currency in which Unit Cost is expressed"),
                             }
                         })
                         _moves_arch_lst += """
@@ -157,6 +161,7 @@ class stock_partial_picking(osv.osv_memory):
         if 'date' in fields:
             res.update({'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
+            need_product_cost = (pick.type == 'in')
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):
                     continue
@@ -168,8 +173,10 @@ class stock_partial_picking(osv.osv_memory):
                     res['move%s_product_uom'%(m.id)] = m.product_uom.id
                 if 'move%s_prodlot_id'%(m.id) in fields:
                     res['move%s_prodlot_id'%(m.id)] = m.prodlot_id.id
-                if (m.product_id.cost_method == 'average'):
-                    currency = False
+                if (need_product_cost and m.product_id.cost_method == 'average'):
+                    # Always use default product cost and currency from Product Form, 
+                    # which belong to the Company owning the product
+                    currency = m.product_id.company_id.currency_id.id
                     price = m.product_id.standard_price
                     if 'move%s_product_price'%(m.id) in fields:
                         res['move%s_product_price'%(m.id)] = price
@@ -193,6 +200,7 @@ class stock_partial_picking(osv.osv_memory):
             'delivery_date' : partial.date
         }
         for pick in pick_obj.browse(cr, uid, picking_ids):
+            need_product_cost = (pick.type == 'in')
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):
                     continue
@@ -203,7 +211,7 @@ class stock_partial_picking(osv.osv_memory):
                     'prodlot_id' : getattr(partial, 'move%s_prodlot_id'%(m.id)).id
                 }
 
-                if (m.product_id.cost_method == 'average'):
+                if (need_product_cost and m.product_id.cost_method == 'average'):
                     partial_datas['move%s'%(m.id)].update({
                         'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
                         'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id

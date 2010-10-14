@@ -730,21 +730,29 @@ class stock_picking(osv.osv):
                 'button_confirm', cr)
         return True
 
-    def draft_validate(self, cr, uid, ids, *args):
+    def draft_validate(self, cr, uid, ids, context=None):
         """ Validates picking directly from draft state.
         @return: True
         """
+        if context is None:
+            context = {}
         wf_service = netsvc.LocalService("workflow")
         self.draft_force_assign(cr, uid, ids)
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
-
-            self.action_move(cr, uid, [pick.id])
-            wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
-        return True
-
+        context.update({'active_ids':ids})
+        return {
+                'name': 'Make Picking',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.partial.picking',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy': True,
+                'context':context
+            }
     def cancel_assign(self, cr, uid, ids, *args):
         """ Cancels picking and moves.
         @return: True
@@ -1433,7 +1441,7 @@ class stock_move(osv.osv):
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'date': fields.datetime('Date', required=True, help="Move date: scheduled date until move is done, then date of actual move processing", readonly=True),
-        'date_expected': fields.datetime('Scheduled Date', required=True, help="Scheduled date for the processing of this move"),
+        'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
 
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True,states={'done': [('readonly', True)]}),
@@ -1685,21 +1693,23 @@ class stock_move(osv.osv):
         """
         moves = self.browse(cr, uid, ids)
         self.write(cr, uid, ids, {'state': 'confirmed'})
+        res_obj = self.pool.get('res.company')
+        location_obj = self.pool.get('stock.location')
+        move_obj = self.pool.get('stock.move')
+        wf_service = netsvc.LocalService("workflow")
 
         def create_chained_picking(self, cr, uid, moves, context=None):
             new_moves = []
-            res_obj = self.pool.get('res.company')
-            move_obj = self.pool.get('stock.move')
             if context is None:
                 context = {}
             for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
-                ptype = todo[0][1][5] and todo[0][1][5] or self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
+                ptype = todo[0][1][5] and todo[0][1][5] or location_obj.picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
                 pick_name = picking.name or ''
                 if picking:
                     pickid = self._create_chained_picking(cr, uid, pick_name,picking,ptype,todo,context)
                 else:
                     pickid = False
-                for move, (loc, auto, delay, journal, company_id, ptype) in todo:
+                for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:
                     new_id = move_obj.copy(cr, uid, move.id, {
                         'location_id': move.location_dest_id.id,
                         'location_dest_id': loc.id,
@@ -1717,7 +1727,6 @@ class stock_move(osv.osv):
                     })
                     new_moves.append(self.browse(cr, uid, [new_id])[0])
                 if pickid:
-                    wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
             if new_moves:
                 create_chained_picking(self, cr, uid, new_moves, context)
@@ -1969,8 +1978,6 @@ class stock_move(osv.osv):
                     if move.move_dest_id.picking_id:
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
-                    else:
-                        pass
                     if move.move_dest_id.auto_validate:
                         self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
@@ -2506,16 +2513,16 @@ class stock_picking_move_wizard(osv.osv_memory):
     def _get_picking(self, cr, uid, ctx=None):
         if ctx is None:
             ctx = {}
-        if ctx.get('action_id', False):
-            return ctx['action_id']
+        if ctx.get('active_id', False):
+            return ctx['active_id']
         return False
 
     def _get_picking_address(self, cr, uid, context=None):
         picking_obj = self.pool.get('stock.picking')
         if context is None:
             context = {}
-        if context.get('action_id', False):
-            picking = picking_obj.browse(cr, uid, [context['action_id']])[0]
+        if context.get('active_id', False):
+            picking = picking_obj.browse(cr, uid, [context['active_id']])[0]
             return picking.address_id and picking.address_id.id or False
         return False
 
