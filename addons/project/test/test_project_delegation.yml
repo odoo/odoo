@@ -204,7 +204,7 @@
        - state == "pending"
                  
 - 
-  Close the child project 'Prepare a technical reference for creating your modules'
+  Close the child task 'Prepare a technical reference for creating your modules'
 - 
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_delegate_developer_book")], {"lang": "en_US",
@@ -214,7 +214,7 @@
       })
       
 - 
-  Close the child project 'Prepare a book that gives functional overview of OpenERP' 
+  Close the child task 'Prepare a book that gives functional overview of OpenERP' 
 - 
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_delegate_openerp_tutorial")], {"lang": "en_US",
