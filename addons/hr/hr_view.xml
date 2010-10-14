@@ -324,8 +324,9 @@
                     <field name="name" />
                     <field name="department_id" />
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="expected_employees"/>
+                    <field name="expected_employees" on_change="on_change_expected_employee(expected_employees)"/>
                     <field name="no_of_employee"/>
+                    <field name="no_of_recruitment"/>
                     </group>
                     <newline/>
                     <notebook colspan="4">
@@ -360,6 +361,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
+                    <field name="no_of_recruitment"/>
                     <field name="state"/>
                 </tree>
             </field>

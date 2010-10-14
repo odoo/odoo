@@ -429,17 +429,13 @@ class hr_applicant(crm.crm_case, osv.osv):
             message = _('Applicant ') + " '" + name + "' "+ _("is Hired.")
             self.log(cr, uid, id, message)
 
-        stage_id = self.pool.get('hr.recruitment.stage').search(cr, uid, [('name','=','Contract Signed')])
-        self.write(cr, uid, ids,{'stage_id':stage_id[0]})
-
         applicant = self.browse(cr, uid, ids)[0]
         if applicant.job_id :
             emp_id = employee_obj.create(cr,uid,{'name':applicant.name,'job_id':applicant.job_id.id})
             job_data = job_obj.browse(cr,uid, applicant.job_id.id)
-            expected_emp = job_data['expected_employees'] - 1
-            if expected_emp == 0:
-                job_obj.write(cr,uid, [applicant.job_id.id],{'state':'old'})
-            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp})
+            no_of_emp = job_data['no_of_employee'] + 1
+            no_of_recruit = job_data['no_of_recruitment'] - 1
+            job_obj.write(cr,uid, [applicant.job_id.id],{'no_of_employee':no_of_emp,'no_of_recruitment':no_of_recruit})
         return res
 
     def case_reset(self, cr, uid, ids, *args):
@@ -450,18 +446,9 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        applicant = self.browse(cr, uid, ids)[0]
-        if applicant.job_id :
-            job_obj = self.pool.get('hr.job')
-            emp_obj = self.pool.get('hr.employee')
-            job_data = job_obj.browse(cr,uid, applicant.job_id.id)
-            expected_emp = job_data['expected_employees'] + 1
-            emp_id = emp_obj.search(cr,uid, [('job_id','=',applicant.job_id.id),('name','=',applicant.name)])
-            emp_obj.unlink(cr, uid, emp_id)
-            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp})
+
         res = super(hr_applicant, self).case_reset(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed':False})
-        
         return res
 
 
