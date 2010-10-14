@@ -574,6 +574,7 @@ class account_voucher(osv.osv):
         move_line_pool = self.pool.get('account.move.line')
         currency_pool = self.pool.get('res.currency')
         bank_st_line_obj = self.pool.get('account.bank.statement.line')
+        tax_obj = self.pool.get('account.tax')
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
@@ -679,7 +680,10 @@ class account_voucher(osv.osv):
                     move_line.update({
                         'account_tax_id':inv.tax_id.id,
                     })
-
+                if move_line.get('account_tax_id', False):
+                    tax_id = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
+                    if not (tax_id.base_code_id and tax_id.tax_code_id):
+                        raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to define account base code and account tax code on the '%s' tax!") % (tax_id.name))
                 master_line = move_line_pool.create(cr, uid, move_line)
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
