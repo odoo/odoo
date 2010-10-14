@@ -36,12 +36,12 @@ class pos_details(report_sxw.rml_parse):
 
     def _pos_sales_details(self,form,user):
         data={}
-        self.cr.execute ("select po.name as pos_name,po.date_order,pt.name ,pol.qty,pol.price_unit,pol.discount,po.invoice_id,sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
-                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,res_users as ru,res_company as rc " \
-                         "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('done','paid','invoiced') " \
+        self.cr.execute ("select po.name as pos_name,po.date_order,pt.name ,pp.default_code as code,pol.qty,pu.name as uom,pol.price_unit,pol.discount,po.invoice_id,sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
+                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,product_uom as pu,res_users as ru,res_company as rc " \
+                         "where  pt.id=pp.product_tmpl_id and pu.id=pt.uom_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('done','paid','invoiced') " \
                          "and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= %s and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= %s " \
                          "and po.user_id = ru.id and rc.id = %s and ru.id = %s " \
-                         "group by po.name,pol.qty,po.date_order,pt.name,pol.price_unit,pol.discount,po.invoice_id " \
+                         "group by po.name,pol.qty,po.date_order,pt.name,pp.default_code,pu.name,pol.price_unit,pol.discount,po.invoice_id " \
                              ,(form['date_start'],form['date_end'],str(user.company_id.id),str(self.uid)))
         data=self.cr.dictfetchall()
         if data:

@@ -53,7 +53,7 @@
 		<record id="process_transition_employeeuser0" model="process.transition">
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Link a user to an employee&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;The field Relate'd user in the Employee form allows to link the OpenERP user (and his rights and role) to the employee.&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;The Related user field on the Employee form allows to link the OpenERP user (and her rights) to the employee.&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" ref="process_node_openerpuser0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_employee0"/>
 		</record>
