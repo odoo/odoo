@@ -24,7 +24,7 @@
     "author" : "OpenERP SA",
     "category": 'Generic Modules/Accounting',
     "description": """
-Give access to the admin user to all accounting features like the journal
+This module gives the admin user the access to all the accounting features like the journal
 items and the chart of accounts.
     """,
     'website': 'http://www.openerp.com',
@@ -33,8 +33,8 @@ items and the chart of accounts.
     'update_xml': [
         'security/account_security.xml',
     ],
-    'demo_xml': [ ],
-    'test': [ ],
+    'demo_xml': [],
+    'test': [],
     'installable': True,
     'active': False,
     'certificate': '',
