@@ -87,7 +87,7 @@ You can use the demo data as follow:
     'author': 'OpenERP SA',
     'depends': ['procurement','stock','sale'],
     'init_xml': [],
-    'update_xml': ['stock_location_view.xml', 'security/ir.model.access.csv', 'mrp_pull_workflow.xml'],
+    'update_xml': ['stock_location_view.xml', 'security/ir.model.access.csv', 'procurement_pull_workflow.xml'],
     'demo_xml': [
         'stock_location_demo_cpu1.xml',
         'stock_location_demo_cpu3.yml',
