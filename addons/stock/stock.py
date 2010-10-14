@@ -730,21 +730,29 @@ class stock_picking(osv.osv):
                 'button_confirm', cr)
         return True
 
-    def draft_validate(self, cr, uid, ids, *args):
+    def draft_validate(self, cr, uid, ids, context=None):
         """ Validates picking directly from draft state.
         @return: True
         """
+        if context is None:
+            context = {}
         wf_service = netsvc.LocalService("workflow")
         self.draft_force_assign(cr, uid, ids)
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
-
-            self.action_move(cr, uid, [pick.id])
-            wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
-        return True
-
+        context.update({'active_ids':ids})
+        return {
+                'name': 'Make Picking',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.partial.picking',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy': True,
+                'context':context
+            }
     def cancel_assign(self, cr, uid, ids, *args):
         """ Cancels picking and moves.
         @return: True
@@ -1434,7 +1442,7 @@ class stock_move(osv.osv):
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'date': fields.datetime('Date', required=True, help="Move date: scheduled date until move is done, then date of actual move processing", readonly=True),
-        'date_expected': fields.datetime('Scheduled Date', required=True, help="Scheduled date for the processing of this move"),
+        'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
 
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True,states={'done': [('readonly', True)]}),
@@ -2508,16 +2516,16 @@ class stock_picking_move_wizard(osv.osv_memory):
     def _get_picking(self, cr, uid, ctx=None):
         if ctx is None:
             ctx = {}
-        if ctx.get('action_id', False):
-            return ctx['action_id']
+        if ctx.get('active_id', False):
+            return ctx['active_id']
         return False
 
     def _get_picking_address(self, cr, uid, context=None):
         picking_obj = self.pool.get('stock.picking')
         if context is None:
             context = {}
-        if context.get('action_id', False):
-            picking = picking_obj.browse(cr, uid, [context['action_id']])[0]
+        if context.get('active_id', False):
+            picking = picking_obj.browse(cr, uid, [context['active_id']])[0]
             return picking.address_id and picking.address_id.id or False
         return False
 
