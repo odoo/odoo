@@ -75,13 +75,14 @@ class pos_details(report_sxw.rml_parse):
     def _get_sum_invoice_2(self,form,user):
         res2=[]
         self.cr.execute ("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))" \
-                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt ,res_users as ru,res_company as rc " \
-                         "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('invoiced')  " \
+                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt ,res_users as ru,res_company as rc,account_invoice as ai " \
+                         "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and ai.id=po.invoice_id " \
                          "and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= %s and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= %s " \
                          "and po.user_id = ru.id and rc.id = %s and ru.id = %s " \
                          ,(form['date_start'],form['date_end'],str(user.company_id.id),str(self.uid)))
         res2=self.cr.fetchone()
         self.total_invoiced=res2[0]
+        print "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",res2[0]
         return res2[0] or False
 
     def _paid_total_2(self,form,user):
