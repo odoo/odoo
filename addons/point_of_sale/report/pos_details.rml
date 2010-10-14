@@ -247,7 +247,7 @@
             <para style="terp_default_Centre_9">[[ formatLang(line_ids['discount']) ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ getinvoice(line_ids['invoice_id'],user) or removeParentNode('font') ]]</para>
+            <para style="terp_default_Centre_9">[[ getinvoice(line_ids['invoice_id'],user) or removeParentNode('font') ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -359,7 +359,7 @@
           <para style="terp_default_Bold_9">Total discount</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(getsumdisc(objects)) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getsumdisc(data['form'],user)) ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
