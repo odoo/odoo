@@ -31,9 +31,7 @@
 
 import commands
 import os
-#import platform
 import report
-import sys
 import tempfile
 import time
 from mako.template import Template
@@ -224,12 +222,8 @@ class WebKitParser(report_sxw):
         objs = self.getObjects(cursor, uid, ids, context)
         self.parser_instance.set_context(objs, data, ids, report_xml.report_type)
 
-        user = self.pool.get('res.users').browse(cursor, uid, uid)
-        company = user.company_id
-
-
         template =  False
-       
+
         if report_xml.report_file :
             path = os.path.join(config['addons_path'], report_xml.report_file)
             if os.path.exists(path) :

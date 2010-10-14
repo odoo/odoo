@@ -29,8 +29,6 @@
 #
 ##############################################################################
 
-import wizard
-import pooler
 import ir
 from tools.translate import _
 from osv import fields, osv
@@ -39,12 +37,12 @@ class report_webkit_actions(osv.osv_memory):
     _name = "report.webkit.actions"
     _description = "Webkit Actions"
     _columns = {
-       'print_button':fields.boolean('Add print button',help="Add action to menu context in print button."),
-       'open_action':fields.boolean('Open added action'),
+       'print_button':fields.boolean('Add print button', help="Check this to add a Print action for this Report in the sidebar of the corresponding document types"),
+       'open_action':fields.boolean('Open added action', help="Check this to view the newly added internal print action after creating it (technical view) "),
     }
     _defaults = {
              'print_button': lambda *a: True,
-             'open_action': lambda *a: False,    
+             'open_action': lambda *a: False,
     }    
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -131,10 +129,10 @@ class report_webkit_actions(osv.osv_memory):
                     return {}
                 
                 return {
-                    'domain':"[('id','=',%d)]" % (res[0]),
                     'name': _('Client Actions Connections'),
                     'view_type': 'form',
-                    'view_mode': 'tree,form',
+                    'view_mode': 'form',
+                    'res_id' : res[0],
                     'res_model': 'ir.values',
                     'view_id': False,
                     'type': 'ir.actions.act_window',

@@ -29,9 +29,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
 import pooler
-import base64
 
 class WebKitHelper(object):
     """Set of usefull report helper"""

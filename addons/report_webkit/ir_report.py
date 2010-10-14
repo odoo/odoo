@@ -33,7 +33,6 @@ from osv import osv, fields
 import netsvc
 from webkit_report import WebKitParser
 from report.report_sxw import rml_parse
-from tools.translate import _
 
 def register_report(name, model, tmpl_path, parser):
     "Register the report into the services"
@@ -60,7 +59,6 @@ class ReportXML(osv.osv):
 
     def unlink(self, cursor, user, ids, context=None):
         """Delete report and unregister it"""
-        records = self.read(cursor, user, ids)
         trans_obj = self.pool.get('ir.translation')
         trans_ids = trans_obj.search(
             cursor, 
@@ -71,9 +69,8 @@ class ReportXML(osv.osv):
 
         # Warning: we cannot unregister the services at the moment
         # because they are shared across databases. Calling a deleted
-        # report will fail so it's ok. 
+        # report will fail so it's ok.
 
-        records = None
         res = super(ReportXML, self).unlink(
                                             cursor, 
                                             user, 
@@ -93,7 +90,7 @@ class ReportXML(osv.osv):
                         parser
                         )
         return res
-        
+
     def write(self, cursor, user, ids, vals, context=None):
         "Edit report and manage it registration"
         parser=rml_parse
@@ -102,7 +99,6 @@ class ReportXML(osv.osv):
             record =  record[0]
         if vals.get('report_name', False) and \
             vals['report_name']!=record['report_name']:
-            delete_report_service(record['report_name'])
             report_name = vals['report_name']
         else:
             report_name = record['report_name']
