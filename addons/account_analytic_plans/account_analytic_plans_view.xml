@@ -186,13 +186,24 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="account_analytic_plan_search">
+        <field name="name">account.analytic.plan.search</field>
+        <field name="model">account.analytic.plan</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Analytic Plans">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="account_analytic_plan_form">
         <field name="name">account.analytic.plan.form</field>
         <field name="model">account.analytic.plan</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Analytic Plan">
-                <field name="name" select="1"/>
+                <field name="name"/>
                 <field name="default_instance_id"/>
                 <field name="plan_ids" colspan="4" nolabel="1"/>
             </form>
@@ -217,6 +228,7 @@
         <field name="res_model">account.analytic.plan</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="account_analytic_plan_search"/>
     </record>
 
     <menuitem

@@ -12,6 +12,18 @@
         <!--
     Budgets
     -->
+        <record id="view_budget_post_search" model="ir.ui.view">
+            <field name="name">account.budget.post.search</field>
+            <field name="model">account.budget.post</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Budgetary Position">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
 
         <record id="view_budget_post_tree" model="ir.ui.view">
             <field name="name">account.budget.post.tree</field>
@@ -31,6 +43,7 @@
             <field name="res_model">account.budget.post</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_budget_post_tree"/>
+            <field name="search_view_id" ref="view_budget_post_search"/>
         </record>
         <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance" sequence="5"/>
         <menuitem id="next_id_pos" name="Budgets" parent="account.menu_finance_configuration" sequence="20"/>

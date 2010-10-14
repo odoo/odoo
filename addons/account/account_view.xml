@@ -23,8 +23,8 @@
                     <separator colspan="4" string="Periods"/>
                     <field colspan="4" name="period_ids" nolabel="1" widget="one2many_list">
                         <form string="Period">
-                            <field name="name" select="1"/>
-                            <field name="code" select="1"/>
+                            <field name="name"/>
+                            <field name="code"/>
                             <field name="date_start"/>
                             <field name="date_stop"/>
                             <field name="special"/>
@@ -59,7 +59,7 @@
                 <search string="Search Fiscalyear">
                     <group>
                         <filter string="Open" domain="[('state','=','draft')]" icon="terp-camera_test"/>
-                        <filter string="Closed" domain="[('state','=','done')]" icon="terp-dialog_close"/>
+                        <filter string="Closed" domain="[('state','=','done')]" icon="terp-dialog-close"/>
                         <separator orientation="vertical"/>
                         <field name="code"/>
                         <field name="name"/>
@@ -237,16 +237,16 @@
             </field>
         </record>
         <record id="view_treasory_graph" model="ir.ui.view">
-         	<field name="name">account.treasory.graph</field>
-         	<field name="model">account.account</field>
-         	<field name="type">graph</field>
-         	<field name="arch" type="xml">
-             	<graph string="Treasory Analysis" type="bar">
-                	<field name="name"/>
-                	<field name="balance" operator="+"/>
-             	</graph>
+           <field name="name">account.treasory.graph</field>
+           <field name="model">account.account</field>
+           <field name="type">graph</field>
+           <field name="arch" type="xml">
+               <graph string="Treasory Analysis" type="bar">
+                  <field name="name"/>
+                  <field name="balance" operator="+"/>
+               </graph>
          </field>
-    	</record>
+      </record>
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">Accounts</field>
             <field name="res_model">account.account</field>
@@ -314,13 +314,33 @@
             </field>
         </record>
 
+        <record id="view_account_journal_view_search" model="ir.ui.view">
+            <field name="name">account.journal.view.search</field>
+            <field name="model">account.journal.view</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Journal View">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_account_journal_view_tree" model="ir.ui.view">
+            <field name="name">account.journal.view.tree</field>
+            <field name="model">account.journal.view</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Journal View">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
         <record id="view_account_journal_view_form" model="ir.ui.view">
             <field name="name">account.journal.view.form</field>
             <field name="model">account.journal.view</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Journal View">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field colspan="4" name="columns_id" nolabel="1" widget="one2many_list"/>
                 </form>
             </field>
@@ -330,7 +350,9 @@
             <field name="res_model">account.journal.view</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_journal_view_search"/>
         </record>
+
         <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_low_level"/>
 
         <!--
@@ -665,6 +687,18 @@
         <!--
     Account Types
     -->
+        <record id="view_account_type_search" model="ir.ui.view">
+            <field name="name">account.account.type.search</field>
+            <field name="model">account.account.type</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Account Type">
+                    <field name="name"/>
+                    <field name="code"/>
+                </search>
+            </field>
+        </record>
+
         <record id="view_account_type_tree" model="ir.ui.view">
             <field name="name">account.account.type.tree</field>
             <field name="model">account.account.type</field>
@@ -706,6 +740,7 @@
             <field name="res_model">account.account.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_type_search"/>
         </record>
         <menuitem action="action_account_type_form" groups="base.group_extended" id="menu_action_account_type_form" parent="menu_low_level"/>
         <!--
@@ -755,6 +790,19 @@
         <!--
     Tax Codes
     -->
+        <record id="view_tax_code_search" model="ir.ui.view">
+            <field name="name">account.tax.code.search</field>
+            <field name="model">account.tax.code</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Account Tax Code">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="parent_id"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
         <record id="view_tax_code_tree" model="ir.ui.view">
             <field name="name">account.tax.code.tree</field>
             <field name="model">account.tax.code</field>
@@ -778,10 +826,10 @@
             <field name="arch" type="xml">
                 <form string="Account Tax Code">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
-                        <field name="parent_id" select="1"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="parent_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Reporting Configuration" colspan="4"/>
@@ -804,6 +852,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_tax_code_tree"/>
+            <field name="search_view_id" ref="view_tax_code_search"/>
         </record>
        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_accounting"/>
        <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="menu_low_level" sequence="12"/>
@@ -835,7 +884,6 @@
                         <field name="name"/>
                         <field name="description"/>
                     </group>
-                    <newline/>
                 </search>
             </field>
         </record>
@@ -846,8 +894,8 @@
             <field name="arch" type="xml">
                 <form string="Account Tax">
                     <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                        <field name="description" select="1"/>
+                        <field name="name"/>
+                        <field name="description"/>
                   <field name="type_tax_use"/>
                         <field name="price_include"/>
                         <field name="active"/>
@@ -1228,24 +1276,24 @@
             <field name="arch" type="xml">
                 <form string="Journal Entries">
                     <group colspan="4" col="6">
-                        <field name="name" select="1" readonly="True"/>
-                        <field name="ref" select="1"/>
+                        <field name="name" readonly="True"/>
+                        <field name="ref"/>
                         <field name="to_check" groups="base.group_extended"/>
-                        <field name="journal_id" select="1"/>
+                        <field name="journal_id"/>
                         <field name="period_id"/>
-                        <field name="date" select="1"/>
+                        <field name="date"/>
                         <field name="company_id" required="1" groups="base.group_multi_company"/>
-                        <field name="partner_id" invisible="1" select="1"/>
-                        <field name="amount" invisible="1" select="1"/>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="amount" invisible="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Items">
                             <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
                                 <form string="Journal Item">
                                     <group col="6" colspan="4">
-                                        <field name="name" select="1"/>
+                                        <field name="name"/>
                                         <field name="ref"/>
-                                        <field name="partner_id" select="1" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                                        <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
 
                                         <field name="journal_id"/>
                                         <field name="period_id"/>
@@ -1255,7 +1303,7 @@
                                         <page string="Information">
                                             <group col="2" colspan="2">
                                                 <separator colspan="2" string="Amount"/>
-                                                <field name="account_id" select="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                                <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                                                 <field name="debit"/>
                                                 <field name="credit"/>
                                                 <field name="quantity"/>
@@ -1270,7 +1318,7 @@
 
                                             <group col="2" colspan="2">
                                                 <separator colspan="2" string="Dates"/>
-                                                <field name="date" select="1"/>
+                                                <field name="date"/>
                                                 <field name="date_maturity"/>
                                                 <field name="date_created"/>
                                             </group>
@@ -1356,15 +1404,15 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_zoom" string="To Review" domain="[('to_check','=',True)]" groups="base.group_extended" help="Journal Entries to Review"/>
                         <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
-                        <field name="ref" select="1"/>
-                        <field name="partner_id" select='1'/>
-                        <field name="date" select='1'/>
+                        <field name="name"/>
+                        <field name="ref"/>
+                        <field name="partner_id"/>
+                        <field name="date"/>
                     </group>
                     <newline/>
                     <group col='8' colspan='4'>
-                        <field name="journal_id" widget="selection" select='1'/>
-                        <field name="period_id" select='1'/>
+                        <field name="journal_id" widget="selection"/>
+                        <field name="period_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
@@ -1604,9 +1652,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Journal Entry Model">
-                    <field name="name" select="1"/>
-                    <field name="journal_id" select="1"/>
-                    <field name="company_id" select="1" widget='selection' groups="base.group_multi_company"/>
+                    <field name="name"/>
+                    <field name="journal_id"/>
+                    <field name="company_id" widget='selection' groups="base.group_multi_company"/>
                     <field colspan="4" nolabel="1" name="lines_id" height="250" widget="one2many_list"/>
                     <separator string="Legend" colspan="4"/>
                     <field name="legend" colspan="4" nolabel="1"/>
@@ -1642,7 +1690,7 @@
                     <separator orientation="vertical"/>
                       <field name="name"/>
                       <field name="journal_id" widget="selection"/>
-                      <field name="company_id" groups="base.group_multi_company"/>
+                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -1724,6 +1772,18 @@
             </field>
         </record>
 
+        <record id="view_payment_term_search" model="ir.ui.view">
+            <field name="name">account.payment.term.search</field>
+            <field name="model">account.payment.term</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Payment Term">
+                    <field name="name"/>
+                    <field name="active"/>
+                </search>
+            </field>
+        </record>
+
         <record id="view_payment_term_form" model="ir.ui.view">
             <field name="name">account.payment.term.form</field>
             <field name="model">account.payment.term</field>
@@ -1746,6 +1806,7 @@
             <field name="res_model">account.payment.term</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_payment_term_search"/>
         </record>
         <menuitem action="action_payment_term_form"
             id="menu_action_payment_term_form" parent="menu_configuration_misc"
@@ -2085,6 +2146,7 @@
             <field name="res_model">account.account.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,search</field>
+            <field name="search_view_id" ref="view_account_template_search"/>
         </record>
 
         <menuitem action="action_account_template_form" id="menu_action_account_template_form" parent="account_template_accounts"/>
@@ -2244,7 +2306,6 @@
                         <filter icon="terp-sale" string="Sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
                         <filter icon="terp-purchase" string="Purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
                         <separator orientation="vertical"/>
-                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="description"/>
                         <field name="chart_template_id"/>
@@ -2258,6 +2319,7 @@
             <field name="res_model">account.tax.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_tax_template_search"/>
         </record>
 
         <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_template_taxes" sequence="13"/>
@@ -2318,6 +2380,7 @@
             <field name="res_model">account.tax.code.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,search</field>
+            <field name="search_view_id" ref="view_tax_code_template_search"/>
         </record>
         <menuitem action="action_account_tax_code_template_form" id="menu_action_account_tax_code_template_form" parent="account_template_taxes" sequence="14"/>
 
@@ -2397,13 +2460,24 @@
 
          <!-- Fiscal Position Templates -->
 
+        <record id="view_account_position_template_search" model="ir.ui.view">
+            <field name="name">account.fiscal.position.template.search</field>
+            <field name="model">account.fiscal.position.template</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Fiscal Position">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
         <record id="view_account_position_template_form" model="ir.ui.view">
             <field name="name">account.fiscal.position.template.form</field>
             <field name="model">account.fiscal.position.template</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Fiscal Position Template">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="chart_template_id"/>
                     <newline/>
                     <field name="tax_ids" colspan="4" nolabel="1">
@@ -2445,6 +2519,7 @@
             <field name="res_model">account.fiscal.position.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_position_template_search"/>
         </record>
 
         <menuitem
