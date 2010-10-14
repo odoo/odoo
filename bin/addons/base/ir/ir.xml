@@ -854,8 +854,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Attachments">
-                    <field name="name" />
-                    <field name="type"/>
+                    <group colspan="4" col="6">
+                        <field name="name" />
+                        <field name="type"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    </group>
                     <notebook colspan="4">
                     <page string="Attachment">
                     <group col="4" colspan="4">
@@ -896,6 +899,8 @@
                 <tree string="Attachments">
                     <field name="name"/>
                     <field name="datas_fname"/>
+                    <field name="type" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="create_uid"/>
                     <field name="create_date"/>
                 </tree>
@@ -908,20 +913,31 @@
             <field name="arch" type="xml">
                 <search string="Attachments">
                     <group colspan="4" col="10">
-                      <filter icon="terp-stage"
-                        string="URL"
-                        domain="[('type','=','url')]"/>
-                      <filter icon="terp-stock_align_left_24"
-                        string="Binary"
-                        domain="[('type','=','binary')]"/>
-                    <separator orientation="vertical"/>
+                        <filter icon="terp-stage"
+                            string="URL"
+                            domain="[('type','=','url')]"/>
+                        <filter icon="terp-stock_align_left_24"
+                            string="Binary"
+                            domain="[('type','=','binary')]"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-go-month" string="Month"
+                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
+                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="type"/>
                         <field name="datas_fname"/>
+                        <field name="create_uid">
+                            <filter icon="terp-personal"
+                                domain="[('create_uid','=',uid)]"
+                                help="Filter on my documents" />
+                        </field>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Creator" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
+                        <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator orientation="vertical"/>
                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                 </search>
