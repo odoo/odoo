@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-29 10:24+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-10-14 03:06+0000\n"
+"Last-Translator: sugi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:38+0000\n"
+"X-Launchpad-Export-Date: 2010-10-14 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
 msgid "LIFO"
-msgstr ""
+msgstr "Сүүлд орсон нь эхэнд гарна"
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -35,7 +35,7 @@ msgstr "Бараа хадгалах"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_15
 msgid "Sub Products"
-msgstr ""
+msgstr "Дэд бүтээгдэхүүн"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -45,7 +45,7 @@ msgstr ""
 #. module: stock
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Моделийн нэр алдаатай."
 
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
@@ -61,7 +61,7 @@ msgstr ""
 #. module: stock
 #: field:stock.production.lot.revision,indice:0
 msgid "Revision"
-msgstr ""
+msgstr "Хяналт"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -82,7 +82,7 @@ msgstr ""
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "UoM"
-msgstr ""
+msgstr "Хэмжих нэгж"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.return_picking
@@ -97,7 +97,7 @@ msgstr "Барааны журнал"
 #. module: stock
 #: wizard_view:stock.fill_inventory,init:0
 msgid "Fill Inventory for specific location"
-msgstr ""
+msgstr "Бодит байрлалын нөөцийг дүүргэх"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
@@ -115,7 +115,7 @@ msgstr "Хэмжээ"
 #. module: stock
 #: view:stock.picking:0
 msgid "Products Received"
-msgstr ""
+msgstr "Бараа хүлээн авах"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
@@ -190,7 +190,7 @@ msgstr "Жинхэнэ барааны өртөг"
 #. module: stock
 #: view:stock.move:0
 msgid "UOM"
-msgstr ""
+msgstr "Хэмжих нэгж"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -333,7 +333,7 @@ msgstr "Хөдөлгөөний мэдээлэл"
 #. module: stock
 #: view:stock.picking:0
 msgid "Unreceived Products"
-msgstr ""
+msgstr "Бараа хүлээн аваагүй"
 
 #. module: stock
 #: field:stock.inventory,state:0
@@ -713,7 +713,7 @@ msgstr ""
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "Packing List:"
-msgstr ""
+msgstr "Савлагааны жагсаалт"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -748,7 +748,7 @@ msgstr "Нэхэмжлэлийн удирдлага"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot_revision
 msgid "Production lot revisions"
-msgstr ""
+msgstr "Барааны серийн дугаарын хяналт"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1412,6 +1412,15 @@ msgid ""
 "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
 "    "
 msgstr ""
+"OpenERP бүртгэлийн менежментийн модуль нь олон тооны агуулах, олон тооны мөн "
+"тодорхой бүтэцтэй агуулахын байршилыг зохион байгуулж чаддагДавхар нэвтрэх "
+"боломжтой менежментийн ачаар, бүртгэлийн хяналт чадалтай мөн уян хатан "
+"чанартай болсон:төлөвлөгөө болон түүхийг шилжүүлдэг, янз бүрийн бүртгэлийн "
+"аргууд, агуулахын барагцаалал (үнийн стандарт эсвэл дундаж), бүртгэлийн "
+"өөрчлөлттэй зэрэгцсэн тогтвортой байдал, дүрмийг автоматаар дахин шинэчлэх "
+"(агуулахын төвшин), дэмжигдсэн коддавхар нэвтрэлтийн системийн алдааг "
+"илрүүлэх, мөрдөгдөх чанар (өссөн/багассан, барааны цуврал, серийн дугаар)\n"
+"    "
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -1423,6 +1432,7 @@ msgstr "Тогтоосон байрлал"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"объектийн нэр нь x_ - ээр эхлэх ёстой ба тусгай тэмдэглэгээ агуулахгүй байх"
 
 #. module: stock
 #: field:stock.picking,min_date:0
@@ -1458,7 +1468,7 @@ msgstr "Барааны журнал"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_CLEAR"
-msgstr ""
+msgstr "агуулахыг цэвэрлэх"
 
 #. module: stock
 #: field:stock.production.lot,date:0
@@ -1478,7 +1488,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Force Availability"
-msgstr ""
+msgstr "боломжийг хурдасгах"
 
 #. module: stock
 #: wizard_view:stock.location.products,init:0
@@ -1510,7 +1520,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_tracking_form
 #: model:ir.ui.menu,name:stock.menu_action_tracking_form
 msgid "Tracking Lots"
-msgstr ""
+msgstr "цувралын замыг тодорхойлох"
 
 #. module: stock
 #: wizard_button:inventory.merge,init,merge:0
@@ -1530,7 +1540,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_PROPERTIES"
-msgstr ""
+msgstr "агуулахын дэлгэрэнгүй мэдээлэл"
 
 #. module: stock
 #: field:stock.location,stock_real:0
@@ -1578,12 +1588,12 @@ msgstr "Савлах үйл явц"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_STOP"
-msgstr ""
+msgstr "агуулахын дамжуулгыг зогсоох"
 
 #. module: stock
 #: view:stock.move:0
 msgid "Set Available"
-msgstr ""
+msgstr "боломжтой болгох"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.make_picking
@@ -1604,7 +1614,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_REMOVE"
-msgstr ""
+msgstr "агуулахыг устгах (агуулахаас устгах)"
 
 #. module: stock
 #: field:stock.incoterms,active:0
@@ -1646,7 +1656,7 @@ msgstr ""
 #. module: stock
 #: wizard_field:stock.move.track,init,tracking_prefix:0
 msgid "Tracking prefix"
-msgstr ""
+msgstr "урьдчилсан нөхцлийг тодорхойлох"
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -1666,7 +1676,7 @@ msgstr "Хяналтын нэр"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_SELECT_COLOR"
-msgstr ""
+msgstr "агуулахын өнгийг сонгох"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1723,7 +1733,7 @@ msgstr "Яаралтай бус"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_CLOSE"
-msgstr ""
+msgstr "агуулахыг хаах"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -1734,7 +1744,7 @@ msgstr "Агуулах"
 #. module: stock
 #: help:product.product,track_outgoing:0
 msgid "Force to use a Production Lot during deliveries"
-msgstr ""
+msgstr "Тарааж байх үед барааны цувралыг хурдасгах"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1776,7 +1786,7 @@ msgstr "Автомат савлагаа"
 #. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
-msgstr ""
+msgstr "UOS бараа"
 
 #. module: stock
 #: field:stock.location,posz:0
@@ -1828,7 +1838,7 @@ msgstr "Бүтээгдэхүүний байрлал"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_UNDO"
-msgstr ""
+msgstr "агуулахын үйлдлийг буцаах"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.move_split
@@ -1848,7 +1858,7 @@ msgstr "Сериал"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_ADD"
-msgstr ""
+msgstr "агуулахад нэмэх"
 
 #. module: stock
 #: field:stock.location,chained_delay:0
@@ -1868,7 +1878,7 @@ msgstr "Дансны бичилт"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_PAUSE"
-msgstr ""
+msgstr "агуулахын дамжуулгаг түр зогсоох"
 
 #. module: stock
 #: view:product.product:0
@@ -1883,7 +1893,7 @@ msgstr "Нэг мөсөн"
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outging Lots"
-msgstr ""
+msgstr "гаралтын цувралын замыг тодорхойлох"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -1896,12 +1906,12 @@ msgstr "Нөөцөлсөн огноо"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_PRINT_PREVIEW"
-msgstr ""
+msgstr "агуулахыг урьдчилан харах"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_FIND"
-msgstr ""
+msgstr "агуулахыг олох"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1917,6 +1927,11 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
+"энэ нь таныг бэхлэгдсэн байршилын төрлийг сонгох үед ашиглагданаавтомат "
+"шилжилтийн утга нь автоматаар батлагдах одоогийн агуулахын шилжилтийн "
+"дараагийн шилжилтийг үүсгэнэ. гар удирдлагыг ашиглавал агуулахын шилжилт "
+"заавал ажилтнаар баталгаажих хэрэгтэй болно. Алхам нэмэгдээгүй автоматыг "
+"ашиглавал байршил нь одоогийн шилжилтийн байрлалаар солигдоно."
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -1926,7 +1941,7 @@ msgstr "Зураг"
 #. module: stock
 #: field:stock.tracking,name:0
 msgid "Tracking"
-msgstr ""
+msgstr "Зам тодорхойлох"
 
 #. module: stock
 #: wizard_button:stock.move.track,init,track:0
@@ -1939,6 +1954,7 @@ msgstr "Тийм"
 msgid ""
 "This account will be used, instead of the default one, to value input stock"
 msgstr ""
+"агуулахын оролтыг дүгнэхийн тулд заяамалынх нь оронд энэ гишүүн хэрэглэгдэнэ"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
@@ -1958,7 +1974,7 @@ msgstr "Эдгээр нөөцийг нэгтгэхийг та хүсч байн�
 #. module: stock
 #: field:stock.picking,max_date:0
 msgid "Max. Planned Date"
-msgstr ""
+msgstr "төлөвлөгдсөн огнооны хамгийн дээд хязгаар"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1968,7 +1984,7 @@ msgstr "Зарласан нөөц"
 #. module: stock
 #: selection:stock.picking,type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "Барааг хүлээж авах"
 
 #. module: stock
 #: view:stock.location:0
@@ -1978,7 +1994,7 @@ msgstr "Барааны байршил"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_PLAY"
-msgstr ""
+msgstr "Агуулахын дамжуулгыг явуулах"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_delivery
@@ -1997,6 +2013,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
 msgstr ""
+"энэ агуулахын байршил нь заяамал агуулахынх нь оронд захиалагч руу илгээсэн "
+"барааны хүрэх газар болж ашиглагдана"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -2007,7 +2025,7 @@ msgstr "Баталсан"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_PREVIOUS"
-msgstr ""
+msgstr "агуулахын өмнөх дамжуулга"
 
 #. module: stock
 #: view:stock.move:0
@@ -2017,7 +2035,7 @@ msgstr "Бататгах"
 #. module: stock
 #: view:stock.picking:0
 msgid "Check Availability"
-msgstr ""
+msgstr "Бэлэн байдлыг шалгах"
 
 #. module: stock
 #: wizard_view:inventory.merge,init:0
@@ -2041,6 +2059,7 @@ msgstr "Бараа_тусгаарлах"
 msgid ""
 "This account will be used, instead of the default one, to value output stock"
 msgstr ""
+"Агуулахын гаралтыг дүгнэхийн тулд заяамалын оронд энэ гишүүн ашиглагдана"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2050,12 +2069,12 @@ msgstr "Батлах(Одоо үйл ажиллагаа хийхгүй)"
 #. module: stock
 #: field:stock.tracking,move_ids:0
 msgid "Moves Tracked"
-msgstr ""
+msgstr "шилжилтийн зам гаргах"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
 msgid "Reporting"
-msgstr "Мэдээлэл"
+msgstr "Тайлан"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.wizard_invoice_onshipping
@@ -2112,7 +2131,7 @@ msgstr "Цуцлагдсан"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_GOTO_LAST"
-msgstr ""
+msgstr "Агуулах хоосрох"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -2131,6 +2150,9 @@ msgid ""
 "instead of the default one, as the source location for stock moves generated "
 "by production orders"
 msgstr ""
+"барааны захиалгаар боловсруулагдсан агуулахын шилжилтийн анхны байрлал "
+"болгохын тулд заяамал агуулахынх нь оронд тухайн бараанд энэ агуулахын "
+"байрлалыг ашиглана"
 
 #. module: stock
 #: view:stock.picking.move.wizard:0
@@ -2152,7 +2174,7 @@ msgstr "Ноорог"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_JUSTIFY_CENTER"
-msgstr ""
+msgstr "агуулахыг төвд нь зэрэгцүүлэх"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree3
@@ -2160,7 +2182,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree3
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree8
 msgid "Confirmed Packing Waiting Availability"
-msgstr ""
+msgstr "батлагдсан хүлээлтийн багц"
 
 #. module: stock
 #: field:stock.location,posy:0
@@ -2190,12 +2212,12 @@ msgstr "Шууд хүргэлт"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_REVERT_TO_SAVED"
-msgstr ""
+msgstr "агуулах буцаж хэвэндээ орон хадгалагдах"
 
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Production Lots"
-msgstr ""
+msgstr "барааны хэв маягийн багц"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2214,11 +2236,14 @@ msgid ""
 "instead of the default one, as the source location for stock moves generated "
 "by procurements"
 msgstr ""
+"Татан авалтаар биелэгдсэн агуулахын шилжилтийн анхны байрлал болгох "
+"зорилгоор заяамал агуулахынх нь оронд энэ агуулахын байршил тухайн бараанд "
+"ашиглагдана,"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_move_wizard
 msgid "stock.picking.move.wizard"
-msgstr ""
+msgstr "агуулахын сонголтыг шилжүүлэх визард"
 
 #. module: stock
 #: model:res.request.link,name:stock.req_link_tracking
@@ -2254,7 +2279,7 @@ msgstr "Байршлууд"
 msgid ""
 "Scheduled date for the movement of the products or real date if the move is "
 "done."
-msgstr ""
+msgstr "Барааг шилжүүлэх төлөвлөгдсөн огноо эсвэл шилжилт хийгдсэн огноо"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2322,7 +2347,7 @@ msgstr "Тодорхойлолт"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_INDENT"
-msgstr ""
+msgstr "Агуулахын барааны захиалга"
 
 #. module: stock
 #: selection:stock.picking,type:0
@@ -2366,7 +2391,7 @@ msgstr "Гаралт"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_JUSTIFY_RIGHT"
-msgstr ""
+msgstr "Агуулахыг баруун талд нь зэрэгцүүлэх"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
@@ -2381,7 +2406,7 @@ msgstr "Бусад мэдээлэл"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_NEXT"
-msgstr ""
+msgstr "Агуулахын дараагийн дамжуулга"
 
 #. module: stock
 #: view:stock.move:0
