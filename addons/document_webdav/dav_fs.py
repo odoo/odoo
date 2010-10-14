@@ -339,7 +339,7 @@ class openerp_dav_handler(dav_interface):
                         result.append( self.urijoin(dbname,d.path) )
         except DAV_Error:
             raise
-        except Exception:
+        except Exception, e:
             self.parent.log_error("cannot get_childs: "+ str(e))
             raise
         finally:
