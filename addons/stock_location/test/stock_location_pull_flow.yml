@@ -5,65 +5,61 @@
 - 
   !record {model: account.account.type, id: account_account_type_asset0}:
     close_method: balance
-    code: asset
-    name: Asset
+    code: asset_test
+    name: Asset For Tests
     sign: 1
 - 
   I create a account type income.
 - 
   !record {model: account.account.type, id: account_account_type_income0}:
     close_method: unreconciled
-    code: income
-    name: Income
+    code: income_test
+    name: Income For Tests
     sign: 1
 - 
   I create a account type Expense.
 - 
   !record {model: account.account.type, id: account_account_type_expense0}:
     close_method: unreconciled
-    code: expense
-    name: Expense
+    code: expense_test
+    name: Expense For Tests
     sign: 1    
 - 
   I create a account type Receivable.
 - 
   !record {model: account.account.type, id: account_account_type_receivable0}:
     close_method: balance
-    code: receivable
-    name: Receivable
+    code: receivable_test
+    name: Receivable For Tests
     sign: 1
 -
  
   I create a account  Receivable.
 - 
   !record {model: account.account, id: account_account_receivable0}:
-    code: '40000'
+    code: 40000_test
     company_id: base.main_company
     currency_mode: current
-    name: Receivable
-    parent_left: 1
-    parent_right: 2
+    name: Receivable For Tests
     type: receivable
     user_type: account_account_type_receivable0
 - 
   I create a account  Payable.
 - 
   !record {model: account.account, id: account_account_payable0}:
-    code: '440000'
+    code: 440000_test
     company_id: base.main_company
     currency_mode: current
-    name: Payable
-    parent_left: 3
-    parent_right: 4
+    name: Payable For Tests
     type: payable
     user_type: account_account_type_expense0    
 - 
   I create a Purchase Journal.
 - 
   !record {model: account.journal, id: account_journal_purchasejournal0}:
-    code: pur
+    code: pur_test
     company_id: base.main_company
-    name: Purchase Journal
+    name: Purchase Journal For Tests
     sequence_id:  account.sequence_purchase_journal
     type: purchase
     view_id: account.account_journal_bank_view
@@ -72,33 +68,31 @@
   I create a Sale Journal.
 - 
   !record {model: account.journal, id: account_journal_salejouran0}:
-    code: sal
+    code: sal_test
     company_id: base.main_company
-    name: Sale Journal
+    name: Sale Journal For Tests
     sequence_id: account.sequence_sale_journal
     type: sale
     view_id: account.account_journal_view
     
 - 
-  I create a Sale Journal.
+  I create an Expense Account
 - 
   !record {model: account.account, id: account_account_expenseaccount0}:
-    code: Expe
+    code: Expe_test
     company_id: base.main_company
     currency_mode: current
-    name: Expense Account
-    parent_left: 5
-    parent_right: 6
+    name: Expense Account For Tests
     type: consolidation
     user_type: account_account_type_asset0
 - 
   I create  Product Sale account.
 - 
   !record {model: account.account, id: account_account_productsale0}:
-    code: '001'
+    code: 001_test
     company_id: base.main_company
     currency_mode: current
-    name: Product Sale
+    name: Product Sale For Tests
     type: other
     user_type: account_account_type_income0
 
@@ -106,31 +100,31 @@
   I create  Product Product Purchase.
 - 
   !record {model: account.account, id: account_account_productpurchase0}:
-    code: '0002'
+    code: 0002_test
     company_id: base.main_company
     currency_mode: current
-    name: Product Purchase
+    name: Product Purchase For Tests
     type: other
     user_type: account_account_type_expense0
 - 
-  I create  Supplier.
+  I create a Supplier.
 - 
   !record {model: res.partner, id: res_partner_shawtrust0}:
     address:
-      - country_id: base.in    
+      - country_id: base.in
       - street: St James House, Vicar Lane, Sheffield
     lang: en_US
     name: 'Shaw Trust '
     property_account_payable: account_account_payable0
     property_account_receivable: account_account_receivable0  
 -     
-  I create product category.
+  I create a product category.
 - 
   !record {model: product.category, id: product_category_computer0}:
     name: Computer
 -
-  I create product and define the  pulled flow condition for stock move.
-  I set shipping type Sending Goods. and set Procurement type move.
+  I create a product and define the pulled flow condition for stock move.
+  I set shipping type Sending Goods. and set Procurement type to move.
 - 
   !record {model: product.product, id: product_product_hpcdwriters0}:
     categ_id: product_category_computer0
@@ -176,7 +170,7 @@
     property_stock_production: stock.location_production
     qty_available: 15
 -   
-  I create procurement order.
+  I create a procurement order.
 - 
   !record {model: procurement.order, id: procurement_order_test0}:
     company_id: base.main_company
@@ -191,7 +185,7 @@
     product_uos: product.product_uom_unit
     product_uos_qty: 0.0
 - 
-  I confirm  procurement order.
+  I confirm the procurement order.
 - 
   !workflow {model: procurement.order, action: button_confirm, ref: procurement_order_test0}
 - 
@@ -208,19 +202,18 @@
    procurement_ids=self.search(cr, uid, [('id', '=', ref('procurement_order_test0'))])
    if procurement_ids:
     order=self.browse(cr,uid,procurement_ids)[0]
-    assert(order.state=='cancel')  
+    assert(order.state=='cancel')
 -
-  I check the new of procurement order  create .
+  I check the new procurement order has been created .
 -
   !python {model: procurement.order }: |  
    from tools.translate import _   
    procurement_ids=self.search(cr, uid, [('name','=','E001')])
-   assert len(procurement_ids), "Procurement order hasn't Created."  
+   assert len(procurement_ids), "Procurement order hasn't Created."
 -
-  I check the Outgoing Picking  is create for source location Shop 2 and destination shop1.
+  I check the Outgoing Picking is created for source location Shop 2 and destination shop1.
 -
   !python {model: stock.picking }: |
     from tools.translate import _   
     picking_id = self.search(cr, uid, [('origin','=','Testing pulled flow:E001'),('type','=','out')])
-    assert len(picking_id), "Picking  hasn't Created."  
-    
+    assert len(picking_id), "Picking  hasn't Created."

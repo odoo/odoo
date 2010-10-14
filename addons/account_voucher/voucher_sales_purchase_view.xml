@@ -148,12 +148,14 @@
                             <field name="move_ids" colspan="4" nolabel="1" readonly="1"/>
                         </page>
                     </notebook>
-                    <group col="10" colspan="4">
+                    <group col="8" colspan="4">
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
                         <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
-                        <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay" attrs="{'invisible':[('pay_now','!=','pay_now'), ('state','!=','posted')]}"/>
+                        <group  colspan="2" attrs="{'invisible':[('pay_now','!=','pay_now')]}">
+			    <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay" attrs="{'invisible':[('state','!=','posted')]}"/>
+			</group>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>

@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-import netsvc
-import pooler, tools
-
+import pooler
+import tools
 from osv import fields, osv
 
 class Env(dict):
@@ -139,7 +138,7 @@ class process_process(osv.osv):
             if node.model_id and node.model_id.model == res_model:
                 try:
                     data['active'] = eval(node.model_states, expr_context)
-                except Exception, e:
+                except Exception:
                     pass
 
             if not data['active']:
@@ -169,23 +168,19 @@ class process_process(osv.osv):
                     button['state'] = b.state
                     button['action'] = b.action
                     buttons.append(button)
-                data['roles'] = roles = []
+                data['groups'] = groups = []
                 for r in tr.transition_ids:
-                    if r.role_id:
-                        role = {}
-                        role['name'] = r.role_id.name
-                        roles.append(role)
-                for r in tr.role_ids:
-                    role = {}
-                    role['name'] = r.name
-                    roles.append(role)
+                    if r.group_id:
+                        groups.append({'name': r.group_id.name})
+                for r in tr.group_ids:
+                    groups.append({'name': r.name})
                 transitions[tr.id] = data
 
         # now populate resource information
         def update_relatives(nid, ref_id, ref_model):
             relatives = []
 
-            for tid, tr in transitions.items():
+            for dummy, tr in transitions.items():
                 if tr['source'] == nid:
                     relatives.append(tr['target'])
                 if tr['target'] == nid:
@@ -349,7 +344,7 @@ class process_transition(osv.osv):
         'target_node_id': fields.many2one('process.node', 'Target Node', required=True, ondelete='cascade'),
         'action_ids': fields.one2many('process.transition.action', 'transition_id', 'Buttons'),
         'transition_ids': fields.many2many('workflow.transition', 'process_transition_ids', 'ptr_id', 'wtr_id', 'Workflow Transitions'),
-        'role_ids': fields.many2many('res.roles', 'process_transition_roles_rel', 'tid', 'rid', 'Roles'),
+        'group_ids': fields.many2many('res.groups', 'process_transition_group_rel', 'tid', 'rid', string='Required Groups'),
         'note': fields.text('Description', translate=True),
     }
 process_transition()
