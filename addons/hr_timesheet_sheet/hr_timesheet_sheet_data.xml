@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record id="ir_actions_server_timsheet_sheet" model="ir.actions.server">
+            <field eval="5" name="sequence"/>
+            <field eval="&quot;&quot;&quot;code&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;ir.actions.server&quot;&quot;&quot;" name="type"/>
+            <field name="model_id" ref="model_hr_timesheet_current_open"/>
+            <field eval="[(6,0,[])]" name="child_ids"/>
+            <field eval="&quot;&quot;&quot;action = self.pool.get('hr.timesheet.current.open').open_timesheet(cr, uid, object.id, context)&quot;&quot;&quot;" name="code"/>
+            <field eval="&quot;&quot;&quot;True&quot;&quot;&quot;" name="condition"/>
+            <field eval="&quot;&quot;&quot;My Timesheet&quot;&quot;&quot;" name="name"/>
+        </record>
+
+        <record id="menu_act_hr_timesheet_sheet_form_my_current" model="ir.ui.menu">
+            <field name="name">My Timesheet</field>
+            <field eval="1" name="sequence"/>
+            <field name="parent_id" ref="hr_attendance.menu_hr_time_tracking"/>
+            <field name="icon">STOCK_JUSTIFY_FILL</field>
+            <field name="action" ref="ir_actions_server_timsheet_sheet"/>
+        </record>
+
+    </data>
+</openerp>
