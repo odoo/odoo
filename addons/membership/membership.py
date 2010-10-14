@@ -423,6 +423,8 @@ class Partner(osv.osv):
                 tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()
                 for tax in tax_value:
                        invoice_tax_obj.create(cr, uid, tax, context=context)
+        #recompute the membership_state of those partners
+        self.pool.get('res.partner').write(cr, uid, ids, {})
         return invoice_list
 
 Partner()
