@@ -31,7 +31,7 @@ class account_vat_declaration(osv.osv_memory):
 		                              'Based On', required=True),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
 		'periods': fields.many2many('account.period', 'vat_period_rel', 'vat_id', 'period_id', 'Periods', help="All periods if empty"),
-		'fiscalyear': fields.many2many('account.fiscalyear','vat_fiscal_rel','fiscal_id','Fiscal Year'),        
+		'fiscalyear': fields.many2many('account.fiscalyear','vat_fiscal_rel','fiscal_id','Fiscal Year',required=True),        
 		}
 		
 	def _get_company(self, cr, uid, context={}):

@@ -55,7 +55,7 @@ class tax_report(rml_parse.rml_parse):
 			        res['periods'] = period['name']
 		        else:
 			        res['periods'] += ", "+ period['name']
-            return res
+        return res
             
     def _get_lines(self, based_on, period_list, company_id=False, parent=False, level=0, context={}):
         res = self._get_codes(based_on, company_id, parent, level, period_list, context=context)

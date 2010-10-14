@@ -111,7 +111,7 @@
         <td><para style="P12">Year : [[ get_years(data['form'])['fname'] ]]</para></td>
       </tr>
       <tr>
-        <td><para style="P12">Periods : [[ get_years(data['form'])['periods'] ]]</para></td>
+        <td><para style="P12">Periods : [[ get_years(data['form'])['periods'] or removeParentNode('tr')]]</para></td>
       </tr>
     </blockTable>
   <para style="P2"><font color="white"> </font></para>    	
