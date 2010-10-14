@@ -58,6 +58,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
     def set_context(self, objects, data, ids, report_type=None):
         obj_move = self.pool.get('account.move.line')
+        obj_partner = self.pool.get('res.partner')
         self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
         ctx2 = data['form'].get('used_context',{}).copy()
         ctx2.update({'initial_bal': True})
@@ -100,7 +101,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "AND l.account_id = account.id " \
                     "AND am.id = l.move_id " \
                     "AND am.state IN %s"
-                    "AND " + self.query +" " \
+#                    "AND " + self.query +" " \
                     "AND l.account_id IN %s " \
                     " " + PARTNER_REQUEST + " " \
                     "AND account.active ",
@@ -111,7 +112,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             partner_to_use.append(res_line['partner_id'])
         new_ids = partner_to_use
         self.partner_ids = new_ids
-        objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
+        objects = obj_partner.browse(self.cr, self.uid, new_ids)
         return super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
 
     def comma_me(self, amount):
