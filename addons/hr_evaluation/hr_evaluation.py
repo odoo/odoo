@@ -267,7 +267,21 @@ class hr_evaluation(osv.osv):
             context = {}
         self.write(cr, uid, ids,{'state':'cancel'}, context=context)
         return True
-
+        
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        if 'date' in vals:
+            new_vals = {}
+            obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
+            current_record = self.browse(cr, uid, ids, context=context)[0]
+            survey_requests =  current_record.survey_request_ids
+            new_vals.update({'date_deadline':vals.get('date')})
+            if survey_requests:
+                for survey_req in survey_requests:
+                    obj_hr_eval_iterview.write(cr, uid, survey_req.id, new_vals,context=context)
+        return super(hr_evaluation, self).write(cr, uid, ids, vals, context=context)
+    
 hr_evaluation()
 
 class survey_request(osv.osv):
