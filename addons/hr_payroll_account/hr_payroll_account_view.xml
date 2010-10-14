@@ -177,13 +177,13 @@
             <field name="inherit_id" ref="hr_payroll.hr_contibution_register_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="monthly_total_by_emp" position="before">
+                <group name="Month" position="after">
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Year"/>
                         <field name="yearly_total_by_emp"/>
                         <field name="yearly_total_by_comp"/>
                     </group>
-                </field>
+                </group>
             </field>
         </record>
 
