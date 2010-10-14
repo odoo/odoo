@@ -45,7 +45,6 @@ class crm_lead_report(osv.osv):
             @param context: A standard dictionary for contextual values """
 
         res = {}
-        state_perc = 0.0
         avg_ans = 0.0
 
         for case in self.browse(cr, uid, ids, context):
@@ -101,10 +100,8 @@ class crm_lead_report(osv.osv):
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
-                         domain="[('section_id','=',section_id)]" , readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.lead')]", readonly=True),
+                         domain="['|',('section_id','=',False),('section_id','=',section_id)]" , readonly=True),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="('object_id.model', '=', 'crm.lead')]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'opening_date': fields.date('Opening Date', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),

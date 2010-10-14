@@ -179,6 +179,50 @@ class mailgate_message(osv.osv):
     '''
     Mailgateway Message
     '''
+    def open_document(self, cr, uid, ids, context):
+        """ To Open Document
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID of messages
+        @param context: A standard dictionary
+        """
+        action_data = False
+        if ids:
+            message_id = ids[0]
+            mailgate_data = self.browse(cr, uid, message_id)
+            model = mailgate_data.model
+            res_id = mailgate_data.res_id
+
+            action_pool = self.pool.get('ir.actions.act_window')
+            action_ids = action_pool.search(cr, uid, [('res_model', '=', model)])
+            if action_ids:
+                action_data = action_pool.read(cr, uid, action_ids[0], context=context)
+                action_data.update({
+                    'res_id': res_id,
+                    'nodestroy': True
+                    })
+        return action_data
+    
+    def open_attachment(self, cr, uid, ids, context):
+        """ To Open attachments
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID of messages
+        @param context: A standard dictionary
+        """
+        action_data = False
+        action_pool = self.pool.get('ir.actions.act_window')
+        action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
+        if action_ids:
+            action_data = action_pool.read(cr, uid, action_ids[0], context=context)
+            action_data.update({
+                'domain': [('res_id','in',ids),('res_model','=',self._name)],
+                'nodestroy': True
+                })
+        return action_data
+
     def truncate_data(self, cr, uid, data, context=None):
         data_list = data and data.split('\n') or []
         if len(data_list) > 3:
@@ -327,7 +371,7 @@ class mailgate_tool(osv.osv_memory):
                     msg['to'] = email_error
                     tools.misc._email_send(smtp_from, self.to_email(email_error), msg, openobject_id=res.id)
 
-    def process_email(self, cr, uid, model, message, attach=True, context=None):
+    def process_email(self, cr, uid, model, message, custom_values=None, attach=True, context=None):
         """This function Processes email and create record for given OpenERP model
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -346,6 +390,9 @@ class mailgate_tool(osv.osv_memory):
         if not context:
             context = {}
 
+        if custom_values is None or not isinstance(custom_values, dict):
+            custom_values = {}
+
         model_pool = self.pool.get(model)
         res_id = False
 
@@ -354,6 +401,8 @@ class mailgate_tool(osv.osv_memory):
             att_ids = []
             if hasattr(model_pool, 'message_new'):
                 res_id = model_pool.message_new(cr, uid, msg, context)
+                if custom_values:
+                    model_pool.write(cr, uid, [res_id], custom_values, context=context)
             else:
                 data = {
                     'name': msg.get('subject'),
@@ -542,3 +591,5 @@ class mailgate_tool(osv.osv_memory):
         return res
 
 mailgate_tool()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

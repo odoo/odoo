@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 04:02+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -31,11 +31,6 @@ msgstr "Все заявления на отпуск"
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
 msgstr "Недопустимое имя модели в определении действия."
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,remaining_leaves:0
-msgid "Remaining Leaves"
-msgstr "Оставшиеся отпуска"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
@@ -64,7 +59,6 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: view:hr.holidays.per.user:0
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
 msgstr "Отпуска сотрудника"
@@ -75,8 +69,6 @@ msgid "Set to Draft"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
-#: field:hr.holidays.per.user,holiday_ids:0
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidays0
 msgid "Holidays"
@@ -142,14 +134,12 @@ msgstr "Мои заявления на отпуск"
 
 #. module: hr_holidays
 #: field:hr.holidays,notes:0
-#: field:hr.holidays.per.user,notes:0
 msgid "Notes"
 msgstr "Примечания"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status:0
 #: field:hr.holidays.log,holiday_status:0
-#: field:hr.holidays.per.user,holiday_status:0
 msgid "Holiday's Status"
 msgstr "Статус отпуска"
 
@@ -192,11 +182,6 @@ msgstr "Статус отпусков"
 #: field:hr.holidays,date_to:0
 msgid "Vacation end day"
 msgstr "Последний день отпуска"
-
-#. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "Holidays Allowed"
-msgstr "Разрешено отпусков"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_legaldeclaration0
@@ -255,7 +240,6 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,employee_id:0
 #: field:hr.holidays.log,employee_id:0
-#: field:hr.holidays.per.user,employee_id:0
 msgid "Employee"
 msgstr "Сотрудник"
 
@@ -291,7 +275,6 @@ msgstr "Мои запросы отпусков"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: view:hr.holidays.per.user:0
 msgid "Number of Days"
 msgstr "Кол-во дней"
 
@@ -344,7 +327,6 @@ msgid "Number of Days in this Holiday Request"
 msgstr "Количество дней в данном заявлении на отпуск"
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
 #: model:ir.actions.act_window,name:hr_holidays.action_holidays_per_user
 #: model:ir.ui.menu,name:hr_holidays.menu_open_holidays_per_user
 msgid "Holidays Per Employee"
@@ -470,11 +452,6 @@ msgid "My Draft Holidays Requests"
 msgstr "Мои черновые заявления на отпуск"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,max_leaves:0
-msgid "Maximum Leaves Allowed"
-msgstr "Максимально позволенные отпуска"
-
-#. module: hr_holidays
 #: field:hr.holidays,state:0
 msgid "Status"
 msgstr "Состояние"
@@ -500,11 +477,6 @@ msgid "Both Validated and Confirmed"
 msgstr "Оба Утвержденные и Подтвержденные"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,leaves_taken:0
-msgid "Leaves Already Taken"
-msgstr "Отпуска, уже взятые"
-
-#. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "holidays."
 msgstr "отпусков."
@@ -513,11 +485,6 @@ msgstr "отпусков."
 #: selection:hr.holidays,state:0
 msgid "draft"
 msgstr "черновик"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,user_id:0
-msgid "User"
-msgstr "Пользователь"
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_employeedeclaration0
@@ -545,7 +512,6 @@ msgid "Holiday manager"
 msgstr "Ответственный за график отпусков"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,active:0
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "Активно"
@@ -574,11 +540,6 @@ msgstr "Заявления на отпуск в ожидании проверк�
 #: view:hr.holidays:0
 msgid "General"
 msgstr "Общие"
-
-#. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "General Information"
-msgstr "Общая информация"
 
 #. module: hr_holidays
 #: view:hr.holidays:0

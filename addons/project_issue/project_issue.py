@@ -19,20 +19,26 @@
 #
 ##############################################################################
 
-import base64
-import os
-import re
-import time
-from datetime import datetime, timedelta
-import binascii
-import collections
-
-import tools
 from crm import crm
-from osv import fields,osv,orm
-from osv.orm import except_orm
+from datetime import datetime
+from osv import fields,osv
 from tools.translate import _
+import binascii
+import time
 import tools
+
+
+class project_issue_version(osv.osv):
+    _name = "project.issue.version"
+    _order = "name desc"
+    _columns = {
+        'name': fields.char('Version Number', size=32, required=True),
+        'active': fields.boolean('Active', required=False),
+    }
+    _defaults = {
+        'active': 1,
+    }
+project_issue_version()
 
 class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
@@ -135,10 +141,10 @@ class project_issue(crm.crm_case, osv.osv):
                 else:
                     res[issue.id][field] = abs(float(duration))
         return res
-
+    
     _columns = {
         'id': fields.integer('ID'),
-        'name': fields.char('Name', size=128, required=True),
+        'name': fields.char('Issue', size=128, required=True),
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Update Date', readonly=True),
@@ -167,11 +173,11 @@ class project_issue(crm.crm_case, osv.osv):
                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Severity'),
-        'type_id': fields.many2one('crm.case.resource.type', 'Version', domain="[('object_id.model', '=', 'project.issue')]"),
+        'version_id': fields.many2one('project.issue.version', 'Version'),
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
+        'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('object_id.model', '=', 'project.issue')]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -179,7 +185,7 @@ class project_issue(crm.crm_case, osv.osv):
                                 method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
-        'assigned_to': fields.many2one('res.users', 'Assigned to', help='This is the current user to whom the related task have been assigned'),
+        'assigned_to': fields.related('task_id', 'user_id', string = 'Assigned to', type="many2one", relation="res.users", store=True, help='This is the current user to whom the related task have been assigned'),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 method=True, multi='working_days_open', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
@@ -187,6 +193,7 @@ class project_issue(crm.crm_case, osv.osv):
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'progress': fields.related('task_id', 'progress', string='Progress (%)',group_operator="avg", store=True),
     }
 
     def _get_project(self, cr, uid, context):
@@ -239,6 +246,7 @@ class project_issue(crm.crm_case, osv.osv):
 
             vals = {
                 'task_id': new_task_id,
+                'state':'open'
             }
             case_obj.write(cr, uid, [bug.id], vals)
 
@@ -271,15 +279,37 @@ class project_issue(crm.crm_case, osv.osv):
     def convert_to_bug(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
+
+    def next_type(self, cr, uid, ids, *args):
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id.type_ids or [])
+            if types:
+                if not typeid:
+                    self.write(cr, uid, task.id, {'type_id': types[0]})
+                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
+                    index = types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': types[index+1]})
+        return True
+
+    def prev_type(self, cr, uid, ids, *args):
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
+            if types:
+                if typeid and typeid in types:
+                    index = types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
+        return True
+
+    def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         if context is None:
             context = {}
-        if not stage_id:
+        result = {}    
+        if not task_id:
             return {'value':{}}
-        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
-        if not stage.on_change:
-            return {'value':{}}
-        return {'value':{}}
+        task = self.pool.get('project.task').browse(cr, uid, task_id, context)
+        return {'value':{'assigned_to': task.user_id.id,}}
 
     def case_escalate(self, cr, uid, ids, *args):
         """Escalates case to top level
@@ -301,6 +331,7 @@ class project_issue(crm.crm_case, osv.osv):
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)
+        self._history(cr, uid, cases, _('Escalate'))
         return True
 
     def message_new(self, cr, uid, msg, context):
@@ -399,6 +430,17 @@ class project_issue(crm.crm_case, osv.osv):
             @param **args: Return Dictionary of Keyword Value
         """
         return True
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not context:
+            context={}
+        issue = self.read(cr, uid, id, ['name'], context=context)
+        if not default:
+            default = {}
+        default = default.copy()
+        default['name'] = issue['name'] + _(' (copy)')
+        return super(project_issue, self).copy(cr, uid, id, default=default,
+                context=context)
 
 project_issue()
 

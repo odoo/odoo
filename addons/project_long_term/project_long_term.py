@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import time
-from datetime import date, datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task
@@ -91,13 +91,24 @@ class project_phase(osv.osv):
        model_data_obj = self.pool.get('ir.model.data')
        model_data_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
        return model_data_obj.read(cr, uid, [model_data_id], ['res_id'])[0]['res_id']
+    
+    def _compute(self, cr, uid, ids,field_name, arg, context=None):
+        res = {}
+        if not ids:
+            return res
+        for phase in self.browse(cr, uid, ids, context=context):
+            tot = 0.0
+            for task in phase.task_ids:
+                tot += task.planned_hours
+            res[phase.id] = tot
+        return res
 
     _columns = {
         'name': fields.char("Name", size=64, required=True),
         'date_start': fields.date('Start Date', help="Starting Date of the phase", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'date_end': fields.date('End Date', help="Ending Date of the phase", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'constraint_date_start': fields.date('Start Date', help='force the phase to start after this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'constraint_date_end': fields.date('End Date', help='force the phase to finish before this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'constraint_date_start': fields.date('Minimum Start Date', help='force the phase to start after this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'constraint_date_end': fields.date('Deadline', help='force the phase to finish before this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'project_id': fields.many2one('project.project', 'Project', required=True),
         'next_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'prv_phase_id', 'next_phase_id', 'Next Phases', states={'cancelled':[('readonly',True)]}),
         'previous_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'next_phase_id', 'prv_phase_id', 'Previous Phases', states={'cancelled':[('readonly',True)]}),
@@ -109,7 +120,8 @@ class project_phase(osv.osv):
         'responsible_id': fields.many2one('res.users', 'Responsible', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the phase is created the state \'Draft\'.\n If the phase is started, the state becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' state.\
-                                  \n If the phase is over, the states is set to \'Done\'.')
+                                  \n If the phase is over, the states is set to \'Done\'.'),
+        'total_hours': fields.function(_compute, method=True, string='Total Hours'),
      }
     _defaults = {
         'responsible_id': lambda obj,cr,uid,context: uid,
@@ -130,6 +142,14 @@ class project_phase(osv.osv):
         if project:
             project_id = project_obj.browse(cr, uid, project, context=context)
             result['date_start'] = project_id.date_start
+        return {'value': result}
+    
+    def onchange_days(self, cr, uid, ids, project, context=None):
+        result = {}
+        for id in ids:
+            project_id = self.browse(cr, uid, id, context=context)
+            newdate = datetime.strptime(project_id.date_start, '%Y-%m-%d') + relativedelta(days=project_id.duration or 0.0)
+            result['date_end'] = newdate.strftime('%Y-%m-%d')
         return {'value': result}
 
     def _check_date_start(self, cr, uid, phase, date_end, context=None):
@@ -278,7 +298,6 @@ class project_phase(osv.osv):
             context = {}
         resource_pool = self.pool.get('resource.resource')
         uom_pool = self.pool.get('product.uom')
-        phase_resource = False
         if context is None:
            context = {}
         default_uom_id = self._get_default_uom_id(cr, uid)
@@ -291,11 +310,11 @@ class project_phase(osv.osv):
             duration = str(avg_hours) + 'H'
             # Create a new project for each phase
             def Project():
+                # If project has working calendar then that
+                # else the default one would be considered
                 start = start_date
                 minimum_time_unit = 1
                 resource = phase_resource_obj
-                # If project has working calendar then that
-                # else the default one would be considered
                 if calendar_id:
                     working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
                     vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id))
@@ -373,8 +392,10 @@ class project_resource_allocation(osv.osv):
     _columns = {
         'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
         'phase_id': fields.many2one('project.phase', 'Project Phase', ondelete='cascade', required=True),
-        'phase_id_date_start': fields.related('phase_id', 'date_start', type='date', string='Starting Date of the phase'),
-        'phase_id_date_end': fields.related('phase_id', 'date_end', type='date', string='Ending Date of the phase'),
+        'project_id': fields.related('phase_id', 'project_id', type='many2one', relation="project.project", string='Project', store=True),
+        'user_id': fields.related('resource_id', 'user_id', type='many2one', relation="res.users", string='User'),
+        'date_start': fields.date('Start Date', help="Starting Date"),
+        'date_end': fields.date('End Date', help="Ending Date"),
         'useability': fields.float('Usability', help="Usability of this resource for this project phase in percentage (=50%)"),
     }
     _defaults = {

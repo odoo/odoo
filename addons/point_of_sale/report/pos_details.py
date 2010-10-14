@@ -28,7 +28,7 @@ class pos_details(report_sxw.rml_parse):
     def _get_invoice(self,inv_id,user):
         res={}
         if inv_id:
-            self.cr.execute("select name from account_invoice as ac where id = %d" %(inv_id))
+            self.cr.execute("select name from account_invoice as ac where id = %s", (inv_id,))
             res = self.cr.fetchone()
             return res[0]
         else:
@@ -36,12 +36,12 @@ class pos_details(report_sxw.rml_parse):
 
     def _pos_sales_details(self,form,user):
         data={}
-        self.cr.execute ("select po.name as pos_name,po.date_order,pt.name ,pol.qty,pol.price_unit,pol.discount,po.invoice_id,sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
-                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,res_users as ru,res_company as rc " \
-                         "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('done','paid','invoiced') " \
+        self.cr.execute ("select po.name as pos_name,po.date_order,pt.name ,pp.default_code as code,pol.qty,pu.name as uom,pol.price_unit,pol.discount,po.invoice_id,sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
+                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,product_uom as pu,res_users as ru,res_company as rc " \
+                         "where  pt.id=pp.product_tmpl_id and pu.id=pt.uom_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('done','paid','invoiced') " \
                          "and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= %s and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= %s " \
                          "and po.user_id = ru.id and rc.id = %s and ru.id = %s " \
-                         "group by po.name,pol.qty,po.date_order,pt.name,pol.price_unit,pol.discount,po.invoice_id " \
+                         "group by po.name,pol.qty,po.date_order,pt.name,pp.default_code,pu.name,pol.price_unit,pol.discount,po.invoice_id " \
                              ,(form['date_start'],form['date_end'],str(user.company_id.id),str(self.uid)))
         data=self.cr.dictfetchall()
         if data:
@@ -107,14 +107,8 @@ class pos_details(report_sxw.rml_parse):
                                     objects,
                                     0.0)
 
-    def _get_payments(self, form,user, ignore_gift=False):
+    def _get_payments(self, form,user):
         statement_line_obj = self.pool.get("account.bank.statement.line")
-        gift_journal_id = None
-        if ignore_gift:
-            config_journal_ids = self.pool.get("pos.config.journal").search(self.cr, self.uid, [('code', '=', 'GIFT')])
-            if len(config_journal_ids):
-                config_journal = self.pool.get("pos.config.journal").browse(self.cr, self.uid, config_journal_ids, {})[0]
-                gift_journal_id = config_journal.journal_id.id
         pos_ids=self.pool.get("pos.order").search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','=',self.uid)])
         data={}
         if pos_ids:
@@ -162,7 +156,6 @@ class pos_details(report_sxw.rml_parse):
         res = {}
         temp={}
         list_ids = []
-        c=[]
         temp2 = 0.0
         pos_ids=self.pool.get("pos.order").search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','=',self.uid)])
         temp.update({'name':''})
@@ -184,7 +177,7 @@ class pos_details(report_sxw.rml_parse):
         return form['date_end']
 
     def __init__(self, cr, uid, name, context):
-        super(pos_details, self).__init__(cr, uid, name, context)
+        super(pos_details, self).__init__(cr, uid, name, context=context)
         self.total = 0.0
         self.qty = 0.0
         self.invoice_id = ''

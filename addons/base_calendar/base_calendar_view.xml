@@ -122,7 +122,7 @@
                        separator="1" help="Delegated Invitations" />
                    <separator orientation="vertical"/>
                    <field name="email" select='1'/>
-                   <field name="user_id" select="1"/>
+                   <field name="user_id" select="1" string="Responsible"/>
                    <separator orientation="vertical"/>
                    <field name="cutype" string="Invitation type" select="1"/>
                    <field name="event_date" select="1"/>
@@ -163,7 +163,8 @@
         <!-- Invitation menu -->
 
            <menuitem id="menu_attendee_invitations"
-            name="Event Invitations" parent="base.menu_calendar_configuration"
+            parent="base.menu_calendar_configuration"
+            groups="base.group_extended"
             sequence="10" action="action_view_attendee_form" />
 
         <!--        ALARM FORM VIEW-->
@@ -312,6 +313,11 @@
                         <separator colspan="4" string="" />
                            <group col="5" colspan="4">
                                <field name="state" select="2" />
+                               <button name="do_cancel"
+                                   string="Cancel"
+                                   states="tentative,confirmed"
+                                   type="object"
+                                   icon="gtk-cancel" />
                                <button name="do_tentative"
                                    states="confirmed,cancelled"
                                    string="Uncertain"
@@ -322,11 +328,6 @@
                                    states="tentative,cancelled"
                                    type="object"
                                    icon="gtk-apply" />
-                               <button name="do_cancel"
-                                   string="Cancel"
-                                   states="tentative,confirmed"
-                                   type="object"
-                                   icon="gtk-cancel" />
                            </group>
                         </page>
                         <page string="Invitation Detail">
@@ -474,7 +475,7 @@
                             <separator orientation="vertical" />
                             <filter string="Date" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'date'}" />
-                            
+
                         </group>
                 </search>
             </field>
@@ -496,6 +497,7 @@
 
         <menuitem id="menu_events"
                 name="Events" parent="base.menu_calendar_configuration"
+                groups="base.group_extended"
                 sequence="5" action="action_view_event" />
 
      </data>

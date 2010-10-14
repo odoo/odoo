@@ -51,7 +51,7 @@ class mrp_production_order(osv.osv):
         'date_planned':fields.date('Scheduled Date'),
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', readonly=True),
         'date_start': fields.datetime('Start Date',readonly=True),
-        'date_finnished': fields.datetime('End Date',readonly=True),
+        'date_finished': fields.datetime('End Date',readonly=True),
         'location_dest_id': fields.many2one('stock.location', 'Finished Products Location', readonly=True),
         'company_id': fields.many2one('res.company','Company',readonly=True),
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material',readonly=True),
@@ -100,7 +100,7 @@ class mrp_production_order(osv.osv):
                      s.routing_id,
                      s.picking_id,
                      s.date_start,
-                     s.date_finnished,
+                     s.date_finished,
                      to_date(to_char(s.date_planned, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_planned,
                      s.origin,
                      s.priority,
@@ -128,7 +128,7 @@ class mrp_production_order(osv.osv):
                      to_date(to_char(s.date_planned, 'dd-MM-YYYY'),'dd-MM-YYYY'),
                      s.origin,
                      s.date_start,
-                     s.date_finnished,
+                     s.date_finished,
                      s.company_id
             )""")
 mrp_production_order()

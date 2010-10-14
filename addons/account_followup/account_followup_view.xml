@@ -73,7 +73,8 @@
                 <search string="Search Followup">
                    <group col="10" colspan="4">
                         <field name="name"/>
-                    </group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                   </group>
                </search>
             </field>
         </record>
@@ -87,7 +88,7 @@
         </record>
         <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_configuration_misc" groups="base.group_system"/>
 
-        <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/report_followp_print.rml" string="Followup Report"/>
+        <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Followup Report"/>
 
         <record id="account_move_line_partner_tree" model="ir.ui.view">
             <field name="name">account.move.line.partner.tree</field>

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
+from osv import fields, osv
 from crm import crm
 
 class crm_fundraising(crm.crm_case, osv.osv):
@@ -61,12 +61,9 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'partner_name2': fields.char('Employee Email', size=64), 
             'partner_phone': fields.char('Phone', size=32), 
             'partner_mobile': fields.char('Mobile', size=32), 
-            'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                             domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.fundraising')]"), 
-            'type_id': fields.many2one('crm.case.resource.type', 'Fundraising Type', \
-                             domain="[('section_id','=',section_id),\
-                             ('object_id.model', '=', 'crm.fundraising')]"), 
+            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="('object_id.model', '=', 'crm.fundraising')]"), 
+            'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
+                             domain="[('section_id','=',section_id)]"), 
             'duration': fields.float('Duration'), 
             'ref': fields.reference('Reference', selection=crm._links_get, size=128), 
             'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128), 

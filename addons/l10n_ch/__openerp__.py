@@ -66,7 +66,7 @@ TODO :
 
 
 """,
-    "version" : "5.0",
+    "version" : "5.1",
     "author" : "Camptocamp SA",
     "category" : "Localisation/Europe",
     "website": "http://www.camptocamp.com",
@@ -75,6 +75,7 @@ TODO :
         "base_vat",
         "base_iban",
         "account_payment",
+        "account_voucher",
     ],
     "init_xml" : [
         "dta_data.xml",

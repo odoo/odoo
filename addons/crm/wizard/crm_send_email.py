@@ -57,6 +57,7 @@ class crm_send_new_email(osv.osv_memory):
         'body': fields.text('Message Body', required=True),
         'state': fields.selection(AVAILABLE_STATES, string='Set New State To', required=True),
         'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
+        'html': fields.boolean('HTML formatting?', help="Select this if you want to send email with HTML formatting."), 
     }
 
     def action_send(self, cr, uid, ids, context=None):
@@ -79,6 +80,7 @@ class crm_send_new_email(osv.osv_memory):
                 (x.name, base64.decodestring(x.binary)) for x in obj.attachment_ids
             ]
 
+            subtype = 'plain'
             message_id = None
             ref_id = None
 
@@ -119,6 +121,9 @@ class crm_send_new_email(osv.osv_memory):
             if message_id:
                 x_headers['References'] = "%s" % (message_id)
 
+            if obj.html:
+                subtype = 'html'
+
             flag = tools.email_send(
                 email_from,
                 emails,
@@ -126,6 +131,7 @@ class crm_send_new_email(osv.osv_memory):
                 body,
                 email_cc=email_cc,
                 attach=attach,
+                subtype=subtype,
                 reply_to=obj.reply_to,
                 openobject_id=str(case.id),
                 x_headers=x_headers

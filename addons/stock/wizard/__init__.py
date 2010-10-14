@@ -27,7 +27,6 @@ import stock_partial_move
 import stock_replacement
 import stock_ups
 import stock_inventory_merge
-import stock_inventory_set_stock_zero
 import stock_fill_inventory
 import stock_inventory_line_split
 import stock_invoice_onshipping

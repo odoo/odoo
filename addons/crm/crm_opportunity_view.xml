@@ -14,13 +14,14 @@
                             <label string="Stage:" align="1.0"/>
                             <group colspan="1" col="4">
                                 <field name="stage_id" nolabel="1"
-                                on_change="onchange_stage_id(stage_id)"
-                                domain="[('section_id','=',section_id), ('object_id.model', '=', 'crm.lead')]" />
+                                    widget="selection"
+                                    on_change="onchange_stage_id(stage_id)"
+                                    domain="[('object_id.model', '=', 'crm.lead')]"/>
                                 <button name="stage_previous"
-                                states="open,pending" type="object"
-                                icon="gtk-go-back" string="" />
-                                <button name="stage_next" states="open,pending"
-                                type="object" icon="gtk-go-forward" string="" />
+                                    states="draft,open,pending" type="object"
+                                    icon="gtk-go-back" string="" />
+                                <button name="stage_next" states="draft,open,pending"
+                                    type="object" icon="gtk-go-forward" string="" />
                             </group>
                             <field name="user_id"/>
 
@@ -45,10 +46,10 @@
                                 <separator colspan="4" string="Contacts"/>
                                 <group colspan="2">
                                     <field name="partner_id" select="1"
-                                        on_change="onchange_partner_id(partner_id, email_from)"
+                                        on_change="onchange_partner_id(partner_id, email_from)" string="Customer"
                                         colspan="2" />
                                     <button name="%(action_crm_lead2partner)d"
-                                        icon="gtk-index" type="action"
+                                        icon="terp-partner" type="action"
                                         string="Create"
                                         attrs="{'invisible':[('partner_id','!=',False)]}"/>
                                 </group>
@@ -62,7 +63,7 @@
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Categorization"/>
                                 <field name="section_id" colspan="1" widget="selection"/>
-                                <field name="categ_id" select="1" groups="base.group_extended"
+                                <field name="categ_id" select="1"
                                 string="Category" widget="selection"
                                 domain="[('object_id.model', '=', 'crm.lead')]" />
                             </group>
@@ -73,6 +74,9 @@
                             <separator colspan="4"/>
                             <group col="10" colspan="4">
                                 <field name="state"/>
+                                <button name="case_cancel" string="Cancel"
+                                    states="draft" type="object"
+                                    icon="gtk-close" />
                                 <button name="case_reset" string="Reset to Draft"
                                     states="done,cancel" type="object"
                                     icon="gtk-convert" />
@@ -86,9 +90,6 @@
                                     states="open,pending" type="object"
                                     groups="base.group_extended"
                                     icon="gtk-go-up" />
-                                <button name="case_cancel" string="Cancel"
-                                    states="draft,open,pending" type="object"
-                                    icon="gtk-close" />
                                 <button name="case_mark_lost" string="Mark Lost"
                                     states="open,pending" type="object"
                                     icon="gtk-cancel" />
@@ -100,9 +101,9 @@
                         <page string="Lead">
                             <group colspan="2" col="4">
                                 <separator string="Contact" colspan="4" col="4"/>
-                                <field name="partner_name" string="Partner Name" colspan="4"/>
+                                <field name="partner_name" string="Customer Name" colspan="4"/>
                                 <newline/>
-                                <field domain="[('domain', '=', 'contact')]" name="title"/>
+                                <field domain="[('domain', '=', 'contact')]" name="title" widget="selection"/>
                                 <field name="function" />
                                 <field name="street" colspan="4"/>
                                 <field name="street2" colspan="4"/>
@@ -118,7 +119,7 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Categorization" colspan="2"/>
-                                <field name="type_id" widget="selection"/>
+                                <field name="type_id" widget="selection" groups="base.group_extended"/>
                                 <field name="channel_id" widget="selection"/>
                             </group>
                             <group colspan="2" col="2">
@@ -211,11 +212,11 @@
                 <field name="model">crm.lead</field>
                 <field name="type">tree</field>
                 <field name="arch" type="xml">
-                    <tree string="Opportunities"  colors="blue:state=='pending';grey:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
+                    <tree string="Opportunities" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                         <field name="date_deadline" invisible="1"/>
                         <field name="create_date"/>
                         <field name="name" string="Opportunity"/>
-                        <field name="partner_id"/>
+                        <field name="partner_id" string="Customer"/>
                         <field name="country_id" invisible="context.get('invisible_country', True)" />
                         <field name="date_action"/>
                         <field name="title_action" />
@@ -282,16 +283,8 @@
                             string="Pending"  help="Pending Opportunities"
                             domain="[('state','=','pending')]"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Today"
-                            domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('create_date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                            help="Todays' Opportunities" />
-                        <filter icon="terp-go-week" string="7 Days"
-                            help="Opportunities created during last 7 days"
-                            domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"
-                        />
-                        <separator orientation="vertical"/>
                         <field name="name" string="Opportunity"/>
-                        <field name="partner_id"/>
+                        <field name="partner_id" string="Customer"/>
                         <field name="user_id">
                             <filter icon="terp-personal-"
                                 domain="[('user_id','=', False)]"
@@ -302,7 +295,7 @@
                             context="{'invisible_section': False}"
                             widget="selection">
                             <filter icon="terp-personal+"
-                                domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                                domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                 context="{'invisible_section': False}"
                                 help="My Sales Team(s)" />
                             <filter icon="terp-personal+"
@@ -337,7 +330,7 @@
                             <filter string="Category" icon="terp-stock_symbol-selection"
                                 domain="[]" context="{'group_by':'categ_id'}" />
                             <filter string="Campaign" icon="terp-stock_symbol-selection"
-                                domain="[]" context="{'group_by':'type_id'}" />
+                                domain="[]" context="{'group_by':'type_id'}" groups="base.group_extended"/>
                             <filter string="Channel" icon="terp-stock_symbol-selection"
                                 domain="[]" context="{'group_by':'channel_id'}" />
                             <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>

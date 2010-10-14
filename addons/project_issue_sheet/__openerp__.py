@@ -37,6 +37,7 @@
     ],
     'update_xml': [
         'project_issue_sheet_view.xml',
+        'security/ir.model.access.csv',
     ],
     'demo_xml': [
     ],

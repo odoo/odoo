@@ -50,7 +50,9 @@
 - 
   I run the scheduler.
 - 
-  !workflow {model: procurement.order, action: button_check, ref: procurement_order_testcase0}
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
+      search: "[]"
 -
   I check that  purchase order is generated.
 -
@@ -74,21 +76,20 @@
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'purchase.order',proc_ids.purchase_id.id,'purchase_confirm', cr)  
-    wf_service.trg_validate(uid, 'purchase.order',proc_ids.purchase_id.id,'purchase_approve', cr)  
 -   
   I receive the order of the supplier ASUStek from the Incoming Shipments menu.
 -   
   !python {model: stock.picking }: |
    import time
    procurement_obj = self.pool.get('procurement.order')
-   proc_ids = procurement_obj.browse(cr, uid, [ref('procurement_order_testcase0')])[0] 
-   picking_id = self.search(cr, uid, [('origin', '=', proc_ids.purchase_id.name)])
-   if picking_id:
-      pick=self.browse(cr,uid,picking_id[0])
-      move =pick.move_lines[0]
+   proc_ids = procurement_obj.browse(cr, uid, [ref('procurement_order_testcase0')])[0]
+   picking_ids = self.search(cr, uid, [('purchase_id', '=', proc_ids.purchase_id.id),('type','=','in')])
+   pickings = self.browse(cr, uid, picking_ids)
+   for picking in pickings:
+      move = picking.move_lines[0]
       partial_datas = {
-           'partner_id':pick.address_id.partner_id.id,
-            'address_id': pick.address_id.id,
+            'partner_id': picking.address_id.partner_id.id,
+            'address_id': picking.address_id.id,
             'delivery_date' : time.strftime('%Y-%m-%d')
            }
       partial_datas['move%s'%(move.id)]= {
@@ -96,7 +97,7 @@
           'product_qty': move.product_qty,
           'product_uom': move.product_uom.id,
       } 
-      self.do_partial(cr, uid, picking_id,partial_datas)
+      self.do_partial(cr, uid, [picking.id], partial_datas)
 -
   I confirm the Reservation.
 -

@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-import wizard
 import netsvc
 import tools
 from osv import fields, osv
 from tools.translate import _
+from decimal_precision import decimal_precision as dp
 
 
 class partner_event_registration(osv.osv_memory):
@@ -36,7 +36,7 @@ class partner_event_registration(osv.osv_memory):
     _columns = {
         'event_id': fields.many2one('event.event', 'Event'),
         'event_type': fields.many2one('event.type', 'Type', readonly=True),
-        'unit_price': fields.float('Registration Cost'),
+        'unit_price': fields.float('Registration Cost', digits_compute=dp.get_precision('Sale Price')),
         'start_date': fields.datetime('Start date', required=True, help="Beginning Date of Event", readonly=True),
         'end_date': fields.datetime('Closing date', required=True, help="Closing Date of Event", readonly=True),
         'nb_register': fields.integer('Number of Registration'),
@@ -52,7 +52,6 @@ class partner_event_registration(osv.osv_memory):
         value = {}
         res_obj = self.pool.get('res.partner')
         job_obj = self.pool.get('res.partner.job')
-        event_obj = self.pool.get('event.event')
         reg_obj = self.pool.get('event.registration')
         mod_obj = self.pool.get('ir.model.data')
 
@@ -61,9 +60,9 @@ class partner_event_registration(osv.osv_memory):
         contact_id = False
         email = False
         if addr.has_key('default'):
-                job_ids = job_obj.search(cr, uid, [('address_id', '=', addr['default'])])
+                job_ids = job_obj.search(cr, uid, [('address_id', '=', addr['default'])], context=context)
                 if job_ids:
-                    contact = job_obj.browse(cr, uid, job_ids[0])
+                    contact = job_obj.browse(cr, uid, job_ids[0], context=context)
                     if contact:
                         contact_id = contact.contact_id.id
                         email = contact.email
@@ -71,14 +70,13 @@ class partner_event_registration(osv.osv_memory):
         result = mod_obj._get_id(cr, uid, 'event', 'view_registration_search')
         res = mod_obj.read(cr, uid, result, ['res_id'])
 
-        data_obj = self.pool.get('ir.model.data')
         # Select the view
-        id2 = data_obj._get_id(cr, uid, 'event', 'view_event_registration_form')
-        id3 = data_obj._get_id(cr, uid, 'event', 'view_event_registration_tree')
+        id2 = mod_obj._get_id(cr, uid, 'event', 'view_event_registration_form')
+        id3 = mod_obj._get_id(cr, uid, 'event', 'view_event_registration_tree')
         if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+            id2 = mod_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+            id3 = mod_obj.browse(cr, uid, id3, context=context).res_id
 
         for current in self.browse(cr, uid, ids, context=context):
             for partner in res_obj.browse(cr, uid, record_ids, context=context):
@@ -104,7 +102,7 @@ class partner_event_registration(osv.osv_memory):
                 'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': res['res_id']
-            }
+        }
         return value
 
     def name_get(self, cr, uid, ids, context=None):
@@ -117,7 +115,7 @@ class partner_event_registration(osv.osv_memory):
         res = []
         if not ids:
             return res
-        reads = self.read(cr, uid, ids, ['event_type', 'event_id'], context)
+        reads = self.read(cr, uid, ids, ['event_type', 'event_id'], context=context)
         for record in reads:
             event_id = record['event_id'][1]
             if record['event_type']:
@@ -134,13 +132,13 @@ class partner_event_registration(osv.osv_memory):
             context = {}
         partner_id = context.get('active_id', False)
         if event_id:
-            event = event_obj.browse(cr, uid, event_id)
+            event = event_obj.browse(cr, uid, event_id, context=context)
             pricelist_id = event.pricelist_id and event.pricelist_id.id or False
             if partner_id:
                 partner = partner_obj.browse(cr, uid, partner_id, context=context)
                 pricelist_id = pricelist_id or partner.property_product_pricelist.id
             unit_price = product_obj._product_price(cr, uid, [event.product_id.id], False, False, {'pricelist': pricelist_id})[event.product_id.id]
-                
+
             res['value'] = {
                           'event_type': event.type and event.type.id or False,
                           'start_date': event.date_begin,

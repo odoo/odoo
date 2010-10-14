@@ -4,7 +4,7 @@
 
     <menuitem
         id="menu_process"
-        name="Enterprise Processes"
+        name="Enterprise Process"
         parent="base.menu_custom"
         groups="base.group_extended"/>
 
@@ -121,7 +121,7 @@
         </record>
 
     <record model="ir.actions.act_window" id="action_process_form">
-        <field name="name">Process</field>
+        <field name="name">Processes</field>
         <field name="res_model">process.process</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -282,11 +282,11 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Roles Required">
-                        <field name="role_ids" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Roles from Workflow">
+                    <page string="Workflow Transitions">
                         <field name="transition_ids" colspan="4" nolabel="1"/>
+                    </page>
+                    <page string="Associated Groups">
+                        <field name="group_ids" colspan="4" nolabel="1"/>
                     </page>
                     <page string="Notes">
                         <field name="note" nolabel="1" colspan="4"/>

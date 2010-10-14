@@ -42,7 +42,7 @@
             <field name="model">crm.claim</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Claims" colors="blue:state=='pending';black:state=='open';gray:state in ('close', 'cancel');red:date_deadline and (date_deadline &lt; current_date)">
+                <tree string="Claims" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('close', 'cancel');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="user_id" />
@@ -53,6 +53,9 @@
                     <field name="categ_id" string="Type" select="1"/>
                     <field name="stage_id" invisible="1"/>
                     <field name="state"/>
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
@@ -62,9 +65,6 @@
                     <button name="case_close" string="Close"
                         states="open,draft,pending" type="object"
                         icon="gtk-close" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object" icon="gtk-convert" />
                 </tree>
@@ -109,16 +109,15 @@
                                     <field name="section_id" widget="selection"/>
                                     <label string="Stage: " align="1.0"/>
                                     <group colspan="1" col="3">
-                                        <field name="stage_id" nolabel="1"
+                                        <field name="stage_id" nolabel="1" readonly="1"
                                             on_change="onchange_stage_id(stage_id)"
-                                            domain="[('section_id','=',section_id), ('object_id.model', '=', 'crm.claim')]" />
+                                            domain="[('object_id.model', '=', 'crm.claim')]" />
                                         <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
                                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                                     </group>
                                     <field name="categ_id" select="1" widget="selection"
                                     domain="[('object_id.model', '=', 'crm.claim')]" />
-                                    <field name="type_id" string="Type of Action" select="1"
-                                    domain="[('object_id.model', '=', 'crm.claim')]" />
+                                    <field name="type_action" select="1"/>
                                     <field name="priority"/>
                                 </group>
                                 <separator colspan="4" string="References"/>
@@ -131,6 +130,9 @@
                                 <separator colspan="4" string=""/>
                                 <group col="8" colspan="4">
                                     <field name="state" select="1"/>
+                                    <button name="case_cancel" string="Cancel"
+                                    states="draft,open,pending" type="object"
+                                    icon="gtk-cancel" />
                                     <button name="case_open" string="Open"
                                     states="draft,pending" type="object"
                                     icon="gtk-go-forward" />
@@ -140,9 +142,6 @@
                                     <button name="case_close" string="Done"
                                     states="open,draft,pending" type="object"
                                     icon="gtk-jump-to" />
-                                    <button name="case_cancel" string="Cancel"
-                                    states="draft,open,pending" type="object"
-                                    icon="gtk-cancel" />
                                     <button name="case_reset"
                                     string="Reset to Draft" states="done,cancel"
                                     type="object" icon="gtk-convert" />
@@ -275,7 +274,11 @@
                                help="Unassigned Claims" />
                    </field>
                    <field name="section_id" select="1"
-                       widget="selection"/>
+                       widget="selection">
+                       <filter icon="terp-personal+"
+                            domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                            help="My section" />
+                    </field>
                    <newline/>
                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"

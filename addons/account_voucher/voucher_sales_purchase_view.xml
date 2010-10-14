@@ -80,7 +80,7 @@
         </record>
 
         <record id="act_pay_voucher" model="ir.actions.act_window">
-            <field name="name">Sales Payment</field>
+            <field name="name">Customer Payment</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt'), ('partner_id','=',partner_id)]</field>
@@ -111,7 +111,7 @@
                                     <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection"/>
                                     <field name="name"/>
                                     <field name="amount" sum="Total"/>
-                                    <field name="account_analytic_id" groups="base.group_extended"/>
+                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
@@ -148,12 +148,14 @@
                             <field name="move_ids" colspan="4" nolabel="1" readonly="1"/>
                         </page>
                     </notebook>
-                    <group col="10" colspan="4">
+                    <group col="8" colspan="4">
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
-                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
-                        <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Sales Payment', 'type':'receipt', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay" attrs="{'invisible':[('pay_now','!=','pay_now'), ('state','!=','posted')]}"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
+                        <group  colspan="2" attrs="{'invisible':[('pay_now','!=','pay_now')]}">
+			    <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay" attrs="{'invisible':[('state','!=','posted')]}"/>
+			</group>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
@@ -186,6 +188,7 @@
         <menuitem id="menu_action_sale_receipt" icon="STOCK_JUSTIFY_FILL"
             action="action_sale_receipt"
             parent="account.menu_finance_receivables"
+            groups="base.group_extended"
             sequence="10"/>
 
         <!--  Purchase Vouchers -->
@@ -203,9 +206,9 @@
             <field name="model">account.voucher</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Vendor Bills">
+                <form string="Supplier Voucher">
                     <group col="6" colspan="4">
-                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" string="Vendor" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"/>
+                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"/>
                         <field name="journal_id" domain="[('type','in',['purchase','purchase_refund'])]" widget="selection" select="1" on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id)"/>
                         <field name="number"/>
                         <field name="name" colspan="4"/>
@@ -221,7 +224,7 @@
                                     <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"/>
                                     <field name="name"/>
                                     <field name="amount"/>
-                                    <field name="account_analytic_id" groups="base.group_extended"/>
+                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
@@ -255,7 +258,7 @@
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
-                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                         <button icon="terp-dolar_ok!" name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':[('pay_now','!=','pay_now'), ('state','!=','posted')]}"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
@@ -263,7 +266,7 @@
             </field>
         </record>
         <record id="action_purchase_receipt" model="ir.actions.act_window">
-            <field name="name">Vendor Bills</field>
+            <field name="name">Supplier Vouchers</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type','in',['purchase','purchase_refund']), ('type','=','purchase')]</field>
@@ -285,7 +288,8 @@
         </record>
 
         <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL"
-        action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>
+            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"
+            groups="base.group_extended"/>
 
     </data>
 </openerp>

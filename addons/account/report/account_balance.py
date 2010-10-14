@@ -47,6 +47,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             'get_journal': self._get_journal,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
+            'get_target_move': self._get_target_move,
         })
         self.context = context
 
@@ -85,7 +86,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
                 self.sum_debit += account_rec['debit']
                 self.sum_credit += account_rec['credit']
                 if disp_acc == 'bal_movement':
-                    if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
+                    if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0:
                         self.result_acc.append(res)
                 elif disp_acc == 'bal_solde':
                     if  res['balance'] != 0:

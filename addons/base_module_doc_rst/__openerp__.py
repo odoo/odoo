@@ -24,10 +24,10 @@
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """
-    * This module generate the Technical Guides of selected modules in Restructured Text format (RST)
+    * This module generates the Technical Guides of selected modules in Restructured Text format (RST)
     * It uses the Sphinx (http://sphinx.pocoo.org) implementation of RST
     * It creates a tarball (.tgz file suffix) containing an index file and one file per module
-    * Generate Relationship Graph
+    * Generates Relationship Graph
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

@@ -2,20 +2,6 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="product_consultant" model="product.product">
-            <field name="default_code">DEV</field>
-            <field name="list_price">75.0</field>
-            <field name="standard_price">30.0</field>
-            <field name="uom_id" ref="product.uom_hour"/>
-            <field name="uom_po_id" ref="product.uom_hour"/>
-            <field name="name">Consultancy - Senior Developer</field>
-            <field name="categ_id" ref="product.product_category_10"/>
-            <field name="type">service</field>
-            <field name="supply_method">produce</field>
-            <field name="procure_method">make_to_order</field>
-            <field eval="False" name="purchase_ok"/>
-        </record>
-
         <!-- complete our example employee -->
         <record id="hr.employee1" model="hr.employee">
             <field name="product_id" ref="product_consultant"/>

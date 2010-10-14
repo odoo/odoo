@@ -61,8 +61,6 @@
                 <field name="state"/>
                 <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
                 <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                <button name="case_close" string="Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
-                <button name="case_cancel" string="Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
             </tree>
         </field>
     </record>
@@ -77,8 +75,8 @@
                         <field name="name" string="Subject"/>
                         <field name="partner_name"/>
                         <field name="job_id" on_change="onchange_job(job_id)"/>
-                        <button string="Schedule a Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
-                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="gtk-index"/>
+                        <button string="Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
+                        <button name="action_makeMeeting" type="object" string="Meeting" icon="gtk-index"/>
                     <newline/>
                     <field name="department_id" widget="selection"/>
                     <group colspan="2" col="4">
@@ -87,11 +85,11 @@
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
                     <field name="user_id"/>
-                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                    <button name="action_print_survey" string="Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
                     <newline/>
-          <field name="date_action"/>
-          <field name="title_action"/>
+                    <field name="date_action"/>
+                    <field name="title_action"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
@@ -116,7 +114,7 @@
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Qualification"/>
                             <!-- <field name="type_id" domain="[('object_id.model', '=', 'hr.applicant')]"/>-->
-                            <field name="type_id"/>
+                            <field name="type_id" widget="selection"/>
                             <field name="priority" string="Appreciation"/>
                             <field name="reference"/>
                         </group>
@@ -130,10 +128,10 @@
                         <separator colspan="4" string="Status"/>
                         <group col="8" colspan="4">
                             <field name="state"/>
-                            <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                            <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                            <button name="case_close" string="Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
                             <button name="case_cancel" string="Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                            <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                            <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
+                            <button name="case_close" string="Hired" states="open,pending" type="object" icon="terp-partner"/>
                             <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                         </group>
                    </page>

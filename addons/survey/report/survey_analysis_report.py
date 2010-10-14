@@ -29,7 +29,6 @@ from report import report_sxw
 
 class survey_analysis(report_rml):
     def create(self, cr, uid, ids, datas, context):
-
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
         user_obj = pooler.get_pool(cr.dbname).get('res.users')
         rml_obj=report_sxw.rml_parse(cr, uid, surv_obj._name,context)
@@ -46,9 +45,6 @@ class survey_analysis(report_rml):
                         <drawString x="1.3cm" y="28.3cm"> """+to_xml(rml_obj.formatLang(time.strftime("%Y-%m-%d %H:%M:%S"),date_time=True))+"""</drawString>
                         <setFont name="DejaVu Sans Bold" size="10"/>
                         <drawString x="9.8cm" y="28.3cm">"""+ to_xml(company.name) +"""</drawString>
-                        <setFont name="DejaVu Sans" size="8"/>
-                        <drawRightString x="19.7cm" y="28.3cm"><pageNumber/> / </drawRightString>
-                        <drawString x="19.8cm" y="28.3cm"></drawString>
                         <stroke color="#000000"/>
                         <lines>1.3cm 28.1cm 20cm 28.1cm</lines>
                         </pageGraphics>
@@ -189,9 +185,9 @@ class survey_analysis(report_rml):
 
                         for ans in que.answer_choice_ids:
                             rml += """<tr><td><para style="answer">""" + to_xml(tools.ustr(ans.answer)) + """</para></td>"""
-                            cr.execute("select count(id) from survey_response_answer sra where sra.answer_id = %d" % ans.id)
+                            cr.execute("select count(id) from survey_response_answer sra where sra.answer_id = %s", (ans.id,))
                             tot_res = cr.fetchone()[0]
-                            cr.execute("select count(id) ,sra.column_id from survey_response_answer sra where sra.answer_id = %d group by sra.column_id" % ans.id)
+                            cr.execute("select count(id) ,sra.column_id from survey_response_answer sra where sra.answer_id=%s group by sra.column_id", (ans.id,))
                             calc_res = cr.dictfetchall()
                             for mat_col in range(1, len(matrix_ans)):
                                 percantage = 0.0
@@ -210,7 +206,7 @@ class survey_analysis(report_rml):
                         rml += """</blockTable>"""
 
                         if que.is_comment_require:
-                            cr.execute("select count(id) from survey_response_line where question_id = %d and comment != ''"% que.id)
+                            cr.execute("select count(id) from survey_response_line where question_id = %s and comment != ''",(que.id,))
                             tot_res = cr.fetchone()[0]
                             rml += """<blockTable colWidths=" """+ str(500 - last_col) +"," + str(last_col) + """ " style="Table1"><tr><td><para style="answer_right">""" + to_xml(tools.ustr(que.comment_label)) + """</para></td>
                                     <td><para style="answer">""" + tools.ustr(tot_res) + """</para></td></tr></blockTable>"""
@@ -244,7 +240,7 @@ class survey_analysis(report_rml):
 
                         if que.is_comment_require:
 #                            if que.make_comment_field:
-#                                cr.execute("select count(id) from survey_response_line where question_id = %d and comment != ''"% que.id)
+#                                cr.execute("select count(id) from survey_response_line where question_id = %s and comment != ''", (que.id,))
 #                                tot_res = cr.fetchone()[0]
 #                                tot_avg = 0.00
 #                                if que.tot_resp:
@@ -253,13 +249,13 @@ class survey_analysis(report_rml):
 #                                        <td><para style="answer">""" + str(tot_avg) + """%</para></td>
 #                                        <td><para style="answer">""" + tools.ustr(tot_res) + """</para></td></tr></blockTable>"""
 #                            else:
-                            cr.execute("select count(id) from survey_response_line where question_id = %d and comment != ''"% que.id)
+                            cr.execute("select count(id) from survey_response_line where question_id = %s and comment != ''", (que.id,))
                             tot_res = cr.fetchone()[0]
                             rml += """<blockTable colWidths="450.0,50.0" style="Table1"><tr><td><para style="answer_right">""" + to_xml(tools.ustr(que.comment_label)) + """</para></td>
                                     <td><para style="answer_right">""" + tools.ustr(tot_res) + """</para></td></tr></blockTable>"""
 
                     elif que.type in['single_textbox']:
-                        cr.execute("select count(id) from survey_response_line where question_id = %d and single_text!=''" % que.id)
+                        cr.execute("select count(id) from survey_response_line where question_id = %s and single_text!=''",(que.id,))
                         rml += """<blockTable colWidths="400.0,100.0" style="Table1">
                              <tr>
                                  <td> <para style="Standard"> </para></td>
@@ -270,7 +266,7 @@ class survey_analysis(report_rml):
                             </blockTable>"""
 
                     elif que.type in['comment']:
-                        cr.execute("select count(id) from survey_response_line where question_id = %d and comment !=''" % que.id)
+                        cr.execute("select count(id) from survey_response_line where question_id = %s and comment !=''", (que.id,))
                         rml += """<blockTable colWidths="400.0,100.0" style="Table1">
                              <tr>
                                  <td> <para style="Standard"> </para></td>
@@ -303,12 +299,12 @@ class survey_analysis(report_rml):
                             rating_weight_sum = 0
                             for mat_col in range(1, len(matrix_ans)):
                                 cr.execute("select count(sra.answer_id) from survey_response_line sr, survey_response_answer sra\
-                                     where sr.id = sra.response_id and  sra.answer_id = %d and sra.column_id ='%d'" % (ans.id,matrix_ans[mat_col][0]))
+                                     where sr.id = sra.response_id and  sra.answer_id = %s and sra.column_id ='%s'", (ans.id,matrix_ans[mat_col][0]))
                                 tot_res = cr.fetchone()[0]
                                 cr.execute("select count(sra.answer_id),sqc.rating_weight from survey_response_line sr, survey_response_answer sra ,\
                                         survey_question_column_heading sqc where sr.id = sra.response_id and \
-                                        sqc.question_id = sr.question_id  and sra.answer_id = %d and sqc.title ='%s'\
-                                        group by sra.answer_id,sqc.rating_weight" % (ans.id,matrix_ans[mat_col][1]))
+                                        sqc.question_id = sr.question_id  and sra.answer_id = %s and sqc.title ='%s'\
++                                       group by sra.answer_id,sqc.rating_weight", (ans.id,matrix_ans[mat_col][1]))
                                 col_weight =  cr.fetchone()
 
                                 if not col_weight:
@@ -352,10 +348,10 @@ class survey_analysis(report_rml):
                                 rml += """<td><para style="response">""" + to_xml(tools.ustr(menu)) + """</para></td>"""
                             rml += """<td><para style="response-bold">Answer Count</para></td></tr>"""
                             cr.execute("select count(id), sra.answer_id from survey_response_answer sra \
-                                     where sra.column_id='%s' group by sra.answer_id "  % (column.id))
+                                     where sra.column_id='%s' group by sra.answer_id ", (column.id,))
                             res_count = cr.dictfetchall()
                             cr.execute("select count(sra.id),sra.value_choice, sra.answer_id, sra.column_id from survey_response_answer sra \
-                                 where sra.column_id='%s'  group by sra.value_choice ,sra.answer_id, sra.column_id" % (column.id))
+                                 where sra.column_id='%s' group by sra.value_choice ,sra.answer_id, sra.column_id", (column.id,))
                             calc_percantage = cr.dictfetchall()
 
                             for ans in que.answer_choice_ids:
@@ -393,7 +389,7 @@ class survey_analysis(report_rml):
                              <td> <para style="response-bold">Answer Count</para></td>
                          </tr>"""
                         for ans in que.answer_choice_ids:
-                            cr.execute("select answer from survey_response_answer where answer_id=%d group by answer" % ans.id)
+                            cr.execute("select answer from survey_response_answer where answer_id=%s group by answer", (ans.id,))
                             tot_res = cr.dictfetchall()
                             total = 0
                             for  tot in tot_res:
@@ -426,6 +422,7 @@ class survey_analysis(report_rml):
         rml += """</document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
+        self.internal_header=True
         pdf = create_doc(rml, title=self.title)
 
         return (pdf, report_type)

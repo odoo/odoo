@@ -29,10 +29,9 @@
                             <attribute name="string">Configure</attribute>
                   </xpath>
                   <group colspan="8">
+                        <field name="marketing_campaign" />
                         <field name="email_template" />
                         <field name="crm_profiling" />
-                        <field name="marketing_campaign" />
-                        <field name="marketing_campaign_mailchimp" />
                   </group>
                 </data>
             </field>
@@ -51,6 +50,7 @@
         <record id="marketing_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_marketing_installer"/>
             <field name="sequence">3</field>
+            <field name="restart">always</field>
         </record>
 
     </data>

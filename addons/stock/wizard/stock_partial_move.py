@@ -38,8 +38,7 @@ class stock_partial_move(osv.osv_memory):
             context={}
         for m in move_obj.browse(cr, uid, context.get('active_ids', [])):
             if m.state in ('done', 'cancel'):
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delivery products  which are already delivered !'))
-
+                raise osv.except_osv(_('Invalid action !'), _('Cannot deliver products which are already delivered !'))
 
             if 'move%s_product_id'%(m.id) not in self._columns:
                 self._columns['move%s_product_id'%(m.id)] = fields.many2one('product.product',string="Product")
@@ -47,12 +46,14 @@ class stock_partial_move(osv.osv_memory):
                 self._columns['move%s_product_qty'%(m.id)] = fields.float("Quantity")
             if 'move%s_product_uom'%(m.id) not in self._columns:
                 self._columns['move%s_product_uom'%(m.id)] = fields.many2one('product.uom',string="Product UOM")
-
+            if 'move%s_prodlot_id'%(m.id) not in self._columns:
+                self._columns['move%s_prodlot_id'%(m.id)] = fields.many2one('stock.production.lot', string="Lot")
+                
             if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
                 if 'move%s_product_price'%(m.id) not in self._columns:
-                    self._columns['move%s_product_price'%(m.id)] = fields.float("Price")
+                    self._columns['move%s_product_price'%(m.id)] = fields.float("Cost", help="Unit Cost for this product line")
                 if 'move%s_product_currency'%(m.id) not in self._columns:
-                    self._columns['move%s_product_currency'%(m.id)] = fields.many2one('res.currency',string="Currency")
+                    self._columns['move%s_product_currency'%(m.id)] = fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed")
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
@@ -89,7 +90,12 @@ class stock_partial_move(osv.osv_memory):
                         'relation': 'product.uom',
                         'required' : True,
                         'readonly' : True,
-                    }
+                    },
+                    'move%s_prodlot_id'%(m.id): {
+                            'string': _('Production Lot'),
+                            'type': 'many2one',
+                            'relation': 'stock.production.lot',
+                        }                    
                 })
 
                 _moves_arch_lst += """
@@ -97,18 +103,20 @@ class stock_partial_move(osv.osv_memory):
                     <field name="move%s_product_id" nolabel="1"/>
                     <field name="move%s_product_qty" string="Qty" />
                     <field name="move%s_product_uom" nolabel="1" />
-                """%(m.id, m.id, m.id)
+                    <field name="move%s_prodlot_id" domain="[('product_id','=',move%s_product_id)]"  groups="base.group_extended" />                    
+                """%(m.id, m.id, m.id,m.id,m.id)
                 if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
                     _moves_fields.update({
                         'move%s_product_price'%(m.id) : {
-                            'string': _('Price'),
+                            'string': _('Cost'),
                             'type' : 'float',
+                            'help': _('Unit Cost for this product line'),
                         },
                         'move%s_product_currency'%(m.id): {
                             'string': _('Currency'),
-                            'type' : 'float',
                             'type' : 'many2one',
                             'relation': 'res.currency',
+                            'help': _("Currency in which Unit Cost is expressed"),
                         }
                     })
                     _moves_arch_lst += """
@@ -154,37 +162,19 @@ class stock_partial_move(osv.osv_memory):
             if m.state in ('done', 'cancel'):
                 continue
             res['type'] = m.picking_id and m.picking_id.type or ''
-    
-
             if 'move%s_product_id'%(m.id) in fields:
                 res['move%s_product_id'%(m.id)] = m.product_id.id
             if 'move%s_product_qty'%(m.id) in fields:
                 res['move%s_product_qty'%(m.id)] = m.product_qty
             if 'move%s_product_uom'%(m.id) in fields:
                 res['move%s_product_uom'%(m.id)] = m.product_uom.id
-            if (m.picking_id.type == 'out') and (m.product_id.cost_method == 'average') and 'sale_id' in m.picking_id._columns.keys():
-                price = 0
-                if hasattr(m, 'sale_line_id') and m.sale_line_id:
-                    price = m.sale_line_id.price_unit
-
-                currency = False
-                if hasattr(m.picking_id, 'sale_id') and m.picking_id.sale_id:
-                    currency = m.picking_id.sale_id.pricelist_id.currency_id.id
-
-                if 'move%s_product_price'%(m.id) in fields:
-                    res['move%s_product_price'%(m.id)] = price
-                if 'move%s_product_currency'%(m.id) in fields:
-                    res['move%s_product_currency'%(m.id)] = currency
-
-            if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average') and 'purchase_id' in m.picking_id._columns.keys():
-                price = 0
-                if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
-                    price = m.purchase_line_id.price_unit
-
-                currency = False
-                if hasattr(m.picking_id, 'purchase_id') and m.picking_id.purchase_id:
-                    currency = m.picking_id.purchase_id.pricelist_id.currency_id.id
-
+            if 'move%s_prodlot_id'%(m.id) in fields:
+                    res['move%s_prodlot_id'%(m.id)] = m.prodlot_id.id
+            if m.picking_id.type == 'in' and m.product_id.cost_method == 'average':
+                # Always use default product cost and currency from Product Form, 
+                # which belong to the Company owning the product
+                currency = m.product_id.company_id.currency_id.id
+                price = m.product_id.standard_price
                 if 'move%s_product_price'%(m.id) in fields:
                     res['move%s_product_price'%(m.id)] = price
                 if 'move%s_product_currency'%(m.id) in fields:
@@ -213,7 +203,8 @@ class stock_partial_move(osv.osv_memory):
             partial_datas['move%s'%(m.id)] = {
                 'product_id' : getattr(partial, 'move%s_product_id'%(m.id)).id,
                 'product_qty' : getattr(partial, 'move%s_product_qty'%(m.id)),
-                'product_uom' : getattr(partial, 'move%s_product_uom'%(m.id)).id
+                'product_uom' : getattr(partial, 'move%s_product_uom'%(m.id)).id,
+                'prodlot_id' : getattr(partial, 'move%s_prodlot_id'%(m.id)).id
             }
 
             if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):

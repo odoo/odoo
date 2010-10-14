@@ -40,7 +40,7 @@
   !python {model: stock.picking }: |
    sale_order_obj = self.pool.get('sale.order')
    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
-   picking_id = self.search(cr, uid, [('origin','!=',so.name),(('type','=','out')and('type','=','delivery'))])
+   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
    assert picking_id,"There is a picking attached to this sale order"
 -
   I open the Invoice for the SO.
@@ -54,7 +54,7 @@
     for invoice in invoice_ids:
       wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
 -
-  I assign an analytic jounal to the Bank journal
+  I assign an analytic journal to the Bank journal
 - 
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale

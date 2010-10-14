@@ -28,12 +28,12 @@
     "depends": ["account"],
     "init_xml": [],
     "description": """
-    This module provides :
-    * a more efficient way to manage invoice payment.
-    * a basic mechanism to easily plug various automated payment.
+This module provides :
+* a more efficient way to manage invoice payment.
+* a basic mechanism to easily plug various automated payment.
     """,
     'author': 'OpenERP SA',
-    'depends': ['account'],
+    'depends': ['account_voucher'],
     'init_xml': [],
     'update_xml': [
         'security/account_payment_security.xml',
@@ -49,7 +49,7 @@
     ],
     'demo_xml': ['account_payment_demo.xml'],
     'test': [
-             'test/account_payment.yml'
+             'test/account_payment.yml',
              'test/account_payment_report.yml'
     ],
     'installable': True,

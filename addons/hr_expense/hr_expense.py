@@ -97,6 +97,13 @@ class hr_expense_expense(osv.osv):
         'currency_id': _get_currency,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+
+    def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
+        if not employee_id:
+            return {'value':{'department_id': False}}
+        dept = self.pool.get('hr.employee').browse(cr, uid, employee_id).department_id
+        return {'value': {'department_id':dept and dept.id or False}}
+
     def expense_confirm(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'confirm',
@@ -246,10 +253,8 @@ class hr_expense_line(osv.osv):
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v['name'] = product.name
             # Compute based on pricetype of employee company
-            pricetype_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.property_valuation_price_type.id
             context['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
-            pricetype = self.pool.get('product.price.type').browse(cr, uid, pricetype_id, context=context)
-            amount_unit = product.price_get(pricetype.field, context)[product.id]
+            amount_unit = product.price_get('standard_price', context)[product.id]
             v['unit_amount'] = amount_unit
             if not uom_id:
                 v['uom_id'] = product.uom_id.id

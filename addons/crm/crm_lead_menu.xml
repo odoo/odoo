@@ -8,9 +8,8 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
-        <field name="context">{"search_default_user_id":uid,'search_default_current':1}</field>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
-        <field name="context">{'search_default_current':1, 'default_type': 'lead'}</field>
+        <field name="context">{'search_default_current':1, 'default_type': 'lead', 'search_default_section_id': section_id}</field>
         <field name="help">A lead is a first, unqualified, contact with a new prospect. Use leads when you import a database of prospects or integrate your website's contact form with OpenERP. After having been qualified, the lead can be converted to a partner and a business opportunity for a further detailed tracking of the related activities.</field>
     </record>
 

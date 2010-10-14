@@ -49,7 +49,7 @@
         <field name="res_model">crm.meeting</field>
         <field name="view_mode">calendar,tree,form,gantt</field>
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
-        <field name="context">{"search_default_user_id":uid}</field>
+        <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
         <field name="help">The calendar of meetings is shared between sales teams and fully integrated with the others applications like the employee holidays. You can also synchronize meetings with your mobile phone using the caldav interface.</field>
     </record>
@@ -92,7 +92,7 @@
         sequence="1" />
 
     <record id="ir_ui_view_sc_calendar0" model="ir.ui.view_sc">
-        <field name="name">Calendar</field>
+        <field name="name">Meetings</field>
         <field name="resource">ir.ui.menu</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>

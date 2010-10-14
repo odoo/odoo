@@ -61,14 +61,11 @@ class crm_phonecall(crm_case, osv.osv):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."), 
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', \
-                            domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.phonecall')]"), 
         'date_open': fields.datetime('Opened', readonly=True),
         # phonecall fields
         'duration': fields.float('Duration', help="Duration in Minutes"), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                        domain="[('section_id','=',section_id),\
+                        domain="['|',('section_id','=',section_id),('section_id','=',False),\
                         ('object_id.model', '=', 'crm.phonecall')]"), 
         'partner_phone': fields.char('Phone', size=32), 
         'partner_contact': fields.related('partner_address_id', 'name', \

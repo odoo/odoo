@@ -64,7 +64,7 @@ class auction_dates(osv.osv):
         reads = self.read(cr, uid, ids, ['name', 'auction1'], context)
         name = [(r['id'], '['+r['auction1']+'] '+ r['name']) for r in reads]
         return name
-    
+
     def _get_invoice(self, cr, uid, ids, name, arg, context={}):
         lots_obj = self.pool.get('auction.lots')
         result = {}
@@ -100,7 +100,7 @@ class auction_dates(osv.osv):
         'adj_total': fields.function(_adjudication_get, method=True, string='Total Adjudication', store=True),
         'state': fields.selection((('draft', 'Draft'), ('closed', 'Closed')), 'State', select=1, readonly=True,
                                   help='When auction starts the state is \'Draft\'.\n At the end of auction, the state becomes \'Closed\'.'),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=False),
         'buyer_invoice_history': fields.function(_get_invoice, relation='account.invoice', method=True, string="Buyer Invoice", type='many2many', multi=True),
         'seller_invoice_history': fields.function(_get_invoice, relation='account.invoice', method=True, string="Seller Invoice", type='many2many', multi=True),
     }
@@ -291,7 +291,7 @@ class auction_lots(osv.osv):
                         taxes += lot.auction_id.buyer_costs
                     tax = pt_tax.compute_all(cr, uid, taxes, amount, 1)['taxes']
                     for t in tax:
-                        result += t['amount']
+                        result += t.get('amount', 0.0)
                     result += amount
                 elif name == "seller_price":
                     if lot.bord_vnd_id.tax_id:
@@ -300,7 +300,7 @@ class auction_lots(osv.osv):
                         taxes += lot.auction_id.seller_costs
                     tax = pt_tax.compute_all(cr, uid, taxes, amount, 1)['taxes']
                     for t in tax:
-                        result += t['amount']
+                        result += t.get('amount', 0.0)
                     result += amount
                 elif name == "gross_revenue":
                     if lot.auction_id:
@@ -621,14 +621,14 @@ class auction_lots(osv.osv):
                     taxes.append(lot.author_right.id)
 
                 inv_line= {
-                    'invoice_id': inv_id, 
-                    'quantity': 1, 
-                    'product_id': lot.product_id.id, 
-                    'name': 'proforma'+'['+str(lot.obj_num)+'] '+ lot.name, 
-                    'invoice_line_tax_id': [(6, 0, taxes)], 
-                    'account_analytic_id': lot.auction_id.account_analytic_id.id, 
-                    'account_id': lot.auction_id.acc_income.id, 
-                    'price_unit': lot.obj_price, 
+                    'invoice_id': inv_id,
+                    'quantity': 1,
+                    'product_id': lot.product_id.id,
+                    'name': 'proforma'+'['+str(lot.obj_num)+'] '+ lot.name,
+                    'invoice_line_tax_id': [(6, 0, taxes)],
+                    'account_analytic_id': lot.auction_id.account_analytic_id.id,
+                    'account_id': lot.auction_id.acc_income.id,
+                    'price_unit': lot.obj_price,
                 }
                 inv_line_obj.create(cr, uid, inv_line, context)
             inv_ref.button_compute(cr, uid, invoices.values())
@@ -646,7 +646,6 @@ class auction_lots(osv.osv):
         if not context:
             context={}
         inv_ref=self.pool.get('account.invoice')
-        partner_obj = self.pool.get('res.partner')
         inv_line_obj = self.pool.get('account.invoice.line')
         wf_service = netsvc.LocalService('workflow')
         for lot in self.browse(cr, uid, ids, context):
@@ -655,7 +654,6 @@ class auction_lots(osv.osv):
             if lot.bord_vnd_id.id in invoices:
                 inv_id = invoices[lot.bord_vnd_id.id]
             else:
-                res = partner_obj.address_get(cr, uid, [lot.bord_vnd_id.partner_id.id], ['contact', 'invoice'])
                 inv = {
                     'name': 'Auction:' +lot.name,
                     'journal_id': lot.auction_id.journal_seller_id.id,

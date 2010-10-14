@@ -28,6 +28,7 @@ import tools
 import pooler
 import re
 import sys
+from lxml import etree
 
 
 class rml_parse(report_sxw.rml_parse):
@@ -150,10 +151,21 @@ class rml_parse(report_sxw.rml_parse):
             print Stringer
             return Stringer
 
-    def _add_header(self, node, header=1):
-        if header==2:
+    def _add_header(self, node, header='external'):
+        if header=='internal':
             rml_head =  self.rml_header2
+        elif header=='internal landscape':
+            rml_head =  self.rml_header3
         else:
             rml_head =  self.rml_header
         rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
+        rml_dom = node
+        head_dom = etree.XML(rml_head)
+        for tag in head_dom:
+            found = rml_dom.find('.//'+tag.tag)
+            if found is not None and len(found):
+                if tag.get('position'):
+                    found.append(tag)
+                else :
+                    found.getparent().replace(found,tag)
         return True

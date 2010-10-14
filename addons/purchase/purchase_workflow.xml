@@ -103,7 +103,7 @@
         <record id="trans_confirmed_router" model="workflow.transition">
             <field name="act_from" ref="act_confirmed"/>
             <field name="act_to" ref="act_router"/>
-            <field name="signal">purchase_approve</field>
+            <!-- <field name="signal">purchase_approve</field> removed from simplification/useability -->
         </record>
         <record id="trans_router_picking" model="workflow.transition">
             <field name="act_from" ref="act_router"/>

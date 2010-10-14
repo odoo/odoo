@@ -214,11 +214,8 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
     <section>
-      <para style="terp_default_9">[[repeatIn(o.line_ids, 'line') ]]</para>
+      <para style="terp_default_2">[[repeatIn(o.line_ids, 'line') ]]</para>
       <blockTable colWidths="112.0,86.0,106.0,64.0,85.0,75.0" style="Table4">
         <tr>
           <td>
@@ -237,12 +234,12 @@
             <para style="terp_default_Right_9">[[formatLang(line.amount) or '-' ]] [[get_company_currency_symbol()]] </para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line.amount_currency) ]] [[ line.currency.name ]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(line.amount_currency) ]] [[ line.currency.symbol]] </para>
           </td>
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="304.0,64.0,85.0,75.0" style="Table5">
+    <blockTable colWidths="335.0,32.0,85.0,75.0" style="Table5">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -256,7 +253,7 @@
           <para style="terp_default_Right_9">[[ formatLang(get_amount_total(o)) or '' ]] [[get_company_currency_symbol()]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(get_amount_total_in_currency(o)) or '' ]] [[ line.currency.name ]] </para>
+          <para style="terp_default_Right_9">[[ formatLang(get_amount_total_in_currency(o)) or '' ]] [[get_company_currency_symbol()]] </para>
         </td>
       </tr>
     </blockTable>

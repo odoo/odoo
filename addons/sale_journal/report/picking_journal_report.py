@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields, osv
 import tools
+from decimal_precision import decimal_precision as dp
+
 
 class sale_journal_picking_report(osv.osv):
     """
@@ -30,32 +32,32 @@ class sale_journal_picking_report(osv.osv):
     _description = "Picking lists"
     _auto = False
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True), 
-        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'), 
-                          ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True), 
+        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                          ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
 
         'invoice_state':fields.selection([
-            ("invoiced", "invoiced"), 
-            ("2binvoiced", "to be invoiced"), 
+            ("invoiced", "invoiced"),
+            ("2binvoiced", "to be invoiced"),
             ("none", "None")
-        ], "Invoice state", readonly=True), 
+        ], "Invoice state", readonly=True),
         'state': fields.selection([
-            ('draft', 'draft'), 
-            ('auto', 'waiting'), 
-            ('confirmed', 'confirmed'), 
-            ('assigned', 'assigned'), 
-            ('done', 'done'), 
-            ('cancel', 'cancel'), 
-        ], 'State', readonly=True), 
-        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoicing method', readonly=True), 
-        'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal', readonly=True), 
-        'quantity': fields.float('Quantities', readonly=True), 
-        'price_total': fields.float('Total Price', readonly=True), 
-        'price_average': fields.float('Average Price', readonly=True), 
-        'count': fields.integer('# of Lines', readonly=True), 
+            ('draft', 'draft'),
+            ('auto', 'waiting'),
+            ('confirmed', 'confirmed'),
+            ('assigned', 'assigned'),
+            ('done', 'done'),
+            ('cancel', 'cancel'),
+        ], 'State', readonly=True),
+        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoicing method', readonly=True),
+        'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal', readonly=True),
+        'quantity': fields.float('Quantities', readonly=True),
+        'price_total': fields.float('Total Price', readonly=True, digits_compute=dp.get_precision('Sale Price')),
+        'price_average': fields.float('Average Price', readonly=True, digits_compute=dp.get_precision('Sale Price')),
+        'count': fields.integer('# of Lines', readonly=True),
     }
     _order = 'journal_id, name desc, price_total desc'
-    
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'sale_journal_picking_report')
 
@@ -80,7 +82,7 @@ class sale_journal_picking_report(osv.osv):
                 order by s.invoice_type_id, s.invoice_state, s.state
                 )
         """)
-        
+
 sale_journal_picking_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

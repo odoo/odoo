@@ -20,12 +20,7 @@
 ##############################################################################
 
 from lxml import etree
-from operator import itemgetter
 from osv import fields, osv
-import netsvc
-import os
-import pooler
-import tools
 
 class crm_installer(osv.osv_memory):
     _name = 'crm.installer'

@@ -26,9 +26,9 @@
     "author": "OpenERP SA & Axelor",
     "category": "Generic Modules/Human Resources",
     "website": "http://www.openerp.com",
-    "description": """Human Ressources: Holidays tracking and workflow
+    "description": """Human Resources: Holidays tracking and workflow
 
-    This module allows you to manage leaves and leaves requests.
+    This module allows you to manage leaves and leaves' requests.
     Implements a dashboard for human resource management that includes.
         * My Leaves
         * My Expenses
@@ -43,7 +43,7 @@
                 HR / Employees / Employees
             then select the ones you want to choose, click on the print icon and select the option
                 'Print Summary of Employee's Holidays'
-    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR' and with the role 'holidays'. You can define these features in the security tab from the user data in
+    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR'. You can define these features in the security tab from the user data in
                 Administration / Users / Users
             for example, you maybe will do it for the user 'admin'
             .
@@ -56,6 +56,7 @@
         'security/ir.model.access.csv',
         'hr_holidays_workflow.xml',
         'hr_holidays_view.xml',
+        'hr_holidays_data.xml',
         'hr_holidays_wizard.xml',
         'hr_holidays_report.xml',
         'report/hr_holidays_report_view.xml',

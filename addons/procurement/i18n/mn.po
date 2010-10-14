@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-08-20 08:51+0000\n"
-"PO-Revision-Date: 2010-09-09 04:31+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-10-13 07:43+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-09 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-10-14 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_make_procurement
 msgid "Make Procurements"
-msgstr ""
+msgstr "Татан авалт хийх"
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -29,95 +29,98 @@ msgid ""
 "under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
 msgstr ""
+"Виртуал агуулах нь тэгтэй тэнцүү бүх бараанд автомат татан авалтыг "
+"эхлүүлдэг. Та энэ сонголтыг ашиглахгүй байх нь дээр, бид танд барааны МТО "
+"тохиргоог ашиглахыг зөвлөж байна."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Group By..."
-msgstr ""
+msgstr "Бүлэглэх..."
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Planification"
-msgstr ""
+msgstr "Төлөвлөлт"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "Энэ бараанд нийлүүлэгч тодорхойлоогүй байна !"
 
 #. module: procurement
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Хэмжих нэгж"
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Нийлүүлэх арга"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "No address defined for the supplier"
-msgstr ""
+msgstr "Нийлүүлэгчийн хаяг байхгүй"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
-msgstr ""
+msgstr "Зөвхөн зохистой нөөцийн дүрмийг бодно"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
 #: field:stock.warehouse.orderpoint,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Компани"
 
 #. module: procurement
 #: field:procurement.order,product_uos_qty:0
 msgid "UoS Quantity"
-msgstr ""
+msgstr "Зарах нэгжээрхи тоо"
 
 #. module: procurement
 #: view:procurement.order:0
 #: field:procurement.order,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Шалтгаан"
 
 #. module: procurement
 #: view:procurement.order.compute:0
 msgid "Compute Procurements"
-msgstr ""
+msgstr "Татан авалт тооцоолох"
 
 #. module: procurement
 #: field:procurement.order,message:0
 msgid "Latest error"
-msgstr ""
+msgstr "Сүүлийн алдаа"
 
 #. module: procurement
 #: help:mrp.property,composition:0
 msgid "Not used in computations, for information purpose only."
-msgstr ""
+msgstr "Тооцоололд ашиглагдахгүй, зөвхөн мэдээллийн зорилгоор ашиглана."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
-msgstr ""
+msgstr "Сүүлийн татан авалт"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Notes"
-msgstr ""
+msgstr "Тэмдэглэгээ"
 
 #. module: procurement
 #: help:procurement.order,message:0
 msgid "Exception occurred while computing procurement orders."
-msgstr ""
+msgstr "Татан авалтын захиалгыг тооцоолж байх үед онцгой тохиолдол гардаг."
 
 #. module: procurement
 #: help:procurement.order,state:0
@@ -131,11 +134,18 @@ msgid ""
 " It is in 'Waiting'. state when the procurement is waiting for another one "
 "to finish."
 msgstr ""
+"Татан авалт үүсэхэд төлөв нь 'Draft'.\n"
+"Татан авалт нь баталгаажсан бол төлөв нь 'Confirmed'.\n"
+"Баталгаажсаны дараа төлөв нь 'Running'.\n"
+"Хэрэв ямар нэгэн онцгой тохиолдол захиалгад үүсвэл төлөв нь  'Exception'.\n"
+"Онцгой тохиолдол устхад төлөв нь 'Ready'.\n"
+"Нэг татан авалт нь нөгөө татан авалтаа дуусахыг хүлээж байхад төлөв нь "
+"'Waiting' байна."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules Search"
-msgstr ""
+msgstr "Зохистой нөөцийн дүрэм хайх"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_min_qty:0
@@ -143,53 +153,56 @@ msgid ""
 "When the virtual stock goes belong the Min Quantity, OpenERP generates a "
 "procurement to bring the virtual stock to the Max Quantity."
 msgstr ""
+"Виртуал агуулах нь хамгийн бага тоо хэмжээнд ойртож байвал, OpenERP нь "
+"виртуал агуулахыг хамгийн их тоо хэмжээнд хүргэхийн тулд татан авалтыг "
+"боловсруулдаг."
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
 msgid "Scheduler Parameters"
-msgstr ""
+msgstr "Төлөвлөгчийн үзүүлэлт"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action11
 msgid "Temporary Procurement Exceptions"
-msgstr ""
+msgstr "Тухайн үеийн алдаатай татан авалт"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "has an exception."
-msgstr ""
+msgstr "алдаатай."
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
-msgstr ""
+msgstr "Бэлэн"
 
 #. module: procurement
 #: field:procurement.order.compute.all,automatic:0
 msgid "Automatic orderpoint"
-msgstr ""
+msgstr "Автомат захиалгын цэг"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Баталсан"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Retry"
-msgstr ""
+msgstr "Дахин оролдох"
 
 #. module: procurement
 #: view:procurement.order.compute:0
 #: view:procurement.orderpoint.compute:0
 msgid "Parameters"
-msgstr ""
+msgstr "Параметер"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Confirm"
-msgstr ""
+msgstr "Батлах"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -197,120 +210,122 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by OpenERP."
 msgstr ""
+"Татан авалтын үүсгэсэн баримтын дугаар. Үүнийг OpenERP автоматаар "
+"гүйцэтгэдэг."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "Хамгийн бага эрхтэй оролцогч"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action4
 msgid "Procurement Exceptions to Fix"
-msgstr ""
+msgstr "Алдаатай татан авалтын төлөв"
 
 #. module: procurement
 #: field:procurement.order,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Урьтамж"
 
 #. module: procurement
 #: view:procurement.order:0
 #: field:procurement.order,state:0
 msgid "State"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: procurement
 #: field:procurement.order,location_id:0
 #: view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,location_id:0
 msgid "Location"
-msgstr ""
+msgstr "Байршил"
 
 #. module: procurement
 #: field:make.procurement,warehouse_id:0
 #: view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Агуулах"
 
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Best price (not yet active!)"
-msgstr ""
+msgstr "Шилдэг үнэ (одоохондоо идэвхжээгүй!)"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Product & Location"
-msgstr ""
+msgstr "Бараа & Байршил"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
 msgid "Compute Procurement"
-msgstr ""
+msgstr "Татан авалт бодох"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action3
 #: model:ir.module.module,shortdesc:procurement.module_meta_information
 msgid "Procurements"
-msgstr ""
+msgstr "Нийлүүлэлт"
 
 #. module: procurement
 #: field:res.company,schedule_range:0
 msgid "Scheduler Range Days"
-msgstr ""
+msgstr "Төлөвлөгчийн өдрийн хязгаар"
 
 #. module: procurement
 #: view:make.procurement:0
 msgid "Ask New Products"
-msgstr ""
+msgstr "Шинэ бараа асуух"
 
 #. module: procurement
 #: field:make.procurement,date_planned:0
 msgid "Planned Date"
-msgstr ""
+msgstr "Төлөвлөсөн огноо"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Group By"
-msgstr ""
+msgstr "Бүлэглэх"
 
 #. module: procurement
 #: field:make.procurement,qty:0
 #: field:procurement.order,product_qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Тоо хэмжээ"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
-msgstr ""
+msgstr "Хангалттай бараа байхгүй, зохистой нөөцийн дүрэм байхгүй."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Буруу үйлдэл!"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "References"
-msgstr ""
+msgstr "Дугаар"
 
 #. module: procurement
 #: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "Тохиргоо"
 
 #. module: procurement
 #: constraint:ir.cron:0
 msgid "Invalid arguments"
-msgstr ""
+msgstr "Алдаатай аргумент"
 
 #. module: procurement
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Дэлгэцийн XML алдаатай!"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -318,11 +333,13 @@ msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
 msgstr ""
+"Татан авалтыг гараар кодлохоор бол, методуудыг цэгцлэхийн тулд загвар харах "
+"болно."
 
 #. module: procurement
 #: view:res.company:0
 msgid "MRP & Logistic Scheduler"
-msgstr ""
+msgstr "Үйлдвэрлэл & Логистик"
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -330,64 +347,66 @@ msgid ""
 "Wizard run all the procurements, and generate task, production order or "
 "purchase order based on the product type"
 msgstr ""
+"Визард нь татан авалтыг ажиллуулдаг ба даалгавруудыг биелүүлдэг, барааны "
+"захиалга эсвэл худалдан авалтын захиалга нь барааны төрлөөс хамаарна."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Max Quantity"
-msgstr ""
+msgstr "Дээд тоо"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Reason"
-msgstr ""
+msgstr "Татан авах шалтгаан"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
 #: model:process.process,name:procurement.process_process_procurementprocess0
 #: view:procurement.order:0
 msgid "Procurement"
-msgstr ""
+msgstr "Татан авалт"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action
 msgid "Procurement Orders"
-msgstr ""
+msgstr "Татан авалтын захиалгууд"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "To Fix"
-msgstr ""
+msgstr "Засах"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Exceptions"
-msgstr ""
+msgstr "Алдаанууд"
 
 #. module: procurement
 #: model:process.node,note:procurement.process_node_serviceonorder0
 msgid "Assignment from Production or Purchase Order."
-msgstr ""
+msgstr "Бараа болон худалдан авалтын захиалгаас хөрөнгө гаргах"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property
 msgid "Property"
-msgstr ""
+msgstr "Шинж чанар"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.act_make_procurement
 #: view:make.procurement:0
 msgid "Procurement Request"
-msgstr ""
+msgstr "Татан авах хүсэлт"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
-msgstr ""
+msgstr "Үлдэгдэл тооцоолох"
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
-msgstr ""
+msgstr "Үйлчилгээ"
 
 #. module: procurement
 #: model:ir.module.module,description:procurement.module_meta_information
@@ -396,21 +415,24 @@ msgid ""
 "    This is the module for computing Procurements.\n"
 "    "
 msgstr ""
+"\n"
+"    Татан авалтын тооцооллын модуль.\n"
+"    "
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
-msgstr ""
+msgstr "Доод тоо"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
-msgstr ""
+msgstr "Яаралтай"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
 msgid "plus"
-msgstr ""
+msgstr "нэмэх"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -419,6 +441,8 @@ msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
 "than 1!"
 msgstr ""
+"Татан авалтын захиалгын тоо хэмжээг шалгана уу, энэ нь нэгээс бага байх "
+"ёсгүй!"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -426,44 +450,50 @@ msgid ""
 "When the virtual stock goes belong the Max Quantity, OpenERP generates a "
 "procurement to bring the virtual stock to the Max Quantity."
 msgstr ""
+"Виртуал агуулах нь хамгийн бага тоо хэмжээнд ойртож байвал, OpenERP нь "
+"виртуал агуулахыг хамгийн их тоо хэмжээнд хүргэхийн тулд татан авалтыг "
+"боловсруулдаг."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
 msgid "If the stock of a product is under 0, it will act like an orderpoint"
 msgstr ""
+"Хэрэв агуулахын бараа 0-ээс доогуур байвал захиалгын цэг акталсан гэсэн үг."
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Lines"
-msgstr ""
+msgstr "Татан авалтын мөрүүд"
 
 #. module: procurement
 #: view:procurement.order:0
 #: field:procurement.order,note:0
 msgid "Note"
-msgstr ""
+msgstr "Тэмдэглэл"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Ноорог"
 
 #. module: procurement
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+"болохгүй!"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "Procurement "
-msgstr ""
+msgstr "Татан авалт "
 
 #. module: procurement
 #: help:res.company,schedule_range:0
@@ -472,16 +502,19 @@ msgid ""
 "procurements. All procurements that are not between today and today+range "
 "are skipped for futur computation."
 msgstr ""
+"Энэ бол Татан авалтыг тооцоолж байх үед  төлөвлөгчийн дүгнэсэн боломжит "
+"хугацаа юм. Өнөөдөр болон өнөөдрийн хязгаар хооронд багтаагүй татан авалт нь "
+"дараагийн тооцоолол хүртэл орхигдоно."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "Ердийн"
 
 #. module: procurement
 #: view:procurement.order.compute:0
 msgid "This wizard will schedule procurements."
-msgstr ""
+msgstr "Энэ визард нь татан авалтыг төлөвлөнө."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -489,137 +522,139 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the orderpoint "
 "without removing it."
 msgstr ""
+"Хэрэв идэвхтэй талбар нь үнэн болсон бол, захиалгын цэгийг устгалгүйгээр "
+"нуух боломжийг олгоно."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "is running."
-msgstr ""
+msgstr "ажиллаж байна."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "Not enough stock "
-msgstr ""
+msgstr "Нөөц хүрэлцэхгүй "
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_procureproducts0
 msgid "Procure Products"
-msgstr ""
+msgstr "Бараа татах"
 
 #. module: procurement
 #: field:procurement.order,date_planned:0
 msgid "Scheduled date"
-msgstr ""
+msgstr "Төлөвлөсөн огноо"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Exception"
-msgstr ""
+msgstr "Алдаа"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_orderpoint_compute
 msgid "Automatic Order Point"
-msgstr ""
+msgstr "Автомат захиалгын цэг"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
-msgstr ""
+msgstr "Хуваагдах тоо хэмжээ"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Компаниуд"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Extra Information"
-msgstr ""
+msgstr "Нэмэлт мэдээлэл"
 
 #. module: procurement
 #: help:procurement.order,name:0
 msgid "Procurement name."
-msgstr ""
+msgstr "Татан авалтын нэр."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
-msgstr ""
+msgstr "Идэвхитэй"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "Qty Multiple must be greater than zero."
-msgstr ""
+msgstr "Үржүүлсэн тоо хэмжээ 0-ээс илүү байх ёстой."
 
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
-msgstr ""
+msgstr "Хамгийн их захиалга"
 
 #. module: procurement
 #: field:procurement.order,date_close:0
 msgid "Date Closed"
-msgstr ""
+msgstr "Хаагдсан огноо"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Late"
-msgstr ""
+msgstr "Хожимдсон"
 
 #. module: procurement
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr ""
+msgstr "Бүрэлдэхүүн хэсгийн шинж чанар"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "Data Insufficient !"
-msgstr ""
+msgstr "Өгөгдөл хангалтгүй !"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property_group
 #: field:mrp.property,group_id:0
 #: field:mrp.property.group,name:0
 msgid "Property Group"
-msgstr ""
+msgstr "Группын шинж чанар"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Misc"
-msgstr ""
+msgstr "Янз бүрийн"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Locations"
-msgstr ""
+msgstr "Байршлууд"
 
 #. module: procurement
 #: selection:procurement.order,procure_method:0
 msgid "from stock"
-msgstr ""
+msgstr "Агуулахаас"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "General Information"
-msgstr ""
+msgstr "Ерөнхий мэдээлэл"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Run Procurement"
-msgstr ""
+msgstr "Татан авалт эхлүүлэх"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Done"
-msgstr ""
+msgstr "Дууссан"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will by rounded up to this multiple."
-msgstr ""
+msgstr "Татан авалтын тоо хэмжээ нь дараа дараагийн талбарт тоймлогдоно."
 
 #. module: procurement
 #: view:make.procurement:0
@@ -629,49 +664,49 @@ msgstr ""
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "Cancel"
-msgstr ""
+msgstr "Цуцлах"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
 msgid "Reordering Mode"
-msgstr ""
+msgstr "Дахин захиалах горим"
 
 #. module: procurement
 #: field:procurement.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Эх баримт"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Not urgent"
-msgstr ""
+msgstr "Яаралтай бус"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr ""
+msgstr "Төлөвлөгөө гаргагч бүгдийг тооцно"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Current"
-msgstr ""
+msgstr "Одоо"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "Project_mrp module not installed !"
-msgstr ""
+msgstr "Project_mrp модуль суугаагүй !"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Details"
-msgstr ""
+msgstr "Дэлгэрэнгүй"
 
 #. module: procurement
 #: view:board.board:0
 #: model:ir.actions.act_window,name:procurement.procurement_action5
 msgid "Procurement Exceptions"
-msgstr ""
+msgstr "Татан авалтын алдаа"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.act_procurement_2_stock_warehouse_orderpoint
@@ -680,7 +715,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:procurement.action_orderpoint_form
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "Зохистой нөөцийн дүрмүүд"
 
 #. module: procurement
 #: field:procurement.order,close_move:0
@@ -690,7 +725,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Төлөвлөгдсөн огноо"
 
 #. module: procurement
 #: field:make.procurement,product_id:0
@@ -698,63 +733,63 @@ msgstr ""
 #: field:procurement.order,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Бараа"
 
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
 msgid "Description"
-msgstr ""
+msgstr "Тодорхойлолт"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
 msgid "min"
-msgstr ""
+msgstr "мин"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Quantity Rules"
-msgstr ""
+msgstr "Тооны дүрмүүд"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Running"
-msgstr ""
+msgstr "Ажиллаж байна"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product UOM"
-msgstr ""
+msgstr "Барааны хэмжих нэгж"
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
 msgid "Make to Order"
-msgstr ""
+msgstr "Захиалга хийх"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "UOM"
-msgstr ""
+msgstr "Хэмжих нэгж"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Waiting"
-msgstr ""
+msgstr "Хүлээж байна"
 
 #. module: procurement
 #: selection:procurement.order,procure_method:0
 msgid "on order"
-msgstr ""
+msgstr "Захиалга"
 
 #. module: procurement
 #: field:procurement.order,move_id:0
 msgid "Reservation"
-msgstr ""
+msgstr "Урьдчилсан захиалга"
 
 #. module: procurement
 #: model:process.node,note:procurement.process_node_procureproducts0
 msgid "The way to procurement depends on the product type."
-msgstr ""
+msgstr "Татан авах хэлбэр нь барааны төрлөөс хамаарна."
 
 #. module: procurement
 #: view:make.procurement:0
@@ -762,71 +797,76 @@ msgid ""
 "This wizard will plan the procurement for this product. This procurement may "
 "generate task, production orders or purchase orders."
 msgstr ""
+"Энэ визард нь тухайн барааны татан авалтыг төлөвлөдөг. Энэ татан авалт нь "
+"даалгаварууд, барааны захиалга эсвэл худалдан авалтын захиалгыг боловсруулах "
+"боломжтой."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "is done."
-msgstr ""
+msgstr "дууссан."
 
 #. module: procurement
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
-msgstr ""
+msgstr "Нэр"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
 msgid "max"
-msgstr ""
+msgstr "макс"
 
 #. module: procurement
 #: field:procurement.order,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "Барааны зарах нэгж"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "from stock: products assigned."
-msgstr ""
+msgstr "Агуулахаас: Оноосон бараанууд"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
 #: view:procurement.order.compute.all:0
 msgid "Compute Schedulers"
-msgstr ""
+msgstr "Тооцоолол төлөвлөгч"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
 msgstr ""
+"Визард нь агуулахын хамгийн бага дүрмийг шалгаад татан авалтын захиалгыг "
+"биелүүлдэг."
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "Барааны хэмжих нэгж"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Search Procurement"
-msgstr ""
+msgstr "Татан авалт хайх"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Very Urgent"
-msgstr ""
+msgstr "Маш яаралтай"
 
 #. module: procurement
 #: field:procurement.orderpoint.compute,automatic:0
 msgid "Automatic Orderpoint"
-msgstr ""
+msgstr "Автомат захиалгын цэг"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Details"
-msgstr ""
+msgstr "Татан авалтын дэлгэрэнгүй"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -843,8 +883,18 @@ msgid ""
 "        if product_id:\n"
 "            w = self.pool.get('product.product"
 msgstr ""
+"Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
+"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
+"\n"
+"    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
+"        \"\"\" Finds UoM and UoS of changed product.\n"
+"        @param product_id: Changed id of product.\n"
+"        @return: Dictionary of values.\n"
+"        \"\"\"\n"
+"        if product_id:\n"
+"            w = self.pool.get('product.product"
 
 #. module: procurement
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"

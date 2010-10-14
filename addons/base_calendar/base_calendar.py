@@ -673,9 +673,10 @@ true, it will allow you to hide the event alarm information without removing it.
                     new_res_alarm = res_alarm_obj.create(cr, uid, val, context=context)
                 else:
                     new_res_alarm = alarm_ids[0]
-                cr.execute('Update %s set base_calendar_alarm_id=%s, alarm_id=%s \
-                                    where id=%s' % (model_obj._table, \
-                                    cal_alarm.id, new_res_alarm, data.id))
+                cr.execute('UPDATE %s ' % model_obj._table + \
+                            ' SET base_calendar_alarm_id=%s, alarm_id=%s ' \
+                            ' WHERE id=%s', 
+                            (cal_alarm.id, new_res_alarm, data.id))
 
             self.do_alarm_unlink(cr, uid, [data.id], model)
             if basic_alarm:
@@ -697,9 +698,10 @@ true, it will allow you to hide the event alarm information without removing it.
                     'user_id': uid
                  }
                 alarm_id = alarm_obj.create(cr, uid, vals)
-                cr.execute('Update %s set base_calendar_alarm_id=%s, alarm_id=%s \
-                                        where id=%s' % (model_obj._table, \
-                                        alarm_id, basic_alarm.id, data.id))
+                cr.execute('UPDATE %s ' % model_obj._table + \
+                            ' SET base_calendar_alarm_id=%s, alarm_id=%s '
+                            ' WHERE id=%s', \
+                            ( alarm_id, basic_alarm.id, data.id) )
         return True
 
     def do_alarm_unlink(self, cr, uid, ids, model, context=None):
@@ -722,7 +724,7 @@ true, it will allow you to hide the event alarm information without removing it.
             if alarm_ids:
                 alarm_obj.unlink(cr, uid, alarm_ids)
                 cr.execute('Update %s set base_calendar_alarm_id=NULL, alarm_id=NULL\
-                            where id=%s' % (model_obj._table, datas.id))
+                            where id=%%s' % model_obj._table,(datas.id,))
         return True
 
 res_alarm()
@@ -976,7 +978,7 @@ class calendar_event(osv.osv):
         if not context:
             context = {}
         for event_id in ids:
-            cr.execute('select id from %s  where recurrent_uid=%s' % (self._table, event_id))
+            cr.execute("select id from %s where recurrent_uid=%%s" % (self._table), (event_id,))
             r_ids = map(lambda x: x[0], cr.fetchall())
             self.unlink(cr, uid, r_ids, context=context)
         return True
@@ -994,10 +996,10 @@ class calendar_event(osv.osv):
             context = {}
         cr.execute("UPDATE %s set freq='None',interval=0,count=0,end_date=Null,\
                     mo=False,tu=False,we=False,th=False,fr=False,sa=False,su=False,\
-                    day=0,select1='date',month_list=Null ,byday=Null where id=%s" % (self._table, id))
+                    day=0,select1='date',month_list=Null ,byday=Null where id=%%s" % (self._table), (id,))
 
         if not value:
-            cr.execute("UPDATE %s set rrule_type='none' where id=%s" % (self._table, id))
+            cr.execute("UPDATE %s set rrule_type='none' where id=%%s" % self._table,(id,))
             return True
         val = {}
         for part in value.split(';'):
@@ -1081,7 +1083,7 @@ class calendar_event(osv.osv):
             if datas.get('rrule_type'):
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
-                    cr.execute("UPDATE %s set exrule=Null where id=%s" % (self._table, event))
+                    cr.execute("UPDATE %s set exrule=Null where id=%%s" % self._table,( event,))
                 elif datas.get('rrule_type') == 'custom':
                     if datas.get('interval', 0) < 0:
                         raise osv.except_osv('Warning!', 'Interval can not be Negative')
@@ -1258,7 +1260,7 @@ true, it will allow you to hide the event alarm information without removing it.
             if defaults.get('location'):
                 qry += ", location = '%(location)s'"
             qry += "WHERE id = %s" % (event_id)
-            cr.execute(qry %(defaults))
+            cr.execute(qry, defaults)
 
         return True
 
@@ -1283,8 +1285,7 @@ true, it will allow you to hide the event alarm information without removing it.
         if ids and (base_start_date or base_until_date):
             cr.execute("select m.id, m.rrule, m.date, m.date_deadline, m.duration, \
                             m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
-                            " m where m.id in ("\
-                            + ','.join(map(lambda x: str(x), ids))+")")
+                            " m where m.id = ANY(%s)", (ids,) )
 
             count = 0
             for data in cr.dictfetchall():
@@ -1437,7 +1438,8 @@ true, it will allow you to hide the event alarm information without removing it.
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
                                  offset, limit, order, context, count)
 
-        return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
+        res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
+        return res
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         """
@@ -1532,11 +1534,9 @@ true, it will allow you to hide the event alarm information without removing it.
         if fields and 'date' not in fields:
             fields.append('date')
 
-        real_ids = [item2 for item1, item2 in select]
-        event_values = dict([(res['id'], res) for res in super(calendar_event, self).read(cr, uid, real_ids, fields=fields, context=context, load=load)])
-
         for base_calendar_id, real_id in select:
-            res = event_values[real_id]
+            #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
+            res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
@@ -1683,10 +1683,8 @@ class calendar_todo(osv.osv):
         @param context: A standard dictionary for contextual values
         """
 
-        event = self.browse(cr, uid, id, context=context)
-        cr.execute("UPDATE %s set date_start='%s' where id=%s" \
-                            % (self._table, value, id))
-        return True
+        assert name == 'date'
+        return self.write(cr, uid, id, { 'date_start': value }, context=context)
 
     _columns = {
         'date': fields.function(_get_date, method=True, fnct_inv=_set_date, \

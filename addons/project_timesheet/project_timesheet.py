@@ -46,7 +46,7 @@ class project_work(osv.osv):
             raise osv.except_osv(_('Bad Configuration !'),
                  _('No journal defined on the related employee.\nFill in the timesheet tab of the employee form.'))
 
-        a =  emp.product_id.product_tmpl_id.property_account_expense.id
+        a = emp.product_id.product_tmpl_id.property_account_expense.id
         if not a:
             a = emp.product_id.categ_id.property_account_expense_categ.id
             if not a:
@@ -98,7 +98,7 @@ class project_work(osv.osv):
 
         # Compute based on pricetype
         amount_unit = obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
-            prod_id, amount, unit, context=context)
+            prod_id, amount, False, unit, context=context)
         if amount_unit and 'amount' in amount_unit.get('value',{}):
             updv = { 'amount': amount_unit['value']['amount'] }
             obj_timesheet.write(cr, uid, [timeline_id], updv, context=context)
@@ -108,10 +108,10 @@ class project_work(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
-        obj = self.pool.get('hr.analytic.timesheet')
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
         project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
+        result = {}
         
         if isinstance(ids, (long, int)):
             ids = [ids,]
@@ -139,13 +139,13 @@ class project_work(osv.osv):
                 vals_line['unit_amount'] = vals['hours']
                 prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
 
-                if result['product_uom_id'] and (not result['product_uom_id'] == default_uom):
+                if result.get('product_uom_id',False) and (not result['product_uom_id'] == default_uom):
                     vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
                     
                 # Compute based on pricetype
-                amount_unit = obj.on_change_unit_amount(cr, uid, line_id.id,
+                amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, line_id.id,
                     prod_id=prod_id,
-                    unit_amount=vals_line['unit_amount'], unit=False, context=context)
+                    quantity=vals_line['unit_amount'], unit=False, context=context)
 
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     vals_line['amount'] = amount_unit['value']['amount']
@@ -205,21 +205,4 @@ class task(osv.osv):
         return super(task,self).write(cr, uid, ids, vals, context)
 
 task()
-
-class project_project(osv.osv):
-    _inherit = "project.project"
-
-    def name_get(self, cr, user, ids, context=None):
-        if context is None:
-            context = {}
-        result = []
-        if ids and not isinstance(ids, list):
-            ids = [ids]
-        for project in self.browse(cr, user, ids, context):
-            name = "[%s] %s" % (project.analytic_account_id and project.analytic_account_id.code or '?', project.name)
-            result.append((project.id, name))
-        return result
-
-project_project()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -223,7 +223,7 @@
           <para style="terp_tblheader_General_Centre">Filter By <font>[[ get_filter(data)!='No Filter' and get_filter(data) ]]</font> </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Printing Date</para>
+          <para style="terp_tblheader_General_Centre">Target Moves</para>
         </td>
       </tr>
       <tr>
@@ -273,7 +273,7 @@
           </blockTable>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True)]]</para>
+          <para style="terp_default_Centre_8">[[ get_target_move(data) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -283,7 +283,7 @@
         <para style="P11">
       <font color="white"> </font>
     </para>
-  <blockTable colWidths="67,264.0,70.0,70.0,80.0" style="Table2" repeatRows="1">
+  <blockTable colWidths="67,295.0,60.0,60.0,60.0" style="Table2" repeatRows="1">
       <tr noRowsplits="1">
         <td><para style="P12a">Code</para></td>
         <td><para style="P12a">Account</para></td>
@@ -294,7 +294,7 @@
       <tr>
     <td><para style="P14">[[ repeatIn(lines(data['form']), 'a') ]]<font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><i>[[ a['code'] or removeParentNode('tr')  ]]</i></para></td>
         <td><para style="P14"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font color="white">[[ '..'*(a['level']-1) ]]</font><font>[[ a['name'] ]]</font> </para></td>
-        <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['debit']) ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[formatLang(a['debit']) ]] </font></para></td>
+        <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['debit']) ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[formatLang(a['debit']) ]]</font></para></td>
         <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font')]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['credit']) ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['credit']) ]]</font> </para></td>
         <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['balance']) ]] [[ company.currency_id.symbol ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['balance']) ]] [[ company.currency_id.symbol ]]</font> </para></td>
       </tr>

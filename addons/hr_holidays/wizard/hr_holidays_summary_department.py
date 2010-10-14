@@ -30,7 +30,7 @@ class hr_holidays_summary_dept(osv.osv_memory):
     _columns = {
         'date_from': fields.date('From', required=True),
         'depts': fields.many2many('hr.department', 'summary_dept_rel', 'sum_id', 'dept_id', 'Department(s)'),
-        'holiday_type': fields.selection([('Validated','Validated'),('Confirmed','Confirmed'),('both','Both Validated and Confirmed')], 'Select Holiday Type', required=True)
+        'holiday_type': fields.selection([('Validated','Validated'),('Confirmed','Confirmed'),('both','Both Validated and Confirmed')], 'Leave Type', required=True)
     }
 
     _defaults = {

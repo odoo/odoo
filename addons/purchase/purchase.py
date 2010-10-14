@@ -59,7 +59,7 @@ class purchase_order(osv.osv):
             for line in order.order_line:
                val1 += line.price_subtotal
                for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id.id, order.partner_id)['taxes']:
-                    val += c['amount']
+                    val += c.get('amount', 0.0)
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
             res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
@@ -150,12 +150,12 @@ class purchase_order(osv.osv):
         ('wait', 'Waiting'),
         ('confirmed', 'Waiting Supplier Ack'),
         ('approved', 'Approved'),
-        ('except_picking', 'Shipping Exception'), 
+        ('except_picking', 'Shipping Exception'),
         ('except_invoice', 'Invoice Exception'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')
     ]
-        
+
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True, help="unique number of the purchase order,computed automatically when the purchase order is created"),
         'origin': fields.char('Source Document', size=64,
@@ -451,7 +451,7 @@ class purchase_order(osv.osv):
                         'product_uos_qty': order_line.product_qty,
                         'product_uom': order_line.product_uom.id,
                         'product_uos': order_line.product_uom.id,
-                        'date_planned': order_line.date_planned,
+                        'date': order_line.date_planned,
                         'date_expected': order_line.date_planned,
                         'location_id': loc_id,
                         'location_dest_id': dest,

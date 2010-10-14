@@ -13,11 +13,24 @@
             <field name="model">project.resource.allocation</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-              <gantt color="phase_id" date_start="phase_id_date_start" date_stop="phase_id_date_end" string="R.A." mode="year">
-               <level object="project.resource" link="resource_id" domain="[]">
-                   <field name="useability"/>
+              <gantt color="phase_id" date_start="date_start" date_stop="date_end" string="R.A." mode="year">
+               <level object="res.users" link="user_id" domain="[]">
+                   <field name="useability" string="Availability"/>
                 </level>
               </gantt>
+            </field>
+        </record>
+
+        <record id="view_project_resource_allocation_calendar" model="ir.ui.view">
+            <field name="name">project.resource.allocation.calendar</field>
+            <field name="model">project.resource.allocation</field>
+            <field name="type">calendar</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="user_id" date_start="date_start" date_stop="date_end" day_length="12" string="Resources">
+                    <field name="phase_id"/>
+                    <field name="project_id"/>
+                </calendar>
             </field>
         </record>
 
@@ -28,9 +41,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project Resource Allocation">
-                    <field name="resource_id" select="1"/>
-                    <field name="phase_id"/>
-                    <field name="useability" string="Availability"/>
+                    <group colspan="4" col="6">
+                        <field name="resource_id"/>
+                        <field name="phase_id"/>
+                        <field name="project_id"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="useability" string="Availability"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -44,6 +62,7 @@
                 <tree editable="bottom" string="Project Resource Allocation">
                     <field name="resource_id"/>
                     <field name="phase_id"/>
+                    <field name="project_id"/>
                     <field name="useability"/>
                 </tree>
             </field>
@@ -58,11 +77,13 @@
                     <group colspan="4" col="20">
                         <field name="resource_id"/>
                         <field name="phase_id"/>
+                        <field name="project_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">
                         <filter name="resource" string="Resource" icon="terp-folder-blue" domain="[]" context="{'group_by':'resource_id'}"/>
                         <separator orientation="vertical"/>
+                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
                     </group>
                 </search>
@@ -73,7 +94,7 @@
             <field name="name">Resource Allocations</field>
             <field name="res_model">project.resource.allocation</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,gantt</field>
+            <field name="view_mode">gantt,tree,form,calendar</field>
              <field name="context">{}</field>
             <field name="search_view_id" ref="view_project_resource_allocation_search"/>
         </record>
@@ -89,42 +110,47 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project Phase">
-                    <group colspan="6" col="6">
-	                    <group colspan="2" col="2">
+                    <group colspan="8" col="7">
+	                    <group colspan="8">
 	                        <field name="name" select="1"/>
-	                        <field name="date_start"/>
+                            <field name="total_hours"/>
+	                        <field name="project_id" on_change="onchange_project(project_id)" colspan="2"/>
+                            <field name="responsible_id" colspan="2"/>
 	                    </group>
-	                    <group colspan="2" col="4">
-	                       <field name="project_id" on_change="onchange_project(project_id)" colspan="4"/>
-                           <newline/>
-	                       <field name="duration" colspan="1"/>
+						<newline/>
+	                    <group colspan="2">
+                             <field name="date_start"/>
+                             <field name="date_end"/>
+                        </group>
+                        <group colspan="2">
+	                       <field name="duration"  on_change="onchange_days(project_id)"/>	                       
                            <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
-	                    </group>
-	                    <group colspan="2" col="2">
-	                       <field name="responsible_id"/>
-	                       <field name="date_end"/>
                     	</group>
-					</group>
+                    </group>
                     <notebook colspan="4">
                         <page string="Resource Allocation">
                             <field colspan="4" name="resource_ids" nolabel="1">
                                  <tree editable="bottom" string="Project Resource Allocation">
                                     <field name="resource_id" context="{'project_id':parent.project_id}"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
                                     <field name="useability"/>
                                   </tree>
                                   <form string="Project Resource Allocation">
                                     <field name="resource_id" context="{'project_id':parent.project_id}"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
                                     <field name="useability"/>
                                   </form>
                              </field>
                             <separator string="" colspan="4"/>
                             <group col="12" colspan="4">
                                 <field name="state" select="1"/>
+                                <button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
                                 <button string="Draft" name="set_draft" states="open" icon="gtk-indent"/>
                                 <button string="Pending" name="set_pending" states="open" icon="gtk-media-pause"/>
                                 <button string="Done" name="set_done" states="pending,open" icon="terp-dialog-close"/>
                                 <button string="Start Phase" name="set_open" states="pending,draft" icon="gtk-execute"/>
-                                <button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Task Detail">
@@ -134,6 +160,7 @@
                                     <field name="user_id"/>
                                     <field name="planned_hours" widget="float_time"/>
                                     <field name="project_id" invisible="1"/>
+                                    <field name="total_hours" sum='Total Hours'/>
                                   </tree>
                                   <form string="Project's Tasks">
                                       <notebook colspan="4">
@@ -151,6 +178,7 @@
                                             <group colspan="2" col="2">
                                                   <separator string="Planning" colspan="2"/>
                                                   <field name="planned_hours" widget="float_time"/>
+                                                <field name="total_hours" widget="float_time"/>
                                                 <field name="remaining_hours" widget="float_time" sum="Remaining Hours"/>
                                                 <field name="effective_hours" invisible="1"/>
                                             </group>
@@ -263,7 +291,7 @@
             <field name="name">Project Phases</field>
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,gantt,calendar</field>
+            <field name="view_mode">gantt,tree,form,calendar</field>
             <field name="context">{'search_default_responsible_id':uid}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
             <field name="help">You can subdivide your larger projects into several phases. For each phase, you can define your resources allocation (humans or engine), describe de differend task and link your phase with previous and next one, add constraints date and scheduling. A gantt view of your project phase is also available from this menu. Gantt view is a graphically draw of the project plan; it includes any task dependencies by visually adjusting task durations and priorities, and by linking tasks to each other.</field>
@@ -299,7 +327,30 @@
     # ------------------------------------------------------
     # Project Task
     # ------------------------------------------------------
-
+    
+        <record id="view_phase_task_form2" model="ir.ui.view">
+            <field name="name">phase.task.form2</field>
+            <field name="model">project.task</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <field name="sequence" position="after">
+                    <field name="phase_id"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_phase_task_search_form" model="ir.ui.view">
+            <field name="name">phase.task.search.form</field>
+            <field name="model">project.task</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+                <field name="project_id" position="after">
+                    <field name="phase_id" select="1"/>
+                </field>
+            </field>
+        </record>   
+    
     <act_window
         id="project_phase_task_list"
         name="Related Tasks"

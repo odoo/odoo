@@ -83,7 +83,7 @@ class mrp_production(osv.osv):
                         qty2 *= production.product_uos_qty / (production.bom_id.product_uos_qty or 1.0)
                 data = {
                     'name': 'PROD:'+production.name,
-                    'date_planned': production.date_planned,
+                    'date': production.date_planned,
                     'product_id': sub_product.product_id.id,
                     'product_qty': qty1,
                     'product_uom': sub_product.product_uom.id,

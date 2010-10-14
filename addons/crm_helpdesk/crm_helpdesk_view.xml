@@ -69,6 +69,9 @@
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state" select="1"/>
+                                <button name="case_cancel"
+                                    states="draft,open,pending" string="Cancel"
+                                    type="object" icon="gtk-cancel" />
                                 <button name="case_open"
                                     states="draft,pending" string="Open"
                                     type="object" icon="gtk-go-forward" />
@@ -82,9 +85,6 @@
                                 <button name="case_close"
                                     states="open,draft,pending" string="Close"
                                     type="object" icon="gtk-jump-to" />
-                                <button name="case_cancel"
-                                    states="draft,open,pending" string="Cancel"
-                                    type="object" icon="gtk-cancel" />
                                 <button name="case_reset"
                                     states="done,cancel"
                                     string="Reset to Draft" type="object"
@@ -187,6 +187,9 @@
                     <field name="section_id"/>
                     <field name="priority"/>
                     <field name="state"/>
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
@@ -200,9 +203,6 @@
                     <button name="case_close" string="Done"
                         states="open,draft,pending" type="object"
                         icon="gtk-close" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object" icon="gtk-convert" />
                 </tree>
@@ -249,7 +249,7 @@
                     <field name="user_id" select="1" widget="selection"/>
                     <field name="section_id" select="1" widget="selection" string="Sales Team">
                         <filter icon="terp-personal+"
-                            domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                            domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My section" />
                     </field>
                     <newline/>

@@ -110,7 +110,7 @@
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
     pick_obj = self.pool.get('stock.picking')
-    pick_id = pick_obj.search(cr, uid, [('origin', '=', so.name),('type','=','delivery')])
+    pick_id = pick_obj.search(cr, uid, [('origin', '=', so.name)])
     pick_brw = pick_obj.browse(cr,uid,pick_id)[0]
     move_obj = self.pool.get('stock.move')
     move_id = move_obj.search(cr, uid, [('picking_id', '=', pick_brw.name),('name','=','LG Viewty Smart')])
@@ -183,7 +183,7 @@
     for id in inv:
         wf_service.trg_validate(uid, 'account.invoice',id,'invoice_open', cr)
 -
-  I assign an analytic jounal to the bank journal
+  I assign an analytic journal to the bank journal
 - 
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale
@@ -200,7 +200,7 @@
         ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
         name='tst')
 -
-  I verify the invoice is in Paid sate 
+  I verify the invoice is in Paid state 
 -
   !python {model: account.invoice}: |
     invoice_id = self.search(cr, uid, [('origin','=','Test_SO004|Test_SO003|'),('state','=','paid')])

@@ -21,7 +21,6 @@
 
 import time
 
-import netsvc
 from osv import osv, fields
 from tools.translate import _
 
@@ -150,12 +149,12 @@ class account_automatic_reconcile(osv.osv_memory):
         for account_id in form['account_ids']:
             params = (account_id,)
             if not allow_write_off:
-                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL 
-                AND state <> 'draft' GROUP BY partner_id 
+                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL
+                AND state <> 'draft' GROUP BY partner_id
                 HAVING ABS(SUM(debit-credit)) = 0.0 AND count(*)>0"""
             else:
-                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL 
-                AND state <> 'draft' GROUP BY partner_id 
+                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL
+                AND state <> 'draft' GROUP BY partner_id
                 HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0"""
                 params += (max_amount,)
             # reconcile automatically all transactions from partners whose balance is 0
@@ -171,7 +170,7 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND reconcile_id IS NULL",
                     (account_id, partner_id))
                 line_ids = [id for (id,) in cr.fetchall()]
-                if len(line_ids):
+                if line_ids:
                     reconciled += len(line_ids)
                     if allow_write_off:
                         move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
@@ -200,7 +199,8 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND partner_id=%s " \
                     "AND reconcile_id IS NULL " \
                     "AND state <> 'draft' " \
-                    "AND debit > 0",
+                    "AND debit > 0 " \
+                    "ORDER BY date_maturity",
                     (account_id, partner_id))
                 debits = cr.fetchall()
 
@@ -212,7 +212,8 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND partner_id=%s " \
                     "AND reconcile_id IS NULL " \
                     "AND state <> 'draft' " \
-                    "AND credit > 0",
+                    "AND credit > 0 " \
+                    "ORDER BY date_maturity",
                     (account_id, partner_id))
                 credits = cr.fetchall()
 

@@ -132,7 +132,7 @@ class report_aged_receivable(osv.osv):
 
             while (last_month_date > fy_start_date):
                 LIST_RANGES.append(today + " to " + last_month_date.strftime('%Y-%m-%d'))
-                today = (last_month_date- 1).strftime('%Y-%m-%d')
+                today = (last_month_date- relativedelta(days=1)).strftime('%Y-%m-%d')
                 last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
 
             LIST_RANGES.append(today +" to " + fy_start_date.strftime('%Y-%m-%d'))
@@ -165,7 +165,7 @@ class report_invoice_created(osv.osv):
         'amount_untaxed': fields.float('Untaxed', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'date_invoice': fields.date('Date Invoiced', readonly=True),
+        'date_invoice': fields.date('Invoice Date', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'residual': fields.float('Residual', readonly=True),
         'state': fields.selection([

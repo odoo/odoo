@@ -19,15 +19,14 @@
 #
 ##############################################################################
 
-import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+import time
 
-import netsvc
 from osv import fields, osv
-from tools import config
 from tools.translate import _
 import decimal_precision as dp
+import netsvc
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -38,7 +37,10 @@ class sale_shop(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=False),
+    }
+    _defaults = {
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.shop', context=c),
     }
 
 sale_shop()
@@ -63,6 +65,7 @@ class sale_order(osv.osv):
             'shipped': False,
             'invoice_ids': [],
             'picking_ids': [],
+            'date_confirm':False,
             'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
@@ -72,7 +75,7 @@ class sale_order(osv.osv):
             context = {}
         val = 0.0
         for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id)['taxes']:
-            val += c['amount']
+            val += c.get('amount', 0.0)
         return val
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
@@ -247,7 +250,7 @@ class sale_order(osv.osv):
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
         'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Picking', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
-        'shipped': fields.boolean('Picked', readonly=True, help="It indicates that a picking has been done. It will be set to True if the ordered quantities are available and the picking is done. If the ordered quantities are not available Procurement generates a Purchase/Manufacturing order. Unless its Picking and Purchase/Manufacturing order are not in the done state it wont be set to True"),
+        'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sale order has been delivered. This field is updated only after the scheduler have been launched !"),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
@@ -420,8 +423,14 @@ class sale_order(osv.osv):
             pay_term = order.payment_term.id
         else:
             pay_term = False
+        invoiced_sale_line_ids = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id), ('invoiced', '=', True)], context=context)
+        from_line_invoice_ids = []
+        for invoiced_sale_line_id in self.pool.get('sale.order.line').browse(cr, uid, invoiced_sale_line_ids, context=context):
+            for invoice_line_id in invoiced_sale_line_id.invoice_lines:
+                if invoice_line_id.invoice_id.id not in from_line_invoice_ids:
+                    from_line_invoice_ids.append(invoice_line_id.invoice_id.id)
         for preinv in order.invoice_ids:
-            if preinv.state not in ('cancel',):
+            if preinv.state not in ('cancel',) and preinv.id not in from_line_invoice_ids:
                 for preline in preinv.invoice_line:
                     inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
@@ -452,6 +461,34 @@ class sale_order(osv.osv):
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 
+    def manual_invoice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        inv_ids = set()
+        inv_ids1 = set()
+        for id in ids:
+            for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
+                inv_ids.add(record.id)
+        # inv_ids would have old invoices if any
+        for id in ids:
+            wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
+            for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
+                inv_ids1.add(record.id)
+        inv_ids = list(inv_ids1.difference(inv_ids))
+
+        result = {
+            'name': 'Invoices',
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'account.invoice',
+            'view_id': False,
+            'context': "{'type':'out_refund'}",
+            'type': 'ir.actions.act_window',
+            'res_id': inv_ids[0],
+            'nodestroy' :True
+                  }
+
+        return result
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}
@@ -468,7 +505,6 @@ class sale_order(osv.osv):
             lines = []
             for line in o.order_line:
                 if line.invoiced:
-                    #raise osv.except_osv(_('Error !'), _('The Sale Order already has some lines invoiced. You should continue the billing process by line.'))
                     continue
                 elif (line.state in states):
                     lines.append(line.id)
@@ -499,32 +535,56 @@ class sale_order(osv.osv):
                     if order.order_policy == 'picking':
                         picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
+
         return res
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        for sale in self.browse(cr, uid, ids, context=context):
+        for sale in self.browse(cr, uid, ids):
             for line in sale.order_line:
+                #
+                # Check if the line is invoiced (has asociated invoice
+                # lines from non-cancelled invoices).
+                #
                 invoiced = False
                 for iline in line.invoice_lines:
-                    if iline.invoice_id and iline.invoice_id.state == 'cancel':
-                        continue
-                    else:
+                    if iline.invoice_id and iline.invoice_id.state != 'cancel':
                         invoiced = True
-                self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced})
-        self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False})
+                        break
+                # Update the line (only when needed)
+                if line.invoiced != invoiced:
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced}, context=context)
+        self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False}, context=context)
         return True
 
     def action_invoice_end(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-
         for order in self.browse(cr, uid, ids, context=context):
+            #
+            # Update the sale order lines state (and invoiced flag).
+            #
             for line in order.order_line:
+                vals = {}
+                #
+                # Check if the line is invoiced (has asociated invoice
+                # lines from non-cancelled invoices).
+                #
+                invoiced = False
+                for iline in line.invoice_lines:
+                    if iline.invoice_id and iline.invoice_id.state != 'cancel':
+                        invoiced = True
+                        break
+                if line.invoiced != invoiced:
+                    vals['invoiced'] = invoiced
+                # If the line was in exception state, now it gets confirmed.
                 if line.state == 'exception':
-                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'state': 'confirmed'}, context=context)
-
+                    vals['state'] = 'confirmed'
+                # Update the line (only when needed).
+                if vals:
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], vals, context=context)
+            #
+            # Update the sale order state.
+            #
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
 
@@ -533,7 +593,6 @@ class sale_order(osv.osv):
     def action_cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        ok = True
         sale_order_line_obj = self.pool.get('sale.order.line')
         for sale in self.browse(cr, uid, ids, context=context):
             for pick in sale.picking_ids:
@@ -562,7 +621,6 @@ class sale_order(osv.osv):
         return True
 
     def action_wait(self, cr, uid, ids, *args):
-        product_obj = self.pool.get('product.product')
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
@@ -637,7 +695,6 @@ class sale_order(osv.osv):
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     location_id = order.shop_id.warehouse_id.lot_stock_id.id
                     if not picking_id:
-                        loc_dest_id = order.partner_id.property_stock_customer.id
                         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
                         picking_id = self.pool.get('stock.picking').create(cr, uid, {
                             'name': pick_name,
@@ -655,7 +712,7 @@ class sale_order(osv.osv):
                         'name': line.name[:64],
                         'picking_id': picking_id,
                         'product_id': line.product_id.id,
-                        'date_planned': date_planned,
+                        'date': date_planned,
                         'date_expected': date_planned,
                         'product_qty': line.product_uom_qty,
                         'product_uom': line.product_uom.id,
@@ -702,7 +759,7 @@ class sale_order(osv.osv):
             if picking_id:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-                
+
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
 
@@ -845,13 +902,6 @@ class sale_order_line(osv.osv):
         'product_packaging': False
     }
 
-    def create_sale_order_line_invoice(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        context.update({'active_ids' : ids,'active_id' : ids})
-        self.pool.get('sale.order.line.make.invoice').make_invoices(cr, uid, ids, context=context)
-        return True
-
     def invoice_line_create(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -890,7 +940,7 @@ class sale_order_line(osv.osv):
                 else:
                     a = self.pool.get('ir.property').get(cr, uid,
                             'property_account_income_categ', 'product.category',
-                            context=context)
+                            context=context).id
                 uosqty = _get_line_qty(line)
                 uos_id = _get_line_uom(line)
                 pu = 0.0
@@ -1044,7 +1094,6 @@ class sale_order_line(osv.osv):
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         if update_tax: #The quantity only have changed
             result['delay'] = (product_obj.sale_delay or 0.0)
-            partner = partner_obj.browse(cr, uid, partner_id)
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
             result.update({'type': product_obj.procure_method})
 
@@ -1155,7 +1204,7 @@ class sale_config_picking_policy(osv.osv_memory):
         'picking_policy': fields.selection([
             ('direct', 'Direct Delivery'),
             ('one', 'All at Once')
-        ], 'Picking Default Policy', required=True, help="The Shipping Policy is used to synchronise invoices and delivery operations."),
+        ], 'Picking Default Policy', required=True, help="The Shipping Policy is used to configure per order if you want to deliver as soon as possible when one product is available or you wait that all products are available.."),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
@@ -1185,11 +1234,6 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
             if o.step == 'one':
                 md = self.pool.get('ir.model.data')
-                group_id = md._get_id(cr, uid, 'base', 'group_no_one')
-                group_id = md.browse(cr, uid, group_id, context=context).res_id
-                menu_id = md._get_id(cr, uid, 'stock', 'menu_action_picking_tree_delivery')
-                menu_id = md.browse(cr, uid, menu_id, context=context).res_id
-                self.pool.get('ir.ui.menu').write(cr, uid, [menu_id], {'groups_id': [(6, 0, [group_id])]})
                 location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
                 location_id = md.browse(cr, uid, location_id, context=context).res_id
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})

@@ -48,6 +48,19 @@
              </graph>
          </field>
     </record>
+    <record id="view_company_analysis_tree" model="ir.ui.view">
+         <field name="name">account.company.analysis.tree</field>
+         <field name="model">account.entries.report</field>
+         <field name="type">tree</field>
+         <field name="arch" type="xml">
+             <tree string="Company Analysis" >
+                <field name="user_type"/>
+                <field name="debit" />
+                <field name="credit" />
+                <field name="balance" />
+             </tree>
+         </field>
+    </record>
     <record id="view_account_entries_report_search" model="ir.ui.view">
         <field name="name">account.entries.report.search</field>
         <field name="model">account.entries.report</field>
@@ -117,6 +130,9 @@
         <field name="context">{'group_by':[], 'search_default_usertype':1, 'search_default_thisyear':1, 'group_by_no_leaf':1}</field>
         <field name="help">A tool search lets you know statistics on your different financial accounts that match your needs.</field>
     </record>
-    <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all" parent="account.menu_finance_statistic_report_statement" sequence="2"/>
+    <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all"
+        parent="account.menu_finance_statistic_report_statement"
+        groups="group_account_manager"
+        sequence="2"/>
 </data>
 </openerp>

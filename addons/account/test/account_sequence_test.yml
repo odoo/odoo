@@ -32,7 +32,7 @@
     reference_type: none
     period_id: period_1
     
-- I create the invoice, as is I clicked on the "Create" button
+- I create the invoice, as I clicked on the "Create" button
 - !workflow {model: account.invoice, action: invoice_open, ref: invoice_seq_test}
 
 - I check that the invoice state is "Open"
