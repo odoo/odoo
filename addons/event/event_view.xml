@@ -232,7 +232,6 @@
                               domain="[('user_id','=',uid)]"/>
                         </field>
                         <field name="date_begin" select="1"/>
-                        <field name="state" select="1"/>
                         <field name="section_id" default="context.get('section_id', False)" widget="selection" groups="base.group_extended">
                           <filter icon="terp-personal+"
                                   context="{'invisible_section': False}"
