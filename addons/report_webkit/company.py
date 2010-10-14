@@ -53,7 +53,4 @@ class ResCompany(osv.osv):
                 'lib_path' : fields.char('Webkit Executable Path', size=264, help="Complete (Absolute) path to the wkhtmltopdf executable."),
 
     }   
-    _defaults = {
-         'lib_path': lambda *a: 'wkhtmltopdf-0.9.9'
-     }     
 ResCompany()
