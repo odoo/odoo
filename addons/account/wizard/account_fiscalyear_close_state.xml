@@ -7,7 +7,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Close states of Fiscal year and periods">
-					<group height="160" width="310">
 						<label string ="This wizard will definitelly close a fiscal year and its related periods. That means that no one will be able to create or modify journal entries in it." colspan="4"/>
 						<separator colspan="4" />
 						<field name="fy_id"  domain = "[('state','=','draft')]" colspan="4"/>
@@ -16,7 +15,6 @@
 						    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
 						    <button icon="terp-locked" string="Close Fiscalyear" name="data_save" type="object"/>
 						</group>
-					</group>
                </form>
             </field>
         </record>
