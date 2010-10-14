@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-    <menuitem id="menu_mrp_planning" name="Planning"
-        parent="base.menu_mrp_root" sequence="2"
-        groups="base.group_extended"/>
         
     <record id="mrp_production_form_inherit_view" model="ir.ui.view">
 	    <field name="name">mrp.production.form.inherit</field>
@@ -212,10 +209,34 @@
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
         <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
-        <field name="view_mode">tree,form,graph,calendar</field>
+        <field name="view_mode">gantt,tree,form,graph,calendar</field>
         <field name="help">To manufacture or assemble products, as well as using raw materials and finished product you must also handle manufacturing operations. Manufacturing operations are often called work orders. The different operations will have different impacts on the costs of manufacture and planning depending on the available workload.</field>
     </record>
 
+
+    <record id="workcenter_line_resource_gantt" model="ir.ui.view">
+        <field name="name">mrp.production.workcenter.line.resource.gantt</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="type">gantt</field>
+        <field name="arch" type="xml">
+            <gantt color="workcenter_id" date_delay="delay" date_start="date_planned" string="Resources">
+                <level object="mrp.workcenter" link="workcenter_id" domain="[]">
+                    <field name="delay"/>
+                    <field name="workcenter_id"/>
+                </level>
+            </gantt>
+        </field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="mrp_production_wc_resource_planning">
+        <field name="name">Resources</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="workcenter_line_resource_gantt"/>
+    </record>
 
     <!-- Action for Confirm Operations   -->
 
@@ -250,18 +271,18 @@
 
     </record>
 
-    <menuitem action="mrp.mrp_production_action_planning"
-        id="menu_mrp_production_order_action"
-        parent="menu_mrp_planning" sequence="1"
-        groups="base.group_extended"/>
     <menuitem name="Work Orders" parent="mrp.menu_mrp_manufacturing"
         id="menu_mrp_production_wc_order"
         action="mrp_production_wc_action_form"
         groups="base.group_extended" sequence="2"/>
-    <menuitem name="Work Orders" parent="menu_mrp_planning"
+    <menuitem name="Work Orders" parent="mrp.menu_mrp_planning"
         id="menu_mrp_production_wc_action_planning"
         action="mrp_production_wc_action_planning"
         sequence="2"
+        groups="base.group_extended"/>
+    <menuitem parent="mrp.menu_mrp_planning"
+        id="menu_mrp_production_wc_resource_planning"
+        action="mrp_production_wc_resource_planning"
         groups="base.group_extended"/>
 
     <!-- Operation codes -->

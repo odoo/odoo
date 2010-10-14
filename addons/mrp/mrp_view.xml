@@ -767,11 +767,11 @@
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="1"/>
 
         <record id="mrp_production_action_planning" model="ir.actions.act_window">
-            <field name="name">Manufacturing Orders Planning</field>
+            <field name="name">Manufacturing Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">calendar,tree,form,graph</field>
             <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
             <field name="help">Manufacturing Orders describe the operations that need to be carried out and the raw materials usage for each stage of production. You use specifications (bills of materials or BoM) to work out the raw material requirements and the manufacturing orders needed for the finished products. Once the bills of materials have been defined, OpenERP becomes capable of automatically deciding on the manufacturing route depending on the needs of the company.</field>
         </record>
@@ -915,13 +915,24 @@
 
         <!-- Menu for Resource for MRP-->
 
-        <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
-            groups="base.group_extended"
-            sequence="4"/>
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
-        <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
+        <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_config" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_config" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_config" sequence="1"/>
+        
+        <!-- Planning -->
+        
+        <menuitem id="menu_mrp_planning" name="Planning"
+		        parent="base.menu_mrp_root" sequence="2"
+		        groups="base.group_extended"/>
+		<menuitem action="mrp.mrp_production_action_planning"
+		        id="menu_mrp_production_order_action"
+		        parent="menu_mrp_planning" sequence="1"
+		        groups="base.group_extended"/>
+		<menuitem action="resource.action_resource_resource_gantt"
+		        id="menu_resource_resource_planning"
+		        parent="menu_mrp_planning"
+		        groups="base.group_extended"/>
 
     </data>
 </openerp>
