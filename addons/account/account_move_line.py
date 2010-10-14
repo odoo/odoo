@@ -864,9 +864,8 @@ class account_move_line(osv.osv):
                     result['toolbar']['action'] = []
 
             #Restrict the list of journal view in search view
-            if view_type == 'search':
-                journal_list = journal_pool.name_search(cr, uid, '', [], context=context)
-                result['fields']['journal_id']['selection'] = journal_list
+            if view_type == 'search' and result['fields'].get('journal_id', False):
+                result['fields']['journal_id']['selection'] = journal_pool.name_search(cr, uid, '', [], context=context)
             return result
 
         if context.get('view_mode', False):
