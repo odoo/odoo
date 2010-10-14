@@ -215,12 +215,13 @@ class openerp_dav_handler(dav_interface):
         if not dbname:
             if cr: cr.close()
             raise DAV_NotFound
-        node = self.uri2object(cr, uid, pool, uri2)
-        if not node:
+        try:
+            node = self.uri2object(cr, uid, pool, uri2)
+            if not node:
+                raise DAV_NotFound
+            res = node.get_dav_eprop(cr, ns, propname)
+        finally:
             cr.close()
-            raise DAV_NotFound
-        res = node.get_dav_eprop(cr, ns, propname)
-        cr.close()
         return res
 
     def get_db(self, uri, rest_ret=False, allow_last=False):
