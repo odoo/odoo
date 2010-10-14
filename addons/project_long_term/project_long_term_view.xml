@@ -230,9 +230,9 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="responsible_id" date_start="date_start" date_stop="date_end" day_length="12" string="Phases">
+                <calendar color="project_id" date_start="date_start" date_stop="date_end" day_length="12">
                     <field name="name"/>
-                    <field name="project_id"/>
+                    <field name="responsible_id"/>
                 </calendar>
             </field>
         </record>
@@ -243,7 +243,7 @@
             <field name="type">gantt</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt color="name" date_stop="date_end" date_start="date_start" mode="year">
+                <gantt color="project_id" date_stop="date_end" date_start="date_start" mode="year">
                     <level object="project.project" link="project_id" domain="[]">
                         <field name="name"/>
                     </level>
