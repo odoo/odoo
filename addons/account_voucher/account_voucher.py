@@ -681,9 +681,9 @@ class account_voucher(osv.osv):
                         'account_tax_id':inv.tax_id.id,
                     })
                 if move_line.get('account_tax_id', False):
-                    tax_id = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
-                    if not (tax_id.base_code_id and tax_id.tax_code_id):
-                        raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to define account base code and account tax code on the '%s' tax!") % (tax_id.name))
+                    tax_data = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
+                    if not (tax_data.base_code_id and tax_data.tax_code_id):
+                        raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
                 master_line = move_line_pool.create(cr, uid, move_line)
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
