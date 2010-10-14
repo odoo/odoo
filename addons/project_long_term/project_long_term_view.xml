@@ -13,9 +13,9 @@
             <field name="model">project.resource.allocation</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-              <gantt color="phase_id" date_start="date_start" date_stop="date_end" string="R.A." mode="year">
-               <level object="project.resource.allocation" link="id" domain="[]">
-                    <field name="resource_id"/>
+              <gantt color="resource_id" date_start="date_start" date_stop="date_end" mode="year">
+               <level object="project.project" link="project_id" domain="[]">
+                    <field name="phase_id"/>
                 </level>
               </gantt>
             </field>
@@ -243,8 +243,8 @@
             <field name="type">gantt</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt color="responsible_id" date_stop="date_end" date_start="date_start" string="Phases">
-                    <level object="project.phase" link="id" domain="[]">
+                <gantt color="name" date_stop="date_end" date_start="date_start" mode="year">
+                    <level object="project.project" link="project_id" domain="[]">
                         <field name="name"/>
                     </level>
                 </gantt>
