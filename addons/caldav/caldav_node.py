@@ -286,22 +286,31 @@ class node_calendar(nodes.node_class):
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         where = []
+        bc_obj = dirobj.pool.get('basic.calendar')
+
         if name:
             if name.endswith('.ics'):
                 name = name[:-4]
             try:
-                where.append(('id','=',int(name)))
+                if name.isdigit():
+                    where.append(('id','=',int(name)))
+                else:
+                    bca_obj = dirobj.pool.get('basic.calendar.alias')
+                    bc_alias = bca_obj.search(cr, uid, 
+                        [('cal_line_id.calendar_id', '=', self.calendar_id),
+                         ('name', '=', name)] )
+                    if not bc_alias:
+                        return []
+                    bc_val = bca_obj.read(cr, uid, bc_alias, ['res_id',])
+                    where.append(('id', '=', bc_val[0]['res_id']))
             except ValueError:
                 # if somebody requests any other name than the ones we
                 # generate (non-numeric), it just won't exist
-                # FIXME: however, this confuses Evolution (at least), which
-                # thinks the .ics node hadn't been saved.
                 return []
 
         if not domain:
             domain = []
 
-        bc_obj = dirobj.pool.get('basic.calendar')
         # we /could/ be supplying an invalid calendar id to bc_obj, it has to check
         res = bc_obj.get_calendar_objects(cr, uid, [self.calendar_id], self, domain=where, context=ctx)
         return res
@@ -325,6 +334,21 @@ class node_calendar(nodes.node_class):
             assert isinstance(res[0], (int, long))
             fnodes = fil_obj.get_calendar_objects(cr, uid, [self.calendar_id], self,
                     domain=[('id','=',res[0])], context=ctx)
+            if self.context.get('DAV-client','') in ('iPhone', 'iCalendar',):
+                # For those buggy clients, register the alias
+                bca_obj = fil_obj.pool.get('basic.calendar.alias')
+                ourcal = fil_obj.browse(cr, uid, self.calendar_id)
+                line_id = None
+                for line in ourcal.line_ids:
+                    if line.name == ourcal.type:
+                        line_id = line.id
+                        break
+                assert line_id, "Calendar #%d must have at least one %s line" % \
+                                    (ourcal.id, ourcal.type)
+                if path.endswith('.ics'):
+                    path = path[:-4]
+                bca_obj.create(cr, uid, { 'cal_line_id': line_id, 
+                                    'res_id': res[0], 'name': path}, context=ctx)
             return fnodes[0]
         # If we reach this line, it means that we couldn't import any useful
         # (and matching type vs. our node kind) data from the iCal content.

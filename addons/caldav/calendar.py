@@ -776,6 +776,30 @@ line "%s" more than once' % (vals.get('name'))))
 
 basic_calendar_line()
 
+class basic_calendar_alias(osv.osv):
+    """ Mapping of client filenames to ORM ids of calendar records
+    
+        Since some clients insist on putting arbitrary filenames on the .ics data
+        they send us, and they won't respect the redirection "Location:" header, 
+        we have to store those filenames and allow clients to call our calendar
+        records with them.
+        Note that adding a column to all tables that would possibly hold calendar-
+        mapped data won't work. The user is always allowed to specify more 
+        calendars, on any arbitrary ORM object, without need to alter those tables'
+        data or structure
+    """
+    _name = 'basic.calendar.alias'
+    _columns = {
+        'name': fields.char('Filename', size=512, required=True, select=1),
+        'cal_line_id': fields.many2one('basic.calendar.lines', 'Calendar', required=True,
+                        select=1, help='The calendar/line this mapping applies to'),
+        'res_id': fields.integer('Res. ID', required=True, select=1),
+        }
+        
+    _sql_constraints = [ ('name_cal_uniq', 'UNIQUE(cal_line_id, name)',
+                _('The same filename cannot apply to two records!')), ]
+
+basic_calendar_alias()
 
 class basic_calendar_attribute(osv.osv):
     _name = 'basic.calendar.attributes'
