@@ -14,7 +14,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Membership Products">
-                   <filter string="Inactive" icon="terp-inactive.png" domain="[('active','=',0)]"/>
+                   <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',0)]"/>
                    <separator orientation="vertical"/>
                    <field name="code"/>
                    <field name="name"/>
@@ -86,10 +86,6 @@
                             <field colspan="4" name="description_purchase" nolabel="1"/>
                       </page>
                     </notebook>
-                       <!--field name="list_price" string="Membership Fee"/>
-                    <separator colspan="4" string="Customer Taxes:"/>
-                    <field name="taxes_id" colspan="4" nolabel="1"/-->
-
                 </form>
             </field>
         </record>
@@ -249,7 +245,7 @@
                             <group colspan="4" col="3">
                             <field name="free_member"/>
                             <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" icon="gtk-apply"/>
-                            <field colspan="4" name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')], 'readonly':[('free_member','=',True)]}"/>
+                            <field colspan="4" name="associate_member" attrs="{'readonly':[('membership_state','!=', 'none')]}"/>
                             <field colspan="4" name="membership_state"/>
                             </group>
                         </group>
