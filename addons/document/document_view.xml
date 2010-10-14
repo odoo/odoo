@@ -291,6 +291,7 @@
                                 help="Filter on my documents" />
                         </field>
                     <field name="parent_id" />
+                    <field name="index_content"/>
                 </field>
             </field>
     </record>
@@ -308,7 +309,6 @@
                     <filter string="Partner" icon="terp-partner" domain="[]"
                        context="{'group_by':'partner_id'}"  groups="base.group_extended"/>
                     <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
-                    
                  </filter>
             </field>
     </record>
