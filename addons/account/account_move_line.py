@@ -888,20 +888,19 @@ class account_move_line(osv.osv):
             for field in journal.view_id.columns_id:
                 if not field.field in fields:
                     fields[field.field] = [journal.id]
-                    fld.append((field.field, field.sequence))
+                    fld.append((field.field, field.sequence, field.name))
                     flds.append(field.field)
                     common_fields[field.field] = 1
                 else:
                     fields.get(field.field).append(journal.id)
                     common_fields[field.field] = common_fields[field.field] + 1
 
-        fld.append(('period_id', 3))
-        fld.append(('journal_id', 10))
+        fld.append(('period_id', 3, 'Period'))
+        fld.append(('journal_id', 10, 'Journal'))
         flds.append('period_id')
         flds.append('journal_id')
         fields['period_id'] = all_journal
         fields['journal_id'] = all_journal
-
 
         fld = sorted(fld, key=itemgetter(1))
 
@@ -956,7 +955,7 @@ class account_move_line(osv.osv):
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
-
+            attrs.append('string="'+field_it[2]+'"')
             attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
             xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
 
