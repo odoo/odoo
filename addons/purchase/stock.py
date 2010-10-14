@@ -28,9 +28,6 @@ class stock_move(osv.osv):
             'Purchase Order Line', ondelete='set null', select=True,
             readonly=True),
     }
-    _defaults = {
-        'purchase_line_id': False
-    }
 
     def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
         """
@@ -73,47 +70,39 @@ class stock_picking(osv.osv):
                 return picking.note + '\n' + picking.purchase_id.notes
             else:
                 return picking.purchase_id.notes
-        return super(stock_picking, self)._get_comment_invoice(cursor, user,
-                picking)
+        return super(stock_picking, self)._get_comment_invoice(cursor, user, picking)
 
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
         if move_line.purchase_line_id:
             return move_line.purchase_line_id.price_unit
-        return super(stock_picking, self)._get_price_unit_invoice(cursor,
-                user, move_line, type)
+        return super(stock_picking, self)._get_price_unit_invoice(cursor, user, move_line, type)
 
     def _get_discount_invoice(self, cursor, user, move_line):
         if move_line.purchase_line_id:
             return 0.0
-        return super(stock_picking, self)._get_discount_invoice(cursor, user,
-                move_line)
+        return super(stock_picking, self)._get_discount_invoice(cursor, user, move_line)
 
     def _get_taxes_invoice(self, cursor, user, move_line, type):
         if move_line.purchase_line_id:
             return [x.id for x in move_line.purchase_line_id.taxes_id]
-        return super(stock_picking, self)._get_taxes_invoice(cursor, user,
-                move_line, type)
+        return super(stock_picking, self)._get_taxes_invoice(cursor, user, move_line, type)
 
     def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
         if move_line.purchase_line_id:
             return move_line.purchase_line_id.account_analytic_id.id
-        return super(stock_picking, self)._get_account_analytic_invoice(cursor,
-                user, picking, move_line)
+        return super(stock_picking, self)._get_account_analytic_invoice(cursor, user, picking, move_line)
 
     def _invoice_line_hook(self, cursor, user, move_line, invoice_line_id):
         if move_line.purchase_line_id:
             invoice_line_obj = self.pool.get('account.invoice.line')
-            invoice_line_obj.write(cursor, user, [invoice_line_id], {'note':  move_line.purchase_line_id.notes,})            
-        return super(stock_picking, self)._invoice_line_hook(cursor, user,
-                move_line, invoice_line_id)
+            invoice_line_obj.write(cursor, user, [invoice_line_id], {'note':  move_line.purchase_line_id.notes,})
+        return super(stock_picking, self)._invoice_line_hook(cursor, user, move_line, invoice_line_id)
 
     def _invoice_hook(self, cursor, user, picking, invoice_id):
         purchase_obj = self.pool.get('purchase.order')
         if picking.purchase_id:
-            purchase_obj.write(cursor, user, [picking.purchase_id.id], {'invoice_id': invoice_id,
-                })
-        return super(stock_picking, self)._invoice_hook(cursor, user,
-                picking, invoice_id)
+            purchase_obj.write(cursor, user, [picking.purchase_id.id], {'invoice_id': invoice_id,})
+        return super(stock_picking, self)._invoice_hook(cursor, user, picking, invoice_id)
 
 stock_picking()
 
@@ -132,11 +121,13 @@ class stock_partial_picking(osv.osv_memory):
         pick_obj = self.pool.get('stock.picking')
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
+            has_product_cost = (pick.type == 'in' and pick.purchase_id)
             for m in pick.move_lines:
-                if (m.product_id.cost_method == 'average'):
-                    if pick.type == 'in' and pick.purchase_id and m.purchase_line_id:
-                        res['move%s_product_price'%(m.id)] =  m.purchase_line_id.price_unit
-                        res['move%s_product_currency'%(m.id)] =  pick.purchase_id.pricelist_id.currency_id.id
+                if has_product_cost and m.product_id.cost_method == 'average' and m.purchase_line_id:
+                    # We use the original PO unit purchase price as the basis for the cost, expressed
+                    # in the currency of the PO (i.e the PO's pricelist currency)
+                    res['move%s_product_price'%(m.id)] =  m.purchase_line_id.price_unit
+                    res['move%s_product_currency'%(m.id)] = pick.purchase_id.pricelist_id.currency_id.id
         return res
 stock_partial_picking()
 
@@ -154,10 +145,12 @@ class stock_partial_move(osv.osv_memory):
         res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
         move_obj = self.pool.get('stock.move')
         for m in move_obj.browse(cr, uid, context.get('active_ids', [])):
-            if (m.product_id.cost_method == 'average'):
-                if m.picking_id.type == 'in' and m.purchase_line_id and m.picking_id.purchase_id:
+            if m.picking_id.type == 'in' and m.product_id.cost_method == 'average' \
+                and m.purchase_line_id and m.picking_id.purchase_id:
+                    # We use the original PO unit purchase price as the basis for the cost, expressed
+                    # in the currency of the PO (i.e the PO's pricelist currency)
                     res['move%s_product_price'%(m.id)] = m.purchase_line_id.price_unit
-                    res['move%s_product_currency'%(m.id)] =  m.picking_id.purchase_id.pricelist_id.currency_id.id
+                    res['move%s_product_currency'%(m.id)] = m.picking_id.purchase_id.pricelist_id.currency_id.id
         return res
 stock_partial_move()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
