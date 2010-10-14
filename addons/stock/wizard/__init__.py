@@ -34,6 +34,6 @@ import stock_location_product
 import stock_change_standard_price
 import stock_picking_make
 import stock_return_picking
-import stock_picking_make
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
