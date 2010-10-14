@@ -366,7 +366,6 @@
             <field name="arch" type="xml">
                 <calendar string="Scrum Meeting" date_start="date" color="user_id">
                     <field name="sprint_id"/>
-                    <field name="project_id"/>
                 </calendar>
             </field>
         </record>
@@ -430,7 +429,6 @@
                         <field name="sprint_id">
                             <filter icon="terp-check" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints" default="1"/>
                         </field>
-                        <field name="project_id"/>
                         <field name="date"/>
                     </group>
                     <newline/>
