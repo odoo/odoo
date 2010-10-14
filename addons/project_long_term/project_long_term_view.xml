@@ -14,8 +14,8 @@
             <field name="type">gantt</field>
             <field name="arch" type="xml">
               <gantt color="phase_id" date_start="date_start" date_stop="date_end" string="R.A." mode="year">
-               <level object="res.users" link="user_id" domain="[]">
-                   <field name="useability" string="Availability"/>
+               <level object="project.resource.allocation" link="id" domain="[]">
+                    <field name="resource_id"/>
                 </level>
               </gantt>
             </field>
@@ -27,7 +27,7 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="user_id" date_start="date_start" date_stop="date_end" day_length="12" string="Resources">
+                <calendar color="resource_id" date_start="date_start" date_stop="date_end" day_length="12" string="Resources">
                     <field name="phase_id"/>
                     <field name="project_id"/>
                 </calendar>
@@ -244,7 +244,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <gantt color="responsible_id" date_stop="date_end" date_start="date_start" string="Phases">
-                    <level object="project.project" link="project_id" domain="[]">
+                    <level object="project.phase" link="id" domain="[]">
                         <field name="name"/>
                     </level>
                 </gantt>
@@ -288,7 +288,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar</field>
-            <field name="context">{'search_default_responsible_id':uid,'group_by':'project_id'}</field>
+            <field name="context">{'search_default_responsible_id':uid,'search_default_project':1}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
             <field name="help">You can subdivide your larger projects into several phases. For each phase, you can define your resources allocation (humans or engine), describe de differend task and link your phase with previous and next one, add constraints date and scheduling. A gantt view of your project phase is also available from this menu. Gantt view is a graphically draw of the project plan; it includes any task dependencies by visually adjusting task durations and priorities, and by linking tasks to each other.</field>
         </record>
@@ -298,7 +298,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
- 			<field name="context">{'search_default_responsible_id':uid,'group_by':'project_id'}</field>
+ 			<field name="context">{'search_default_responsible_id':uid,'search_default_project':1}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
