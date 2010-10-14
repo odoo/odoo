@@ -48,18 +48,20 @@
     </record>
 
      <record model="ir.rule" id="project_details_comp_rule">
-        <field name="name" >Projects According to User</field>
+        <field name="name" >Projects According to User or Members</field>
         <field name="model_id" ref="model_project_project"/>
         <field name="groups" eval="[(6, 0, [ref('group_project_manager')])]"/>
-        <field name="domain_force">[('members','in',[user.id])]</field>
+        <field name="domain_force">['|',('members','in',[user.id]),('user_id','=',user.id)]</field>
     </record>
 
      <record model="ir.rule" id="project_user_rule">
-        <field name="name" >Projects According to Members</field>
+        <field name="name" >Projects According to Members or Users</field>
         <field name="model_id" ref="model_project_project"/>
          <field eval="1" name="perm_read"/>
+         <field eval="1" name="perm_write"/>
+         <field eval="1" name="perm_create"/>
         <field name="groups" eval="[(6, 0, [ref('group_project_user')])]"/>
-        <field name="domain_force">[('members','in',[user.id])]</field>
+        <field name="domain_force">['|',('members','in',[user.id]),('user_id','=',user.id)]</field>
     </record>
 
 </data>

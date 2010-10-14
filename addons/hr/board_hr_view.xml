@@ -32,6 +32,8 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_hr_form"/>
         </record>
-        <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15" action="open_board_hr"/>
+
+        <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15" action="open_board_hr"
+        groups="project.group_project_finance_user"/>
     </data>
 </openerp>
