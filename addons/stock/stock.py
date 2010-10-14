@@ -25,7 +25,6 @@ from operator import itemgetter
 from itertools import groupby
 
 from osv import fields, osv
-from tools import config
 from tools.translate import _
 import netsvc
 import tools
@@ -1101,8 +1100,6 @@ class stock_picking(osv.osv):
                           delivery moves with product_id, product_qty, uom
         @return: Dictionary of values
         """
-        import pdb
-        #pdb.set_trace()
         if context is None:
             context = {}
         else:
@@ -1112,15 +1109,10 @@ class stock_picking(osv.osv):
         product_obj = self.pool.get('product.product')
         currency_obj = self.pool.get('res.currency')
         uom_obj = self.pool.get('product.uom')
-        price_type_obj = self.pool.get('product.price.type')
         sequence_obj = self.pool.get('ir.sequence')
         wf_service = netsvc.LocalService("workflow")
-        partner_id = partial_datas.get('partner_id', False)
-        address_id = partial_datas.get('address_id', False)
-        delivery_date = partial_datas.get('delivery_date', False)
         for pick in self.browse(cr, uid, ids, context=context):
             new_picking = None
-            new_moves = []
             complete, too_many, too_few = [], [], []
             move_product_qty = {}
             prodlot_ids = {}
@@ -1194,7 +1186,7 @@ class stock_picking(osv.osv):
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
                         defaults.update(prodlot_id=prodlot_id)
-                    new_obj = move_obj.copy(cr, uid, move.id, defaults)
+                    move_obj.copy(cr, uid, move.id, defaults)
 
                 move_obj.write(cr, uid, [move.id],
                         {
@@ -1887,9 +1879,7 @@ class stock_move(osv.osv):
         These reference values should possibly be converted before being posted in Journals to adapt to the primary
         and secondary currencies of the relevant accounts.
         """
-        product_obj=self.pool.get('product.product')
         product_uom_obj = self.pool.get('product.uom')
-        price_type_obj = self.pool.get('product.price.type')
 
         # by default the reference currency is that of the move's company
         reference_currency_id = move.company_id.currency_id.id
@@ -1956,12 +1946,8 @@ class stock_move(osv.osv):
         """ Makes the move done and if all moves are done, it will finish the picking.
         @return:
         """
-        track_flag = False
         partial_datas=''
         picking_ids = []
-        product_uom_obj = self.pool.get('product.uom')
-        price_type_obj = self.pool.get('product.price.type')
-        product_obj = self.pool.get('product.product')
         partial_obj=self.pool.get('stock.partial.picking')
         partial_id=partial_obj.search(cr,uid,[])
         if partial_id:
@@ -1986,8 +1972,6 @@ class stock_move(osv.osv):
                     if move.move_dest_id.picking_id:
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
-                    else:
-                        pass
                     if move.move_dest_id.auto_validate:
                         self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
@@ -2252,20 +2236,12 @@ class stock_move(osv.osv):
                           like partner_id, address_id, delivery_date, delivery
                           moves with product_id, product_qty, uom
         """
-        import pdb
-        #pdb.set_trace()
         res = {}
         picking_obj = self.pool.get('stock.picking')
         product_obj = self.pool.get('product.product')
         currency_obj = self.pool.get('res.currency')
         uom_obj = self.pool.get('product.uom')
-        price_type_obj = self.pool.get('product.price.type')
-        sequence_obj = self.pool.get('ir.sequence')
         wf_service = netsvc.LocalService("workflow")
-        partner_id = partial_datas.get('partner_id', False)
-        address_id = partial_datas.get('address_id', False)
-        delivery_date = partial_datas.get('delivery_date', False)
-        new_moves = []
 
         if  context is None:
             context = {}
