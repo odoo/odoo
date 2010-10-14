@@ -66,23 +66,23 @@
                          help="Tasks during last 7 days"/>
                     <separator orientation="vertical"/>
                     <filter string="Invoiced"
-						name="invoiced"
-						icon="terp-dolar"
-						help = "Invoices" context="{'total_visible':0}"/>
-					<filter icon="terp-check"
-						string="Current Event" name="draft"
-						domain="[('state','in',('draft', 'confirm'))]" help="Events in draft or confirmed state"/>
-					<filter icon="terp-camera_test"
-					      string="Confirmed Registrations"
-					      domain="[('state','=','confirm')]" context="{'no_of_draft_visible':1}" help="Events in confirmed state"/>
+                        name="invoiced"
+                        icon="terp-dolar"
+                        help = "Invoices" context="{'total_visible':0}"/>
+                    <filter icon="terp-check"
+                        string="Current Event" name="draft"
+                        domain="[('state','in',('draft', 'confirm'))]" help="Events in draft or confirmed state"/>
+                    <filter icon="terp-camera_test"
+                          string="Confirmed Registrations"
+                          domain="[('state','=','confirm')]" context="{'no_of_draft_visible':1}" help="Events in confirmed state"/>
                     <separator orientation="vertical"/>
-					<field name="event_id" string="Event"/>
-					<field name="user_id" widget="selection">
-						<filter icon="terp-personal"
-						string="My Events"
-						help="My Events"
-						domain="[('user_id','=',uid)]"/>
-					</field>
+                    <field name="event_id" string="Event"/>
+                    <field name="user_id" widget="selection">
+                        <filter icon="terp-personal"
+                        string="My Events"
+                        help="My Events"
+                        domain="[('user_id','=',uid)]"/>
+                    </field>
                     </group>
                     <newline/>
 
@@ -105,10 +105,10 @@
                             domain="[]" context="{'group_by':'year'}"/>
                     </group>
                     <newline/>
-	                <group expand="0" string="Extended Filters..." groups="base.group_extended">
-	                	<field name="type" widget="selection"/>
-						<field name="date"/>
-	                </group>
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                        <field name="type" widget="selection"/>
+                        <field name="date"/>
+                    </group>
                 </search>
             </field>
         </record>
