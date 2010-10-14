@@ -25,19 +25,18 @@ import tools
 class report_event_registration(osv.osv):
 
     _name = "report.event.registration"
-    _description = "Events on registrations and Events on type"
+    _description = "Events Analysis"
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Event Start Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'day': fields.char('Date', size=128, readonly=True),
-        'event_id': fields.many2one('event.event', 'Event Related', required=True),
-        'draft_state': fields.integer(' # No of draft Registration.', size=20),
-        'confirm_state': fields.integer(' # No of Confirm Registration', size=20),
+        'event_id': fields.many2one('event.event', 'Event', required=True),
+        'draft_state': fields.integer(' # No of Draft Registrations', size=20),
+        'confirm_state': fields.integer(' # No of Confirmed Registrations', size=20),
         'register_max': fields.integer('Maximum Registrations'),
         'nbevent': fields.integer('Number Of Events'),
         'type': fields.many2one('event.type', 'Event Type'),
@@ -59,8 +58,27 @@ class report_event_registration(osv.osv):
         cr.execute("""
          CREATE OR REPLACE view report_event_registration AS (
                 SELECT
-                e.id AS id,
-                c.event_id AS event_id,
+                id,
+                event_id,
+                date,
+                user_id,
+                section_id,
+                company_id,
+                product_id,
+                speaker_id,
+                year,
+                month,
+                nbevent,
+                type,
+                SUM(draft_state) AS draft_state,
+                SUM(confirm_state) AS confirm_state,
+                SUM(total) AS total,
+                register_max,
+                state
+                FROM(
+                SELECT
+                MIN(e.id) AS id,
+                e.id AS event_id,
                 e.date_begin AS date,
                 e.user_id AS user_id,
                 e.section_id AS section_id,
@@ -69,26 +87,43 @@ class report_event_registration(osv.osv):
                 e.main_speaker_id AS speaker_id,
                 to_char(e.date_begin, 'YYYY') AS year,
                 to_char(e.date_begin, 'MM') AS month,
-                to_char(e.date_begin, 'YYYY-MM-DD') AS day,
-                count(t.id) AS nbevent,
+                count(e.id) AS nbevent,
                 t.id AS type,
-                (SELECT SUM(c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type AND c.state IN ('draft')) AS draft_state,
-                (SELECT SUM(c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type AND c.state IN ('open')) AS confirm_state,
-                (SELECT SUM(c.price_subtotal) FROM event_registration  c  WHERE c.event_id=e.id AND t.id=e.type AND c.state IN ('done')) AS total,
+                CASE WHEN c.state IN ('draft') THEN c.nb_register ELSE 0 END AS draft_state,
+                CASE WHEN c.state IN ('open','done') THEN c.nb_register ELSE 0 END AS confirm_state,
+                CASE WHEN c.state IN ('done') THEN c.price_subtotal ELSE 0 END AS total,
                 e.register_max AS register_max,
                 e.state AS state
                 FROM
                 event_event e
-                INNER JOIN
+                LEFT JOIN
                     event_registration c ON (e.id=c.event_id)
-                INNER JOIN
+                LEFT JOIN
                     event_type t ON (e.type=t.id)
                GROUP BY
                     to_char(e.date_begin, 'YYYY'),
                     to_char(e.date_begin, 'MM'),
+                    c.state,
+                    c.nb_register,
                     t.id, e.id, e.date_begin, e.main_speaker_id,
                     e.register_max, e.type, e.state, c.event_id, e.user_id,e.company_id,e.product_id,e.section_id,
-                    to_char(e.date_begin, 'YYYY-MM-DD')
-                )""")
+                    to_char(e.date_begin, 'YYYY-MM-DD'), c.id, c.price_subtotal )AS foo
+                GROUP BY
+                id,
+                event_id,
+                date,
+                user_id,
+                section_id,
+                company_id,
+                product_id,
+                speaker_id,
+                year,
+                month,
+                nbevent,
+                type,
+                register_max,
+                state
+              )
+                """)
 
 report_event_registration()
