@@ -74,6 +74,9 @@ class node_context(object):
         self.dbname = cr.dbname
         self.uid = uid
         self.context = context
+        if context is None:
+            context = {}
+        context['uid'] = uid
         self._dirobj = pooler.get_pool(cr.dbname).get('document.directory')
         self.node_file_class = node_file
         self.extra_ctx = {} # Extra keys for context, that do _not_ trigger inequality
