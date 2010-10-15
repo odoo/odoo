@@ -6,18 +6,16 @@
             <field name="model">stock.invoice.onshipping</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Create invoices">
-                    <separator colspan="4" string="Create invoices" />
+              <form string="Create invoice">
+                    <separator colspan="4" string="Create invoice" />
                     <field name="journal_id"/>
                     <newline/>
                     <field name="group"/>
                     <newline/>
-                    <field name="type"/>
-                    <newline/>
                     <field name="invoice_date" />
-                       <separator string="" colspan="4" />
+                    <separator string="" colspan="4" />
                     <button special="cancel" string="_Cancel" icon='gtk-cancel'/>
-                       <button name="create_invoice" string="Create Invoices" type="object" icon="terp-gtk-go-back-rtl"/>
+                    <button name="create_invoice" string="Create" type="object" icon="terp-gtk-go-back-rtl"/>
              </form>
             </field>
         </record>
