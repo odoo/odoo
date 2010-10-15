@@ -33,10 +33,11 @@ class account_analytic_journal(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
-        'active': lambda *a: True,
-        'type': lambda *a: 'general',
+        'active': True,
+        'type': 'general',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+
 account_analytic_journal()
 
 class account_journal(osv.osv):
@@ -45,7 +46,7 @@ class account_journal(osv.osv):
     _columns = {
         'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal',help="Journal for analytic entries"),
     }
+
 account_journal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from operator import itemgetter
 
 from osv import fields, osv
@@ -58,8 +59,8 @@ class account_fiscal_position(osv.osv):
                 account_id = pos.account_dest_id.id
                 break
         return account_id
-account_fiscal_position()
 
+account_fiscal_position()
 
 class account_fiscal_position_tax(osv.osv):
     _name = 'account.fiscal.position.tax'
@@ -70,8 +71,8 @@ class account_fiscal_position_tax(osv.osv):
         'tax_src_id': fields.many2one('account.tax', 'Tax Source', required=True),
         'tax_dest_id': fields.many2one('account.tax', 'Replacement Tax')
     }
-account_fiscal_position_tax()
 
+account_fiscal_position_tax()
 
 class account_fiscal_position_account(osv.osv):
     _name = 'account.fiscal.position.account'
@@ -82,6 +83,7 @@ class account_fiscal_position_account(osv.osv):
         'account_src_id': fields.many2one('account.account', 'Account Source', domain=[('type','<>','view')], required=True),
         'account_dest_id': fields.many2one('account.account', 'Account Destination', domain=[('type','<>','view')], required=True)
     }
+
 account_fiscal_position_account()
 
 class res_partner(osv.osv):
@@ -89,7 +91,7 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _description = 'Partner'
 
-    def _credit_debit_get(self, cr, uid, ids, field_names, arg, context):
+    def _credit_debit_get(self, cr, uid, ids, field_names, arg, context=None):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
         cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
@@ -184,6 +186,7 @@ class res_partner(osv.osv):
             'Companies that refers to partner'),
         'last_reconciliation_date': fields.datetime('Latest Reconciliation Date', help='Date on which the partner accounting entries were reconciled last time')
     }
+
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
