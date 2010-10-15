@@ -212,7 +212,7 @@ class event_event(osv.osv):
         'register_current': fields.function(_get_register, method=True, string='Confirmed Registrations', multi='register_current',
             help="Total of Open and Done Registrations"),
         'register_prospect': fields.function(_get_register, method=True, string='Unconfirmed Registrations', multi='register_prospect',
-            help="Total of Prospect Registrations"),
+            help="Total of Prospect Registrati./event/event.py:41:ons"),
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
         'date_begin': fields.datetime('Beginning date', required=True, help="Beginning Date of Event", readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('Closing date', required=True, help="Closing Date of Event", readonly=True, states={'draft': [('readonly', False)]}),
@@ -263,8 +263,15 @@ class event_event(osv.osv):
 
         return True
 
+    def _check_closing_date(self, cr, uid, ids):
+        for event in self.browse(cr, uid, ids):
+            if event.date_end < event.date_begin:
+                return False
+        return True
+
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive event.', ['parent_id'])
+        (_check_recursion, 'Error ! You cannot create recursive event.', ['parent_id']),
+        (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
     ]
 
     def do_team_change(self, cr, uid, ids, team_id, context=None):

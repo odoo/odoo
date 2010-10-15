@@ -26,28 +26,12 @@ class stock_move(osv.osv):
     _columns = {
         'sale_line_id': fields.many2one('sale.order.line', 'Sale Order Line', ondelete='set null', select=True, readonly=True),
     }
-    _defaults = {
-        'sale_line_id': False
-    }
 
-    def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
-        """
-        Overrides the default stock valuation to take into account the currency that was specified
-        on the sale order in case the valuation data was not directly specified during picking
-        confirmation.
-        """
-        reference_amount, reference_currency_id = super(stock_move, self)._get_reference_accounting_values_for_valuation(cr, uid, move, context=context)
-        if move.product_id.cost_method != 'average' or not move.price_unit:
-            # no average price costing or cost not specified during picking validation, we will 
-            # plug the sale line values if they are found.
-            if move.sale_line_id and move.picking_id.sale_id.pricelist_id:
-                reference_amount, reference_currency_id = move.sale_line_id.price_unit, move.picking_id.sale_id.pricelist_id.currency_id.id
-        return reference_amount, reference_currency_id
     def _create_chained_picking(self, cr, uid, pick_name,picking,ptype,move, context=None):
         res=super(stock_move, self)._create_chained_picking(cr, uid, pick_name,picking,ptype,move, context=context)
         if picking.sale_id:
-            picking_obj = self.pool.get('stock.picking').write(cr,uid,[res],{'sale_id':picking.sale_id.id})
-        return res    
+            self.pool.get('stock.picking').write(cr,uid,[res],{'sale_id':picking.sale_id.id})
+        return res
 stock_move()
 
 class stock_picking(osv.osv):
@@ -66,11 +50,9 @@ class stock_picking(osv.osv):
             return super(stock_picking, self).get_currency_id(cursor, user, picking)
 
     def _get_payment_term(self, cursor, user, picking):
-        res = {}
         if picking.sale_id and picking.sale_id.payment_term:
             return picking.sale_id.payment_term.id
-        return super(stock_picking, self)._get_payment_term(cursor,
-                user, picking)
+        return super(stock_picking, self)._get_payment_term(cursor, user, picking)
 
     def _get_address_invoice(self, cursor, user, picking):
         res = {}
@@ -78,47 +60,42 @@ class stock_picking(osv.osv):
             res['contact'] = picking.sale_id.partner_order_id.id
             res['invoice'] = picking.sale_id.partner_invoice_id.id
             return res
-        return super(stock_picking, self)._get_address_invoice(cursor,
-                user, picking)
+        return super(stock_picking, self)._get_address_invoice(cursor, user, picking)
 
     def _get_comment_invoice(self, cursor, user, picking):
         if picking.note or (picking.sale_id and picking.sale_id.note):
             return picking.note or picking.sale_id.note
-        return super(stock_picking, self)._get_comment_invoice(cursor, user,
-                picking)
+        return super(stock_picking, self)._get_comment_invoice(cursor, user, picking)
 
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
         if move_line.sale_line_id and move_line.sale_line_id.product_id.id == move_line.product_id.id:
             return move_line.sale_line_id.price_unit
-        return super(stock_picking, self)._get_price_unit_invoice(cursor,
-                user, move_line, type)
+        return super(stock_picking, self)._get_price_unit_invoice(cursor, user, move_line, type)
 
     def _get_discount_invoice(self, cursor, user, move_line):
         if move_line.sale_line_id:
             return move_line.sale_line_id.discount
-        return super(stock_picking, self)._get_discount_invoice(cursor, user,
-                move_line)
+        return super(stock_picking, self)._get_discount_invoice(cursor, user, move_line)
 
     def _get_taxes_invoice(self, cursor, user, move_line, type):
         if move_line.sale_line_id and move_line.sale_line_id.product_id.id == move_line.product_id.id:
             return [x.id for x in move_line.sale_line_id.tax_id]
-        return super(stock_picking, self)._get_taxes_invoice(cursor, user,
-                move_line, type)
+        return super(stock_picking, self)._get_taxes_invoice(cursor, user, move_line, type)
 
     def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
         if picking.sale_id:
             return picking.sale_id.project_id.id
-        return super(stock_picking, self)._get_account_analytic_invoice(cursor,
-                user, picking, move_line)
+        return super(stock_picking, self)._get_account_analytic_invoice(cursor, user, picking, move_line)
 
     def _invoice_line_hook(self, cursor, user, move_line, invoice_line_id):
         sale_line_obj = self.pool.get('sale.order.line')
         if move_line.sale_line_id:
-            sale_line_obj.write(cursor, user, [move_line.sale_line_id.id], {'invoiced':True,
-                'invoice_lines': [(4, invoice_line_id)],
-                })
-        return super(stock_picking, self)._invoice_line_hook(cursor, user,
-                move_line, invoice_line_id)
+            sale_line_obj.write(cursor, user, [move_line.sale_line_id.id], 
+                                    {
+                                        'invoiced': True,
+                                        'invoice_lines': [(4, invoice_line_id)],
+                                    })
+        return super(stock_picking, self)._invoice_line_hook(cursor, user, move_line, invoice_line_id)
 
     def _invoice_hook(self, cursor, user, picking, invoice_id):
         sale_obj = self.pool.get('sale.order')
@@ -126,8 +103,7 @@ class stock_picking(osv.osv):
             sale_obj.write(cursor, user, [picking.sale_id.id], {
                 'invoice_ids': [(4, invoice_id)],
                 })
-        return super(stock_picking, self)._invoice_hook(cursor, user,
-                picking, invoice_id)
+        return super(stock_picking, self)._invoice_hook(cursor, user, picking, invoice_id)
 
     def action_invoice_create(self, cursor, user, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
@@ -227,47 +203,4 @@ class stock_picking(osv.osv):
 
 stock_picking()
 
-class stock_partial_picking(osv.osv_memory):
-    _inherit = 'stock.partial.picking'
-
-    def default_get(self, cr, uid, fields, context=None):
-        """ To get default values for the object.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values
-        @param context: A standard dictionary
-        @return: A dictionary which of fields with values.
-        """
-        pick_obj = self.pool.get('stock.picking')
-        res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
-        for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
-            for m in pick.move_lines:
-                if (m.product_id.cost_method == 'average'):
-                    if pick.type == 'out' and pick.sale_id and m.sale_line_id:
-                        res['move%s_product_price'%(m.id)] =  m.sale_line_id.price_unit
-                        res['move%s_product_currency'%(m.id)] =  pick.sale_id.pricelist_id.currency_id.id
-        return res
-stock_partial_picking()
-
-class stock_partial_move(osv.osv_memory):
-    _inherit = "stock.partial.move"
-    def default_get(self, cr, uid, fields, context=None):
-        """ To get default values for the object.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values
-        @param context: A standard dictionary
-        @return: A dictionary which of fields with values.
-        """
-        res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
-        move_obj = self.pool.get('stock.move')
-        for m in move_obj.browse(cr, uid, context.get('active_ids', [])):
-            if (m.product_id.cost_method == 'average'):
-                if m.picking_id.type == 'out' and  m.sale_line_id and m.picking_id.sale_id:
-                    res['move%s_product_price'%(m.id)] = m.sale_line_id.price_unit
-                    res['move%s_product_currency'%(m.id)] = m.picking_id.sale_id.pricelist_id.currency_id.id
-        return res
-stock_partial_move()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
