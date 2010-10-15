@@ -31,7 +31,7 @@
             <field name="arch" type="xml">
                 <form string="Administration Dashboard">
                     <hpaned position="100">
-						<child1>
+                        <child1>
                             <action  name="%(action_latest_activities_tree)d" string="Latest Activities" sequence="1"/>
                         </child1>
                         <child2>
@@ -49,8 +49,8 @@
         </record>
        <menuitem id="menu_reporting" name="Reporting" parent="base.menu_administration" sequence="11"
             groups="base.group_extended"/>
-		<menuitem id="board.admin_menu_dasboard" name="Dashboard" sequence="0" parent="menu_reporting"/>
-        <menuitem id="menu_board_admin" action="open_board_administration_form" icon="terp-graph" parent="board.admin_menu_dasboard" />
+       <menuitem id="board.admin_menu_dasboard" name="Dashboard" sequence="0" parent="menu_reporting"/>
+       <menuitem id="menu_board_admin" action="open_board_administration_form" icon="terp-graph" parent="board.admin_menu_dasboard" />
 
         <!-- User Connection -->
         <record model="ir.ui.view" id="view_user_connection_tree">

@@ -12,8 +12,8 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-			<field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
-			<field name="view_id" ref="stock.view_move_tree_reception_picking_board"/>
+            <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
+            <field name="view_id" ref="stock.view_move_tree_reception_picking_board"/>
         </record>
 
 		<record id="action_outgoing_product_board" model="ir.actions.act_window">
@@ -22,7 +22,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-			<field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
+            <field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
 			<field name="view_id" ref="stock.view_move_tree_reception_picking_board"/>
         </record>
 
@@ -55,8 +55,8 @@
                         </child1>
 
                         <child2>
-							<action colspan="4" name="%(action_stock_incoming_product_delay)d" string="Incoming Products Delay" width="510"/>
-							<action colspan="4" name="%(action_stock_outgoing_product_delay)d" string="Outgoing Products delay" width="510"/>
+                            <action colspan="4" name="%(action_stock_incoming_product_delay)d" string="Incoming Products Delay" width="510"/>
+                            <action colspan="4" name="%(action_stock_outgoing_product_delay)d" string="Outgoing Products delay" width="510"/>
                         </child2>
                     </hpaned>
                 </form>
