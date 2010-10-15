@@ -169,3 +169,5 @@ class rml_parse(report_sxw.rml_parse):
                 else :
                     found.getparent().replace(found,tag)
         return True
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

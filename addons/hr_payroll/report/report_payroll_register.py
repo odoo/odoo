@@ -82,3 +82,5 @@ report_sxw.report_sxw(
     'hr_payroll/report/payroll_register.rml', 
     parser=report_payroll_register
 )   
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
