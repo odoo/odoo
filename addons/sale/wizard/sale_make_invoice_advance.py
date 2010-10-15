@@ -20,7 +20,6 @@
 
 from osv import fields, osv
 from tools.translate import _
-import ir
 
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
@@ -134,26 +133,20 @@ sale_advance_payment_inv()
 class sale_open_invoice(osv.osv_memory):
     _name = "sale.open.invoice"
     _description = "Sale Open Invoice"
-    _columns = {
-    }
-
     def open_invoice(self, cr, uid, ids, context):
 
         """
              To open invoice.
-
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
              @param ids: the ID or list of IDs if we want more than one
              @param context: A standard dictionary
-
              @return:
 
         """
 
         mod_obj = self.pool.get('ir.model.data')
-
         for advance_pay in self.browse(cr, uid, ids):
             result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
             id = mod_obj.read(cr, uid, result, ['res_id'])
@@ -162,7 +155,7 @@ class sale_open_invoice(osv.osv_memory):
             tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
             tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
         return {
-            'name': 'Invoices',
+            'name': 'Customer Invoices',
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'account.invoice',
