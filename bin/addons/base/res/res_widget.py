@@ -22,30 +22,19 @@
 from osv import fields,osv
 class res_widget(osv.osv):
     _name = "res.widget"
+    _rec_name = "title"
+    _columns = {
+        'title' : fields.char('Title', size=64, required=True),
+        'content': fields.text('Content', required=True),
+    }
 res_widget()
 
 class res_widget_user(osv.osv):
     _name="res.widget.user"
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'user_id': fields.one2many('res.users', 'widget_user', 'Users'),
-        'widget_id': fields.one2many('res.widget', 'widget_res', 'Widgets'),
+        'user_id': fields.many2one('res.users','User'),
+        'widget_id': fields.many2one('res.widget','Widget'),
     }
-res_widget_user() 
+res_widget_user()
 
-class res_users(osv.osv):
-    _inherit = 'res.users'
-    _columns = {
-        'widget_user': fields.many2one('res.widget.user', 'Widget User'),
-    }
-res_users()
-
-class res_widget(osv.osv):
-    _inherit = "res.widget"
-    _rec_name = "title"
-    _columns = {
-        'title' : fields.char('Title', size=64, required=True),
-        'content': fields.text('Content', required=True),
-        'widget_res': fields.many2one('res.widget.user', 'Widget')
-    }
-res_widget()
