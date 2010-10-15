@@ -132,6 +132,7 @@ module named account_voucher.
         'test/account_validate_account_move.yml',
         'test/account_fiscalyear_close.yml',
         'test/account_bank_statement.yml',
+        'test/account_cash_statement.yml',
         'test/account_report.yml',
     ],
     'installable': True,
