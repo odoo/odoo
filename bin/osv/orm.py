@@ -1723,7 +1723,6 @@ class orm_template(object):
             resprint = ir_values_obj.get(cr, user, 'action',
                     'client_print_multi', [(self._name, False)], False,
                     context)
-            resaction = []
             resaction = ir_values_obj.get(cr, user, 'action',
                     'client_action_multi', [(self._name, False)], False,
                     context)
