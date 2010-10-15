@@ -967,7 +967,7 @@ class mrp_production_workcenter_line(osv.osv):
         'cycle': fields.float('Nbr of cycles', digits=(16,2)),
         'hour': fields.float('Nbr of hours', digits=(16,2)),
         'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of work orders."),
-        'production_id': fields.many2one('mrp.production', 'Production Order', select=True, ondelete='cascade'),
+        'production_id': fields.many2one('mrp.production', 'Production Order', select=True, ondelete='cascade', required=True),
     }
     _defaults = {
         'sequence': lambda *a: 1,
