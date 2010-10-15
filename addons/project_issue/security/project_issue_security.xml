@@ -4,5 +4,14 @@
 	     <record id="group_project_supporter" model="res.groups">
 	        <field name="name">Project / Support Manager</field>
 	    </record>
+        <record model="ir.rule" id="project_issue_rule">
+            <field name="name" >Issues according to Users</field>
+            <field name="model_id" ref="model_project_issue"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="1" name="perm_create"/>
+            <field eval="1" name="perm_write"/>
+            <field name="groups" eval="[(6, 0, [ref('project.group_project_user')])]"/>
+            <field name="domain_force">[('project_id.members','in',[user.id])]</field>
+        </record>
  	</data>
 </openerp>
