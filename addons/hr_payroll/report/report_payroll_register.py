@@ -1,7 +1,6 @@
 import time
 from datetime import datetime
 from report import report_sxw
-from tools import amount_to_text_en
 
 class report_payroll_register(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

@@ -22,7 +22,6 @@
 #
 ##############################################################################
 
-import time
 from datetime import datetime
 from report import report_sxw
 from tools import amount_to_text_en

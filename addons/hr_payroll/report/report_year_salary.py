@@ -1,5 +1,3 @@
-import time
-import locale
 import datetime
 from report import report_sxw
 import time
@@ -51,7 +49,6 @@ class year_salary_report(rml_parse.rml_parse):
     def get_employee(self,form):
         ls1=[]
         ls = []
-        periods = []
         tol_mnths=['Total',0,0,0,0,0,0,0,0,0,0,0,0]
         emp = pooler.get_pool(self.cr.dbname).get('hr.employee')
         emp_ids = form['employee_ids']
