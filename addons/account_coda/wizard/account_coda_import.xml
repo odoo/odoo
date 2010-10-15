@@ -23,29 +23,27 @@
 					<group colspan="4">
      					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
                			<button name="coda_parsing" string="Import" type="object" icon="gtk-ok"/>
- 					</group>				    
+ 					</group>
 				</form>
 			</field>
 		</record>
-		
+
 		<record id="account_coda_note_view" model="ir.ui.view">
 	         <field name="name">Import Coda Statement</field>
 	         <field name="model">account.coda.import</field>
 	         <field name="type">form</field>
 	         <field name="arch" type="xml">
 				<form string="Result of Imported Coda Statements">
-					<group width="500" height="420">
-						<separator colspan="4" string="Results :" />
-				    	<field name="note" colspan="4" nolabel="1" width="500"/>
-				    	<newline/>
-						<separator colspan="6"/>
-						<button special="cancel" string="Close" icon="gtk-cancel"/>
-						<button name="action_open_window" string="Open Statements" type="object" icon="gtk-apply"/>
-					</group>		    	
+					<separator colspan="4" string="Results :" />
+			    	<field name="note" colspan="4" nolabel="1" width="500" height="310"/>
+			    	<newline/>
+					<separator colspan="6"/>
+					<button special="cancel" string="Close" icon="gtk-cancel"/>
+					<button name="action_open_window" string="Open Statements" type="object" icon="gtk-apply"/>
 		    	</form>
 	    	</field>
 	   	</record>
-	   	
+
 	   	<record id="action_account_coda_import" model="ir.actions.act_window">
             <field name="name">Import Coda Statement</field>
             <field name="type">ir.actions.act_window</field>
@@ -53,7 +51,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-   			<field name="view_id" ref="account_coda_import_view"/>            
+   			<field name="view_id" ref="account_coda_import_view"/>
         </record>
 
 </data>

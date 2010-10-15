@@ -93,8 +93,8 @@ class account_followup_stat(osv.osv):
                     sum(l.debit) as debit,
                     sum(l.credit) as credit,
                     sum(l.debit - l.credit) as balance,
-                    a.type as account_type ,
-                    l.company_id as company_id ,
+                    a.type as account_type,
+                    l.company_id as company_id,
                     l.blocked,
                     am.period_id as period_id
                 from
@@ -111,7 +111,7 @@ class account_followup_stat(osv.osv):
                     l.company_id is not NULL and
                     l.blocked is not NULL
                     group by
-                    l.partner_id, a.type , l.company_id ,l.blocked ,am.period_id
+                    l.partner_id, a.type, l.company_id,l.blocked,am.period_id
             )""")
 account_followup_stat()
 

@@ -67,17 +67,16 @@ class year_salary_report(rml_parse.rml_parse):
                     query = "select net from hr_payslip where employee_id = "+str(emp_id.id)+" and to_char(date,'mm-yyyy') like '%"+mnth+"%' and state = 'done' "
                     self.cr.execute(query)
                     sal = self.cr.fetchall()
+                    if sal:
+                        ls1.append(sal[0][0])
+                        tol += sal[0][0]
+                        tol_mnths[cnt] = tol_mnths[cnt] + sal[0][0]
+                    else:
+                        ls1.append(0.00)
+                        tol_mnths[cnt] = 0.0
                 else:
-                    sal = [(0.0,)]
-                try:
-                    ls1.append(sal[0][0])
-                except:
-                    ls1.append(0)
-                try:
-                    tol += sal[0][0]
-                    tol_mnths[cnt] = tol_mnths[cnt] + sal[0][0]
-                except:
-                    tol += 0
+                    ls1.append('')
+                    tol_mnths[cnt] = ''
                 cnt = cnt + 1
             cnt = 1
             ls1.append(tol)
@@ -92,6 +91,8 @@ class year_salary_report(rml_parse.rml_parse):
     def get_total(self):
         for item in self.mnths_tol:
             for count in range(1,len(item)):
+              if item[count] == '':
+                  continue
               self.total += item[count]
         return self.total
 

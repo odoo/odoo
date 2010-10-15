@@ -462,6 +462,7 @@ class sale_order(osv.osv):
         return inv_id
 
     def manual_invoice(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
         inv_ids = set()
         inv_ids1 = set()
@@ -474,17 +475,20 @@ class sale_order(osv.osv):
             for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
                 inv_ids1.add(record.id)
         inv_ids = list(inv_ids1.difference(inv_ids))
-
+        
+        result = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
+        res = mod_obj.read(cr, uid, result, ['res_id'])
         result = {
             'name': 'Invoices',
             'view_type': 'form',
-            'view_mode': 'form,tree',
+            'view_mode': 'form',
+            'view_id': [res['res_id']],
             'res_model': 'account.invoice',
-            'view_id': False,
-            'context': "{'type':'out_refund'}",
+            'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'res_id': inv_ids[0],
-            'nodestroy' :True
+            'nodestroy' :True,
+            'target': 'new',
+            'res_id': inv_ids and inv_ids[0] or False,
                   }
 
         return result
