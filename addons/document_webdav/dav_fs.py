@@ -323,11 +323,15 @@ class openerp_dav_handler(dav_interface):
                                 for tx in hr.childNodes:
                                     if tx.nodeType == hr.TEXT_NODE:
                                         turi += tx.data
-                                        
+                                if not turi.startswith('/'):
+                                    # it may be an absolute URL, decode to the
+                                    # relative part, because ul is relative, anyway
+                                    uparts=urlparse.urlparse(turi)
+                                    turi=uparts[2]
                                 if turi.startswith(ul):
                                     result.append( turi[len(self.parent.davpath):])
                                 else:
-                                    self.parent.log_error("ignore href %s because it is not under request path", turi)
+                                    self.parent.log_error("ignore href %s because it is not under request path %s", turi, ul)
                             return result
                             # We don't want to continue with the children found below
                             # Note the exceptions and that 'finally' will close the
