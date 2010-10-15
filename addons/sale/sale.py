@@ -594,6 +594,7 @@ class sale_order(osv.osv):
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
         sale_order_line_obj = self.pool.get('sale.order.line')
@@ -605,7 +606,6 @@ class sale_order(osv.osv):
                         _('You must first cancel all picking attached to this sale order.'))
             for r in self.read(cr, uid, ids, ['picking_ids']):
                 for pick in r['picking_ids']:
-                    wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)
             for inv in sale.invoice_ids:
                 if inv.state not in ('draft', 'cancel'):
@@ -614,7 +614,6 @@ class sale_order(osv.osv):
                         _('You must first cancel all invoices attached to this sale order.'))
             for r in self.read(cr, uid, ids, ['invoice_ids']):
                 for inv in r['invoice_ids']:
-                    wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
@@ -681,6 +680,7 @@ class sale_order(osv.osv):
             return canceled
 
     def action_ship_create(self, cr, uid, ids, *args):
+        wf_service = netsvc.LocalService("workflow")
         picking_id = False
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for order in self.browse(cr, uid, ids, context={}):
@@ -756,11 +756,9 @@ class sale_order(osv.osv):
 
             val = {}
             for proc_id in proc_ids:
-                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
 
             if picking_id:
-                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
 
             if order.state == 'shipping_except':
