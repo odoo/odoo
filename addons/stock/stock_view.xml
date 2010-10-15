@@ -779,7 +779,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Outgoing Deliveries">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="origin"/>
@@ -798,7 +798,7 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Outgoing Picking list">
+                <form string="Outgoing Deliveries">
                     <group col="6" colspan="4">
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
@@ -935,8 +935,8 @@
             <field name="arch" type="xml">
                 <search string="Picking list">
                     <group col="8" colspan="4">
-                        <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Outgoing Orders"/>
-                        <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Outgoing Orders"/>
+                        <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Outgoing Deliveries"/>
+                        <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Outgoing Deliveries"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
@@ -962,7 +962,7 @@
         </record>
 
         <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Outgoing Orders</field>
+            <field name="name">Outgoing Deliveries</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
