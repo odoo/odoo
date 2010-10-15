@@ -255,8 +255,10 @@ class act_window(osv.osv):
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.'),
         'display_menu_tip':fields.function(_get_help_status, type='boolean', method=True, string='Display Menu Tips',
-            help='It gives the status if the tip has to be displayed or not when a user executes an action')
+            help='It gives the status if the tip has to be displayed or not when a user executes an action'),
+        'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
+
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',
         'view_type': lambda *a: 'form',
@@ -265,7 +267,8 @@ class act_window(osv.osv):
         'limit': lambda *a: 80,
         'target': lambda *a: 'current',
         'auto_refresh': lambda *a: 0,
-        'auto_search':lambda *a: True
+        'auto_search':lambda *a: True,
+        'multi': False,
     }
 
 act_window()

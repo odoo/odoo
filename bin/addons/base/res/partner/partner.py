@@ -130,7 +130,7 @@ class res_partner(osv.osv):
         'email': fields.related('address', 'email', type='char', size=240, string='E-mail'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
     }
-
+    
     def _default_category(self, cr, uid, context={}):
         if 'category_id' in context and context['category_id']:
             return [context['category_id']]

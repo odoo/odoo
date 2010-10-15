@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 import tools
-import time
 
 class res_log(osv.osv):
     _name = 'res.log'
@@ -63,7 +62,6 @@ class res_log(osv.osv):
         return unread_logs
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        res = []
         log_ids = super(res_log, self).search(cr, uid, args, offset, limit, order, context, count)
         logs = {}
         for log in self.browse(cr, uid, log_ids, context=context):

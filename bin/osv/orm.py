@@ -1723,7 +1723,6 @@ class orm_template(object):
             resprint = ir_values_obj.get(cr, user, 'action',
                     'client_print_multi', [(self._name, False)], False,
                     context)
-            resaction = []
             resaction = ir_values_obj.get(cr, user, 'action',
                     'client_action_multi', [(self._name, False)], False,
                     context)
@@ -3041,20 +3040,20 @@ class orm(orm_template):
         else:
             res = map(lambda x: {'id': x}, ids)
 
-        if not res:
-            res = map(lambda x: {'id': x}, ids)
-            for record in res:
-                for f in fields_to_read:
-                    field_val = False
-                    if f in self._columns.keys():
-                        ftype = self._columns[f]._type
-                    elif f in self._inherit_fields.keys():
-                        ftype = self._inherit_fields[f][2]._type
-                    else:
-                        continue
-                    if ftype in ('one2many', 'many2many'):
-                        field_val = []
-                    record.update({f:field_val})
+#        if not res:
+#            res = map(lambda x: {'id': x}, ids)
+#            for record in res:
+#                for f in fields_to_read:
+#                    field_val = False
+#                    if f in self._columns.keys():
+#                        ftype = self._columns[f]._type
+#                    elif f in self._inherit_fields.keys():
+#                        ftype = self._inherit_fields[f][2]._type
+#                    else:
+#                        continue
+#                    if ftype in ('one2many', 'many2many'):
+#                        field_val = []
+#                    record.update({f:field_val})
 
         for f in fields_pre:
             if f == self.CONCURRENCY_CHECK_FIELD:
@@ -3107,7 +3106,9 @@ class orm(orm_template):
                 for pos in val:
                     for record in res:
                         if isinstance(res2[record['id']], str): res2[record['id']] = eval(res2[record['id']]) #TOCHECK : why got string instend of dict in python2.6
-                        record[pos] = res2[record['id']][pos]
+                        multi_fields = res2.get(record['id'],{})
+                        if multi_fields:
+                            record[pos] = multi_fields.get(pos,[])
             else:
                 for f in val:
                     res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
