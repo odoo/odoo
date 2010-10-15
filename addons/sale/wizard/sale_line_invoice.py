@@ -90,6 +90,13 @@ class sale_order_line_make_invoice(osv.osv_memory):
                     invoices[line.order_id.id].append((line, lid))
                 sales_order_line_obj.write(cr, uid, [line.id],
                         {'invoiced': True})
+            for result in invoices.values():
+                order = result[0][0].order_id
+                il = map(lambda x: x[1], result)
+                res = make_invoice(order, il)
+                cr.execute('INSERT INTO sale_order_invoice_rel \
+                        (order_id,invoice_id) values (%s,%s)', (order.id, res))
+
             flag = True
             data_sale = sales_order_obj.browse(cr, uid, line.order_id.id)
             for line in data_sale.order_line:
@@ -102,12 +109,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
 
         if not invoices:
             raise osv.except_osv(_('Warning'), _('Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either "draft" or "cancel"!\n2.The Sale Order Line is Invoiced!'))
-        for result in invoices.values():
-            order = result[0][0].order_id
-            il = map(lambda x: x[1], result)
-            res = make_invoice(order, il)
-            cr.execute('INSERT INTO sale_order_invoice_rel \
-                    (order_id,invoice_id) values (%s,%s)', (order.id, res))
+        
         return {}
 
 sale_order_line_make_invoice()
