@@ -114,25 +114,13 @@ class stock_invoice_onshipping(osv.osv_memory):
             if not invoice_ids:
                 raise osv.except_osv(_('Error'), _('Invoice is not created'))
 
-            if type == 'out_invoice':
-                xml_id = 'action_invoice_tree1'
-            elif type == 'in_invoice':
-                xml_id = 'action_invoice_tree2'
-            elif type == 'out_refund':
-                xml_id = 'action_invoice_tree3'
-            else:
-                xml_id = 'action_invoice_tree4'
-
-            result = mod_obj._get_id(cr, uid, 'account', xml_id)
-            id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
-            res_id = act_obj.read(cr, uid, id['res_id'], context=context)
         return {
             'domain': "[('id','in', ["+','.join(map(str,invoice_ids))+"])]",
             'name' : _('New picking invoices'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
-            'views': id['res_id'],
+            'views': False,
             'context': context,
             'type': 'ir.actions.act_window',
         }
