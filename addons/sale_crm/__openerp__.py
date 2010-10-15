@@ -42,6 +42,7 @@ crm modules.
                    'board_sale_crm_view.xml',
                    'process/sale_crm_process.xml',
                    'security/sale_crm_security.xml',
+                   'security/ir.model.access.csv'
                    ],
     'demo_xml': [],
     'test': ['test/sale_crm.yml'],

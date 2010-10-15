@@ -45,8 +45,10 @@
                                 <field name="allow_unlink" select="2"/>
                                 <field name="change_responsible"/>
                             </group>
-                            <separator string="Team Members" colspan="4"/>
-                            <field name="member_ids" nolabel="1" colspan="4"/>
+                            <group col="1" colspan="4" groups="base.group_extended">
+                                <separator string="Team Members" colspan="4"/>
+                                <field name="member_ids" nolabel="1" colspan="4"   height="250"/>
+                            </group>
                         </page>
                         <page string="Stages">
                             <separator string="Select stages for this Sales Team" colspan="4"/>

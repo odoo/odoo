@@ -171,7 +171,8 @@ class crm_lead(osv.osv):
                                         AND partner_weight > 0) AS d
                                   ORDER BY distance LIMIT 1""", (result[1],result[0]))
                     res = cr.dictfetchone()
-                    part_ids.append(res['id'])
+                    if res:
+                        part_ids.append(res['id'])
 
                 total = 0
                 toassign = []

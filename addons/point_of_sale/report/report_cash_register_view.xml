@@ -31,12 +31,12 @@
 	                        domain="[('year','=',time.strftime('%%Y'))]"
 	                        help="Cash Analysis created during this year"/>
 	                    <filter icon="terp-go-month" string="Month"
-	                        domain="[('month','=',time.strftime('%%m'))]"
+	                        domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
 	                        help="Cash Analysis created in current month"/>
 	                    <filter icon="terp-go-month"
 	                         string="Month -1"
 	                         separator="1"
-	                         domain="[('month','=',(datetime.date.today() - datetime.timedelta(365/12)).strftime('%%m'))]"
+	                         domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
 	                         help="Cash Analysis created in last month"/>
 	                    <separator orientation="vertical"/>
 	                    <filter icon="terp-go-today"
