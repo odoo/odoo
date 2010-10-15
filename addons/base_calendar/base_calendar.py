@@ -1475,6 +1475,8 @@ true, it will allow you to hide the event alarm information without removing it.
             if not real_event_id in new_ids:
                 new_ids.append(real_event_id)
 
+        if vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
+            vals['vtimezone'] = vals['vtimezone'][40:]
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
         if (vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'))\
@@ -1604,6 +1606,8 @@ true, it will allow you to hide the event alarm information without removing it.
         """
         if not context:
             context = {}
+        if vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
+            vals['vtimezone'] = vals['vtimezone'][40:]
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
