@@ -5,10 +5,10 @@
         <menuitem
             icon="terp-project" id="base.menu_main_pm"
             name="Project" sequence="10"
-            groups="group_project_manager,group_project_user,base.group_system"/>
+            groups="group_project_manager,group_project_user,base.group_system,group_project_finance_user"/>
 
-        <menuitem id="menu_project_management" name="Project Management" parent="base.menu_main_pm" sequence="1"/>
-        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60" groups="base.group_system"/>
+        <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
+        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60" groups="base.group_system,group_project_finance_user"/>
 
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
@@ -114,7 +114,7 @@
                        <field name="name" string="Project Name"/>
                        <field name="user_id" string="Project Manager" default="1">
                             <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manage" icon="terp-personal"/>
-                       </field> 
+                       </field>
                        <field name="partner_id" string="Partner"/>
                    </group>
                    <newline />
@@ -304,7 +304,7 @@
             <field name="type">tree</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0 and state in ('pending');red:date_deadline and (date_deadline&gt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
+                <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0 and state in ('pending');red:date_deadline and (date_deadline&lt;current_date) and (state in ('draft','open'))" string="Tasks">
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>
                     <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]" invisible="context.get('user_invisible', False)"/>
@@ -328,7 +328,7 @@
                     <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>                    
 					<button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
                     <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-sort-descending" help="For changing to delegate state"/>
-                    <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="gtk-apply" help="For changing to done state"/>
+                    <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close" help="For changing to done state"/>
                 </tree>
             </field>
         </record>
@@ -380,7 +380,7 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft, In Progress and Pending Tasks" icon="terp-check" default="1"/>
+                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress tasks" icon="terp-check" default="1"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
@@ -392,6 +392,8 @@
                         <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
+                        <field name="type_id" widget="selection"/>
+                        <separator orientation="vertical"/>
                         <field name="project_id" select="1">
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                         </field>
@@ -405,7 +407,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Project" name="group_project_id" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Stages" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
@@ -492,7 +494,7 @@
             <field name="view_id" ref="task_type_tree"/>
         </record>
 
-        <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1" groups="base.group_system"/>
+        <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1" groups="base.group_system,group_project_finance_user"/>
         <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_tasks_config" sequence="1"/>
 
         <act_window context="{'search_default_user_id': [active_id]}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
