@@ -21,9 +21,8 @@
 ##############################################################################
 from report import report_sxw
 import re
-import sys
 from lxml import etree
-from time import strptime 
+from time import strptime
 
 class rml_parse(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -50,14 +49,14 @@ class rml_parse(report_sxw.rml_parse):
             return new
         else:
             return self.comma_me(new)
-        
+
     def _ellipsis(self, string, maxlen=100, ellipsis = '...'):
         ellipsis = ellipsis or ''
         try:
             return string[:maxlen - len(ellipsis) ] + (ellipsis, '')[len(string) < maxlen]
         except Exception:
             return False
-        
+
     def _strip_name(self, name, maxlen=50):
         return self._ellipsis(name, maxlen, '...')
 
