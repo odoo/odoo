@@ -896,8 +896,8 @@
                     <group colspan="4" col="6">
                         <field name="name"/>
                         <field name="description"/>
-                  <field name="type_tax_use"/>
-                        <field name="price_include" groups="base.group_extended"/>
+                        <field name="type_tax_use"/>
+                        <field name="price_include"/>
                         <field name="active"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
@@ -930,8 +930,8 @@
                         </page>
                         <page groups="base.group_extended" string="Special Computation">
                             <separator colspan="4" string="Applicability Options"/>
-                      <field name="applicable_type"/>
-                      <field name="domain"/>
+                            <field name="applicable_type"/>
+                            <field name="domain"/>
                             <separator colspan="4" string="Applicable Code (if type=code)"/>
                             <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
                             <separator colspan="4" string="Compute Code (if type=code)"/>
