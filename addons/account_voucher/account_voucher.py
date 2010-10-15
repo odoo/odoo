@@ -257,10 +257,9 @@ class account_voucher(osv.osv):
 
         total = 0.0
         total_tax = 0.0
-
         for line in line_ids:
             line_amount = 0.0
-            line_amount = line[2].get('amount')
+            line_amount = line[2] and line[2].get('amount',0.0) or 0.0
             voucher_line_ids += [line[1]]
             voucher_total += line_amount
 
