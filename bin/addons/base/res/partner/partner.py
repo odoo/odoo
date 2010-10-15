@@ -130,7 +130,11 @@ class res_partner(osv.osv):
         'email': fields.related('address', 'email', type='char', size=240, string='E-mail'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
     }
-
+    
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        x = self.pool.get('account.account').read(cr,uid,[500],[],context=context)
+        print "::XXX:",x
+        return super(res_partner,self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
     def _default_category(self, cr, uid, context={}):
         if 'category_id' in context and context['category_id']:
             return [context['category_id']]
