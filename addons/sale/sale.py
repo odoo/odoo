@@ -109,7 +109,7 @@ class sale_order(osv.osv):
         for id in ids:
             res[id] = [0.0, 0.0]
         cr.execute('''SELECT
-                p.sale_id,sum(m.product_qty), mp.state as mp_state
+                p.sale_id, sum(m.product_qty), mp.state as mp_state
             FROM
                 stock_move m
             LEFT JOIN
@@ -117,7 +117,7 @@ class sale_order(osv.osv):
             LEFT JOIN
                 procurement_order mp on (mp.move_id=m.id)
             WHERE
-                p.sale_id IN %s GROUP BY mp.state, p.sale_id''',(tuple(ids),))
+                p.sale_id IN %s GROUP BY mp.state, p.sale_id''', (tuple(ids),))
         for oid, nbr, mp_state in cr.fetchall():
             if mp_state == 'cancel':
                 continue
@@ -321,7 +321,7 @@ class sale_order(osv.osv):
     def action_cancel_draft(self, cr, uid, ids, *args):
         if not len(ids):
             return False
-        cr.execute('select id from sale_order_line where order_id IN %s and state=%s',(tuple(ids),'cancel'))
+        cr.execute('select id from sale_order_line where order_id IN %s and state=%s', (tuple(ids), 'cancel'))
         line_ids = map(lambda x: x[0], cr.fetchall())
         self.write(cr, uid, ids, {'state': 'draft', 'invoice_ids': [], 'shipped': 0})
         self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
@@ -330,7 +330,7 @@ class sale_order(osv.osv):
             # Deleting the existing instance of workflow for SO
             wf_service.trg_delete(uid, 'sale.order', inv_id, cr)
             wf_service.trg_create(uid, 'sale.order', inv_id, cr)
-        for (id,name) in self.name_get(cr, uid, ids):
+        for (id, name) in self.name_get(cr, uid, ids):
             message = _('Sale order ') + " '" + name + "' "+ _("is in draft state")
             self.log(cr, uid, id, message)
         return True
@@ -413,7 +413,7 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
 
-        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', order.company_id.id)], limit=1)
+        journal_ids = journal_obj.search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)], limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error !'),
                 _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
@@ -521,7 +521,7 @@ class sale_order(osv.osv):
                         return i.id
         for val in invoices.values():
             if grouped:
-                res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []), context=context)
+                res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x, y: x + y, [l for o, l in val], []), context=context)
                 invoice_ref = ''
                 for o, l in val:
                     invoice_ref += o.name + '|'

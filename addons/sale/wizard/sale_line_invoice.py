@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 from tools.translate import _
 import netsvc
 
@@ -80,7 +80,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
         sales_order_line_obj = self.pool.get('sale.order.line')
         sales_order_obj = self.pool.get('sale.order')
         wf_service = netsvc.LocalService('workflow')
-        for line in sales_order_line_obj.browse(cr,uid,context['active_ids']):
+        for line in sales_order_line_obj.browse(cr, uid, context['active_ids']):
             if (not line.invoiced) and (line.state not in ('draft','cancel')):
                 if not line.order_id.id in invoices:
                     invoices[line.order_id.id] = []
@@ -91,17 +91,17 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 sales_order_line_obj.write(cr, uid, [line.id],
                         {'invoiced': True})
             flag = True
-            data_sale = sales_order_obj.browse(cr,uid,line.order_id.id)
+            data_sale = sales_order_obj.browse(cr, uid, line.order_id.id)
             for line in data_sale.order_line:
                 if not line.invoiced:
                     flag = False
                     break
             if flag:
                 wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
-                sales_order_obj.write(cr,uid,[line.order_id.id],{'state' : 'progress'})
+                sales_order_obj.write(cr, uid, [line.order_id.id], {'state' : 'progress'})
 
         if not invoices:
-            raise osv.except_osv(_('Warning'),_('Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either "draft" or "cancel"!\n2.The Sale Order Line is Invoiced!'))
+            raise osv.except_osv(_('Warning'), _('Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either "draft" or "cancel"!\n2.The Sale Order Line is Invoiced!'))
         for result in invoices.values():
             order = result[0][0].order_id
             il = map(lambda x: x[1], result)

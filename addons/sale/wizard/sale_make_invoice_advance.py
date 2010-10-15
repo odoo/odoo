@@ -105,7 +105,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         # If invoice on picking: add the cost on the SO
         # If not, the advance will be deduced when generating the final invoice
         #
-                if sale.order_policy=='picking':
+                if sale.order_policy == 'picking':
                     self.pool.get('sale.order.line').create(cr, uid, {
                         'order_id': sale.id,
                         'name': val['value']['name'],
