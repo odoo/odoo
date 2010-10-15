@@ -277,7 +277,7 @@
             </form>
         </field>
     </record>
-       
+
     <record id="view_attach_filter_inherit0" model="ir.ui.view">
             <field name="name">IR Attachment0</field>
             <field name="model">ir.attachment</field>
@@ -296,9 +296,9 @@
             </field>
     </record>
 
-        
 
     <record id="view_attach_filter_inherit2" model="ir.ui.view">
+
             <field name="name">IR Attachment2</field>
             <field name="model">ir.attachment</field>
             <field name="type">search</field>
@@ -307,11 +307,13 @@
                 <filter string="Owner" position="replace">
                     <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Partner" icon="terp-partner" domain="[]"
+
                        context="{'group_by':'partner_id'}"  groups="base.group_extended"/>
                     <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
                  </filter>
             </field>
     </record>
+
 
     <record model="ir.ui.view" id="view_document_file_tree">
         <field name="name">ir.attachment</field>
