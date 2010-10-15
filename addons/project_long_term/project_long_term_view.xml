@@ -13,7 +13,7 @@
             <field name="model">project.resource.allocation</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-              <gantt color="resource_id" date_start="date_start" date_stop="date_end" mode="year">
+              <gantt color="phase_id" date_start="date_start" date_stop="date_end" mode="year">
                <level object="project.project" link="project_id" domain="[]">
                     <field name="phase_id"/>
                 </level>
