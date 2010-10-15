@@ -399,9 +399,11 @@ class task(osv.osv):
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
 #            res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
+
             for ctimespent in task.work_ids:
                 timespent=timespent+ctimespent.hours
             res[task.id]['delay_hours'] = task.planned_hours - timespent
+
             res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
                 res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)

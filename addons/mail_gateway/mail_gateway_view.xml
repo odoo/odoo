@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+        <menuitem id="base.menu_mail_gateway" name="Email"
+            parent="base.menu_base_config" sequence="1" />
+
         <record model="ir.ui.view" id="view_mailgate_message_form">
           <field name="name">mailgate.message.form</field>
             <field name="model">mailgate.message</field>
@@ -85,6 +89,20 @@
             </field>
         </record>
 
+
+
+
+        <record id="action_view_mail_message" model="ir.actions.act_window">
+            <field name="name">Message</field>
+            <field name="res_model">mailgate.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_mailgate_message_search"/>
+        </record>
+
+
+
+
         <record model="ir.ui.view" id="view_mailgate_thread_form">
             <field name="name">mailgate.thread.form</field>
             <field name="model">mailgate.thread</field>
@@ -133,6 +151,9 @@
                 </tree>
             </field>
         </record>
+
+
+
 
          <!--        Emails action-->
         <record model="ir.actions.act_window" id="action_view_mailgate_thread">
@@ -191,6 +212,9 @@
        res_model="ir.attachment"
        src_model="mailgate.message"
        domain="[('res_id', '=', res_id),('res_model','=',model)]"/>
+
+           <menuitem id="menu_email_gateway_form"
+               parent="base.menu_mail_gateway" action="action_view_mail_message" />
 
     </data>
 </openerp>
