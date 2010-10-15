@@ -132,10 +132,9 @@ class stock_invoice_onshipping(osv.osv_memory):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
-            'view_id': res_id,
+            'views': id['res_id'],
             'context': context,
             'type': 'ir.actions.act_window',
-            'nodestroy': True                
         }
 
 stock_invoice_onshipping()
