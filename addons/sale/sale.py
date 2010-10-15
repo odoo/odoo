@@ -409,7 +409,7 @@ class sale_order(osv.osv):
     def _make_invoice(self, cr, uid, order, lines, context=None):
         journal_obj = self.pool.get('account.journal')
         inv_obj = self.pool.get('account.invoice')
-
+        obj_invoice_line = self.pool.get('account.invoice.line')
         if context is None:
             context = {}
 
@@ -431,7 +431,7 @@ class sale_order(osv.osv):
         for preinv in order.invoice_ids:
             if preinv.state not in ('cancel',) and preinv.id not in from_line_invoice_ids:
                 for preline in preinv.invoice_line:
-                    inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
+                    inv_line_id = obj_invoice_line.copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
         inv = {
             'name': order.client_order_ref or order.name,
@@ -448,8 +448,8 @@ class sale_order(osv.osv):
             'comment': order.note,
             'payment_term': pay_term,
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
-            'date_invoice' : context.get('date_invoice',False),
-            'company_id' : order.company_id.id,
+            'date_invoice': context.get('date_invoice',False),
+            'company_id': order.company_id.id,
             'user_id':order.user_id and order.user_id.id or False
         }
         inv.update(self._inv_get(cr, uid, order))
@@ -485,7 +485,7 @@ class sale_order(osv.osv):
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'nodestroy' :True,
+            'nodestroy':True,
             'target': 'new',
             'res_id': inv_ids and inv_ids[0] or False,
                   }
@@ -498,6 +498,7 @@ class sale_order(osv.osv):
         invoice_ids = []
         picking_obj = self.pool.get('stock.picking')
         invoice = self.pool.get('account.invoice')
+        obj_sale_order_line = self.pool.get('sale.order.line')
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
@@ -511,7 +512,7 @@ class sale_order(osv.osv):
                     continue
                 elif (line.state in states):
                     lines.append(line.id)
-            created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
+            created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
             if created_lines:
                 invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
         if not invoices:
@@ -589,7 +590,7 @@ class sale_order(osv.osv):
             # Update the sale order state.
             #
             if order.state == 'invoice_except':
-                self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
+                self.write(cr, uid, [order.id], {'state': 'progress'}, context=context)
 
         return True
 
