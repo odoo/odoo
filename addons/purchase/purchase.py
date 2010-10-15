@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from mx import DateTime
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -765,9 +764,8 @@ class procurement_order(osv.osv):
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
-            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-            newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
-            newdate = newdate - seller_delay
+            newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
+            newdate = (newdate - relativedelta(days=company.po_lead)) - relativedelta(days=seller_delay)
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})

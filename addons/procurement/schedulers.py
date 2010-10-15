@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-from mx import DateTime
-
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from osv import osv
 from tools.translate import _
 import tools
@@ -59,7 +59,7 @@ class procurement_order(osv.osv):
             if use_new_cursor:
                 cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-            maxdate = (DateTime.now() + DateTime.RelativeDateTime(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+            maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
             start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
             offset = 0
             report = []
@@ -166,7 +166,7 @@ class procurement_order(osv.osv):
                 if product.virtual_available >= 0.0:
                     continue
 
-                newdate = DateTime.now()
+                newdate = datetime.today()
                 if product.supply_method == 'buy':
                     location_id = warehouse.lot_input_id.id
                 elif product.supply_method == 'produce':
@@ -228,7 +228,7 @@ class procurement_order(osv.osv):
                     reste = qty % op.qty_multiple
                     if reste > 0:
                         qty += op.qty_multiple - reste
-                    newdate = DateTime.now() + DateTime.RelativeDateTime(
+                    newdate = datetime.today() + relativedelta(
                             days = int(op.product_id.seller_delay))
                     if qty <= 0:
                         continue
