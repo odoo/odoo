@@ -110,7 +110,7 @@ class account_voucher(osv.osv):
         return context.get('narration', False)
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
+        if not ids:
             return []
         return [(r['id'], (str("%.2f" % r['amount']) or '')) for r in self.read(cr, uid, ids, ['amount'], context, load='_classic_write')]
 
@@ -194,7 +194,7 @@ class account_voucher(osv.osv):
         'state': 'draft',
         'pay_now': 'pay_later',
         'name': '',
-        'date' : time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
         'tax_id': _get_tax,
     }
@@ -574,6 +574,7 @@ class account_voucher(osv.osv):
         move_line_pool = self.pool.get('account.move.line')
         currency_pool = self.pool.get('res.currency')
         bank_st_line_obj = self.pool.get('account.bank.statement.line')
+        tax_obj = self.pool.get('account.tax')
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
@@ -585,9 +586,9 @@ class account_voucher(osv.osv):
                 raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal !'))
 
             move = {
-                'name' : name,
+                'name': name,
                 'journal_id': inv.journal_id.id,
-                'narration' : inv.narration,
+                'narration': inv.narration,
                 'date':inv.date,
                 'ref':inv.reference,
                 'period_id': inv.period_id and inv.period_id.id or False
@@ -621,7 +622,7 @@ class account_voucher(osv.osv):
                 'debit':debit,
                 'credit':credit,
                 'account_id':inv.account_id.id,
-                'move_id':move_id ,
+                'move_id':move_id,
                 'journal_id':inv.journal_id.id,
                 'period_id':inv.period_id.id,
                 'partner_id':inv.partner_id.id,
@@ -679,7 +680,10 @@ class account_voucher(osv.osv):
                     move_line.update({
                         'account_tax_id':inv.tax_id.id,
                     })
-
+                if move_line.get('account_tax_id', False):
+                    tax_data = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
+                    if not (tax_data.base_code_id and tax_data.tax_code_id):
+                        raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
                 master_line = move_line_pool.create(cr, uid, move_line)
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
@@ -690,7 +694,7 @@ class account_voucher(osv.osv):
                 move_line = {
                     'name': name,
                     'account_id': False,
-                    'move_id': move_id ,
+                    'move_id': move_id,
                     'partner_id': inv.partner_id.id,
                     'date': inv.date,
                     'credit': diff > 0 and diff or 0.0,

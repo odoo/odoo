@@ -137,7 +137,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                 future_past[i[0]] = i[1]
 
         # Use one query per period and store results in history (a list variable)
-        # Each history will contain : history[1] = {'<partner_id>': <partner_debit-credit>}
+        # Each history will contain: history[1] = {'<partner_id>': <partner_debit-credit>}
         history = []
         for i in range(5):
             args_list = (tuple(move_state), tuple(self.ACCOUNT_TYPE), tuple(partner_ids),self.date_from,)

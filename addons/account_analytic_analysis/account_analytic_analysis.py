@@ -146,7 +146,7 @@ class account_analytic_account(osv.osv):
                             FROM account_analytic_line \
                             WHERE account_id IN %s \
                                 AND invoice_id IS NULL \
-                            GROUP BY account_analytic_line.account_id" ,(parent_ids,))
+                            GROUP BY account_analytic_line.account_id",(parent_ids,))
                     for account_id, lwd in cr.fetchall():
                         if account_id not in res:
                             res[account_id] = {}
@@ -656,7 +656,7 @@ class account_analytic_account_summary_month(osv.osv):
         if fields is None:
             fields = self._columns.keys()
         res_trans_obj = self.pool.get('ir.translation')
-        # construct a clause for the rules :
+        # construct a clause for the rules:
         d1, d2, tables= self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
