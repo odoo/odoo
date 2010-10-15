@@ -1382,8 +1382,9 @@ class orm_template(object):
                   INNER JOIN wkf_transition t ON (t.act_to = a.id)
                        WHERE wkf.osv = %s
                          AND t.signal = %s
+                         AND t.group_id is NOT NULL
                    """, (self._name, button.get('name')))
-            group_ids = [x[0] for x in cr.fetchall()]
+            group_ids = [x[0] for x in cr.fetchall() if x[0]]
             can_click = not group_ids or bool(set(user_groups).intersection(group_ids))
             button.set('readonly', str(int(not can_click)))
         return node
