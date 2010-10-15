@@ -45,8 +45,6 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_start_date': self._get_start_date,
             'get_end_date': self._get_end_date,
             'get_fiscalyear': self._get_fiscalyear,
-            'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,
             'display_currency':self._display_currency,
             'get_sortby': self._get_sortby,
             'get_target_move': self._get_target_move,
