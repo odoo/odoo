@@ -395,7 +395,18 @@ class project_resource_allocation(osv.osv):
     _name = 'project.resource.allocation'
     _description = 'Project Resource Allocation'
     _rec_name = 'resource_id'
+
+    def get_name(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for allocation in self.browse(cr, uid, ids, context=context):
+            name = allocation.resource_id.name
+            if allocation.user_id:
+                name = '%s' %(allocation.user_id.name)
+            name += ' (%s%%)' %(allocation.useability)
+            res[allocation.id] = name
+        return res
     _columns = {
+        'name': fields.function(get_name, method=True, type='char', size=256),
         'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
         'phase_id': fields.many2one('project.phase', 'Project Phase', ondelete='cascade', required=True),
         'project_id': fields.related('phase_id', 'project_id', type='many2one', relation="project.project", string='Project', store=True),
