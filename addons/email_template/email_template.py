@@ -31,6 +31,7 @@ TEMPLATE_ENGINES = []
 
 from osv import osv, fields
 from tools.translate import _
+
 try:
     from mako.template import Template as MakoTemplate
     TEMPLATE_ENGINES.append(('mako', 'Mako Templates'))

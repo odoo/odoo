@@ -182,12 +182,10 @@ class thunderbird_partner(osv.osv_memory):
         #@param message: string of mail which is read from EML File
         #@return model,res_id
         dictcreate = dict(message)
-        message = dictcreate.get('message')
+        message_id = dictcreate.get('message_id')
         msg_pool = self.pool.get('mailgate.message')
-        msg = self.pool.get('email.server.tools').parse_message(message)
-        message_id = msg.get('message-id', False)
-        model = False
-        res_id = False
+        model = ''
+        res_id = 0
         if message_id:
             msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
             if msg_ids and len(msg_ids):
@@ -195,6 +193,7 @@ class thunderbird_partner(osv.osv_memory):
                 model = msg.model
                 res_id = msg.res_id
         return (model,res_id)
+
 
     def search_contact(self, cr, user, email):
         address_pool = self.pool.get('res.partner.address')
@@ -314,14 +313,16 @@ class thunderbird_partner(osv.osv_memory):
 
     def list_allcountry(self,cr,user,vals):
         country_list = []
-        cr.execute("SELECT id, name from res_country")
+        cr.execute("SELECT id, name from res_country order by name")
         country_list = cr.fetchall()
         return country_list
 
+
     def list_allstate(self,cr,user,vals):
-        cr.execute("SELECT id, name from res_country_state")
-        state_country_list = cr.fetchall()
-        return state_country_list
+         cr.execute("select id, name  from res_country_state  where country_id = %s order by name",(vals,) )
+         state_country_list = cr.fetchall()
+         return state_country_list
+
 
     def search_document_attachment(self,cr,user,vals):
         model_obj = self.pool.get('ir.model')

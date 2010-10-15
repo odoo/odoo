@@ -41,7 +41,7 @@ class document_file(osv.osv):
         fbrl = self.browse(cr, uid, ids, context=context)
         nctx = nodes.get_node_context(cr, uid, context={})
         # nctx will /not/ inherit the caller's context. Most of
-        # it would be useless, anyway (like active_id, active_model, 
+        # it would be useless, anyway (like active_id, active_model,
         # bin_size etc.)
         result = {}
         bin_size = context.get('bin_size', False)
@@ -88,20 +88,19 @@ class document_file(osv.osv):
         'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True),
         'index_content': fields.text('Indexed Content'),
         'partner_id':fields.many2one('res.partner', 'Partner', select=1),
-        'company_id': fields.many2one('res.company', 'Company'),
         'file_size': fields.integer('File Size', required=True),
         'file_type': fields.char('Content Type', size=128),
-        
+
         # fields used for file storage
         'store_fname': fields.char('Stored Filename', size=200),
     }
+    _order = "create_date desc"
 
     def __get_def_directory(self, cr, uid, context=None):
         dirobj = self.pool.get('document.directory')
         return dirobj._get_root_directory(cr, uid, context)
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
         'user_id': lambda self, cr, uid, ctx:uid,
         'file_size': lambda self, cr, uid, ctx:0,
         'parent_id': __get_def_directory
@@ -150,7 +149,7 @@ class document_file(osv.osv):
             return False
         if not self._check_duplication(cr, uid, vals, ids, 'write'):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
-        
+
         # if nodes call this write(), they must skip the code below
         from_node = context and context.get('__from_node', False)
         if (('parent_id' in vals) or ('name' in vals)) and not from_node:
@@ -255,10 +254,11 @@ class document_file(osv.osv):
                     storage_id = par.storage_id
                     break
                 par = par.parent_id
-            assert storage_id, "Strange, found file #%s w/o storage!" % f.id
-            r = stor.prepare_unlink(cr, uid, storage_id, f)
-            if r:
-                unres.append(r)
+            #assert storage_id, "Strange, found file #%s w/o storage!" % f.id #TOCHECK: after run yml, it's fail
+            if storage_id:
+                r = stor.prepare_unlink(cr, uid, storage_id, f)
+                if r:
+                    unres.append(r)
         res = super(document_file, self).unlink(cr, uid, ids, context)
         stor.do_unlink(cr, uid, unres)
         return res

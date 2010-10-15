@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
 <openerp>
     <data noupdate="1">
-<!-- 
+<!--
 This Demo data file includes Users, Human Resources, Projects and it' members list, Phases and Resources,Tasks allocation and  also run scheduling of phase and tasks.
 -->
         <!-- Users -->
-        
+
         <record id="res_users_analyst" model="res.users">
-            <field name="name">Phoung</field>
+            <field name="name">Phuong</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
             <field name="login">phu</field>
             <field name="password">phu</field>
@@ -19,7 +19,7 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="password">al</field>
         </record>
         <record id="res_users_technical_leader" model="res.users">
-            <field name="name">Qwintin</field>
+            <field name="name">Quentin</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="login">qdp</field>
             <field name="password">qdp</field>
@@ -37,7 +37,7 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="password">jth</field>
         </record>
         <record id="res_users_tester" model="res.users">
-            <field name="name">Alien</field>
+            <field name="name">Aline</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="login">apr</field>
             <field name="password">apr</field>
@@ -91,8 +91,8 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="name">Project Finacial Manager</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
-        
-        
+
+
 
         <!-- Projects -->
         <record id="project_integrate_openerp" model="project.project">
@@ -101,12 +101,12 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="type">normal</field>
             <field name="description">Integrate an Sale and Warehouse Management.</field>
             <field eval="[(6, 0, [
-                    ref('res_users_analyst'), 
-                    ref('res_users_project_manager'), 
-                    ref('res_users_technical_leader'), 
-                    ref('res_users_developer'), 
-                    ref('res_users_designer'), 
-                    ref('res_users_tester'), 
+                    ref('res_users_analyst'),
+                    ref('res_users_project_manager'),
+                    ref('res_users_technical_leader'),
+                    ref('res_users_developer'),
+                    ref('res_users_designer'),
+                    ref('res_users_tester'),
                     ref('res_users_finacial_manager')])]" name="members"/>
             <field name="user_id" ref="res_users_project_manager"/>
             <field name="name">Integrate an Sale and Warehouse Management.</field>
@@ -213,7 +213,7 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="resource_id" ref="resource_project_manager"/>
             <field name="phase_id" ref="project_phase_5"/>
         </record>
-        
+
         <record id="resource_allocation_9" model="project.resource.allocation">
             <field name="resource_id" ref="resource_analyst"/>
             <field name="phase_id" ref="project_phase_6"/>

@@ -313,7 +313,7 @@
                            <separator orientation="vertical"/>
                            <field name="partner_id" select="1" />
                            <field name="section_id" select="1" widget="selection">
-                               <filter icon="terp-personal+"
+                               <filter icon="terp-personal+" groups="base.group_extended"
                                    domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                    help="My Sales Team(s)" />
                            </field>
