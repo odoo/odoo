@@ -54,8 +54,6 @@ class sale_advance_payment_inv(osv.osv_memory):
 
         for sale_adv_obj in self.browse(cr, uid, ids):
             for sale in obj_sale.browse(cr, uid, context['active_ids']):
-                address_contact = False
-                address_invoice = False
                 create_ids = []
                 ids_inv = []
                 if sale.order_policy == 'postpaid':
@@ -153,12 +151,8 @@ class sale_open_invoice(osv.osv_memory):
              @return:
 
         """
-        record_id = context and context.get('active_id', False) or False
 
         mod_obj = self.pool.get('ir.model.data')
-        obj_inv = self.pool.get('account.invoice')
-        invoices = []
-        invoice = obj_inv.browse(cr, uid, record_id, context=context)
 
         for advance_pay in self.browse(cr, uid, ids):
             result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
