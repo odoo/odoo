@@ -23,78 +23,78 @@
 ##############################################################################
 
 from datetime import datetime
+
 from report import report_sxw
 from tools import amount_to_text_en
 
 class payslip_report(report_sxw.rml_parse):
 
-      def __init__(self, cr, uid, name, context):
-	  super(payslip_report, self).__init__(cr, uid, name, context)
-	  self.localcontext.update({
-            'convert'     : self.convert,
-            'get_month'   : self.get_month,
-            'get_earnings': self.get_earnings,
-            'get_deductions':self.get_deductions,
-            'get_leave':self.get_leave,
-            'get_others':self.get_others,
-          })
+    def __init__(self, cr, uid, name, context):
+        super(payslip_report, self).__init__(cr, uid, name, context)
+        self.localcontext.update({
+                'convert': self.convert,
+                'get_month': self.get_month,
+                'get_earnings': self.get_earnings,
+                'get_deductions':self.get_deductions,
+                'get_leave':self.get_leave,
+                'get_others':self.get_others,
+                })
 
+    def convert(self, amount, cur):
+        amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur)
+        return amt_en
 
-      def convert(self,amount, cur):
-          amt_en = amount_to_text_en.amount_to_text(amount,'en',cur)
-          return amt_en
+    def get_others(self, obj):
+        payslip_line = self.pool.get('hr.payslip.line')
+        res = []
+        ids = []
+        for id in range(len(obj)):
+            if obj[id].category_id.type in ('advance', 'loan', 'otherpay', 'otherdeduct', 'installment'):
+                ids.append(obj[id].id)
+        if len(ids):
+            res = payslip_line.browse(self.cr, self.uid, ids)
+        return res
 
-      def get_others(self,obj):
-          res = []
-          ids = []
-          for id in range(len(obj)):
-              if obj[id].category_id.type in ('advance','loan','otherpay','otherdeduct','installment'):
-                 ids.append(obj[id].id)
-          payslip_line = self.pool.get('hr.payslip.line')
-          if len(ids):
-              res = payslip_line.browse(self.cr, self.uid, ids)
-          return res
+    def get_leave(self, obj):
+        payslip_line = self.pool.get('hr.payslip.line')
+        res = []
+        ids = []
+        for id in range(len(obj)):
+            if obj[id].type == 'leaves':
+                ids.append(obj[id].id)
+        if len(ids):
+            res = payslip_line.browse(self.cr, self.uid, ids)
+        return res
 
-      def get_leave(self,obj):
-          res = []
-          ids = []
-          for id in range(len(obj)):
-              if obj[id].type == 'leaves':
-                 ids.append(obj[id].id)
-          payslip_line = self.pool.get('hr.payslip.line')
-          if len(ids):
-              res = payslip_line.browse(self.cr, self.uid, ids)
-          return res
+    def get_earnings(self, obj):
+        payslip_line = self.pool.get('hr.payslip.line')
+        res = []
+        ids = []
+        for id in range(len(obj)):
+            if obj[id].category_id.type == 'allowance' and obj[id].type != 'leaves':
+                ids.append(obj[id].id)
+        if len(ids):
+            res = payslip_line.browse(self.cr, self.uid, ids)
+        return res
 
-      def get_earnings(self,obj):
-          res = []
-          ids = []
-          for id in range(len(obj)):
-              if obj[id].category_id.type == 'allowance' and obj[id].type != 'leaves':
-                 ids.append(obj[id].id)
-          payslip_line = self.pool.get('hr.payslip.line')
-          if len(ids):
-              res = payslip_line.browse(self.cr, self.uid, ids)
-          return res
+    def get_deductions(self, obj):
+        payslip_line = self.pool.get('hr.payslip.line')
+        res = []
+        ids = []
+        for id in range(len(obj)):
+            if obj[id].category_id.type == 'deduction' and obj[id].type != 'leaves':
+                ids.append(obj[id].id)
+        if len(ids):
+            res = payslip_line.browse(self.cr, self.uid, ids)
+        return res
 
-      def get_deductions(self,obj):
-          res = []
-          ids = []
-          for id in range(len(obj)):
-              if obj[id].category_id.type == 'deduction' and obj[id].type != 'leaves':
-                 ids.append(obj[id].id)
-          payslip_line = self.pool.get('hr.payslip.line')
-          if len(ids):
-              res = payslip_line.browse(self.cr, self.uid, ids)
-          return res
-
-      def get_month(self,obj):
-           res = {
-                    'mname':''
-                 }
-           date = datetime.strptime(obj.date, '%Y-%m-%d')
-           res['mname']= date.strftime('%B')+"-"+date.strftime('%Y')
-           return res['mname']
+    def get_month(self, obj):
+        res = {
+                'mname':''
+        }
+        date = datetime.strptime(obj.date, '%Y-%m-%d')
+        res['mname']= date.strftime('%B')+"-"+date.strftime('%Y')
+        return res['mname']
 
 report_sxw.report_sxw('report.payslip.pdf', 'hr.payslip', 'hr_payroll/report/payslip.rml', parser=payslip_report)
 

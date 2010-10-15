@@ -19,10 +19,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from time import strptime
+
 from report import report_sxw
 import re
 from lxml import etree
-from time import strptime
+
 
 class rml_parse(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
