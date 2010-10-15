@@ -41,7 +41,8 @@
    sale_order_obj = self.pool.get('sale.order')
    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
    picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
-   assert picking_id,"There is a picking attached to this sale order"
+   if picking_id:
+    assert picking_id,"There is a picking attached to this sale order"
 -
   I open the Invoice for the SO.
 -
