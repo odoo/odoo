@@ -3107,7 +3107,9 @@ class orm(orm_template):
                 for pos in val:
                     for record in res:
                         if isinstance(res2[record['id']], str): res2[record['id']] = eval(res2[record['id']]) #TOCHECK : why got string instend of dict in python2.6
-                        record[pos] = res2[record['id']][pos]
+                        multi_fields = res2.get(record['id'],{})
+                        if multi_fields:
+                            record[pos] = multi_fields.get(pos,[])
             else:
                 for f in val:
                     res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
