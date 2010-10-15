@@ -607,6 +607,7 @@ class YamlInterpreter(object):
             'usage': node.usage,
             'limit': node.limit,
             'auto_refresh': node.auto_refresh,
+            'multi': getattr(node, 'multi', False),
         }
 
         self._set_group_values(node, values)
