@@ -37,7 +37,7 @@ def str2float(str):
 
 def list2float(lst):
     try:
-        return str2float((lambda s : s[:-3] + '.' + s[-3:])(lst))
+        return str2float((lambda s: s[:-3] + '.' + s[-3:])(lst))
     except:
         return 0.0
 
@@ -48,7 +48,7 @@ class account_coda_import(osv.osv_memory):
             'journal_id': fields.many2one('account.journal', 'Bank Journal', required=True),
             'def_payable': fields.many2one('account.account', 'Default Payable Account', domain=[('type', '=', 'payable')], required=True, help= 'Set here the payable account that will be used, by default, if the partner is not found'),
             'def_receivable': fields.many2one('account.account', 'Default Receivable Account', domain=[('type', '=', 'receivable')], required=True, help= 'Set here the receivable account that will be used, by default, if the partner is not found',),
-            'awaiting_account': fields.many2one('account.account', 'Default Account for Unrecognized Movement', domain=[('type', '=', 'liquidity')], required=True, help= 'Set here the default account that will be used, if the partner is found but does not have the bank account , or if he is domiciled'),
+            'awaiting_account': fields.many2one('account.account', 'Default Account for Unrecognized Movement', domain=[('type', '=', 'liquidity')], required=True, help= 'Set here the default account that will be used, if the partner is found but does not have the bank account, or if he is domiciled'),
             'coda': fields.binary('Coda File', required=True),
             'note':fields.text('Log'),
     }
@@ -81,7 +81,7 @@ class account_coda_import(osv.osv_memory):
         err_log = "Errors:\n------\n"
         nb_err=0
         std_log=''
-        str_log1 = "Coda File is Imported  :  "
+        str_log1 = "Coda File is Imported:  "
         str_not=''
         str_not1=''
 
@@ -158,9 +158,9 @@ class account_coda_import(osv.osv_memory):
                         bank = partner_bank_obj.browse(cr, uid, bank_ids[0], context)
                         if line and bank.partner_id:
                             bank_statement_lines[st_line_name].update({'partner_id': bank.partner_id.id})
-                            if bank_statement_lines[st_line_name]['amount'] < 0 :
+                            if bank_statement_lines[st_line_name]['amount'] < 0:
                                 bank_statement_lines[st_line_name].update({'account_id': bank.partner_id.property_account_payable.id})
-                            else :
+                            else:
                                 bank_statement_lines[st_line_name].update({'account_id': bank.partner_id.property_account_receivable.id})
                     else:
                         nb_err += 1
@@ -216,9 +216,9 @@ class account_coda_import(osv.osv_memory):
                             rec_id = self.pool.get('account.move.line').search(cr, uid, [('name', '=', name), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
                             if rec_id:
                                 result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line['partner_id'], journal_id=statement['journal_id'], price=abs(line['amount']), currency_id = journal.company_id.currency_id.id, ttype=(line['amount'] < 0 and 'payment' or 'receipt'), context=context)
-                                voucher_res = { 'type':(line['amount'] < 0 and 'payment' or 'receipt') ,
+                                voucher_res = { 'type':(line['amount'] < 0 and 'payment' or 'receipt'),
                                 'name': line['name'],#line.name,
-                                'partner_id': line['partner_id'] ,#line.partner_id.id,
+                                'partner_id': line['partner_id'],#line.partner_id.id,
                                 'journal_id': statement['journal_id'], #statement.journal_id.id,
                                 'account_id': result.get('account_id', journal.default_credit_account_id.id),#line.account_id.id,
                                 'company_id': journal.company_id.id,#statement.company_id.id,
@@ -249,9 +249,9 @@ class account_coda_import(osv.osv_memory):
                                 mv = self.pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
                                 if mv.partner_id:
                                     line['partner_id'] = mv.partner_id.id
-                                    if line['amount'] < 0 :
+                                    if line['amount'] < 0:
                                         line['account_id'] = mv.partner_id.property_account_payable.id
-                                    else :
+                                    else:
                                         line['account_id'] = mv.partner_id.property_account_receivable.id
                         str_not1 = ''
                         if line.has_key('contry_name') and line.has_key('cntry_number'):
@@ -269,28 +269,28 @@ class account_coda_import(osv.osv_memory):
                                    })
 
                 str_not = "\n \n Account Number: %s \n Account Holder Name: %s " %(statement["acc_number"], statement["acc_holder"])
-                std_log += "\nStatement : %s , Date  : %s, Starting Balance :  %.2f , Ending Balance : %.2f \n"\
+                std_log += "\nStatement: %s, Date: %s, Starting Balance:  %.2f, Ending Balance: %.2f \n"\
                           %(statement['name'], statement['date'], float(statement["balance_start"]), float(statement["balance_end_real"]))
                 bkst_list.append(bk_st_id)
 
             except osv.except_osv, e:
                 cr.rollback()
                 nb_err += 1
-                err_log += '\n Application Error : ' + str(e)
+                err_log += '\n Application Error: ' + str(e)
                 raise # REMOVEME
 
             except Exception, e:
                 cr.rollback()
                 nb_err += 1
-                err_log += '\n System Error : '+str(e)
+                err_log += '\n System Error: '+str(e)
                 raise # REMOVEME
-            except :
+            except:
                 cr.rollback()
                 nb_err+=1
                 err_log += '\n Unknown Error'
                 raise
-        err_log += '\n\nNumber of statements : '+ str(len(bkst_list))
-        err_log += '\nNumber of error :'+ str(nb_err) +'\n'
+        err_log += '\n\nNumber of statements: '+ str(len(bkst_list))
+        err_log += '\nNumber of error:'+ str(nb_err) +'\n'
 
         account_coda_obj.create(cr, uid, {
             'name': codafile,

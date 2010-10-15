@@ -66,20 +66,17 @@ class mrp_production_workcenter_line(osv.osv):
         """ Finds ending date.
         @return: Dictionary of values.
         """
+
         ops = self.browse(cr, uid, ids, context=context)
-        date_and_hours_by_cal = []
-        for op in ops:
-            date_planned = op.production_id.date_planned and op.date_planned
-            if date_planned:
-                date_and_hours_by_cal.append((date_planned, op.hour, op.workcenter_id.calendar_id.id))
+        date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops if op.date_planned]
+
         intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
 
         res = {}
         for op in ops:
             res[op.id] = False
-            date_planned = op.production_id.date_planned and op.date_planned
-            if date_planned:
-                i = intervals[(date_planned, op.hour, op.workcenter_id.calendar_id.id)]
+            if op.date_planned:
+                i = intervals.get((op.date_planned, op.hour, op.workcenter_id.calendar_id.id))
                 if i:
                     res[op.id] = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
                 else:
@@ -291,6 +288,7 @@ class mrp_production(osv.osv):
                         dt_end = max(dt_end, i[-1][1])
                 else:
                     dt_end = datetime.strptime(wc.date_planned_end, '%Y-%m-%d %H:%M:%S')
+
                 old = wc.sequence or 0
             super(mrp_production, self).write(cr, uid, [po.id], {
                 'date_finished': dt_end
