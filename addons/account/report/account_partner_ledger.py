@@ -46,8 +46,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'get_start_date': self._get_start_date,
             'get_end_date': self._get_end_date,
             'get_fiscalyear': self._get_fiscalyear,
-            'get_start_date':self._get_start_date,
-            'get_end_date': self._get_end_date,
             'get_journal': self._get_journal,
             'get_partners':self._get_partners,
             'get_intial_balance':self._get_intial_balance,
