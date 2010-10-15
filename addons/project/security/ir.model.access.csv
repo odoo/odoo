@@ -1,12 +1,12 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "access_project_project_manager","project.project manager","model_project_project","project.group_project_manager",1,1,1,1
-"access_account_analytic_account_manager","account.analytic.account","analytic.model_account_analytic_account","project.group_project_manager",1,0,0,0
+"access_account_analytic_account_manager","account.analytic.account","analytic.model_account_analytic_account","project.group_project_manager",1,1,1,1
 "access_project_project","project.project","model_project_project","project.group_project_user",1,1,1,1
 "access_account_analytic_account","account.analytic.account","analytic.model_account_analytic_account","project.group_project_user",1,1,1,1
 "access_project_task_type_user","project.task.type user","model_project_task_type","project.group_project_user",1,1,1,1
 "access_project_task_type","project.task.type","model_project_task_type","project.group_project_manager",1,1,1,1
 "access_project_task_manager","project.task manager","model_project_task","project.group_project_manager",1,1,1,1
-"access_project_task","project.task","model_project_task","project.group_project_user",1,1,1,1
+"access_project_task","project.task","model_project_task","project.group_project_user",1,1,1,0
 "access_project_task_work","project.task.work","model_project_task_work","project.group_project_user",1,1,1,1
 "access_project_task_work_manager","project.task.work.manager","model_project_task_work","project.group_project_manager",1,1,1,1
 "access_report_project_task_user","report.project.task.user","model_report_project_task_user","project.group_project_manager",1,1,1,1
@@ -28,3 +28,11 @@
 "access_project_vs_hours_system","project.vs.hours.system","model_project_vs_hours","base.group_system",1,0,0,0
 "access_project_task_sale_user","project.task salesman","model_project_task","base.group_sale_salesman",1,0,0,0
 "access_project_project_sale_user","project.project salesman","model_project_project","base.group_sale_salesman",1,0,0,0
+"access_project_project_project_financial_user","project.project.project.financial.user","model_project_project","group_project_finance_user",1,0,0,0
+"access_project_task_project_financial_user","project.task.project.financial.user","model_project_task","group_project_finance_user",1,0,0,0
+"access_project_task_work_project_financial_user","project.task.work.project.financial.user","model_project_task_work","group_project_finance_user",1,0,0,0
+"access_report_project_task_user_project_financial_user","report.project.task.user.project.financial.user","model_report_project_task_user","group_project_finance_user",1,0,0,0
+"access_project_board_project_financial_user","board.board.project.financial.user","board.model_board_board","group_project_finance_user",1,0,0,0
+"access_account_analytic_account_project_financial_user","account.analytic.account.project.financial.user","analytic.model_account_analytic_account","group_project_finance_user",1,0,0,0
+"access_project_task_type_project_financial_user","project.task.type.project.financial.user","model_project_task_type","group_project_finance_user",1,0,0,0
+"access_project_vs_hours_project_financial_user","project.vs.hours.project.financial.user","model_project_vs_hours","group_project_finance_user",1,0,0,0
