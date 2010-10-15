@@ -332,11 +332,11 @@
                         <field name="code" select="1" string="Reference" groups="base.group_extended"/>
                         <newline/>
                         <field name="product_qty"/>
-                        <field name="product_uom"/>
-                        <field name="routing_id" groups="base.group_extended"/>
+                        <field name="product_uom" widget="selection"/>
+                        <field name="routing_id" widget="selection" groups="base.group_extended"/>
                         <newline/>
-                        <field name="product_uos" groups="product.group_uos"/>
                         <field name="product_uos_qty" groups="product.group_uos" />
+                        <field name="product_uos" widget="selection" groups="product.group_uos"/>
                         <newline/>
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
@@ -422,7 +422,7 @@
             </field>
         </record>
         <record id="mrp_bom_form_action" model="ir.actions.act_window">
-            <field name="name">Master Bill of Materials</field>
+            <field name="name">Bill of Materials</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
