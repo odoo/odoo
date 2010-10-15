@@ -297,6 +297,7 @@ class project_phase(osv.osv):
         if context is None:
             context = {}
         resource_pool = self.pool.get('resource.resource')
+        resource_allocation_pool = self.pool.get('project.resource.allocation')
         uom_pool = self.pool.get('product.uom')
         if context is None:
            context = {}
@@ -344,7 +345,12 @@ class project_phase(osv.osv):
                                           'date_start': start_date.strftime('%Y-%m-%d'),
                                           'date_end': end_date.strftime('%Y-%m-%d')
                                         }, context=ctx)
-
+            # write dates into Resources Allocation
+            for resource in phase.resource_ids:
+                resource_allocation_pool.write(cr, uid, [resource.id], {
+                                        'date_start': start_date.strftime('%Y-%m-%d'),
+                                        'date_end': end_date.strftime('%Y-%m-%d')
+                                    }, context=ctx)
             # Recursive call till all the next phases scheduled
             for phase in phase.next_phase_ids:
                if phase.state in ['draft', 'open', 'pending']:
@@ -396,7 +402,7 @@ class project_resource_allocation(osv.osv):
         'user_id': fields.related('resource_id', 'user_id', type='many2one', relation="res.users", string='User'),
         'date_start': fields.date('Start Date', help="Starting Date"),
         'date_end': fields.date('End Date', help="Ending Date"),
-        'useability': fields.float('Availability', help="Usability of this resource for this project phase in percentage (=50%)"),
+        'useability': fields.float('Availability', help="Availability of this resource for this project phase in percentage (=50%)"),
     }
     _defaults = {
         'useability': 100,

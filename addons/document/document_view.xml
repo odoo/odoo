@@ -278,65 +278,42 @@
         </field>
     </record>
 
-         <record id="view_attach_filter_inherit" model="ir.ui.view">
-            <field name="name">IR Attachment</field>
-            <field name="model">ir.attachment</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="base.view_attachment_search"/>
-            <field name="arch" type="xml">
-                <filter string="Binary" position="after">
-                    <filter icon="terp-go-month" string="Month"
-                    domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
-                </filter>
-            </field>
-         </record>
-
-        <record id="view_attach_filter_inherit0" model="ir.ui.view">
+    <record id="view_attach_filter_inherit0" model="ir.ui.view">
             <field name="name">IR Attachment0</field>
             <field name="model">ir.attachment</field>
             <field name="type">search</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
-                <field name="type" position="replace">
+                <field name="create_uid" position="replace">
+                    <field name="user_id">
+                            <filter icon="terp-personal"
+                                domain="[('user_id','=',uid)]"
+                                help="Filter on my documents" />
+                        </field>
                     <field name="parent_id" />
-                </field>
-                <field name="datas_fname" position="replace">
-                   <field name="user_id">
-                    <filter icon="terp-personal"
-                        domain="[('user_id','=',uid)]"
-                        help="Filter on my documents" />
-                 </field>
+                    <field name="index_content"/>
                 </field>
             </field>
-         </record>
+    </record>
 
-         <record id="view_attach_filter_inherit1" model="ir.ui.view">
-            <field name="name">IR Attachment1</field>
-            <field name="model">ir.attachment</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="base.view_attachment_search"/>
-            <field name="arch" type="xml">
-                <filter string="Creator" position="replace">
-                   <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                </filter>
-            </field>
-         </record>
 
-         <record id="view_attach_filter_inherit2" model="ir.ui.view">
+    <record id="view_attach_filter_inherit2" model="ir.ui.view">
+
             <field name="name">IR Attachment2</field>
             <field name="model">ir.attachment</field>
             <field name="type">search</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
-                <filter string="Owner" position="after">
-                    <filter string="Partner" icon="terp-personal" domain="[]"
+                <filter string="Owner" position="replace">
+                    <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Partner" icon="terp-partner" domain="[]"
+
                        context="{'group_by':'partner_id'}"  groups="base.group_extended"/>
                     <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
-                    <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
-                    <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                  </filter>
             </field>
-         </record>
+    </record>
+
 
     <record model="ir.ui.view" id="view_document_file_tree">
         <field name="name">ir.attachment</field>

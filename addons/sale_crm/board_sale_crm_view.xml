@@ -83,8 +83,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="crm.board_crm_form"/>
             <field name="arch" type="xml">
-	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_sales_pipeline)d']" position="attributes">
-	                <attribute name="string">My Sales Pipeline</attribute>
+	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_sales_pipeline)d']" position="replace">
 	            </xpath>
             </field>
         </record>

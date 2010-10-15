@@ -22,7 +22,6 @@
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
                     <field name="amount" sum="Total cost" invisible="1"/>
                     <field name="general_account_id" invisible="1"/>
-                    <field name="journal_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -102,7 +101,6 @@
 
     <menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
     <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
-    <menuitem id="menu_partner_invc" parent="base.menu_project_management_time_tracking" action="account.action_invoice_tree1"/>
 
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>
