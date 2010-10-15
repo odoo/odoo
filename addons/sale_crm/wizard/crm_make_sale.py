@@ -114,6 +114,7 @@ class crm_make_sale(osv.osv_memory):
                 new_ids.append(new_id)
                 message = _('Opportunity ') + " '" + case.name + "' "+ _("is converted to Quotation.")
                 self.log(cr, uid, case.id, message)
+                case_obj._history(cr, uid, [case], _("Converted to Sales Quotation(id: %s).") % (new_id))
 
             if make.close:
                 case_obj.case_close(cr, uid, data)

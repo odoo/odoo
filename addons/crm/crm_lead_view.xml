@@ -54,7 +54,7 @@
                     <newline />
                     <field name="section_id" widget="selection" />
                     <field name="user_id" />
-                    <field name="stage_id" readonly="1"/>
+                    <field name="stage_id" domain="[('object_id.model', '=', 'crm.lead'), ('section_ids', '=', section_id)]"/>
                     <group col="2" colspan="1">
                         <button name="stage_previous" string=""
                             states="open,pending,draft" type="object"
@@ -233,7 +233,7 @@
                 <field name="referred" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
 
-                <field name="stage_id" readonly="1"/>
+                <field name="stage_id"/>
                 <button name="stage_previous" string="Previous Stage"
                     states="open,pending" type="object" icon="gtk-go-back" />
                 <button name="stage_next" string="Next Stage"
@@ -314,11 +314,11 @@
                 </field>
                 <field name="section_id" default="context.get('section_id', False)" widget="selection"
                     context="{'invisible_section': False}">
-                    <filter icon="terp-personal+"
+                    <filter icon="terp-personal+" groups="base.group_extended"
                         context="{'invisible_section': False}"
                         domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         help="My Sales Team(s)"/>
-                    <filter icon="terp-personal+"
+                    <filter icon="terp-personal+" groups="base.group_extended"
                         context="{'invisible_section': False}"
                         domain="[]"
                         help="Show Sales Team"/>
@@ -347,7 +347,7 @@
                     <filter string="Category" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'categ_id'}"/>
                     <filter string="Campaign" icon="terp-stock_symbol-selection"
                         domain="[]" context="{'group_by':'type_id'}" />
-                    <filter string="Channel" icon="terp-stock_symbol-selection"
+                    <filter string="Channel" icon="terp-call-start"
                         domain="[]" context="{'group_by':'channel_id'}" />
                     <separator orientation="vertical"/>
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>

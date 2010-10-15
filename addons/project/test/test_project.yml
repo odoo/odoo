@@ -136,7 +136,6 @@
        - planned_hours == 30
        - remaining_hours == 30
        - delay_hours == 0.0
-       - total_hours == 30
        - effective_hours == 0.0     
 - 
   Make a work task entry 'Training on OpenERP modules, models and classes' of 10 hours
@@ -153,8 +152,6 @@
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After work task of 10 hours effective_hours must be equal to 10}:
        - remaining_hours == 20
        - effective_hours == 10.0
-       - total_hours == effective_hours + remaining_hours
-       - delay_hours == total_hours - planned_hours    
 - 
   Make a work task entry 'Training on OpenERP xml views' of 10 hours
 - 
@@ -170,8 +167,6 @@
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After one more work task of 10 hours effective_hours must be equal to 20}:
        - remaining_hours == 10
        - effective_hours == 20.0
-       - total_hours == effective_hours + remaining_hours
-       - delay_hours == total_hours - planned_hours           
 - 
   Make a work task entry 'Training on workflows' of 10 hours        
 - 
@@ -187,8 +182,6 @@
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After one more work task of 10 hours effective_hours must be equal to 30}:
        - remaining_hours == 0
        - effective_hours == 30.0
-       - total_hours == effective_hours + remaining_hours
-       - delay_hours == total_hours - planned_hours       
 - 
   Set remaining hours of 10 hours for reevaluating the task  
 - 
@@ -210,8 +203,6 @@
        - planned_hours == 30
        - remaining_hours == 10.0
        - effective_hours == 30.0
-       - total_hours == effective_hours + remaining_hours
-       - delay_hours == total_hours - planned_hours       
 - 
   Make a work task entry 'Training on reports and wizards' of 10 hours
 - 
@@ -228,8 +219,6 @@
        - planned_hours == 30
        - remaining_hours == 0
        - effective_hours == 40.0
-       - total_hours == effective_hours + remaining_hours
-       - delay_hours == total_hours - planned_hours
 - 
   Close the task
 - 
@@ -265,8 +254,6 @@
        - planned_hours == 30
        - remaining_hours == 10.0
        - effective_hours == 40.0
-       - total_hours == effective_hours + remaining_hours
-       - delay_hours == total_hours - planned_hours           
 - 
   Make a work task entry 'Training on yml' of 5 hours
 - 
@@ -283,8 +270,6 @@
        - planned_hours == 30
        - remaining_hours == 5.0
        - effective_hours == 45.0
-       - total_hours == effective_hours + remaining_hours
-       - delay_hours == total_hours - planned_hours    
 - 
   Close the task
 - 
@@ -302,8 +287,6 @@
        - planned_hours == 30
        - remaining_hours == 0.0
        - effective_hours == 45.0
-       - total_hours == effective_hours + remaining_hours
-       - delay_hours == total_hours - planned_hours     
 - 
   Close project 'OpenERP Training Programme'
 - 

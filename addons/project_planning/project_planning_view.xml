@@ -219,7 +219,7 @@
             parent="base.menu_main_pm" />
 
         <menuitem action="action_account_analytic_planning_form"
-            id="menu_report_account_analytic_planning" parent="base.menu_project_long_term" sequence="3" groups="project.group_project_user,project.group_project_manager,base.group_system"/>
+            id="menu_report_account_analytic_planning" parent="base.menu_project_long_term" sequence="3" groups="project.group_project_user,project.group_project_manager,base.group_system,project.group_project_finance_user"/>
 
         <!--
             Planning statistics
@@ -276,8 +276,6 @@
             <field name="arch" type="xml">
                 <search string="Planning statistics">
                     <group col="10" colspan="4">
-                        <filter icon="gtk-execute" string="My" domain="[('user_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]" help="My Plannings Statistics"/>
-                        <separator orientation="vertical"/>
                         <field name="planning_id" select="1"/>
                         <field name="user_id" select="1"/>
                         <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
@@ -292,13 +290,17 @@
             <field name="res_model">report_account_analytic.planning.stat</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="context">{"search_default_user_id":uid}</field>
+            <!-- <field name="context">{"search_default_user_id":uid}</field> -->
             <field name="search_view_id" ref="account_analytic_planning_stat_view_search"/>
         </record>
         <menuitem id="next_id_85" name="Planning"
             parent="hr.menu_hr_reporting" />
         <menuitem action="action_account_analytic_planning_stat_form"
             id="menu_report_account_analytic_planning_stat" parent="next_id_85" />
+            <menuitem  action="action_account_analytic_planning_stat_form"
+                       icon="terp-graph"
+                       id="menu_board_planning"
+                       parent="project.next_id_86"/>
 
 <!--        Analytic account Form -->
 
