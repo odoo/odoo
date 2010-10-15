@@ -177,7 +177,7 @@
                     <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
-                   <notebook>
+                   <notebook colspan="4">
                      <page string="General Information">
                        <field name="calendar_id" widget="selection"/>
                        <field name="time_efficiency" groups="base.group_extended"/>
