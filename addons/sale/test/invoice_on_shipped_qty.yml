@@ -90,13 +90,13 @@
     so = self.browse(cr, uid, ref("sale_order_so6"))
     assert so.invoice_ids, "Invoices has not been generated for sale_order_so6"
 -
-  I verify that an invoice is created on the basis of shipped quantities 199 not ordered quantities 200
+  I verify that an invoice is created on the basis of shipped quantities 100 not ordered quantities 200
 -
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so6"))
     picking_obj = self.pool.get('stock.picking')
-    ids = picking_obj.search(cr, uid, [('origin', '=', so.name),('type','=','out')])
+    ids = picking_obj.search(cr, uid, [('origin', '=', so.name),('type','=','out'),('state','=','done')])
     qty = qty1 = 0.0
     for pick_brw in picking_obj.browse(cr,uid, ids):
         for lines in pick_brw.move_lines:
@@ -105,7 +105,7 @@
     inv_brw = self.browse(cr,uid,inv_id)[0]
     for inv_lines in inv_brw.invoice_line:
         qty1=inv_lines.quantity
-    assert abs(qty1-qty) < 0.001, "Quantities are not the same"
+    assert (qty1 == qty), "Quantities are not the same"
 -    
   I open the Invoice for the SO.
 -

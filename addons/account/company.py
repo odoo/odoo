@@ -33,7 +33,7 @@ class res_company(osv.osv):
             method=True,
             view_load=True,
             domain="[('type', '=', 'payable')]",
-            help="This Account is used for transferring Profit/Loss(If It is Profit : Amount will be added, Loss : Amount will be deducted.), Which is calculated from Profit & Loss Report"),
+            help="This Account is used for transferring Profit/Loss(If It is Profit: Amount will be added, Loss : Amount will be deducted.), Which is calculated from Profit & Loss Report"),
     }
 
     _defaults = {

@@ -232,7 +232,6 @@
                               domain="[('user_id','=',uid)]"/>
                         </field>
                         <field name="date_begin" select="1"/>
-                        <field name="state" select="1"/>
                         <field name="section_id" default="context.get('section_id', False)" widget="selection" groups="base.group_extended">
                           <filter icon="terp-personal+"
                                   context="{'invisible_section': False}"
@@ -440,7 +439,7 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="event_id" date_start="date" date_delay="duration" string="Event Registration">
+                <calendar color="event_id" date_start="date" date_delay="date_closed" string="Event Registration">
                     <field name="event_id"/>
                     <field name="partner_invoice_id"/>
                 </calendar>

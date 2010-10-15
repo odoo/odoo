@@ -100,7 +100,7 @@ class account_common_report(osv.osv_memory):
         return self.pool.get('account.journal').search(cr, uid ,[])
 
     _defaults = {
-            'fiscalyear_id' : _get_fiscalyear,
+            'fiscalyear_id': _get_fiscalyear,
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
             'chart_account_id': _get_account,
