@@ -164,8 +164,6 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             etag = None
 
             for match in self.headers['If-Match'].split(','):
-                if match.startswith('"') and match.endswith('"'):
-                    match = match[1:-1]
                 if match == '*':
                     if dc.exists(uri):
                         test = True
