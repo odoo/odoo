@@ -2371,6 +2371,24 @@ class stock_inventory(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c)
     }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
+                            context=None, toolbar=False, submenu=False):
+            """
+             Changes the view dynamically
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary
+             @return: New arch of view.
+            """
+            if not context:
+                context={}
+            res = super(stock_inventory, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+            if view_type == 'form':
+               if res['toolbar']['action'] and res['toolbar']['action'][0]['res_model']=='stock.fill.inventory':
+                   res['toolbar']['action']=[]
+            return res
 
     def _inventory_line_hook(self, cr, uid, inventory_line, move_vals):
         """ Creates a stock move from an inventory line

@@ -41,6 +41,25 @@ class crm_lead(crm_case, osv.osv):
     _description = "Lead"
     _order = "date_action, priority, id desc"
     _inherit = ['mailgate.thread','res.partner.address']
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
+                            context=None, toolbar=False, submenu=False):
+            """
+             Changes the view dynamically
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary
+             @return: New arch of view.
+            """
+            if not context:
+                context={}
+            res = super(crm_lead, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+            if view_type == 'form':
+               if res['toolbar']['action'] and res['toolbar']['action'][0]['res_model']=='crm.merge.opportunity':
+                   res['toolbar']['action']=[]
+            return res
+
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
         @param cr: the current row, from the database cursor,
