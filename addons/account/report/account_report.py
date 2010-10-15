@@ -74,7 +74,7 @@ class temp_range(osv.osv):
     _description = 'A Temporary table used for Dashboard view'
 
     _columns = {
-        'name' : fields.char('Range',size=64)
+        'name': fields.char('Range',size=64)
     }
 
 temp_range()
@@ -177,7 +177,7 @@ class report_invoice_created(osv.osv):
             ('cancel','Cancelled')
         ],'State', readonly=True),
         'origin': fields.char('Source Document', size=64, readonly=True, help="Reference of the document that generated this invoice report."),
-        'create_date' : fields.datetime('Create Date', readonly=True)
+        'create_date': fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
 

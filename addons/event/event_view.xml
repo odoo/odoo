@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
         <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17"/>
+
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.marketing_menu" />
+        <menuitem name="Events Organisation" id="base.menu_event_association" parent="base.menu_association" />
 
     <!-- EVENTS  -->
 
@@ -34,7 +38,10 @@
             <field name="view_type">form</field>
         </record>
         <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30" groups="base.group_extended"/>
+        <menuitem name="Configuration" id="base.menu_marketing_config_association" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
+
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_extended"/>
+        <menuitem name="Types of Events" id="menu_event_type_association" action="action_event_type" parent="base.menu_marketing_config_association" groups="base.group_extended"/>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
@@ -174,6 +181,7 @@
                     <field name="register_current"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)"/>
                     <field name="state"/>
+                    <field name="user_id"/>
                     <button string="Confirm Event" help="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                     <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
                     <button string="Event Done" help="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
@@ -232,7 +240,6 @@
                               domain="[('user_id','=',uid)]"/>
                         </field>
                         <field name="date_begin" select="1"/>
-                        <field name="state" select="1"/>
                         <field name="section_id" default="context.get('section_id', False)" widget="selection" groups="base.group_extended">
                           <filter icon="terp-personal+"
                                   context="{'invisible_section': False}"
@@ -286,6 +293,7 @@
             view_type="form"/>
 
        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />
+       <menuitem name="Events" id="menu_event_event_assiciation" action="action_event_view" parent="base.menu_event_association" />
 
     <!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
@@ -440,7 +448,7 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="event_id" date_start="date" date_delay="duration" string="Event Registration">
+                <calendar color="event_id" date_start="date" date_delay="date_closed" string="Event Registration">
                     <field name="event_id"/>
                     <field name="partner_invoice_id"/>
                 </calendar>
@@ -508,6 +516,12 @@
             name="Registrations"
             id="menu_action_registration" parent="base.menu_event_main"
             action="action_registration"/>
+
+        <menuitem
+            name="Registrations"
+            id="menu_action_registration_association" parent="base.menu_event_association"
+            action="action_registration"/>
+
         <menuitem name="Reporting" id="base.menu_report_association" parent="base.marketing_menu" sequence="20"/>
     </data>
 </openerp>

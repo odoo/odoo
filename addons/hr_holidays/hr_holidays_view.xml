@@ -16,7 +16,7 @@
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"/>
                         <separator orientation="vertical"/>
                         <filter string="This Month" icon="terp-go-month" name="This Month"
-                           domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_from','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                                domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                         <field name="employee_id">
                             <filter icon="terp-personal"

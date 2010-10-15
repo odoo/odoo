@@ -63,12 +63,12 @@
 	                    	    help="Current Year"/>
 	                    <filter icon="terp-go-month" string="   Month   "
 	                    		name="month"
-	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;=',time.strftime('%%Y-%%m-01'))]"
+	                    		domain="[('date_start','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_start','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
 	                    		help="Current Month"/>
 		                <filter icon="terp-go-week"
 	                            string="    Month-1    "
 	                            separator="1"
-	                            domain="[('date_start','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                                domain="[('date_start','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_start','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
 	                            help="Previous Month"/>
 	                    <separator orientation="vertical"/>
 	                    <filter string="Draft"
@@ -91,7 +91,7 @@
 	                    <field name="project_id">
 	                        <filter icon="terp-folder-violet"
 	                        		string="My Projects"
-	                        		help="My Projects" domain="[('project_id','=',uid)]"/>
+	                        		help="My Projects" domain="[('project_id.user_id','=',uid)]"/>
                           </field>
 
                           <field name="user_id" widget="selection">
@@ -108,14 +108,16 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                        <field name="priority"/>
                         <field name="type_id" widget="selection"/>
                         <separator orientation="vertical"/>
-                        <field name="date_start"/>
-                        <field name="date_deadline"/>
-                        <field name="date_end"/>
-                        <separator orientation="vertical"/>
-                        <field name="priority"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <newline/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="date_deadline"/>                        
+                        <separator orientation="vertical"/>
+                        
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="12">
@@ -129,9 +131,9 @@
                         <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
                         <filter string="Stage" icon="terp-stage" context="{'group_by':'type_id'}" />
                         <separator orientation="vertical"/>
-                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Current Day"/>
-                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Current Month"/>
-                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Current Year"/>
+                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Creation Date"/>
+                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Creation Date"/>
+                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Creation Date"/>
                     </group>
                 </search>
             </field>

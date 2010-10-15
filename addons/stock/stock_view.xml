@@ -570,33 +570,6 @@
         </record>
         <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_warehouse_config" groups="group_stock_manager,base.group_system"/>
 
-        <record id="stock_picking_move_wizard_form" model="ir.ui.view">
-            <field name="name">stock.picking.move.wizard.form</field>
-            <field name="model">stock.picking.move.wizard</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Entry Lines">
-                    <group height="200" width="500">
-                    <field name="address_id" invisible="True" context="{'contact_display':'partner'}"/>
-                    <field name="picking_id" invisible="True"/>
-                    <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('picking_id.address_id','=',address_id)]" name="move_ids" nolabel="1"  height="100" width="500"/><newline/>
-                    <group colspan="4">
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                        <button name="action_move" string="Add" type="object" icon="gtk-add"/>
-                    </group>
-                    </group>
-                </form>
-               </field>
-        </record>
-
-      <act_window name="Unreceived Products"
-            res_model="stock.picking.move.wizard"
-            src_model="stock.picking"
-            view_mode="form"
-            target="new"
-            key2="client_action_multi"
-            id="act_stock_picking_move_wizard"/>
-
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
             <field name="model">stock.picking</field>

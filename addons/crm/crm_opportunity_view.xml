@@ -14,9 +14,8 @@
                             <label string="Stage:" align="1.0"/>
                             <group colspan="1" col="4">
                                 <field name="stage_id" nolabel="1"
-                                    widget="selection"
                                     on_change="onchange_stage_id(stage_id)"
-                                    domain="[('object_id.model', '=', 'crm.lead')]"/>
+                                    domain="[('object_id.model', '=', 'crm.lead'), ('section_ids', '=', section_id)]"/>
                                 <button name="stage_previous"
                                     states="draft,open,pending" type="object"
                                     icon="gtk-go-back" string="" />
@@ -294,11 +293,11 @@
                             default="context.get('section_id', False)"
                             context="{'invisible_section': False}"
                             widget="selection">
-                            <filter icon="terp-personal+"
+                            <filter icon="terp-personal+" groups="base.group_extended"
                                 domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                 context="{'invisible_section': False}"
                                 help="My Sales Team(s)" />
-                            <filter icon="terp-personal+"
+                            <filter icon="terp-personal+" groups="base.group_extended"
                                 context="{'invisible_section': False}"
                                 domain="[]"
                                 help="Show Sales Team"/>
@@ -311,6 +310,8 @@
                               <field name="country_id" context="{'invisible_country': False}">
                                   <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
                               </field>
+                              <separator orientation="vertical"/>
+                              <field name="email_from"/>
                               <separator orientation="vertical"/>
                               <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                               <newline/>

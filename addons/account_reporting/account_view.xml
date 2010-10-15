@@ -10,18 +10,19 @@
             <form string="Account reporting">
                 <notebook>
                 <page string="General">
-                    <field name="name" select="1" colspan="3"/>
+                    <field name="name" select="1"/>
                     <field name="code" select="1"/>
-                    <field name="parent_id" select="1" />
+                    <field name="parent_id" select="1"/>
                     <field name="sequence"/>
                     <field name="color_font"/>
                     <field name="color_back"/>
-                    <field name="font_style" />
-                    <field name="report_type" />
+                    <field name="font_style"/>
+                    <field name="report_type"/>
                     <newline/>
                     <separator string="Accounts" colspan="4"/>
                         <field name="account_id" colspan="4" nolabel="1"/>
-                </page><page string="Notes">
+                </page>
+                <page string="Notes">
                     <field name="note" nolabel="1" colspan="4"/>
                 </page>
                 </notebook>

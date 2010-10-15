@@ -1361,7 +1361,7 @@ class account_invoice_line(osv.osv):
                 else:
                     app_acc_in = in_acc_cate
                     app_acc_exp = ex_acc_cate
-            if app_acc_in.company_id.id != company_id and app_acc_exp.company_id.id != company_id:
+            if app_acc_in and app_acc_in.company_id.id != company_id and app_acc_exp and app_acc_exp.company_id.id != company_id:
                 in_res_id = account_obj.search(cr, uid, [('name','=',app_acc_in.name),('company_id','=',company_id)])
                 exp_res_id = account_obj.search(cr, uid, [('name','=',app_acc_exp.name),('company_id','=',company_id)])
                 if not in_res_id and not exp_res_id:

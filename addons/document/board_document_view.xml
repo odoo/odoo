@@ -16,9 +16,7 @@
                             <action
                                 string="New Files"
                                 name="%(document.action_view_all_document_tree1)d"
-                                view_mode="tree"
-                                domain="[('name','=',time.strftime('%%Y')),('month','=',time.strftime('%%m'))]"/>
-
+                                view_mode="tree,form"/>
                             <action
                                 string="File Size by Month"
                                 name="%(document.action_view_size_month)d"
@@ -28,7 +26,8 @@
                             <action
                                 string="Files by Resource Type"
                                 name="%(document.action_view_document_by_resourcetype_graph)d"
-                                view_mode="graph,tree"/>
+                                view_mode="graph,tree"
+                                />
 
                             <action
                                 string="Files by Partner"

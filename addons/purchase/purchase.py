@@ -435,8 +435,9 @@ class purchase_order(osv.osv):
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})
-        message = _('Purchase order ') + " '" + purchase.name + "' "+ _("is cancelled")
-        self.log(cr, uid, id, message)
+        for (id,name) in self.name_get(cr, uid, ids):        
+            message = _('Purchase order ') + " '" + purchase.name + "' "+ _("is cancelled")
+            self.log(cr, uid, id, message)
         return True
 
     def action_picking_create(self,cr, uid, ids, *args):

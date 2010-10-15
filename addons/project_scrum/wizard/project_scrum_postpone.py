@@ -18,26 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import osv
+from osv import fields
 
-from osv import fields, osv
-import decimal_precision as dp
-
-class account_budget_spread(osv.osv_memory):
-
-    _name = 'account.budget.spread'
-    _description = 'Account Budget spread '
-    _columns = {
-        'fiscalyear': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
-    }
-
-    def check_spread(self, cr, uid, ids, context=None):
+class postpone_wizard(osv.osv_memory):
+    _name = "postpone.wizard"
+    def button_postpone(self, cr, uid, ids, context=None):
         if context is None:
-            context = {}
-        data = self.browse(cr, uid, ids, context=context)[0]
-        res = self.pool.get('account.budget.post').spread(cr, uid, context['active_ids'], data.fiscalyear.id, data.amount)
+            context = {}    
+        self.pool.get('project.scrum.product.backlog').button_postpone(cr, uid, context.get('active_ids',[]), context)
         return {}
-
-account_budget_spread()
-
+postpone_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

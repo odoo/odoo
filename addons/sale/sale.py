@@ -297,10 +297,9 @@ class sale_order(osv.osv):
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you want your invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.many2one('res.company','Company')
+        'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
         'picking_policy': 'direct',
         'date_order': time.strftime('%Y-%m-%d'),
         'order_policy': 'manual',
@@ -480,6 +479,7 @@ class sale_order(osv.osv):
         return inv_id
 
     def manual_invoice(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
         inv_ids = set()
         inv_ids1 = set()
@@ -492,17 +492,20 @@ class sale_order(osv.osv):
             for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
                 inv_ids1.add(record.id)
         inv_ids = list(inv_ids1.difference(inv_ids))
-
+        
+        result = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
+        res = mod_obj.read(cr, uid, result, ['res_id'])
         result = {
             'name': 'Invoices',
             'view_type': 'form',
-            'view_mode': 'form,tree',
+            'view_mode': 'form',
+            'view_id': [res['res_id']],
             'res_model': 'account.invoice',
-            'view_id': False,
-            'context': "{'type':'out_refund'}",
+            'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'res_id': inv_ids[0],
-            'nodestroy' :True
+            'nodestroy' :True,
+            'target': 'new',
+            'res_id': inv_ids and inv_ids[0] or False,
                   }
 
         return result
