@@ -126,7 +126,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return obj_mline.browse(self.cr, self.uid, ids)
 
     def _set_get_account_currency_code(self, account_id):
-        self.cr.execute("SELECT c.code AS code "\
+        self.cr.execute("SELECT c.symbol AS code "\
                 "FROM res_currency c,account_account AS ac "\
                 "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
         result = self.cr.fetchone()
