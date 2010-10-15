@@ -306,7 +306,7 @@ class calendar_attendee(osv.osv):
         res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
         return [(r['object'], r['name']) for r in res]
 
-    def _lang_get(self, cr, uid, context={}):
+    def _lang_get(self, cr, uid, context=None):
         """
         Get language for language selection field.
         @param cr: the current row, from the database cursor,
@@ -912,10 +912,10 @@ class calendar_event(osv.osv):
     _description = "Calendar Event"
     __attribute__ = {}
 
-    def _tz_get(self, cr, uid, context={}):
+    def _tz_get(self, cr, uid, context=None):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
-    def onchange_allday(self, cr, uid, ids, allday, context={}):
+    def onchange_allday(self, cr, uid, ids, allday, context=None):
         """Sets duration as 24 Hours if event is selcted for all day
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -1485,7 +1485,7 @@ true, it will allow you to hide the event alarm information without removing it.
                                             context=context)
         return res
 
-    def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
+    def browse(self, cr, uid, ids, context=None, list_class=None, fields_process=None):
         """
         Overrides orm browse method.
         @param self: the object pointer
