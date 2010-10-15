@@ -54,7 +54,7 @@ def _incoterm_get(self, cr, uid, context=None):
 class sale_order(osv.osv):
     _name = "sale.order"
     _description = "Sale Order"
-
+    
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}

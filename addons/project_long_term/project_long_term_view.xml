@@ -83,7 +83,7 @@
                     <group expand="0" string="Group By..." colspan="4" col="20">
                         <filter name="resource" string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
                     </group>
                 </search>
@@ -264,7 +264,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="project_id">
-                            <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
+                            <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-folder-violet"/>
                         </field>
                         <field name="responsible_id"/>
                         <field name="date_start"/>
@@ -273,7 +273,7 @@
                     <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'responsible_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}" name="project"/>
+                        <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" name="project"/>
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
