@@ -357,7 +357,7 @@
             <field name="type">sale_refund</field>
             <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
-            <field name="sequence_id" ref="sequence_sale_journal"/>
+            <field name="sequence_id" ref="sequence_refund_sales_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="a_sale"/>
             <field name="analytic_journal_id" ref="cose_journal_sale"/>
@@ -381,7 +381,7 @@
             <field name="type">purchase_refund</field>
             <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
-            <field name="sequence_id" ref="sequence_purchase_journal"/>
+            <field name="sequence_id" ref="sequence_refund_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="a_expense"/>
             <field name="analytic_journal_id" ref="exp"/>
@@ -393,7 +393,7 @@
             <field name="code">BNK</field>
             <field name="type">bank</field>
             <field name="view_id" ref="account_journal_bank_view"/>
-            <field name="sequence_id" ref="sequence_journal"/>
+            <field name="sequence_id" ref="sequence_bank_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="sit"/>
@@ -404,7 +404,7 @@
             <field name="code">CHK</field>
             <field name="type">bank</field>
             <field name="view_id" ref="account_journal_bank_view"/>
-            <field name="sequence_id" ref="sequence_journal"/>
+            <field name="sequence_id" ref="sequence_check_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="sit"/>
@@ -415,7 +415,7 @@
             <field name="code">CSH</field>
             <field name="type">cash</field>
             <field name="view_id" ref="account_journal_bank_view"/>
-            <field name="sequence_id" ref="sequence_journal"/>
+            <field name="sequence_id" ref="sequence_cash_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="sit"/>

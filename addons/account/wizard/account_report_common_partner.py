@@ -28,7 +28,7 @@ class account_common_partner_report(osv.osv_memory):
     _columns = {
         'result_selection': fields.selection([('customer','Receivable Accounts'),
                                               ('supplier','Payable Accounts'),
-                                              ('customer_supplier' ,'Receivable and Payable Accounts')],
+                                              ('customer_supplier','Receivable and Payable Accounts')],
                                               "Partner's", required=True),
     }
 

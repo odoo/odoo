@@ -192,8 +192,13 @@ class employees_salary_report(rml_parse.rml_parse):
                                     append_index = len(result) - 1
                                     tot += line.total
             else:
-                result.append(0.00)
-                res[mnth] = 0.00
+                if mnth == 'None':
+                    result.append('')
+                    res[mnth] = ''
+                    self.month_total_list[cnt] = ''
+                else:
+                    result.append(0.00)
+                    res[mnth] = 0.00
             if not res:
                 result.append(0.00)
             res = {}

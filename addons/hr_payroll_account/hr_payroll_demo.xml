@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <record id="hr_payroll.hr_payslip_line_houserantallowance1" model="hr.payslip.line">
+            <field name="account_id" ref="account.a_expense"/>
+        </record>
+        
+        <record id="hr_payroll.hr_payslip_line_convanceallowance1" model="hr.payslip.line">
+            <field name="account_id" ref="account.a_expense"/>
+        </record>
+
+        <record id="hr_payroll.hr_payslip_line_professionaltax1" model="hr.payslip.line">
+            <field name="account_id" ref="account.a_pay"/>
+        </record>
+
+        <record id="hr_payroll.hr_payslip_line_providentfund1" model="hr.payslip.line">
+            <field name="account_id" ref="account.a_pay"/>
+        </record>
+
+        <!-- Payslip -->
+        <record id="hr_payroll.hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
+            <field name="journal_id" ref="account.expenses_journal"/>
+            <field name="bank_journal_id" ref="account.bank_journal"/>
+        </record>
+
+        <!-- Assigned Default Account in Different Demo Employees -->
+
+        <record id="hr.employee" model="hr.employee">
+            <field name="property_bank_account" ref="account.bnk"/>
+            <field name="salary_account" ref="account.a_salary_expense"/>
+            <field name="employee_account" ref="account.a_expense"/>
+        </record>
+
+        <record id="hr.employee1" model="hr.employee">
+            <field name="property_bank_account" ref="account.bnk"/>
+            <field name="salary_account" ref="account.a_salary_expense"/>
+            <field name="employee_account" ref="account.a_expense"/>
+        </record>
+        
+        <record id="hr.employee2" model="hr.employee">
+            <field name="property_bank_account" ref="account.bnk"/>
+            <field name="salary_account" ref="account.a_salary_expense"/>
+            <field name="employee_account" ref="account.a_expense"/>
+        </record>
+
+        <record id="hr.employee3" model="hr.employee">
+            <field name="property_bank_account" ref="account.bnk"/>
+            <field name="salary_account" ref="account.a_salary_expense"/>
+            <field name="employee_account" ref="account.a_expense"/>
+        </record>
+
+        <record id="hr_payroll.hr_employee_bonamy0" model="hr.employee">
+            <field name="property_bank_account" ref="account.bnk"/>
+            <field name="salary_account" ref="account.a_salary_expense"/>
+            <field name="employee_account" ref="account.a_expense"/>
+        </record>
+
+    </data>
+</openerp>

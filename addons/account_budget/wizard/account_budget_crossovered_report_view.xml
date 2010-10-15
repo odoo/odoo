@@ -8,16 +8,14 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
 	             <form string="Select Dates Period">
-	                <group width="450">
-	                	<separator string="This wizard is used to print budget" colspan="4"/>
-					    <field name="date_from"/>
-					    <field name="date_to"/>
-					    <separator colspan="4"/>
-					    <group colspan="4" col="6">
-	     					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-	               			<button name="check_report" string="Print" type="object" icon="gtk-print" default_focus="1"/>
- 						</group>
- 					</group>
+                	<separator string="This wizard is used to print budget" colspan="4"/>
+				    <field name="date_from"/>
+				    <field name="date_to"/>
+				    <separator colspan="4"/>
+				    <group colspan="4" col="6">
+     					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+               			<button name="check_report" string="Print" type="object" icon="gtk-print" default_focus="1"/>
+					</group>
 				</form>
 			</field>
 		</record>
