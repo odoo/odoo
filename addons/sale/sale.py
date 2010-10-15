@@ -474,7 +474,7 @@ class sale_order(osv.osv):
             for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
                 inv_ids1.add(record.id)
         inv_ids = list(inv_ids1.difference(inv_ids))
-        
+
         result = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
         res = mod_obj.read(cr, uid, result, ['res_id'])
         result = {
@@ -892,7 +892,7 @@ class sale_order_line(osv.osv):
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='Salesman'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
-    _order = 'sequence, id'
+    _order = 'sequence, id desc'
     _defaults = {
         'discount': 0.0,
         'delay': 0.0,
