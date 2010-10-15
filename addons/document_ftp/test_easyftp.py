@@ -31,7 +31,7 @@ def get_plain_ftp(timeout=10.0):
     ftp = FTP()
     host = config.get('ftp_server_host', '127.0.0.1')
     port = config.get('ftp_server_port', '8021')
-    ftp.connect(host, port, timeout=timeout)
+    ftp.connect(host, port,timeout)
     return ftp
 
 def get_ftp_login(cr, uid, ormobj):

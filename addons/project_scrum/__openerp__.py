@@ -54,6 +54,8 @@
         'project_scrum_report.xml',
         'wizard/project_scrum_backlog_create_task_view.xml',
         'wizard/project_scrum_backlog_merger_view.xml',
+        'wizard/project_scrum_postpone_view.xml',
+        "wizard/project_scrum_email_view.xml",
         'project_scrum_view.xml',
         'wizard/project_scrum_backlog_sprint_view.xml',
         'process/project_scrum_process.xml',

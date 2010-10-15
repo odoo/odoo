@@ -196,7 +196,7 @@
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
-        ftp.mkd("Test-Folder2")
+        ftp.mkd("Test-Folder3")
         # TODO move
 -
     I remove the 'Test-Folder3'
