@@ -18,15 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from datetime import datetime
+from operator import itemgetter
 
 import netsvc
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
 import tools
-from operator import itemgetter
 
 class account_move_line(osv.osv):
     _name = "account.move.line"
@@ -102,8 +103,8 @@ class account_move_line(osv.osv):
 
         return query
 
-    def default_get(self, cr, uid, fields, context={}):
-        data = self._default_get(cr, uid, fields, context)
+    def default_get(self, cr, uid, fields, context=None):
+        data = self._default_get(cr, uid, fields, context=context)
         for f in data.keys():
             if f not in fields:
                 del data[f]
@@ -498,17 +499,17 @@ class account_move_line(osv.osv):
         return cur and cur.id or False
 
     _defaults = {
-        'blocked': lambda *a: False,
-        'centralisation': lambda *a: 'normal',
+        'blocked': False,
+        'centralisation': 'normal',
         'date': _get_date,
-        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
+        'date_created': time.strftime('%Y-%m-%d'),
+        'state': 'draft',
         'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
     }
-    _order = "date desc,id desc"
+    _order = "date desc, id desc"
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in accounting entry !'),
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
@@ -1033,10 +1034,11 @@ class account_move_line(osv.osv):
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if context is None:
             context={}
+        move_obj = self.pool.get('account.move')
+        account_obj = self.pool.get('account.account')
         if vals.get('account_tax_id', False):
             raise osv.except_osv(_('Unable to change tax !'), _('You can not change the tax, you should remove and recreate lines !'))
         self._check_date(cr, uid, vals, context, check)
-        account_obj = self.pool.get('account.account')
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
         if update_check:
@@ -1072,9 +1074,9 @@ class account_move_line(osv.osv):
             for line in self.browse(cr, uid, ids):
                 if line.move_id.id not in done:
                     done.append(line.move_id.id)
-                    self.pool.get('account.move').validate(cr, uid, [line.move_id.id], context)
+                    move_obj.validate(cr, uid, [line.move_id.id], context)
                     if todo_date:
-                        self.pool.get('account.move').write(cr, uid, [line.move_id.id], {'date': todo_date}, context=context)
+                        move_obj.write(cr, uid, [line.move_id.id], {'date': todo_date}, context=context)
         return result
 
     def _update_journal_check(self, cr, uid, journal_id, period_id, context={}):
@@ -1108,7 +1110,9 @@ class account_move_line(osv.osv):
 
     def create(self, cr, uid, vals, context=None, check=True):
         account_obj = self.pool.get('account.account')
-        tax_obj=self.pool.get('account.tax')
+        tax_obj = self.pool.get('account.tax')
+        move_obj = self.pool.get('account.move')
+        cur_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
         self._check_date(cr, uid, vals, context, check)
@@ -1119,7 +1123,7 @@ class account_move_line(osv.osv):
         if 'period_id' in vals:
             context['period_id'] = vals['period_id']
         if ('journal_id' not in context) and ('move_id' in vals) and vals['move_id']:
-            m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
+            m = move_obj.browse(cr, uid, vals['move_id'])
             context['journal_id'] = m.journal_id.id
             context['period_id'] = m.period_id.id
 
@@ -1142,7 +1146,7 @@ class account_move_line(osv.osv):
                         'period_id': context['period_id'],
                         'journal_id': context['journal_id']
                     }
-                    move_id = self.pool.get('account.move').create(cr, uid, v, context)
+                    move_id = move_obj.create(cr, uid, v, context)
                     vals['move_id'] = move_id
                 else:
                     raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
@@ -1167,7 +1171,6 @@ class account_move_line(osv.osv):
             # the provided values were not already multi-currency
             if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
-                cur_obj = self.pool.get('res.currency')
                 ctx = {}
                 if 'date' in vals:
                     ctx['date'] = vals['date']
@@ -1189,9 +1192,10 @@ class account_move_line(osv.osv):
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals.get('ref', False),
                         'user_id': uid
-                    })]
+            })]
 
-        result = super(osv.osv, self).create(cr, uid, vals, context)
+        result = super(osv.osv, self).create(cr, uid, vals, context=context)
+
         # CREATE Taxes
         if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
@@ -1263,7 +1267,7 @@ class account_move_line(osv.osv):
             if journal.entry_posted and tmp:
                 self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
         return result
+
 account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
