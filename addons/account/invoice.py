@@ -375,6 +375,9 @@ class account_invoice(osv.osv):
 
     def confirm_paid(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
+        for inv_id, name in self.name_get(cr, uid, ids, context=context):
+            message = _('Invoice ') + " '" + name + "' "+ _("is marked as paid.")
+            self.log(cr, uid, inv_id, message)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
