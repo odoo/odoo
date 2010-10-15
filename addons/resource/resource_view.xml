@@ -11,6 +11,8 @@
             <field name="arch" type="xml">
                 <search string="Search Resource">
                    <group col='15' colspan='4'>
+                       <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                       <separator orientation="vertical"/>
                        <field name="name"/>
                        <field name="user_id" string="User"/>
                        <field name="resource_type"/>

@@ -224,6 +224,7 @@
                     <field name="workcenter_id"/>
                     <field name="cycle_nbr"/>
                     <field name="hour_nbr"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -240,6 +241,7 @@
                     <field name="workcenter_id" select="1" widget="selection"/>
                     <field name="cycle_nbr"/>
                     <field name="hour_nbr" widget="float_time"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <separator colspan="4" string="Description"/>
                     <field colspan="4" name="note" nolabel="1"/>
                 </form>
@@ -257,6 +259,7 @@
                         <field name="code"/>
                         <field name="active" groups="base.group_extended"/>
                         <field name="location_id"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
                     <notebook colspan="4">
 	                <page string="Work Center Operations">
@@ -278,6 +281,7 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="location_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -287,9 +291,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Routing">
+                    <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                    <separator orientation="vertical"/>
                     <field name="code"/>
                     <field name="name"/>
                     <field name="location_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
+                        <filter string="Production Location" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'location_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>

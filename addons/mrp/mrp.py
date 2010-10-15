@@ -81,9 +81,11 @@ class mrp_routing(osv.osv):
                 "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations."
         ),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
         'active': lambda *a: 1,
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.routing', context=context)
     }
 mrp_routing()
 
@@ -103,7 +105,8 @@ class mrp_routing_workcenter(osv.osv):
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
-        'note': fields.text('Description')
+        'note': fields.text('Description'),
+        'company_id': fields.related('routing_id', 'company_id', type='many2one', relation='res.company', string='Company'),
     }
     _defaults = {
         'cycle_nbr': lambda *a: 1.0,
