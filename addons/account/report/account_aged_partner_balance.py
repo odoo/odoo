@@ -21,7 +21,6 @@
 
 import time
 
-import pooler
 import rml_parse
 from report import report_sxw
 from common_report_header import common_report_header

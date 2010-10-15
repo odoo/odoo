@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-import time
-import operator
-
 from osv import fields
 from osv import osv
 

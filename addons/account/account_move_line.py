@@ -36,7 +36,6 @@ class account_move_line(osv.osv):
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         fiscalperiod_obj = self.pool.get('account.period')
         fiscalyear_ids = []
-        fiscalperiod_ids = []
         if context is None:
             context = {}
         initial_bal = context.get('initial_bal', False)
@@ -130,7 +129,7 @@ class account_move_line(osv.osv):
                     'move_id':obj_line.id,
                     'user_id': uid
                 }
-                new_id = self.pool.get('account.analytic.line').create(cr,uid,vals_lines)
+                self.pool.get('account.analytic.line').create(cr,uid,vals_lines)
         return True
 
     def _default_get_move_form_hook(self, cursor, user, data):
@@ -1127,7 +1126,7 @@ class account_move_line(osv.osv):
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         move_id = vals.get('move_id', False)
         journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
-        is_new_move = False
+#        is_new_move = False
         if not move_id:
             if journal.centralisation:
                 #Check for centralisation
@@ -1147,7 +1146,7 @@ class account_move_line(osv.osv):
                     vals['move_id'] = move_id
                 else:
                     raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
-            is_new_move = True
+#            is_new_move = True
 
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
@@ -1262,7 +1261,7 @@ class account_move_line(osv.osv):
         if check and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
-                rs = self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
+                self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
         return result
 account_move_line()
 
