@@ -85,8 +85,8 @@ class hr_job(osv.osv):
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
         'expected_employees': fields.integer('Expected Employees', help='Required number of Employees'),
-        'no_of_employee': fields.integer('No of Employees', help='Number of employee there are already in the department', readonly=True),
-        'no_of_recruitment': fields.integer('No of Recruitment'),
+        'no_of_employee': fields.integer('No of Employees', help='Number of employee there are already in the department'),
+        'no_of_recruitment': fields.integer('No of Recruitment', readonly=True),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
@@ -101,13 +101,12 @@ class hr_job(osv.osv):
         'no_of_recruitment': 1,
     }
 
-    def on_change_expected_employee(self, cr, uid, ids, expected_employee, context=None):
+    def on_change_expected_employee(self, cr, uid, ids, expected_employee, no_of_employee, context=None):
         if context is None:
             context = {}
         result={}
         if expected_employee:
-            xx  = self.browse(cr, uid, ids, context)[0]
-            result['no_of_recruitment'] = expected_employee - xx['no_of_employee']
+            result['no_of_recruitment'] = expected_employee - no_of_employee
         return {'value': result}
 
     def job_old(self, cr, uid, ids, *args):
