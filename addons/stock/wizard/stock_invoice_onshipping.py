@@ -45,9 +45,9 @@ class stock_invoice_onshipping(osv.osv_memory):
         for pick in pick_obj.browse(cr, uid,context.get('active_ids', False)):
             if pick.invoice_state != '2binvoiced':
                 count=count+1
-        if count==1:
+        if len(context.get('active_ids'))==1 and count==1:
              raise osv.except_osv(_('Warning !'),'This picking list does not require invoicing.')
-        elif len(context.get('active_ids'))==count:
+        if  len(context.get('active_ids'))==count:
             raise osv.except_osv(_('Warning !'),'None of these picking lists require invoicing.')
         return res
     
@@ -125,11 +125,18 @@ class stock_invoice_onshipping(osv.osv_memory):
 
             result = mod_obj._get_id(cr, uid, 'account', xml_id)
             id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
-            result = act_obj.read(cr, uid, id['res_id'], context=context)
-            result['res_id'] = invoice_ids
-            result['context'] = context
-            print result
-            return result
+            res_id = act_obj.read(cr, uid, id['res_id'], context=context)
+        return {
+            'domain': "[('id','in', ["+','.join(map(str,invoice_ids))+"])]",
+            'name' : _('New picking invoices'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'view_id': res_id,
+            'context': context,
+            'type': 'ir.actions.act_window',
+            'nodestroy': True                
+        }
 
 stock_invoice_onshipping()
 
