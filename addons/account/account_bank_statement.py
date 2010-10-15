@@ -86,7 +86,6 @@ class account_bank_statement(osv.osv):
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
-
         res = {}
 
         company_currency_id = res_users_obj.browse(cursor, user, user,
