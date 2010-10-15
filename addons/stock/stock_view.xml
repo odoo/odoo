@@ -750,6 +750,7 @@
                     <group col="10" colspan="4">
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Available Pickings"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Pickings"/>
+                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
@@ -766,6 +767,10 @@
                         <filter string="Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <separator orientation="vertical" />
                         <filter string="Journal" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
+                        <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Internal Pickings to invoice"/>
                     </group>
                 </search>
             </field>
@@ -945,7 +950,7 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
-                        <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
+                        <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Outgoing Deliveries to invoice"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="partner_id" />
@@ -1154,9 +1159,10 @@
             <field name="model">stock.picking</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Input Picking List">
+                <search string="Incoming Shipments">
                     <group col="8" colspan="4">
-                        <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Incoming Orders" />
+                        <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Incoming Shipments Available" />
+                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
                         <separator orientation="vertical" />
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
