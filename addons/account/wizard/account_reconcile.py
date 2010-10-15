@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import fields, osv
@@ -72,6 +73,7 @@ class account_move_line_reconcile(osv.osv_memory):
 
     def trans_rec_reconcile_full(self, cr, uid, ids, context=None):
         account_move_line_obj = self.pool.get('account.move.line')
+        period_obj = self.pool.get('account.period')
         date = False
         period_id = False
         journal_id= False
@@ -82,7 +84,7 @@ class account_move_line_reconcile(osv.osv_memory):
 
         data = self.read(cr, uid, ids, context=context)
         date = time.strftime('%Y-%m-%d')
-        ids = self.pool.get('account.period').find(cr, uid, dt=date, context=context)
+        ids = period_obj.find(cr, uid, dt=date, context=context)
         if ids:
             period_id = ids[0]
         #stop the reconciliation process by partner (manual reconciliation) only if there is nothing more to reconcile for this partner
@@ -148,6 +150,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
 
     def trans_rec_reconcile(self, cr, uid, ids, context=None):
         account_move_line_obj = self.pool.get('account.move.line')
+        period_obj = self.pool.get('account.period')
         if context is None:
             context = {}
         data = self.read(cr, uid, ids,context=context)[0]
@@ -160,7 +163,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         if context['date_p']:
             date = context['date_p']
 
-        ids = self.pool.get('account.period').find(cr, uid, dt=date, context=context)
+        ids = period_obj.find(cr, uid, dt=date, context=context)
         if ids:
             period_id = ids[0]
 
