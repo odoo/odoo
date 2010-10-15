@@ -14,7 +14,7 @@
             <field name="type">gantt</field>
             <field name="arch" type="xml">
               <gantt color="project_id" date_start="date_start" date_stop="date_end" mode="year">
-               <level object="project.phase" link="phase_id" domain="[]">
+               <level object="res.users" link="user_id" domain="[]">
                     <field name="name"/>
                 </level>
               </gantt>
@@ -73,7 +73,7 @@
             <field name="model">project.resource.allocation</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Resource Allocations">
+                <search string="Resources Allocation">
                     <group colspan="4" col="20">
                         <field name="resource_id"/>
                         <field name="phase_id"/>
@@ -89,9 +89,8 @@
                 </search>
             </field>
         </record>
-
        <record id="act_resouce_allocation" model="ir.actions.act_window">
-            <field name="name">Resource Allocations</field>
+            <field name="name">Resources Allocation</field>
             <field name="res_model">project.resource.allocation</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar</field>
@@ -243,7 +242,7 @@
             <field name="type">gantt</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt color="project_id" date_stop="date_end" date_start="date_start" mode="year">
+                <gantt color="project_id" date_stop="date_end" date_start="date_start" mode="month">
                     <level object="project.project" link="project_id" domain="[]">
                         <field name="name"/>
                     </level>
@@ -298,7 +297,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
- 			<field name="context">{'search_default_responsible_id':uid,'search_default_project':1}</field>
+             <field name="context">{'search_default_responsible_id':uid,'search_default_project':1}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
@@ -356,7 +355,7 @@
         context="{'search_default_phase_id': [active_id]}"/>
 
     <act_window
-    	context="{'search_default_project_id': [active_id]}"
+        context="{'search_default_project_id': [active_id]}"
         id="act_project_phases"
         name="Phases"
         res_model="project.phase"
@@ -368,8 +367,12 @@
     # Menu Items
     # ------------------------------------------------------
 
+        <menuitem action="act_project_phase_list"
+            groups="base.group_extended"
+            id="menu_project_phase_list" parent="project.menu_project_management" sequence="2"/>
+
         <menuitem action="act_project_phase"
-            groups="base.group_extended,project.group_project_finance_user,project.group_project_manager"
+            groups="base.group_extended"
             id="menu_project_phase"   parent="base.menu_project_long_term" sequence="1"/>
 
         <menuitem id="menu_resouce_allocation" action="act_resouce_allocation"
@@ -379,8 +382,8 @@
             groups="base.group_extended,project.group_project_finance_user"
             name="Resources" parent="project.menu_definitions" sequence="3"/>
 
-        <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_project_long_term" sequence="4" groups="project.group_project_user,project.group_project_manager,base.group_system,project.group_project_finance_user"/>
-        <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="base.menu_project_long_term" sequence="2"/>
+        <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_main_pm" sequence="4" groups="project.group_project_user,project.group_project_manager,base.group_system,project.group_project_finance_user"/>
+        <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_resources_project1" sequence="2"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar" parent="menu_pm_resources_project1" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves" parent="menu_pm_resources_project1" sequence="1"/>
 
