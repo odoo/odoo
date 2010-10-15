@@ -35,7 +35,22 @@ class stock_invoice_onshipping(osv.osv_memory):
                     ('in_refund', 'Supplier Refund')] , 'Type', required=True),
         'invoice_date': fields.date('Invoiced date'),
     }
-
+    
+    def view_init(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
+        res= super(stock_invoice_onshipping, self).view_init(cr, uid, fields_list, context=context)            
+        pick_obj=self.pool.get('stock.picking')
+        count=0        
+        for pick in pick_obj.browse(cr, uid,context.get('active_ids', False)):
+            if pick.invoice_state != '2binvoiced':
+                count=count+1
+        if count==1:
+             raise osv.except_osv(_('Warning !'),'This picking list does not require invoicing.')
+        elif len(context.get('active_ids'))==count:
+            raise osv.except_osv(_('Warning !'),'None of these picking lists require invoicing.')
+        return res
+    
     def _get_type(self, cr, uid, context=None):
         """ To get invoice type.
         @param self: The object pointer.
@@ -49,24 +64,21 @@ class stock_invoice_onshipping(osv.osv_memory):
             context = {}
         picking_obj = self.pool.get('stock.picking')
         src_usage = dest_usage = None
-        pick = picking_obj.browse(cr, uid, context['active_id'], context=context)
-        if pick.invoice_state == 'invoiced':
-            raise osv.except_osv(_('UserError'), _('Invoice is already created.'))
-        if pick.invoice_state == 'none':
-            raise osv.except_osv(_('UserError'), _('This picking does not require any invoicing.'))
-        if pick.move_lines:
-            src_usage = pick.move_lines[0].location_id.usage
-            dest_usage = pick.move_lines[0].location_dest_id.usage
-        if pick.type == 'out' and dest_usage == 'supplier':
-            type = 'in_refund'
-        elif pick.type == 'out' and dest_usage == 'customer':
-            type = 'out_invoice'
-        elif pick.type == 'in' and src_usage == 'supplier':
-            type = 'in_invoice'
-        elif pick.type == 'in' and src_usage == 'customer':
-            type = 'out_refund'
-        else:
-            type = 'out_invoice'
+        for pick in picking_obj.browse(cr, uid, context['active_ids'], context=context):
+            if pick.invoice_state=='2binvoiced':
+                if pick.move_lines:
+                    src_usage = pick.move_lines[0].location_id.usage
+                    dest_usage = pick.move_lines[0].location_dest_id.usage
+                if pick.type == 'out' and dest_usage == 'supplier':
+                    type = 'in_refund'
+                elif pick.type == 'out' and dest_usage == 'customer':
+                    type = 'out_invoice'
+                elif pick.type == 'in' and src_usage == 'supplier':
+                    type = 'in_invoice'
+                elif pick.type == 'in' and src_usage == 'customer':
+                    type = 'out_refund'
+                else:
+                    type = 'out_invoice'
         return type
 
     _defaults = {
@@ -86,7 +98,6 @@ class stock_invoice_onshipping(osv.osv_memory):
         picking_obj = self.pool.get('stock.picking')
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-
         for onshipdata_obj in self.read(cr, uid, ids, ['journal_id', 'group', 'type', 'invoice_date']):
             if context.get('new_picking', False):
                 onshipdata_obj[id] = onshipdata_obj.new_picking
@@ -117,6 +128,7 @@ class stock_invoice_onshipping(osv.osv_memory):
             result = act_obj.read(cr, uid, id['res_id'], context=context)
             result['res_id'] = invoice_ids
             result['context'] = context
+            print result
             return result
 
 stock_invoice_onshipping()
