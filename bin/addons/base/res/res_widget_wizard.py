@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,34 +18,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
 
-from osv import fields,osv
-class res_widget(osv.osv):
-    _name = "res.widget"
-res_widget()
+class res_widget_wizard(osv.osv_memory):
+    _name = "res.widget.wizard"
+    _description = "Res Widget Wizard"
 
-class res_widget_user(osv.osv):
-    _name="res.widget.user"
     _columns = {
-        'sequence': fields.integer('Sequence'),
-        'user_id': fields.one2many('res.users', 'widget_user', 'Users'),
-        'widget_id': fields.one2many('res.widget', 'widget_res', 'Widgets'),
+        'res_widget': fields.one2many("res.widget", 'widget_res', 'Res Widget', required=True),
     }
-res_widget_user() 
 
-class res_users(osv.osv):
-    _inherit = 'res.users'
-    _columns = {
-        'widget_user': fields.many2one('res.widget.user', 'Widget User'),
-    }
-res_users()
-
-class res_widget(osv.osv):
-    _inherit = "res.widget"
-    _rec_name = "title"
-    _columns = {
-        'title' : fields.char('Title', size=64, required=True),
-        'content': fields.text('Content', required=True),
-        'widget_res': fields.many2one('res.widget.user', 'Widget')
-    }
-res_widget()
+    def res_widget_add(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        res_widget = self.read(cr, uid, ids)[0]
+        self.pool.get('res.widget').write(cr, uid, res_widget['res_widget'],{'widget_res':context['active_ids'][0]})
+        return {}
+        
+res_widget_wizard()

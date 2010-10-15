@@ -260,6 +260,8 @@ class ir_ui_menu(osv.osv):
                 return False
             level -= 1
         return True
+    
+    
 
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
@@ -289,7 +291,7 @@ class ir_ui_menu(osv.osv):
     _defaults = {
         'icon' : lambda *a: 'STOCK_OPEN',
         'icon_pict': lambda *a: ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
-        'sequence' : lambda *a: 10
+        'sequence' : lambda *a: 10,
     }
     _order = "sequence,id"
 ir_ui_menu()

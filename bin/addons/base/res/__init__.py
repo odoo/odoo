@@ -34,4 +34,5 @@ import res_lang
 import res_log 
 import ir_property
 import res_widget
+import res_widget_wizard
 

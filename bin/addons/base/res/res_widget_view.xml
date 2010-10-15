@@ -47,5 +47,53 @@
             id="menu_res_widget_act_window"
             parent="base.next_id_2"
             />
+            
+        <record id="res_widget_user_tree" model="ir.ui.view">
+            <field name="name">res.widget.user.tree</field>
+            <field name="model">res.widget.user</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="User Widgets">
+                    <field name="sequence"/>
+                    <field name="user_id"/>
+                    <field name="widget_id"/>
+                </tree>
+            </field>
+        </record>
+            
+        <record id="res_widget_user_form" model="ir.ui.view">
+            <field name="name">res.widget.user.form</field>
+            <field name="model">res.widget.user</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="User Widgets">
+                    <field name="sequence"/>
+                    <field name="user_id"/>
+                    <field name="widget_id"/>
+                </form>
+            </field>
+        </record>
+        
+        <record id="res_widget_user_act_window" model="ir.actions.act_window">
+            <field name="name">Res user Widgets</field>
+            <field name="res_model">res.widget.user</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem
+            action="res_widget_user_act_window"
+            id="menu_res_widget_user_act_window"
+            parent="base.menu_users"
+            />
+        
+        <act_window name="Res Widget Wizard"
+            res_model="res.widget.wizard"
+            src_model="res.widget.user"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_res_widget_wizard"/>
+        
     </data>
 </openerp>
