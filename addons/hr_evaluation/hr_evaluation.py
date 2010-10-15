@@ -334,7 +334,7 @@ class hr_evaluation_interview(osv.osv):
         for id in self.browse(cr, uid, ids, context=context):
             flag = False
             wating_id = 0
-            tot_done_req = 0
+            tot_done_req = 1
             if not id.evaluation_id.id:
                 raise osv.except_osv(_('Warning !'),_("You cannot start evaluation without Evaluation."))
             records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_request_ids
