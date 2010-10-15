@@ -19,7 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
 import netsvc
 from datetime import date, datetime, timedelta
@@ -27,8 +26,6 @@ from datetime import date, datetime, timedelta
 from osv import fields, osv
 from tools import config
 from tools.translate import _
-
-
 
 def prev_bounds(cdate=False):
     when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
@@ -669,3 +666,4 @@ class account_move_link_slip(osv.osv):
     }
 account_move_link_slip()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
