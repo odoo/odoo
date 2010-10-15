@@ -800,7 +800,7 @@ class account_voucher_line(osv.osv):
             move_line = move_line_pool.browse(cr, user, move_line_id, context=context)
             if move_line.credit:
                 ttype = 'dr'
-                amount = move_line.credit
+#                amount = move_line.credit
             else:
                 ttype = 'cr'
             account_id = move_line.account_id.id
