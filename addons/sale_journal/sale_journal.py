@@ -68,10 +68,11 @@ class sale_journal(osv.osv):
 
     def button_sale_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'cancel'})
+        obj_sale_order = self.pool.get('sale.order')
+        wf_service = netsvc.LocalService("workflow")
         for id in ids:
-            sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
+            sale_ids = obj_sale_order.search(cr, uid, [('journal_id','=',id),('state','=','draft')])
             for saleid in sale_ids:
-                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'sale.order', saleid, 'cancel', cr)
             for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale order of Journal') + " '" + name + "' "+ _("is cancelled")
@@ -80,10 +81,11 @@ class sale_journal(osv.osv):
 
     def button_sale_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'confirm'})
+        obj_sale_order = self.pool.get('sale.order')
+        wf_service = netsvc.LocalService("workflow")
         for id in ids:
-            sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
+            sale_ids = obj_sale_order.search(cr, uid, [('journal_id','=',id),('state','=','draft')])
             for saleid in sale_ids:
-                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'sale.order', saleid, 'order_confirm', cr)
             for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is confirmed")
@@ -161,10 +163,11 @@ class picking_journal(osv.osv):
     }
     def button_picking_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'cancel'})
+        wf_service = netsvc.LocalService("workflow")
+        obj_stock_pick = self.pool.get('stock.picking')
         for id in ids:
-            pick_ids = self.pool.get('stock.picking').search(cr, uid, [('journal_id','=',id)])
+            pick_ids = obj_stock_pick.search(cr, uid, [('journal_id','=',id)])
             for pickid in pick_ids:
-                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_cancel', cr)
         return True
 
@@ -188,12 +191,12 @@ class picking_journal(osv.osv):
         return True
 
     def button_picking_confirm(self, cr, uid, ids, context={}):
-
+        wf_service = netsvc.LocalService("workflow")
         self.write(cr, uid, ids, {'state':'confirm'})
+        obj_stock_pick = self.pool.get('stock.picking')
         for id in ids:
-            pick_ids = self.pool.get('stock.picking').search(cr, uid, [('journal_id','=',id)])
+            pick_ids = obj_stock_pick.search(cr, uid, [('journal_id','=',id)])
             for pickid in pick_ids:
-                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
         return True
 
@@ -250,9 +253,10 @@ class sale(osv.osv):
     }
     def action_ship_create(self, cr, uid, ids, *args):
         result = super(sale, self).action_ship_create(cr, uid, ids, *args)
+        obj_stock_pick = self.pool.get('stock.picking')
         for order in self.browse(cr, uid, ids, context={}):
             pids = [ x.id for x in order.picking_ids]
-            self.pool.get('stock.picking').write(cr, uid, pids, {
+            obj_stock_pick.write(cr, uid, pids, {
                 'invoice_type_id': order.invoice_type_id.id,
                 'sale_journal_id': order.journal_id.id
             })
