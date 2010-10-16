@@ -15,6 +15,7 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
             <field name="context">{'object_id':'crm.fundraising'}</field>
+            <field name="help">Manage and define the fund raising categories you want to be maintained in the system.</field>
         </record>
 
         <menuitem action="crm_fund_categ_action" name="Categories"
@@ -30,6 +31,7 @@
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
             <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
             <field name="context">{'object_id':'crm.fundraising'}</field>
+            <field name="help">Create and manage fund raising activity categories you want to be maintained in the system.</field>
         </record>
 
          <menuitem action="crm_fundraising_stage_act"

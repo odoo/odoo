@@ -430,7 +430,7 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">Most of customer invoices are automatically generated in draft mode by OpenERP flows, following a purchase order for instance. Review, confirm or cancel, pay or refund your customers' invoices here. A manual invoice can be created here.</field>
+            <field name="help">Customer Invoices allows you create and manage invoices issued to your customers. OpenERP generates draft of invoices automatically so that you only have to confirm them before sending them to your customers.</field>
         </record>
 
 
@@ -458,7 +458,7 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">Proposal for supplier invoices are usually automatically generate by OpenERP, following a procurement order or a production order for instance. To consult and to check for, or to manually create a customer invoice, use this menu. You can review, confirm or cancel, pay or refund an invoice from the view from of the invoices.</field>
+            <field name="help">Supplier Invoices allows you to enter and manage invoices issued by your suppliers. OpenERP generates draft of supplier invoices automatically so that you can control what you received from your supplier according to what you purchased or received.</field>
         </record>
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables"/>
 
@@ -471,7 +471,7 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund', 'journal_type': 'sale_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">A customer refund is a credit note to your customer that cancel invoice or a part of it.</field>
+            <field name="help">Customer Refunds helps you manage the credit notes issued/to be issued for your customers. A refund invoice is a document that cancels an invoice or a part of it. You can easily generate refunds and reconcile them from the invoice form.</field>
         </record>
 
         <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">

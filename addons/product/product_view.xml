@@ -207,6 +207,7 @@
             <field name="domain">[('purchase_ok','=',1)]</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="help">Products can be purchased and/or sold. They can be raw materials, stockable products, consumables or services. The Product form contains a detailed information on your  products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
 
         <record id="product_category_form_view" model="ir.ui.view">
@@ -252,7 +253,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
-            <field name="help">Here is a list of all your products classified by category. You can click on a category to get the list of all products linked to this category or to a child of this category.</field>
+            <field name="help">Create and manage product categories you want to be maintained in the system. This allows you to classify your products according to your needs.</field>
         </record>
         <menuitem
             action="product_category_action"
@@ -346,6 +347,7 @@
             <field name="res_model">product.uom</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_uom_tree_view"/>
+            <field name="help">Create and manage the units of measure you want to be used in your system. You can define a conversion rate to be used between the several Unit of Measure within the same category.</field>
         </record>
         <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="65"/>
         <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16"/>
@@ -366,6 +368,7 @@
             <field name="res_model">product.uom.categ</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Create and manage the units of measure categories you want to be used in your system. If several units of measures are in the same category, they can be converted within each other. For example, in the unit of measure category "Time", you will have the following UoM: Hours, Days.</field>
         </record>
         <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.next_id_16" sequence="5"/>
 
@@ -397,6 +400,7 @@
             <field name="res_model">product.ul</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Create and manage your packaging dimensions and types you want to be maintained in your system.</field>
         </record>
         <menuitem
             action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>

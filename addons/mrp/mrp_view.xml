@@ -37,6 +37,7 @@
             <field name="res_model">mrp.property.group</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Define specific property groups that can be assigned to the properties of your bills of materials.</field>
         </record>
         <menuitem
             id="menu_mrp_configuration"
@@ -99,6 +100,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_mrp_property_search"/>
+            <field name="help">The Properties in OpenERP are used to select the right bill of material in order to manufacture a product, when you have different ways of building the same product. You can assign several properties to each Bill of Materials. When a sales person creates a sales order, he can relate it to several properties and OpenERP will select automatically the BoM to use according the the needs.</field>
         </record>
         <menuitem name="Master Bill of Materials"
             id="menu_mrp_property"
@@ -207,7 +209,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
-            <field name="help">Work Centers are units of manufacture consisting of one or several people and/or machines that can be considered as a unit for the purposes of forecasting capacity and planning.</field>
+            <field name="help">Work Centers allows you to create and manage manufacturing units consisting of one or several people and/or machines that can be considered as a unit for capacity and planning forecasting.</field>
         </record>
 
         <!--
@@ -298,7 +300,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
             <field name="search_view_id" ref="mrp_routing_search_view"/>
-            <field name="help">Routings define the assembly operations to be done in work centers for manufacturing a certain product. They are usually attached to bills of materials which will define the assembly of products required for manufacture or for finished products.</field>
+            <field name="help">Routings allows you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.</field>
         </record>
         <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="40" />
         <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="30"/>
@@ -415,7 +417,7 @@
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','=',False)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
-            <field name="help">Master Bills of Materials are documents that describe the list of raw materials used to make a finished product. You can generate documents for a product manufacturing (defining each manufacturing step) or you could define a single multi-level bill of materials.</field>
+            <field name="help">Master Bill of Materials allows you to create and manage the list of necessary raw materials used to make a finished product. OpenERP will use these BoM in order to propose automatically manufacturing orders according to products' needs. You can either create a bill of materials to define specific production steps or define a single multi-level bill of materials.</field>
         </record>
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
             <field name="name">Bill of Material Components</field>
@@ -423,7 +425,7 @@
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','!=',False)]</field>
-            <field name="help">Bills of materials Components are components and sub-product used to create master bills of materials.</field>
+            <field name="help">Bills of materials Components are components and sub-products used to create master bills of materials. Use this menu to search in which BoM is used a specific component.</field>
         </record>
 
         <!-- BOM menus -->
@@ -757,7 +759,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{'search_default_Current':1}</field>
-            <field name="help">Manufacturing Orders describe the operations that need to be carried out and the raw materials usage for each stage of production. You use specifications (bills of materials) to work out the raw material requirements and the manufacturing orders needed for the finished products. Once the bills of materials have been defined, OpenERP becomes capable of automatically deciding on the manufacturing route depending on the needs of the company.</field>
+            <field name="help">Manufacturing Orders are usually proposed automatically by OpenERP based on the bill of materials and the procurement rules, but you can also create manufacturing orders manually. OpenERP will handle the consumation of the raw materials (stock decrease) and the production of the finished products (stock increase) when the order is processed.</field>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="1"/>
 
