@@ -203,7 +203,7 @@ class crm_lead(crm_case, osv.osv):
                 'opportunity': _('The opportunity')
             }.get(case.type, _('The case'))
             message = n +" '" + case.name + "' "+ _("has been opened.")
-            self.log(cr, uid, id, message)
+            self.log(cr, uid, case.id, message)
         return res
 
     def case_close(self, cr, uid, ids, *args):
@@ -222,7 +222,7 @@ class crm_lead(crm_case, osv.osv):
                 'opportunity': _('The opportunity')
             }.get(case.type, _('The case'))
             message = n +" '" + case.name + "' "+ _("has been closed.")
-            self.log(cr, uid, id, message)
+            self.log(cr, uid, case.id, message)
         return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):
