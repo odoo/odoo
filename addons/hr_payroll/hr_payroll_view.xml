@@ -402,20 +402,23 @@
             <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="double_validation" position="replace">
-                    <group col="2" colspan="2">
-                        <separator colspan="4" string="Payroll Configurtion"/>
-                        <field name="type"/>
-                        <field name="head_id"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/>
-                        <field name="code" readonly="True"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator colspan="4" string="Validation"/>
-                        <field name="double_validation"/>
-                    </group>
-                </field>
-            </field>
+            <xpath expr="//group[@name='selection']" position="replace">
+				<group col="1">
+		          	<separator colspan="2" string="Validation"/>
+					<newline/>
+					<field name="active"/>
+					<field name="limit"/>
+					<field name="double_validation"/>
+			  	</group>
+				<group col="2">						
+					<separator colspan="2" string="Payroll Configurtion"/>
+					<field name="type"/>
+					<field name="head_id"/>
+					<field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/>
+					<field name="code" readonly="True"/>
+				</group>
+			</xpath>
+        </field>
         </record>
         <!-- End Holiday Status -->
 
