@@ -1249,8 +1249,8 @@ class stock_picking(osv.osv):
         """
         for pick in self.browse(cr, uid, ids, context=context):
             msg=''
-            #if pick.auto_picking:
-            #    continue
+            if pick.auto_picking:
+                continue
             type_list = {
                 'out':_("Delivery Order"),
                 'in':_('Reception'),
