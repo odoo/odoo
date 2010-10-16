@@ -68,30 +68,18 @@ class purchase_requisition(osv.osv):
                 if str(purchase_id.state) in('draft','wait'):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
         self.write(cr, uid, ids, {'state': 'cancel'})
-        for (id,name) in self.name_get(cr, uid, ids):
-                    message = _('Tender') + " '" + name + "' "+ _("is cancelled")
-                    self.log(cr, uid, id, message)
         return True
 
     def tender_in_progress(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
-        for (id,name) in self.name_get(cr, uid, ids):
-                    message = _('Tender') + " '" + name + "' "+ _(" is In Progress")
-                    self.log(cr, uid, id, message)
         return True
 
     def tender_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'draft'})
-        for (id,name) in self.name_get(cr, uid, ids):
-                    message = _('Tender') + " '" + name + "' "+ _("is in draft state")
-                    self.log(cr, uid, id, message)
         return True
 
     def tender_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
-        for (id,name) in self.name_get(cr, uid, ids):
-                    message = _('Tender') + " '" + name + "' "+ _("is done")
-                    self.log(cr, uid, id, message)
         return True
 
 purchase_requisition()

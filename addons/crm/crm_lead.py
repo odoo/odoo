@@ -197,9 +197,12 @@ class crm_lead(crm_case, osv.osv):
             value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
             self.write(cr, uid, ids, value)
 
-        for (id, name) in self.name_get(cr, uid, ids):
-            type = self.browse(cr, uid, id).type or 'Lead'
-            message = (_('The ') + type.title()) + " '" + name + "' "+ _("has been Opened.")
+        for case in self.browse(cr, uid, ids):
+            n = {
+                'lead': _('The lead'),
+                'opportunity': _('The opportunity')
+            }.get(case.type, _('The case'))
+            message = (n +" '" + case.name + "' "+ _("has been opened.")
             self.log(cr, uid, id, message)
         return res
 
@@ -213,11 +216,13 @@ class crm_lead(crm_case, osv.osv):
         """
         res = super(crm_lead, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
-        for (id, name) in self.name_get(cr, uid, ids):
-            lead = self.browse(cr, uid, id)
-            if lead.type == 'lead':
-                message = _('The Lead') + " '" + name + "' "+ _("has been Closed.")
-                self.log(cr, uid, id, message)
+        for case in self.browse(cr, uid, ids):
+            n = {
+                'lead': _('The lead'),
+                'opportunity': _('The opportunity')
+            }.get(case.type, _('The case'))
+            message = (n +" '" + case.name + "' "+ _("has been closed.")
+            self.log(cr, uid, id, message)
         return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):
@@ -315,8 +320,6 @@ class crm_lead(crm_case, osv.osv):
             vals.update(res)
 
         res = self.create(cr, uid, vals, context)
-        message = _('A Lead created') + " '" + subject + "' " + _("from Mailgate.")
-        self.log(cr, uid, res, message)
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {

@@ -1247,23 +1247,25 @@ class stock_picking(osv.osv):
         @param ids: List of Picking Ids
         @param context: A standard dictionary for contextual values
         """
-        msg=''
         for pick in self.browse(cr, uid, ids, context=context):
+            msg=''
+            #if pick.auto_picking:
+            #    continue
             type_list = {
-                'out':'Picking List',
-                'in':'Reception',
-                'internal': 'Internal picking',
+                'out':_("Delivery Order"),
+                'in':_('Reception'),
+                'internal': _('Internal picking'),
             }
-            message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or 'n/a') + "' "
+            message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or '?') + "' "
             if pick.min_date:
-                msg=datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d') + "'."
+                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
             state_list = {
-                          'confirmed': "is scheduled for the '" + msg ,
-                          'assigned': 'is ready to process.',
-                          'cancel': 'is Cancelled.',
-                          'done': 'is processed.',
-                          'draft':'is draft.',
-                          }
+                'confirmed': _("is scheduled") + msg +'.',
+                'assigned': _('is ready to process.'),
+                'cancel': _('is cancelled.'),
+                'done': _('is done.'),
+                'draft':_('is in draft state.'),
+            }
             message += state_list[pick.state]
             self.log(cr, uid, pick.id, message)
         return True
@@ -1997,7 +1999,6 @@ class stock_move(osv.osv):
         for pick_id in picking_ids:
             wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
 
-        picking_obj.log_picking(cr, uid, picking_ids, context=context)
         return True
 
     def _create_account_move_line(self, cr, uid, move, src_account_id, dest_account_id, reference_amount, reference_currency_id, context=None):

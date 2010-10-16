@@ -248,7 +248,7 @@ class project(osv.osv):
         task_obj.write(cr, uid, task_ids, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'close'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Project ') + " '" + name + "' "+ _("is Closed.")
+            message = _('The project ') + " '" + name + "' "+ _("has been closed.")
             self.log(cr, uid, id, message)
         return True
 
@@ -270,7 +270,7 @@ class project(osv.osv):
     def reset_project(self, cr, uid, ids, context=None):
         res = self.setActive(cr, uid, ids, value=True, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Project ') + " '" + name + "' "+ _("is Open.")
+            message = _('The project ') + " '" + name + "' "+ _("has been opened.")
             self.log(cr, uid, id, message)
         return res
 
@@ -634,7 +634,7 @@ class task(osv.osv):
                     if reopen:
                         self.do_reopen(cr, uid, [parent_id.id])
             self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
-            message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
+            message = _("The task '%s' is done") % (task.name,)
             self.log(cr, uid, task.id, message)
         return True
 
@@ -675,7 +675,7 @@ class task(osv.osv):
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
                 })
-            message = _('Task ') + " '" + task.name + "' "+ _("is Cancelled.")
+            message = _("The task '%s' is cancelled.") % (task.name,)
             self.log(cr, uid, task.id, message)
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0})
         return True
@@ -687,7 +687,7 @@ class task(osv.osv):
             if not t.date_start:
                 data['date_start'] = time.strftime('%Y-%m-%d %H:%M:%S')
             self.write(cr, uid, [t.id], data)
-            message = _('Task ') + " '" + t.name + "' "+ _("is Open.")
+            message = _("The task '%s' is opened.") % (t.name,)
             self.log(cr, uid, t.id, message)
         return True
 
@@ -724,15 +724,15 @@ class task(osv.osv):
         else:
             self.do_close(cr, uid, [task.id], context)
         user_pool = self.pool.get('res.users')
-        delegrate_user = user_pool.browse(cr, uid, delegate_data['user_id'], context=context)
-        message = _('Task ') + " '" + delegate_data['name'] + "' "+ _("is Delegated to User:") +" '"+ delegrate_user.name +"' "
+        delegate_user = user_pool.browse(cr, uid, delegate_data['user_id'], context=context)
+        message = _("The task '%s' has been delegated to %s.") % (delegate_data['name'], delegate_user.name)
         self.log(cr, uid, task.id, message)
         return True
 
     def do_pending(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'pending'})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Task ') + " '" + name + "' "+ _("is Pending.")
+            message = _('The task ') + " '" + name + "' "+ _("is pending.")
             self.log(cr, uid, id, message)
         return True
 

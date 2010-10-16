@@ -70,7 +70,7 @@ class crm_opportunity(osv.osv):
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
-                message = _('The Opportunity') + " '" + name + "' "+ _("has been Won.")
+                message = _('The opportunity') + " '" + name + "' "+ _("has been won.")
                 self.log(cr, uid, id, message)
         return res
 
@@ -94,7 +94,7 @@ class crm_opportunity(osv.osv):
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
-                message = _('The Opportunity') + " '" + name + "' "+ _("has been Lost.")
+                message = _('The opportunity') + " '" + name + "' "+ _("has been marked as lost.")
                 self.log(cr, uid, id, message)
         return res
 

@@ -376,7 +376,7 @@ class account_invoice(osv.osv):
     def confirm_paid(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
         for inv_id, name in self.name_get(cr, uid, ids, context=context):
-            message = _('Invoice ') + " '" + name + "' "+ _("is marked as paid.")
+            message = _('Invoice ') + " '" + name + "' "+ _("is paid.")
             self.log(cr, uid, inv_id, message)
         return True
 
@@ -1221,7 +1221,6 @@ class account_invoice(osv.osv):
 
         inv_id, name = self.name_get(cr, uid, [invoice.id], context=context)[0]
         if (not round(total,self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))) or writeoff_acc_id:
-            self.log(cr, uid, inv_id, _('Invoice ') + " '" + name + "' "+ _("is totally paid."))
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
             code = invoice.currency_id.code
