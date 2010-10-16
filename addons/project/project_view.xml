@@ -5,10 +5,10 @@
         <menuitem
             icon="terp-project" id="base.menu_main_pm"
             name="Project" sequence="10"
-            groups="group_project_manager,group_project_user,base.group_system,group_project_finance_user"/>
+            groups="group_project_manager,group_project_user,group_project_finance_user"/>
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
-        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60" groups="base.group_system,group_project_finance_user"/>
+        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60" groups="group_project_finance_user"/>
 
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
@@ -497,7 +497,7 @@
             <field name="help">Define here the steps that will be used on the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress of the resolution of a task or an issue.</field>
         </record>
 
-        <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1" groups="base.group_system,group_project_finance_user"/>
+        <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1" groups="group_project_finance_user"/>
         <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_tasks_config" sequence="1"/>
 
         <act_window context="{'search_default_user_id': [active_id]}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>

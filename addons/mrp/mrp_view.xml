@@ -3,7 +3,7 @@
     <data>
 
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" parent="" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager,base.group_system" sequence="8"/>
+            groups="group_mrp_user,group_mrp_manager" sequence="8"/>
 
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
@@ -11,7 +11,7 @@
         <menuitem name="Master Data"
                   id="menu_mrp_bom"
                   parent="base.menu_mrp_root"
-                  groups="mrp.group_mrp_manager,base.group_system"
+                  groups="mrp.group_mrp_manager"
                   sequence="5" />
 
         <!--
@@ -43,7 +43,7 @@
             id="menu_mrp_configuration"
             name="Configuration"
             parent="base.menu_mrp_root"
-            groups="base.group_system"
+            groups="base.group_extended"
             sequence="50" />
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
@@ -111,11 +111,10 @@
             action="mrp_property_action"
             id="menu_mrp_property_action"
             parent="menu_mrp_property"
-            groups="base.group_extended,base.group_system" />
+            groups="base.group_extended" />
         <menuitem
             action="mrp_property_group_action"
             id="menu_mrp_property_group_action"
-            groups="base.group_system"
             parent="menu_mrp_property"/>
 
         <!--
@@ -186,9 +185,9 @@
             <field name="arch" type="xml">
                 <search string="Search for mrp workcenter">
                    <group col='15' colspan='4'>
-	                    <field name="code"/>
-	                    <field name="name"/>
-	                    <field name="resource_type"/>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="resource_type"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
@@ -259,10 +258,10 @@
                     <field name="location_id"/>
                     <field name="active" groups="base.group_extended"/>
                     <notebook colspan="4">
-	                    <page string="Work Center Operations">
-	                       <field colspan="4" name="workcenter_lines" nolabel="1" widget="one2many_list"/>
-	                    </page>
-	                    <page string="Notes">
+                        <page string="Work Center Operations">
+                           <field colspan="4" name="workcenter_lines" nolabel="1" widget="one2many_list"/>
+                        </page>
+                        <page string="Notes">
                            <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
@@ -434,7 +433,7 @@
             action="mrp_bom_form_action"
             id="menu_mrp_bom_form_action"
             parent="menu_mrp_bom"
-            groups="mrp.group_mrp_user,mrp.group_mrp_manager,base.group_system"
+            groups="mrp.group_mrp_user,mrp.group_mrp_manager"
             sequence="10"/>
         <menuitem
             action="mrp_bom_form_action2"
@@ -761,7 +760,7 @@
             <field name="context">{'search_default_Current':1}</field>
             <field name="help">Manufacturing Orders are usually proposed automatically by OpenERP based on the bill of materials and the procurement rules, but you can also create manufacturing orders manually. OpenERP will handle the consumation of the raw materials (stock decrease) and the production of the finished products (stock increase) when the order is processed.</field>
         </record>
-        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="1"/>
+        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" groups="mrp.group_mrp_user,mrp.group_mrp_manager" sequence="1"/>
 
         <record id="mrp_production_action_planning" model="ir.actions.act_window">
             <field name="name">Manufacturing Orders Planning</field>
@@ -884,10 +883,10 @@
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                 </xpath>
                 <xpath expr="/form/notebook/page/field[@name='close_move']" position="after">
-					<group colspan="4"  groups="base.group_extended">
-					<separator colspan="4" string="Properties" />
-					<field colspan="4" name="property_ids" nolabel="1"/>
-	                 </group>
+                    <group colspan="4"  groups="base.group_extended">
+                    <separator colspan="4" string="Properties" />
+                    <field colspan="4" name="property_ids" nolabel="1"/>
+                     </group>
                 </xpath>
                </data>
             </field>

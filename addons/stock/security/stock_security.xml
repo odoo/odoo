@@ -9,10 +9,6 @@
         <field name="name">Warehouse / User</field>
     </record>
 
-    <record model='ir.ui.menu' id='menu_stock_root'>
-        <field name="groups_id" eval="[(6,0,[ref('group_stock_manager'),ref('group_stock_user'),ref('base.group_system')])]"/>
-    </record>
-
 <!-- multi -->
 
     <record model="ir.rule" id="stock_picking_rule">

@@ -1,7 +1,7 @@
 <openerp>
    <data>
         <menuitem id="base.menu_base_config" name="Configuration" parent="base.menu_base_partner" sequence="30"
-            groups="base.group_sale_salesman,base.group_system,base.group_sale_manager"/>
+            groups="base.group_sale_salesman,base.group_sale_manager"/>
         <menuitem id="menu_sale_journal_config" name="Sale Journals"
             parent="base.menu_base_config" sequence="5" groups="base.group_sale_salesman"/>
 
@@ -431,7 +431,7 @@
             <field name="search_view_id" ref="view_picking_journal_search"/>
         </record>
 
-        <menuitem name="Picking Journals" id="menu_definition_journal_picking" parent="stock.menu_warehouse_config" action="action_definition_picking_journal" groups="base.group_system"/>
+        <menuitem name="Picking Journals" id="menu_definition_journal_picking" parent="stock.menu_warehouse_config" action="action_definition_picking_journal"/>
 
         <record model="ir.actions.act_window" id="action_invoice_type_tree">
             <field name="name">Picking by invoice_method</field>
