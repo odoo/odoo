@@ -7,13 +7,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Logs">
+                    <filter icon="terp-stock_align_left_24" string="Read" domain="[('read','=',True)]" name="read"/>
+                    <filter icon="terp-stock_align_left_24" string="Unread" domain="[('read','&lt;&gt;',True)]" name="unread"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-stock_align_left_24" string="My Logs" domain="[('user_id','=',uid)]" name="my"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="res_model"/>
                     <field name="create_date"/>
-                    <field name="read"/>
                 </search>
             </field>
         </record>
@@ -37,15 +39,13 @@
             <field name="arch" type="xml">
                 <form string="Logs">
                   <group colspan="4" col="6">
-                    <field name="name"/>
-                    <field name="create_date"/>
-                    <field name="read" readonly="1"/>
+                      <field name="name"/>
+                      <field name="create_date"/>
+                      <field name="read"/>
+                      <field name="user_id" />
+                      <field name="res_model"/>
+                      <field name="res_id"/>
                   </group>
-                    <group colspan="4" col="6">
-                        <field name="user_id" />
-                        <field name="res_model"/>
-                        <field name="res_id"/>
-                    </group>
                 </form>
             </field>
         </record>

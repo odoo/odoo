@@ -52,22 +52,19 @@ class res_log(osv.osv):
 
     # TODO: do not return secondary log if same object than in the model (but unlink it)
     def get(self, cr, uid, context=None):
-        unread_log_ids = self.search(cr, uid, [('user_id','=',uid),
-                                               ('read', '=', False)],
-                                     context=context)
-        unread_logs = self.read(cr, uid, unread_log_ids,
-                                ['name','res_model','res_id'],
-                                context=context)
+        unread_log_ids = self.search(cr, uid,
+            [('user_id','=',uid), ('read', '=', False)], context=context)
+        res = self.read(cr, uid, unread_log_ids,
+            ['name','res_model','res_id'],
+            context=context)
+        res.reverse()
+        result = []
+        res_dict = {}
+        for r in res:
+            if r['res_model'] not in res_dict:
+                res_dict[r['res_model']] = True
+                result.insert(0,r)
         self.write(cr, uid, unread_log_ids, {'read': True}, context=context)
-        return unread_logs
+        return result
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        log_ids = super(res_log, self).search(cr, uid, args, offset, limit, order, context, count)
-        logs = {}
-        for log in self.browse(cr, uid, log_ids, context=context):
-            res_dict = logs.get(log.res_model, {})
-            res_dict.update({log.res_id: log.id})
-            logs.update({log.res_model: res_dict})
-        res = map(lambda x: x.values(), logs.values())
-        return tools.flatten(res)
 res_log()
