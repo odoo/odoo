@@ -61,8 +61,9 @@ class res_log(osv.osv):
         result = []
         res_dict = {}
         for r in res:
-            if r['res_model'] not in res_dict:
-                res_dict[r['res_model']] = True
+            t = (r['res_model'], r['res_id'])
+            if t not in res_dict:
+                res_dict[t] = True
                 result.insert(0,r)
         self.write(cr, uid, unread_log_ids, {'read': True}, context=context)
         return result
