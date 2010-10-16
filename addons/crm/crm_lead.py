@@ -221,7 +221,7 @@ class crm_lead(crm_case, osv.osv):
                 'lead': _('The lead'),
                 'opportunity': _('The opportunity')
             }.get(case.type, _('The case'))
-            message = (n +" '" + case.name + "' "+ _("has been closed.")
+            message = n +" '" + case.name + "' "+ _("has been closed.")
             self.log(cr, uid, id, message)
         return res
 
