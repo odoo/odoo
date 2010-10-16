@@ -72,7 +72,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="res_widget_user_act_window" id="menu_res_widget_user_act_window" parent="base.menu_users" />
+        <menuitem action="res_widget_user_act_window" id="menu_res_widget_user_act_window" parent="base.menu_users"
+            groups="base.group_no_one"/>
 
 <!--
         <record id="view_res_widget_wizard" model="ir.ui.view">
