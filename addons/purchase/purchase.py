@@ -38,24 +38,6 @@ from osv.orm import browse_record, browse_null
 #
 class purchase_order(osv.osv):
     
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
-                            context=None, toolbar=False, submenu=False):
-            """
-             Changes the view dynamically
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary
-             @return: New arch of view.
-            """
-            if not context:
-                context={}
-            res = super(purchase_order, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-            if view_type == 'form':
-               if res['toolbar']['action'] and res['toolbar']['action'][0]['res_model']=='purchase.order.group':
-                   res['toolbar']['action']=[]
-            return res
-             
     def _calc_amount(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = {}
         for order in self.browse(cr, uid, ids):

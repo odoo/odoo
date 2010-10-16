@@ -29,20 +29,23 @@
 ##############################################################################
 
 {
-	"name" : "WebDAV server for Document Management",
-	"version" : "2.0",
-	"author" : "OpenERP SA",
-	"category" : "Generic Modules/Others",
-	"website": "http://www.openerp.com",
-	"description": """ With this module, the WebDAV server for the documents is activated.
-	You can then use any compatible browser to remotely see the attachments of OpenObject.
+        "name" : "WebDAV server for Document Management",
+        "version" : "2.2",
+        "author" : "OpenERP SA",
+        "category" : "Generic Modules/Others",
+        "website": "http://www.openerp.com",
+        "description": """ With this module, the WebDAV server for the documents is activated.
+        You can then use any compatible browser to remotely see the attachments of OpenObject.
 
-	After installation, the webDAV server can be controlled by a [webdav] section in the server's config.
+        After installation, the webDAV server can be controlled by a [webdav] section in the server's config.
 """,
-	"depends" : ["base", "document"],
-	"init_xml" : [],
-	"update_xml" : [],
-	"demo_xml" : [],
-	"active": False,
-	"installable": True
+        "depends" : ["base", "document"],
+        "init_xml" : [],
+        "update_xml" : ['security/ir.model.access.csv', 
+                        'webdav_view.xml',
+                        'webdav_setup.xml',
+                        ],
+        "demo_xml" : [],
+        "active": False,
+        "installable": True
 }

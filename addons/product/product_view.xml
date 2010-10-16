@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <search string="Product">
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>                   
-                   <filter string="Consumable/Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
+                   <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
                    <separator orientation="vertical"/>
                    <filter string="To Sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
                    <filter string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
@@ -193,7 +193,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="help">In OpenERP, a product is something you can buy and sell. It can be a raw material, a stockable product, a consumable or a service. The product form contains a detailed information on the products like procurement logistic, sales price, product category, suppliers, etc.</field>
+            <field name="help">You must define a Product for everything you buy or sell. They can be raw materials, stockable products, consumables or services. The Product form contains a detailed information of your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9" groups="group_product_manager,base.group_sale_salesman,base.group_system"/>
@@ -252,7 +252,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
-            <field name="help">This is a hyerarchical structure of your product's categories, you can enter a category to browse all products in this category and his children.</field>
+            <field name="help">Here is a list of all your products classified by category. You can click on a category to get the list of all products linked to this category or to a child of this category.</field>
         </record>
         <menuitem
             action="product_category_action"

@@ -80,13 +80,25 @@ hr_employee_marital_status()
 
 class hr_job(osv.osv):
 
+    def _no_of_employee(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for job in self.browse(cr, uid, ids, context):
+            res[job.id] = len(job.employee_ids or [])
+        return res
+
+    def _no_of_recruitement(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for job in self.browse(cr, uid, ids, context):
+            res[job.id] = job.expected_employees - job.no_of_employee
+        return res
+
     _name = "hr.job"
     _description = "Job Description"
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.integer('Expected Employees', help='Required number of Employees'),
-        'no_of_employee': fields.integer('No of Employees', help='Number of employee there are already in the department'),
-        'no_of_recruitment': fields.integer('No of Recruitment', readonly=True),
+        'expected_employees': fields.integer('Expected Employees', help='Required number of Employees in total for that job.'),
+        'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.'),
+        'no_of_recruitment': fields.function(_no_of_recruitement, method=True, string='Expected in Recruitment', readonly=True),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
@@ -98,7 +110,6 @@ class hr_job(osv.osv):
         'expected_employees': 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
         'state': 'open',
-        'no_of_recruitment': 1,
     }
 
     def on_change_expected_employee(self, cr, uid, ids, expected_employee, no_of_employee, context=None):

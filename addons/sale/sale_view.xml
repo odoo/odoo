@@ -288,12 +288,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="help">The sales order manages the invoicing, the product fullfilment and the
-delivery processes. OpenERP can handle products, services and
-consumables so that a sales order can trigger tasks, manufacturing
-orders, purchases, etc. It support several invoicing methods according
-to your configuration: from the sales order, from the pickings, etc.
-            </field>
+            <field name="help">Sales Orders helps you manage quotations and orders done with your customers. OpenERP suggests that you to start by creating a quotation. Once the order is confirmed, the quotation is converted into a Sale Order. OpenERP can handle several types of products so that a sales order can trigger tasks, delivery orders, manufacturing orders, purchases and so on. Based on the configuration of the sale order, a draft invoice will be generated so that you just have to confirm it when you want to bill your customer.</field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
@@ -490,7 +485,7 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
             <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
-            <field name="help">Lines to invoice opens a search view with sales order and their status.</field>
+            <field name="help">Here is a list of each sales order line to be invoiced. This view allows you to invoice sales orders partially, by lines of sales order. You don't need this list if you invoice based on the delivery orders or if you invoice sales totally.</field>
         </record>
 
         <record id="action_order_line_tree3" model="ir.actions.act_window">

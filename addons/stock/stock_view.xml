@@ -720,7 +720,9 @@
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Process" type="action" icon="gtk-go-forward"/>
-                                <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
+                                <group colspan="1" states="done">
+                                    <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -748,6 +750,7 @@
                     <group col="10" colspan="4">
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Available Pickings"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Pickings"/>
+                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
@@ -765,6 +768,10 @@
                         <separator orientation="vertical" />
                         <filter string="Journal" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
                     </group>
+                    <newline/>
+                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
+                        <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Internal Pickings to invoice"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -779,7 +786,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Outgoing Deliveries">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="origin"/>
@@ -798,7 +805,7 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Outgoing Picking list">
+                <form string="Outgoing Deliveries">
                     <group col="6" colspan="4">
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
@@ -907,10 +914,12 @@
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
-                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-apply"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Process" type="action" icon="gtk-go-forward"/>
-                                <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
+                                <group colspan="1" states="done">
+                                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -935,10 +944,13 @@
             <field name="arch" type="xml">
                 <search string="Picking list">
                     <group col="8" colspan="4">
-                        <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Outgoing Orders"/>
-                        <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Outgoing Orders"/>
+                        <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Outgoing Deliveries"/>
+                        <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Outgoing Deliveries"/>
+                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Outgoing Deliveries already processed"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Outgoing Deliveries to invoice"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="partner_id" />
@@ -962,7 +974,7 @@
         </record>
 
         <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Outgoing Orders</field>
+            <field name="name">Outgoing Deliveries</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1125,7 +1137,9 @@
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Process" type="action" icon="gtk-go-forward"/>
-                                <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
+                                <group colspan="1" states="done">
+                                    <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Additional Info" groups="base.group_extended,base.group_multi_company">
@@ -1145,9 +1159,10 @@
             <field name="model">stock.picking</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Input Picking List">
+                <search string="Incoming Shipments">
                     <group col="8" colspan="4">
-                        <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Incoming Orders" />
+                        <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Incoming Shipments Available" />
+                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
                         <separator orientation="vertical" />
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
@@ -1167,6 +1182,9 @@
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
                         <separator orientation="vertical" />
                         <filter string="Journal" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
+                    </group>
+                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
+                        <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
                     </group>
                 </search>
             </field>

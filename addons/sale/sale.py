@@ -55,24 +55,6 @@ class sale_order(osv.osv):
     _name = "sale.order"
     _description = "Sale Order"
     
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
-                            context=None, toolbar=False, submenu=False):
-            """
-             Changes the view dynamically
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary
-             @return: New arch of view.
-            """
-            if not context:
-                context={}
-            res = super(sale_order, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-            if view_type == 'form':
-               if res['toolbar']['action'] and res['toolbar']['action'][0]['res_model']=='sale.make.invoice':
-                   res['toolbar']['action']=[]
-            return res
-    
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}

@@ -32,13 +32,10 @@
             <field name="model">available.holidays.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Available Holidays" type="bar">
-                    <field name="employee_id"/>
-                    <field name="max_leave" operator="+"/>
-                    <field name="taken_leaves" operator="+"/>
-                    <field name="remaining_leave" operator="+"/>
-               		<field name="month" group = "True" operator="+" invisible="1"/>
-                    <field group="True" name="holiday_status_id"/>
+                <graph string="Available Holidays" type="bar">
+                    <field name="holiday_status_id"/>
+                    <field name="taken_leaves" string="Leave Days" operator="+"/>
+                    <field name="remaining_leave" string="Remaining Days" operator="+"/>
                 </graph>
             </field>
         </record>

@@ -51,7 +51,7 @@ class hr_evaluation_plan_phase(osv.osv):
         'name': fields.char("Phase", size=64, required=True),
         'sequence': fields.integer("Sequence"),
         'company_id': fields.related('plan_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
-        'plan_id': fields.many2one('hr_evaluation.plan','Evaluation Plan', ondelete='cascade'),
+        'plan_id': fields.many2one('hr_evaluation.plan','Evaluation Plan', required=True, ondelete='cascade'),
         'action': fields.selection([
             ('top-down','Top-Down Appraisal Requests'),
             ('bottom-up','Bottom-Up Appraisal Requests'),
@@ -272,14 +272,11 @@ class hr_evaluation(osv.osv):
         if context is None:
             context = {}
         if 'date' in vals:
-            new_vals = {}
+            new_vals = {'date_deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
-            current_record = self.browse(cr, uid, ids, context=context)[0]
-            survey_requests =  current_record.survey_request_ids
-            new_vals.update({'date_deadline':vals.get('date')})
-            if survey_requests:
-                for survey_req in survey_requests:
-                    obj_hr_eval_iterview.write(cr, uid, survey_req.id, new_vals,context=context)
+            for evalutation in self.browse(cr, uid, ids, context=context):
+                for survey_req in evalutation.survey_request_ids:
+                    obj_hr_eval_iterview.write(cr, uid, [survey_req.id], new_vals, context=context)
         return super(hr_evaluation, self).write(cr, uid, ids, vals, context=context)
     
 hr_evaluation()
