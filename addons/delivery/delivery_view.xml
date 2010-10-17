@@ -234,10 +234,13 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                <field name="product_uom" position="after">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </field>
+                <group colspan="2" col="2" position="after">
+                    <group colspan="2" col="2" groups="base.group_extended">
+                        <separator string="Weights" colspan="2"/>
+                        <field name="weight"/>
+                        <field name="weight_net"/>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -247,10 +250,13 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form_reception_picking"/>
             <field name="arch" type="xml">
-                <field name="product_uom" position="after">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </field>
+                <group colspan="2" col="2" position="after">
+                    <group colspan="2" col="2" groups="base.group_extended">
+                        <separator string="Weights" colspan="2"/>
+                        <field name="weight"/>
+                        <field name="weight_net"/>
+                    </group>
+                </group>
             </field>
         </record>
 

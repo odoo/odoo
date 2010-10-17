@@ -486,9 +486,9 @@ class sale_order(osv.osv):
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
             'nodestroy' :True,
-            'target': 'new',
+            'target': 'current',
             'res_id': inv_ids and inv_ids[0] or False,
-                  }
+        }
 
         return result
 

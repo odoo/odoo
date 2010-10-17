@@ -510,22 +510,5 @@
            res_model="account.invoice"
            src_model="account.journal"/>
 
-        <act_window
-            domain="[('account_id.reconcile', '=', True)]"
-            context="{'search_default_unreconciled':True,'search_default_partner_id':[partner_id]}"
-            id="act_account_invoice_account_move_unreconciled"
-	    groups="base.group_extended"
-            name="Items to Reconcile"
-            res_model="account.move.line"
-            src_model="account.invoice"/>
-
-        <act_window
-            context="{'search_default_move_id':move_id, 'search_default_unreconciled':False,}"
-            id="act_account_invoice_account_move_invoice_link"
-            name="Invoice Items"
-	    groups="base.group_extended"
-            res_model="account.move.line"
-            src_model="account.invoice"/>
-
     </data>
 </openerp>
