@@ -26,6 +26,8 @@
             parent="base.menu_custom" name="Reporting" sequence="30"
              />
 
-        <menuitem id="menu_audit" name="Audit" parent="menu_administration" groups="base.group_extended" sequence="50"/>
+        <menuitem id="base.menu_reporting" name="Reporting" parent="base.menu_administration" sequence="11"
+            groups="base.group_extended"/>
+        <menuitem id="menu_audit" name="Audit" parent="base.menu_reporting" groups="base.group_extended" sequence="50"/>
     </data>
 </openerp>
