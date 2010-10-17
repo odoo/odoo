@@ -2544,9 +2544,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         if ids:
             return ids[0]
         return False
+
+    def _get_default_accounts(self, cr, uid, context=None):
+        accounts = [{'acc_name':'Current','account_type':'bank'},
+                    {'acc_name':'Deposit','account_type':'bank'},
+                    {'acc_name':'Cash','account_type':'cash'}]
+        return accounts
+
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
         'chart_template_id': _get_chart,
+        'bank_accounts_id': _get_default_accounts,
         'code_digits': 6,
         'seq_journal': True
     }

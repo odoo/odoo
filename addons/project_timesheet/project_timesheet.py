@@ -26,6 +26,20 @@ import pooler
 import tools
 from tools.translate import _
 
+class project_project(osv.osv):
+    _inherit = 'project.project'
+    def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
+        result = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
+        if result.get('value', False):
+            try:
+                d = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
+                if d:
+                    result['value']['to_invoice'] = d[1]
+            except ValueError, e:
+                pass
+        return result
+project_project()
+
 class project_work(osv.osv):
     _inherit = "project.task.work"
 
@@ -145,13 +159,13 @@ class project_work(osv.osv):
                     
                 # Compute based on pricetype
                 amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, line_id.id,
-                    prod_id=prod_id,
-                    quantity=vals_line['unit_amount'], unit=False, context=context)
+                    prod_id=prod_id, company_id=False,
+                    unit_amount=vals_line['unit_amount'], unit=False, context=context)
 
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     vals_line['amount'] = amount_unit['value']['amount']
 
-            obj.write(cr, uid, [line_id.id], vals_line, context=context)
+            self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
             
         return super(project_work,self).write(cr, uid, ids, vals, context)
 

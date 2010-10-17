@@ -33,7 +33,6 @@
             res_model="stock.picking"
             src_model="sale.order"
             context="{'contact_display': 'partner'}" />
-        -->
        
        <record id="action_sale_picking_out_tree_view" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -48,6 +47,7 @@
             <field name="view_id" ref="stock.view_picking_out_form"/>
             <field name="act_window_id" ref="act_sale_order_2_stock_picking"/>
         </record>
+        -->
         
         <!-- Adding Sale Order Reference to outgoing picking -->
         

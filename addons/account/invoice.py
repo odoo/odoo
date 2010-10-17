@@ -677,7 +677,7 @@ class account_invoice(osv.osv):
         return (ref or '').replace('/','')
 
     def _get_analytic_lines(self, cr, uid, id):
-        inv = self.browse(cr, uid, [id])[0]
+        inv = self.browse(cr, uid, id)
         cur_obj = self.pool.get('res.currency')
 
         company_currency = inv.company_id.currency_id.id
@@ -693,6 +693,8 @@ class account_invoice(osv.osv):
                     ref = inv.reference
                 else:
                     ref = self._convert_ref(cr, uid, inv.number)
+                if not inv.journal_id.analytic_journal_id:
+                    raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (inv.journal_id.name,))
                 il['analytic_lines'] = [(0,0, {
                     'name': il['name'],
                     'date': inv['date_invoice'],
@@ -702,7 +704,7 @@ class account_invoice(osv.osv):
                     'product_id': il['product_id'],
                     'product_uom_id': il['uos_id'],
                     'general_account_id': il['account_id'],
-                    'journal_id': self._get_journal_analytic(cr, uid, inv.type),
+                    'journal_id': inv.journal_id.analytic_journal_id.id,
                     'ref': ref,
                 })]
         return iml

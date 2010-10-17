@@ -2413,23 +2413,22 @@
                           <attribute name='string'></attribute>
                   </xpath>
                 <group string="res_config_contents" position="replace">
-                  <field name="company_id" widget="selection"/>
-                  <field name ="code_digits" />
-                  <field name="chart_template_id" widget="selection"/>
-                  <field name ="seq_journal" />
-                  <field colspan="4" mode="tree" name="bank_accounts_id"
-                         nolabel="1" widget="one2many_list">
-                    <form string="Bank Information">
-                      <field name="acc_name"/>
-                      <field name="account_type"/>
-                      <field name="currency_id" widget="selection"/>
-                    </form>
-                    <tree editable="bottom" string="Bank Information">
-                      <field name="acc_name"/>
-                      <field name="account_type"/>
-                      <field name="currency_id" widget="selection"/>
-                    </tree>
-                  </field>
+                    <field name="company_id" widget="selection"/>
+                    <field name ="code_digits" groups="base.group_extended"/>
+                    <field name="chart_template_id" widget="selection"/>
+                    <field name ="seq_journal" groups="base.group_extended"/>
+                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
+                        <form string="Bank Information">
+                            <field name="acc_name"/>
+                            <field name="account_type"/>
+                            <field name="currency_id" widget="selection" groups="base.group_extended"/>
+                        </form>
+                        <tree editable="bottom" string="Bank Information">
+                            <field name="acc_name"/>
+                            <field name="account_type"/>
+                            <field name="currency_id" widget="selection" groups="base.group_extended"/>
+                        </tree>
+                    </field>
                 </group>
               </data>
             </field>

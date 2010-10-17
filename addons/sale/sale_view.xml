@@ -198,7 +198,8 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
-                                <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual"/>
+                                <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice"
+                                    type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
                             </group>
                             <group col="13" colspan="4">
                                 <field name="state"/>
@@ -374,14 +375,15 @@
                 <form string="Sales Order Lines">
                     <group colspan="4" col="6">
                         <field name="order_id"/>
-                        <field name="product_id" readonly="1"/>
+                        <field name="order_partner_id" readonly="1" invisible="1"/>
                         <field name="invoiced"/>
+
+                        <field name="product_id" readonly="1"/>
                         <field name="product_uom_qty" readonly="1"/>
-                        <field groups="product.group_uos" name="product_uos_qty"/>
                         <field name="product_uom"/>
+
                         <field colspan="4" name="name" groups="base.group_extended"/>
                         <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                        <field name="order_partner_id" readonly="1" invisible="1"/>
                     </group>
                     <separator colspan="4" string="Price"/>
                     <group colspan="4" col="6">
@@ -394,20 +396,21 @@
                     <separator colspan="4"/>
                     <field name="state"/>
                     <group col="3" colspan="2">
-                       <!-- <button colspan="1"
-                          name="%(action_view_sale_order_line_make_invoice)d"
-                          string="Make Invoice"
-                          type="action"
-                          icon="terp-document-new"
-                          attrs="{'invisible': ['|',('state', 'in', ('draft','cancel')),('invoiced', '=', 1)]}"/>-->
                         <button name="button_cancel"
                             string="Cancel" type="object"
                             icon="gtk-cancel"
-                            attrs="{'invisible': ['|',('state', 'not in', ('confirmed', 'exception')),('invoiced', '=', 1)]}"/>
+                            states="confirmed,exception"/>
+                        <button colspan="1"
+                            name="%(action_view_sale_order_line_make_invoice)d"
+                            string="Create Invoice"
+                            type="action"
+                            states="done"
+                            icon="gtk-go-forward"
+                            attrs="{'invisible': [('invoiced', '=', 1)]}"/>
                         <button name="button_done"
                             string="Done" type="object"
-                            icon="gtk-jump-to"
-                            attrs="{'invisible': ['|',('state', 'not in', ('confirmed','exception')),('invoiced', '=', 0)]}"/>
+                            states="confirmed,exception"
+                            icon="gtk-go-forward" />
                     </group>
                 </form>
             </field>
@@ -444,10 +447,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Uninvoiced Lines">
-                    <filter icon="terp-check" string="Confirmed"
+                    <filter icon="terp-check" string="To Do"
                         domain="[('state','=','confirmed')]"
                         name="sale order"
-                        help="Confirmed Sale Order Lines"
+                        help="Confirmed sale order lines, not yet delivered"
+                        />
+                    <filter icon="terp-check" string="Done"
+                        domain="[('state','=','done')]"
+                        name="sale_order_done"
+                        help="Sale order lines done"
                         />
                     <separator orientation="vertical"/>
                     <filter icon="terp-accessories-archiver" string="Shipped"
@@ -514,7 +522,7 @@
         src_model="product.product"
         groups="base.group_extended"/>
 
-        <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="5"
+        <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"
             groups="base.group_extended"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2" groups="base.group_sale_salesman,base.group_sale_manager"/>
         <!-- configartion view -->
@@ -530,8 +538,7 @@
                   <attribute name="string">Sales Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
-                <attribute name="string"
-                       >Configure Sales Order Logistic</attribute>
+                <attribute name="string">Configure Sales Order Logistic</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">Setup your sales workflow and default values.</attribute>
