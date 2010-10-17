@@ -23,7 +23,7 @@
 {
     "name" : "Email Template for OpenERP",
     "version" : "0.7 RC",
-    "author" : "Sharoon Thomas, Openlabs",
+    "author" : "Openlabs",
     "website" : "http://openerp.com",
     "category" : "Added functionality",
     "depends" : ['marketing'],

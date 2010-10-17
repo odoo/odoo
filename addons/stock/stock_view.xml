@@ -93,6 +93,7 @@
                     <page string="General Informations">
                         <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list">
                             <tree string="Products" editable="bottom">
+                                <field colspan="4" domain="[('usage','=','internal')]" name="location_id"/>
                                 <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
@@ -100,21 +101,20 @@
                                 <button name="%(stock.action_view_stock_inventory_line_split)d"
                                     string="Split inventory lines" groups="base.group_extended"
                                     type="action" icon="terp-stock_effects-object-colorize" states="draft"/>
-                                <field colspan="4" domain="[('usage','=','internal')]" name="location_id"/>
                                 <field name="state" invisible="True"/>
                             </tree>
                             <form string="Products ">
+                                <field domain="[('usage','=','internal')]" name="location_id"/>
+                                <newline/>
                                 <field colspan="4" context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
-                                <field  domain="[('usage','=','internal')]" name="location_id"/>
                                 <group colspan="2" col="4">
                                 <field name="prod_lot_id" groups="base.group_extended"/>
                                     <button name="%(stock.action_view_stock_inventory_line_split)d"
                                         string="Split inventory lines" groups="base.group_extended"
                                         type="action" icon="terp-stock_effects-object-colorize"/>
                                 </group>
-                                
                             </form>
                         </field>
                     </page><page string="Posted Inventory" groups="base.group_extended">

@@ -311,7 +311,7 @@
                     <field name="user_id" invisible="context.get('user_invisible', False)"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
                     <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)"/>
-                    <field name="date_deadline" invisible="context.get('set_visible',False)"/>
+                    <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="type_id" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"
                         states="draft,open,pending"
@@ -388,11 +388,9 @@
                             icon="gtk-execute"
                             groups="base.group_extended"/>
                         <separator orientation="vertical"/>
-                        <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
+                        <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="type_id" widget="selection"/>
-                        <separator orientation="vertical"/>
                         <field name="project_id" select="1">
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                         </field>
