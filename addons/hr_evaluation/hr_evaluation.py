@@ -235,12 +235,12 @@ class hr_evaluation(osv.osv):
                         hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [int_id], context=context)
 
                     if (not wait) and phase.mail_feature:
-                        body = phase.mail_body % {'employee_name': child.name, 'user_signature': user.signature,
+                        body = phase.mail_body % {'employee_name': child.name, 'user_signature': child.user_id.signature,
                             'eval_name': phase.survey_id.title, 'date': time.strftime('%Y-%m-%d'), 'time': time }
                         sub = phase.email_subject
                         dest = [child.work_email]
                         if dest:
-                           tools.email_send(src, dest, sub, body)
+                           tools.email_send(evaluation.employee_id.work_email, dest, sub, body)
 
         self.write(cr, uid, ids, {'state':'wait'}, context=context)
         return True
