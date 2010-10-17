@@ -82,14 +82,14 @@ class ir_ui_menu(osv.osv):
                     'action':'ir.actions.act_window,'+str(action_id),
                     'parent_id':shortcut_menu_id,
                     'icon':'STOCK_JUSTIFY_FILL'}
-        menu_id =  self.pool.get('ir.ui.menu').create(cr, uid, menu_data)
+        menu_id =  self.pool.get('ir.ui.menu').create(cr, 1, menu_data)
         sc_data= {'name':values['name'], 'sequence': 1,'res_id': menu_id }
         sc_menu_id = self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, new_context)
 
         user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
         key = (cr.dbname, shortcut_menu_id, tuple(user_groups))
         self._cache[key] = True
-        return True
+        return action_id
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
                context=None, count=False):
