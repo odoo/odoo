@@ -248,7 +248,7 @@ class project(osv.osv):
         task_obj.write(cr, uid, task_ids, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'close'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('The project ') + " '" + name + "' "+ _("has been closed.")
+            message = _("The project '%s' has been closed.") % name
             self.log(cr, uid, id, message)
         return True
 
@@ -270,7 +270,7 @@ class project(osv.osv):
     def reset_project(self, cr, uid, ids, context=None):
         res = self.setActive(cr, uid, ids, value=True, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('The project ') + " '" + name + "' "+ _("has been opened.")
+            message = _("The project '%s' has been opened.") % name
             self.log(cr, uid, id, message)
         return res
 
@@ -732,7 +732,7 @@ class task(osv.osv):
     def do_pending(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'pending'})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('The task ') + " '" + name + "' "+ _("is pending.")
+            message = _("The task '%s' is pending.") % name
             self.log(cr, uid, id, message)
         return True
 

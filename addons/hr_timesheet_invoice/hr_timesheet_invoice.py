@@ -45,7 +45,10 @@ class account_analytic_account(osv.osv):
             context = {}
         res = {}
 
-        cr.execute('select account_id as account_id, l.invoice_id from hr_analytic_timesheet h left join account_analytic_line l on (h.line_id=l.id)')
+        cr.execute('SELECT account_id as account_id, l.invoice_id '
+                'FROM hr_analytic_timesheet h LEFT JOIN account_analytic_line l '
+                    'ON (h.line_id=l.id) '
+                    'WHERE l.account_id = ANY(%s)', (ids,))
         account_to_invoice_map = {}
         for rec in cr.dictfetchall():
             account_to_invoice_map.setdefault(rec['account_id'], []).append(rec['invoice_id'])
@@ -163,6 +166,7 @@ class account_invoice(osv.osv):
             obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:
                 if il['account_analytic_id']:
+		    # *-* browse (or refactor to avoid read inside the loop)
                     to_invoice = obj_analytic_account.read(cr, uid, [il['account_analytic_id']], ['to_invoice'])[0]['to_invoice']
                     if to_invoice:
                         il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]

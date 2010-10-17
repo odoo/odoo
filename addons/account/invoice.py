@@ -351,7 +351,7 @@ class account_invoice(osv.osv):
         if view_type == 'tree':
             doc = etree.XML(res['arch'])
             nodes = doc.xpath("//field[@name='partner_id']")
-            partner_string = 'Customer'
+            partner_string = _('Customer')
             if context.get('type', 'out_invoice') in ('in_invoice', 'in_refund'):
                 partner_string = _('Supplier')
             for node in nodes:
@@ -363,7 +363,7 @@ class account_invoice(osv.osv):
         try:
             res = super(account_invoice, self).create(cr, uid, vals, context)
             for inv_id, name in self.name_get(cr, uid, [res], context=context):
-                message = _('Invoice ') + " '" + name + "' "+ _("is waiting for validation.")
+                message = _("Invoice '%s' is waiting for validation.") % name
                 self.log(cr, uid, inv_id, message)
             return res
         except Exception, e:
@@ -376,7 +376,7 @@ class account_invoice(osv.osv):
     def confirm_paid(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
         for inv_id, name in self.name_get(cr, uid, ids, context=context):
-            message = _('Invoice ') + " '" + name + "' "+ _("is paid.")
+            message = _("Invoice '%s' is paid.") % name
             self.log(cr, uid, inv_id, message)
         return True
 
@@ -1226,8 +1226,10 @@ class account_invoice(osv.osv):
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
             code = invoice.currency_id.code
-            amt = str(pay_amount) + code + ' on ' + str(invoice.amount_total) + code + ' (' + str(total) + code + ' remaining)'
-            self.log(cr, uid, inv_id, _('Invoice ') + " '" + name + "' "+ _("is paid partially: ") + amt)
+            # TODO: use currency's formatting function
+            msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)") % \
+                    (name, pay_amount, code, invoice.amount_total, code, total, code)
+            self.log(cr, uid, inv_id,  msg)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
         # Update the stored value (fields.function), so we write to trigger recompute

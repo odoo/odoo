@@ -134,7 +134,7 @@ class crm_meeting(crm_case, osv.osv):
         """
         res = super(crm_meeting, self).case_open(cr, uid, ids, args)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('The meeting') + " '" + name + "' "+ _("has been confirmed.")
+            message = _("The meeting '%s' has been confirmed.") % name
             self.log(cr, uid, id, message)
         return res
 

@@ -58,7 +58,7 @@ class project_issue(crm.crm_case, osv.osv):
         res = super(project_issue, self).case_open(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Issue ') + " '" + name + "' "+ _("has been opened.")
+            message = _("Issue '%s' has been opened.") % name
             self.log(cr, uid, id, message)
         return res
 
@@ -73,7 +73,7 @@ class project_issue(crm.crm_case, osv.osv):
 
         res = super(project_issue, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Issue ') + " '" + name + "' "+ _("has been closed.")
+            message = _("Issue '%s' has been closed.") % name
             self.log(cr, uid, id, message)
         return res
 

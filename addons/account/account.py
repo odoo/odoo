@@ -1215,7 +1215,8 @@ class account_move(osv.osv):
     #
     # TODO: Check if period is closed !
     #
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
+        context = context or {}
         if 'line_id' in vals and context.get('copy'):
             for l in vals['line_id']:
                 if not l[0]:
@@ -1256,6 +1257,7 @@ class account_move(osv.osv):
         return result
 
     def copy(self, cr, uid, id, default={}, context={}):
+        context = context or {}
         default.update({
             'state':'draft',
             'name':'/',
@@ -1265,7 +1267,8 @@ class account_move(osv.osv):
         })
         return super(account_move, self).copy(cr, uid, id, default, context)
 
-    def unlink(self, cr, uid, ids, context={}, check=True):
+    def unlink(self, cr, uid, ids, context=None, check=True):
+        context = context or {}
         toremove = []
         obj_move_line = self.pool.get('account.move.line')
         for move in self.browse(cr, uid, ids, context):

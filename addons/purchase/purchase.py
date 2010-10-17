@@ -330,7 +330,7 @@ class purchase_order(osv.osv):
             wf_service.trg_delete(uid, 'purchase.order', p_id, cr)
             wf_service.trg_create(uid, 'purchase.order', p_id, cr)
         for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Purchase order') + " '" + name + "' "+ _("has been set in draft state.")
+            message = _("Purchase order '%s' has been set in draft state.") % name
             self.log(cr, uid, id, message)
         return True
 
@@ -412,7 +412,7 @@ class purchase_order(osv.osv):
                 wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})
         for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Purchase order ') + " '" + purchase.name + "' "+ _("is cancelled.")
+            message = _("Purchase order '%s' is cancelled.") % name
             self.log(cr, uid, id, message)
         return True
 

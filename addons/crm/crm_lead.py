@@ -198,11 +198,12 @@ class crm_lead(crm_case, osv.osv):
             self.write(cr, uid, ids, value)
 
         for case in self.browse(cr, uid, ids):
-            n = {
-                'lead': _('The lead'),
-                'opportunity': _('The opportunity')
-            }.get(case.type, _('The case'))
-            message = n +" '" + case.name + "' "+ _("has been opened.")
+            if case.type == 'lead':
+                message = _("The lead '%s' has been opened.") % name
+            elif case.type == 'opportunity':
+                message = _("The opportunity '%s' has been opened.") % name
+            else:
+                message = _("The case '%s' has been opened.") % name
             self.log(cr, uid, case.id, message)
         return res
 
@@ -217,11 +218,12 @@ class crm_lead(crm_case, osv.osv):
         res = super(crm_lead, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         for case in self.browse(cr, uid, ids):
-            n = {
-                'lead': _('The lead'),
-                'opportunity': _('The opportunity')
-            }.get(case.type, _('The case'))
-            message = n +" '" + case.name + "' "+ _("has been closed.")
+            if case.type == 'lead':
+                message = _("The lead '%s' has been closed.") % name
+            elif case.type == 'opportunity':
+                message = _("The opportunity '%s' has been closed.") % name
+            else:
+                message = _("The case '%s' has been closed.") % name
             self.log(cr, uid, case.id, message)
         return res
 
