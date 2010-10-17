@@ -168,7 +168,7 @@ class sale_open_invoice(osv.osv_memory):
             tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
             tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
         return {
-            'name': 'Invoices',
+            'name': _('Deposit Invoice'),
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'account.invoice',
