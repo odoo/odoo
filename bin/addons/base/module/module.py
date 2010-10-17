@@ -435,7 +435,7 @@ class module(osv.osv):
             categs = categs[1:]
         self.write(cr, uid, [id], {'category_id': p_id})
 
-    def update_translations(self, cr, uid, ids, filter_lang=None):
+    def update_translations(self, cr, uid, ids, filter_lang=None, context={}):
         logger = netsvc.Logger()
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
@@ -462,7 +462,7 @@ class module(osv.osv):
                     iso_lang = iso_lang.split('_')[0]
                 if os.path.exists(f):
                     logger.notifyChannel("i18n", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, iso_lang))
-                    tools.trans_load(cr.dbname, f, lang, verbose=False)
+                    tools.trans_load(cr.dbname, f, lang, verbose=False, context=context)
 
     def check(self, cr, uid, ids, context=None):
         logger = logging.getLogger('init')

@@ -695,12 +695,12 @@ def trans_generate(lang, modules, dbname=None):
     cr.close()
     return out
 
-def trans_load(db_name, filename, lang, strict=False, verbose=True):
+def trans_load(db_name, filename, lang, strict=False, verbose=True, context={}):
     logger = netsvc.Logger()
     try:
         fileobj = open(filename,'r')
         fileformat = os.path.splitext(filename)[-1][1:].lower()
-        r = trans_load_data(db_name, fileobj, fileformat, lang, strict=strict, verbose=verbose)
+        r = trans_load_data(db_name, fileobj, fileformat, lang, strict=strict, verbose=verbose, context=context)
         fileobj.close()
         return r
     except IOError:
@@ -708,7 +708,7 @@ def trans_load(db_name, filename, lang, strict=False, verbose=True):
             logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True):
+def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True, context={}):
     logger = netsvc.Logger()
     if verbose:
         logger.notifyChannel("i18n", netsvc.LOG_INFO, 'loading translation file for language %s' % (lang))
@@ -833,7 +833,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                             ('res_id', '=', dic['res_id'])
                         ])
                         if ids:
-                            trans_obj.write(cr, uid, ids, {'value': dic['value']})
+                            if context.get('overwrite', False):
+                                trans_obj.write(cr, uid, ids, {'value': dic['value']})
                         else:
                             trans_obj.create(cr, uid, dic)
             else:
@@ -844,7 +845,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                     ('src', '=', dic['src'])
                 ])
                 if ids:
-                    trans_obj.write(cr, uid, ids, {'value': dic['value']})
+                    if context.get('overwrite', False):
+                        trans_obj.write(cr, uid, ids, {'value': dic['value']})
                 else:
                     trans_obj.create(cr, uid, dic)
             cr.commit()

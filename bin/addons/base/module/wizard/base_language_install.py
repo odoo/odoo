@@ -31,23 +31,24 @@ class base_language_install(osv.osv_memory):
 
     _columns = {
         'lang': fields.selection(tools.scan_languages(),'Language', required=True),
+        'overwrite': fields.boolean('Overwrite Existing Terms', help="If you check this box, your customized translations will be overwrited and replaced by the official ones."),
         'state':fields.selection([('init','init'),('done','done')], 'state', readonly=True),
     }
-
     _defaults = {  
         'state': 'init',
+        'overwrite': False
     }
-
     def lang_install(self, cr, uid, ids, context):
         language_obj = self.browse(cr, uid, ids)[0]
         lang = language_obj.lang
         if lang:
             modobj = self.pool.get('ir.module.module')
             mids = modobj.search(cr, uid, [('state', '=', 'installed')])
-            modobj.update_translations(cr, uid, mids, lang)
+            if language_obj.overwrite:
+                context = {'overwrite': True}
+            modobj.update_translations(cr, uid, mids, lang, context or {})
             self.write(cr, uid, ids, {'state': 'done'}, context=context)
         return False
-
 base_language_install()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
