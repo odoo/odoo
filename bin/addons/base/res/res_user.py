@@ -193,7 +193,7 @@ class users(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=True,
+        'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
                                  " and most listings"),
         'login': fields.char('Login', size=64, required=True,
