@@ -271,7 +271,7 @@
         <record id="project_task_116" model="project.task">
             <field name="planned_hours">38.0</field>
             <field name="remaining_hours">38.0</field>
-            <field name="type" ref="project_tt_development"/>
+            <field name="type_id" ref="project_tt_development"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="project_id" ref="project_project_22"/>
             <field name="description">BoM, After sales returns, interventions. Traceability.</field>
@@ -280,7 +280,7 @@
         <record id="project_task_130" model="project.task">
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
-            <field name="type" ref="project_tt_development"/>
+            <field name="type_id" ref="project_tt_development"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Data importation + Doc</field>
@@ -288,7 +288,7 @@
         <record id="project_task_131" model="project.task">
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
-            <field name="type" ref="project_tt_development"/>
+            <field name="type_id" ref="project_tt_development"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Modifications asked by the customer.</field>
@@ -296,7 +296,7 @@
         <record id="project_task_184" model="project.task">
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
-            <field name="type" ref="project_tt_development"/>
+            <field name="type_id" ref="project_tt_development"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project_project_21"/>
@@ -306,7 +306,7 @@
             <field name="sequence">15</field>
             <field name="planned_hours">8.0</field>
             <field name="remaining_hours">8.0</field>
-            <field name="type" ref="project_tt_development"/>
+            <field name="type_id" ref="project_tt_development"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Internal testing + Software Install</field>
@@ -315,7 +315,7 @@
             <field name="sequence">17</field>
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
-            <field name="type" ref="project_tt_development"/>
+            <field name="type_id" ref="project_tt_development"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="priority">2</field>
             <field name="state">open</field>
@@ -357,7 +357,6 @@
             <field name="project_id" ref="project_project_21"/>
             <field name="name">MRP; functional layer</field>
             <field name="state">done</field>
-            <field eval="time.strftime('%Y-%m-%d 12:12')" name="date_close"/>
         </record>
         <record id="project_task_194" model="project.task">
             <field name="sequence">30</field>
