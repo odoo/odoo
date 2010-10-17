@@ -78,82 +78,30 @@ class project(osv.osv):
         pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
         return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id}}
 
-    def _get_user_and_default_uom_ids(self, cr, uid):
-        users_obj = self.pool.get('res.users')
-        model_data_obj = self.pool.get('ir.model.data')
-        model_data_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
-        default_uom = user_uom = model_data_obj.read(cr, uid, [model_data_id], ['res_id'])[0]['res_id']
-        obj_tm = users_obj.browse(cr, uid, uid).company_id.project_time_mode_id
-        if obj_tm:
-            user_uom = obj_tm.id
-        return user_uom, default_uom
-
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
-        def _get_all_child_projects(ids):
-            """Recursively get child project ids"""
-            child_ids = flatten([project_hierarchy.get(idn, []) for idn in ids])
-            if child_ids:
-                child_ids = _get_all_child_projects(child_ids)
-            return ids + child_ids
-        # END _get_all_child_projects
-
         res = {}.fromkeys(ids, 0.0)
         progress = {}
         if not ids:
             return res
-
-        par_child_projects = {}
-        all_projects = list(ids)
-
-        # get project hierarchy:
-        cr.execute('''SELECT prp.id AS pr_parent_id, prpc.id AS pr_child_id
-            FROM account_analytic_account AS p
-            JOIN account_analytic_account AS c ON p.id = c.parent_id
-            JOIN project_project AS prp ON prp.analytic_account_id = p.id
-            JOIN project_project AS prpc ON prpc.analytic_account_id = c.id''')
-
-        project_hierarchy = dict((k, list(set([v[1] for v in itr]))) for k, itr in groupby(cr.fetchall(), itemgetter(0)))
-
-        for id in ids:
-            child_projects = _get_all_child_projects([id])
-            par_child_projects[id] = child_projects
-            all_projects.extend(child_projects)
-
-        all_projects = dict.fromkeys(all_projects).keys()
         cr.execute('''SELECT
                 project_id, sum(planned_hours), sum(total_hours), sum(effective_hours)
             FROM
-                project_task
+                project_task 
             WHERE
-                project_id IN %s AND
+                project_id in %s AND
                 state<>'cancelled'
             GROUP BY
-                project_id''',(tuple(all_projects),))
-        progress = dict(map(lambda x: (x[0], (x[1] or 0.0, x[2] or 0.0, x[3] or 0.0)), cr.fetchall()))
+                project_id''',
+                   (tuple(ids),))
+        progress = dict(map(lambda x: (x[0], (x[1],x[2],x[3])), cr.fetchall()))
 
-        user_uom, def_uom = self._get_user_and_default_uom_ids(cr, uid)
-        for project in self.browse(cr, uid, par_child_projects.keys(), context=context):
-            s = [0.0, 0.0, 0.0]
-            tocompute = par_child_projects[project.id]
-            while tocompute:
-                p = tocompute.pop()
-                for i in range(3):
-                    s[i] += progress.get(p, (0.0, 0.0, 0.0))[i]
-
-            uom_obj = self.pool.get('product.uom')
-            if user_uom != def_uom:
-                s[0] = uom_obj._compute_qty(cr, uid, user_uom, s[0], def_uom)
-                s[1] = uom_obj._compute_qty(cr, uid, user_uom, s[1], def_uom)
-                s[2] = uom_obj._compute_qty(cr, uid, user_uom, s[2], def_uom)
-            if project.state == 'close':
-                progress_rate = 100.0
-            else:
-                progress_rate = s[1] and round(min(100.0 * s[2] / s[1], 99.99), 2)
+        for project in self.browse(cr, uid, ids, context=context):
+            s = progress.get(project.id, (0.0,0.0,0.0))
             res[project.id] = {
                 'planned_hours': s[0],
                 'effective_hours': s[2],
                 'total_hours': s[1],
-                'progress_rate': progress_rate
+                'progress_rate': s[1] and (100.0 * s[2] / s[1]) or 0.0
             }
         return res
 
@@ -172,7 +120,6 @@ class project(osv.osv):
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
             if work.task_id and work.task_id.project_id: result[work.task_id.project_id.id] = True
         return result.keys()
-
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
@@ -227,11 +174,12 @@ class project(osv.osv):
         'sequence': 10,
     }
 
+    # TODO: Why not using a SQL contraints ?
     def _check_dates(self, cr, uid, ids):
-         leave = self.read(cr, uid, ids[0], ['date_start', 'date'])
-         if leave['date_start'] and leave['date']:
-             if leave['date_start'] > leave['date']:
-                 return False
+         for leave in self.read(cr, uid, ids, ['date_start', 'date']):
+             if leave['date_start'] and leave['date']:
+                 if leave['date_start'] > leave['date']:
+                     return False
          return True
 
     _constraints = [
@@ -387,23 +335,9 @@ class task(osv.osv):
         res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
-
-        uom_obj = self.pool.get('product.uom')
-        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-        if user_uom != default_uom:
-            for task in self.browse(cr, uid, ids, context=context):
-                if hours.get(task.id, False):
-                    dur_in_user_uom =  uom_obj._compute_qty(cr, uid, default_uom, hours.get(task.id, 0.0), user_uom)
-                    hours[task.id] = dur_in_user_uom
-        timespent=0
         for task in self.browse(cr, uid, ids, context=context):
-            res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
-#            res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
-
-            for ctimespent in task.work_ids:
-                timespent=timespent+ctimespent.hours
-            res[task.id]['delay_hours'] = task.planned_hours - timespent
-
+            res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': (task.remaining_hours or 0.0) + hours.get(task.id, 0.0)}
+            res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
             res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
                 res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
@@ -483,23 +417,23 @@ class task(osv.osv):
         'planned_hours': fields.float('Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', help="Computed using the sum of the task work done.",
             store = {
-                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids'], 10),
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
         'total_hours': fields.function(_hours_get, method=True, string='Total Hours', multi='hours', help="Computed as: Time Spent + Remaining Time.",
             store = {
-                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids'], 10),
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
         'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
             store = {
-                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids'], 10),
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours','state'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
         'delay_hours': fields.function(_hours_get, method=True, string='Delay Hours', multi='hours', help="Computed as difference of the time estimated by the project manager and the real time to close the task.",
             store = {
-                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids'], 10),
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
         'user_id': fields.many2one('res.users', 'Assigned to'),
@@ -778,53 +712,6 @@ class project_work(osv.osv):
     }
 
     _order = "date desc"
-
-    def create(self, cr, uid, vals, *args, **kwargs):
-        project_obj = self.pool.get('project.project')
-        uom_obj = self.pool.get('product.uom')
-        if vals.get('hours', False):
-            user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-            duration = vals['hours']
-            if user_uom != default_uom:
-                duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
-            cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (duration, vals['task_id']))
-        return super(project_work, self).create(cr, uid, vals, *args, **kwargs)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        project_obj = self.pool.get('project.project')
-        uom_obj = self.pool.get('product.uom')
-        if vals.get('hours', False):
-            old_hours = self.browse(cr, uid, ids, context=context)
-            user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-            duration = vals['hours']
-            for old in old_hours:
-                if vals.get('hours') != old.hours:
-                    # this code is only needed when we update the hours of the project
-                    # TODO: it may still a second calculation if the task.id is changed
-                    # at this task.
-                    if user_uom == default_uom:
-                        for work in self.browse(cr, uid, ids, context=context):
-                            cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, work.hours, work.task_id.id))
-                    else:
-                        for work in self.browse(cr, uid, ids, context=context):
-                            duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
-                            del_work =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
-                            cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, del_work, work.task_id.id))
-        return super(project_work,self).write(cr, uid, ids, vals, context=context)
-
-    def unlink(self, cr, uid, ids, *args, **kwargs):
-        context = kwargs.get('context', {})
-        project_obj = self.pool.get('project.project')
-        uom_obj = self.pool.get('product.uom')
-        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-        if user_uom == default_uom:
-            for work in self.browse(cr, uid, ids, context):
-                cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
-        else:
-            for work in self.browse(cr, uid, ids, context):
-                duration =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
-                cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (duration, work.task_id.id))
-        return super(project_work, self).unlink(cr, uid, ids, *args, **kwargs)
 
 project_work()
 

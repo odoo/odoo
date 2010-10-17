@@ -572,7 +572,6 @@ class account_voucher(osv.osv):
         move_pool = self.pool.get('account.move')
         move_line_pool = self.pool.get('account.move.line')
         currency_pool = self.pool.get('res.currency')
-        bank_st_line_obj = self.pool.get('account.bank.statement.line')
         tax_obj = self.pool.get('account.tax')
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
@@ -593,11 +592,6 @@ class account_voucher(osv.osv):
                 'period_id': inv.period_id and inv.period_id.id or False
             }
             move_id = move_pool.create(cr, uid, move)
-            line_bank_ids = bank_st_line_obj.search(cr, uid, [('voucher_id', '=', inv.id)], context=context)
-            if line_bank_ids:
-                bank_st_line_obj.write(cr, uid, line_bank_ids, {
-            'move_ids': [(4, move_id, False)]
-            })
 
             #create the first line manually
             company_currency = inv.journal_id.company_id.currency_id.id
@@ -867,13 +861,20 @@ class account_bank_statement(osv.osv):
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, next_number, context=None):
         voucher_obj = self.pool.get('account.voucher')
         wf_service = netsvc.LocalService("workflow")
-        st_line = self.pool.get('account.bank.statement.line').browse(cr, uid, st_line_id, context=context)
+        bank_st_line_obj = self.pool.get('account.bank.statement.line')
+        st_line = bank_st_line_obj.browse(cr, uid, st_line_id, context=context)
         if st_line.voucher_id:
             voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
             if st_line.voucher_id.state == 'cancel':
                 voucher_obj.action_cancel_draft(cr, uid, [st_line.voucher_id.id], context=context)
             wf_service.trg_validate(uid, 'account.voucher', st_line.voucher_id.id, 'proforma_voucher', cr)
-            return self.pool.get('account.move.line').write(cr, uid, [x.id for x in st_line.voucher_id.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
+
+            v = voucher_obj.browse(cr, uid, st_line.voucher_id.id, context=context)
+            bank_st_line_obj.write(cr, uid, [st_line_id], {
+                'move_ids': [(4, v.move_id.id, False)]
+            })
+
+            return self.pool.get('account.move.line').write(cr, uid, [x.id for x in v.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
         return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line.id, company_currency_id, next_number, context=context)
 
 account_bank_statement()

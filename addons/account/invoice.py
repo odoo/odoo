@@ -1295,14 +1295,6 @@ class account_invoice_line(osv.osv):
         'price_unit': _price_unit_default,
     }
 
-    def product_id_change_unit_price_inv(self, cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=None):
-        tax_obj = self.pool.get('account.tax')
-        if price_unit:
-            taxes = tax_obj.browse(cr, uid, tax_id)
-            for tax in tax_obj.compute_inv(cr, uid, taxes, price_unit, qty, address_invoice_id, product, partner_id):
-                price_unit = price_unit - tax['amount']
-        return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
-
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
         if context is None:
             context = {}
@@ -1402,8 +1394,7 @@ class account_invoice_line(osv.osv):
             taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
             tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
         if type in ('in_invoice', 'in_refund'):
-            to_update = self.product_id_change_unit_price_inv(cr, uid, tax_id, price_unit or res.standard_price, qty, address_invoice_id, product, partner_id, context=context)
-            result.update(to_update)
+            result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
 

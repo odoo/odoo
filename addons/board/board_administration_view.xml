@@ -32,9 +32,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_administration_form"/>
         </record>
-       <menuitem id="menu_reporting" name="Reporting" parent="base.menu_administration" sequence="11"
-            groups="base.group_extended"/>
-       <menuitem id="board.admin_menu_dasboard" name="Dashboard" sequence="0" parent="menu_reporting"/>
+       <menuitem id="board.admin_menu_dasboard" name="Dashboard" sequence="0" parent="base.menu_reporting"/>
        <menuitem id="menu_board_admin" action="open_board_administration_form" icon="terp-graph" parent="board.admin_menu_dasboard" />
 
         <!-- User Connection -->
