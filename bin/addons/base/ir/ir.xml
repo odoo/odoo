@@ -1175,7 +1175,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Module data">
+                <form string="Object Identifiers">
                     <field name="name"/>
                     <field name="module"/>
                     <field name="model"/>
@@ -1193,7 +1193,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Module Data">
+                <tree string="Object Identifiers">
                     <field name="module"/>
                     <field name="name"/>
                     <field name="model"/>
@@ -1207,7 +1207,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Module Data">
+                <search string="Object Identifiers">
                     <filter icon="terp-camera_test"
                         string="Updatable"
                         domain="[('noupdate', '=', False)]"/>
@@ -1247,12 +1247,12 @@
         <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
 
         <record id="action_model_data" model="ir.actions.act_window">
-            <field name="name">Module data</field>
+            <field name="name">Object Identifiers</field>
             <field name="res_model">ir.model.data</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_model_data_list"/>
         </record>
-        <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_9"
+        <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_5"
                   groups="base.group_extended"/>
 
         <!-- Translations -->
