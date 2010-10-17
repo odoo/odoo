@@ -31,10 +31,10 @@ class base_language_install(osv.osv_memory):
 
     _columns = {
         'lang': fields.selection(tools.scan_languages(),'Language', required=True),
-        'overwrite': fields.boolean('Overwrite Existing Terms', help="If you check this box, your customized translations will be overwrited and replaced by the official ones."),
+        'overwrite': fields.boolean('Overwrite Existing Terms', help="If you check this box, your customized translations will be overwritten and replaced by the official ones."),
         'state':fields.selection([('init','init'),('done','done')], 'state', readonly=True),
     }
-    _defaults = {  
+    _defaults = {
         'state': 'init',
         'overwrite': False
     }
