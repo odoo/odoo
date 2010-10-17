@@ -2,26 +2,11 @@
 <openerp>
     <data>
     <!-- Latest Activities -->
-        <record model="ir.ui.view" id="view_latest_activities_tree">
-            <field name="name">latest.activities.tree</field>
-            <field name="model">res.log</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Latest Activities">
-                    <field name="name"/>
-                    <field name="create_date"/>
-                    <field name="user_id" />
-                    <field name="res_model"/>
-                    <field name="res_id"/>
-                </tree>
-            </field>
-        </record>
         <record model="ir.actions.act_window" id="action_latest_activities_tree">
             <field name="name">Latest Activities</field>
             <field name="res_model">res.log</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_latest_activities_tree"></field>
         </record>
 
         <record id="board_administration_form" model="ir.ui.view">
