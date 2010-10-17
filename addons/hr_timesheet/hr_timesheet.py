@@ -87,7 +87,9 @@ class hr_analytic_timesheet(osv.osv):
         if prod_id and unit_amount:
             # find company
             company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context)
-            res.update(self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, journal_id, context=context))
+            r = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, journal_id, context=context)
+            if r:
+                res.update(r)
         # update unit of measurement
         if prod_id:
             uom = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)

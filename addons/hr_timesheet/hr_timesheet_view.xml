@@ -69,9 +69,8 @@
                         <filter name="today" icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
                         <separator orientation="vertical"/>
                         <field name="user_id"/>
-                        <field name="account_id" select="1" widget="selection"/>
-                        <field name="product_id" select="1"/>
-                        <field name="date" select="1"/>
+                        <field name="account_id"/>
+                        <field name="date"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
