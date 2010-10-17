@@ -23,7 +23,6 @@ import time
 
 from osv import fields
 from osv import osv
-from osv.orm import except_orm
 from tools.translate import _
 
 class hr_employee(osv.osv):
@@ -39,7 +38,7 @@ class hr_employee(osv.osv):
         try:
             result = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
             return result[1]
-        except ValueError, e:
+        except ValueError:
             pass
         return False
 
@@ -48,7 +47,7 @@ class hr_employee(osv.osv):
         try:
             result = md.get_object_reference(cr, uid, 'hr_timesheet', 'product_consultant')
             return result[1]
-        except ValueError, e:
+        except ValueError:
             pass
         return False
 
