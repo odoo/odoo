@@ -24,19 +24,21 @@ class res_widget(osv.osv):
     _name = "res.widget"
     _rec_name = "title"
     _columns = {
-        'title' : fields.char('Title', size=64, required=True),
+        'title' : fields.char('Title', size=64, required=True, translate=True),
         'content': fields.text('Content', required=True),
     }
 res_widget()
 
 class res_widget_user(osv.osv):
     _name="res.widget.user"
+    _order = "sequence"
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'user_id': fields.many2one('res.users','User'),
-        'widget_id': fields.many2one('res.widget','Widget'),
+        'user_id': fields.many2one('res.users','User', select=1),
+        'widget_id': fields.many2one('res.widget','Widget',required=1),
     }
 res_widget_user()
+
 class res_widget_wizard(osv.osv_memory):
     _name = "res.widget.wizard"
     _description = "Add a widget"

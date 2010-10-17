@@ -48,7 +48,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="User Widgets">
-                    <field name="sequence"/>
+                    <field name="sequence" invisible="1"/>
                     <field name="user_id"/>
                     <field name="widget_id"/>
                 </tree>
@@ -60,14 +60,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User Widgets">
-                    <field name="sequence"/>
-                    <field name="user_id"/>
                     <field name="widget_id"/>
+                    <field name="user_id"/>
+                    <field name="sequence"/>
                 </form>
             </field>
         </record>
         <record id="res_widget_user_act_window" model="ir.actions.act_window">
-            <field name="name">Res user Widgets</field>
+            <field name="name">Widgets per User</field>
             <field name="res_model">res.widget.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
