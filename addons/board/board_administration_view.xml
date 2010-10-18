@@ -1,57 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    <!-- Latest Activities -->
-        <record model="ir.ui.view" id="view_latest_activities_tree">
-            <field name="name">latest.activities.tree</field>
-            <field name="model">res.log</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Latest Activities">
-                    <field name="name"/>
-                    <field name="create_date"/>
-                    <field name="user_id" />
-                    <field name="res_model"/>
-                    <field name="res_id"/>
-                </tree>
-            </field>
-        </record>
-        <record model="ir.actions.act_window" id="action_latest_activities_tree">
-            <field name="name">Latest Activities</field>
-            <field name="res_model">res.log</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_latest_activities_tree"></field>
-        </record>
-
-        <record id="board_administration_form" model="ir.ui.view">
-            <field name="name">board.administration.form</field>
-            <field name="model">board.board</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Administration Dashboard">
-                    <hpaned position="100">
-                        <child1>
-                            <action  name="%(action_latest_activities_tree)d" string="Latest Activities" sequence="1"/>
-                        </child1>
-                        <child2>
-                        </child2>
-                    </hpaned>
-                </form>
-            </field>
-        </record>
-        <record id="open_board_administration_form" model="ir.actions.act_window">
-             <field name="name">Administration Dashboard</field>
-            <field name="res_model">board.board</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="board_administration_form"/>
-        </record>
-       <menuitem id="menu_reporting" name="Reporting" parent="base.menu_administration" sequence="11"
-            groups="base.group_extended"/>
-       <menuitem id="board.admin_menu_dasboard" name="Dashboard" sequence="0" parent="menu_reporting"/>
-       <menuitem id="menu_board_admin" action="open_board_administration_form" icon="terp-graph" parent="board.admin_menu_dasboard" />
-
         <!-- User Connection -->
         <record model="ir.ui.view" id="view_user_connection_tree">
             <field name="name">user.connection.tree</field>
@@ -72,18 +21,140 @@
             <field name="view_id" ref="view_user_connection_tree"></field>
         </record>
 
-        <record id="board_user_connection_form" model="ir.ui.view">
-            <field name="name">board.user.connection.form</field>
+        <!-- Latest Activities -->
+        <record model="ir.actions.act_window" id="action_latest_activities_tree">
+            <field name="name">Latest Activities</field>
+            <field name="res_model">res.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="board_administration_form" model="ir.ui.view">
+            <field name="name">board.administration.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Administration Dashboard">
+                    <hpaned position="100">
+                        <child1>
+                            <action name="%(action_latest_activities_tree)d" string="Latest Activities" sequence="1"/>
+                            <action width="510" name="%(action_user_connection_tree)d" string="Latest Connections" />
+                        </child1>
+                    </hpaned>
+                </form>
+            </field>
+        </record>
+        <record id="open_board_administration_form" model="ir.actions.act_window">
+             <field name="name">Administration Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="board_administration_form"/>
+        </record>
+        <menuitem id="base.menu_reporting" name="Reporting" parent="base.menu_administration" sequence="11"
+            groups="base.group_extended"/>
+       <menuitem id="board.admin_menu_dasboard" name="Dashboard" sequence="0" parent="base.menu_reporting"/>
+       <menuitem id="menu_board_admin" action="open_board_administration_form" icon="terp-graph" parent="board.admin_menu_dasboard" />
+
+       <!-- Monthly Activity per Document -->
+		<record id="board_res_log_graph" model="ir.ui.view">
+            <field name="name">board.res.log.graph</field>
+            <field name="model">res.log</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Monthly Activity per Document" type="bar">
+                	<field name="res_model"/>
+                	<field name="count"/>
+                </graph>
+            </field>
+        </record>
+		<record id="board_res_log_tree" model="ir.ui.view">
+            <field name="name">board.res.log.tree</field>
+            <field name="model">res.log</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Monthly Activity per Document">
+                	<field name="res_model"/>
+                	<field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+        <record id="board_res_log_action" model="ir.actions.act_window">
+            <field name="name">Monthly Activity per Document</field>
+            <field name="res_model">res.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="board_res_log_graph"></field>
+        </record>
+        <record id="board_open_res_log_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="board_res_log_tree"/>
+            <field name="act_window_id" ref="board_res_log_action"/>
+	    </record>
+	    <record id="board_open_res_log_graph" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="board_res_log_graph"/>
+            <field name="act_window_id" ref="board_res_log_action"/>
+	    </record>
+
+		<!-- Weekly Global Activity -->
+	    <record id="board_weekly_res_log_graph" model="ir.ui.view">
+            <field name="name">board.weekly.res.log.graph</field>
+            <field name="model">res.log</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Weekly Global Activity" type="bar">
+                	<field name="create_date"/>
+                	<field name="count"/>
+                </graph>
+            </field>
+        </record>
+		<record id="board_weekly_res_log_tree" model="ir.ui.view">
+            <field name="name">board.weekly.res.log.tree</field>
+            <field name="model">res.log</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Weekly Global Activity">
+                	<field name="res_model"/>
+                	<field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+        <record id="board_weekly_res_log_action" model="ir.actions.act_window">
+            <field name="name">Weekly Global Activity</field>
+            <field name="res_model">res.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="board_weekly_res_log_graph"></field>
+        </record>
+        <record id="board_open_weekly_res_log_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="board_weekly_res_log_tree"/>
+            <field name="act_window_id" ref="board_weekly_res_log_action"/>
+	    </record>
+	    <record id="board_open_weekly_res_log_graph" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="board_weekly_res_log_graph"/>
+            <field name="act_window_id" ref="board_weekly_res_log_action"/>
+	    </record>
+
+        <record id="board_admin_graphs_form" model="ir.ui.view">
+            <field name="name">board.admin.graphs.form</field>
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="board_administration_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child1/action[@string='Latest Activities']" position="after">
-                            <action  width="510" name="%(action_user_connection_tree)d" string="Latest Connections" />
+                <xpath expr="/form/hpaned/child1" position="after">
+                		<child2>
+                            <action  name="%(board_res_log_action)d" string="Monthly Activity per Document"/>
+                            <action  name="%(board_weekly_res_log_action)d" string="Weekly Global Activity"/>
+            			</child2>
             	</xpath>
             </field>
         </record>
-
     </data>
 </openerp>
 

@@ -1215,7 +1215,8 @@ class account_move(osv.osv):
     #
     # TODO: Check if period is closed !
     #
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
+        context = context or {}
         if 'line_id' in vals and context.get('copy'):
             for l in vals['line_id']:
                 if not l[0]:
@@ -1256,6 +1257,7 @@ class account_move(osv.osv):
         return result
 
     def copy(self, cr, uid, id, default={}, context={}):
+        context = context or {}
         default.update({
             'state':'draft',
             'name':'/',
@@ -1265,7 +1267,8 @@ class account_move(osv.osv):
         })
         return super(account_move, self).copy(cr, uid, id, default, context)
 
-    def unlink(self, cr, uid, ids, context={}, check=True):
+    def unlink(self, cr, uid, ids, context=None, check=True):
+        context = context or {}
         toremove = []
         obj_move_line = self.pool.get('account.move.line')
         for move in self.browse(cr, uid, ids, context):
@@ -1605,7 +1608,7 @@ class account_tax_code(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
-        return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
+        return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name']) \
                 for x in reads]
 
     def _default_company(self, cr, uid, context={}):
@@ -2544,9 +2547,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         if ids:
             return ids[0]
         return False
+
+    def _get_default_accounts(self, cr, uid, context=None):
+        accounts = [{'acc_name':'Current','account_type':'bank'},
+                    {'acc_name':'Deposit','account_type':'bank'},
+                    {'acc_name':'Cash','account_type':'cash'}]
+        return accounts
+
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
         'chart_template_id': _get_chart,
+        'bank_accounts_id': _get_default_accounts,
         'code_digits': 6,
         'seq_journal': True
     }

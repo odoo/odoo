@@ -28,7 +28,7 @@
     * Payment Encoding
     * Company Contribution Management
     """,
-    'author':'OpenERP SA/Axelor',
+    'author':'OpenERP SA',
     'website':'http://www.openerp.com',
     'depends': [
         'hr_payroll',

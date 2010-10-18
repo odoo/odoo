@@ -149,6 +149,7 @@
         <field name="view_mode">tree,graph</field>
         <field name="view_id" ref="view_purchase_order_tree"></field>
         <field name="context">{'search_default_month':1,'search_default_group_partner_id':1,'search_default_group_product_id': 1, 'search_default_orders': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="help">Purchase Analysis allows you to easily check and analyse your company purchase history and performance. From this menu you can track your negotiation performance, the delivery performance of your suppliers, etc.</field>
     </record>
 
     <record id="action_purchase_order_report_graph" model="ir.actions.act_window">
@@ -177,6 +178,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_month':1, 'search_default_group_product':1, 'search_default_group_partner':1, 'search_default_done':1, 'search_default_in': 1, 'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="help">Reception Analysis allows you to easily check and analyse your company order receptions and the performance of your supplier's deliveries.</field>
     </record>
     <menuitem action="action_stock_move_report_po" id="menu_action_stock_move_report_po" parent="base.next_id_73" sequence="8"/>
 

@@ -204,6 +204,7 @@ class survey_browse_response(report_rml):
                 rml += """<blockTable colWidths='""" + colwidth + """' style="Table_heading">
                           <tr>
                             <td><para style="terp_tblheader_General_Centre">Answer Create Date:- </para></td>
+                            # *-* formatting hard coded, breaks with utf8
                             <td><para style="terp_tblheader_General_Centre_simple">""" + to_xml(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S'))) + """</para></td>
                             <td><para style="terp_tblheader_General_Centre"></para></td>
                             <td><para style="terp_tblheader_General_right">Answer By:- </para></td>
