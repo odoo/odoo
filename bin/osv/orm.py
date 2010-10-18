@@ -1934,10 +1934,14 @@ class orm_template(object):
             # override defaults with the provided values, never allow the other way around
             defaults = self.default_get(cr, uid, missing_defaults, context)
             for dv in defaults:
-                # FIXME: also handle inherited m2m
-                if dv in self._columns and self._columns[dv]._type == 'many2many' \
+                if (dv in self._columns and self._columns[dv]._type == 'many2many') \
+                     or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'many2many') \
                         and defaults[dv] and isinstance(defaults[dv][0], (int, long)):
                     defaults[dv] = [(6, 0, defaults[dv])]
+                if dv in self._columns and self._columns[dv]._type == 'one2many' \
+                    or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'one2many') \
+                        and isinstance(defaults[dv], (list, tuple)) and isinstance(defaults[dv][0], dict):
+                    defaults[dv] = [(0, 0, x) for x in defaults[dv]]
             defaults.update(values)
             values = defaults
         return values
