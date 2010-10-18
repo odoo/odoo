@@ -611,18 +611,18 @@ class account_voucher(osv.osv):
                 credit = 0.0
 
             move_line = {
-                'name':inv.name or '/',
-                'debit':debit,
-                'credit':credit,
-                'account_id':inv.account_id.id,
-                'move_id':move_id,
-                'journal_id':inv.journal_id.id,
-                'period_id':inv.period_id.id,
-                'partner_id':inv.partner_id.id,
-                'currency_id':inv.currency_id.id,
-                'amount_currency':inv.amount,
-                'date':inv.date,
-                'date_maturity':inv.date_due
+                'name': inv.name or '/',
+                'debit': debit,
+                'credit': credit,
+                'account_id': inv.account_id.id,
+                'move_id': move_id,
+                'journal_id': inv.journal_id.id,
+                'period_id': inv.period_id.id,
+                'partner_id': inv.partner_id.id,
+                'currency_id': inv.currency_id.id,
+                'amount_currency': inv.amount,
+                'date': inv.date,
+                'date_maturity': inv.date_due
             }
 
             if (debit == 0.0 or credit == 0.0 or debit+credit > 0) and (debit > 0.0 or credit > 0.0):
@@ -639,21 +639,20 @@ class account_voucher(osv.osv):
                 if not line.amount:
                     continue
                 amount = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, line.amount)
-
                 move_line = {
-                    'journal_id':inv.journal_id.id,
-                    'period_id':inv.period_id.id,
-                    'name':line.name and line.name or '/',
-                    'account_id':line.account_id.id,
-                    'move_id':move_id,
-                    'partner_id':inv.partner_id.id,
-                    'currency_id':inv.currency_id.id,
-                    'amount_currency':line.amount,
-                    'analytic_account_id':line.account_analytic_id and line.account_analytic_id.id or False,
-                    'quantity':1,
-                    'credit':0.0,
-                    'debit':0.0,
-                    'date':inv.date
+                    'journal_id': inv.journal_id.id,
+                    'period_id': inv.period_id.id,
+                    'name': line.name and line.name or '/',
+                    'account_id': line.account_id.id,
+                    'move_id': move_id,
+                    'partner_id': inv.partner_id.id,
+                    'currency_id': inv.currency_id.id,
+                    'amount_currency': line.amount,
+                    'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
+                    'quantity': 1,
+                    'credit': 0.0,
+                    'debit': 0.0,
+                    'date': inv.date
                 }
                 if amount < 0:
                     amount = -amount
@@ -671,7 +670,7 @@ class account_voucher(osv.osv):
 
                 if inv.tax_id and inv.type in ('sale', 'purchase'):
                     move_line.update({
-                        'account_tax_id':inv.tax_id.id,
+                        'account_tax_id': inv.tax_id.id,
                     })
                 if move_line.get('account_tax_id', False):
                     tax_data = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
@@ -716,12 +715,12 @@ class account_voucher(osv.osv):
 
     def copy(self, cr, uid, id, default={}, context=None):
         default.update({
-            'state':'draft',
-            'number':False,
-            'move_id':False,
-            'line_cr_ids':False,
-            'line_dr_ids':False,
-            'reference':False
+            'state': 'draft',
+            'number': False,
+            'move_id': False,
+            'line_cr_ids': False,
+            'line_dr_ids': False,
+            'reference': False
         })
         if 'date' not in default:
             default['date'] = time.strftime('%Y-%m-%d')
@@ -774,7 +773,7 @@ class account_voucher_line(osv.osv):
         'company_id': fields.related('voucher_id','company_id', relation='res.company', string='Company', store=True),
     }
     _defaults = {
-        'name': lambda *a: ''
+        'name': ''
     }
 
     def onchange_move_line_id(self, cr, user, ids, move_line_id, context={}):
