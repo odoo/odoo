@@ -54,6 +54,7 @@
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'hr_holidays_workflow.xml',
         'hr_holidays_view.xml',
         'hr_holidays_data.xml',
