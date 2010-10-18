@@ -1531,6 +1531,9 @@ true, it will allow you to hide the event alarm information without removing it.
         result = []
         if fields and 'date' not in fields:
             fields.append('date')
+        if fields and 'duration' not in fields:
+            fields.append('duration')
+
 
         for base_calendar_id, real_id in select:
             #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
