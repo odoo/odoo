@@ -293,6 +293,8 @@ class account_move_line(osv.osv):
         return data
 
     def on_create_write(self, cr, uid, id, context={}):
+        if not id:
+            return []
         ml = self.browse(cr, uid, id, context)
         return map(lambda x: x.id, ml.move_id.line_id)
 
