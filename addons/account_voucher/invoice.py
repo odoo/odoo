@@ -35,7 +35,7 @@ class invoice(osv.osv):
             'res_model': 'account.voucher',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
-            'target': 'new',
+            'target': 'current',
             'domain': '[]',
             'context': {
                 'default_partner_id': inv.partner_id.id,
