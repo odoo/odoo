@@ -177,7 +177,7 @@ class account_move_line(osv.osv):
                     for item in i[2]:
                             data[item] = i[2][item]
             if context['journal']:
-                journal_data = obj_journal.browse(cr, uid, context['journal'])
+                journal_data = journal_obj.browse(cr, uid, context['journal'])
                 if journal_data.type == 'purchase':
                     if total_new > 0:
                         account = journal_data.default_credit_account_id
