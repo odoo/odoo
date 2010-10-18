@@ -56,7 +56,7 @@
                   <group col="16" colspan="8">
                            <filter string="Year" icon="terp-go-year" help="Current Year"
                         domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                        />                               
+                        />
 
                        <filter string="Month" icon="terp-go-month" name="This Month"
                         domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
