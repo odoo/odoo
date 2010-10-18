@@ -42,6 +42,11 @@ class calendar_event_import(osv.osv_memory):
         @param ids: List of calendar event import’s IDs
         @return: dictionary of calendar evet import  window with Import successful msg.
         """
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
+        context['uid'] = uid
 
         for data in self.read(cr, uid, ids):
             model = data.get('model', 'basic.calendar')

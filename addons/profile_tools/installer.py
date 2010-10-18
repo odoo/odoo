@@ -29,9 +29,10 @@ class misc_tools_installer(osv.osv_memory):
         'subscription':fields.boolean('Recurring Documents',help='Helps to generate automatically recurring documents.'),
         'survey':fields.boolean('Survey',help='Allows you to organize surveys.'),
         'idea':fields.boolean('Ideas Box',help='Promote ideas of the employees, votes and discussion on best ideas.'),
+        'share':fields.boolean('Share Data / Portals',help='This module allows you to easily give restricted access of any filtered list of objects to any customer or supplier.' \
+            'Just click on the share icon to give access to your customers on their project\'s tasks, support requests, invoices, etc.'),
     }
     _defaults = {
-        'lunch': True,
     }
 misc_tools_installer()
 

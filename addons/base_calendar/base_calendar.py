@@ -306,7 +306,7 @@ class calendar_attendee(osv.osv):
         res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
         return [(r['object'], r['name']) for r in res]
 
-    def _lang_get(self, cr, uid, context={}):
+    def _lang_get(self, cr, uid, context=None):
         """
         Get language for language selection field.
         @param cr: the current row, from the database cursor,
@@ -912,10 +912,10 @@ class calendar_event(osv.osv):
     _description = "Calendar Event"
     __attribute__ = {}
 
-    def _tz_get(self, cr, uid, context={}):
+    def _tz_get(self, cr, uid, context=None):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
-    def onchange_allday(self, cr, uid, ids, allday, context={}):
+    def onchange_allday(self, cr, uid, ids, allday, context=None):
         """Sets duration as 24 Hours if event is selcted for all day
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -1017,7 +1017,8 @@ class calendar_event(osv.osv):
         elif int(val.get('interval')) > 1: #If interval is other than 1 rule is custom
             rrule_type = 'custom'
 
-        qry = "UPDATE %(table)s set rrule_type=\'%(rule_type)s\' "
+        qry = "UPDATE \"%s\" set rrule_type=%%s " % self._table
+        qry_args = [ rrule_type, ]
 
         if rrule_type == 'custom':
             new_val = val.copy()
@@ -1055,17 +1056,12 @@ class calendar_event(osv.osv):
                     new_val.pop('bymonth')
 
             for k, v in new_val.items():
-                temp = ", %s='%s'" % (k, v)
-                qry += temp
+                qry += ", %s=%%s" % k
+                qry_args.append(v)
 
-        whr = " where id=%(id)s"
-        qry = qry + whr
-        val.update({
-            'table': self._table,
-            'rule_type': rrule_type,
-            'id': id,
-        })
-        cr.execute(qry % val)
+        qry = qry + " where id=%s"
+        qry_args.append(id)
+        cr.execute(qry, qry_args)
         return True
 
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
@@ -1479,6 +1475,8 @@ true, it will allow you to hide the event alarm information without removing it.
             if not real_event_id in new_ids:
                 new_ids.append(real_event_id)
 
+        if vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
+            vals['vtimezone'] = vals['vtimezone'][40:]
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
         if (vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'))\
@@ -1489,7 +1487,7 @@ true, it will allow you to hide the event alarm information without removing it.
                                             context=context)
         return res
 
-    def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
+    def browse(self, cr, uid, ids, context=None, list_class=None, fields_process=None):
         """
         Overrides orm browse method.
         @param self: the object pointer
@@ -1608,6 +1606,8 @@ true, it will allow you to hide the event alarm information without removing it.
         """
         if not context:
             context = {}
+        if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
+            vals['vtimezone'] = vals['vtimezone'][40:]
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
@@ -1682,7 +1682,7 @@ class calendar_todo(osv.osv):
         @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
         @param context: A standard dictionary for contextual values
         """
-
+        
         assert name == 'date'
         return self.write(cr, uid, id, { 'date_start': value }, context=context)
 

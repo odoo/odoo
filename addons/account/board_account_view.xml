@@ -44,7 +44,7 @@
                 <form string="Account Board">
                     <hpaned>
                         <child1>
-                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Draft Customer Invoices" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
+                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Customer Invoices to Validate" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
                             <action colspan="4" height="160" width="400" name="%(action_company_analysis_tree)d" string="Company Analysis" />
                         </child1>
                         <child2>
@@ -68,6 +68,6 @@
 
         <menuitem id="menu_dashboard_acc" name="Dashboard" sequence="2" parent="account.menu_finance_reporting" groups="group_account_user,group_account_manager"/>
         <menuitem action="open_board_account" icon="terp-graph" id="menu_board_account" parent="menu_dashboard_acc" sequence="1"/>
-        
+
     </data>
 </openerp>

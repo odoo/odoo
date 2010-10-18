@@ -39,7 +39,7 @@
                 Events / Reporting
 """,
     'author': 'OpenERP SA',
-    'depends': ['crm', 'base_contact', 'account'],
+    'depends': ['crm', 'base_contact', 'account', 'marketing'],
     'init_xml': [],
     'update_xml': [
         'security/event_security.xml',
