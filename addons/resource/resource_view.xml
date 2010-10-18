@@ -140,7 +140,7 @@
             <field name="model">resource.calendar.leaves</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
-                <calendar color="resource_id" date_start="date_from" string="Resource">
+                <calendar color="resource_id" date_start="date_from" date_stop="date_to" string="Resource">
                     <field name="name"/>
                 </calendar>
             </field>
@@ -201,7 +201,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_resource_resource_search"/>
-            <field name="help">There you can find clusters of your resources type involved in a specific project phase as well as their workload.</field>
+            <field name="help">Resources allows you to create and manage resources that should be involved in a specific project phase. It also allows you to set their efficiency level and workload based on their weekly working hours</field>
         </record>
 
         <record id="resource_calendar_leave_form" model="ir.ui.view">

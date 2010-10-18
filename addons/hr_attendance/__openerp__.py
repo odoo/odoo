@@ -32,7 +32,6 @@
     'author': 'OpenERP SA',
     'depends': ['hr'],
     'update_xml': [
-        'security/hr_security.xml',
         'security/ir.model.access.csv',
         'hr_attendance_view.xml',
         'hr_attendance_report.xml',

@@ -42,8 +42,10 @@ class job2phonecall(osv.osv_memory):
         return case.user_id and case.user_id.id or False
 
     def _date_category(self, cr, uid, context=None):
+        case_obj = self.pool.get('hr.applicant')
         if context is None:
             context = {}
+        case = case_obj.browse(cr, uid, context['active_id'], context=context)
         categ_id = self.pool.get('crm.case.categ').search(cr, uid, [('name','=','Outbound')], context=context)
         return categ_id and categ_id[0] or case.categ_id and case.categ_id.id or False
 

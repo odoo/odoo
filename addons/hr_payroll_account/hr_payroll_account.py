@@ -28,8 +28,6 @@ from osv import fields, osv
 from tools import config
 from tools.translate import _
 
-
-
 def prev_bounds(cdate=False):
     when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
     this_first = date(when.year, when.month, 1)
@@ -572,8 +570,9 @@ class hr_payslip(osv.osv):
 
                 line_ids += [movel_pool.create(cr, uid, rec, context=context)]
 
-                for contrub in line.category_id.contribute_ids:
-                    print contrib.name, contrub.code, contrub.amount_type, contrib.contribute_per, line.total
+                # if self._debug:
+                #    for contrib in line.category_id.contribute_ids:
+                #       _log.debug("%s %s %s %s %s",  contrib.name, contrub.code, contrub.amount_type, contrib.contribute_per, line.total)
 
             adj_move_id = False
             if total_deduct > 0:

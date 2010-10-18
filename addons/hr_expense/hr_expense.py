@@ -226,7 +226,7 @@ class hr_expense_line(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Short Description', size=128, required=True),
+        'name': fields.char('Expense Note', size=128, required=True),
         'date_value': fields.date('Date', required=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
         'total_amount': fields.function(_amount, method=True, string='Total'),

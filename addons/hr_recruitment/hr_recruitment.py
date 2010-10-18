@@ -332,9 +332,6 @@ class hr_applicant(crm.crm_case, osv.osv):
             vals.update(res)
         res = self.create(cr, uid, vals, context=context)
 
-        message = _('A Job Request created') + " '" + subject + "' " + _("from Mailgate.")
-        self.log(cr, uid, res, message)
-
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
@@ -410,7 +407,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         if not date['date_open']:
             self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Job request for') + " '" + name + "' "+ _("is Open.")
+            message = _("The job request '%s' has been set 'in progress'.") % name
             self.log(cr, uid, id, message)
         return res
 
@@ -426,20 +423,12 @@ class hr_applicant(crm.crm_case, osv.osv):
         job_obj = self.pool.get('hr.job')
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Applicant ') + " '" + name + "' "+ _("is Hired.")
+            message = _("Applicant '%s' is being hired.") % name
             self.log(cr, uid, id, message)
-
-        stage_id = self.pool.get('hr.recruitment.stage').search(cr, uid, [('name','=','Contract Signed')])
-        self.write(cr, uid, ids,{'stage_id':stage_id[0]})
 
         applicant = self.browse(cr, uid, ids)[0]
         if applicant.job_id :
             emp_id = employee_obj.create(cr,uid,{'name':applicant.name,'job_id':applicant.job_id.id})
-            job_data = job_obj.browse(cr,uid, applicant.job_id.id)
-            expected_emp = job_data['expected_employees'] - 1
-            if expected_emp == 0:
-                job_obj.write(cr,uid, [applicant.job_id.id],{'state':'old'})
-            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp})
         return res
 
     def case_reset(self, cr, uid, ids, *args):
@@ -450,18 +439,9 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        applicant = self.browse(cr, uid, ids)[0]
-        if applicant.job_id :
-            job_obj = self.pool.get('hr.job')
-            emp_obj = self.pool.get('hr.employee')
-            job_data = job_obj.browse(cr,uid, applicant.job_id.id)
-            expected_emp = job_data['expected_employees'] + 1
-            emp_id = emp_obj.search(cr,uid, [('job_id','=',applicant.job_id.id),('name','=',applicant.name)])
-            emp_obj.unlink(cr, uid, emp_id)
-            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp})
+
         res = super(hr_applicant, self).case_reset(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed':False})
-        
         return res
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Purchase Order" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Purchase Order.pdf">
+  <template pageSize="(595.0,842.0)" title="Purchase Order" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="18.0" y1="42.0" width="535" height="758"/>
     </pageTemplate>
@@ -149,7 +149,7 @@
               <td>
                 <para style="terp_default_9">[[ repeatIn(o.dest_address_id and [o.dest_address_id] or [],'addr') ]]</para>
                 <para style="terp_default_Bold_9">Shipping address :</para>
-                <para style="terp_default_9">[[ addr.partner_id.title.name or '' ]] [[ addr.partner_id.name ]]</para>
+                <para style="terp_default_9">[[ (addr.partner_id and addr.partner_id.title and addr.partner_id.title.name) or '' ]] [[ (addr.partner_id and addr.partner_id.name) or '' ]]</para>
                 <para style="terp_default_9">[[ addr.street ]]</para>
                 <para style="terp_default_9">[[ addr.street2 or removeParentNode('para') ]]</para>
                 <para style="terp_default_9">[[ addr.zip or '' ]] [[ addr.city or '' ]]</para>
@@ -168,18 +168,18 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.partner_id.title.name or '' ]] [[ o.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ o.partner_address_id.street ]]</para>
-          <para style="terp_default_9">[[ o.partner_address_id.street2 or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ o.partner_address_id.zip or '' ]] [[ o.partner_address_id.city or '' ]]</para>
-          <para style="terp_default_9">[[ o.partner_address_id.state_id and o.partner_address_id.state_id.name or removeParentNode('para')]]</para>
-          <para style="terp_default_9">[[ o.partner_address_id.country_id and o.partner_address_id.country_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ (o.partner_id and o.partner_id.title and o.partner_id.title.name) or '' ]] [[ (o.partner_id and o.partner_id.name) or '' ]]</para>
+          <para style="terp_default_9">[[ (o.partner_address_id and o.partner_address_id.street ) or '']]</para>
+          <para style="terp_default_9">[[ (o.partner_address_id and o.partner_address_id.street2) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">[[ (o.partner_address_id and o.partner_address_id.zip) or '' ]] [[ (o.partner_address_id and o.partner_address_id.city) or '' ]]</para>
+          <para style="terp_default_9">[[ (o.partner_address_id and o.partner_address_id.state_id and o.partner_address_id.state_id.name) or removeParentNode('para')]]</para>
+          <para style="terp_default_9">[[ (o.partner_address_id and o.partner_address_id.country_id and o.partner_address_id.country_id.name) or '' ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tél. : [[ o.partner_address_id.phone or '' ]]</para>
-          <para style="terp_default_9">Fax : [[ o.partner_address_id.fax or '' ]]</para>
-          <para style="terp_default_9">TVA : [[ o.partner_id.vat or '' ]]</para>
+          <para style="terp_default_9">Tél. : [[ (o.partner_address_id and o.partner_address_id.phone) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Fax : [[ (o.partner_address_id and o.partner_address_id.fax) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">TVA : [[ (o.partner_id and o.partner_id.vat) or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -219,7 +219,7 @@
           <para style="terp_default_Centre_8">[[formatLang(o.date_order,date=True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ o.validator and o.validator.name or '' ]]</para>
+          <para style="terp_default_Centre_8">[[ (o.validator and o.validator.name) or '' ]]</para>
         </td>
       </tr>
     </blockTable>

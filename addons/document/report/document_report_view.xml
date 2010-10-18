@@ -10,6 +10,7 @@
                     <field name="name" select="1"/>
                     <field name="user" select="1"/>
                     <field name="directory" select="1"/>
+                    <field name="datas_fname" select="1"/>
                     <field name="file_size"/>
                     <field name="create_date"/>
                 </form>
@@ -25,10 +26,11 @@
                 <tree string="Files">
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
-                    <field name="user" select="1"/>
-                    <field name="directory" select="1"/>
-                    <field name="file_size"/>
-                    <field name="create_date"/>
+                    <field name="user" select="1" invisible="1"/>
+                    <field name="directory" select="1" invisible="1"/>
+                    <field name="file_size" invisible="1"/>
+                    <field name="create_date" invisible="1"/>
+                    <field name="nbr"/>
                 </tree>
             </field>
         </record>
@@ -60,8 +62,8 @@
             <field name="name">All Users files</field>
             <field name="res_model">report.document.user</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="context">{'search_default_user': 'user_id'}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'group_by': ['name','month']}</field>
             <field name="search_view_id" ref="view_report_document_user_search"/>
         </record>
 
@@ -112,30 +114,18 @@
             <field name="arch" type="xml">
                 <graph string="Files by Resource Type" type="pie">
                     <field name="type" />
-<!--                    <field name="file_size" operator="+"/>-->
                     <field name="nbr" operator="+"/>
                 </graph>
             </field>
         </record>
 
-<!--        <record model="ir.ui.view" id="view_document_by_resourcetype_tree">-->
-<!--            <field name="name">report.document.resource.tree.view</field>-->
-<!--            <field name="model">report.document.user</field>-->
-<!--            <field name="type">tree</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <tree string="Files by Resource Type">-->
-<!--                    <field name="type" />-->
-<!--                    <field name="nbr"/>-->
-<!--                </tree>-->
-<!--            </field>-->
-<!--        </record>-->
 
         <record model="ir.actions.act_window" id="action_view_document_by_resourcetype_graph">
             <field name="name">Files by Resource Type</field>
             <field name="res_model">report.document.user</field>
-            <field name="view_id" ref="view_document_by_resourcetype_graph"></field>
+            <field name="view_id" ref="view_document_by_resourcetype_graph"/>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">graph,tree</field>
         </record>
 
 <!--***************************************************************************************-->
@@ -150,7 +140,7 @@
                     <field name="file_size" operator="+"/>
                 </graph>
             </field>
-        </record>
+    </record>
 
     <record model="ir.ui.view" id="view_size_month_tree">
             <field name="name">report.document.user.tree</field>

@@ -54,9 +54,6 @@ class project_tasks(osv.osv):
             data.update(res)
         res = self.create(cr, uid, data)    
         
-        message = _('A task created') + " '" + subject + "' " + _("from Mailgate.")
-        self.log(cr, uid, res, message)
-        
         attachments = msg.get('attachments', [])
         for attachment in attachments or []:
             data_attach = {

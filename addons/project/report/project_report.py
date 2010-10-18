@@ -89,7 +89,7 @@ class report_project_task_user(osv.osv):
                     planned_hours as hours_planned,
                     (extract('epoch' from (t.date_end-t.create_date)))/(3600*24)  as closing_days,
                     (extract('epoch' from (t.date_start-t.create_date)))/(3600*24)  as opening_days,
-                    (extract('epoch' from (t.date_deadline-t.date_end)))/(3600*24)  as delay_endings_days
+                    abs((extract('epoch' from (t.date_deadline-t.date_end)))/(3600*24))  as delay_endings_days
               FROM project_task t
 
                 GROUP BY
