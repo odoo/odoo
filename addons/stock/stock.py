@@ -2090,7 +2090,7 @@ class stock_move(osv.osv):
                 'state': move.state,
                 'scrapped' : True,
                 'location_dest_id': location_id,
-                'tracking_id':False,
+                'tracking_id': move.tracking_id.id,
                 'prodlot_id': move.prodlot_id.id,
             }
             new_move = self.copy(cr, uid, move.id, default_val)
