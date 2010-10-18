@@ -45,7 +45,7 @@ class pos_close_statement(osv.osv_memory):
         ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', journal_ids)])
         for journal in journal_obj.browse(cr, uid, journal_ids):
             if not ids:
-                raise osv.except_osv(_('Message'), _('Registers are already closed.'))
+                raise osv.except_osv(_('Message'), _('Cash registers are already closed.'))
             else:
                 if not journal.check_dtls:
                     statement_obj.button_confirm_cash(cr, uid, ids, context)
