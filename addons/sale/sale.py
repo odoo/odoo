@@ -54,7 +54,7 @@ def _incoterm_get(self, cr, uid, context=None):
 class sale_order(osv.osv):
     _name = "sale.order"
     _description = "Sale Order"
-
+    
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}
@@ -331,7 +331,7 @@ class sale_order(osv.osv):
             wf_service.trg_delete(uid, 'sale.order', inv_id, cr)
             wf_service.trg_create(uid, 'sale.order', inv_id, cr)
         for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Sale order ') + " '" + name + "' "+ _("is in draft state")
+            message = _("The sale order '%s' has been set in draft state.") %(name,)
             self.log(cr, uid, id, message)
         return True
 
@@ -461,6 +461,7 @@ class sale_order(osv.osv):
         return inv_id
 
     def manual_invoice(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
         inv_ids = set()
         inv_ids1 = set()
@@ -473,18 +474,21 @@ class sale_order(osv.osv):
             for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
                 inv_ids1.add(record.id)
         inv_ids = list(inv_ids1.difference(inv_ids))
-
+        
+        result = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
+        res = mod_obj.read(cr, uid, result, ['res_id'])
         result = {
             'name': 'Invoices',
             'view_type': 'form',
-            'view_mode': 'form,tree',
+            'view_mode': 'form',
+            'view_id': [res['res_id']],
             'res_model': 'account.invoice',
-            'view_id': False,
-            'context': "{'type':'out_refund'}",
+            'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'res_id': inv_ids[0],
-            'nodestroy' :True
-                  }
+            'nodestroy' :True,
+            'target': 'current',
+            'res_id': inv_ids and inv_ids[0] or False,
+        }
 
         return result
 
@@ -614,7 +618,7 @@ class sale_order(osv.osv):
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
-            message = _('Sale order') + " '" + sale.name + _(" is cancelled")
+            message = _("The sale order '%s' has been cancelled.") % (sale.name,)
             self.log(cr, uid, sale.id, message)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
@@ -626,7 +630,7 @@ class sale_order(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            message = _('Quotation') + " '" + o.name + "' "+ _("is converted to Sale order")
+            message = _("The quotation '%s' has been converted to a sale order.") % (o.name,)
             self.log(cr, uid, o.id, message)
         return True
 
@@ -985,8 +989,6 @@ class sale_order_line(osv.osv):
                     raise osv.except_osv(
                             _('Could not cancel sale order line!'),
                             _('You must first cancel stock moves attached to this sale order line.'))
-        message = _('Sale order line') + " '" + line.name + "' "+_("is cancelled")
-        self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def button_confirm(self, cr, uid, ids, context=None):

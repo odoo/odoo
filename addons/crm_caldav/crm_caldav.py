@@ -77,7 +77,7 @@ class crm_meeting(osv.osv):
         try:
             for val in vals:
                 # Compute value of duration
-                if 'date_deadline' in val and 'duration' not in val:
+                if val.get('date_deadline', False) and 'duration' not in val:
                     start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
                     end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
                     diff = end - start

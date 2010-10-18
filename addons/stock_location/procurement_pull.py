@@ -42,8 +42,6 @@ class procurement_order(osv.osv):
         for procurement in self.browse(cr, uid, ids):
             for line in procurement.product_id.flow_pull_ids:
                 if line.location_id==procurement.location_id:
-                    if not line.location_src_id:
-                        self.write(cr, uid, procurement.id, {'message': _('No source location defined to generate the picking !')})
                     return (line.type_proc=='move') and (line.location_src_id)
         return False
 

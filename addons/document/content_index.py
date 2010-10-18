@@ -21,11 +21,11 @@
 import logging
 import os
 import tempfile
+from subprocess import Popen, PIPE
 
 class NhException(Exception):
     pass
 
-from subprocess import Popen, PIPE
 
 class indexer(object):
     """ An indexer knows how to parse the content of some file.

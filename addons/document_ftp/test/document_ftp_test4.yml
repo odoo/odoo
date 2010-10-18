@@ -118,3 +118,10 @@
 - |
     Bonus Piste:
     I create a 'Partner3' under 'all'
+-
+    I delete the Partners Testing folder
+-
+    !python {model: document.directory}: |
+        self.unlink(cr, uid, [ref('dir_tests2')])
+        self.unlink(cr, uid, [ref('dir_respart1')])
+        cr.commit()

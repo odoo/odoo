@@ -58,7 +58,7 @@ class project_issue(crm.crm_case, osv.osv):
         res = super(project_issue, self).case_open(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Issue ') + " '" + name + "' "+ _("is Open.")
+            message = _("Issue '%s' has been opened.") % name
             self.log(cr, uid, id, message)
         return res
 
@@ -73,7 +73,7 @@ class project_issue(crm.crm_case, osv.osv):
 
         res = super(project_issue, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Issue ') + " '" + name + "' "+ _("is Closed.")
+            message = _("Issue '%s' has been closed.") % name
             self.log(cr, uid, id, message)
         return res
 
@@ -401,8 +401,6 @@ class project_issue(crm.crm_case, osv.osv):
             vals.update(res)
         context.update({'state_to' : 'draft'})
         res = self.create(cr, uid, vals, context)
-        message = _('An Issue created') + " '" + subject + "' " + _("from Mailgate.")
-        self.log(cr, uid, res, message)
         self.convert_to_bug(cr, uid, [res], context=context)
 
         attachents = msg.get('attachments', [])

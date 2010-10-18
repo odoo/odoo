@@ -26,6 +26,20 @@ import pooler
 import tools
 from tools.translate import _
 
+class project_project(osv.osv):
+    _inherit = 'project.project'
+    def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
+        result = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
+        if result.get('value', False):
+            try:
+                d = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
+                if d:
+                    result['value']['to_invoice'] = d[1]
+            except ValueError, e:
+                pass
+        return result
+project_project()
+
 class project_work(osv.osv):
     _inherit = "project.task.work"
 
@@ -66,10 +80,7 @@ class project_work(osv.osv):
         
         vals_line = {}
         context = kwargs.get('context', {})
-        #TOFIX: after loading project_timesheet module, it's fail yml of other project* modules. 
-        #Temporary: pass context['withoutemployee'] = True in all yml.
-        if 'withoutemployee' in context and context['withoutemployee']:
-            return super(project_work,self).create(cr, uid, vals, context=context)
+
         obj_task = task_obj.browse(cr, uid, vals['task_id'])
         result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
         vals_line['name'] = '%s: %s' % (tools.ustr(obj_task.name), tools.ustr(vals['name']) or '/')
@@ -79,7 +90,8 @@ class project_work(osv.osv):
         
         #calculate quantity based on employee's product's uom 
         vals_line['unit_amount'] = vals['hours']
-        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
+
+        default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
         if result['product_uom_id'] != default_uom:
             vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
         acc_id = obj_task.project_id and obj_task.project_id.analytic_account_id.id or False
@@ -136,7 +148,7 @@ class project_work(osv.osv):
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
-                user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
+                default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
                 vals_line['unit_amount'] = vals['hours']
                 prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
 
@@ -145,13 +157,13 @@ class project_work(osv.osv):
                     
                 # Compute based on pricetype
                 amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, line_id.id,
-                    prod_id=prod_id,
-                    quantity=vals_line['unit_amount'], unit=False, context=context)
+                    prod_id=prod_id, company_id=False,
+                    unit_amount=vals_line['unit_amount'], unit=False, context=context)
 
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     vals_line['amount'] = amount_unit['value']['amount']
 
-            obj.write(cr, uid, [line_id.id], vals_line, context=context)
+            self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
             
         return super(project_work,self).write(cr, uid, ids, vals, context)
 

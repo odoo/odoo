@@ -378,7 +378,7 @@ class account_bank_statement(osv.osv):
                 self.create_move_from_st_line(cr, uid, st_line.id, company_currency_id, st_line_number, context)
 
             self.write(cr, uid, [st.id], {'name': st_number}, context=context)
-            self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st_number)
+            self.log(cr, uid, st.id, _('Statement %s is confirmed, journal items are created.') % (st_number,))
             done.append(st.id)
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
