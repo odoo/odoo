@@ -21,7 +21,6 @@
 
 import time
 
-import pooler
 import rml_parse
 from report import report_sxw
 from common_report_header import common_report_header
@@ -96,7 +95,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                     OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
                     AND ' + self.query + '\
                     AND account_account.active\
-                    GROUP BY partner_id ', (tuple(move_state), tuple(self.ACCOUNT_TYPE), tuple(partner_ids), self.date_from))
+                    GROUP BY l.partner_id ', (tuple(move_state), tuple(self.ACCOUNT_TYPE), tuple(partner_ids), self.date_from))
         t = self.cr.fetchall()
         for i in t:
             totals[i[0]] = i[1]

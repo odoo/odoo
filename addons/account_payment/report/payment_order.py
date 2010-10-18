@@ -70,7 +70,7 @@ class payment_order(report_sxw.rml_parse):
     def _get_company_currency(self):
         pool = pooler.get_pool(self.cr.dbname)
         user = pool.get('res.users').browse(self.cr, self.uid, self.uid)
-        return user.company_id and user.company_id.currency_id and user.company_id.currency_id.code or False
+        return user.company_id and user.company_id.currency_id and user.company_id.currency_id.symbol or False
 
     def _get_company_currency_symbol(self):
         pool = pooler.get_pool(self.cr.dbname)
