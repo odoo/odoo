@@ -1114,7 +1114,6 @@ class account_move_line(osv.osv):
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         move_id = vals.get('move_id', False)
         journal = journal_obj.browse(cr, uid, context['journal_id'])
-#        is_new_move = False
         if not move_id:
             if journal.centralisation:
                 #Check for centralisation
@@ -1133,7 +1132,6 @@ class account_move_line(osv.osv):
                     vals['move_id'] = move_id
                 else:
                     raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
-#            is_new_move = True
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
             account = account_obj.browse(cr, uid, vals['account_id'])
