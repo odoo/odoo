@@ -237,7 +237,7 @@ class sale_order(osv.osv):
             ('prepaid', 'Payment Before Delivery'),
             ('manual', 'Shipping & Manual Invoice'),
             ('postpaid', 'Invoice on Order After Delivery'),
-            ('picking', 'Invoice from Picking'),
+            ('picking', 'Invoice from Delivery'),
         ], 'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)]},
                     help="""The Shipping Policy is used to synchronise invoice and delivery operations.
   - The 'Pay before delivery' choice will first generate the invoice and then generate the picking order after the payment of this invoice.
