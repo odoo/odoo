@@ -334,11 +334,16 @@ class hr_timesheet_sheet(osv.osv):
             return time.strftime('%Y-12-31')
         return time.strftime('%Y-%m-%d')
 
+    def _default_employee(self,cr, uid, context=None):
+        emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
+        return emp_ids and emp_ids[0] or False
+
     _defaults = {
         'date_from' : _default_date_from,
         'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
         'date_to' : _default_date_to,
         'state': 'new',
+        'employee_id': _default_employee,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', context=c)
     }
 

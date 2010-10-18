@@ -1925,8 +1925,7 @@ class bi_auto_configure_wizard(osv.osv_memory):
                 table_new = dbtab_obj.write(cr, uid, tables['id'], end_user_name)
                 if not(tables['table_db_name'].startswith('ir') or \
                        tables['table_db_name'].startswith('wkf') or \
-                       tables['table_db_name'].startswith('res_groups') or \
-                       tables['table_db_name'].startswith('res_role')) and \
+                       tables['table_db_name'].startswith('res_groups')) and \
                        tables['table_db_name'] not in ['inherit', 'user_rule_group_rel',\
                                                  'group_rule_group_rel']:
                     vals = {}
@@ -1999,8 +1998,8 @@ class bi_auto_configure_wizard(osv.osv_memory):
                         table['table_db_name'].startswith('wkf')) or \
                         (table['table_db_name'].startswith('res_groups')) or \
                         (table['table_db_name'] in \
-                         ['inherit', 'res_roles', 'user_rule_group_rel', \
-                          'res_roles_users_rel', 'group_rule_group_rel']):
+                         ['inherit', 'user_rule_group_rel', \
+                          'group_rule_group_rel']):
                     vals['hide'] = True
                     vals['active'] = False
                     make_id.append(table['id'])

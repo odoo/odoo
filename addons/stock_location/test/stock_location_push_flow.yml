@@ -47,15 +47,11 @@
     path_ids:
       - auto: auto
         invoice_state: none
-        location_dest_id: stock.stock_location_stock
-        location_from_id: stock.stock_location_suppliers
-      - auto: auto
-        invoice_state: none
         location_dest_id: stock_location.stock_location_qualitytest0
         location_from_id: stock.stock_location_stock
       - auto: auto
         invoice_state: none
-        location_dest_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_components
         location_from_id: stock_location.stock_location_qualitytest0
     supply_method: buy
     type: product

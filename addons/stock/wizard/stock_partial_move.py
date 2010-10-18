@@ -40,7 +40,6 @@ class stock_partial_move(osv.osv_memory):
             if m.state in ('done', 'cancel'):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot deliver products which are already delivered !'))
 
-
             if 'move%s_product_id'%(m.id) not in self._columns:
                 self._columns['move%s_product_id'%(m.id)] = fields.many2one('product.product',string="Product")
             if 'move%s_product_qty'%(m.id) not in self._columns:
@@ -52,9 +51,9 @@ class stock_partial_move(osv.osv_memory):
                 
             if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
                 if 'move%s_product_price'%(m.id) not in self._columns:
-                    self._columns['move%s_product_price'%(m.id)] = fields.float("Price")
+                    self._columns['move%s_product_price'%(m.id)] = fields.float("Cost", help="Unit Cost for this product line")
                 if 'move%s_product_currency'%(m.id) not in self._columns:
-                    self._columns['move%s_product_currency'%(m.id)] = fields.many2one('res.currency',string="Currency")
+                    self._columns['move%s_product_currency'%(m.id)] = fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed")
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
@@ -109,14 +108,15 @@ class stock_partial_move(osv.osv_memory):
                 if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
                     _moves_fields.update({
                         'move%s_product_price'%(m.id) : {
-                            'string': _('Price'),
+                            'string': _('Cost'),
                             'type' : 'float',
+                            'help': _('Unit Cost for this product line'),
                         },
                         'move%s_product_currency'%(m.id): {
                             'string': _('Currency'),
-                            'type' : 'float',
                             'type' : 'many2one',
                             'relation': 'res.currency',
+                            'help': _("Currency in which Unit Cost is expressed"),
                         }
                     })
                     _moves_arch_lst += """
@@ -162,8 +162,6 @@ class stock_partial_move(osv.osv_memory):
             if m.state in ('done', 'cancel'):
                 continue
             res['type'] = m.picking_id and m.picking_id.type or ''
-    
-
             if 'move%s_product_id'%(m.id) in fields:
                 res['move%s_product_id'%(m.id)] = m.product_id.id
             if 'move%s_product_qty'%(m.id) in fields:
@@ -171,10 +169,12 @@ class stock_partial_move(osv.osv_memory):
             if 'move%s_product_uom'%(m.id) in fields:
                 res['move%s_product_uom'%(m.id)] = m.product_uom.id
             if 'move%s_prodlot_id'%(m.id) in fields:
-                    res['move%s_prodlot_id'%(m.id)] = m.prodlot_id.id                
-            if  m.product_id.cost_method == 'average' :
+                    res['move%s_prodlot_id'%(m.id)] = m.prodlot_id.id
+            if m.picking_id.type == 'in' and m.product_id.cost_method == 'average':
+                # Always use default product cost and currency from Product Form, 
+                # which belong to the Company owning the product
+                currency = m.product_id.company_id.currency_id.id
                 price = m.product_id.standard_price
-                currency = False
                 if 'move%s_product_price'%(m.id) in fields:
                     res['move%s_product_price'%(m.id)] = price
                 if 'move%s_product_currency'%(m.id) in fields:
@@ -204,7 +204,7 @@ class stock_partial_move(osv.osv_memory):
                 'product_id' : getattr(partial, 'move%s_product_id'%(m.id)).id,
                 'product_qty' : getattr(partial, 'move%s_product_qty'%(m.id)),
                 'product_uom' : getattr(partial, 'move%s_product_uom'%(m.id)).id,
-                'prodlot_id' : getattr(partial, 'move%s_prodlot_id'%(m.id)).id                
+                'prodlot_id' : getattr(partial, 'move%s_prodlot_id'%(m.id)).id
             }
 
             if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):

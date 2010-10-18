@@ -281,7 +281,7 @@ class project_issue(crm.crm_case, osv.osv):
 
             vals = {
                 'task_id': new_task_id,
-                'state':'open'
+                'state':'pending'
             }
             case_obj.write(cr, uid, [bug.id], vals)
 

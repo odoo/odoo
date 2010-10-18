@@ -55,21 +55,21 @@ class procurement_order(osv.osv):
         for proc in proc_obj.browse(cr, uid, ids, context=context):
             line = None
             for line in proc.product_id.flow_pull_ids:
-                if line.location_id==proc.location_id:
+                if line.location_id == proc.location_id:
                     break
             assert line, 'Line can not be False if we are on this state of the workflow'
             origin = (proc.origin or proc.name or '').split(':')[0] +':'+line.name
-            picking_id =picking_obj.create(cr, uid, {
+            picking_id = picking_obj.create(cr, uid, {
                 'origin': origin,
                 'company_id': line.company_id and line.company_id.id or False,
                 'type': line.picking_type,
                 'stock_journal_id': line.journal_id and line.journal_id.id or False,
                 'move_type': 'one',
                 'address_id': line.partner_address_id.id,
-                'note': line.name, # TODO: note on procurement ?
+                'note': _('Picking for pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, line.name, proc.name, proc.id),
                 'invoice_state': line.invoice_state,
             })
-            move_id =move_obj.create(cr, uid, {
+            move_id = move_obj.create(cr, uid, {
                 'name': line.name,
                 'picking_id': picking_id,
                 'company_id':  line.company_id and line.company_id.id or False,
@@ -88,7 +88,7 @@ class procurement_order(osv.osv):
                 'tracking_id': False,
                 'cancel_cascade': line.cancel_cascade,
                 'state': 'confirmed',
-                'note': line.name, # TODO: same as above
+                'note': _('Move for pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, line.name, proc.name, proc.id),
             })
             if proc.move_id and proc.move_id.state in ('confirmed'):
                 move_obj.write(cr,uid, [proc.move_id.id],  {
@@ -97,6 +97,7 @@ class procurement_order(osv.osv):
             proc_id = proc_obj.create(cr, uid, {
                 'name': line.name,
                 'origin': origin,
+                'note': _('Pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, line.name, proc.name, proc.id),
                 'company_id':  line.company_id and line.company_id.id or False,
                 'date_planned': proc.date_planned,
                 'product_id': proc.product_id.id,
@@ -116,7 +117,10 @@ class procurement_order(osv.osv):
             if proc.move_id:
                 move_obj.write(cr, uid, [proc.move_id.id],
                     {'location_id':proc.location_id.id})
+            self.write(cr, uid, [proc.id], {'state':'running', 'message':_('Pulled from another location via procurement %d')%proc_id})
 
-            self.write(cr, uid, [proc.id], {'state':'running','message':_('Moved from other location')})
+            # trigger direct processing (the new procurement shares the same planned date as the original one, which is already being processed)
+            wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
         return False
+
 procurement_order()
