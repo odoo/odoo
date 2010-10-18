@@ -2443,10 +2443,29 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+        <record id="ir_actions_server_action_wizard_multi_chart" model="ir.actions.server">
+            <field name="type">ir.actions.server</field>
+            <field name="condition">True</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="base.model_ir_actions_todo"/>
+            <field eval="5" name="sequence"/>
+            <field name="code">
+act_window_ids = self.pool.get('ir.actions.act_window').search(cr, uid,[('name', 'in', ('Accounting Chart Configuration', 'Generate Chart of Accounts from a Chart Template'))], context=context)
+todo_ids = self.pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', act_window_ids)], context=context)
+self.pool.get('ir.actions.todo').write(cr, uid, todo_ids, {'state':'open'}, context=context)
+action = self.pool.get('res.config').next(cr, uid, [], context)
+</field>
+           <field name="name">New Company Financial Setting</field>
+        </record>
 
-        <menuitem name="New Company Financial Setting" parent="account.menu_finance_accounting"
-            groups="group_account_manager"
-            action="account.action_account_configuration_installer" id="menu_wizard"/>
+
+        <record id="menu_act_ir_actions_bleble" model="ir.ui.menu">
+            <field name="name">New Company Financial Setting</field>
+            <field eval="1" name="sequence"/>
+            <field name="parent_id" ref="account.menu_finance_accounting"/>
+            <field name="icon">STOCK_JUSTIFY_FILL</field>
+            <field name="action" ref="ir_actions_server_action_wizard_multi_chart"/>
+        </record>
 
         <record id="account_account_graph" model="ir.ui.view">
             <field name="name">account.account.graph</field>
