@@ -719,7 +719,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
-                raise osv.except_osv(_('Warning !'),_('Not Available. Moves are not confirmed.'))
+                raise osv.except_osv(_('Warning !'),_('Not enough stock, unable to reserve the products.'))
             self.pool.get('stock.move').action_assign(cr, uid, move_ids)
         return True
 
