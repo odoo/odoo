@@ -20,7 +20,6 @@
 ##############################################################################
 
 from datetime import datetime, timedelta
-from mx import DateTime
 import math
 from faces import *
 from new import classobj
@@ -113,7 +112,7 @@ class resource_calendar(osv.osv):
         results = {}
 
         for d, hours, id in date_and_hours_by_cal:
-            dt_from = DateTime.strptime(d, '%Y-%m-%d %H:%M:%S')
+            dt_from = datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
             if not id:
                 td = int(hours)*3
                 results[(d, hours, id)] = [(dt_from, dt_from + timedelta(hours=td))]

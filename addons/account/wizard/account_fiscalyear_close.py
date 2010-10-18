@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 from tools.translate import _
-import tools
 
 class account_fiscalyear_close(osv.osv_memory):
     """
@@ -57,7 +57,6 @@ class account_fiscalyear_close(osv.osv_memory):
         obj_acc_move_line = self.pool.get('account.move.line')
         obj_acc_account = self.pool.get('account.account')
         obj_acc_journal_period = self.pool.get('account.journal.period')
-        obj_rec = self.pool.get('account.move.reconcile')
 
         data =  self.read(cr, uid, ids, context=context)
 

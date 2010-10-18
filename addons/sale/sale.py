@@ -54,7 +54,7 @@ def _incoterm_get(self, cr, uid, context=None):
 class sale_order(osv.osv):
     _name = "sale.order"
     _description = "Sale Order"
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}
@@ -109,7 +109,7 @@ class sale_order(osv.osv):
         for id in ids:
             res[id] = [0.0, 0.0]
         cr.execute('''SELECT
-                p.sale_id,sum(m.product_qty), mp.state as mp_state
+                p.sale_id, sum(m.product_qty), mp.state as mp_state
             FROM
                 stock_move m
             LEFT JOIN
@@ -117,7 +117,7 @@ class sale_order(osv.osv):
             LEFT JOIN
                 procurement_order mp on (mp.move_id=m.id)
             WHERE
-                p.sale_id IN %s GROUP BY mp.state, p.sale_id''',(tuple(ids),))
+                p.sale_id IN %s GROUP BY mp.state, p.sale_id''', (tuple(ids),))
         for oid, nbr, mp_state in cr.fetchall():
             if mp_state == 'cancel':
                 continue
@@ -321,7 +321,7 @@ class sale_order(osv.osv):
     def action_cancel_draft(self, cr, uid, ids, *args):
         if not len(ids):
             return False
-        cr.execute('select id from sale_order_line where order_id IN %s and state=%s',(tuple(ids),'cancel'))
+        cr.execute('select id from sale_order_line where order_id IN %s and state=%s', (tuple(ids), 'cancel'))
         line_ids = map(lambda x: x[0], cr.fetchall())
         self.write(cr, uid, ids, {'state': 'draft', 'invoice_ids': [], 'shipped': 0})
         self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
@@ -409,11 +409,11 @@ class sale_order(osv.osv):
     def _make_invoice(self, cr, uid, order, lines, context=None):
         journal_obj = self.pool.get('account.journal')
         inv_obj = self.pool.get('account.invoice')
-
+        obj_invoice_line = self.pool.get('account.invoice.line')
         if context is None:
             context = {}
 
-        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', order.company_id.id)], limit=1)
+        journal_ids = journal_obj.search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)], limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error !'),
                 _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
@@ -431,7 +431,7 @@ class sale_order(osv.osv):
         for preinv in order.invoice_ids:
             if preinv.state not in ('cancel',) and preinv.id not in from_line_invoice_ids:
                 for preline in preinv.invoice_line:
-                    inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
+                    inv_line_id = obj_invoice_line.copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
         inv = {
             'name': order.client_order_ref or order.name,
@@ -448,8 +448,8 @@ class sale_order(osv.osv):
             'comment': order.note,
             'payment_term': pay_term,
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
-            'date_invoice' : context.get('date_invoice',False),
-            'company_id' : order.company_id.id,
+            'date_invoice': context.get('date_invoice',False),
+            'company_id': order.company_id.id,
             'user_id':order.user_id and order.user_id.id or False
         }
         inv.update(self._inv_get(cr, uid, order))
@@ -474,11 +474,11 @@ class sale_order(osv.osv):
             for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
                 inv_ids1.add(record.id)
         inv_ids = list(inv_ids1.difference(inv_ids))
-        
+
         result = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
         res = mod_obj.read(cr, uid, result, ['res_id'])
         result = {
-            'name': 'Invoices',
+            'name': 'Customer Invoices',
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': [res['res_id']],
@@ -498,6 +498,7 @@ class sale_order(osv.osv):
         invoice_ids = []
         picking_obj = self.pool.get('stock.picking')
         invoice = self.pool.get('account.invoice')
+        obj_sale_order_line = self.pool.get('sale.order.line')
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
@@ -511,7 +512,7 @@ class sale_order(osv.osv):
                     continue
                 elif (line.state in states):
                     lines.append(line.id)
-            created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
+            created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
             if created_lines:
                 invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
         if not invoices:
@@ -521,7 +522,7 @@ class sale_order(osv.osv):
                         return i.id
         for val in invoices.values():
             if grouped:
-                res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []), context=context)
+                res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x, y: x + y, [l for o, l in val], []), context=context)
                 invoice_ref = ''
                 for o, l in val:
                     invoice_ref += o.name + '|'
@@ -589,11 +590,12 @@ class sale_order(osv.osv):
             # Update the sale order state.
             #
             if order.state == 'invoice_except':
-                self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
+                self.write(cr, uid, [order.id], {'state': 'progress'}, context=context)
 
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
         sale_order_line_obj = self.pool.get('sale.order.line')
@@ -605,7 +607,6 @@ class sale_order(osv.osv):
                         _('You must first cancel all picking attached to this sale order.'))
             for r in self.read(cr, uid, ids, ['picking_ids']):
                 for pick in r['picking_ids']:
-                    wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)
             for inv in sale.invoice_ids:
                 if inv.state not in ('draft', 'cancel'):
@@ -614,7 +615,6 @@ class sale_order(osv.osv):
                         _('You must first cancel all invoices attached to this sale order.'))
             for r in self.read(cr, uid, ids, ['invoice_ids']):
                 for inv in r['invoice_ids']:
-                    wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
@@ -681,6 +681,7 @@ class sale_order(osv.osv):
             return canceled
 
     def action_ship_create(self, cr, uid, ids, *args):
+        wf_service = netsvc.LocalService("workflow")
         picking_id = False
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for order in self.browse(cr, uid, ids, context={}):
@@ -756,11 +757,9 @@ class sale_order(osv.osv):
 
             val = {}
             for proc_id in proc_ids:
-                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
 
             if picking_id:
-                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
 
             if order.state == 'shipping_except':
@@ -892,7 +891,7 @@ class sale_order_line(osv.osv):
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='Salesman'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
-    _order = 'sequence, id'
+    _order = 'sequence, id desc'
     _defaults = {
         'discount': 0.0,
         'delay': 0.0,

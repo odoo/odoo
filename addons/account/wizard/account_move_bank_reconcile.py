@@ -18,10 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import tools
+
 from osv import fields, osv
 from tools.translate import _
-
 
 class account_move_bank_reconcile(osv.osv_memory):
     """

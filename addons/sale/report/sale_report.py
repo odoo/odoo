@@ -20,7 +20,7 @@
 ##############################################################################
 
 import tools
-from osv import fields,osv
+from osv import fields, osv
 
 class sale_report(osv.osv):
     _name = "sale.report"

@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 from tools.translate import _
-import tools
 
 class account_move_journal(osv.osv_memory):
     _name = "account.move.journal"
@@ -31,7 +30,8 @@ class account_move_journal(osv.osv_memory):
         """
         Return  default account period value
         """
-        ids = self.pool.get('account.period').find(cr, uid, context=context)
+        account_period_obj = self.pool.get('account.period')
+        ids = account_period_obj.find(cr, uid, context=context)
         period_id = False
         if ids:
             period_id = ids[0]
@@ -119,6 +119,7 @@ class account_move_journal(osv.osv_memory):
         period_pool = self.pool.get('account.journal.period')
         data_pool = self.pool.get('ir.model.data')
         journal_pool = self.pool.get('account.journal')
+        account_period_obj = self.pool.get('account.period')
 
         if context is None:
             context = {}
@@ -132,7 +133,7 @@ class account_move_journal(osv.osv_memory):
 
             if not ids:
                 journal = journal_pool.browse(cr, uid, journal_id)
-                period = self.pool.get('account.period').browse(cr, uid, period_id)
+                period = account_period_obj.browse(cr, uid, period_id)
 
                 name = journal.name
                 state = period.state

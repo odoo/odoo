@@ -505,13 +505,13 @@
     <blockTable colWidths="181.0,88.0,177.0,93.0" style="Table4">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Total Earnings<font face="Helvetica" size="7.0">([[ o.company_id and o.company_id.currency_id.code or '' ]])</font></para>
+          <para style="terp_tblheader_Details">Total Earnings<font face="Helvetica" size="7.0">([[ o.company_id and o.company_id.currency_id.symbol or '' ]])</font></para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">[[ formatLang(o.allounce + o.basic) ]] [[ o.company_id and o.company_id.currency_id.symbol ]] </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Total Deductions<font face="Helvetica" size="7.0">([[ o.company_id and o.company_id.currency_id.code or '' ]])</font></para>
+          <para style="terp_tblheader_Details">Total Deductions<font face="Helvetica" size="7.0">([[ o.company_id and o.company_id.currency_id.symbol or '' ]])</font></para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">[[ formatLang(o.deduction) ]] [[ o.company_id and o.company_id.currency_id.symbol or '' ]]</para>
@@ -558,7 +558,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Net Amount<font face="Helvetica" size="7.0">([[ o.company_id and o.company_id.currency_id.code or '' ]])</font></para>
+          <para style="terp_tblheader_Details">Net Amount<font face="Helvetica" size="7.0">([[ o.company_id and o.company_id.currency_id.symbol or '' ]])</font></para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">[[ formatLang(o.net) ]] [[ o.company_id and o.company_id.currency_id.symbol or '' ]]</para>
