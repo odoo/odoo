@@ -35,7 +35,6 @@ class account_change_currency(osv.osv_memory):
         if context is None:
             context = {}
         if context.get('active_id',False):
-            state = obj_inv.browse(cr, uid, context['active_id']).state
             if obj_inv.browse(cr, uid, context['active_id']).state != 'draft':
                 raise osv.except_osv(_('Error'), _('You can only change currency for Draft Invoice !'))
             pass
@@ -44,7 +43,6 @@ class account_change_currency(osv.osv_memory):
         obj_inv = self.pool.get('account.invoice')
         obj_inv_line = self.pool.get('account.invoice.line')
         obj_currency = self.pool.get('res.currency')
-        invoice_ids = []
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]

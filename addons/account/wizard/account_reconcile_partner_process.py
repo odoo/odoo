@@ -22,7 +22,6 @@
 import time
 
 from osv import osv, fields
-from tools.translate import _
 
 class account_partner_reconcile_process(osv.osv_memory):
     _name = 'account.partner.reconcile.process'

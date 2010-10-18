@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
 
 class account_period_close(osv.osv_memory):
     """

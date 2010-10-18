@@ -82,7 +82,6 @@ class account_move_line_reconcile(osv.osv_memory):
         if context is None:
             context = {}
 
-        data = self.read(cr, uid, ids, context=context)
         date = time.strftime('%Y-%m-%d')
         ids = period_obj.find(cr, uid, dt=date, context=context)
         if ids:

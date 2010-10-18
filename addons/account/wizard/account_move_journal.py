@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 from tools.translate import _
-import tools
 
 class account_move_journal(osv.osv_memory):
     _name = "account.move.journal"
