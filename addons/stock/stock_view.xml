@@ -603,7 +603,7 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="%(action_partial_picking)d" states="confirmed,assigned" string="Process" type="action" icon="gtk-go-forward"/>
+                    <button name="action_process" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -725,7 +725,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="%(action_partial_picking)d" states="assigned" string="Process" type="action" icon="gtk-go-forward"/>
+                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                                 <button states="done" name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
                             </group>
                         </page>
@@ -800,7 +800,7 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="%(action_partial_picking)d" states="assigned" string="Process" type="action" icon="gtk-go-forward"/>
+                    <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -920,10 +920,8 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="%(action_partial_picking)d" states="assigned" string="Process" type="action" icon="gtk-go-forward"/>
-                                <group colspan="1" states="done">
-                                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
-                                </group>
+                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                                <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" states="done" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -1022,7 +1020,7 @@
                     <field name="invoice_state" groups="base.group_extended"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="%(action_partial_picking)d" states="assigned" string="Process" type="action" icon="gtk-go-forward"/>
+                    <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
                 </tree>
             </field>
@@ -1141,7 +1139,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
-                                <button name="%(action_partial_picking)d" states="assigned" string="Process" type="action" icon="gtk-go-forward"/>
+                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                                 <group colspan="1" states="done">
                                     <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
                                 </group>
