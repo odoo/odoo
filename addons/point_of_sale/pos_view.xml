@@ -3,7 +3,7 @@
     <data>
         <menuitem name="Point of Sale" id="menu_point_root" sequence="21"
             icon="terp-partner"
-            groups="group_pos_manager,group_pos_user,base.group_system"/>
+            groups="group_pos_manager,group_pos_user"/>
 
         <record model="ir.ui.view" id="view_pos_pos_form">
             <field name="name">pos.order</field>
@@ -150,7 +150,7 @@
         </record>
 
         <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
-        <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user,base.group_system"/>
+        <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
         <menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale_product" sequence="2" name="Products"/>
@@ -697,7 +697,7 @@
                               <group colspan="2" col="2" name="Prices">
                                   <separator string="Prices" colspan="2"/>
                                   <field name="lst_price"/>
-                                <field name="standard_price"/>
+                                  <field name="standard_price"/>
                              </group>
                         </page>
                    </notebook>
@@ -706,7 +706,7 @@
         </record>
 
         <menuitem name="Configuration" parent="menu_point_root"
-            id="menu_point_config_product" sequence="25" groups="base.group_system,group_pos_manager"/>
+            id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
 
         <record model="ir.actions.act_window" id="action_product_input">
             <field name="name">Products</field>
@@ -732,7 +732,7 @@
                     parent="menu_point_config_product"
                     action="action_product_input"
                     id="products_for_input_operations"
-                    groups="base.group_system,group_pos_manager"/>
+                    groups="group_pos_manager"/>
 
         <record model="ir.actions.act_window" id="action_product_output">
             <field name="name">Products</field>
@@ -758,7 +758,7 @@
                     parent="menu_point_config_product"
                     action="action_product_output"
                     id="products_for_output_operations"
-                    groups="base.group_system,group_pos_manager"/>
+                    groups="group_pos_manager"/>
 
         <menuitem
             name="Input Operations" parent="menu_point_of_sale"
@@ -796,7 +796,7 @@
         </record>
 
         <!--  Miscelleanous Operations/Reporting -->
-        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="20" groups="group_pos_manager,base.group_system"/>
+        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="20" groups="group_pos_manager"/>
         <!-- Invoice -->
 
         <record model="ir.actions.act_window" id="action_pos_invoice">

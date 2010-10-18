@@ -5,7 +5,6 @@
         <menuitem id="base.menu_project_management_time_tracking" name="Time Tracking"
                   parent="base.menu_main_pm" sequence="3"/>
 
-
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
@@ -70,9 +69,8 @@
                         <filter name="today" icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
                         <separator orientation="vertical"/>
                         <field name="user_id"/>
-                        <field name="account_id" select="1" widget="selection"/>
-                        <field name="product_id" select="1"/>
-                        <field name="date" select="1"/>
+                        <field name="account_id"/>
+                        <field name="date"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -96,12 +94,11 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{"search_default_user_id":uid, "search_default_today":1}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
-            <field name="help">This functionality gives you a list of work done by user, product and analytic account (or project). A search tool allows you to make fine-grained analysis.</field>
+            <field name="help">Working Hours allows you to log your working hours by project every day.</field>
         </record>
 
     <menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
     <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
-    <menuitem id="menu_partner_invc" parent="base.menu_project_management_time_tracking" action="account.action_invoice_tree1"/>
 
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>

@@ -129,7 +129,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
-            <field name="help">Analytic Charts of Accounts allows you to access to reports by analytic accounts (or cost accounts) . From this menu you can access to analytic balance, a report that relates the analytic accounts to the general accounts. It is useful for analyzing the profitability of projects, giving you the profitability of a project for the different operations that you used to carry out the project.</field>
+            <field name="help">The normal chart of accounts has a structure defined by the legal requirement of the country. The analytic chart of account structure should reflect your own business needs in term of costs/revenues reporting. They are usually structured by contracts, projects, products or departements. Most of the OpenERP operations (invoices, timesheets, expenses, etc) generate analytic entries on the related account.</field>
         </record>
 
         <menuitem groups="analytic.group_analytic_accounting" id="next_id_40" name="Analytic" parent="account.menu_finance_generic_reporting" sequence="4"/>

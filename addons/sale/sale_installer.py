@@ -28,11 +28,8 @@ class sale_installer(osv.osv_memory):
     _columns = {
         'delivery': fields.boolean('Delivery Costs', 
             help="Allows you to compute delivery costs on your quotations."),
-        'sale_journal': fields.boolean('Sales and deliveries by journal',
-            help="Allows you to categorise your "
-                "sales and deliveries (picking lists) between different journals. "
-                "This module is very helpful for bigger companies that "
-                "work by departments."),
+        'sale_journal': fields.boolean('Invoicing journals',
+            help="Allows you to group and invoice your delivery orders according to different invoicing types: daily, weekly, etc."),
         'sale_layout': fields.boolean('Sales Order Layout Improvement',
             help="Provides some features to improve the layout of the Sales Order reports."),
         'sale_margin': fields.boolean('Margins in Sales Orders',

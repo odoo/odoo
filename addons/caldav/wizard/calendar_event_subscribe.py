@@ -44,6 +44,12 @@ class calendar_event_subscribe(osv.osv_memory):
         @return: dictionary of calendar evet subscribe  window with Import successful msg.
         """
         global cnt
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
+        context['uid'] = uid
+
         for data in self.read(cr, uid, ids):
             try:
                 f =  urllib.urlopen(data['url_path'])

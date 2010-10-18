@@ -13,9 +13,9 @@
             <field name="model">project.resource.allocation</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-              <gantt color="resource_id" date_start="date_start" date_stop="date_end" mode="year">
-               <level object="project.project" link="project_id" domain="[]">
-                    <field name="phase_id"/>
+              <gantt color="project_id" date_start="date_start" date_stop="date_end" mode="year">
+               <level object="res.users" link="user_id" domain="[]">
+                    <field name="name"/>
                 </level>
               </gantt>
             </field>
@@ -73,7 +73,7 @@
             <field name="model">project.resource.allocation</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Resource Allocations">
+                <search string="Resources Allocation">
                     <group colspan="4" col="20">
                         <field name="resource_id"/>
                         <field name="phase_id"/>
@@ -83,15 +83,14 @@
                     <group expand="0" string="Group By..." colspan="4" col="20">
                         <filter name="resource" string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
                     </group>
                 </search>
             </field>
         </record>
-
        <record id="act_resouce_allocation" model="ir.actions.act_window">
-            <field name="name">Resource Allocations</field>
+            <field name="name">Resources Allocation</field>
             <field name="res_model">project.resource.allocation</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar</field>
@@ -243,7 +242,7 @@
             <field name="type">gantt</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt color="project_id" date_stop="date_end" date_start="date_start" mode="year">
+                <gantt color="project_id" date_stop="date_end" date_start="date_start" mode="month">
                     <level object="project.project" link="project_id" domain="[]">
                         <field name="name"/>
                     </level>
@@ -264,7 +263,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="project_id">
-                            <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
+                            <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-folder-violet"/>
                         </field>
                         <field name="responsible_id"/>
                         <field name="date_start"/>
@@ -273,7 +272,7 @@
                     <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'responsible_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}" name="project"/>
+                        <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" name="project"/>
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
@@ -290,7 +289,7 @@
             <field name="view_mode">gantt,tree,form,calendar</field>
             <field name="context">{'search_default_responsible_id':uid,'search_default_project':1}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
-            <field name="help">You can subdivide your larger projects into several phases. For each phase, you can define your resources allocation (humans or engine), describe de differend task and link your phase with previous and next one, add constraints date and scheduling. A gantt view of your project phase is also available from this menu. Gantt view is a graphically draw of the project plan; it includes any task dependencies by visually adjusting task durations and priorities, and by linking tasks to each other.</field>
+            <field name="help">A project can be split into the different phases. For each phase, you can define your resources allocation, describe different tasks and link your phase to previous and next ones, add date constraints for the automated scheduling. Use the long term planning in order to planify your available human resources, convert your phases into a series of tasks when you start working on it.</field>
         </record>
 
         <record id="act_project_phase_list" model="ir.actions.act_window">
@@ -298,7 +297,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
- 			<field name="context">{'search_default_responsible_id':uid,'search_default_project':1}</field>
+             <field name="context">{'search_default_responsible_id':uid,'search_default_project':1}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
@@ -356,7 +355,7 @@
         context="{'search_default_phase_id': [active_id]}"/>
 
     <act_window
-    	context="{'search_default_project_id': [active_id]}"
+        context="{'search_default_project_id': [active_id]}"
         id="act_project_phases"
         name="Phases"
         res_model="project.phase"
@@ -368,19 +367,23 @@
     # Menu Items
     # ------------------------------------------------------
 
+        <menuitem action="act_project_phase_list"
+            groups="base.group_extended"
+            id="menu_project_phase_list" parent="project.menu_project_management" sequence="2"/>
+
         <menuitem action="act_project_phase"
             groups="base.group_extended"
             id="menu_project_phase"   parent="base.menu_project_long_term" sequence="1"/>
 
         <menuitem id="menu_resouce_allocation" action="act_resouce_allocation"
-            name="Resource Allocations" parent="base.menu_project_long_term" sequence="3"/>
+            name="Resource Allocations" parent="base.menu_project_long_term" sequence="2"/>
 
         <menuitem id="menu_pm_resources_project1"
             groups="base.group_extended"
             name="Resources" parent="project.menu_definitions" sequence="3"/>
 
-        <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_project_long_term" sequence="4" groups="project.group_project_user,project.group_project_manager,base.group_system"/>
-        <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="base.menu_project_long_term" sequence="2"/>
+        <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_main_pm" sequence="4" groups="project.group_project_user,project.group_project_manager"/>
+        <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_resources_project1" sequence="2"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar" parent="menu_pm_resources_project1" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves" parent="menu_pm_resources_project1" sequence="1"/>
 

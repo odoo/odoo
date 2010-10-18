@@ -635,6 +635,7 @@
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
             <field name="context">{'journal_type':'bank'}</field>
             <field name="search_view_id" ref="view_bank_statement_search"/>
+            <field name="help">A bank statement is a summary of all financial transactions occurring over a given period of time on a deposit account, a credit card, or any other type of account. Start by encoding the starting and closing balance, then record all lines of your statement. When you are in the Payment column of the a line, you can press F1 to open the reconciliation form.</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
             <field name="sequence" eval="1"/>
@@ -956,7 +957,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_tax_code_tree"/>
-            <field name="help">Chart of Taxes is a tree view reflecting the structure of the Tax Cases (or tax codes) and shows the current tax situation. The tax chart represents the amount of each area of the tax declaration for your country. It’s presented in a hierarchical structure, which can be modified to fit your needs.</field>
+            <field name="help">The chart of taxes is used to generate your periodic tax statement. You will see here the taxes with codes related to your legal statement according to your country.</field>
         </record>
 
         <!--
@@ -1188,6 +1189,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
+            <field name="help">This view is used by accountants in order to record entries massively in OpenERP. If you want to record a supplier invoice, start by recording the line of the expense account, OpenERP will propose to you automatically the Tax related to this account and the counter-part "Account Payable".</field>
         </record>
 
         <menuitem
@@ -1435,6 +1437,7 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
+            <field name="help">A journal entry consists of several journal items, each of which is either a debit or a credit. OpenERP creates automatically one journal entry per accounting document: invoices, refund, supplier payment, bank statements, etc.</field>
         </record>
 
         <menuitem
@@ -2410,26 +2413,24 @@
                           <attribute name='string'></attribute>
                   </xpath>
                 <group string="res_config_contents" position="replace">
-                  <field name="company_id" widget="selection"/>
-                  <field name ="code_digits" />
-                  <field name="chart_template_id" widget="selection"
-                  		on_change="onchange_chart_template_id(chart_template_id)"/>
-                  <field name ="seq_journal" />
+                    <field name="company_id" widget="selection"/>
+                    <field name ="code_digits" groups="base.group_extended"/>
+                    <field name="chart_template_id" widget="selection"/>
+                    <field name ="seq_journal" groups="base.group_extended"/>
                   <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False)]"/>
                   <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False)]"/>
-                  <field colspan="4" mode="tree" name="bank_accounts_id"
-                         nolabel="1" widget="one2many_list">
-                    <form string="Bank Information">
-                      <field name="acc_name"/>
-                      <field name="account_type"/>
-                      <field name="currency_id" widget="selection"/>
-                    </form>
-                    <tree editable="bottom" string="Bank Information">
-                      <field name="acc_name"/>
-                      <field name="account_type"/>
-                      <field name="currency_id" widget="selection"/>
-                    </tree>
-                  </field>
+                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
+                        <form string="Bank Information">
+                            <field name="acc_name"/>
+                            <field name="account_type"/>
+                            <field name="currency_id" widget="selection" groups="base.group_extended"/>
+                        </form>
+                        <tree editable="bottom" string="Bank Information">
+                            <field name="acc_name"/>
+                            <field name="account_type"/>
+                            <field name="currency_id" widget="selection" groups="base.group_extended"/>
+                        </tree>
+                    </field>
                 </group>
               </data>
             </field>
@@ -2678,6 +2679,7 @@
             <field name="search_view_id" ref="view_account_bank_statement_filter"/>
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
             <field name="context">{'journal_type':'cash'}</field>
+            <field name="help">Cash Register allows you to manage cash entries in your cash journals.</field>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
             <field name="sequence" eval="1"/>

@@ -33,7 +33,6 @@
     * Automatic Email Receive
     * Email based Records (Add, Update)
     """,
-    'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
