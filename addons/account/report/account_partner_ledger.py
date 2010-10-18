@@ -169,7 +169,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             "SELECT COALESCE(SUM(l.debit),0.0), COALESCE(SUM(l.credit),0.0), COALESCE(sum(debit-credit), 0.0) " \
             "FROM account_move_line AS l,  " \
             "account_move AS m "
-            "WHERE partner_id = %s " \
+            "WHERE l.partner_id = %s " \
             "AND m.id = l.move_id " \
             "AND m.state IN %s "
             "AND account_id IN %s" \
@@ -194,7 +194,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "SELECT sum(debit) " \
                     "FROM account_move_line AS l, " \
                     "account_move AS m "
-                    "WHERE partner_id = %s" \
+                    "WHERE l.partner_id = %s" \
                         "AND m.id = l.move_id " \
                         "AND m.state IN %s "
                         "AND account_id IN %s" \
@@ -211,7 +211,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                 "SELECT sum(debit) " \
                 "FROM account_move_line AS l, " \
                 "account_move AS m "
-                "WHERE partner_id = %s " \
+                "WHERE l.partner_id = %s " \
                     "AND m.id = l.move_id " \
                     "AND m.state IN %s "
                     "AND account_id IN %s" \
@@ -243,7 +243,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "SELECT sum(credit) " \
                     "FROM account_move_line AS l, " \
                     "account_move AS m  "
-                    "WHERE partner_id = %s" \
+                    "WHERE l.partner_id = %s" \
                         "AND m.id = l.move_id " \
                         "AND m.state IN %s "
                         "AND account_id IN %s" \
@@ -260,7 +260,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                 "SELECT sum(credit) " \
                 "FROM account_move_line AS l, " \
                 "account_move AS m "
-                "WHERE partner_id=%s " \
+                "WHERE l.partner_id=%s " \
                     "AND m.id = l.move_id " \
                     "AND m.state IN %s "
                     "AND account_id IN %s" \
