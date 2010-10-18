@@ -59,9 +59,8 @@ class account_installer(osv.osv_memory):
                  "country."),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
-        'period': fields.selection([('month','Monthly'), ('3months','3 Monthly')],
-                                  'Periods', required=True),
-        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Your Bank and Cash Accounts',required=True),
+        'period': fields.selection([('month','Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
+        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Your Bank and Cash Accounts'),
         'sale_tax': fields.float('Sale Tax(%)'),
         'purchase_tax': fields.float('Purchase Tax(%)'),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -89,11 +88,11 @@ class account_installer(osv.osv_memory):
         return 'configurable'
 
     _defaults = {
-        'date_start': time.strftime('%Y-01-01'),
-        'date_stop': time.strftime('%Y-12-31'),
-        'period': lambda *a: 'month',
-        'sale_tax': lambda *a: 0.0,
-        'purchase_tax': lambda *a: 0.0,
+        'date_start': lambda *a: time.strftime('%Y-01-01'),
+        'date_stop': lambda *a: time.strftime('%Y-12-31'),
+        'period': 'month',
+        'sale_tax': 0.0,
+        'purchase_tax': 0.0,
         'company_id': _default_company,
         'bank_accounts_id': _get_default_accounts,
         'charts': _get_default_charts
@@ -697,13 +696,13 @@ class account_bank_accounts_wizard(osv.osv_memory):
 
     _columns = {
         'acc_name': fields.char('Account Name.', size=64, required=True),
-        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
+        'bank_account_id': fields.many2one('account.installer', 'Bank Account', required=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Account Type', size=32),
     }
 #    _defaults = {
 #        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
-#        }
+#    }
 
 account_bank_accounts_wizard()
 
