@@ -192,7 +192,7 @@ class wkf_workitem(osv.osv):
     _log_access = False
     _rec_name = 'state'
     _columns = {
-        'act_id': fields.many2one('workflow.activity', 'Activity', required=True, ondelete="cascade", select=True),
+        'act_id': fields.many2one('workflow.activity', 'Activity', required=True, ondelete="restrict", select=True),
         'wkf_id': fields.related('act_id','wkf_id', type='many2one', relation='workflow', string='Workflow'),
         'subflow_id': fields.many2one('workflow.instance', 'Subflow', ondelete="cascade", select=True),
         'inst_id': fields.many2one('workflow.instance', 'Instance', required=True, ondelete="cascade", select=True),
