@@ -429,6 +429,7 @@
             <field name="remaining_hours">24.0</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="project_id" ref="project_project_22"/>
+            <field name="state">open</field>
             <field name="name">Validation + latest modifications.</field>
         </record>
         <record id="project_task_203" model="project.task">
@@ -463,5 +464,33 @@
             <field name="project_id" ref="project_project_22"/>
             <field name="name">Latest in house tests</field>
         </record>
+
+
+        <!-- Example task work -->
+        <record id="project_task_work_task201" model="project.task.work">
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">First day trainig</field>
+            <field name="task_id" ref="project_task_201"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="8.0" name="hours"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
+        </record>
+        <record id="project_task_work_task202" model="project.task.work">
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">First pass validation</field>
+            <field name="task_id" ref="project_task_202"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="1.0" name="hours"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
+        </record>
+        <record id="project_task_work_task202_2" model="project.task.work">
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">Create a script for migration and testing</field>
+            <field name="task_id" ref="project_task_202"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="5.0" name="hours"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
+        </record>
+
     </data>
 </openerp>
