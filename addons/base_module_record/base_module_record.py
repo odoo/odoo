@@ -88,48 +88,9 @@ def doc_createXElement(xdoc, tagName):
         return e
 
 import yaml
-            
-class record(yaml.YAMLObject):
-    yaml_tag = u'!record'
-    def __init__(self, model, id=None, attrs={}):
-        self.model = model
-        self.id = id
-        self.attrs=attrs
-    def __repr__(self):
-        return '!record {model: %s, id: %s}:' % (str(self.model,), str(self.id,))
+from tools import yaml_tag
+# Please do not override yaml_tag here: modify it in server bin/tools/yaml_tag.py
 
-class workflow(yaml.YAMLObject):
-    yaml_tag = u'!workflow'
-    def __init__(self, model, action, ref=None):
-        self.model = model
-        self.ref = ref
-        self.action=action
-    def __repr__(self):
-        return '!workflow {model: %s, action: %s, ref: %s}' % (str(self.model,), str(self.action,), str(self.ref,))
-        
-class ref(yaml.YAMLObject):
-    yaml_tag = u'!ref'
-    def __init__(self, expr="False"):
-        self.expr = expr
-    def __repr__(self):
-        return 'ref(%s)' % (str(self.expr,))
-
-class eval(yaml.YAMLObject):
-    yaml_tag = u'!eval'
-    def __init__(self, expr="False"):
-        self.expr = expr
-    def __repr__(self):
-        return 'eval(%s)' % (str(self.expr,))
-
-class function(yaml.YAMLObject):
-    yaml_tag = u'!python'
-    def __init__(self, model, action=None,attrs={}):
-        self.model = model
-        self.action = action
-        self.attrs=attrs
-    def __repr__(self):
-        return '!python {model: %s}: |' % (str(self.model), )
-    
 class base_module_record(osv.osv):
     _name = "ir.module.record"
     _columns = {
