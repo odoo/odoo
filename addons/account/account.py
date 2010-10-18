@@ -2874,10 +2874,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     obj_ac_fp.create(cr, uid, vals_acc)
         
         ir_values = self.pool.get('ir.values')
-        ir_values.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id
-                      , models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
-        ir_values.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id
-                      , models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.purchase_tax.id]])
+        if obj_multi.sale_tax:
+            ir_values.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id
+                          , models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
+        if obj_multi.purchase_tax:
+            ir_values.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id
+                          , models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.purchase_tax.id]])
 
 wizard_multi_charts_accounts()
 
