@@ -12,12 +12,12 @@
 
 
     <!-- Record Rule For Company -->
-    
+
     <record id="res_company_rule" model="ir.rule">
         <field name="name">company rule</field>
         <field model="ir.model" name="model_id" ref="model_res_company"/>
         <field eval="True" name="global"/>
-        <!-- <field name="domain_force">['|', ('child_ids', 'child_of', [user.company_id.id]), ('parent_id', 'child_of', [user.company_id.id])]</field> -->
+        <!-- TODO: review this <field name="domain_force">['|', ('child_ids', 'child_of', [user.company_id.id]), ('parent_id', 'child_of', [user.company_id.id])]</field> -->
         <field name="domain_force">[]</field>
     </record>
 
