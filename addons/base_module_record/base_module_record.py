@@ -22,12 +22,10 @@
 from xml.dom import minidom
 from osv.osv import osv_pool
 from osv import fields,osv
-import netsvc
 import pooler
 import string
 import tools
 
-#objects_proxy = netsvc.ExportService.getService('object').__class__
 class recording_objects_proxy(osv_pool):
     def execute(self, *args, **argv):
         if args[3] == 'create':
@@ -88,8 +86,6 @@ def doc_createXElement(xdoc, tagName):
         return e
 
 import yaml
-from tools import yaml_tag
-# Please do not override yaml_tag here: modify it in server bin/tools/yaml_tag.py
 
 class base_module_record(osv.osv):
     _name = "ir.module.record"
@@ -180,9 +176,9 @@ class base_module_record(osv.osv):
                 for valitem in (val or []):
                     if valitem[0] in (0,1):
                         if key in model_pool._columns:
-                            fname = model_pool._columns[key]._fields_id
+                            model_pool._columns[key]._fields_id
                         else:
-                            fname = model_pool._inherit_fields[key][2]._fields_id
+                            model_pool._inherit_fields[key][2]._fields_id
                         if valitem[0] == 0:
                             newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
                             valitem[1]=newid
