@@ -842,7 +842,6 @@ class stock_picking(osv.osv):
         """ Gets payment term from partner.
         @return: Payment term
         """
-        partner_obj = self.pool.get('res.partner')
         partner = picking.address_id.partner_id
         return partner.property_payment_term and partner.property_payment_term.id or False
 
@@ -1308,7 +1307,7 @@ class stock_production_lot(osv.osv):
         if locations:
             cr.execute('''select
                     prodlot_id,
-                    sum(name)
+                    sum(qty)
                 from
                     stock_report_prodlots
                 where
@@ -1324,12 +1323,12 @@ class stock_production_lot(osv.osv):
         locations = self.pool.get('stock.location').search(cr, uid, [('usage', '=', 'internal')])
         cr.execute('''select
                 prodlot_id,
-                sum(name)
+                sum(qty)
             from
                 stock_report_prodlots
             where
                 location_id IN %s group by prodlot_id
-            having  sum(name) '''+ str(args[0][1]) + str(args[0][2]),(tuple(locations),))
+            having  sum(qty) '''+ str(args[0][1]) + str(args[0][2]),(tuple(locations),))
         res = cr.fetchall()
         ids = [('id', 'in', map(lambda x: x[0], res))]
         return ids
@@ -1809,7 +1808,6 @@ class stock_move(osv.osv):
 
     def setlast_tracking(self, cr, uid, ids, context=None):
         tracking_obj = self.pool.get('stock.tracking')
-        tracking = context.get('tracking', False)
         picking = self.browse(cr, uid, ids)[0].picking_id
         if picking:
             last_track = [line.tracking_id.id for line in picking.move_lines if line.tracking_id]
@@ -2093,7 +2091,7 @@ class stock_move(osv.osv):
                 'scrapped' : True,
                 'location_dest_id': location_id,
                 'tracking_id':False,
-                'prodlot_id':False
+                'prodlot_id': move.prodlot_id.id,
             }
             new_move = self.copy(cr, uid, move.id, default_val)
 
@@ -2395,7 +2393,6 @@ class stock_inventory(osv.osv):
         location_obj = self.pool.get('stock.location')
         for inv in self.browse(cr, uid, ids):
             move_ids = []
-            move_line = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
                 product_context.update(uom=line.product_uom.id)

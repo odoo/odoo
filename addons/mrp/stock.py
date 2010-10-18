@@ -19,13 +19,9 @@
 #
 ##############################################################################
 
-from mx import DateTime
 from osv import fields
 from osv import osv
-from tools.translate import _
-import ir
 import netsvc
-import time
 
 
 class StockMove(osv.osv):
@@ -132,6 +128,7 @@ class StockMove(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for move in self.browse(cr, uid, ids):
             new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, context=context)
+            self.write(cr, uid, [move.id], {'prodlot_id': False})
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
                 wf_service.trg_validate(uid, 'mrp.production', prod_id, 'button_produce', cr)

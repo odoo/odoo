@@ -19,11 +19,7 @@
 #
 ##############################################################################
 
-import time
-import ir
-from osv.osv import except_osv
 from osv import fields, osv
-import netsvc
 from tools.translate import _
 
 class change_production_qty(osv.osv_memory):
@@ -63,7 +59,6 @@ class change_production_qty(osv.osv_memory):
         record_id = context and context.get('active_id',False)
         assert record_id, _('Active Id is not found')
         prod_obj = self.pool.get('mrp.production')
-        product_lines_obj = self.pool.get('mrp.production.product.line')
         bom_obj = self.pool.get('mrp.bom')
         for wiz_qty in self.browse(cr, uid, ids):
             prod = prod_obj.browse(cr, uid,record_id)
