@@ -351,7 +351,7 @@ class account_invoice(osv.osv):
         if view_type == 'tree':
             doc = etree.XML(res['arch'])
             nodes = doc.xpath("//field[@name='partner_id']")
-            partner_string = 'Customer'
+            partner_string = _('Customer')
             if context.get('type', 'out_invoice') in ('in_invoice', 'in_refund'):
                 partner_string = _('Supplier')
             for node in nodes:
@@ -363,7 +363,7 @@ class account_invoice(osv.osv):
         try:
             res = super(account_invoice, self).create(cr, uid, vals, context)
             for inv_id, name in self.name_get(cr, uid, [res], context=context):
-                message = _('Invoice ') + " '" + name + "' "+ _("is waiting for validation.")
+                message = _("Invoice '%s' is waiting for validation.") % name
                 self.log(cr, uid, inv_id, message)
             return res
         except Exception, e:
@@ -376,7 +376,7 @@ class account_invoice(osv.osv):
     def confirm_paid(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
         for inv_id, name in self.name_get(cr, uid, ids, context=context):
-            message = _('Invoice ') + " '" + name + "' "+ _("is marked as paid.")
+            message = _("Invoice '%s' is paid.") % name
             self.log(cr, uid, inv_id, message)
         return True
 
@@ -677,7 +677,7 @@ class account_invoice(osv.osv):
         return (ref or '').replace('/','')
 
     def _get_analytic_lines(self, cr, uid, id):
-        inv = self.browse(cr, uid, [id])[0]
+        inv = self.browse(cr, uid, id)
         cur_obj = self.pool.get('res.currency')
 
         company_currency = inv.company_id.currency_id.id
@@ -693,6 +693,8 @@ class account_invoice(osv.osv):
                     ref = inv.reference
                 else:
                     ref = self._convert_ref(cr, uid, inv.number)
+                if not inv.journal_id.analytic_journal_id:
+                    raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (inv.journal_id.name,))
                 il['analytic_lines'] = [(0,0, {
                     'name': il['name'],
                     'date': inv['date_invoice'],
@@ -702,7 +704,7 @@ class account_invoice(osv.osv):
                     'product_id': il['product_id'],
                     'product_uom_id': il['uos_id'],
                     'general_account_id': il['account_id'],
-                    'journal_id': self._get_journal_analytic(cr, uid, inv.type),
+                    'journal_id': inv.journal_id.analytic_journal_id.id,
                     'ref': ref,
                 })]
         return iml
@@ -1221,12 +1223,13 @@ class account_invoice(osv.osv):
 
         inv_id, name = self.name_get(cr, uid, [invoice.id], context=context)[0]
         if (not round(total,self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))) or writeoff_acc_id:
-            self.log(cr, uid, inv_id, _('Invoice ') + " '" + name + "' "+ _("is totally paid."))
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
             code = invoice.currency_id.code
-            amt = str(pay_amount) + code + ' on ' + str(invoice.amount_total) + code + ' (' + str(total) + code + ' remaining)'
-            self.log(cr, uid, inv_id, _('Invoice ') + " '" + name + "' "+ _("is paid partially: ") + amt)
+            # TODO: use currency's formatting function
+            msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)") % \
+                    (name, pay_amount, code, invoice.amount_total, code, total, code)
+            self.log(cr, uid, inv_id,  msg)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
         # Update the stored value (fields.function), so we write to trigger recompute
@@ -1291,14 +1294,6 @@ class account_invoice_line(osv.osv):
         'discount': 0.0,
         'price_unit': _price_unit_default,
     }
-
-    def product_id_change_unit_price_inv(self, cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=None):
-        tax_obj = self.pool.get('account.tax')
-        if price_unit:
-            taxes = tax_obj.browse(cr, uid, tax_id)
-            for tax in tax_obj.compute_inv(cr, uid, taxes, price_unit, qty, address_invoice_id, product, partner_id):
-                price_unit = price_unit - tax['amount']
-        return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
         if context is None:
@@ -1399,8 +1394,7 @@ class account_invoice_line(osv.osv):
             taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
             tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
         if type in ('in_invoice', 'in_refund'):
-            to_update = self.product_id_change_unit_price_inv(cr, uid, tax_id, price_unit or res.standard_price, qty, address_invoice_id, product, partner_id, context=context)
-            result.update(to_update)
+            result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
 

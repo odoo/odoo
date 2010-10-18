@@ -604,8 +604,7 @@ class account_installer(osv.osv_memory):
                     new_paid_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_paid_tax_code)
 
                     sales_tax = obj_tax.create(cr, uid,
-                                           {'name':'TAX%s%%'%(s_tax*100),
-                                            'description':'TAX%s%%'%(s_tax*100),
+                                           {'name':'TAX %s%%'%(s_tax*100),
                                             'amount':s_tax,
                                             'base_code_id':new_tax_code,
                                             'tax_code_id':new_paid_tax_code,

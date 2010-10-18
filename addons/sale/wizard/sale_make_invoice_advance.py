@@ -25,8 +25,9 @@ class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
     _description = "Sale Advance Payment Invoice"
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product', required=True),
-        'amount': fields.float('Unit Price', size=(16, 2), required=True),
+        'product_id': fields.many2one('product.product', 'Advance Product', required=True,
+            help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
+        'amount': fields.float('Advance Amount', size=(16, 2), required=True, help="The amount to be invoiced in advance."),
         'qtty': fields.float('Quantity', size=(16, 2), required=True),
     }
     _defaults = {
@@ -92,6 +93,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 }
 
                 inv_id = inv_obj.create(cr, uid, inv)
+                inv_obj.button_reset_taxes(cr, uid, [inv_id], context=context)
 
                 for inv in sale.invoice_ids:
                     ids_inv.append(inv.id)
@@ -155,7 +157,7 @@ class sale_open_invoice(osv.osv_memory):
             tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
             tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
         return {
-            'name': 'Customer Invoices',
+            'name': _('Advance Invoice'),
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'account.invoice',

@@ -26,8 +26,6 @@ import os
 import time
 from string import joinfields, split, lower
 
-from service import security
-
 import netsvc
 import urlparse
 
@@ -37,9 +35,13 @@ from DAV.iface import *
 import urllib
 
 from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
-from document.nodes import node_res_dir, node_res_obj
 from cache import memoize
 from tools import misc
+try:
+    from tools.dict_tools import dict_merge2
+except ImportError:
+    from document.dict_tools import dict_merge2
+
 CACHE_SIZE=20000
 
 #hack for urlparse: add webdav in the net protocols
@@ -96,8 +98,7 @@ class openerp_dav_handler(dav_interface):
             return props
         node = self.uri2object(cr, uid, pool, uri2)
         if node:
-            props = props.copy()
-            props.update(node.get_dav_props(cr))
+            props = dict_merge2(props, node.get_dav_props(cr))
         cr.close()
         return props
 
@@ -134,11 +135,11 @@ class openerp_dav_handler(dav_interface):
             self.parent.log_message("Exc: %s",traceback.format_exc())
             raise default_exc("Operation failed")
 
-    def _get_dav_lockdiscovery(self, uri):
-        raise DAV_NotFound
+    #def _get_dav_lockdiscovery(self, uri):
+    #    raise DAV_NotFound
 
-    def _get_dav_supportedlock(self, uri):
-        raise DAV_NotFound
+    #def A_get_dav_supportedlock(self, uri):
+    #    raise DAV_NotFound
 
     def match_prop(self, uri, match, ns, propname):
         if self.M_NS.has_key(ns):
@@ -186,6 +187,16 @@ class openerp_dav_handler(dav_interface):
             cr.close()
             return ret
 
+    def reduce_useragent(self):
+        ua = self.parent.headers.get('User-Agent', False)
+        ctx = {}
+        if ua:
+            if 'iPhone' in ua:
+                ctx['DAV-client'] = 'iPhone'
+            elif 'Konqueror' in ua:
+                ctx['DAV-client'] = 'GroupDAV'
+        return ctx
+
     def get_prop(self, uri, ns, propname):
         """ return the value of a given property
 
@@ -194,17 +205,23 @@ class openerp_dav_handler(dav_interface):
             pname        -- name of the property
          """
         if self.M_NS.has_key(ns):
-            return dav_interface.get_prop(self, uri, ns, propname)
+            try:
+                # if it's not in the interface class, a "DAV:" property
+                # may be at the node class. So shouldn't give up early.
+                return dav_interface.get_prop(self, uri, ns, propname)
+            except DAV_NotFound:
+                pass
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
             raise DAV_NotFound
-        node = self.uri2object(cr, uid, pool, uri2)
-        if not node:
+        try:
+            node = self.uri2object(cr, uid, pool, uri2)
+            if not node:
+                raise DAV_NotFound
+            res = node.get_dav_eprop(cr, ns, propname)
+        finally:
             cr.close()
-            raise DAV_NotFound
-        res = node.get_dav_eprop(cr, ns, propname)
-        cr.close()
         return res
 
     def get_db(self, uri, rest_ret=False, allow_last=False):
@@ -283,26 +300,55 @@ class openerp_dav_handler(dav_interface):
         result = []
         node = self.uri2object(cr, uid, pool, uri2[:])
 
-        if not node:
-            if cr: cr.close()
-            raise DAV_NotFound2(uri2)
-        else:
-            fp = node.full_path()
-            if fp and len(fp):
-                self.parent.log_message('childs: @%s' % fp)
-                fp = '/'.join(fp)
+        try:
+            if not node:
+                raise DAV_NotFound2(uri2)
             else:
-                fp = None
-            domain = None
-            if filters:
-                domain = node.get_domain(cr, filters)
-            for d in node.children(cr, domain):
-                self.parent.log_message('child: %s' % d.path)
-                if fp:
-                    result.append( self.urijoin(dbname,fp,d.path) )
+                fp = node.full_path()
+                if fp and len(fp):
+                    fp = '/'.join(fp)
+                    self.parent.log_message('childs for: %s' % fp)
                 else:
-                    result.append( self.urijoin(dbname,d.path) )
-        if cr: cr.close()
+                    fp = None
+                domain = None
+                if filters:
+                    domain = node.get_domain(cr, filters)
+                    
+                    if hasattr(filters, 'getElementsByTagNameNS'):
+                        hrefs = filters.getElementsByTagNameNS('DAV:', 'href')
+                        if hrefs:
+                            ul = self.parent.davpath + self.uri2local(uri)
+                            for hr in hrefs:
+                                turi = ''
+                                for tx in hr.childNodes:
+                                    if tx.nodeType == hr.TEXT_NODE:
+                                        turi += tx.data
+                                if not turi.startswith('/'):
+                                    # it may be an absolute URL, decode to the
+                                    # relative part, because ul is relative, anyway
+                                    uparts=urlparse.urlparse(turi)
+                                    turi=uparts[2]
+                                if turi.startswith(ul):
+                                    result.append( turi[len(self.parent.davpath):])
+                                else:
+                                    self.parent.log_error("ignore href %s because it is not under request path %s", turi, ul)
+                            return result
+                            # We don't want to continue with the children found below
+                            # Note the exceptions and that 'finally' will close the
+                            # cursor
+                for d in node.children(cr, domain):
+                    self.parent.log_message('child: %s' % d.path)
+                    if fp:
+                        result.append( self.urijoin(dbname,fp,d.path) )
+                    else:
+                        result.append( self.urijoin(dbname,d.path) )
+        except DAV_Error:
+            raise
+        except Exception, e:
+            self.parent.log_error("cannot get_childs: "+ str(e))
+            raise
+        finally:
+            if cr: cr.close()
         return result
 
     def uri2local(self, uri):
@@ -338,7 +384,8 @@ class openerp_dav_handler(dav_interface):
     def uri2object(self, cr, uid, pool, uri):
         if not uid:
             return None
-        return pool.get('document.directory').get_object(cr, uid, uri)
+        context = self.reduce_useragent()
+        return pool.get('document.directory').get_object(cr, uid, uri, context=context)
 
     def get_data(self,uri, rrange=None):
         self.parent.log_message('GET: %s' % uri)

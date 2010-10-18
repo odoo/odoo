@@ -240,8 +240,7 @@ class hr_holidays(osv.osv):
                 if record.case_id:
                     self.pool.get('crm.meeting').unlink(cr, uid, [record.case_id.id])
                 if record.linked_request_ids:
-                    list_ids = []
-                    [list_ids.append(i) for id in record.linked_request_ids]
+                    list_ids = [ lr.id for lr in record.linked_request_ids]
                     self.holidays_cancel(cr, uid, list_ids)
                     self.unlink(cr, uid, list_ids)
 

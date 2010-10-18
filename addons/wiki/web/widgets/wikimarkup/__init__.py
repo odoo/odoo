@@ -455,7 +455,6 @@ class BaseParser(object):
 		if hasattr(self, 'count'):
 			data = self.env[namespace]
 			test = key in data
-			ls
 			self.count = True
 		return key in self.env[namespace]
 
@@ -1114,7 +1113,7 @@ class BaseParser(object):
 					trail = url[i:] + trail
 					url = url[0:i]
 
-				url = cleanURL(url)
+				url = self.cleanURL(url)
 
 				sb.append(u'<a href="')
 				sb.append(url)
@@ -1978,7 +1977,9 @@ class Parser(BaseParser):
 			if toclevel < wgMaxTocLevel:
 				toc.append(u"</li>\n")
 				toc.append(u"</ul>\n</li>\n" * max(0, toclevel - 1))
-			toc.insert(0, u'<div id="toc"><h2>' + _('Table of Contents') + '</h2>')
+			#TODO: use gettext
+			#toc.insert(0, u'<div id="toc"><h2>' + _('Table of Contents') + '</h2>')
+			toc.insert(0, u'<div id="toc"><h2>Table of Contents</h2>')
 			toc.append(u'</ul>\n</div>')
 
 		# split up and insert constructed headlines

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-            
         <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0"
-            groups="base.group_sale_salesman,base.group_sale_manager,base.group_system"/>
+            groups="base.group_sale_salesman,base.group_sale_manager"/>
+
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
@@ -46,11 +46,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
+            <field name="help">If you have more than one shops reselling your company products, you can create and manage them from here. Whenever you will record a new quotation or sale order, it has to be linked to a shop. The shop also defines the warehouse from which the products will be delivered for each particular sale.</field>
         </record>
 
+        <menuitem id="menu_config_sale"
+            parent="base.menu_base_config"
+            name="Sales" groups="base.group_extended"/>
         <menuitem action="action_shop_form" id="menu_action_shop_form"
-            parent="product.prod_config_main" sequence="0"
-            groups="base.group_extended,base.group_sale_manager"/>
+            parent="menu_config_sale" sequence="0" />
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -197,7 +200,8 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
-                                <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute" attrs="{'invisible':[('state','!=','draft')]}"/>
+                                <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice"
+                                    type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
                             </group>
                             <group col="13" colspan="4">
                                 <field name="state"/>
@@ -206,7 +210,7 @@
                                 <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-ok"/>
                                 <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-apply"/>
                                 <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
-                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="terp-gtk-go-back-rtl" type="object"/>
+                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="gtk-go-forward" type="object"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                 <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
@@ -288,12 +292,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="help">The sales order manages the invoicing, the product fullfilment and the
-delivery processes. OpenERP can handle products, services and
-consumables so that a sales order can trigger tasks, manufacturing
-orders, purchases, etc. It support several invoicing methods according
-to your configuration: from the sales order, from the pickings, etc.
-            </field>
+            <field name="help">Sales Orders helps you manage quotations and orders done with your customers. OpenERP suggests that you to start by creating a quotation. Once the order is confirmed, the quotation is converted into a Sale Order. OpenERP can handle several types of products so that a sales order can trigger tasks, delivery orders, manufacturing orders, purchases and so on. Based on the configuration of the sale order, a draft invoice will be generated so that you just have to confirm it when you want to bill your customer.</field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
@@ -378,14 +377,15 @@ to your configuration: from the sales order, from the pickings, etc.
                 <form string="Sales Order Lines">
                     <group colspan="4" col="6">
                         <field name="order_id"/>
-                        <field name="product_id" readonly="1"/>
+                        <field name="order_partner_id" readonly="1" invisible="1"/>
                         <field name="invoiced"/>
+
+                        <field name="product_id" readonly="1"/>
                         <field name="product_uom_qty" readonly="1"/>
-                        <field groups="product.group_uos" name="product_uos_qty"/>
                         <field name="product_uom"/>
+
                         <field colspan="4" name="name" groups="base.group_extended"/>
                         <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                        <field name="order_partner_id" readonly="1" invisible="1"/>
                     </group>
                     <separator colspan="4" string="Price"/>
                     <group colspan="4" col="6">
@@ -398,20 +398,21 @@ to your configuration: from the sales order, from the pickings, etc.
                     <separator colspan="4"/>
                     <field name="state"/>
                     <group col="3" colspan="2">
-                       <!-- <button colspan="1"
-                          name="%(action_view_sale_order_line_make_invoice)d"
-                          string="Make Invoice"
-                          type="action"
-                          icon="terp-document-new"
-                          attrs="{'invisible': ['|',('state', 'in', ('draft','cancel')),('invoiced', '=', 1)]}"/>-->
                         <button name="button_cancel"
                             string="Cancel" type="object"
                             icon="gtk-cancel"
-                            attrs="{'invisible': ['|',('state', 'not in', ('confirmed', 'exception')),('invoiced', '=', 1)]}"/>
+                            states="confirmed,exception"/>
+                        <button colspan="1"
+                            name="%(action_view_sale_order_line_make_invoice)d"
+                            string="Create Invoice"
+                            type="action"
+                            states="done"
+                            icon="gtk-go-forward"
+                            attrs="{'invisible': [('invoiced', '=', 1)]}"/>
                         <button name="button_done"
                             string="Done" type="object"
-                            icon="gtk-jump-to"
-                            attrs="{'invisible': ['|',('state', 'not in', ('confirmed','exception')),('invoiced', '=', 0)]}"/>
+                            states="confirmed,exception"
+                            icon="gtk-go-forward" />
                     </group>
                 </form>
             </field>
@@ -448,10 +449,15 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Uninvoiced Lines">
-                    <filter icon="terp-check" string="Confirmed"
+                    <filter icon="terp-check" string="To Do"
                         domain="[('state','=','confirmed')]"
                         name="sale order"
-                        help="Confirmed Sale Order Lines"
+                        help="Confirmed sale order lines, not yet delivered"
+                        />
+                    <filter icon="terp-check" string="Done"
+                        domain="[('state','=','done')]"
+                        name="sale_order_done"
+                        help="Sale order lines done"
                         />
                     <separator orientation="vertical"/>
                     <filter icon="terp-accessories-archiver" string="Shipped"
@@ -490,7 +496,7 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
             <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
-            <field name="help">Lines to invoice opens a search view with sales order and their status.</field>
+            <field name="help">Here is a list of each sales order line to be invoiced. This view allows you to invoice sales orders partially, by lines of sales order. You don't need this list if you invoice based on the delivery orders or if you invoice sales totally.</field>
         </record>
 
         <record id="action_order_line_tree3" model="ir.actions.act_window">
@@ -518,7 +524,7 @@ to your configuration: from the sales order, from the pickings, etc.
         src_model="product.product"
         groups="base.group_extended"/>
 
-        <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="5"
+        <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"
             groups="base.group_extended"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2" groups="base.group_sale_salesman,base.group_sale_manager"/>
         <!-- configartion view -->
@@ -534,8 +540,7 @@ to your configuration: from the sales order, from the pickings, etc.
                   <attribute name="string">Sales Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
-                <attribute name="string"
-                       >Configure Sales Order Logistic</attribute>
+                <attribute name="string">Configure Sales Order Logistic</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">Setup your sales workflow and default values.</attribute>

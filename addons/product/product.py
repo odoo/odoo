@@ -283,12 +283,8 @@ class product_template(osv.osv):
         return res and res[1] or False
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
-        if uom_id and uom_po_id:
-            uom_obj=self.pool.get('product.uom')
-            uom=uom_obj.browse(cursor,user,[uom_id])[0]
-            uom_po=uom_obj.browse(cursor,user,[uom_po_id])[0]
-            if uom.category_id.id != uom_po.category_id.id:
-                return {'value': {'uom_po_id': uom_id}}
+        if uom_id:
+            return {'value': {'uom_po_id': uom_id}}
         return False
 
     _defaults = {

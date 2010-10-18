@@ -1,8 +1,8 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_sale_shop","sale.shop","model_sale_shop","base.group_sale_salesman",1,0,0,0
+"access_sale_shop","sale.shop","model_sale_shop","base.group_user",1,0,0,0
 "access_sale_order","sale.order","model_sale_order","base.group_sale_salesman",1,1,1,0
 "access_sale_order_line","sale.order.line","model_sale_order_line","base.group_sale_salesman",1,1,1,1
-"access_sale_shop_admin","sale.shop","model_sale_shop","base.group_system",1,1,1,1
+"access_account_invoice_tax_salesman","account_invoice_tax salesman","account.model_account_invoice_tax","base.group_sale_salesman",1,1,1,0
 "access_account_invoice_salesman","account_invoice salesman","account.model_account_invoice","base.group_sale_salesman",1,1,1,0
 "access_account_invoice_manager","account_invoice manager","account.model_account_invoice","base.group_sale_manager",1,1,1,1
 "access_account_invoice_line_salesman","account_invoice.line salesman","account.model_account_invoice_line","base.group_sale_salesman",1,1,1,0
@@ -23,7 +23,6 @@
 "access_sale_account_journal","account.journal sale order.user","account.model_account_journal","base.group_sale_salesman",1,0,0,0
 "access_res_partner_sale_user","res.partner.sale.user","base.model_res_partner","base.group_sale_salesman",1,0,0,0
 "access_res_partner_sale_manager","res.partner.sale.user","base.model_res_partner","base.group_sale_manager",1,0,0,0
-"access_res_partner_sale_system","res.partner.sale.system","base.model_res_partner","base.group_system",1,0,0,0
 "access_report_stock_move_sales","report.stock.move.sale","stock.model_report_stock_move","base.group_sale_manager",1,1,1,1
 "access_stock_picking_sales","stock.picking.sales","stock.model_stock_picking","base.group_sale_manager",1,1,1,1
 "access_product_template_sale_user","product.template sale use","product.model_product_template","base.group_sale_salesman",1,0,0,0
@@ -36,18 +35,8 @@
 "access_res_partner_address_user","res.partner.address.user","base.model_res_partner_address","base.group_sale_salesman",1,0,0,0
 "access_account_tax_user","account.tax.user","account.model_account_tax","base.group_sale_salesman",1,1,1,0
 "access_product_packaging_user","product.packaging.user","product.model_product_packaging","base.group_sale_salesman",1,1,1,0
-"access_res_country_system","res.country system","base.model_res_country","base.group_system",1,1,1,1
-"access_res_country_state_system","res.country.state system","base.model_res_country_state","base.group_system",1,1,1,1
-"access_res_partner_title_system","res.partner.title system","base.model_res_partner_title","base.group_system",1,1,1,1
-"access_sale_order_system","sale.order.system","model_sale_order","base.group_system",1,0,0,0
-"access_sale_order_line_system","sale.order.line.system","model_sale_order_line","base.group_system",1,0,0,0
-"access_product_product_system","product.product.system","product.model_product_product","base.group_system",1,0,0,0
-"access_stock_picking_system","stock.picking.system","stock.model_stock_picking","base.group_system",1,0,0,0
-"access_sale_report_system","sale.report.system","model_sale_report","base.group_system",1,0,0,0
-"access_ir_attachment_system","ir.attachment.system","base.model_ir_attachment","base.group_system",1,0,0,0
 "access_ir_attachment_sales","ir.attachment.sales","base.model_ir_attachment","base.group_sale_salesman",1,1,1,0
 "access_ir_attachment_manager","ir.attachment.manager","base.model_ir_attachment","base.group_sale_manager",1,1,1,1
-"access_res_partner_bank_type_system","res.partner.bank.type.system","base.model_res_partner_bank_type","base.group_system",1,0,0,0
 "access_stock_warehouse_manager","stock.warehouse.manager","stock.model_stock_warehouse","base.group_sale_manager",1,0,0,0
 "access_product_uom_manager","product.uom.manager","product.model_product_uom","base.group_sale_manager",1,0,0,0
 "access_product_supplierinfo_manager","product.supplierinfo.manager","product.model_product_supplierinfo","base.group_sale_manager",1,0,0,0
@@ -60,6 +49,5 @@
 "access_res_partner_bank_type_field_user","res.partner.bank.type.field.user","base.model_res_partner_bank_type_field","base.group_sale_salesman",1,0,0,0
 "access_product_uom_user","product.uom.user","product.model_product_uom","base.group_sale_salesman",1,0,0,0
 "access_product_supplierinfo_user","product.supplierinfo.user","product.model_product_supplierinfo","base.group_sale_salesman",1,0,0,0
-"access_res_partner_bank_type_field_system","res.partner.bank.type.field.system","base.model_res_partner_bank_type_field","base.group_system",1,0,0,0
 "access_product_pricelist_sale_user","product.pricelist.sale.user","product.model_product_pricelist","base.group_sale_salesman",1,0,0,0
 "access_account_account_salesman","account_account salesman","account.model_account_account","base.group_sale_salesman",1,0,0,0

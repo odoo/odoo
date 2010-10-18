@@ -330,8 +330,8 @@ class sale_order(osv.osv):
             # Deleting the existing instance of workflow for SO
             wf_service.trg_delete(uid, 'sale.order', inv_id, cr)
             wf_service.trg_create(uid, 'sale.order', inv_id, cr)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Sale order ') + " '" + name + "' "+ _("is in draft state")
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _("The sale order '%s' has been set in draft state.") %(name,)
             self.log(cr, uid, id, message)
         return True
 
@@ -485,10 +485,11 @@ class sale_order(osv.osv):
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'nodestroy':True,
-            'target': 'new',
+            'nodestroy' :True,
+            'target': 'current',
             'res_id': inv_ids and inv_ids[0] or False,
-                  }
+        }
+
         return result
 
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
@@ -617,7 +618,7 @@ class sale_order(osv.osv):
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
-            message = _('Sale order') + " '" + sale.name + _(" is cancelled")
+            message = _("The sale order '%s' has been cancelled.") % (sale.name,)
             self.log(cr, uid, sale.id, message)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
@@ -629,7 +630,7 @@ class sale_order(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            message = _('Quotation') + " '" + o.name + "' "+ _("is converted to Sale order")
+            message = _("The quotation '%s' has been converted to a sale order.") % (o.name,)
             self.log(cr, uid, o.id, message)
         return True
 
@@ -987,8 +988,6 @@ class sale_order_line(osv.osv):
                     raise osv.except_osv(
                             _('Could not cancel sale order line!'),
                             _('You must first cancel stock moves attached to this sale order line.'))
-        message = _('Sale order line') + " '" + line.name + "' "+_("is cancelled")
-        self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def button_confirm(self, cr, uid, ids, context=None):

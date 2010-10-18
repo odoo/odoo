@@ -37,6 +37,7 @@ from osv.orm import browse_record, browse_null
 # Model definition
 #
 class purchase_order(osv.osv):
+    
     def _calc_amount(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = {}
         for order in self.browse(cr, uid, ids):
@@ -44,7 +45,7 @@ class purchase_order(osv.osv):
             for oline in order.order_line:
                 res[order.id] += oline.price_unit * oline.product_qty
         return res
-
+         
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
@@ -269,9 +270,6 @@ class purchase_order(osv.osv):
 
     def wkf_approve_order(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
-        for (id,name) in self.name_get(cr, uid, ids):
-                message = _('Purchase order ') + " '" + name + "' "+_("is approved by the supplier")
-                self.log(cr, uid, id, message)
         return True
 
     #TODO: implement messages system
@@ -284,15 +282,12 @@ class purchase_order(osv.osv):
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
+            message = _("Purchase order '%s' is confirmed.") % (po.name,)
+            self.log(cr, uid, po.id, message)
         current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
-            for line in po.order_line:
-                product.append(line.product_id.default_code or '')
-                params = ', '.join(map(lambda x : str(x), product))
-            message = _('Purchase order ') + " '" + po.name + "' "+_('placed on')+ " '" + po.date_order + "' "+_('for')+" '" + params + "' "+ _("is confirmed")
-            self.log(cr, uid, id, message)
         return True
 
     def wkf_warn_buyer(self, cr, uid, ids):
@@ -335,8 +330,8 @@ class purchase_order(osv.osv):
             wf_service.trg_delete(uid, 'purchase.order', p_id, cr)
             wf_service.trg_create(uid, 'purchase.order', p_id, cr)
         for (id,name) in self.name_get(cr, uid, ids):
-                message = _('Purchase order') + " '" + name + "' "+ _("is in the draft state")
-                self.log(cr, uid, id, message)
+            message = _("Purchase order '%s' has been set in draft state.") % name
+            self.log(cr, uid, id, message)
         return True
 
     def action_invoice_create(self, cr, uid, ids, *args):
@@ -416,8 +411,8 @@ class purchase_order(osv.osv):
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})
-        for (id,name) in self.name_get(cr, uid, ids):        
-            message = _('Purchase order ') + " '" + purchase.name + "' "+ _("is cancelled")
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _("Purchase order '%s' is cancelled.") % name
             self.log(cr, uid, id, message)
         return True
 
@@ -722,9 +717,6 @@ class purchase_order_line(osv.osv):
 
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context)
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Purchase order line') + " '" + name + "' "+ _("is confirmed")
-            self.log(cr, uid, id, message)
         return True
 
 purchase_order_line()

@@ -60,13 +60,10 @@ class stock_partial_picking(osv.osv_memory):
         result = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
         pick_obj = self.pool.get('stock.picking')
         picking_ids = context.get('active_ids', False)
-        _moves_arch_lst = """<form string="Deliver Products">
-                        <separator colspan="4" string="Delivery Information"/>
-                        <group colspan="4" col="4">
-                        <field name="date"/>
-                        </group>
-                        <separator colspan="4" string="Move Detail"/>
-                        """
+        _moves_arch_lst = """<form string="%s">
+                        <field name="date" invisible="1"/>
+                        <separator colspan="4" string="%s"/>
+                        """ % (_('Process Document'), _('Products'))
         _moves_fields = result['fields']
         if picking_ids and view_type in ['form']:
             for pick in pick_obj.browse(cr, uid, picking_ids, context):
@@ -101,13 +98,20 @@ class stock_partial_picking(osv.osv_memory):
                         }
                     })
 
+                    invisible = "1"
+                    if pick.type=='in' and m.product_id.track_incoming:
+                        invisible=""
+                    if pick.type=='out' and m.product_id.track_outgoing:
+                        invisible=""
+
+                        
                     _moves_arch_lst += """
                         <group colspan="4" col="10">
                         <field name="move%s_product_id" nolabel="1"/>
-                        <field name="move%s_product_qty" string="Qty" />
+                        <field name="move%s_product_qty"/>
                         <field name="move%s_product_uom" nolabel="1" />
-                        <field name="move%s_prodlot_id" domain="[('product_id','=',move%s_product_id)]" groups="base.group_extended" />
-                    """%(m.id, m.id, m.id, m.id,m.id)
+                        <field name="move%s_prodlot_id" domain="[('product_id','=',move%s_product_id)]" invisible="%s" />
+                    """%(m.id, m.id, m.id, m.id,m.id, invisible)
 
                     if (need_product_cost and m.product_id.cost_method == 'average'):
                         _moves_fields.update({
