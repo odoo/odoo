@@ -68,7 +68,7 @@ class rml_parse(report_sxw.rml_parse):
     def _get_and_change_date_format_for_swiss (self,date_to_format):
         date_formatted=''
         if date_to_format:
-            date_formatted = strptime (date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
+            date_formatted = strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
 
     def _explode_name(self,chaine,length):
@@ -107,7 +107,7 @@ class rml_parse(report_sxw.rml_parse):
         return Stringer
 
     def explode_this(self,chaine,length):
-        chaine = rstrip(chaine)
+        chaine = chaine.rstrip()
         ast = list(chaine)
         i = length
         while i <= len(ast):

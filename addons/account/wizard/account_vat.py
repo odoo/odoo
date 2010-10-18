@@ -22,46 +22,43 @@
 from osv import osv, fields
 
 class account_vat_declaration(osv.osv_memory):
-	_name = 'account.vat.declaration'
-	_description = 'Account Vat Declaration'
-	_inherit = "account.common.account.report"
-	_columns = {
-		'based_on': fields.selection([('invoices','Invoices'),
-		                             ('payments','Payments'),],
-		                              'Based On', required=True),
-		'company_id': fields.many2one('res.company', 'Company', required=True),
-		'periods': fields.many2many('account.period', 'vat_period_rel', 'vat_id', 'period_id', 'Periods', help="All periods if empty"),
-		'fiscalyear': fields.many2many('account.fiscalyear','vat_fiscal_rel','fiscal_id','Fiscal Year',required=True),        
-		}
-		
-	def _get_company(self, cr, uid, context={}):
-		user_obj = self.pool.get('res.users')
-		company_obj = self.pool.get('res.company')
-		user = user_obj.browse(cr, uid, uid, context=context)
-		if user.company_id:
-		    return user.company_id.id
-		else:
-		    return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
+    _name = 'account.vat.declaration'
+    _description = 'Account Vat Declaration'
+    _inherit = "account.common.account.report"
+    _columns = {
+	    'based_on': fields.selection([('invoices','Invoices'),
+                                      ('payments','Payments'),],
+                                      'Based On', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'periods': fields.many2many('account.period', 'vat_period_rel', 'vat_id', 'period_id', 'Periods', help="All periods if empty"),
+        'fiscalyear': fields.many2many('account.fiscalyear','vat_fiscal_rel','fiscal_id','Fiscal Year',required=True),
+        }
 
+    def _get_company(self, cr, uid, context={}):
+        user_obj = self.pool.get('res.users')
+        company_obj = self.pool.get('res.company')
+        user = user_obj.browse(cr, uid, uid, context=context)
+        if user.company_id:
+    	    return user.company_id.id
+        else:
+            return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
 
-	_defaults = {
-			'based_on': 'invoices',
-			'company_id': _get_company
-
+    _defaults = {
+        'based_on': 'invoices',
+        'company_id': _get_company
 		}
 
-	def create_vat(self, cr, uid, ids, context={}):
-		if context is None:
-			context = {}
-		datas = {'ids': context.get('active_ids', [])}
-		datas['model'] = 'account.tax.code'
-		datas['form'] = self.read(cr, uid, ids)[0]
-		return {
-			'type': 'ir.actions.report.xml',
-			'report_name': 'account.vat.declaration',
-			'datas': datas,
-			}
-
+    def create_vat(self, cr, uid, ids, context={}):
+        if context is None:
+            context = {}
+        datas = {'ids': context.get('active_ids', [])}
+        datas['model'] = 'account.tax.code'
+        datas['form'] = self.read(cr, uid, ids)[0]
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'account.vat.declaration',
+            'datas': datas,
+        }
 account_vat_declaration()
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

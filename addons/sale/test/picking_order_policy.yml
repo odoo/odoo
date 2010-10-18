@@ -59,23 +59,15 @@
       }
       self.do_partial(cr, uid, [pick.id],partial_datas)
 -
-  Then I create invoice from picking
--
-  !record {model: stock.invoice.onshipping, id: stock_invoice_onshipping_0}:
-    invoice_date: '2010-07-15'
-    journal_id: account.sales_journal
-    type: out_invoice
--
   Then I click on 'Create Invoices' button
 -
   !python {model: stock.invoice.onshipping}: |
     sale_obj=self.pool.get('sale.order')  
     sale_id=sale_obj.browse(cr, uid, ref("sale_order_so7"))
-    picking_obj = self.pool.get('stock.picking')
-    ids = picking_obj.search(cr, uid, [('origin', '=', sale_id.name)])
-    self.create_invoice(cr, uid, [ref("stock_invoice_onshipping_0")], {"lang": "en_US",
-      "search_default_available": 1, "tz": False, "active_model": "stock.picking",
-      "contact_display": "partner", "active_ids": ids, "active_id": ids[0]})
+    ids = [x.id for x in sale_id.picking_ids]
+    wiz_id = self.create(cr, uid, {'invoice_date': '2010-07-15', 'journal_id': ref('account.sales_journal')},
+      {'active_ids': ids})
+    self.create_invoice(cr, uid, [wiz_id], {"active_ids": ids})
 -
   I check that an invoice has been created.
 -

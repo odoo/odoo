@@ -3,7 +3,7 @@
     <data>
 
         <menuitem id="menu_config_claim" name="Claim"
-            groups="base.group_extended,base.group_system"
+            groups="base.group_extended"
             parent="base.menu_base_config" sequence="6" />
 
         <!-- Claims categories  -->
@@ -15,6 +15,7 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
             <field name="context">{'object_id':'crm.claim'}</field>
+            <field name="help">Create claim categories to better manage and classify your claims. Some example of claims can be: preventive action, corrective action.</field>
         </record>
 
         <menuitem action="crm_claim_categ_action" name="Categories"
@@ -30,6 +31,7 @@
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
             <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
             <field name="context">{'object_id':'crm.claim'}</field>
+            <field name="help">You can create claim stages to categorize the status of every claim entered in the system. The stages define all the steps required for the resolution of a claim.</field>
         </record>
 
          <menuitem action="crm_claim_stage_act" name="Stages"
