@@ -90,7 +90,7 @@ class document_file(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Partner', select=1),
         'file_size': fields.integer('File Size', required=True),
         'file_type': fields.char('Content Type', size=128),
-
+        'company_id': fields.many2one('res.company', 'Company'),
         # fields used for file storage
         'store_fname': fields.char('Stored Filename', size=200),
     }
@@ -101,6 +101,7 @@ class document_file(osv.osv):
         return dirobj._get_root_directory(cr, uid, context)
 
     _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
         'user_id': lambda self, cr, uid, ctx:uid,
         'file_size': lambda self, cr, uid, ctx:0,
         'parent_id': __get_def_directory
