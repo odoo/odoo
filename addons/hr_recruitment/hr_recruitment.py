@@ -332,9 +332,6 @@ class hr_applicant(crm.crm_case, osv.osv):
             vals.update(res)
         res = self.create(cr, uid, vals, context=context)
 
-        message = _('A Job Request created') + " '" + subject + "' " + _("from Mailgate.")
-        self.log(cr, uid, res, message)
-
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
@@ -410,7 +407,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         if not date['date_open']:
             self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Job request for') + " '" + name + "' "+ _("is Open.")
+            message = _("The job request '%s' has been set 'in progress'.") % name
             self.log(cr, uid, id, message)
         return res
 
@@ -426,7 +423,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         job_obj = self.pool.get('hr.job')
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Applicant ') + " '" + name + "' "+ _("is Hired.")
+            message = _("Applicant '%s' is being hired.") % name
             self.log(cr, uid, id, message)
 
         applicant = self.browse(cr, uid, ids)[0]

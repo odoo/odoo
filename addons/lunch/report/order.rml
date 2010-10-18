@@ -66,7 +66,6 @@
     <images/>
   </stylesheet>
   <story>
-    <para style="terp_default_8">[[repeatIn(get_users(objects),'o')]]</para>
     <blockTable colWidths="293.0,235.0" style="Table1">
       <tr>
         <td>
@@ -75,16 +74,19 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_8">[[ (o.address_id and o.address_id.partner_id and o.address_id.partner_id.title and o.address_id.partner_id.title.name) or '' ]] [[ (o.address_id and o.address_id.partner_id and o.address_id.partner_id.name) or '' ]]</para>
-          <para style="terp_default_8">[[ (o.address_id and o.address_id.street) or '' ]]</para>
-          <para style="terp_default_8">[[ (o.address_id and o.address_id.street2) or removeParentNode('para') ]]</para>
-          <para style="terp_default_8">[[ (o.address_id and o.address_id.zip) or '' ]] [[ (o.address_id and o.user_id.address_id.city) or '' ]]</para>
-          <para style="terp_default_8">[[ (o.address_id and o.address_id.state_id and o.address_id.state_id.name) or removeParentNode('para')]]</para>
-          <para style="terp_default_8">[[ (o.address_id and o.address_id.country_id and o.address_id.country_id.name) or '' ]]</para>
+          <para style="terp_default_8">[[ (user.address_id and user.address_id.partner_id and user.address_id.partner_id.title and user.address_id.partner_id.title.name) or '' ]] [[ (user.address_id and user.address_id.partner_id and user.address_id.partner_id.name) or '' ]]</para>
+          <para style="terp_default_8">[[ (user.address_id and user.address_id.street) or '' ]]</para>
+          <para style="terp_default_8">[[ (user.address_id and user.address_id.street2) or removeParentNode('para') ]]</para>
+          <para style="terp_default_8">[[ (user.address_id and user.address_id.zip) or '' ]] [[ (user.address_id and user.address_id.city) or '' ]]</para>
+          <para style="terp_default_8">[[ (user.address_id and user.address_id.state_id and user.address_id.state_id.name) or removeParentNode('para')]]</para>
+          <para style="terp_default_8">[[ (user.address_id and user.address_id.country_id and user.address_id.country_id.name) or '' ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="terp_header">Lunch Order</para>
+
+	<section>
+    <para style="terp_default_8">[[repeatIn(get_users(objects),'o')]]</para>
     <blockTable colWidths="80.0,70.0,141.0,172.0,65.0" style="Table2">
       <tr>
         <td>
@@ -144,5 +146,6 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
+	</section>
   </story>
 </document>
