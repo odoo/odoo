@@ -41,7 +41,7 @@ class recording_objects_proxy(osv_pool):
         res = super(recording_objects_proxy, self).execute(*args, **argv)
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
-        
+
         if mod and mod.recording:
             if args[3] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink'):
                 if _old_args is not None:
@@ -67,7 +67,7 @@ class recording_objects_proxy(osv_pool):
         return res
 
 recording_objects_proxy()
-      
+
 class xElement(minidom.Element):
     """dom.Element with compact print
     The Element in minidom has a problem: if printed, adds whitespace
@@ -86,6 +86,8 @@ def doc_createXElement(xdoc, tagName):
         return e
 
 import yaml
+from tools import yaml_tag # This import is not unused! Do not remove!
+# Please do not override yaml_tag here: modify it in server bin/tools/yaml_tag.py
 
 class base_module_record(osv.osv):
     _name = "ir.module.record"
