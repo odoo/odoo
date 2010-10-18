@@ -223,4 +223,12 @@ class board_note(osv.osv):
 
 board_note()
 
+class temp_log(osv.osv_memory):
+    _inherit = 'res.log'
+    _description = 'Temporary Log'
+    _columns = {'count': fields.integer("Count")}
+    _defaults = {'count': lambda *a: True}
+
+temp_log()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
