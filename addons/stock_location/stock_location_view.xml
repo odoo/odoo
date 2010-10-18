@@ -43,7 +43,7 @@
                     <page string="Logistic Flow">
                         <field name="flow_pull_ids" editable="bottom" colspan="4" nolabel="1">
                             <tree string="Pulled flows">
-                                <field name="location_id"/>
+                                <field name="location_id" attrs="{'required': [('type_proc', '=', 'move')]}"/>
                                 <field name="type_proc"/>
                                 <field name="name"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -59,7 +59,7 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <newline/>
                                 <group col="4" colspan="4" attrs="{'invisible':[('type_proc','!=','move')]}">
-                                    <field name="location_src_id"/>
+                                    <field name="location_src_id" attrs="{'required': [('type_proc', '=', 'move')]}"/>
                                     <field name="picking_type"/>
                                     <field name="partner_address_id"/>
                                     <field name="procure_method"/>

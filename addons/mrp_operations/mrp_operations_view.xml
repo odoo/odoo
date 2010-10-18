@@ -202,7 +202,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,gantt,calendar,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
-        <field name="help">Work Orders are manufacturing operations required to produce or assemble products. The different work orders will have different impacts on the costs of manufacture and planning depending on the available workload.</field>
+        <field name="help">Work Orders is the list of operations to be performed for each manufacturing order. Once you start the first work order of a manufacturing order, the manufacturing order is automatically marked as started. Once you finish the latest operation of a manufacturing order, the MO is automatically done and the related products are produced.</field>
     </record>
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action_planning">

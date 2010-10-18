@@ -122,36 +122,23 @@
  I check that an entry gets created related to stock move.
 -
   !python {model: purchase.order}: |
-    from tools.translate import _
     pur_id1=self.browse(cr, uid, ref("purchase_order_po2"))
     picking_obj = self.pool.get('stock.picking')
     ids = picking_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
     pick_id = picking_obj.browse(cr, uid, ids)[0]
     move_obj = self.pool.get('stock.move')
     search_id = move_obj.search(cr, uid, [('picking_id', '=', pick_id.name)])
-    assert search_id, _('No Incoming Product!')
--
-  I check that Traceability moves are created.
+    assert search_id, 'No Incoming Product!'
 -
   Then I create an invoice from picking by clicking on "Create Invoice" wizard 
 - 
-  I create stock invoice on shipping entry.
-- 
-  !record {model: stock.invoice.onshipping, id: stock_invoice_onshipping_0}:
-    invoice_date: '2010-05-11'
-    journal_id: account.bank_journal
-    type: in_invoice
-- 
-  I create Invoice.
-- 
   !python {model: stock.invoice.onshipping}: |
-    pur_obj=self.pool.get('purchase.order')  
+    pur_obj=self.pool.get('purchase.order')
     pur_id1=pur_obj.browse(cr, uid, ref("purchase_order_po2"))
-    picking_obj = self.pool.get('stock.picking')
-    ids = picking_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
-    self.create_invoice(cr, uid, [ref("stock_invoice_onshipping_0")], {"lang": "en_US",
-      "tz": False, "search_default_approved": 1, "active_model": "stock.picking",
-      "active_ids": ids, "active_id": ids[0], })
+    pick_ids = [x.id for x in pur_id1.picking_ids]
+    id = self.create(cr, uid, {'invoice_date': '2010-05-11', 'journal_id': ref('account.expenses_journal')},
+      {'active_ids': pick_ids})
+    self.create_invoice(cr, uid, [id], {"active_ids": pick_ids})
 -
   I check that an invoice_id field of Delivery&Invoices gets bind with the value.
 -

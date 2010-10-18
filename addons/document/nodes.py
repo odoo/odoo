@@ -61,16 +61,27 @@ def get_node_context(cr, uid, context):
     return node_context(cr, uid, context)
 
 class node_context(object):
-    """ This is the root node, representing access to some particular
-        context """
+    """ This is the root node, representing access to some particular context
+    
+    A context is a set of persistent data, which may influence the structure
+    of the nodes. All other transient information during a data query should
+    be passed down with function arguments.
+    """
     cached_roots = {}
+    node_file_class = None
 
     def __init__(self, cr, uid, context=None):
         self.dbname = cr.dbname
         self.uid = uid
         self.context = context
+        if context is None:
+            context = {}
+        context['uid'] = uid
         self._dirobj = pooler.get_pool(cr.dbname).get('document.directory')
+        self.node_file_class = node_file
+        self.extra_ctx = {} # Extra keys for context, that do _not_ trigger inequality
         assert self._dirobj
+        self._dirobj._prepare_context(cr, uid, self, context=context)
         self.rootdir = False #self._dirobj._get_root_directory(cr,uid,context)
 
     def __eq__(self, other):
@@ -88,10 +99,14 @@ class node_context(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+    
+    def get(self, name, default=None):
+        return self.context.get(name, default)
 
     def get_uri(self, cr,  uri):
         """ Although this fn passes back to doc.dir, it is needed since
-        it is a potential caching point """
+            it is a potential caching point.
+        """
         (ndir, duri) =  self._dirobj._locate_child(cr, self.uid, self.rootdir, uri, None, self)
         while duri:
             ndir = ndir.child(cr, duri[0])
@@ -104,14 +119,10 @@ class node_context(object):
         """Create (or locate) a node for a directory
             @param dbro a browse object of document.directory
         """
-        fullpath = self._dirobj.get_full_path(cr, self.uid, dbro.id, self.context)
-        if dbro.type == 'directory':
-            return node_dir(fullpath, None ,self, dbro)
-        elif dbro.type == 'ressource':
-            assert dbro.ressource_parent_type_id == False
-            return node_res_dir(fullpath, None, self, dbro)
-        else:
-            raise ValueError("dir node for %s type", dbro.type)
+        
+        fullpath = dbro.get_full_path(context=self.context)
+        klass = dbro.get_node_class(dbro, context=self.context)
+        return klass(fullpath, None ,self, dbro)
 
     def get_file_node(self, cr, fbro):
         """ Create or locate a node for a static file
@@ -121,7 +132,7 @@ class node_context(object):
         if fbro.parent_id:
             parent = self.get_dir_node(cr, fbro.parent_id)
 
-        return node_file(fbro.name, parent, self, fbro)
+        return self.node_file_class(fbro.name, parent, self, fbro)
 
 
 class node_descriptor(object):
@@ -266,22 +277,24 @@ class node_class(object):
         """ Get a tag, unique per object + modification.
 
             see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
-        return self._get_ttag(cr) + ':' + self._get_wtag(cr)
+        return '"%s-%s"' % (self._get_ttag(cr), self._get_wtag(cr))
 
     def _get_wtag(self, cr):
         """ Return the modification time as a unique, compact string """
-        return str(_str2time(self.write_date))
+        return str(_str2time(self.write_date)).replace('.','')
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         """ Get a unique tag for this type/id of object.
             Must be overriden, so that each node is uniquely identified.
         """
         print "node_class.get_ttag()",self
-        raise NotImplementedError("get_etag stub()")
+        raise NotImplementedError("get_ttag stub()")
 
     def get_dav_props(self, cr):
         """ If this class has special behaviour for GroupDAV etc, export
         its capabilities """
+        # This fn is placed here rather than WebDAV, because we want the
+        # baseclass methods to apply to all node subclasses
         return self.DAV_PROPS or {}
 
     def match_dav_eprop(self, cr, match, ns, prop):
@@ -438,22 +451,20 @@ class node_database(node_class):
         if not domain:
             domain = []
 
-        where2 = where + domain + [('type', '=', 'directory')]
+        where2 = where + domain + ['|', ('type', '=', 'directory'), \
+                    '&', ('type', '=', 'ressource'), ('ressource_parent_type_id','=',False)]
         ids = dirobj.search(cr, uid, where2, context=ctx)
         res = []
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
-            res.append(node_dir(dirr.name, self, self.context,dirr))
-
-        where2 = where + domain + [('type', '=', 'ressource'), ('ressource_parent_type_id','=',False)]
-        ids = dirobj.search(cr, uid, where2, context=ctx)
-        for dirr in dirobj.browse(cr, uid, ids, context=ctx):
-            res.append(node_res_dir(dirr.name, self, self.context, dirr))
+            klass = dirr.get_node_class(dirr, context=ctx)
+            res.append(klass(dirr.name, self, self.context,dirr))
 
         fil_obj = dirobj.pool.get('ir.attachment')
         ids = fil_obj.search(cr, uid, where, context=ctx)
         if ids:
             for fil in fil_obj.browse(cr, uid, ids, context=ctx):
-                res.append(node_file(fil.name, self, self.context, fil))
+                klass = self.context.node_file_class
+                res.append(klass(fil.name, self, self.context, fil))
         return res
 
     def _file_get(self,cr, nodename=False):
@@ -462,9 +473,6 @@ class node_database(node_class):
 
     def _get_ttag(self,cr):
         return 'db-%s' % cr.dbname
-
-    def get_dav_resourcetype(self, cr):
-        return ('collection', 'DAV:')
 
 def mkdosname(company_name, default='noname'):
     """ convert a string to a dos-like name"""
@@ -492,7 +500,10 @@ class node_dir(node_database):
         self.write_date = dirr and (dirr.write_date or dirr.create_date) or False
         self.content_length = 0
         self.unixperms = 040750
-        self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        try:
+            self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        except Exception:
+            self.uuser = 'nobody'
         self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
         self.uidperms = dirr.get_dir_permissions()
         if dctx:
@@ -505,7 +516,7 @@ class node_dir(node_database):
             for dfld in dirr.dctx_ids:
                 try:
                     self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
-                except Exception,e:
+                except Exception:
                     print "Cannot eval %s" % dfld.expr
                     print e
                     pass
@@ -670,12 +681,14 @@ class node_dir(node_database):
         return ret
 
 class node_res_dir(node_class):
-    """ A special sibling to node_dir, which does only contain dynamically
+    """ A folder containing dynamic folders
+        A special sibling to node_dir, which does only contain dynamically
         created folders foreach resource in the foreign model.
         All folders should be of type node_res_obj and merely behave like
         node_dirs (with limited domain).
     """
     our_type = 'collection'
+    res_obj_class = None
     def __init__(self, path, parent, context, dirr, dctx=None ):
         super(node_res_dir,self).__init__(path, parent, context)
         self.dir_id = dirr.id
@@ -687,7 +700,10 @@ class node_res_dir(node_class):
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
         self.unixperms = 040750
-        self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        try:
+            self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        except Exception:
+            self.uuser = 'nobody'
         self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
         self.uidperms = dirr.get_dir_permissions()
         self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
@@ -782,17 +798,15 @@ class node_res_dir(node_class):
                 continue
                 # Yes! we can't do better but skip nameless records.
 
-            res.append(node_res_obj(name, self.dir_id, self, self.context, self.res_model, bo))
+            res.append(self.res_obj_class(name, self.dir_id, self, self.context, self.res_model, bo))
         return res
 
     def _get_ttag(self,cr):
         return 'rdir-%d' % self.dir_id
 
-    def get_dav_resourcetype(self, cr):
-        return ('collection', 'DAV:')
-
 class node_res_obj(node_class):
-    """ A special sibling to node_dir, which does only contain dynamically
+    """ A dynamically created folder.
+        A special sibling to node_dir, which does only contain dynamically
         created folders foreach resource in the foreign model.
         All folders should be of type node_res_obj and merely behave like
         node_dirs (with limited domain).
@@ -828,7 +842,7 @@ class node_res_obj(node_class):
             for fld,expr in self.dctx_dict.items():
                 try:
                     self.dctx[fld] = safe_eval(expr, dc2)
-                except Exception,e:
+                except Exception:
                     print "Cannot eval %s for %s" % (expr, fld)
                     print e
                     pass
@@ -886,7 +900,8 @@ class node_res_obj(node_class):
 
         return res
 
-    def get_dav_props(self, cr):
+    def get_dav_props_DEPR(self, cr):
+        # Deprecated! (but document_ics must be cleaned, first)
         res = {}
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
@@ -899,7 +914,8 @@ class node_res_obj(node_class):
                 res['http://groupdav.org/'] = ('resourcetype',)
         return res
 
-    def get_dav_eprop(self, cr, ns, prop):
+    def get_dav_eprop_DEPR(self, cr, ns, prop):
+        # Deprecated!
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
             logger.warning("Who asked for %s:%s?" % (ns, prop))
             return None
@@ -910,6 +926,7 @@ class node_res_obj(node_class):
         where = [('directory_id','=',self.dir_id) ]
         ids = cntobj.search(cr,uid,where,context=ctx)
         for content in cntobj.browse(cr, uid, ids, context=ctx):
+            # TODO: remove relic of GroupDAV
             if content.extension == '.ics': # FIXME: call the content class!
                 return ('vevent-collection','http://groupdav.org/')
         return None
@@ -944,20 +961,21 @@ class node_res_obj(node_class):
                 res_name = getattr(bo, namefield)
                 if not res_name:
                     continue
-                res.append(node_res_obj(res_name, self.dir_id, self, self.context, self.res_model, res_bo = bo))
+                # TODO Revise
+                klass = directory.get_node_class(directory, dynamic=True, context=ctx)
+                res.append(klass(res_name, self.dir_id, self, self.context, self.res_model, res_bo = bo))
 
 
         where2 = where + [('parent_id','=',self.dir_id) ]
         ids = dirobj.search(cr, uid, where2, context=ctx)
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             if dirr.type == 'directory':
-                res.append(node_res_obj(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
+                klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
+                res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
             elif dirr.type == 'ressource':
                 # child resources can be controlled by properly set dctx
-                res.append(node_res_dir(dirr.name,self,self.context, dirr, {'active_id': self.res_id}))
-
-
-
+                klass = dirr.get_node_class(dirr, context=ctx)
+                res.append(klass(dirr.name,self,self.context, dirr, {'active_id': self.res_id}))
 
         fil_obj = dirobj.pool.get('ir.attachment')
         if self.res_find_all:
@@ -967,7 +985,8 @@ class node_res_obj(node_class):
         ids = fil_obj.search(cr, uid, where3, context=ctx)
         if ids:
             for fil in fil_obj.browse(cr, uid, ids, context=ctx):
-                res.append(node_file(fil.name, self, self.context, fil))
+                klass = self.context.node_file_class
+                res.append(klass(fil.name, self, self.context, fil))
 
 
         # Get Child Ressource Directories
@@ -979,9 +998,11 @@ class node_res_obj(node_class):
             dirids = dirids + dirobj.search(cr,uid, where5)
             for dirr in dirobj.browse(cr, uid, dirids, context=ctx):
                 if dirr.type == 'directory' and not dirr.parent_id:
-                    res.append(node_res_obj(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
+                    klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
+                    res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
                 if dirr.type == 'ressource':
-                    res.append(node_res_dir(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))
+                    klass = dirr.get_node_class(dirr, context=ctx)
+                    res.append(klass(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))
         return res
 
     def create_child_collection(self, cr, objname):
@@ -993,9 +1014,9 @@ class node_res_obj(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        res_obj = dirobj.pool.get(self.context.context['res_model'])
+        res_obj = dirobj.pool.get(self.res_model)
 
-        object2 = res_obj.browse(cr, uid, self.context.context['res_id']) or False
+        object2 = res_obj.browse(cr, uid, self.res_id) or False
 
         obj = dirobj.browse(cr, uid, self.dir_id)
         if obj and (obj.type == 'ressource') and not object2:
@@ -1038,7 +1059,8 @@ class node_res_obj(node_class):
 
         fil_id = fil_obj.create(cr, uid, val, context=ctx)
         fil = fil_obj.browse(cr, uid, fil_id, context=ctx)
-        fnode = node_file(path, self, self.context, fil)
+        klass = self.context.node_file_class
+        fnode = klass(path, self, self.context, fil)
         if data is not None:
             fnode.set_data(cr, data, fil)
         return fnode
@@ -1046,8 +1068,7 @@ class node_res_obj(node_class):
     def _get_ttag(self,cr):
         return 'rodir-%d-%d' % (self.dir_id, self.res_id)
 
-    def get_dav_resourcetype(self, cr):
-        return ('collection', 'DAV:')
+node_res_dir.res_obj_class = node_res_obj
 
 class node_file(node_class):
     our_type = 'file'
@@ -1069,7 +1090,10 @@ class node_file(node_class):
             elif not parent.check_perms('w'):
                 self.uidperms = 4
     
-        self.uuser = (fil.user_id and fil.user_id.login) or 'nobody'
+        try:
+            self.uuser = (fil.user_id and fil.user_id.login) or 'nobody'
+        except Exception:
+            self.uuser = 'nobody'
         self.ugroup = mkdosname(fil.company_id and fil.company_id.name, default='nogroup')
 
         # This only propagates the problem to get_data. Better
@@ -1182,9 +1206,6 @@ class node_file(node_class):
 
     def _get_ttag(self,cr):
         return 'file-%d' % self.file_id
-
-    def get_dav_resourcetype(self, cr):
-        return ''
 
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
         if ndir_node and ndir_node.context != self.context:
@@ -1382,3 +1403,5 @@ class nodefd_content(StringIO, node_descriptor):
         finally:
             cr.close()
         StringIO.close(self)
+
+#eof

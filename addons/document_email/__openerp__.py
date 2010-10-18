@@ -25,7 +25,6 @@
     "name" : "Email Integrated Document",
     "version" : "1.1",
     "depends" : ["base", "document", "fetchmail","mail_gateway"],
-    "author" : "Tiny",
     "description": """Email Integrated Document
     * Email based Document submission
     * user based document submission

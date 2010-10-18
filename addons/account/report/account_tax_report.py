@@ -37,8 +37,25 @@ class tax_report(rml_parse.rml_parse):
             'get_company': self._get_company,
             'get_currency': self._get_currency,
             'get_lines': self._get_lines,
+            'get_years': self.get_years,
         })
 
+
+    def get_years(self,form):
+        res={}
+        fiscal_year_name = self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'])
+
+        if fiscal_year_name:
+            res['fname'] = fiscal_year_name[0][1]
+            res['periods'] = ''
+        if form['periods']:
+            periods_l = self.pool.get('account.period').read(self.cr, self.uid, form['periods'], ['name'])
+            for period in periods_l:
+                if res['periods']=='':
+                    res['periods'] = period['name']
+                else:
+                    res['periods'] += ", "+ period['name']
+        return res
 
     def _get_lines(self, based_on, period_list, company_id=False, parent=False, level=0, context={}):
         res = self._get_codes(based_on, company_id, parent, level, period_list, context=context)

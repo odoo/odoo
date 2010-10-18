@@ -49,13 +49,11 @@ Three reports are available:
     'update_xml': [
         'security/ir.model.access.csv',
         'security/account_budget_security.xml',
-        'wizard/account_budget_spread_view.xml',
         'account_budget_view.xml',
         'account_budget_report.xml',
         'account_budget_workflow.xml',
         'wizard/account_budget_analytic_view.xml',
         'wizard/account_budget_report_view.xml',
-        'wizard/account_budget_spread_view.xml',
         'wizard/account_budget_crossovered_summary_report_view.xml',
         'wizard/account_budget_crossovered_report_view.xml',
     ],

@@ -143,6 +143,23 @@ class pos_return(osv.osv_memory):
              @return: Return the add product form again for adding more product
 
         """
+        current_rec = self.read(cr, uid, data[0], context=context)
+        order_obj =self.pool.get('pos.order')
+        line_obj = self.pool.get('pos.order.line')
+        pos_current = order_obj.browse(cr, uid, context.get('active_id'))
+        pos_line_ids = pos_current.lines
+        if pos_line_ids:
+            for pos_line in pos_line_ids:
+                line_field = "return"+str(pos_line.id)
+                pos_list = current_rec.keys()
+                newline_vals = {}
+                if line_field in pos_list :
+                    less_qty = current_rec.get(line_field)
+                    pos_cur_line = line_obj.browse(cr, uid, pos_line.id, context=context)
+                    qty = pos_cur_line.qty
+                    qty = qty - less_qty
+                    newline_vals.update({'qty':qty})
+                    line_obj.write(cr, uid, pos_line.id, newline_vals, context=context)
         return {
             'name': _('Add Product'),
             'view_type': 'form',

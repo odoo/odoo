@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Delivery Order" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Delivery Order.pdf">
+  <template pageSize="(595.0,842.0)" title="Delivery Order" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="30.0" y1="27.0" width="508" height="815"/>
     </pageTemplate>
@@ -189,11 +189,8 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_1">
-      <font color="white"> </font>
-    </para>
     <section>
-      <para style="terp_default_9">[[repeatIn(o.move_lines,'line')]]</para>
+      <para style="terp_default_1">[[repeatIn(o.move_lines,'line')]]</para>
       <blockTable colWidths="370.0,85.0,83.0" style="Table4">
         <tr>
           <td>
@@ -211,8 +208,5 @@
         <font color="white"> </font>
       </para>
     </section>
-    <para style="Standard">
-      <font color="white"> </font>
-    </para>
   </story>
 </document>

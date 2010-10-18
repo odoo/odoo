@@ -12,7 +12,7 @@
     I create a "Testing" folder where all the test data will go.
 -
     !record {model: document.directory, id: dir_tests }:
-        name: 'Testing'
+        name: 'Testing (will be deleted!)'
         parent_id: dir_root
 -
     I create an attachment into the root folder (w. empty fields, test that
@@ -52,7 +52,7 @@
     I search the testing folder for attachments.
 -
     !python {model: ir.attachment}: |
-        ids = self.search(cr, uid, [('parent_id.name','=', 'Testing'), ('name','=','Test renamed 2')])
+        ids = self.search(cr, uid, [('parent_id.name','=', 'Testing (will be deleted!)'), ('name','=','Test renamed 2')])
         assert ids == [ ref("file_test2") ], ids
 -
     I create an attachment to a 3rd resource, eg. a res.country
@@ -70,7 +70,14 @@
         ids = self.search(cr, uid, [('res_model', '=', 'res.country'), ('res_id', '=', ref("base.za"))])
         assert ids == [ ref("attach_3rd")], ids
 -
-    I delete the attachment
+    I delete the attachments
 -
     !python {model: ir.attachment}: |
+     self.unlink(cr, uid, [ref('file_test2')])
      self.unlink(cr, uid, [ref('attach_3rd')])
+-
+    I delete the tests folder
+-
+    !python {model: document.directory}: |
+      self.unlink(cr, uid, [ref('dir_tests')])
+      cr.commit()

@@ -28,8 +28,6 @@ from osv import fields, osv
 from tools import config
 from tools.translate import _
 
-
-
 def prev_bounds(cdate=False):
     when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
     this_first = date(when.year, when.month, 1)
@@ -42,6 +40,172 @@ def prev_bounds(cdate=False):
     prev_end = next_month - timedelta(days=1)
     return this_first, prev_end
 
+class hr_payroll_structure(osv.osv):
+    _inherit = 'hr.payroll.structure'
+    _description = 'Salary Structure'
+    
+    _columns = {
+        'account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
+    }
+hr_payroll_structure()
+
+class hr_employee(osv.osv):
+    '''
+    Employee
+    '''
+    _inherit = 'hr.employee'
+    _description = 'Employee'
+
+    _columns = {
+        'property_bank_account': fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Bank Account",
+            method=True,
+            domain="[('type', '=', 'liquidity')]",
+            view_load=True,
+            help="Select Bank Account from where Salary Expanse will be Paid"),
+        'salary_account':fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Salary Account",
+            method=True,
+            domain="[('type', '=', 'other')]",
+            view_load=True,
+            help="Expanse account when Salary Expanse will be recorded"),
+        'employee_account':fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Employee Account",
+            method=True,
+            domain="[('type', '=', 'other')]",
+            view_load=True,
+            help="Employee Payable Account"),
+        'analytic_account':fields.property(
+            'account.analytic.account',
+            type='many2one',
+            relation='account.analytic.account',
+            string="Analytic Account",
+            method=True,
+            view_load=True,
+            help="Analytic Account for Salary Analysis"),
+    }
+hr_employee()
+
+class payroll_register(osv.osv):
+    _inherit = 'hr.payroll.register'
+    _description = 'Payroll Register'
+    
+    _columns = {
+        'journal_id': fields.many2one('account.journal', 'Expanse Journal'),
+        'bank_journal_id': fields.many2one('account.journal', 'Bank Journal'),
+        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
+    }
+    
+    def compute_sheet(self, cr, uid, ids, context={}):
+        emp_pool = self.pool.get('hr.employee')
+        slip_pool = self.pool.get('hr.payslip')
+        func_pool = self.pool.get('hr.payroll.structure')
+        slip_line_pool = self.pool.get('hr.payslip.line')
+        wf_service = netsvc.LocalService("workflow")
+        vals = self.browse(cr, uid, ids)[0]
+        emp_ids = emp_pool.search(cr, uid, [])
+
+        for emp in emp_pool.browse(cr, uid, emp_ids):
+            old_slips = slip_pool.search(cr, uid, [('employee_id','=', emp.id), ('date','=',vals.date)])
+            if old_slips:
+                slip_pool.write(cr, uid, old_slips, {'register_id':ids[0]})
+                for sid in old_slips:
+                    wf_service.trg_validate(uid, 'hr.payslip', sid, 'compute_sheet', cr)
+            else:
+                res = {
+                    'employee_id':emp.id,
+                    'basic':0.0,
+                    'register_id':ids[0],
+                    'name':vals.name,
+                    'date':vals.date,
+                    'journal_id':vals.journal_id.id,
+                    'bank_journal_id':vals.bank_journal_id.id
+                }
+                slip_id = slip_pool.create(cr, uid, res)
+                wf_service.trg_validate(uid, 'hr.payslip', slip_id, 'compute_sheet', cr)
+
+        number = self.pool.get('ir.sequence').get(cr, uid, 'salary.register')
+        self.write(cr, uid, ids, {'state':'draft', 'number':number})
+        return True
+
+payroll_register()
+
+class payroll_advice(osv.osv):
+    _inherit = 'hr.payroll.advice'
+    _description = 'Bank Advice Note'
+    
+    _columns = {
+        'account_id': fields.many2one('account.account', 'Account'),
+    }
+payroll_advice()
+
+class contrib_register(osv.osv):
+    _inherit = 'hr.contibution.register'
+    _description = 'Contribution Register'
+
+    def _total_contrib(self, cr, uid, ids, field_names, arg, context={}):
+        line_pool = self.pool.get('hr.contibution.register.line')
+        period_id = self.pool.get('account.period').search(cr,uid,[('date_start','<=',time.strftime('%Y-%m-%d')),('date_stop','>=',time.strftime('%Y-%m-%d'))])[0]
+        fiscalyear_id = self.pool.get('account.period').browse(cr, uid, period_id).fiscalyear_id
+        res = {}
+        for cur in self.browse(cr, uid, ids):
+            current = line_pool.search(cr, uid, [('period_id','=',period_id),('register_id','=',cur.id)])
+            years = line_pool.search(cr, uid, [('period_id.fiscalyear_id','=',fiscalyear_id.id), ('register_id','=',cur.id)])
+
+            e_month = 0.0
+            c_month = 0.0
+            for i in line_pool.browse(cr, uid, current):
+                e_month += i.emp_deduction
+                c_month += i.comp_deduction
+
+            e_year = 0.0
+            c_year = 0.0
+            for j in line_pool.browse(cr, uid, years):
+                e_year += i.emp_deduction
+                c_year += i.comp_deduction
+
+            res[cur.id]={
+                'monthly_total_by_emp':e_month,
+                'monthly_total_by_comp':c_month,
+                'yearly_total_by_emp':e_year,
+                'yearly_total_by_comp':c_year
+            }
+        return res
+    
+    _columns = {
+        'account_id': fields.many2one('account.account', 'Account'),
+        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
+        'yearly_total_by_emp': fields.function(_total_contrib, method=True, multi='dc', store=True, string='Total By Employee', digits=(16, 4)),
+        'yearly_total_by_comp': fields.function(_total_contrib, method=True, multi='dc', store=True,  string='Total By Company', digits=(16, 4)),
+    }
+contrib_register()
+
+class contrib_register_line(osv.osv):
+    _inherit = 'hr.contibution.register.line'
+    _description = 'Contribution Register Line'
+    
+    _columns = {
+        'period_id': fields.many2one('account.period', 'Period'),
+    }
+contrib_register_line()
+
+class hr_holidays_status(osv.osv):
+    _inherit = 'hr.holidays.status'
+    _columns = {
+        'account_id': fields.many2one('account.account', 'Account'),
+        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
+    }
+hr_holidays_status()
+
 class hr_payslip(osv.osv):
     '''
     Pay Slip
@@ -50,7 +214,9 @@ class hr_payslip(osv.osv):
     _description = 'Pay Slip'
 
     _columns = {
-        'move_ids':fields.one2many('hr.payslip.account.move', 'slip_id', 'Accounting vouchers', required=False),
+        'journal_id': fields.many2one('account.journal', 'Expanse Journal'),
+        'bank_journal_id': fields.many2one('account.journal', 'Bank Journal'),
+        'move_ids':fields.one2many('hr.payslip.account.move', 'slip_id', 'Accounting vouchers'),
         'move_line_ids':fields.many2many('account.move.line', 'payslip_lines_rel', 'slip_id', 'line_id', 'Accounting Lines', readonly=True),
         'move_payment_ids':fields.many2many('account.move.line', 'payslip_payment_rel', 'slip_id', 'payment_id', 'Payment Lines', readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
@@ -404,8 +570,9 @@ class hr_payslip(osv.osv):
 
                 line_ids += [movel_pool.create(cr, uid, rec, context=context)]
 
-                for contrub in line.category_id.contribute_ids:
-                    print contrib.name, contrub.code, contrub.amount_type, contrib.contribute_per, line.total
+                # if self._debug:
+                #    for contrib in line.category_id.contribute_ids:
+                #       _log.debug("%s %s %s %s %s",  contrib.name, contrub.code, contrub.amount_type, contrib.contribute_per, line.total)
 
             adj_move_id = False
             if total_deduct > 0:
@@ -478,6 +645,14 @@ class hr_payslip(osv.osv):
         return True
 
 hr_payslip()
+
+class hr_payslip_line(osv.osv):
+    _inherit = 'hr.payslip.line'
+    _columns = {
+        'account_id': fields.many2one('account.account', 'General Account'),
+        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
+    }
+hr_payslip_line()
 
 class account_move_link_slip(osv.osv):
     '''

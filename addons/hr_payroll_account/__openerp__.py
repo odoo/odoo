@@ -28,11 +28,12 @@
     * Payment Encoding
     * Company Contribution Management
     """,
-    'author':'OpenERP SA/Axelor',
+    'author':'OpenERP SA',
     'website':'http://www.openerp.com',
     'depends': [
         'hr_payroll',
         'account',
+        'hr_expense'
     ],
     'init_xml': [
     ],
@@ -40,6 +41,7 @@
         "hr_payroll_account_view.xml",
     ],
     'demo_xml': [
+        'hr_payroll_demo.xml'
     ],
     'installable': True,
     'active': False,
