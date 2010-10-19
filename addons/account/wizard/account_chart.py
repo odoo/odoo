@@ -38,13 +38,6 @@ class account_chart(osv.osv_memory):
                                         ('posted', 'All Posted Entries')], 'Target Moves', required = True),
     }
 
-    def _get_fiscalyear(self, cr, uid, context=None):
-        """Return default Fiscalyear value"""
-        fy_obj = self.pool.get('account.fiscalyear')
-        now = time.strftime('%Y-%m-%d')
-        fiscalyears = fy_obj.search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1 )
-        return fiscalyears and fiscalyears[0] or False
-
     def onchange_fiscalyear(self, cr, uid, ids, fiscalyear_id=False, context=None):
         res = {}
         res['value'] = {}
@@ -100,7 +93,6 @@ class account_chart(osv.osv_memory):
         return result
 
     _defaults = {
-        'fiscalyear': _get_fiscalyear,
         'target_move': 'all'
     }
 

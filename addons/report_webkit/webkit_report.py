@@ -205,7 +205,7 @@ class WebKitParser(report_sxw):
     def create_single_pdf(self, cursor, uid, ids, data, report_xml, context=None):
         """generate the PDF"""
         
-        if not context:
+        if context is None:
             context={}
             
         if report_xml.report_type != 'webkit':
