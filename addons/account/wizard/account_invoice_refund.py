@@ -210,9 +210,11 @@ class account_invoice_refund(osv.osv_memory):
             result = mod_obj._get_id(cr, uid, 'account', xml_id)
             id = mod_obj.read(cr, uid, result, ['res_id'], context=context)['res_id']
             result = act_obj.read(cr, uid, id, context=context)
-            result['res_id'] = created_inv
+            invoice_domain = eval(result['domain'])
+            invoice_domain.append(('id', '=', created_inv))
+            result['domain'] = invoice_domain
             return result
-
+        
     def invoice_refund(self, cr, uid, ids, context=None):
         data_refund = self.read(cr, uid, ids, [],context=context)[0]['filter_refund']
         return self.compute_refund(cr, uid, ids, data_refund, context=context)
