@@ -72,6 +72,7 @@ class sale(osv.osv):
     }
     def action_ship_create(self, cr, uid, ids, *args):
         result = super(sale, self).action_ship_create(cr, uid, ids, *args)
+        obj_stock_pick = self.pool.get('stock.picking')
         for order in self.browse(cr, uid, ids, context={}):
             pids = [ x.id for x in order.picking_ids]
             self.pool.get('stock.picking').write(cr, uid, pids, {

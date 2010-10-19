@@ -71,24 +71,26 @@
                         </field>
                         <field name="path_ids" editable="bottom" colspan="4" nolabel="1">
                         <field name="name"/>
-                            <tree string="Pushed flows" editable="bottom">
+                            <tree string="Pushed flows">
                                 <field name="location_from_id"/>
                                 <field name="location_dest_id"/>
                                 <field name="auto"/>
-                                <field name="delay"/>
                                 <field name="name"/>
                                 <field name="invoice_state"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </tree>
                             <form string="Pushed flows">
-                                <field name="location_from_id"/>
-                                <field name="location_dest_id"/>
-                                <field name="auto"/>
-                                <field name="delay"/>
-                                <field name="name"/>
+                                <group colspan="4" col="6">
+                                    <field name="name"/>
+                                    <field name="location_from_id"/>
+                                    <field name="location_dest_id"/>
+                                    <field name="auto"/>
+                                    <field name="delay"/>
+                                    <field name="journal_id" groups="base.group_extended"/>
+                                </group>
+                                <field name="picking_type"/>
                                 <field name="invoice_state"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="journal_id" groups="base.group_extended"/>
                             </form>
                         </field>
                     </page>

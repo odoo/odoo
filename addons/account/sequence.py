@@ -62,6 +62,7 @@ class ir_sequence(osv.osv):
                                                            context=context)
         return super(ir_sequence, self).get_id(cr, uid, sequence_id, test,
                                                context=context)
+
 ir_sequence()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -95,7 +95,7 @@ class mrp_production(osv.osv):
                     'state': 'waiting',
                     'production_id': production.id
                 }
-                sub_prod_ids = self.pool.get('stock.move').create(cr, uid, data)
+                self.pool.get('stock.move').create(cr, uid, data)
         return picking_id
 
 mrp_production()
