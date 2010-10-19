@@ -2,45 +2,43 @@
 <openerp>
      <data>
 
-        <record id="account_budget_report_view" model="ir.ui.view">
-             <field name="name">account.budget.report.form</field>
-             <field name="model">account.budget.report</field>
-             <field name="type">form</field>
-             <field name="arch" type="xml">
-	             <form string="Select Dates Period">
-					<group width="450">
-					<separator string="Print Budgets" colspan="4"/>
-					<field name="date1"/>
-					<field name="date2"/>
-					<separator colspan="4"/>
-						<group colspan="4" col="6">
-							<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-							<button name="check_report" string="Print" type="object" icon="gtk-print" default_focus="1"/>
-						</group>
-					</group>
-				</form>
-			</field>
-		</record>
+      <record id="account_budget_report_view" model="ir.ui.view">
+        <field name="name">account.budget.report.form</field>
+        <field name="model">account.budget.report</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+          <form string="Select Dates Period">
+			<separator string="Print Budgets" colspan="4"/>
+			<field name="date_from"/>
+			<field name="date_to"/>
+			<separator colspan="4"/>
+            <group colspan="4" col="6">
+                  <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                  <button name="check_report" string="Print" type="object" icon="gtk-print" default_focus="1"/>
+            </group>
+          </form>
+        </field>
+      </record>
 
-		<record id="action_account_budget_report" model="ir.actions.act_window">
-			<field name="name">Budgets</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">account.budget.report</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="view_id" ref="account_budget_report_view"/>
-			<field name="target">new</field>
-		</record>
+    <record id="action_account_budget_report" model="ir.actions.act_window">
+      <field name="name">Budgets</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">account.budget.report</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="account_budget_report_view"/>
+      <field name="target">new</field>
+    </record>
 
-		<record model="ir.values" id="account_budget_report_values">
-			<field name="model_id" ref="account_budget.model_account_budget_post" />
-			<field name="object" eval="1" />
-			<field name="name">Budgets</field>
-			<field name="key2">client_print_multi</field>
-			<field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_budget_report'))" />
-			<field name="key">action</field>
-			<field name="model">account.budget.post</field>
-		</record>
+    <record model="ir.values" id="account_budget_report_values">
+      <field name="model_id" ref="account_budget.model_account_budget_post" />
+      <field name="object" eval="1" />
+      <field name="name">Budgets</field>
+      <field name="key2">client_print_multi</field>
+      <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_budget_report'))" />
+      <field name="key">action</field>
+      <field name="model">account.budget.post</field>
+    </record>
 
-	</data>
+  </data>
 </openerp>

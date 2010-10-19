@@ -57,7 +57,7 @@ def OpenDAVConfig(**kw):
 class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
     protocol_version = 'HTTP/1.1'
-    _HTTP_OPTIONS= { 'DAV' : ['1',],
+    _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
                     'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT',
                             'PROPFIND', 'PROPPATCH', 'OPTIONS', 'MKCOL',
                             'DELETE', 'TRACE', 'REPORT', ]
@@ -81,7 +81,15 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
 
     def setup(self):
         self.davpath = '/'+config.get_misc('webdav','vdir','webdav')
-        self.baseuri = "http://%s:%d/"% (self.server.server_name, self.server.server_port)
+        addr, port = self.server.server_name, self.server.server_port
+        server_proto = getattr(self.server,'proto', 'http').lower()
+        try:
+            if hasattr(self.request, 'getsockname'):
+                addr, port = self.request.getsockname()
+        except Exception, e:
+            self.log_error("Cannot calculate own address: %s" , e)
+        # Too early here to use self.headers
+        self.baseuri = "%s://%s:%d/"% (server_proto, addr, port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
 
     def copymove(self, CLASS):
@@ -156,8 +164,6 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             etag = None
 
             for match in self.headers['If-Match'].split(','):
-                if match.startswith('"') and match.endswith('"'):
-                    match = match[1:-1]
                 if match == '*':
                     if dc.exists(uri):
                         test = True
@@ -208,8 +214,9 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         if self.headers.has_key("Content-Type"):
             ct=self.headers['Content-Type']
         try:
-            location = dc.put(uri,body,ct)
+            location = dc.put(uri, body, ct)
         except DAV_Error, (ec,dd):
+            self._logger.warning("Cannot PUT to %s: %s", uri, dd, exc_info=True)
             return self.send_status(ec)
 
         headers = {}
@@ -275,8 +282,7 @@ try:
         handler.debug = config.get_misc('webdav','debug',True)
         _dc = { 'verbose' : verbose,
                 'directory' : directory,
-                'lockemulation' : False,
-
+                'lockemulation' : True,
                 }
 
         conf = OpenDAVConfig(**_dc)

@@ -26,6 +26,7 @@ from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
 import tools
+from operator import itemgetter
 
 class account_move_line(osv.osv):
     _name = "account.move.line"
@@ -863,9 +864,8 @@ class account_move_line(osv.osv):
                     result['toolbar']['action'] = []
 
             #Restrict the list of journal view in search view
-            if view_type == 'search':
-                journal_list = journal_pool.name_search(cr, uid, '', [], context=context)
-                result['fields']['journal_id']['selection'] = journal_list
+            if view_type == 'search' and result['fields'].get('journal_id', False):
+                result['fields']['journal_id']['selection'] = journal_pool.name_search(cr, uid, '', [], context=context)
             return result
 
         if context.get('view_mode', False):
@@ -887,19 +887,20 @@ class account_move_line(osv.osv):
             for field in journal.view_id.columns_id:
                 if not field.field in fields:
                     fields[field.field] = [journal.id]
-                    fld.append((field.field, field.sequence))
+                    fld.append((field.field, field.sequence, field.name))
                     flds.append(field.field)
                     common_fields[field.field] = 1
                 else:
                     fields.get(field.field).append(journal.id)
                     common_fields[field.field] = common_fields[field.field] + 1
-        fld.append(('period_id', 3))
-        fld.append(('journal_id', 10))
+
+        fld.append(('period_id', 3, 'Period'))
+        fld.append(('journal_id', 10, 'Journal'))
         flds.append('period_id')
         flds.append('journal_id')
         fields['period_id'] = all_journal
         fields['journal_id'] = all_journal
-        from operator import itemgetter
+
         fld = sorted(fld, key=itemgetter(1))
 
         widths = {
@@ -952,6 +953,7 @@ class account_move_line(osv.osv):
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
+            attrs.append('string="'+field_it[2]+'"')
             attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
             xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
 

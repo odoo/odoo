@@ -30,16 +30,12 @@ class Env(dict):
         self.__usr = user
 
     def __getitem__(self, name):
-
         if name in ('__obj', '__user'):
-            return super(ExprContext, self).__getitem__(name)
-
+            return super(Env, self).__getitem__(name)
         if name == 'user':
             return self.__user
-
         if name == 'object':
             return self.__obj
-
         return self.__obj[name]
 
 class process_process(osv.osv):

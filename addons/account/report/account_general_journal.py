@@ -87,7 +87,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
-        self.cr.execute('SELECT j.code, j.name, l.amount_currency,c.code AS currency_code,l.currency_id , '
+        self.cr.execute('SELECT j.code, j.name, l.amount_currency,c.code AS currency_code,l.currency_id, '
                         'SUM(l.debit) AS debit, SUM(l.credit) AS credit '
                         'FROM account_move_line l '
                         'LEFT JOIN account_move am ON (l.move_id=am.id) '
@@ -111,7 +111,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def _get_account(self, data):
         if data['model'] == 'account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).company_id.name
-        return super(journal_print ,self)._get_account(data)
+        return super(journal_print, self)._get_account(data)
 
     def _get_fiscalyear(self, data):
         if data['model'] == 'account.journal.period':

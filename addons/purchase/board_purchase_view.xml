@@ -17,7 +17,7 @@
             <field name="search_view_id" ref="purchase.purchase_order_tree"/>
         </record>
         <record id="purchase_waiting" model="ir.actions.act_window">
-            <field name="name">Waiting Approval</field>
+            <field name="name">Purchase Order Waiting Approval</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
@@ -125,7 +125,7 @@
                             <action colspan="4" height="220" name="%(purchase.action_po_per_month_tree)d" string="Purchase order per month"  width="510"/>
                         -->
                         	<action colspan="4" height="220" name="%(purchase_draft)d" string="Request for Quotations"  width="510"/>
-                        	<action colspan="4" height="220" name="%(purchase_waiting)d" string="Waiting Approval"  width="510"/>
+                        	<action colspan="4" height="220" name="%(purchase_waiting)d" string="Purchase Order Waiting Approval"  width="510"/>
                         </child1>
                         <child2>
                         	<action colspan="4" height="220" name="%(action_purchase_order_monthly_categ_graph)d" string="Monthly Purchase by Category"  />
@@ -156,7 +156,6 @@
             id="menu_board_purchase"
             parent="menu_purchase_deshboard"
             sequence="4"/>
-        <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases" sequence="3" groups="base.group_system,group_purchase_manager,group_purchase_user,base.group_extended" action="open_board_purchase"/>
 
     </data>
 </openerp>

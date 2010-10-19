@@ -363,7 +363,6 @@ class abstracted_fs(object):
         """Remove the specified directory."""
         cr, node, rem = datacr
         assert node
-        cr = self.get_node_cr(node)
         node.rmcol(cr)
         cr.commit()
 

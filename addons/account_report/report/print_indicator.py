@@ -22,15 +22,16 @@
 import pooler
 import time
 from report import report_sxw
-
 from pychart import *
 import StringIO
+import tools
+import os
+
 theme.use_color = 1
 theme.default_font_family = "Helvetica-Bold"
 theme.default_font_size = 18
 theme.default_line_width = 1.0
-import tools
-import os
+
 
 
 class accounting_report_indicator(report_sxw.rml_parse):
@@ -72,9 +73,9 @@ class accounting_report_indicator(report_sxw.rml_parse):
                 'disp_graph':obj_ind.disp_graph,
                 'disp_tree':obj_ind.disp_tree,
                 'note':obj_ind.note,
-                'level' : obj_ind.parent_id or 0,
+                'level': obj_ind.parent_id or 0,
                 'type':obj_ind.type,
-                'array_table' : False,
+                'array_table': False,
                 }
             if obj_ind.parent_id:
                 for record in result:
@@ -228,7 +229,6 @@ class accounting_report_indicator(report_sxw.rml_parse):
         if intercall:
             return True
         self.count +=1
-        import os
         path=tools.config['addons_path']+"/account_report/tmp_images/image"
 
         dirname =tools.config['addons_path']+'/account_report/tmp_images/'

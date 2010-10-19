@@ -16,7 +16,7 @@
                     <field domain="[('type','=','normal'), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                     <field name="unit_amount"/>
                     <field name="unit_quantity"/>
-                    <field name="total_amount"/>
+                    <field name="total_amount" sum="Total"/>
                 </tree>
             </field>
         </record>
@@ -68,10 +68,9 @@
                 <form string="Expenses Sheet">
                     <group colspan="4" col="6">
                         <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name="ref" groups="base.group_extended"/>
-                        <field name="date" select="1"/>
-                        <field name="amount"/>
+                        <field name="date"/>
                         <field name="currency_id"/>
                         <field name="department_id" groups="base.group_extended"/>
                         <field name="company_id" groups="base.group_multi_company"/>
@@ -81,17 +80,23 @@
                             <newline/>
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <form string="Expense Lines">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)"/>
-                                    <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" widget="selection"/>
-                                    <field name="name" />
-                                    <field name="date_value" />
-                                    <field name="unit_quantity"/>
-                                    <field name="unit_amount"/>
-                                    <field name="ref"/>
-                                    <field name="sequence" groups="base.group_extended"/>
-                                    <field domain="[('type','=','normal'), ('parent_id','!=',False)]" name="analytic_account" groups="base.group_extended"/>
-                                    <newline/>
-                                    <field name="total_amount"/>
+                                    <group col="6" colspan="4">
+                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)"/>
+                                        <field name="name" colspan="4"/>
+                                        <newline/>
+                                        <field name="unit_amount"/>
+                                        <field name="unit_quantity"/>
+                                        <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" widget="selection"/>
+                                    </group>
+                                    <group colspan="2" col="2" groups="analytic.group_analytic_accounting">
+                                        <separator string="Customer Project" colspan="2"/>
+                                        <field domain="[('type','=','normal')]" name="analytic_account"/>
+                                    </group>
+                                    <group colspan="2" col="2">
+                                        <separator string="References" colspan="2"/>
+                                        <field name="date_value" />
+                                        <field name="ref"/>
+                                    </group>
                                 </form>
                             </field>
                             <field name="state"/>
@@ -99,8 +104,8 @@
                                 <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert"/>
                                 <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_manager" />
                                 <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
-                                <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-execute"/>
-                                <button name="validate" states="confirm" string="Approve" type="workflow" icon="terp-camera_test"/>
+                                <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-go-forward"/>
+                                <button name="validate" states="confirm" string="Approve" type="workflow" icon="gtk-go-forward"/>
                             </group>
                         </page>
                         <page string="Other Info" groups="base.group_extended">

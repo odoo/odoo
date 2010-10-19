@@ -37,13 +37,13 @@ STATE = [
 ]
 
 STATE_PRIOR = {
-    'none' : 0,
-    'canceled' : 1,
-    'old' : 2,
-    'waiting' : 3,
-    'invoiced' : 4,
-    'free' : 6,
-    'paid' : 7
+    'none': 0,
+    'canceled': 1,
+    'old': 2,
+    'waiting': 3,
+    'invoiced': 4,
+    'free': 6,
+    'paid': 7
 }
 
 class membership_line(osv.osv):
@@ -109,7 +109,7 @@ class membership_line(osv.osv):
                 )
             ''', (line.id,))
             fetched = cr.fetchone()
-            if not fetched :
+            if not fetched:
                 res[line.id] = 'canceled'
                 continue
             istate = fetched[0]
@@ -137,7 +137,7 @@ class membership_line(osv.osv):
         'membership_id': fields.many2one('product.product', string="Membership Product", required=True),
         'date_from': fields.date('From', readonly=True),
         'date_to': fields.date('To', readonly=True),
-        'date_cancel' : fields.date('Cancel date'),
+        'date_cancel': fields.date('Cancel date'),
         'date': fields.date('Join Date'),
         'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True),
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
@@ -344,7 +344,7 @@ class Partner(osv.osv):
     }
     _defaults = {
         'free_member': False,
-        'membership_cancel' : False,
+        'membership_cancel': False,
     }
 
     def _check_recursion(self, cr, uid, ids):
@@ -423,6 +423,8 @@ class Partner(osv.osv):
                 tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()
                 for tax in tax_value:
                        invoice_tax_obj.create(cr, uid, tax, context=context)
+        #recompute the membership_state of those partners
+        self.pool.get('res.partner').write(cr, uid, ids, {})
         return invoice_list
 
 Partner()

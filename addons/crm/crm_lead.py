@@ -197,10 +197,14 @@ class crm_lead(crm_case, osv.osv):
             value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
             self.write(cr, uid, ids, value)
 
-        for (id, name) in self.name_get(cr, uid, ids):
-            type = self.browse(cr, uid, id).type or 'Lead'
-            message = (_('The ') + type.title()) + " '" + name + "' "+ _("has been Opened.")
-            self.log(cr, uid, id, message)
+        for case in self.browse(cr, uid, ids):
+            if case.type == 'lead':
+                message = _("The lead '%s' has been opened.") % case.name
+            elif case.type == 'opportunity':
+                message = _("The opportunity '%s' has been opened.") % case.name
+            else:
+                message = _("The case '%s' has been opened.") % case.name
+            self.log(cr, uid, case.id, message)
         return res
 
     def case_close(self, cr, uid, ids, *args):
@@ -213,11 +217,14 @@ class crm_lead(crm_case, osv.osv):
         """
         res = super(crm_lead, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
-        for (id, name) in self.name_get(cr, uid, ids):
-            lead = self.browse(cr, uid, id)
-            if lead.type == 'lead':
-                message = _('The Lead') + " '" + name + "' "+ _("has been Closed.")
-                self.log(cr, uid, id, message)
+        for case in self.browse(cr, uid, ids):
+            if case.type == 'lead':
+                message = _("The lead '%s' has been closed.") % case.name
+            elif case.type == 'opportunity':
+                message = _("The opportunity '%s' has been closed.") % case.name
+            else:
+                message = _("The case '%s' has been closed.") % case.name
+            self.log(cr, uid, case.id, message)
         return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):
@@ -315,8 +322,6 @@ class crm_lead(crm_case, osv.osv):
             vals.update(res)
 
         res = self.create(cr, uid, vals, context)
-        message = _('A Lead created') + " '" + subject + "' " + _("from Mailgate.")
-        self.log(cr, uid, res, message)
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {

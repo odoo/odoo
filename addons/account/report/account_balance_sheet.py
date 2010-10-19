@@ -110,7 +110,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         else:
             self.res_bl['type'] = 'Net Loss'
         pl_dict  = {
-            'code': False,
+            'code': self.res_bl['type'],
             'name': self.res_bl['type'],
             'level': False,
             'balance':self.res_bl['balance'],

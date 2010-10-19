@@ -68,6 +68,7 @@ class survey(osv.osv):
         'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
         'send_response': fields.boolean('E-mail Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
+        'invited_user_ids': fields.many2many('res.users', 'survey_invited_user_rel', 'sid', 'uid', 'Invited User'),
     }
     _defaults = {
         'state': lambda * a: "draft",
