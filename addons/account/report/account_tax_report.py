@@ -24,13 +24,15 @@ import copy
 
 import rml_parse
 from report import report_sxw
+from common_report_header import common_report_header
 
-class tax_report(rml_parse.rml_parse):
+class tax_report(rml_parse.rml_parse, common_report_header):
     _name = 'report.account.vat.declaration'
     def __init__(self, cr, uid, name, context={}):
         super(tax_report, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
+            'get_account': self._get_account,
             'get_period': self._get_period,
             'get_codes': self._get_codes,
             'get_general': self._get_general,
@@ -41,9 +43,16 @@ class tax_report(rml_parse.rml_parse):
         })
 
 
+
+#    def _get_account(self, form):
+#        if data['model']=='account.account':
+#            return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['id']).company_id.name
+#        return super(tax_report ,self)._get_account(form)
+
+
     def get_years(self,form):
         res={}
-        fiscal_year_name = self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'])
+        fiscal_year_name = self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear_id'])
 
         if fiscal_year_name:
             res['fname'] = fiscal_year_name[0][1]
