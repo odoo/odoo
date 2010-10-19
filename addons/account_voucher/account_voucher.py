@@ -574,6 +574,8 @@ class account_voucher(osv.osv):
         currency_pool = self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
         for inv in self.browse(cr, uid, ids):
+            if not inv.line_ids:
+                raise osv.except_osv(_('No Lines !'), _('Please create some lines'))
             if inv.move_id:
                 continue
             if inv.number:
