@@ -171,7 +171,6 @@
             <field name="arch" type="xml">
                 <tree string="Events" colors="red:register_min>register_current;black:register_min&lt;=register_current">
                     <field name="name" string="Name"/>
-                    <field name="user_id"/>
                     <field name="main_speaker_id"/>
                     <field name="language"/>
                     <field name="type"/>
@@ -180,8 +179,8 @@
                     <field name="register_min"/>
                     <field name="register_current"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)"/>
-                    <field name="state"/>
                     <field name="user_id"/>
+                    <field name="state"/>
                     <button string="Confirm Event" help="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                     <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
                     <button string="Event Done" help="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
