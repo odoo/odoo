@@ -6,7 +6,7 @@
 override_dh_auto_clean:
 	dh_auto_clean
 
-	-find $(CURDIR) -type f -name "*.pyc" | xargs rm -f
+	rm -rf build
 
 override_dh_installchangelogs:
 	dh_installchangelogs doc/Changelog
