@@ -2,6 +2,7 @@
 
 SHELL := sh -e
 
+include /usr/share/quilt/quilt.make
 
 update:
 	# Needs: shell-helper
@@ -73,8 +74,4 @@ binary-indep: install
 	dh_md5sums
 	dh_builddeb
 
-patch:
-	
-unpatch:
-	
-.PHONY: clean build install binary binary-arch binary-indep patch unpatch
+.PHONY: clean build install binary binary-arch binary-indep
