@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 %:
-	dh ${@} --with quilt
+	dh --with quilt ${@}
 
 override_dh_auto_clean:
 	dh_auto_clean
