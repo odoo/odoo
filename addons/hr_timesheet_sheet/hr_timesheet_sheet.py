@@ -261,7 +261,7 @@ class hr_timesheet_sheet(osv.osv):
             raise osv.except_osv(_('Error !'), _('You can not sign in from an other date than today'))
         emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         context['sheet_id']=ids[0]
-        success = emp_obj.attendance_action_change(cr, uid, emp_ids, type='sign_in', context=context,)
+        emp_obj.attendance_action_change(cr, uid, emp_ids, type='sign_in', context=context,)
         return True
 
     def sign_out(self, cr, uid, ids, context=None):
@@ -272,7 +272,7 @@ class hr_timesheet_sheet(osv.osv):
             raise osv.except_osv(_('Error !'), _('You can not sign out from an other date than today'))
         emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)])
         context['sheet_id']=ids[0]
-        success = emp_obj.attendance_action_change(cr, uid, emp_ids, type='sign_out', context=context,)
+        emp_obj.attendance_action_change(cr, uid, emp_ids, type='sign_out', context=context,)
         return True
 
     _columns = {
