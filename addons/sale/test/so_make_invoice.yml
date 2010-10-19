@@ -78,13 +78,10 @@
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
     sol = so.order_line[1] 
-    try:
-        self.button_cancel(cr, uid, [sol.id], {"lang": "en_US", "tz": False, "active_model":
-          "ir.ui.menu", "active_ids": [ref("sale.menu_invoicing_sales_order_lines")],
-          "search_default_uninvoiced": 1, "active_id": ref("sale.menu_invoicing_sales_order_lines"),
-          })  
-    except:
-        pass
+    self.button_cancel(cr, uid, [sol.id], {"lang": "en_US", "tz": False, "active_model":
+      "ir.ui.menu", "active_ids": [ref("sale.menu_invoicing_sales_order_lines")],
+      "search_default_uninvoiced": 1, "active_id": ref("sale.menu_invoicing_sales_order_lines"),
+      })  
 -   
   I verify that picking has been generated for the sale order.
 - 
