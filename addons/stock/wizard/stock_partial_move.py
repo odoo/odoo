@@ -59,16 +59,15 @@ class stock_partial_move(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
         print context
         message = {
-                'title' : 'Deliver Products',
-                'info' : 'Delivery Information',
+                'title' : '_(Deliver Products)',
+                'info' : '_(Delivery Information)',
                 'button' : '_Deliver'
                 }
         if context:
             if context.get('product_receive', False):
-                print "on a bien reçu un produit"
                 message = {
-                    'title' : 'Receive Products',
-                    'info' : 'Receive Information',
+                    'title' : '_(Receive Products)',
+                    'info' : '_(Receive Information)',
                     'button' : '_Receive'
                 }
                 
