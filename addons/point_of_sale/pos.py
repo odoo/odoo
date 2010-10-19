@@ -22,7 +22,8 @@
 import time
 import netsvc
 from osv import fields, osv
-from mx import DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from tools.translate import _
 from decimal import Decimal
 import decimal_precision as dp
@@ -337,7 +338,7 @@ class pos_order(osv.osv):
         'price_type': lambda *a: 'tax_excluded',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.order'),
         'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'date_validity': lambda *a: (DateTime.now() + DateTime.RelativeDateTime(months=+6)).strftime('%Y-%m-%d'),
+        'date_validity': lambda *a: (datetime.today() + relativedelta(months=+6)).strftime('%Y-%m-%d'),
         'nb_print': lambda *a: 0,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'sale_journal': _sale_journal_get,
@@ -1268,8 +1269,8 @@ class product_product(osv.osv):
     _columns = {
         'income_pdt': fields.boolean('Product for Input'),
         'expense_pdt': fields.boolean('Product for expenses'),
-        'am_out': fields.boolean('Controle for Output Operations'),
-        'disc_controle': fields.boolean('Discount Controle '),
+        'am_out': fields.boolean('Control for Output Operations'),
+        'disc_controle': fields.boolean('Discount Control'),
     }
     _defaults = {
         'disc_controle': lambda *a: True,

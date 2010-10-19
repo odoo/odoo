@@ -48,7 +48,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_opportunity_categ_graph"/>
-            <field name="domain">[('state','!=','done'),('state','!=','cancel')]</field>
+            <field name="domain">[('state', 'not in', ('done', 'cancel')), ('type', '=', 'opportunity')]</field>
         </record>
 
         <record model="ir.actions.act_window" id="act_opportunity_stage">
@@ -56,7 +56,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_opportunity_stage_graph"/>
-            <field name="domain">[('state','!=','done'),('state','!=','cancel')]</field>
+            <field name="domain">[('state', 'not in', ('done', 'cancel')), ('type', '=', 'opportunity')]</field>
         </record>
 
         <record model="ir.actions.act_window" id="act_oppor_stage_user">

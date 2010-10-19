@@ -19,16 +19,13 @@
 #
 ##############################################################################
 
-from mx import DateTime
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from osv import osv, fields
 import netsvc
-import ir
 import pooler
-from tools import config
 from tools.translate import _
 import decimal_precision as dp
 from osv.orm import browse_record, browse_null
@@ -391,8 +388,6 @@ class purchase_order(osv.osv):
         return False
 
     def action_cancel(self, cr, uid, ids, context={}):
-        ok = True
-        purchase_order_line_obj = self.pool.get('purchase.order.line')
         for purchase in self.browse(cr, uid, ids):
             for pick in purchase.picking_ids:
                 if pick.state not in ('draft','cancel'):
@@ -691,7 +686,6 @@ class purchase_order_line(osv.osv):
             'product_uom': uom}}
         domain = {}
 
-        partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
         taxes = self.pool.get('account.tax').browse(cr, uid,map(lambda x: x.id, prod.supplier_taxes_id))
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         res['value']['taxes_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
@@ -764,9 +758,8 @@ class procurement_order(osv.osv):
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
-            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-            newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
-            newdate = newdate - seller_delay
+            newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
+            newdate = (newdate - relativedelta(days=company.po_lead)) - relativedelta(days=seller_delay)
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})

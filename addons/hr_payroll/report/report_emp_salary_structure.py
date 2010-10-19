@@ -24,7 +24,6 @@
 
 import time
 from report import report_sxw
-from tools import amount_to_text_en
 
 class salary_structure_report(report_sxw.rml_parse):
 
@@ -88,13 +87,6 @@ class salary_structure_report(report_sxw.rml_parse):
             return 'Other Deduction'
 
 report_sxw.report_sxw('report.salary.structure', 'hr.employee', 'hr_payroll/report/report_emp_salary_structure.rml', parser=salary_structure_report)
-
-
-
-
-
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

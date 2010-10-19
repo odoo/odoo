@@ -33,9 +33,9 @@ class account_entries_report(osv.osv):
         'date_created': fields.date('Date Created', readonly=True),
         'date_maturity': fields.date('Date Maturity', readonly=True),
         'ref': fields.char('Reference', size=64, readonly=True),
-        'nbr':fields.integer('# of Items', readonly=True),
-        'debit':fields.float('Debit', readonly=True),
-        'credit':fields.float('Credit', readonly=True),
+        'nbr': fields.integer('# of Items', readonly=True),
+        'debit': fields.float('Debit', readonly=True),
+        'credit': fields.float('Credit', readonly=True),
         'balance': fields.float('Balance', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
@@ -77,14 +77,16 @@ class account_entries_report(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
+        fiscalyear_obj = self.pool.get('account.fiscalyear')
+        period_obj = self.pool.get('account.period')
         for arg in args:
             if arg[0] == 'period_id' and arg[2] == 'current_period':
-                current_period = self.pool.get('account.period').find(cr, uid)[0]
+                current_period = period_obj.find(cr, uid)[0]
                 args.append(['period_id','in',[current_period]])
                 break
             elif arg[0] == 'period_id' and arg[2] == 'current_year':
-                current_year = self.pool.get('account.fiscalyear').find(cr, uid)
-                ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                current_year = fiscalyear_obj.find(cr, uid)
+                ids = fiscalyear_obj.read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
                 args.append(['period_id','in',ids])
         for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
             if a in args:
@@ -94,15 +96,17 @@ class account_entries_report(osv.osv):
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
         todel=[]
+        fiscalyear_obj = self.pool.get('account.fiscalyear')
+        period_obj = self.pool.get('account.period')
         for arg in domain:
             if arg[0] == 'period_id' and arg[2] == 'current_period':
-                current_period = self.pool.get('account.period').find(cr, uid)[0]
+                current_period = period_obj.find(cr, uid)[0]
                 domain.append(['period_id','in',[current_period]])
                 todel.append(arg)
                 break
             elif arg[0] == 'period_id' and arg[2] == 'current_year':
-                current_year = self.pool.get('account.fiscalyear').find(cr, uid)
-                ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                current_year = fiscalyear_obj.find(cr, uid)
+                ids = fiscalyear_obj.read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
                 domain.append(['period_id','in',ids])
                 todel.append(arg)
         for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:

@@ -19,15 +19,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from time import strptime
+
 from report import report_sxw
-import xml.dom.minidom
-import os, time
-import osv
 import re
-import tools
-import pooler
-import re
-import sys
 from lxml import etree
 
 
@@ -56,12 +51,14 @@ class rml_parse(report_sxw.rml_parse):
             return new
         else:
             return self.comma_me(new)
+
     def _ellipsis(self, string, maxlen=100, ellipsis = '...'):
         ellipsis = ellipsis or ''
         try:
             return string[:maxlen - len(ellipsis) ] + (ellipsis, '')[len(string) < maxlen]
-        except Exception, e:
+        except Exception:
             return False
+
     def _strip_name(self, name, maxlen=50):
         return self._ellipsis(name, maxlen, '...')
 
@@ -119,7 +116,6 @@ class rml_parse(report_sxw.rml_parse):
     def repair_string(self,chaine):
         ast = list(chaine)
         UnicodeAst = []
-        _previouslyfound = False
         i = 0
         while i < len(ast):
             elem = ast[i]
@@ -135,21 +131,6 @@ class rml_parse(report_sxw.rml_parse):
                 UnicodeAst.append(elem)
                 i += i + 1
         return "".join(UnicodeAst)
-
-    def ReencodeAscii(self,str):
-        print sys.stdin.encoding
-        try:
-            Stringer = str.decode("ascii")
-        except UnicodeEncodeError:
-            print "REENCODING ERROR"
-            return str.encode("ascii")
-        except UnicodeDecodeError:
-            print "DECODING ERROR"
-            return str.encode("ascii")
-
-        else:
-            print Stringer
-            return Stringer
 
     def _add_header(self, node, header='external'):
         if header=='internal':
@@ -169,3 +150,5 @@ class rml_parse(report_sxw.rml_parse):
                 else :
                     found.getparent().replace(found,tag)
         return True
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

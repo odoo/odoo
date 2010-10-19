@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-from mx import DateTime
-
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from osv import fields, osv
 from osv.orm import browse_record, browse_null
 
@@ -84,10 +84,10 @@ class purchase_requisition_partner(osv.osv_memory):
                     partner_list = sorted([(partner.sequence, partner) for partner in  line.product_id.seller_ids if partner])
                     partner_rec = partner_list and partner_list[0] and partner_list[0][1] or False
                     uom_id = line.product_id.uom_po_id and line.product_id.uom_po_id.id or False
-                    newdate = DateTime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S')
-                    newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
+                    newdate = datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S')
+                    newdate = newdate - relativedelta(days=company.po_lead)
                     delay = partner_rec and partner_rec.delay or False
-                    newdate = newdate -(delay or DateTime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S') )
+                    newdate = newdate -(delay or datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S') )
                     partner = partner_rec and partner_rec.name or supplier_data
                     pricelist_id = partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.id or False
                     price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, line.product_qty, False, {'uom': uom_id})[pricelist_id]

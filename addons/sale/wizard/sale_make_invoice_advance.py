@@ -20,7 +20,6 @@
 
 from osv import fields, osv
 from tools.translate import _
-import ir
 
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
@@ -55,8 +54,6 @@ class sale_advance_payment_inv(osv.osv_memory):
 
         for sale_adv_obj in self.browse(cr, uid, ids):
             for sale in obj_sale.browse(cr, uid, context['active_ids']):
-                address_contact = False
-                address_invoice = False
                 create_ids = []
                 ids_inv = []
                 if sale.order_policy == 'postpaid':
@@ -107,7 +104,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         # If invoice on picking: add the cost on the SO
         # If not, the advance will be deduced when generating the final invoice
         #
-                if sale.order_policy=='picking':
+                if sale.order_policy == 'picking':
                     self.pool.get('sale.order.line').create(cr, uid, {
                         'order_id': sale.id,
                         'name': val['value']['name'],
@@ -138,30 +135,20 @@ sale_advance_payment_inv()
 class sale_open_invoice(osv.osv_memory):
     _name = "sale.open.invoice"
     _description = "Sale Open Invoice"
-    _columns = {
-    }
-
     def open_invoice(self, cr, uid, ids, context):
 
         """
              To open invoice.
-
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
              @param ids: the ID or list of IDs if we want more than one
              @param context: A standard dictionary
-
              @return:
 
         """
-        record_id = context and context.get('active_id', False) or False
 
         mod_obj = self.pool.get('ir.model.data')
-        obj_inv = self.pool.get('account.invoice')
-        invoices = []
-        invoice = obj_inv.browse(cr, uid, record_id, context=context)
-
         for advance_pay in self.browse(cr, uid, ids):
             result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
             id = mod_obj.read(cr, uid, result, ['res_id'])

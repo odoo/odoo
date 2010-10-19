@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 10:28:48+0000\n"
-"PO-Revision-Date: 2010-08-20 10:28:48+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46:52+0000\n"
+"PO-Revision-Date: 2010-10-18 17:46:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,15 +36,13 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: project_messages
-#: model:ir.actions.act_window,name:project_messages.messages_form
-#: model:ir.ui.menu,name:project_messages.menu_messages_form
-#: view:project.messages:0
-msgid "Communication Messages"
+#: help:project.messages,to_id:0
+msgid "Keep this empty to broadcast the message."
 msgstr ""
 
 #. module: project_messages
-#: help:project.messages,to_id:0
-msgid "Keep this empty to broadcast the message."
+#: field:project.messages,create_date:0
+msgid "Creation Date"
 msgstr ""
 
 #. module: project_messages
@@ -58,6 +56,8 @@ msgid "project.messages"
 msgstr ""
 
 #. module: project_messages
+#: model:ir.actions.act_window,name:project_messages.act_project_messages
+#: model:ir.actions.act_window,name:project_messages.action_view_project_editable_messages_tree
 #: view:project.messages:0
 #: view:project.project:0
 #: field:project.project,message_ids:0
@@ -74,15 +74,6 @@ msgstr ""
 #. module: project_messages
 #: view:project.messages:0
 msgid "Group By..."
-msgstr ""
-
-#. module: project_messages
-#: model:ir.module.module,description:project_messages.module_meta_information
-msgid "\n"
-"    This module provides the functionality to send messages within a project.\n"
-"    A user can send messages individually to other user. He can even broadcast\n"
-"    it to all the users.\n"
-"    "
 msgstr ""
 
 #. module: project_messages
@@ -105,6 +96,18 @@ msgstr ""
 #. module: project_messages
 #: view:project.messages:0
 msgid "Message From"
+msgstr ""
+
+#. module: project_messages
+#: model:ir.actions.act_window,name:project_messages.messages_form
+#: model:ir.ui.menu,name:project_messages.menu_messages_form
+#: view:project.messages:0
+msgid "Project Messages"
+msgstr ""
+
+#. module: project_messages
+#: view:project.messages:0
+msgid "Today"
 msgstr ""
 
 #. module: project_messages
