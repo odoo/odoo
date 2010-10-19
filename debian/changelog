@@ -1,3 +1,17 @@
+openerp-server (5.0.7-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.7 (Closes: #573716):
+  * Updating copyright file.
+  * Resorting the dh call to more common order.
+  * Updating README.source.
+  * Dropping python-lxml patch, went upstream.
+  * Dropping postgresql-8.4.patch, went upstream.
+  * Adding some more python module build-depends to avoid some chicken-
+    egg problem with the new setup.py and quilt.
+  * Adding dependency to remote_fs in init script.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 13 Mar 2010 13:55:50 +0100
+
 openerp-server (5.0.6-4) unstable; urgency=low
 
   * Adding explicit debian source version 1.0 until switch to 3.0.
