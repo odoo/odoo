@@ -184,9 +184,12 @@ class hr_employee(osv.osv):
         return {'value': {'work_email':mail.user_email}}
 
     def _get_photo(self, cr, uid, context=None):
-        return open(os.path.join(
-            tools.config['addons_path'], 'hr/image', 'photo.png'),
-                    'rb') .read().encode('base64')
+        paths = tools.config['addons_path'].split(",")
+        for path in paths:
+            full_path = os.path.join(path, 'hr/image', 'photo.png')
+            if os.path.exists(full_path):
+                return open(full_path,'rb') .read().encode('base64')
+        raise Exception("photo.png could not be found")
 
     _defaults = {
         'active': 1,
