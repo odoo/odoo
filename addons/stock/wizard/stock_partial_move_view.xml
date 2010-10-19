@@ -2,13 +2,16 @@
 <openerp>
     <data>
 
-        <act_window name="Deliver Products"
+        <act_window name="Deliver/Receive Products"
             res_model="stock.partial.move"
             src_model="stock.move"
             view_mode="form"
+            multi="True"
             target="new"
             key2="client_action_multi"
-            id="action_partial_move"/>
-
+            id="action_partial_move"></act_window>
+            
+		
+		
     </data>
 </openerp>

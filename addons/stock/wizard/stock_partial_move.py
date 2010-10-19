@@ -57,15 +57,31 @@ class stock_partial_move(osv.osv_memory):
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
+        print context
+        message = {
+                'title' : 'Deliver Products',
+                'info' : 'Delivery Information',
+                'button' : '_Deliver'
+                }
+        if context:
+            if context.get('product_receive', False):
+                print "on a bien reçu un produit"
+                message = {
+                    'title' : 'Receive Products',
+                    'info' : 'Receive Information',
+                    'button' : '_Receive'
+                }
+                
+        
         result = super(stock_partial_move, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
         move_obj = self.pool.get('stock.move')
         move_ids = context.get('active_ids', False)
         move_ids = move_obj.search(cr, uid, [('id','in',move_ids)])
-        _moves_arch_lst = """<form string="Deliver Products">
-                        <separator colspan="4" string="Delivery Information"/>
+        _moves_arch_lst = """<form string="%(title)s">
+                        <separator colspan="4" string="%(info)s"/>
                         <field name="date" colspan="2"/>
                         <separator colspan="4" string="Move Detail"/>
-                        """
+                        """ % message
         _moves_fields = result['fields']
         if move_ids and view_type in ['form']:
             for m in move_obj.browse(cr, uid, move_ids, context):
@@ -132,10 +148,10 @@ class stock_partial_move(osv.osv_memory):
                 <group col="2" colspan="2">
                 <button icon='gtk-cancel' special="cancel"
                     string="_Cancel" />
-                <button name="do_partial" string="_Deliver"
+                <button name="do_partial" string="%(button)s"
                     colspan="1" type="object" icon="gtk-apply" />
             </group>
-        </form>"""
+        </form>""" % message
         result['arch'] = _moves_arch_lst
         result['fields'] = _moves_fields
         return result
