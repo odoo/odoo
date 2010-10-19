@@ -280,7 +280,7 @@
             res_model="event.registration"
             src_model="event.event"
             view_mode="tree,form,calendar,graph"
-            context="{'search_default_event_id': active_id}"
+            domain="[('event_id','=',active_id)]"
             view_type="form"/>
 
       <act_window
