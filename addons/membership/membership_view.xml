@@ -72,7 +72,7 @@
                         <separator string="Categorization" colspan="2"/>
                         <field name="list_price" string="Membership Fee"/>
                         <field name="type" />
-                        <field name="property_account_income"/>
+                        <field name="property_account_income" domain="[('type', '!=', 'view')]"/>
                         <field name="categ_id"/>
                         <separator string="Sale Taxes" colspan="2"/>
                         <newline/>
