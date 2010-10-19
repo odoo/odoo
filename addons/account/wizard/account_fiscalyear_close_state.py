@@ -20,8 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
-import tools
 
 class account_fiscalyear_close_state(osv.osv_memory):
     """

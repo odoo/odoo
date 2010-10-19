@@ -84,24 +84,22 @@ class project(osv.osv):
         if not ids:
             return res
         cr.execute('''SELECT
-                project_id, sum(planned_hours), sum(total_hours), sum(effective_hours)
+                project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
             FROM
                 project_task 
             WHERE
                 project_id in %s AND
                 state<>'cancelled'
             GROUP BY
-                project_id''',
-                   (tuple(ids),))
-        progress = dict(map(lambda x: (x[0], (x[1],x[2],x[3])), cr.fetchall()))
-
+                project_id''', (tuple(ids),))
+        progress = dict(map(lambda x: (x[0], (x[1],x[2],x[3],x[4])), cr.fetchall()))
         for project in self.browse(cr, uid, ids, context=context):
-            s = progress.get(project.id, (0.0,0.0,0.0))
+            s = progress.get(project.id, (0.0,0.0,0.0,0.0))
             res[project.id] = {
                 'planned_hours': s[0],
                 'effective_hours': s[2],
                 'total_hours': s[1],
-                'progress_rate': s[1] and (100.0 * s[2] / s[1]) or 0.0
+                'progress_rate': s[1] and round(100.0*s[2]/s[1],2) or 0.0
             }
         return res
 
@@ -139,35 +137,29 @@ class project(osv.osv):
         'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks'], 10),
-                'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours'], 10),
-                'project.task.work': (_get_project_work, ['hours'], 10),
+                'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'effective_hours': fields.function(_progress_rate, multi="progress", method=True, string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks'], 10),
-                'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours'], 10),
-                'project.task.work': (_get_project_work, ['hours'], 10),
+                'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'total_hours': fields.function(_progress_rate, multi="progress", method=True, string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks'], 10),
-                'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours'], 10),
-                'project.task.work': (_get_project_work, ['hours'], 10),
+                'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'progress_rate': fields.function(_progress_rate, multi="progress", method=True, string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo.",
             store = {
                 'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks'], 10),
-                'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours'], 10),
-                'project.task.work': (_get_project_work, ['hours'], 10),
+                'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
      }
-
     _order = "sequence"
-
     _defaults = {
         'active': True,
         'priority': 1,

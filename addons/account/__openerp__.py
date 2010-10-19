@@ -119,7 +119,7 @@ module named account_voucher.
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
-        'account_unit_test.xml',
+        #'account_unit_test.xml',
     ],
     'test': [
         'test/account_customer_invoice.yml',
@@ -131,6 +131,8 @@ module named account_voucher.
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
         'test/account_fiscalyear_close.yml',
+        'test/account_bank_statement.yml',
+        'test/account_cash_statement.yml',
         'test/account_report.yml',
     ],
     'installable': True,

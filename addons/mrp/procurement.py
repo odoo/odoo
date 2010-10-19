@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from mx import DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from osv import fields
 from osv import osv
 from tools.translate import _
@@ -81,8 +82,8 @@ class procurement_order(osv.osv):
         for procurement in procurement_obj.browse(cr, uid, ids):
             res_id = procurement.move_id.id
             loc_id = procurement.location_id.id
-            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
-            newdate = newdate - DateTime.RelativeDateTime(days=company.manufacturing_lead)
+            newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
+            newdate = newdate - relativedelta(days=company.manufacturing_lead)
             produce_id = production_obj.create(cr, uid, {
                 'origin': procurement.origin,
                 'product_id': procurement.product_id.id,

@@ -24,3 +24,5 @@
 import hr_payroll_employees_detail
 #import hr_payroll_create_analytic
 import hr_payroll_year_salary
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
