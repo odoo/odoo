@@ -45,7 +45,7 @@ class account_coda(osv.osv):
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         res = super(account_coda, self).search(cr, user, args=args, offset=offset, limit=limit, order=order,
                 context=context, count=count)
-        if not res:
+        if context.get('bank_statement', False) and not res:
             raise osv.except_osv('Error', _('Coda file not found for bank statement !!'))
         return res
 
