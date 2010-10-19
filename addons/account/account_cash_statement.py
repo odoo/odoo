@@ -241,6 +241,8 @@ class account_cash_statement(osv.osv):
      }
 
     def create(self, cr, uid, vals, context=None):
+        if 'journal_id' not in vals:
+            raise osv.except_osv('Error', _('You cannot create a bank or cash register without a journal!'))
         sql = [
                 ('journal_id', '=', vals['journal_id']),
                 ('state', '=', 'open')
