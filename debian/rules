@@ -27,8 +27,6 @@ clean-patched: patch
 	rm -rf build openerp-server
 	-find $(CURDIR) -type f -name "*.pyc" | xargs rm -f
 
-	debconf-updatepo
-
 	dh_clean
 
 build:
