@@ -29,7 +29,7 @@ class stock_report_prodlots(osv.osv):
     _description = "Stock report by production lots"
     _auto = False
     _columns = {
-        'name': fields.float('Quantity', readonly=True),
+        'qty': fields.float('Quantity', readonly=True),
         'location_id': fields.many2one('stock.location', 'Location', readonly=True, select=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
         'prodlot_id': fields.many2one('stock.production.lot', 'Production lot', readonly=True, select=True),
@@ -43,7 +43,7 @@ class stock_report_prodlots(osv.osv):
                     location_id,
                     product_id,
                     prodlot_id,
-                    sum(qty) as name
+                    sum(qty) as qty
                 from (
                     select -max(sm.id) as id,
                         sm.location_id,

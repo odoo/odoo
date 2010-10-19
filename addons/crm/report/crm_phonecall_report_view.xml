@@ -28,26 +28,6 @@
             </field>
         </record>
 
-<!-- Phone calls by user and section Form View -->
-
-        <record id="view_report_crm_phonecall_form" model="ir.ui.view">
-            <field name="name">crm.phonecall.report.form</field>
-            <field name="model">crm.phonecall.report</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Cases">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="section_id" select="1"/>
-                    <field name="nbr" select="1"/>
-                    <field name="delay_close"/>
-                    <field name="probability"/>
-                    <field name="state" select="1"/>
-                </form>
-            </field>
-        </record>
-
 <!-- Phone calls by user and section Graph View -->
 
         <record id="view_report_crm_phonecall_graph" model="ir.ui.view">

@@ -743,7 +743,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_type_search"/>
         </record>
-        <menuitem action="action_account_type_form" groups="base.group_extended" id="menu_action_account_type_form" parent="menu_low_level"/>
+        <menuitem action="action_account_type_form" groups="base.group_extended,group_account_manager" id="menu_action_account_type_form" parent="menu_low_level"/>
         <!--
     Entries
     -->
@@ -1445,7 +1445,7 @@
             action="action_move_journal_line"
             id="menu_action_move_journal_line_form"
             parent="account.menu_finance_entries"
-            groups="group_account_user"
+            groups="group_account_user,group_account_manager"
             sequence="5"/>
 
         <record id="action_move_line_form" model="ir.actions.act_window">
@@ -1712,7 +1712,7 @@
         </record>
         <menuitem
             action="action_model_form" id="menu_action_model_form" sequence="5"
-            parent="account.menu_configuration_misc" groups="base.group_extended"/>
+            parent="account.menu_configuration_misc" groups="base.group_extended,group_account_manager"/>
 
         <!--
             # Payment Terms
@@ -1927,7 +1927,7 @@
         </record>
         <menuitem
             name="Define Recurring Entries" action="action_subscription_form"
-            groups="base.group_extended"
+            groups="base.group_extended,group_account_manager,group_account_user"
             id="menu_action_subscription_form" sequence="1"
             parent="account.menu_finance_recurrent_entries"/>
 
@@ -2064,17 +2064,17 @@
             id="account_template_folder"
             name="Templates"
             parent="menu_finance_accounting"
-            groups="base.group_multi_company"/>
+            groups="base.group_multi_company,group_account_manager"/>
         <menuitem
             id="account_template_taxes"
             name="Taxes"
             parent="account_template_folder"
-            groups="base.group_multi_company" sequence="2"/>
+            groups="base.group_multi_company,group_account_manager" sequence="2"/>
         <menuitem
             id="account_template_accounts"
             name="Accounts"
             parent="account_template_folder"
-            groups="base.group_multi_company" sequence="1"/>
+            groups="base.group_multi_company,group_account_manager" sequence="1"/>
 
 
         <record id="view_account_template_form" model="ir.ui.view">
@@ -2445,10 +2445,29 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+        <record id="ir_actions_server_action_wizard_multi_chart" model="ir.actions.server">
+            <field name="type">ir.actions.server</field>
+            <field name="condition">True</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="base.model_ir_actions_todo"/>
+            <field eval="5" name="sequence"/>
+            <field name="code">
+act_window_ids = self.pool.get('ir.actions.act_window').search(cr, uid,[('name', 'in', ('Accounting Chart Configuration', 'Generate Chart of Accounts from a Chart Template'))], context=context)
+todo_ids = self.pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', act_window_ids)], context=context)
+self.pool.get('ir.actions.todo').write(cr, uid, todo_ids, {'state':'open'}, context=context)
+action = self.pool.get('res.config').next(cr, uid, [], context)
+</field>
+           <field name="name">New Company Financial Setting</field>
+        </record>
 
-        <menuitem name="New Company Financial Setting" parent="account.menu_finance_accounting"
-            groups="group_account_manager"
-            action="account.action_account_configuration_installer" id="menu_wizard"/>
+
+        <record id="menu_act_ir_actions_bleble" model="ir.ui.menu">
+            <field name="name">New Company Financial Setting</field>
+            <field eval="1" name="sequence"/>
+            <field name="parent_id" ref="account.menu_finance_accounting"/>
+            <field name="icon">STOCK_JUSTIFY_FILL</field>
+            <field name="action" ref="ir_actions_server_action_wizard_multi_chart"/>
+        </record>
 
         <record id="account_account_graph" model="ir.ui.view">
             <field name="name">account.account.graph</field>
@@ -2700,7 +2719,7 @@
             <field name="act_window_id" ref="action_view_bank_statement_tree"/>
         </record>
         <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"
-            groups="group_account_user"/>
+            groups="group_account_user,group_account_manager"/>
 
     </data>
 </openerp>

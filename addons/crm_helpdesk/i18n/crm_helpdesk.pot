@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 13:01:32+0000\n"
-"PO-Revision-Date: 2010-08-20 13:01:32+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46:23+0000\n"
+"PO-Revision-Date: 2010-10-18 17:46:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk.report,delay_close:0
+msgid "Delay to Close"
+msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,nbr:0
@@ -42,11 +47,6 @@ msgid "March"
 msgstr ""
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk.report,delay_close:0
-msgid "Delay to close"
-msgstr ""
-
-#. module: crm_helpdesk
 #: field:crm.helpdesk,company_id:0
 #: view:crm.helpdesk.report:0
 #: field:crm.helpdesk.report,company_id:0
@@ -56,11 +56,6 @@ msgstr ""
 #. module: crm_helpdesk
 #: field:crm.helpdesk,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "This Year"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -75,8 +70,14 @@ msgid "Highest"
 msgstr ""
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
 #: field:crm.helpdesk.report,day:0
 msgid "Day"
+msgstr ""
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Add Internal Note"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -101,8 +102,20 @@ msgid "Partner Contact"
 msgstr ""
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_report_crm_helpdesks_tree
 msgid "Helpdesk Analysis"
+msgstr ""
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+#: field:crm.helpdesk.report,date_closed:0
+msgid "Close Date"
+msgstr ""
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "   Month   "
 msgstr ""
 
 #. module: crm_helpdesk
@@ -146,7 +159,6 @@ msgid "Estimates"
 msgstr ""
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
 #: field:crm.helpdesk.report,section_id:0
 msgid "Section"
 msgstr ""
@@ -175,8 +187,8 @@ msgid "Won"
 msgstr ""
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Reply"
+#: field:crm.helpdesk.report,delay_expected:0
+msgid "Overpassed Deadline"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -191,6 +203,8 @@ msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,canal_id:0
+#: view:crm.helpdesk.report:0
+#: field:crm.helpdesk.report,canal_id:0
 msgid "Channel"
 msgstr ""
 
@@ -201,7 +215,13 @@ msgid "Lowest"
 msgstr ""
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "# Mails"
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,create_date:0
+#: field:crm.helpdesk.report,create_date:0
 msgid "Creation Date"
 msgstr ""
 
@@ -220,7 +240,6 @@ msgstr ""
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
 #: field:crm.helpdesk,date_deadline:0
-#: view:crm.helpdesk.report:0
 #: field:crm.helpdesk.report,date_deadline:0
 msgid "Deadline"
 msgstr ""
@@ -261,13 +280,18 @@ msgid "These email addresses will be added to the CC field of all inbound and ou
 msgstr ""
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "References"
+msgstr ""
+
+#. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
 msgid "September"
 msgstr ""
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "December"
+#: view:crm.helpdesk:0
+msgid "Communication"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -292,13 +316,24 @@ msgid "Query"
 msgstr ""
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Salesman"
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,ref2:0
 msgid "Reference 2"
 msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,categ_id:0
+#: field:crm.helpdesk.report,categ_id:0
 msgid "Category"
+msgstr ""
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "  Year  "
 msgstr ""
 
 #. module: crm_helpdesk
@@ -308,6 +343,7 @@ msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,planned_cost:0
+#: field:crm.helpdesk.report,planned_cost:0
 msgid "Planned Costs"
 msgstr ""
 
@@ -370,7 +406,6 @@ msgid "Planned Revenue"
 msgstr ""
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
 #: field:crm.helpdesk.report,user_id:0
 msgid "User"
 msgstr ""
@@ -470,8 +505,8 @@ msgid "Done"
 msgstr ""
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Communication"
+#: selection:crm.helpdesk.report,month:0
+msgid "December"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -508,7 +543,6 @@ msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
-#: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_config_helpdesk
 msgid "Helpdesk"
@@ -531,6 +565,11 @@ msgid "Details"
 msgstr ""
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Reply"
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
 msgid "Description"
 msgstr ""
@@ -546,13 +585,13 @@ msgid "Probability (%)"
 msgstr ""
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,canal_id:0
-msgid "The channels represent the different communication  modes available with the customer."
+#: field:crm.helpdesk.report,email:0
+msgid "# Emails"
 msgstr ""
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "This Month"
+#: help:crm.helpdesk,canal_id:0
+msgid "The channels represent the different communication  modes available with the customer."
 msgstr ""
 
 #. module: crm_helpdesk
@@ -579,11 +618,6 @@ msgid "Lost"
 msgstr ""
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Communication history"
-msgstr ""
-
-#. module: crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_help_support_main
 msgid "Helpdesk and Support"
 msgstr ""
@@ -594,8 +628,8 @@ msgid "April"
 msgstr ""
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "References"
+#: view:crm.helpdesk.report:0
+msgid "My Case(s)"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -612,12 +646,8 @@ msgstr ""
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
 #: field:crm.helpdesk,section_id:0
+#: view:crm.helpdesk.report:0
 msgid "Sales Team"
-msgstr ""
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk.report,create_date:0
-msgid "Create Date"
 msgstr ""
 
 #. module: crm_helpdesk

@@ -312,7 +312,6 @@ class hr_contract(osv.osv):
 
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
-
     _columns = {
         'permit_no':fields.char('Work Permit No', size=256, required=False, readonly=False),
         'passport_id':fields.many2one('hr.passport', 'Passport', required=False),
@@ -335,6 +334,7 @@ class payroll_register(osv.osv):
     """
     Payroll Register
     """
+    
     _name = 'hr.payroll.register'
     _description = 'Payroll Register'
 
@@ -495,9 +495,9 @@ class payroll_advice(osv.osv):
     '''
     Bank Advice Note
     '''
+    
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice Note'
-
     _columns = {
         'register_id':fields.many2one('hr.payroll.register', 'Payroll Register', required=False),
         'name':fields.char('Name', size=2048, required=True, readonly=False),
@@ -557,9 +557,9 @@ class payroll_advice_line(osv.osv):
     '''
     Bank Advice Lines
     '''
+    
     _name = 'hr.payroll.advice.line'
     _description = 'Bank Advice Lines'
-
     _columns = {
         'advice_id':fields.many2one('hr.payroll.advice', 'Bank Advice', required=False),
         'name':fields.char('Bank Account A/C', size=64, required=True, readonly=False),
@@ -595,6 +595,7 @@ class contrib_register(osv.osv):
     '''
     Contribution Register
     '''
+    
     _name = 'hr.contibution.register'
     _description = 'Contribution Register'
 
@@ -634,6 +635,7 @@ class contrib_register_line(osv.osv):
     '''
     Contribution Register Line
     '''
+    
     _name = 'hr.contibution.register.line'
     _description = 'Contribution Register Line'
 
@@ -669,7 +671,6 @@ class payment_category(osv.osv):
 
     _name = 'hr.allounce.deduction.categoty'
     _description = 'Allowance Deduction Heads'
-
     _columns = {
         'name':fields.char('Categoty Name', size=64, required=True, readonly=False),
         'code':fields.char('Categoty Code', size=64, required=True, readonly=False),
@@ -710,7 +711,6 @@ class company_contribution(osv.osv):
 
     _name = 'company.contribution'
     _description = "Company Contribution"
-
     _columns = {
         'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Heads', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
@@ -784,7 +784,6 @@ class company_contribution_line(osv.osv):
     _name = 'company.contribution.line'
     _description = 'Allowance Deduction Categoty'
     _order = 'sequence'
-
     _columns = {
         'contribution_id':fields.many2one('company.contribution', 'Contribution', required=False),
         'name':fields.char('Name', size=64, required=False, readonly=False),
@@ -799,8 +798,8 @@ class company_contribution_line(osv.osv):
 company_contribution_line()
 
 class hr_holidays_status(osv.osv):
+    
     _inherit = "hr.holidays.status"
-
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'type':fields.selection([
@@ -824,6 +823,7 @@ class hr_payslip(osv.osv):
     '''
     Pay Slip
     '''
+    
     _name = 'hr.payslip'
     _description = 'Pay Slip'
 
@@ -1315,6 +1315,7 @@ class hr_payslip_line(osv.osv):
     '''
     Payslip Line
     '''
+    
     _name = 'hr.payslip.line'
     _description = 'Payslip Line'
 
@@ -1396,10 +1397,10 @@ class hr_payslip_line_line(osv.osv):
     '''
     Function Line
     '''
+    
     _name = 'hr.payslip.line.line'
     _description = 'Function Line'
     _order = 'sequence'
-
     _columns = {
         'slipline_id':fields.many2one('hr.payslip.line', 'Slip Line', required=False),
         'name':fields.char('Name', size=64, required=False, readonly=False),
@@ -1417,6 +1418,7 @@ class hr_employee(osv.osv):
     '''
     Employee
     '''
+    
     _inherit = 'hr.employee'
     _description = 'Employee'
     
