@@ -3,13 +3,14 @@ Section: net
 Priority: optional
 Maintainer: Debian Open Object Maintainers <open-object@lists.debian-maintainers.org>
 Uploaders: Daniel Baumann <daniel@debian.org>
-Build-Depends: debhelper (>= 7), po-debconf, python-dev, quilt
-Build-Depends-Indep: python-libxslt1, python-lxml, python-psycopg2
-Standards-Version: 3.8.3
+Build-Depends: debhelper (>= 7.0.50~), python, quilt (>= 0.46-7)
+Build-Depends-Indep:
+ python-libxslt1, python-lxml, python-pychart, python-pydot, python-psycopg2,
+ python-reportlab
+Standards-Version: 3.9.1
 Homepage: http://www.openerp.com/
 Vcs-Browser: http://git.debian-maintainers.org/?p=open-object/openerp-server.git
 Vcs-Git: git://git.debian-maintainers.org/git/open-object/openerp-server.git
-XSBC-Maintainer-Homepage: http://open-object.debian-maintainers.org/
 
 Package: openerp-server
 Section: net

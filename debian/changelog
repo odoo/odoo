@@ -1,3 +1,139 @@
+openerp-server (5.0.14-1) experimental; urgency=low
+
+  * Updating to standards version 3.9.1.
+  * Merging upstream version 5.0.14.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 15 Sep 2010 00:22:00 +0200
+
+openerp-server (5.0.13-1) experimental; urgency=low
+
+  * Merging upstream version 5.0.13.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 13 Sep 2010 09:14:10 +0200
+
+openerp-server (5.0.12-2) unstable; urgency=low
+
+  * Removing debhelper auto install overrides.
+  * Updating clean target in rules.
+  * Reverting to manual setup.py call, updated for version 5.0.12.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 14 Aug 2010 18:53:43 +0200
+
+openerp-server (5.0.12-1) unstable; urgency=low
+
+  * Updating standards version to 3.9.0.
+  * Merging upstream version 5.0.12.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 18 Jul 2010 19:46:39 +0200
+
+openerp-server (5.0.11-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.11.
+  * Adding patch from Timothy E. Harris <maintainer@mepiscommunity.org>
+    to prevents creating a new database if the locale is not a UTF-8 one
+    (Closes: #584976).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 08 Jun 2010 11:42:23 +0200
+
+openerp-server (5.0.10-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.10.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 07 May 2010 15:02:31 +0200
+
+openerp-server (5.0.9-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.9.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 16 Apr 2010 06:47:02 +0200
+
+openerp-server (5.0.8-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.8.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 14 Apr 2010 20:19:21 +0200
+
+openerp-server (5.0.7-2) unstable; urgency=low
+
+  * Updating python build-depends.
+  * Adding patch to fix bad whatis entry in openerp-server manpage.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 07 Apr 2010 00:09:23 +0200
+
+openerp-server (5.0.7-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.7 (Closes: #573716):
+  * Updating copyright file.
+  * Resorting the dh call to more common order.
+  * Updating README.source.
+  * Dropping python-lxml patch, went upstream.
+  * Dropping postgresql-8.4.patch, went upstream.
+  * Adding some more python module build-depends to avoid some chicken-
+    egg problem with the new setup.py and quilt.
+  * Adding dependency to remote_fs in init script.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 13 Mar 2010 13:55:50 +0100
+
+openerp-server (5.0.6-4) unstable; urgency=low
+
+  * Adding explicit debian source version 1.0 until switch to 3.0.
+  * Updating year in copyright file.
+  * Updating to standards 3.8.4.
+  * Adding patch from Toni Mueller <support@oeko.net> to fix SQL for
+    postgresql 8.4 (Closes: #568119).
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 06 Feb 2010 10:22:05 +0100
+
+openerp-server (5.0.6-3) unstable; urgency=low
+
+  [ Daniel Baumann ]
+  * Setting last-translator for German debconf templates to me, no
+    intention do deal with debian-l10n-german in the future anymore.
+
+  [ Mathias Behrle ]
+  * Removing deprecated option -q for PostgreSQL client commands
+    (Closes: #548875).
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 31 Oct 2009 09:20:27 +0100
+
+openerp-server (5.0.6-2) unstable; urgency=low
+
+  * Minimizing rules file.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 18 Oct 2009 21:19:57 +0200
+
+openerp-server (5.0.6-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.6.
+  * Rediffing python-lxml.patch.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 17 Oct 2009 08:32:56 +0200
+
+openerp-server (5.0.5-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.5.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 21 Sep 2009 20:38:00 +0200
+
+openerp-server (5.0.4-1) unstable; urgency=medium
+
+  * Merging upstream version 5.0.4:
+    - fixes a security problem.
+  * No longer calling debconf-updatepo in clean target of rules.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 21 Sep 2009 00:01:13 +0200
+
+openerp-server (5.0.3-0-2) unstable; urgency=low
+
+  * Adding README.source.
+  * Moving maintainer homepage from control to copyright.
+  * Updating README.source.
+  * Adding patch from upstream to use python-lxml instead of python-xml,
+    thanks to Alan Bell <alan.bell@theopenlearningcentre.com> (Closes:
+    #543947).
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 16 Sep 2009 21:18:30 +0200
+
 openerp-server (5.0.3-0-1) unstable; urgency=low
 
   * Merging upstream version 5.0.3-0.

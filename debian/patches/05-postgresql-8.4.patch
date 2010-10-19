@@ -1,0 +1,15 @@
+Author: Toni Mueller <support@oeko.net>
+Description: Fixes SQL for postgresql 8.4 (Closes: #568119).
+
+diff -Naurp openerp-server.orig/bin/service/web_services.py openerp-server/bin/service/web_services.py
+--- openerp-server.orig/bin/service/web_services.py	2009-11-27 17:41:16.000000000 +0100
++++ openerp-server/bin/service/web_services.py	2010-02-06 10:18:46.000000000 +0100
+@@ -75,7 +75,7 @@ class db(netsvc.Service):
+         cr = db.serialized_cursor()
+         try:
+             cr.autocommit(True) # XXX inhibit the effect of a serialized cursor. is it what we want ?
+-            cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
++            cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\' TEMPLATE template0' % db_name)
+         finally:
+             cr.close()
+             sql_db.close_db('template1')
