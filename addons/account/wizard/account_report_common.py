@@ -20,8 +20,6 @@
 ##############################################################################
 
 import time
-import datetime
-from datetime import timedelta
 from lxml import etree
 
 from osv import fields, osv
@@ -46,7 +44,6 @@ class account_common_report(osv.osv_memory):
         }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        mod_obj = self.pool.get('ir.model.data')
         res = super(account_common_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         if context.get('active_model', False) == 'account.account' and view_id:
             doc = etree.XML(res['arch'])
@@ -111,8 +108,6 @@ class account_common_report(osv.osv_memory):
         if context is None:
             context = {}
         result = {}
-        period_obj = self.pool.get('account.period')
-        fiscal_obj = self.pool.get('account.fiscalyear')
         result['fiscalyear'] = 'fiscalyear_id' in data['form'] and data['form']['fiscalyear_id'] or False
         result['journal_ids'] = 'journal_ids' in data['form'] and data['form']['journal_ids'] or False
         result['chart_account_id'] = 'chart_account_id' in data['form'] and data['form']['chart_account_id'] or False
@@ -132,7 +127,6 @@ class account_common_report(osv.osv_memory):
     def check_report(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        obj_move = self.pool.get('account.move.line')
         data = {}
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')

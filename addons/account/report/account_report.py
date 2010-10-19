@@ -22,10 +22,10 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
 import pooler
 import tools
 from osv import fields,osv
-
 
 def _code_get(self, cr, uid, context={}):
     acc_type_obj = self.pool.get('account.account.type')
@@ -284,4 +284,3 @@ class report_account_sales(osv.osv):
 report_account_sales()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -46,8 +46,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'get_start_date': self._get_start_date,
             'get_end_date': self._get_end_date,
             'get_fiscalyear': self._get_fiscalyear,
-            'get_start_date':self._get_start_date,
-            'get_end_date': self._get_end_date,
             'get_journal': self._get_journal,
             'get_partners':self._get_partners,
             'get_intial_balance':self._get_intial_balance,
@@ -171,7 +169,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             "SELECT COALESCE(SUM(l.debit),0.0), COALESCE(SUM(l.credit),0.0), COALESCE(sum(debit-credit), 0.0) " \
             "FROM account_move_line AS l,  " \
             "account_move AS m "
-            "WHERE partner_id = %s " \
+            "WHERE l.partner_id = %s " \
             "AND m.id = l.move_id " \
             "AND m.state IN %s "
             "AND account_id IN %s" \
@@ -196,7 +194,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "SELECT sum(debit) " \
                     "FROM account_move_line AS l, " \
                     "account_move AS m "
-                    "WHERE partner_id = %s" \
+                    "WHERE l.partner_id = %s" \
                         "AND m.id = l.move_id " \
                         "AND m.state IN %s "
                         "AND account_id IN %s" \
@@ -213,7 +211,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                 "SELECT sum(debit) " \
                 "FROM account_move_line AS l, " \
                 "account_move AS m "
-                "WHERE partner_id = %s " \
+                "WHERE l.partner_id = %s " \
                     "AND m.id = l.move_id " \
                     "AND m.state IN %s "
                     "AND account_id IN %s" \
@@ -245,7 +243,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "SELECT sum(credit) " \
                     "FROM account_move_line AS l, " \
                     "account_move AS m  "
-                    "WHERE partner_id = %s" \
+                    "WHERE l.partner_id = %s" \
                         "AND m.id = l.move_id " \
                         "AND m.state IN %s "
                         "AND account_id IN %s" \
@@ -262,7 +260,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                 "SELECT sum(credit) " \
                 "FROM account_move_line AS l, " \
                 "account_move AS m "
-                "WHERE partner_id=%s " \
+                "WHERE l.partner_id=%s " \
                     "AND m.id = l.move_id " \
                     "AND m.state IN %s "
                     "AND account_id IN %s" \

@@ -45,8 +45,6 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_start_date': self._get_start_date,
             'get_end_date': self._get_end_date,
             'get_fiscalyear': self._get_fiscalyear,
-            'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,
             'display_currency':self._display_currency,
             'get_sortby': self._get_sortby,
             'get_target_move': self._get_target_move,
@@ -126,7 +124,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return obj_mline.browse(self.cr, self.uid, ids)
 
     def _set_get_account_currency_code(self, account_id):
-        self.cr.execute("SELECT c.code AS code "\
+        self.cr.execute("SELECT c.symbol AS code "\
                 "FROM res_currency c,account_account AS ac "\
                 "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
         result = self.cr.fetchone()

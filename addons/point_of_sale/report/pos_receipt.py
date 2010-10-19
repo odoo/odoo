@@ -24,7 +24,6 @@ from report import report_sxw
 import pooler
 
 def titlize(journal_name):
-    res = []
     words = journal_name.split()
     while words.pop() != 'journal':
         continue

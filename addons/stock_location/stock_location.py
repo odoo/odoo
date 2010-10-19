@@ -55,7 +55,7 @@ class stock_location_path(osv.osv):
         'auto': lambda *arg: 'auto',
         'delay': lambda *arg: 1,
         'invoice_state': lambda *args: 'none',
-        'picking_type':lambda *args:'out',
+        'picking_type':lambda *args:'internal',
     }
 stock_location_path()
 
