@@ -32,6 +32,6 @@ upstream source. Changes, if any, are stored in the source package as diffs in
 debian/diff and are applied during the build. Current modifications can be
 applied to the source tree with:
 
-  $ quilt push -a
+  $ QUILT_PATCHES=debian/patches quilt push -a
 
 More information about Quilt can be found in the quilt package.
