@@ -22,7 +22,8 @@
 from osv import osv, fields
 import time
 from tools.translate import _
-from mx import DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import pos_box_entries
 
 
@@ -78,8 +79,8 @@ class pos_box_out(osv.osv_memory):
         for data in  self.read(cr, uid, ids):
             curr_company = res_obj.browse(cr, uid, uid).company_id.id
             statement_id = statement_obj.search(cr, uid, [('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')])
-            monday = (DateTime.now() + DateTime.RelativeDateTime(weekday=(DateTime.Monday, 0))).strftime('%Y-%m-%d')
-            sunday = (DateTime.now() + DateTime.RelativeDateTime(weekday=(DateTime.Sunday, 0))).strftime('%Y-%m-%d')
+            monday = (datetime.today() + relativedelta(weekday=0)).strftime('%Y-%m-%d')
+            sunday = (datetime.today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')
             done_statmt = statement_obj.search(cr, uid, [('date', '>=', monday+' 00:00:00'), ('date', '<=', sunday+' 23:59:59'), ('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid)])
             stat_done = statement_obj.browse(cr, uid, done_statmt)
             address_u = res_obj.browse(cr, uid, uid).address_id

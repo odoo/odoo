@@ -20,7 +20,6 @@
 ##############################################################################
 
 import time
-from datetime import datetime
 from report import report_sxw
 
 

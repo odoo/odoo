@@ -34,34 +34,34 @@ import netsvc
 from webkit_report import WebKitParser
 from report.report_sxw import rml_parse
 
-def register_report(name, model, tmpl_path, parser):
+def register_report(name, model, tmpl_path, parser=rml_parse):
     "Register the report into the services"
     name = 'report.%s' % name
     if netsvc.Service._services.get(name, False):
+        if hasattr(netsvc.Service._services[name], 'parser'):
+            parser = netsvc.Service._services[name].parser
         del netsvc.Service._services[name]
     WebKitParser(name, model, tmpl_path, parser=parser)
 
 
 class ReportXML(osv.osv):
-    
+
     def __init__(self, pool, cr):
         super(ReportXML, self).__init__(pool, cr)
-    
+
     def register_all(self,cursor):
         value = super(ReportXML, self).register_all(cursor)
-        cursor.execute("SELECT * FROM ir_act_report_xml")
+        cursor.execute("SELECT * FROM ir_act_report_xml WHERE report_type = 'webkit'")
         records = cursor.dictfetchall()
         for record in records:
-            if record['report_type'] == 'webkit':
-                parser=rml_parse
-                register_report(record['report_name'], record['model'], record['report_rml'], parser)
+            register_report(record['report_name'], record['model'], record['report_rml'])
         return value
 
     def unlink(self, cursor, user, ids, context=None):
         """Delete report and unregister it"""
         trans_obj = self.pool.get('ir.translation')
         trans_ids = trans_obj.search(
-            cursor, 
+            cursor,
             user,
             [('type', '=', 'report'), ('res_id', 'in', ids)]
         )
@@ -72,9 +72,9 @@ class ReportXML(osv.osv):
         # report will fail so it's ok.
 
         res = super(ReportXML, self).unlink(
-                                            cursor, 
-                                            user, 
-                                            ids, 
+                                            cursor,
+                                            user,
+                                            ids,
                                             context
                                         )
         return res
@@ -82,34 +82,34 @@ class ReportXML(osv.osv):
     def create(self, cursor, user, vals, context=None):
         "Create report and register it"
         res = super(ReportXML, self).create(cursor, user, vals, context)
-        parser=rml_parse
-        register_report(
-                        vals['report_name'], 
-                        vals['model'], 
-                        vals.get('report_rml', False), 
-                        parser
+        if vals.get('report_type','') == 'webkit':
+            # I really look forward to virtual functions :S
+            register_report(
+                        vals['report_name'],
+                        vals['model'],
+                        vals.get('report_rml', False)
                         )
         return res
 
-    def write(self, cursor, user, ids, vals, context=None):
+    def write(self, cr, uid, ids, vals, context=None):
         "Edit report and manage it registration"
-        parser=rml_parse
-        record = self.read(cursor, user, ids)
-        if isinstance(record, list) :
-            record =  record[0]
-        if vals.get('report_name', False) and \
-            vals['report_name']!=record['report_name']:
-            report_name = vals['report_name']
-        else:
-            report_name = record['report_name']
+        if isinstance(ids, (int, long)):
+            ids = [ids,]
+        for rep in self.browse(cr, uid, ids, context=context):
+            if rep.report_type != 'webkit':
+                continue
+            if vals.get('report_name', False) and \
+                vals['report_name'] != rep.report_name:
+                report_name = vals['report_name']
+            else:
+                report_name = rep.report_name
 
-        register_report(
-                        report_name, 
-                        vals.get('model', record['model']), 
-                        vals.get('report_rml', record['report_rml']), 
-                        parser
+            register_report(
+                        report_name,
+                        vals.get('model', rep.model),
+                        vals.get('report_rml', rep.report_rml)
                         )
-        res = super(ReportXML, self).write(cursor, user, ids, vals, context)
+        res = super(ReportXML, self).write(cr, uid, ids, vals, context)
         return res
 
     _name = 'ir.actions.report.xml'

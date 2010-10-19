@@ -19,7 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
 import netsvc
 from datetime import date, datetime, timedelta
@@ -668,3 +667,4 @@ class account_move_link_slip(osv.osv):
     }
 account_move_link_slip()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

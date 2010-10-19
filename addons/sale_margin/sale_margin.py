@@ -83,7 +83,7 @@ class stock_picking(osv.osv):
         invoice_ids = []
         margin_deduce = 0.0
         picking_obj = self.pool.get('stock.picking')
-        picking_obj.write(cr, uid, ids, {'invoice_state' : '2binvoiced'})
+        picking_obj.write(cr, uid, ids, {'invoice_state': '2binvoiced'})
         res = picking_obj.action_invoice_create(cr, uid, ids, type='out_invoice', context={})
         invoice_ids = res.values()
         picking_obj.write(cr, uid, ids,{'invoice_ids': [[6,0,invoice_ids]]})
@@ -107,6 +107,6 @@ class account_invoice_line(osv.osv):
             res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
             vals['cost_price'] = res[0]['standard_price']
         return super(account_invoice_line, self).create(cr, uid, vals, context)
-    
+
 account_invoice_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

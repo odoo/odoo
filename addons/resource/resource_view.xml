@@ -11,6 +11,8 @@
             <field name="arch" type="xml">
                 <search string="Search Resource">
                    <group col='15' colspan='4'>
+                       <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                       <separator orientation="vertical"/>
                        <field name="name"/>
                        <field name="user_id" string="User"/>
                        <field name="resource_type"/>
@@ -168,13 +170,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Resource">
-                    <field name="name" />
-                    <field name="user_id" attrs="{'required':[('resource_type','=','user')]}"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="resource_type" />
-                    <field name="calendar_id" widget="selection"/>
-                    <field name="time_efficiency" groups="base.group_extended"/>
+                   <group colspan="4" col="6">
+                    <field name="name" colspan="4"/>
                     <field name="active"/>
+                    <field name="resource_type" />
+                    <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                   </group>
+                   <notebook colspan="4">
+                     <page string="General Information">
+                       <field name="calendar_id" widget="selection"/>
+                       <field name="time_efficiency" groups="base.group_extended"/>
+                     </page>
+	           </notebook>
                 </form>
             </field>
         </record>

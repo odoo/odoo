@@ -404,30 +404,5 @@ Demo :Bugfix - memory leak
 			<field name="sprint_id" ref="scrum_sprint_8"/>
 			<field eval="time.strftime('%Y-%m-%d')" name="date"/>
 		</record>
-		<record id="project_task_work_scrum_task1" model="project.task.work" context="{'withoutemployee': True }">
-			<field name="user_id" ref="base.user_root"/>
-			<field name="name">Learn how to migration</field>
-			<field name="task_id" ref="scrum_task_6"/>
-			<field name="company_id" ref="base.main_company"/>
-			<field eval="1.0" name="hours"/>
-			<field eval="time.strftime('%Y-%m-%d')" name="date"/>
-		</record>
-		<record id="project_task_work_scrum_task2" model="project.task.work" context="{'withoutemployee': True }">
-			<field name="user_id" ref="base.user_root"/>
-			<field name="name">Create a script for migration and testing</field>
-			<field name="task_id" ref="scrum_task_6"/>
-			<field name="company_id" ref="base.main_company"/>
-			<field eval="5.0" name="hours"/>
-			<field eval="time.strftime('%Y-%m-%d')" name="date"/>
-		</record>
-        <record id="project_task_work_scrum_task3" model="project.task.work" context="{'withoutemployee': True }">
-			<field name="user_id" ref="base.user_root"/>
-			<field name="name">Add on top or bottom and shortcuts</field>
-			<field name="task_id" ref="scrum_task_17"/>
-			<field name="company_id" ref="base.main_company"/>
-			<field eval="10.0" name="hours"/>
-			<field eval="time.strftime('%Y-%m-%d')" name="date"/>
-		</record>
-
     </data>
 </openerp>
