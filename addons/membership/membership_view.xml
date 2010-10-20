@@ -14,17 +14,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Membership Products">
-                   <filter string="To Sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <filter string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
+                   <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',0)]"/>
                    <separator orientation="vertical"/>
-                   <field name="default_code"/>
+                   <field name="code"/>
                    <field name="name"/>
                    <field name="categ_id" widget="selection" operator="child_of"/>
                    <newline/>
                    <group  expand='0' string='Group by...' groups="base.group_extended">
                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
                        <separator orientation="vertical"/>
-                       <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
+                       <filter string='Date From' icon="terp-go-month" domain="[]" context="{'group_by' : 'membership_date_from'}" />
                    </group>
                    <newline/>
                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
@@ -65,13 +64,12 @@
                       <field name="membership_date_from" required="1"/>
                       <field name="membership_date_to" required="1"/>
                       <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                      <field name="membership"/>
                     </group>
                     <notebook colspan="4">
                       <page string="General">
                         <separator string="Accounting Info" colspan="2"/>
                         <separator string="Categorization" colspan="2"/>
-                        <field name="price" />
+                        <field name="list_price" string="Membership Fee"/>
                         <field name="type" />
                         <field name="property_account_income"/>
                         <field name="categ_id"/>
@@ -88,10 +86,6 @@
                             <field colspan="4" name="description_purchase" nolabel="1"/>
                       </page>
                     </notebook>
-                       <!--field name="list_price" string="Membership Fee"/>
-                    <separator colspan="4" string="Customer Taxes:"/>
-                    <field name="taxes_id" colspan="4" nolabel="1"/-->
-
                 </form>
             </field>
         </record>
@@ -251,7 +245,7 @@
                             <group colspan="4" col="3">
                             <field name="free_member"/>
                             <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" icon="gtk-apply"/>
-                            <field colspan="4" name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')], 'readonly':[('free_member','=',True)]}"/>
+                            <field colspan="4" name="associate_member" attrs="{'readonly':[('membership_state','!=', 'none')]}"/>
                             <field colspan="4" name="membership_state"/>
                             </group>
                         </group>

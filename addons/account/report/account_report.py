@@ -22,10 +22,10 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
 import pooler
 import tools
 from osv import fields,osv
-
 
 def _code_get(self, cr, uid, context={}):
     acc_type_obj = self.pool.get('account.account.type')
@@ -74,7 +74,7 @@ class temp_range(osv.osv):
     _description = 'A Temporary table used for Dashboard view'
 
     _columns = {
-        'name' : fields.char('Range',size=64)
+        'name': fields.char('Range',size=64)
     }
 
 temp_range()
@@ -177,7 +177,7 @@ class report_invoice_created(osv.osv):
             ('cancel','Cancelled')
         ],'State', readonly=True),
         'origin': fields.char('Source Document', size=64, readonly=True, help="Reference of the document that generated this invoice report."),
-        'create_date' : fields.datetime('Create Date', readonly=True)
+        'create_date': fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
 
@@ -284,4 +284,3 @@ class report_account_sales(osv.osv):
 report_account_sales()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

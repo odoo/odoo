@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 from tools.translate import _
 import crm
 import time
@@ -70,7 +70,7 @@ class crm_opportunity(osv.osv):
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
-                message = _('The Opportunity') + " '" + name + "' "+ _("has been Won.")
+                message = _("The opportunity '%s' has been won.") % name
                 self.log(cr, uid, id, message)
         return res
 
@@ -94,7 +94,7 @@ class crm_opportunity(osv.osv):
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
-                message = _('The Opportunity') + " '" + name + "' "+ _("has been Lost.")
+                message = _("The opportunity '%s' has been marked as lost.") % name
                 self.log(cr, uid, id, message)
         return res
 

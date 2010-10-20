@@ -70,7 +70,7 @@
            <field name="arch" type="xml">
                <search string="Project Messages">
                		<group>
-                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','=',time.strftime('%%Y-%%m-%%d'))]"/>
+                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-%%d')),('create_date','&lt;', (datetime.date.today() + datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                			<field name="project_id"/>
                         <field name="from_id"/>
@@ -82,7 +82,7 @@
                         <filter string="Message To" icon="terp-personal" domain="[]" context="{'group_by':'to_id'}"/>
                         <filter string="Message From" icon="terp-personal" domain="[]" context="{'group_by':'from_id'}"/>
                         <separator orientation="vertical"/>
-                    	<filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
+                    	<filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
                     </group>
                </search>
            </field>
@@ -109,6 +109,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="project_messages.view_project_message_tree"/>
        </record>
-       <menuitem action="messages_form" id="menu_messages_form" parent="project.menu_project_management"/>
+       <menuitem action="messages_form" id="menu_messages_form" parent="project.menu_project_management" groups="project.group_project_user"/>
      </data>
 </openerp>

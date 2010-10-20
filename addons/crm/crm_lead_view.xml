@@ -11,6 +11,7 @@
         <field name="view_id" ref="crm.crm_case_stage_tree"/>
         <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
         <field name="context">{'object_id':'crm.lead'}</field>
+        <field name="help">Create specific stages that will help your sales better organise their sales pipeline by maintaining them to their leads and sales opportunities. It will allow them to easily track how is positioned a specific lead or opportunity in the sales cycle.</field>
     </record>
 
      <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages"
@@ -26,6 +27,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
+            <field name="help">Create specific categories that fit your company's  activities in order to better classify and analyse them after they have been maintained in your leads and opportunities. You can use categories to reflect your product structure or the different types of sales you do.</field>
         </record>
 
         <menuitem action="crm_lead_categ_action"
@@ -54,7 +56,7 @@
                     <newline />
                     <field name="section_id" widget="selection" />
                     <field name="user_id" />
-                    <field name="stage_id" readonly="1"/>
+                    <field name="stage_id" domain="[('object_id.model', '=', 'crm.lead'), ('section_ids', '=', section_id)]"/>
                     <group col="2" colspan="1">
                         <button name="stage_previous" string=""
                             states="open,pending,draft" type="object"
@@ -233,7 +235,7 @@
                 <field name="referred" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
 
-                <field name="stage_id" readonly="1"/>
+                <field name="stage_id"/>
                 <button name="stage_previous" string="Previous Stage"
                     states="open,pending" type="object" icon="gtk-go-back" />
                 <button name="stage_next" string="Next Stage"
@@ -314,11 +316,11 @@
                 </field>
                 <field name="section_id" default="context.get('section_id', False)" widget="selection"
                     context="{'invisible_section': False}">
-                    <filter icon="terp-personal+"
+                    <filter icon="terp-personal+" groups="base.group_extended"
                         context="{'invisible_section': False}"
                         domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         help="My Sales Team(s)"/>
-                    <filter icon="terp-personal+"
+                    <filter icon="terp-personal+" groups="base.group_extended"
                         context="{'invisible_section': False}"
                         domain="[]"
                         help="Show Sales Team"/>
@@ -347,7 +349,7 @@
                     <filter string="Category" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'categ_id'}"/>
                     <filter string="Campaign" icon="terp-stock_symbol-selection"
                         domain="[]" context="{'group_by':'type_id'}" />
-                    <filter string="Channel" icon="terp-stock_symbol-selection"
+                    <filter string="Channel" icon="terp-call-start"
                         domain="[]" context="{'group_by':'channel_id'}" />
                     <separator orientation="vertical"/>
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>

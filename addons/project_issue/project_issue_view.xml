@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem  id="menu_project_confi" name="Project Issue" parent="project.menu_definitions" sequence="2" groups="base.group_system"/>
+        <menuitem  id="menu_project_confi" name="Project Issue" parent="project.menu_definitions" sequence="2"/>
 
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
@@ -30,6 +30,7 @@
             <field name="name">Versions</field>
             <field name="res_model">project.issue.version</field>
             <field name="view_type">form</field>
+            <field name="help">You can use the issues tracker in OpenERP to handle bugs in the software development project, to handle claims in after-sales services, etc. Define here the different versions of your products on which you can work on issues.</field>
         </record>
         <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" />
 
@@ -213,7 +214,7 @@
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
+                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-%%d')),('create_date','&lt;', (datetime.date.today() + datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="partner_id" groups="base.group_extended"/>
@@ -236,7 +237,7 @@
                         <filter string="Partner" icon="terp-partner" domain="[]"
                             context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical"/>
-                        <filter string="Project"  icon="terp-folder-blue" domain="[]"
+                        <filter string="Project"  icon="terp-folder-violet" domain="[]"
                             context="{'group_by':'project_id'}" />
                         <filter string="Version" icon="terp-gtk-jump-to-rtl"
                             domain="[]" context="{'group_by':'version_id'}" />
@@ -326,6 +327,19 @@
     # Project
     # ------------------------------------------------------
 
+        <record id="project.view_project_resource_form1" model="ir.ui.view">
+            <field name="name">Project Resource Calendar View</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <field name="priority" position="before">
+                    <field name="resource_calendar_id"/>
+                </field>
+
+            </field>
+       </record>
+
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>
             <field name="model">project.project</field>
@@ -333,7 +347,6 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <field name="priority" position="before">
-                    <field name="resource_calendar_id"/>
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>
                 </field>

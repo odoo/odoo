@@ -43,7 +43,7 @@ project_scrum_project()
 class project_scrum_sprint(osv.osv):
     _name = 'project.scrum.sprint'
     _description = 'Project Scrum Sprint'
-
+    _order = 'date_start'
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         progress = {}
@@ -86,7 +86,7 @@ class project_scrum_sprint(osv.osv):
             context = {}
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Sprint ') + " '" + name + "' "+ _("is Open.")
+            message = _("The sprint '%s' has been opened.") % (name,)
             self.log(cr, uid, id, message)
         return True
 
@@ -95,7 +95,7 @@ class project_scrum_sprint(osv.osv):
             context = {}
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Sprint ') + " '" + name + "' "+ _("is Closed.")
+            message = _("The sprint '%s' has been closed.") % (name,)
             self.log(cr, uid, id, message)
         return True
 
@@ -214,9 +214,6 @@ class project_scrum_product_backlog(osv.osv):
         if context is None:
             context = {}
         self.write(cr, uid, ids, {'state':'open'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Product Backlog ') + " '" + name + "' "+ _("is Open.")
-            self.log(cr, uid, id, message)
         return True
 
     def button_close(self, cr, uid, ids, context=None):
@@ -226,8 +223,6 @@ class project_scrum_product_backlog(osv.osv):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
             obj_project_task.write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'done'})
-            message = _('Product Backlog ') + " '" + backlog.name + "' "+ _("is Closed.")
-            self.log(cr, uid, backlog.id, message)
         return True
 
     def button_pending(self, cr, uid, ids, context=None):
@@ -319,7 +314,7 @@ class project_scrum_meeting(osv.osv):
         'question_blocks': fields.text('Blocks encountered'),
         'question_backlog': fields.text('Backlog Accurate'),
         'task_ids': fields.many2many('project.task', 'meeting_task_rel', 'metting_id', 'task_id', 'Tasks'),
-        'user_id': fields.related('sprint_id', 'scrum_master_id', type='many2one', relation='res.users', string='Responsible', readonly=True),
+        'user_id': fields.related('sprint_id', 'scrum_master_id', type='many2one', relation='res.users', string='Scrum Master', readonly=True),
     }
     #
     # TODO: Find the right sprint thanks to users and date

@@ -11,6 +11,7 @@
         <field name="view_id"  ref="crm.crm_case_categ_tree-view"/>
         <field name="domain">[('object_id.model', '=', 'crm.meeting')]</field>
         <field name="context">{'object_id':'crm.meeting'}</field>
+        <field name="help">Create different meeting categories to better organize and classify your meetings.</field>
     </record>
 
      <menuitem action="crm_meeting_categ_action"
@@ -313,7 +314,7 @@
                            <separator orientation="vertical"/>
                            <field name="partner_id" select="1" />
                            <field name="section_id" select="1" widget="selection">
-                               <filter icon="terp-personal+"
+                               <filter icon="terp-personal+" groups="base.group_extended"
                                    domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                    help="My Sales Team(s)" />
                            </field>

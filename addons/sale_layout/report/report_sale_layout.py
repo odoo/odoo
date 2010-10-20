@@ -46,10 +46,10 @@ class sale_order_1(report_sxw.rml_parse):
         info = []
         order_lines = []
         res = {}
-
-        ids = self.pool.get('sale.order.line').search(self.cr, self.uid, [('order_id', '=', sale_order.id)])
+        obj_order_line = self.pool.get('sale.order.line')
+        ids = obj_order_line.search(self.cr, self.uid, [('order_id', '=', sale_order.id)])
         for id in range(0, len(ids)):
-            order = self.pool.get('sale.order.line').browse(self.cr, self.uid, ids[id], self.context.copy())
+            order = obj_order_line.browse(self.cr, self.uid, ids[id], self.context.copy())
             order_lines.append(order)
 
         i = 1

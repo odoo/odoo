@@ -8,18 +8,16 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
                 <form string="Select period">
-	               <group width="450">
-	                   <separator string="Cost Ledger for period" colspan="4"/>
-	                   <field name="date1"/>
-	                   <field name="date2"/>
-	                   <separator string="and Journals" colspan="4"/>
-	                   <field name="journal" colspan="4" nolabel="1"/>
-	                   <separator colspan="4"/>
-	                   <group colspan="4" col="6">
-	                       <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-	                       <button name="check_report" string="Print" type="object" icon="gtk-print"/>
-	                   </group>
-	               </group>
+                   <separator string="Cost Ledger for period" colspan="4"/>
+                   <field name="date1"/>
+                   <field name="date2"/>
+                   <separator string="and Journals" colspan="4"/>
+                   <field name="journal" colspan="4" nolabel="1"/>
+                   <separator colspan="4"/>
+                   <group colspan="4" col="6">
+                       <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                       <button name="check_report" string="Print" type="object" icon="gtk-print"/>
+                   </group>
                 </form>
 			</field>
 		</record>

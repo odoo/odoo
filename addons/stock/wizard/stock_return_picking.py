@@ -83,7 +83,7 @@ class stock_return_picking(osv.osv_memory):
                         if 'return%s'%(m.id) not in self._columns:
                             self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)
                         if 'invoice_state' not in self._columns:
-                            self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be Invoiced'), ('none', 'None')], string='Invoice State', required=True)
+                            self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be refunded/invoiced'), ('none', 'No invoicing')], string='Invoicing', required=True)
             if not valid_lines:
                 raise osv.except_osv(_('Warning !'), _("There are no products to return (only lines in Done state and not fully returned yet can be returned)!"))
         return res
@@ -119,7 +119,7 @@ class stock_return_picking(osv.osv_memory):
                     res['fields']['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True} 
                     res.setdefault('returns', []).append(m.id)
             arch_lst.append('<field name="invoice_state"/>\n<newline/>')
-            res['fields']['invoice_state']={'string':_('Invoice state'), 'type':'selection','required':True, 'selection':[('2binvoiced', _('To Be Invoiced')), ('none', _('None'))]}
+            res['fields']['invoice_state']={'string':_('Invoicing'), 'type':'selection','required':True, 'selection':[('2binvoiced', _('To be refunded/invoiced')), ('none', _('No invoicing'))]}
             arch_lst.append('<group col="2" colspan="4">')
             arch_lst.append('<button icon="gtk-cancel" special="cancel" string="Cancel" />')
             arch_lst.append('<button name="create_returns" string="Return" colspan="1" type="object" icon="gtk-apply" />')

@@ -52,7 +52,7 @@
                             help="Timesheet lines in this year"/>
                       <filter icon="terp-go-month" string="This Month"
                           name="month"
-                          domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                          domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                           help="Timesheet lines in this month"/>
                     <filter icon="terp-go-week"
                               string="    7 Days    "
@@ -468,7 +468,7 @@
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Analytic Account" icon="terp-folder-green" domain="[]" context="{'group_by':'analytic_account_id'}"/>
+                        <filter string="Analytic Account" icon="terp-folder-violet" domain="[]" context="{'group_by':'analytic_account_id'}"/>
                        <filter string="General Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'general_account_id'}"/>
                    </group>
                </search>

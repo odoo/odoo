@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
         <record id="act_account_check" model="workflow.activity">
             <field name="wkf_id" ref="hr_payroll.wkf"/>
             <field name="name">account_check</field>
@@ -28,6 +27,5 @@
             <field name="act_to" ref="hr_payroll.act_cancel"/>
             <field name="signal">cancel_sheet</field>
         </record>
-        
     </data>
 </openerp>

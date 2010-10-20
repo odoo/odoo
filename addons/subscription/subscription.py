@@ -22,7 +22,6 @@
 # TODO:
 #   Error treatment: exception, request, ... -> send request to user_id
 
-from mx import DateTime
 import time
 from osv import fields,osv
 from tools.translate import _

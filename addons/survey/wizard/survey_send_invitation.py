@@ -113,7 +113,13 @@ class survey_send_invitation(osv.osv_memory):
         error = ""
         res_user = ""
         user_exists = False
+        new_user = []
         attachments = []
+        current_sur = survey_ref.browse(cr, uid, context.get('active_id'), context=context)
+        exist_user = current_sur.invited_user_ids
+        if exist_user:
+            for use in exist_user:
+                new_user.append(use.id)
         for id in survey_ref.browse(cr, uid, survey_ids):
             report = self.create_report(cr, uid, [id.id], 'report.survey.form', id.title)
             file = open(tools.config['addons_path'] + '/survey/report/' + id.title +".pdf")
@@ -134,6 +140,8 @@ class survey_send_invitation(osv.osv_memory):
                     continue
                 user = user_ref.search(cr, uid, [('login', "=", addr.email)])
                 if user:
+                    if user[0] not in new_user:
+                        new_user.append(user[0])
                     user = user_ref.browse(cr, uid, user[0])
                     user_ref.write(cr, uid, user.id, {'survey_id':[[6, 0, survey_ids]]})
                     mail = record['mail']%{'login':addr.email, 'passwd':user.password, \
@@ -172,11 +180,17 @@ class survey_send_invitation(osv.osv_memory):
                                     'survey_id': [[6, 0, survey_ids]]
                                    }
                         user = user_ref.create(cr, uid, res_data)
+                        if user not in new_user:
+                            new_user.append(user)
                         created+= "- %s (Login: %s,  Password: %s)\n" % (addr.name or 'Unknown',\
                                                                           addr.email, passwd)
                     else:
                         error+= "- %s (Login: %s,  Password: %s)\n" % (addr.name or 'Unknown',\
                                                                         addr.email, passwd)
+
+        new_vals = {}
+        new_vals.update({'invited_user_ids':[[6,0,new_user]]})
+        survey_ref.write(cr, uid, context.get('active_id'),new_vals)
         note= ""
         if created:
             note += 'Created users:\n%s\n\n' % (created)

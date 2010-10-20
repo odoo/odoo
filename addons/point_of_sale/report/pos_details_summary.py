@@ -38,7 +38,8 @@ class pos_details_summary(report_sxw.rml_parse):
             'getsuminvoice': self._sum_invoice,
             'gettaxamount': self._get_tax_amount,
             'getsalestotal': self._get_sales_total,
-            'getperiod': self._get_period,
+            'getstartperiod': self._get_start_period,
+            'getendperiod': self._get_end_period,
             'getcompany':self.get_company
         })
 
@@ -68,27 +69,26 @@ class pos_details_summary(report_sxw.rml_parse):
                                     objects,
                                     0.0 )
 
-    def _get_payments(self, objects, ignore_gift=False):
-        gift_journal_id = None
-        if ignore_gift:
-            config_journal_ids = self.pool.get("pos.config.journal").search(self.cr, self.uid, [('code', '=', 'GIFT')])
-            if len(config_journal_ids):
-                config_journal = self.pool.get("pos.config.journal").browse(self.cr, self.uid, config_journal_ids, {})[0]
-                gift_journal_id = config_journal.journal_id.id
+    def _get_payments(self, objects):
+#        gift_journal_id = None
+#        if ignore_gift:
+#            config_journal_ids = self.pool.get("pos.config.journal").search(self.cr, self.uid, [('code', '=', 'GIFT')])
+#            if len(config_journal_ids):
+#                config_journal = self.pool.get("pos.config.journal").browse(self.cr, self.uid, config_journal_ids, {})[0]
+#                gift_journal_id = config_journal.journal_id.id
 
         result = {}
         for obj in objects:
-            for payment in obj.statement_ids:
-                if gift_journal_id and gift_journal_id == payment.statement_id.journal_id.id:
-                    continue
-                result[payment.statement_id.journal_id.name] = result.get(payment.statement_id.journal_id.name, 0.0) + payment.amount
+            for statement in obj.statement_ids:
+                if statement.journal_id:
+                    result[statement.journal_id] = result.get(statement.journal_id, 0.0) + statement.amount
         return result
 
     def _paid_total(self, objects):
-        return sum(self._get_payments(objects, True).values(), 0.0)
+        return sum(self._get_payments(objects).values(), 0.0)
 
     def _total_of_the_day(self, objects):
-        total_paid = sum(self._get_payments(objects, True).values(), 0.0)
+        total_paid = self._paid_total(objects)
         total_invoiced = self._sum_invoice(objects)
         return total_paid - total_invoiced
 
@@ -119,15 +119,16 @@ class pos_details_summary(report_sxw.rml_parse):
     def _get_sales_total(self, objects):
         return reduce(lambda x, o: x + len(o.lines), objects, 0)
 
-    def _get_period(self, objects):
-        date_orders = [obj.date_order for obj in objects]
-        min_date = min(date_orders)
-        max_date = max(date_orders)
-        if min_date == max_date:
-            return '%s' % min_date
-        else:
-            return '%s - %s' % (min_date, max_date)
+    def _get_start_period(self, objects):
+        date_orders = sorted([obj.date_order for obj in objects])
+        min_date = date_orders[0]
+        return '%s' % min_date
 
+
+    def _get_end_period(self, objects):
+        date_orders = sorted([obj.date_order for obj in objects])
+        max_date = date_orders[-1]
+        return '%s' % max_date
 
 
 report_sxw.report_sxw('report.pos.details_summary',

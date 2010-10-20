@@ -108,9 +108,9 @@ class wiki_wiki2(osv.osv):
         'name': fields.char('Title', size=256, select=True, required=True),
         'write_uid': fields.many2one('res.users', "Last Contributor", select=True),
         'text_area': fields.text("Content"),
-        'create_uid': fields.many2one('res.users', 'Author', select=True),
-        'create_date': fields.datetime("Created on", select=True),
-        'write_date': fields.datetime("Modification Date", select=True),
+        'create_uid': fields.many2one('res.users', 'Author', select=True, readonly=True),
+        'create_date': fields.datetime("Created on", select=True, readonly=True),
+        'write_date': fields.datetime("Modification Date", select=True, readonly=True),
         'tags': fields.char('Keywords', size=1024, select=True),
         'history_id': fields.one2many('wiki.wiki.history', 'wiki_id', 'History Lines'),
         'minor_edit': fields.boolean('Minor edit', select=True),
@@ -184,16 +184,15 @@ class wiki_wiki2(osv.osv):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
-
-        id = super(wiki_wiki2, self).create(cr, uid, vals, context)
-        self.create_history(cr, uid, [id], vals, context)
-        return id
+        wiki_id = super(wiki_wiki2, self).create(cr, uid,
+                             vals, context)
+        self.create_history(cr, uid, [wiki_id], vals, context)
+        return wiki_id
 
     def write(self, cr, uid, ids, vals, context=None):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
-
         result = super(wiki_wiki2, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result
