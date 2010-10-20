@@ -24,7 +24,7 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
 
         form_insertion_point = output.index(self.BINARY_ATTACHMENTS_FORM)
         return output[:form_insertion_point] + '''
-            <form id="pad-box" action="/piratepad/link" method="post">
+            <form id="pad-form" action="/piratepad/link" method="post">
                 <label for="sidebar_pad_datas">${_("Name")}:</label>
                 <table width="100%">
                 <tr>
@@ -40,16 +40,15 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
             </form>
             <script type="text/javascript">
                 jQuery(document).ready(function() {
-                    var padForm = jQuery('#pad-box').hide();
-                    jQuery('#sidebar_pad_ok').bind('click', function(){
-                        padForm.submit();
+                    var $padForm = jQuery('#pad-form')
+                            .hide()
+                            .submit(createAttachment);
+                    jQuery('#sidebar_pad_ok').click(function(){
+                        $padForm.submit();
                     });
                     jQuery('#add-pad').click(function(e){
-                        padForm.show();
+                        $padForm.show();
                         e.preventDefault();
-                    });
-                    padForm.bind({
-                        submit: createAttachment
                     });
                 });
             </script>
