@@ -29,11 +29,11 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
                 <table width="100%">
                 <tr>
                    <td width=60% style="padding-right:8px;">
-                        <input type="text" id="sidebar_pad_datas" class="binary"
-                       name="pad_name" kind="url" size="5" />
+                        <input id="sidebar_pad_datas"
+                               name="pad_name" size="5" />
                    </td>
                     <td>
-                        <a href="#" id="sidebar_pad_ok" class="button-a">${_("Ok")}</a>
+                        <button>${_("Ok")}</button>
                     </td>
                 </tr>
                </table>
@@ -43,9 +43,6 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
                     var $padForm = jQuery('#pad-form')
                             .hide()
                             .submit(createAttachment);
-                    jQuery('#sidebar_pad_ok').click(function(){
-                        $padForm.submit();
-                    });
                     jQuery('#add-pad').click(function(e){
                         $padForm.show();
                         e.preventDefault();
