@@ -38,6 +38,17 @@
         You can then use any compatible browser to remotely see the attachments of OpenObject.
 
         After installation, the webDAV server can be controlled by a [webdav] section in the server's config.
+        Server Configuration Parameter:
+        [webdav]
+        ; enable = True ; Serve webdav over the http(s) servers
+        ; vdir = webdav ; the directory that webdav will be served at
+          ; this default val means that webdav will be
+          ; on "http://localhost:8069/webdav/
+        ; verbose = True ; Turn on the verbose messages of webdav
+        ; debug = True ; Turn on the debugging messages of webdav
+          ; since the messages are routed to the python logging, with
+          ; levels "debug" and "debug_rpc" respectively, you can leave
+          ; these options on
 """,
         "depends" : ["base", "document"],
         "init_xml" : [],
