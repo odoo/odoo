@@ -56,6 +56,7 @@ class account_payment_populate_statement(osv.osv_memory):
         currency_obj = self.pool.get('res.currency')
         voucher_obj = self.pool.get('account.voucher')
         voucher_line_obj = self.pool.get('account.voucher.line')
+        move_line_obj = self.pool.get('account.move.line')
 
         if context is None:
             context = {}
@@ -98,7 +99,7 @@ class account_payment_populate_statement(osv.osv_memory):
                 voucher_line_dict =  False
                 if result['value']['line_ids']:
                     for line_dict in result['value']['line_ids']:
-                        move_line = self.pool.get('account.move.line').browse(cr, uid, line_dict['move_line_id'], context)
+                        move_line = move_line_obj.browse(cr, uid, line_dict['move_line_id'], context)
                         if line.move_line_id.move_id.id == move_line.move_id.id:
                             voucher_line_dict = line_dict
                 if voucher_line_dict:

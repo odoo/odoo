@@ -113,9 +113,11 @@ class payment_order(osv.osv):
         return True
 
     def action_open(self, cr, uid, ids, *args):
+        ir_seq_obj = self.pool.get('ir.sequence')
+
         for order in self.read(cr, uid, ids, ['reference']):
             if not order['reference']:
-                reference = self.pool.get('ir.sequence').get(cr, uid, 'payment.order')
+                reference = ir_seq_obj.get(cr, uid, 'payment.order')
                 self.write(cr, uid, order['id'],{'reference':reference})
         return True
 
@@ -138,6 +140,7 @@ class payment_order(osv.osv):
             context = {}
         payment_line_obj = self.pool.get('payment.line')
         payment_line_ids = []
+
         if (vals.get('date_prefered', False) == 'fixed' and not vals.get('date_scheduled', False)) or vals.get('date_scheduled', False):
             for order in self.browse(cr, uid, ids, context=context):
                 for line in order.line_ids:
@@ -169,6 +172,8 @@ class payment_line(osv.osv):
 
     def info_owner(self, cr, uid, ids, name=None, args=None, context=None):
         if not ids: return {}
+        partner_zip_obj = self.pool.get('res.partner.zip')
+
         result = {}
         info=''
         for line in self.browse(cr, uid, ids, context=context):
@@ -180,7 +185,7 @@ class payment_line(osv.osv):
                         st=ads.street and ads.street or ''
                         st1=ads.street2 and ads.street2 or ''
                         if 'zip_id' in ads:
-                            zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
+                            zip_city= ads.zip_id and partner_zip_obj.name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
                         else:
                             zip=ads.zip and ads.zip or ''
                             city= ads.city and ads.city or  ''
@@ -193,8 +198,10 @@ class payment_line(osv.osv):
 
     def info_partner(self, cr, uid, ids, name=None, args=None, context=None):
         if not ids: return {}
+        partner_zip_obj = self.pool.get('res.partner.zip')
         result = {}
         info=''
+
         for line in self.browse(cr, uid, ids, context=context):
             result[line.id]=False
             if not line.partner_id:
@@ -206,7 +213,7 @@ class payment_line(osv.osv):
                         st=ads.street and ads.street or ''
                         st1=ads.street2 and ads.street2 or ''
                         if 'zip_id' in ads:
-                            zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
+                            zip_city= ads.zip_id and partner_zip_obj.name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
                         else:
                             zip=ads.zip and ads.zip or ''
                             city= ads.city and ads.city or  ''
@@ -219,8 +226,8 @@ class payment_line(osv.osv):
 
     def select_by_name(self, cr, uid, ids, name, args, context=None):
         if not ids: return {}
-
         partner_obj = self.pool.get('res.partner')
+
         cr.execute("""SELECT pl.id, ml.%s
             from account_move_line ml
                 inner join payment_line pl
@@ -252,6 +259,7 @@ class payment_line(osv.osv):
         if context is None:
             context = {}
         res = {}
+
         for line in self.browse(cursor, user, ids, context=context):
             ctx = context.copy()
             ctx['date'] = line.order_id.date_done or time.strftime('%Y-%m-%d')
@@ -261,18 +269,23 @@ class payment_line(osv.osv):
         return res
 
     def _get_currency(self, cr, uid, context):
-        user = self.pool.get('res.users').browse(cr, uid, uid)
+        user_obj = self.pool.get('res.users')
+        currency_obj = self.pool.get('res.currency')
+        user = user_obj.browse(cr, uid, uid)
+
         if user.company_id:
             return user.company_id.currency_id.id
         else:
-            return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
+            return currency_obj.search(cr, uid, [('rate','=',1.0)])[0]
 
     def _get_date(self, cr, uid, context=None):
         if context is None:
             context = {}
+        payment_order_obj = self.pool.get('payment.order')
         date = False
+
         if context.get('order_id') and context['order_id']:
-            order = self.pool.get('payment.order').browse(cr, uid, context['order_id'], context)
+            order = payment_order_obj.browse(cr, uid, context['order_id'], context)
             if order.date_prefered == 'fixed':
                 date = order.date_scheduled
             else:
@@ -347,12 +360,13 @@ class payment_line(osv.osv):
 
     def onchange_move_line(self, cr, uid, ids, move_line_id, payment_type, date_prefered, date_scheduled, currency=False, company_currency=False, context=None):
         data={}
+        move_line_obj = self.pool.get('account.move.line')
 
         data['amount_currency']=data['communication']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=data['amount']=False
 
         if move_line_id:
-            line = self.pool.get('account.move.line').browse(cr, uid, move_line_id)
-            data['amount_currency']=line.amount_to_pay
+            line = move_line_obj.browse(cr, uid, move_line_id)
+            data['amount_currency'] = line.amount_to_pay
 
             res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency,
                                        company_currency, context)
@@ -394,10 +408,13 @@ class payment_line(osv.osv):
 
     def onchange_partner(self, cr, uid, ids, partner_id, payment_type, context=None):
         data={}
+        partner_zip_obj = self.pool.get('res.partner.zip')
+        partner_obj = self.pool.get('res.partner')
+        payment_mode_obj = self.pool.get('payment.mode')
         data['info_partner']=data['bank_id']=False
 
         if partner_id:
-            part_obj=self.pool.get('res.partner').browse(cr, uid, partner_id)
+            part_obj=partner_obj.browse(cr, uid, partner_id)
             partner=part_obj.name or ''
 
             if part_obj.address:
@@ -407,7 +424,7 @@ class payment_line(osv.osv):
                         st1=ads.street2 and ads.street2 or ''
 
                         if 'zip_id' in ads:
-                            zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
+                            zip_city= ads.zip_id and partner_zip_obj.name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
                         else:
                             zip=ads.zip and ads.zip or ''
                             city= ads.city and ads.city or  ''
@@ -419,7 +436,7 @@ class payment_line(osv.osv):
                         data['info_partner']=info
 
             if part_obj.bank_ids and payment_type:
-                bank_type = self.pool.get('payment.mode').suitable_bank_types(cr, uid, payment_type, context=context)
+                bank_type = payment_mode_obj.suitable_bank_types(cr, uid, payment_type, context=context)
                 for bank in part_obj.bank_ids:
                     if bank.state in bank_type:
                         data['bank_id'] = bank.id

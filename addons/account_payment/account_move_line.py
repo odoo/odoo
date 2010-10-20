@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from operator import itemgetter
 from osv import fields, osv
 from tools.translate import _
@@ -117,4 +118,3 @@ class account_move_line(osv.osv):
 account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

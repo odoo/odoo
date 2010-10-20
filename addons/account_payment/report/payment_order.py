@@ -38,6 +38,7 @@ class payment_order(report_sxw.rml_parse):
             'get_account_name': self._get_account_name,
 
         })
+
     def _get_invoice_name(self, invoice_id):
         if invoice_id:
             pool = pooler.get_pool(self.cr.dbname)
