@@ -405,7 +405,7 @@ def _create_dta(obj, cr, uid, data, context=None):
         v['sequence'] = str(seq).rjust(5).replace(' ', '0')
         v['amount_to_pay']= str(pline.amount_currency).replace('.', ',')
         v['number'] = pline.name
-        v['currency'] = pline.currency.code
+        v['currency'] = pline.currency.symbol
 
         v['partner_bank_name'] =  pline.bank_id.bank.name or False
         v['partner_bank_clearing'] =  pline.bank_id.bank.clearing or False

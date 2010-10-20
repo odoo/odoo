@@ -12,15 +12,4 @@
             <field eval="'()'" name="args"/>
         </record>
     </data>
-
-    <data>
-
-        <record id="fetchmail_user_server_rule" model="ir.rule">
-        	<field name="name">User wise Server</field>
-            <field ref="model_email_server" name="model_id" model="ir.model"/>
-            <field eval="True" name="global"/>
-            <field name="domain_force">[('user_id', '=', user.id)]</field>
-        </record>
-
-    </data>
 </openerp>

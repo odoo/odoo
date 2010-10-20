@@ -63,6 +63,30 @@ class account_cash_statement(osv.osv):
       
         return res
     
+    def _get_cash_open_box_lines(self, cr, uid, context={}):
+        res = super(account_cash_statement,self)._get_cash_open_box_lines(cr, uid, context)
+        curr = [0.01, 0.02, 0.05, 0.10, 0.20, 0.50]
+        for rs in curr:
+            dct = {
+                'pieces':rs,
+                'number':0
+            }
+            res.append(dct)
+        res.sort()
+        return res
+    
+    def _get_default_cash_close_box_lines(self, cr, uid, context={}):
+        res = super(account_cash_statement,self)._get_default_cash_close_box_lines(cr, uid, context)
+        curr = [0.01, 0.02, 0.05, 0.10, 0.20, 0.50]
+        for rs in curr:
+            dct = {
+                'pieces':rs,
+                'number':0
+            }
+            res.append(dct)
+        res.sort()
+        return res
+    
 account_cash_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -37,23 +37,14 @@
         <field name="model_id" ref="model_project_task"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|','|','|',('user_id','=',False),('user_id','=',user.id),('project_id.members','in', [user.id]),('project_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
 
-     <record model="ir.rule" id="project_details_comp_rule">
-        <field name="name" >Projects According to User or Members</field>
-        <field name="model_id" ref="model_project_project"/>
-        <field name="groups" eval="[(6, 0, [ref('group_project_manager')])]"/>
-        <field name="domain_force">['|',('members','in',[user.id]),('user_id','=',user.id)]</field>
-    </record>
-
-     <record model="ir.rule" id="project_user_rule">
-        <field name="name" >Projects According to Members or Users</field>
-        <field name="model_id" ref="model_project_project"/>
-         <field eval="1" name="perm_read"/>
-         <field eval="1" name="perm_write"/>
-         <field eval="1" name="perm_create"/>
-        <field name="groups" eval="[(6, 0, [ref('group_project_user')])]"/>
-        <field name="domain_force">['|',('members','in',[user.id]),('user_id','=',user.id)]</field>
+    <record model="ir.rule" id="project_manager_all_project_tasks_rule">
+        <field name="name">Project Managers: all tasks from all projects</field>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
 
 </data>

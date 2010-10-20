@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from osv import fields, osv
-from tools.translate import _
 
 class account_chart(osv.osv_memory):
     """
@@ -37,12 +37,6 @@ class account_chart(osv.osv_memory):
         'target_move': fields.selection([('all', 'All Entries'),
                                         ('posted', 'All Posted Entries')], 'Target Moves', required = True),
     }
-
-    def _get_fiscalyear(self, cr, uid, context=None):
-        """Return default Fiscalyear value"""
-        now = time.strftime('%Y-%m-%d')
-        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1 )
-        return fiscalyears and fiscalyears[0] or False
 
     def onchange_fiscalyear(self, cr, uid, ids, fiscalyear_id=False, context=None):
         res = {}
@@ -81,23 +75,24 @@ class account_chart(osv.osv_memory):
         """
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
+        period_obj = self.pool.get('account.period')
+        fy_obj = self.pool.get('account.fiscalyear')
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         result = mod_obj._get_id(cr, uid, 'account', 'action_account_tree')
         id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
-        result['periods'] = [] 
+        result['periods'] = []
         if data['period_from'] and data['period_to']:
-            result['periods'] = self.pool.get('account.period').build_ctx_periods(cr, uid, data['period_from'], data['period_to'])
+            result['periods'] = period_obj.build_ctx_periods(cr, uid, data['period_from'], data['period_to'])
         result['context'] = str({'fiscalyear': data['fiscalyear'], 'periods': result['periods'], \
                                     'state': data['target_move']})
         if data['fiscalyear']:
-            result['name'] += ':' + self.pool.get('account.fiscalyear').read(cr, uid, [data['fiscalyear']], context=context)[0]['code']
+            result['name'] += ':' + fy_obj.read(cr, uid, [data['fiscalyear']], context=context)[0]['code']
         return result
 
     _defaults = {
-        'fiscalyear': _get_fiscalyear,
         'target_move': 'all'
     }
 

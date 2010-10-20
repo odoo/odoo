@@ -24,6 +24,7 @@ from tools.translate import _
 
 class invoice(osv.osv):
     _inherit = 'account.invoice'
+    
     def invoice_pay_customer(self, cr, uid, ids, context={}):
         if not ids: return []
         inv = self.browse(cr, uid, ids[0], context=context)
@@ -35,7 +36,7 @@ class invoice(osv.osv):
             'res_model': 'account.voucher',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
-            'target': 'new',
+            'target': 'current',
             'domain': '[]',
             'context': {
                 'default_partner_id': inv.partner_id.id,
@@ -49,3 +50,5 @@ class invoice(osv.osv):
         }
 
 invoice()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

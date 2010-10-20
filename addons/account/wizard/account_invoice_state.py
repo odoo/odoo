@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields, osv
+
+from osv import osv
 from tools.translate import _
 import netsvc
 import pooler

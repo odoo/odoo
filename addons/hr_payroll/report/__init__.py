@@ -28,3 +28,5 @@ import report_year_salary
 import report_payroll_register
 import report_employees_detail
 import report_emp_salary_structure
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

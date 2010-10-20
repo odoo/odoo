@@ -51,9 +51,6 @@
         </record>
         <menuitem id="next_id_77" name="Reporting"
             parent="base.menu_mrp_root" sequence="49"/>
-        <menuitem action="action_report_workcenter_load_tree"
-            id="menu_report_workcenter_load" parent="next_id_77"
-            groups="base.group_extended"/>
 
         <!-- stock.move compared to internal location src/dest -->
 
@@ -101,10 +98,6 @@
             <field name="view_mode">graph,tree</field>
             <field name="help">Weekly Stock Value Variation enables you to track the stock value evolution linked to manufacturing activities, receptions of products and delivery orders.</field>
         </record>
-        <menuitem action="action_report_in_out_picking_tree" id="menu_report_in_out_picking" 
-                    parent="next_id_77" groups="mrp.group_mrp_manager"/>
-
-
 
     </data>
 </openerp>

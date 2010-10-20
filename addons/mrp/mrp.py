@@ -81,9 +81,11 @@ class mrp_routing(osv.osv):
                 "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations."
         ),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
         'active': lambda *a: 1,
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.routing', context=context)
     }
 mrp_routing()
 
@@ -103,7 +105,8 @@ class mrp_routing_workcenter(osv.osv):
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
-        'note': fields.text('Description')
+        'note': fields.text('Description'),
+        'company_id': fields.related('routing_id', 'company_id', type='many2one', relation='res.company', string='Company'),
     }
     _defaults = {
         'cycle_nbr': lambda *a: 1.0,
@@ -192,7 +195,7 @@ class mrp_bom(osv.osv):
         'product_qty': fields.float('Product Qty', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, help="UoM (Unit of Measure) is the unit of measurement for the inventory control"),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
-        'product_efficiency': fields.float('Product Efficiency', required=True, help="Material efficiency. A factor of 0.9 means a loss of 10% in the production."),
+        'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% within the production process."),
         'bom_lines': fields.one2many('mrp.bom', 'bom_id', 'BoM Lines'),
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True),
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan future loads on workcenters based on production planning."),
@@ -441,7 +444,7 @@ class mrp_production(osv.osv):
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority'),
 
-        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','<>','service')]),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ),
         'product_qty': fields.float('Product Qty', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('Product UoS Qty', states={'draft':[('readonly',False)]}, readonly=True),
@@ -951,7 +954,7 @@ class mrp_production_workcenter_line(osv.osv):
         'cycle': fields.float('Nbr of cycles', digits=(16,2)),
         'hour': fields.float('Nbr of hours', digits=(16,2)),
         'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of work orders."),
-        'production_id': fields.many2one('mrp.production', 'Production Order', select=True, ondelete='cascade'),
+        'production_id': fields.many2one('mrp.production', 'Production Order', select=True, ondelete='cascade', required=True),
     }
     _defaults = {
         'sequence': lambda *a: 1,
