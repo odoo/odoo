@@ -26,7 +26,8 @@ from report import report_sxw
 
 class tax_report(rml_parse.rml_parse):
     _name = 'report.account.vat.declaration'
-    def __init__(self, cr, uid, name, context={}):
+
+    def __init__(self, cr, uid, name, context=None):
         super(tax_report, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
@@ -39,24 +40,31 @@ class tax_report(rml_parse.rml_parse):
             'get_years': self.get_years,
         })
 
+    def get_years(self, form):
+        res = {}
+        self.period_ids = []
+        period_obj = self.pool.get('account.period')
+        fy_obj = self.pool.get('account.fiscalyear')
+        res['periods'] = ''
+        res['fname'] = ''
 
-    def get_years(self,form):
-        res={}
-        fiscal_year_name = self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'])
-
+        fiscal_year_name = fy_obj.name_get(self.cr, self.uid, form['fiscalyear_id'])
         if fiscal_year_name:
             res['fname'] = fiscal_year_name[0][1]
             res['periods'] = ''
-        if form['periods']:
-            periods_l = self.pool.get('account.period').read(self.cr, self.uid, form['periods'], ['name'])
+
+        if form['period_from'] and form['period_to']:
+            self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, form['period_from'], form['period_to'])
+            periods_l = period_obj.read(self.cr, self.uid, self.period_ids, ['name'])
             for period in periods_l:
-                if res['periods']=='':
+                if res['periods'] == '':
                     res['periods'] = period['name']
                 else:
                     res['periods'] += ", "+ period['name']
         return res
 
-    def _get_lines(self, based_on, period_list, company_id=False, parent=False, level=0, context={}):
+    def _get_lines(self, based_on, company_id=False, parent=False, level=0, context=None):
+        period_list = self.period_ids
         res = self._get_codes(based_on, company_id, parent, level, period_list, context=context)
 
         if period_list:
@@ -95,12 +103,11 @@ class tax_report(rml_parse.rml_parse):
                 ind_general+=1
             i+=1
         return top_result
-        #return array_result
 
     def _get_period(self, period_id, context={}):
         return self.pool.get('account.period').browse(self.cr, self.uid, period_id, context=context).name
 
-    def _get_general(self, tax_code_id, period_list,company_id, based_on, context={}):
+    def _get_general(self, tax_code_id, period_list, company_id, based_on, context={}):
         res=[]
         obj_account = self.pool.get('account.account')
         periods_ids = tuple(period_list)

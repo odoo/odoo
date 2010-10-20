@@ -108,13 +108,13 @@
   <para style="P2"><font color="white"> </font></para>
 	<blockTable colWidths="538" style="Tableau1">
       <tr>
-        <td><para style="P12">Year : [[ get_years(data['form'])['fname'] ]]</para></td>
+        <td><para style="P12">Fiscal Year : [[ get_years(data['form'])['fname'] ]]</para></td>
       </tr>
       <tr>
         <td><para style="P12">Periods : [[ get_years(data['form'])['periods'] or removeParentNode('tr')]]</para></td>
       </tr>
     </blockTable>
-  <para style="P2"><font color="white"> </font></para>    	
+  <para style="P2"><font color="white"> </font></para>
 	<blockTable colWidths="340.0,55.0,55.0,90.0" style="Table2" repeatRows="1">
 	  <tr>
 	    <td><para style="P12">Tax Name</para></td>
@@ -123,7 +123,7 @@
 	    <td><para style="P12a">Tax Amount</para></td>
 	  </tr>
 	  <tr>
-	       <td><para style="P5"><font>[[ repeatIn(get_lines(data['form']['based_on'],data['form']['periods'],data['form']['company_id']), 'o') ]]</font><font color="white">[[ (o['level']) ]]</font> <font>[[ (len(o['level'])&lt;5 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font><font>[[ o['code'] ]]  [[ o['name'] ]] </font></para></td>
+	       <td><para style="P5"><font>[[ repeatIn(get_lines(data['form']['based_on'], data['form']['company_id']), 'o') ]]</font><font color="white">[[ (o['level']) ]]</font> <font>[[ (len(o['level'])&lt;5 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font><font>[[ o['code'] ]]  [[ o['name'] ]] </font></para></td>
            <td><para style="P6"><font>[[ len(o['level'])&lt;5 and setTag('para','para',{'fontName':"Helvetica-Bold"})  or removeParentNode('font')]]</font><font>[[ o['type']=='view' and removeParentNode('font') ]][[ formatLang(o['debit']) ]]</font><font>[[ o['type']&lt;&gt;'view' and removeParentNode('font') ]][[ formatLang(o['debit']) ]]</font></para></td>
            <td><para style="P6"><font>[[ len(o['level'])&lt;5 and setTag('para','para',{'fontName':"Helvetica-Bold"})  or removeParentNode('font')]]</font><font>[[ o['type']=='view' and removeParentNode('font') ]][[ formatLang(o['credit']) ]]</font><font>[[ o['type']&lt;&gt;'view' and removeParentNode('font') ]][[ formatLang(o['credit'])]]</font></para></td>
            <td><para style="P6"><font>[[ len(o['level'])&lt;5 and setTag('para','para',{'fontName':"Helvetica-Bold"})  or removeParentNode('font')]]</font><font>[[ o['type']=='view' and removeParentNode('font') ]][[ formatLang(o['tax_amount']) ]] [[ company.currency_id.symbol ]]</font><font>[[ o['type']&lt;&gt;'view' and removeParentNode('font') ]][[ formatLang(o['tax_amount']) ]] [[ company.currency_id.symbol ]]</font> </para></td>
