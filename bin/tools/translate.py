@@ -898,5 +898,18 @@ def resetlocale():
         except locale.Error:
             continue
 
+def load_language(cr, lang):
+    """Loads a translation terms for a language.
+    Used mainly to automate language loading at db initialization.
+    
+    :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
+    :type lang: str
+    """
+    pool = pooler.get_pool(cr.dbname)
+    language_installer = pool.get('base.language.install')
+    uid = 1
+    oid = language_installer.create(cr, uid, {'lang': lang})
+    language_installer.lang_install(cr, uid, [oid], context=None)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

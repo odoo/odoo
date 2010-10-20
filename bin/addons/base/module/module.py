@@ -436,7 +436,7 @@ class module(osv.osv):
         self.write(cr, uid, [id], {'category_id': p_id})
 
     def update_translations(self, cr, uid, ids, filter_lang=None, context={}):
-        logger = netsvc.Logger()
+        logger = logging.getLogger('i18n')
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
             lang_obj = pool.get('res.lang')
@@ -456,13 +456,15 @@ class module(osv.osv):
                 if len(lang) > 5:
                     raise osv.except_osv(_('Error'), _('You Can Not Load Translation For language Due To Invalid Language/Country Code'))
                 iso_lang = tools.get_iso_codes(lang)
-                f = os.path.join(modpath, 'i18n', iso_lang + '.po')
-                if not os.path.exists(f) and iso_lang.find('_') != -1:
-                    f = os.path.join(modpath, 'i18n', iso_lang.split('_')[0] + '.po')
+                fn = os.path.join(modpath, 'i18n', iso_lang + '.po')
+                if not os.path.exists(fn) and iso_lang.find('_') != -1:
                     iso_lang = iso_lang.split('_')[0]
-                if os.path.exists(f):
-                    logger.notifyChannel("i18n", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, iso_lang))
-                    tools.trans_load(cr.dbname, f, lang, verbose=False, context=context)
+                    fn = os.path.join(modpath, 'i18n', iso_lang + '.po')
+                if os.path.exists(fn):
+                    logger.info('module %s: loading translation file for language %s' % (mod.name, iso_lang))
+                    tools.trans_load(cr.dbname, fn, lang, verbose=False, context=context)
+                else:
+                    logger.warn('module %s: translation file not found %s' % (mod.name, fn))
 
     def check(self, cr, uid, ids, context=None):
         logger = logging.getLogger('init')

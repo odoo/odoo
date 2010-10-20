@@ -119,12 +119,20 @@ if not ( tools.config["stop_after_init"] or \
 if tools.config['db_name']:
     for dbname in tools.config['db_name'].split(','):
         db,pool = pooler.get_db_and_pool(dbname, update_module=tools.config['init'] or tools.config['update'], pooljobs=False)
+        cr = db.cursor()
+
         if tools.config["test_file"]:
             logger.info('loading test file %s', tools.config["test_file"])
-            cr = db.cursor()
             tools.convert_yaml_import(cr, 'base', file(tools.config["test_file"]), {}, 'test', True)
             cr.rollback()
+
+        if tools.config['load_language']:
+            for lang in tools.config['load_language'].split(','):
+                tools.load_language(cr, lang)
+
         pool.get('ir.cron')._poolJobs(db.dbname)
+
+        cr.close()
 
 #----------------------------------------------------------
 # translation stuff
