@@ -175,7 +175,7 @@ class hr_evaluation(osv.osv):
         'progress' : fields.float("Progress"),
     }
     _defaults = {
-        'date' : lambda *a: (parser.parse(datetime.date.today().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
+        'date' : lambda *a: (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
         'state' : lambda *a: 'draft',
     }
 
@@ -226,7 +226,7 @@ class hr_evaluation(osv.osv):
                     int_id = hr_eval_inter_obj.create(cr, uid, {
                         'evaluation_id': evaluation.id,
                         'survey_id': phase.survey_id.id,
-                        'date_deadline': (parser.parse(datetime.date.today().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
+                        'date_deadline': (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
                         'user_id': child.user_id.id,
                         'user_to_review_id': evaluation.employee_id.id
                     }, context=context)
