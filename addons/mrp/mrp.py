@@ -444,7 +444,7 @@ class mrp_production(osv.osv):
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority'),
 
-        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','<>','service')]),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ),
         'product_qty': fields.float('Product Qty', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('Product UoS Qty', states={'draft':[('readonly',False)]}, readonly=True),

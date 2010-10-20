@@ -86,7 +86,6 @@ class account_bank_statement(osv.osv):
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
-
         res = {}
 
         company_currency_id = res_users_obj.browse(cursor, user, user,
@@ -216,10 +215,8 @@ class account_bank_statement(osv.osv):
 
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
         res_currency_obj = self.pool.get('res.currency')
-        res_users_obj = self.pool.get('res.users')
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
-        account_analytic_line_obj = self.pool.get('account.analytic.line')
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id, context)
         st = st_line.statement_id
@@ -395,8 +392,6 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
 
     def onchange_journal_id(self, cursor, user, statement_id, journal_id, context=None):
-        account_journal_obj = self.pool.get('account.journal')
-        res_users_obj = self.pool.get('res.users')
         cursor.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
                 WHERE journal_id = %s AND NOT state = %s \

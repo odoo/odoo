@@ -1,0 +1,63 @@
+-
+  In order to test Bank Statement feature of account I create a bank statement line and confirm it and check it's move created
+-
+  I create a bank statement with Opening and Closing balance 0.
+-
+  !record {model: account.bank.statement, id: account_bank_statement_0}:
+    balance_end_real: 0.0
+    balance_start: 0.0
+    date: '2010-10-14'
+    journal_id: account.bank_journal
+    name: /
+    period_id: account.period_10
+    line_ids:
+      - account_id: account.a_recv
+        amount: 1000.0
+        date: '2010-10-14'
+        name: a
+        partner_id: base.res_partner_4
+        sequence: 0.0
+        type: general
+-
+  I check that Initially bank statement is in the "Draft" state
+-
+  !assert {model: account.bank.statement, id: account_bank_statement_0}:
+    - state == 'draft'
+-
+  I compute bank statement using Compute button
+-
+  !python {model: account.bank.statement}: |
+    self.button_dummy(cr, uid, [ref("account_bank_statement_0")], {"lang": "en_US",
+      "tz": False, "active_model": "ir.ui.menu", "journal_type": "bank", "section_id":
+      False, "period_id": 10, "active_ids": [ref("account.menu_bank_statement_tree")],
+      "active_id": ref("account.menu_bank_statement_tree"), })
+
+-
+  I modify the bank statement and set the Closing Balance.
+-
+  !record {model: account.bank.statement, id: account_bank_statement_0}:
+    balance_end_real: 1000.0
+
+-
+  I confirm the bank statement using Confirm button
+-
+  !python {model: account.bank.statement}: |
+    self.button_confirm_bank(cr, uid, [ref("account_bank_statement_0")], {"lang":
+      "en_US", "tz": False, "active_model": "ir.ui.menu", "journal_type": "bank",
+      "section_id": False, "period_id": 10, "active_ids": [ref("account.menu_bank_statement_tree")],
+      "active_id": ref("account.menu_bank_statement_tree"), })
+-
+  I check that bank statement state is now "Closed"
+-
+  !assert {model: account.bank.statement, id: account_bank_statement_0}:
+    - state == 'confirm'
+
+-
+  I check that move lines created for bank statement and move state is Posted
+-
+  !python {model: account.bank.statement}: |
+    move_line_obj = self.pool.get('account.move.line')
+    bank_data = self.browse(cr, uid, ref("account_bank_statement_0"))
+    assert bank_data.move_line_ids, "Move lines not created for bank statement"
+    for line in bank_data.move_line_ids:
+      assert line.move_id.state == 'posted', "Move state is not posted"

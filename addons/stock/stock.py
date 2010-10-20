@@ -649,6 +649,22 @@ class stock_picking(osv.osv):
         'date': time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
+    def action_process(self, cr, uid, ids, context={}):
+        return {
+            'name':_("Products to Process"),
+            'view_mode': 'form',
+            'view_id': False,
+            'view_type': 'form',
+            'res_model': 'stock.partial.picking',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': {
+                'active_id': ids[0],
+                'active_ids':ids
+            }
+        }
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -703,7 +719,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
-                raise osv.except_osv(_('Warning !'),_('Not Available. Moves are not confirmed.'))
+                raise osv.except_osv(_('Warning !'),_('Not enough stock, unable to reserve the products.'))
             self.pool.get('stock.move').action_assign(cr, uid, move_ids)
         return True
 

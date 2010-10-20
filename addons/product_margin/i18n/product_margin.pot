@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01:51+0000\n"
-"PO-Revision-Date: 2009-08-28 16:01:51+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46:48+0000\n"
+"PO-Revision-Date: 2010-10-18 17:46:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,22 +16,33 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: product_margin
+#: view:product.product:0
+#: field:product.product,turnover:0
+msgid "Turnover"
+msgstr ""
+
+#. module: product_margin
 #: field:product.product,expected_margin_rate:0
 msgid "Expected Margin (%)"
 msgstr ""
 
 #. module: product_margin
-#: wizard_field:product.margins,init,from_date:0
+#: field:product.margin,from_date:0
 msgid "From"
 msgstr ""
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
-msgid "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: product_margin
-#: wizard_field:product.margins,init,to_date:0
+#: help:product.product,total_margin:0
+msgid "Turnorder - Standard price"
+msgstr ""
+
+#. module: product_margin
+#: field:product.margin,to_date:0
 msgid "To"
 msgstr ""
 
@@ -46,14 +57,24 @@ msgid "From Date"
 msgstr ""
 
 #. module: product_margin
-#: selection:product.margins,init,invoice_state:0
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
+
+#. module: product_margin
+#: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.menu,name:product_margin.menu_product_reporting
-msgid "Reporting"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,sale_expected:0
+msgid "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
 
 #. module: product_margin
@@ -68,8 +89,8 @@ msgid "Margins in Product"
 msgstr ""
 
 #. module: product_margin
-#: help:product.product,total_cost:0
-msgid "Sum of Multification of Invoice price and quantity of Supplier Invoices "
+#: model:ir.model,name:product_margin.model_product_product
+msgid "Product"
 msgstr ""
 
 #. module: product_margin
@@ -78,14 +99,14 @@ msgid "Catalog Price"
 msgstr ""
 
 #. module: product_margin
-#: selection:product.margins,init,invoice_state:0
+#: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Paid"
 msgstr ""
 
 #. module: product_margin
 #: help:product.product,sales_gap:0
-msgid "Excepted Sale - Turn Over"
+msgid "Expected Sale - Turn Over"
 msgstr ""
 
 #. module: product_margin
@@ -109,9 +130,8 @@ msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
 msgstr ""
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,turnover:0
-msgid "Turnover"
+#: help:product.product,expected_margin:0
+msgid "Expected Sale - Normal Cost"
 msgstr ""
 
 #. module: product_margin
@@ -132,18 +152,8 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: product_margin
-#: help:product.product,expected_margin:0
-msgid "Excepted Sale - Normal Cost"
-msgstr ""
-
-#. module: product_margin
 #: field:product.product,expected_margin:0
 msgid "Expected Margin"
-msgstr ""
-
-#. module: product_margin
-#: help:product.product,total_margin:0
-msgid "Turnorder - Total Cost"
 msgstr ""
 
 #. module: product_margin
@@ -167,12 +177,12 @@ msgid "Avg. Price in Customer Invoices)"
 msgstr ""
 
 #. module: product_margin
-#: wizard_view:product.margins,init:0
-msgid "Select "
+#: help:product.product,total_cost:0
+msgid "Sum of Multification of Invoice price and quantity of Supplier Invoices "
 msgstr ""
 
 #. module: product_margin
-#: wizard_field:product.margins,init,invoice_state:0
+#: field:product.margin,invoice_state:0
 #: field:product.product,invoice_state:0
 msgid "Invoice State"
 msgstr ""
@@ -180,6 +190,11 @@ msgstr ""
 #. module: product_margin
 #: help:product.product,purchase_gap:0
 msgid "Normal Cost - Total Cost"
+msgstr ""
+
+#. module: product_margin
+#: field:product.product,total_margin:0
+msgid "Total Margin"
 msgstr ""
 
 #. module: product_margin
@@ -204,8 +219,8 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,total_margin:0
-msgid "Total Margin"
+#: view:product.margin:0
+msgid "Properties categories"
 msgstr ""
 
 #. module: product_margin
@@ -219,7 +234,7 @@ msgid "Analysis Criteria"
 msgstr ""
 
 #. module: product_margin
-#: selection:product.margins,init,invoice_state:0
+#: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Open and Paid"
 msgstr ""
@@ -230,10 +245,17 @@ msgid "Sales"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.actions.wizard,name:product_margin.action_open_margin
+#: code:addons/product_margin/wizard/product_margin.py:0
+#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: view:product.product:0
+#, python-format
 msgid "Product Margins"
+msgstr ""
+
+#. module: product_margin
+#: view:product.margin:0
+msgid "General Information"
 msgstr ""
 
 #. module: product_margin
@@ -247,12 +269,12 @@ msgid "Total Margin (%)"
 msgstr ""
 
 #. module: product_margin
-#: wizard_button:product.margins,init,open:0
+#: view:product.margin:0
 msgid "Open Margins"
 msgstr ""
 
 #. module: product_margin
-#: wizard_button:product.margins,init,end:0
+#: view:product.margin:0
 msgid "Cancel"
 msgstr ""
 
@@ -267,7 +289,7 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr ""
 
 #. module: product_margin
-#: wizard_view:product.margins,init:0
-msgid "View Stock of Products"
+#: model:ir.model,name:product_margin.model_product_margin
+msgid "Product Margin"
 msgstr ""
 
