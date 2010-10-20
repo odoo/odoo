@@ -105,7 +105,7 @@ class purchase_requisition_partner(osv.osv_memory):
                             'product_id': line.product_id.id,
                             'product_uom': uom_id,
                             'price_unit': price,
-                            'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
+                            'date_planned': date_planned,
                             'notes': product.description_purchase,
                     }
                     taxes_ids = line.product_id.product_tmpl_id.supplier_taxes_id
