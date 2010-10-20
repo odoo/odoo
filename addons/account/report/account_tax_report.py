@@ -20,7 +20,6 @@
 ##############################################################################
 
 import time
-import copy
 
 import rml_parse
 from report import report_sxw

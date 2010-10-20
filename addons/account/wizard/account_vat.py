@@ -39,7 +39,7 @@ class account_vat_declaration(osv.osv_memory):
         company_obj = self.pool.get('res.company')
         user = user_obj.browse(cr, uid, uid, context=context)
         if user.company_id:
-    	    return user.company_id.id
+            return user.company_id.id
         else:
             return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
 
