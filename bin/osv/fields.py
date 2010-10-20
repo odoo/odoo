@@ -540,7 +540,6 @@ class many2many(_column):
             res[id] = []
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         obj = obj.pool.get(self._obj)
-
         d1, d2, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
         if d1:
             d1 = ' and ' + ' and '.join(d1)
@@ -564,7 +563,9 @@ class many2many(_column):
               }
         cr.execute(query, [tuple(ids)] + d2)
         for r in cr.fetchall():
-            res[r[1]].append(r[0])
+            if r[0] not in res[r[1]]:
+                ids2 = obj.search(cr, user, self._domain + [('id', '=', r[0])], context=context)
+                if ids2:res[r[1]] += ids2
         return res
 
     def set(self, cr, obj, id, name, values, user=None, context=None):
