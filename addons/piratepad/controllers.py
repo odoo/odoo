@@ -1,13 +1,15 @@
-from openobject.tools import expose
-from openerp.controllers import form
-from openerp.utils import rpc, TinyDict
 import cherrypy
 
-class Form(form.Form):
-    _cp_path = "/piratepad/form"
+from openobject.tools import expose
+
+import openerp.controllers
+from openerp.utils import rpc, TinyDict
+
+class Piratepad(openerp.controllers.SecuredController):
+    _cp_path = "/piratepad"
 
     @expose('json', methods=('POST',))
-    def save(self, pad_name):
+    def link(self, pad_name):
         params, data = TinyDict.split(cherrypy.session['params'])
         ctx = dict(rpc.session.context,
                    default_res_model=params.model, default_res_id=params.id,

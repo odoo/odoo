@@ -12,7 +12,7 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
 
         insertion_point = output.index(self.BINARY_ATTACHMENTS_FORM)
         return output[:insertion_point] + '''
-            <form id="pad-box" action="/piratepad/form/save" method="post">
+            <form id="pad-box" action="/piratepad/link" method="post">
                 <label for="sidebar_pad_datas">${_("Name")}:</label>
                 <table width="100%">
                 <tr>
