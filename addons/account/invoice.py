@@ -24,8 +24,8 @@ from lxml import etree
 import decimal_precision as dp
 
 import netsvc
-from osv import fields, osv, orm
 import pooler
+from osv import fields, osv, orm
 from tools.translate import _
 
 class account_invoice(osv.osv):
@@ -575,7 +575,7 @@ class account_invoice(osv.osv):
             else:
                 val['currency_id'] = company.currency_id.id
 
-        return {'value': val, 'domain': dom }
+        return {'value': val, 'domain': dom}
 
     # go from canceled state to draft state
     def action_cancel_draft(self, cr, uid, ids, *args):
@@ -787,7 +787,6 @@ class account_invoice(osv.osv):
             line = []
             for key, val in line2.items():
                 line.append((0,0,val))
-
         return line
 
     def action_move_create(self, cr, uid, ids, *args):
@@ -1484,8 +1483,8 @@ class account_invoice_line(osv.osv):
         taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
         res = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
-        r = {'value':{'invoice_line_tax_id': res}}
-        return r
+        return {'value':{'invoice_line_tax_id': res}}
+
 account_invoice_line()
 
 class account_invoice_tax(osv.osv):
@@ -1517,7 +1516,6 @@ class account_invoice_tax(osv.osv):
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'manual': fields.boolean('Manual'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of invoice tax."),
-
         'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="The account basis of the tax declaration."),
         'base_amount': fields.float('Base Code Amount', digits_compute=dp.get_precision('Account')),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
@@ -1555,9 +1553,9 @@ class account_invoice_tax(osv.osv):
 
     _order = 'sequence'
     _defaults = {
-        'manual': lambda *a: 1,
-        'base_amount': lambda *a: 0.0,
-        'tax_amount': lambda *a: 0.0,
+        'manual': 1,
+        'base_amount': 0.0,
+        'tax_amount': 0.0,
     }
     def compute(self, cr, uid, invoice_id, context={}):
         tax_grouped = {}
