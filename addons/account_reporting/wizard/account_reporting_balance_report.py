@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
 
 class account_reporting_balance_report(osv.osv_memory):
 

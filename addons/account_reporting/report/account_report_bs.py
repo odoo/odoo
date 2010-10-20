@@ -20,9 +20,7 @@
 ##############################################################################
 
 import time
-import locale
 
-import pooler
 from report import report_sxw
 
 parents = {
@@ -45,7 +43,6 @@ class account_report_bs(report_sxw.rml_parse):
     def line_total(self, line_id, ctx):
         _total = 0
         bsline = self.pool.get('account.report.bs').browse(self.cr, self.uid, [line_id])[0]
-        bsline_accids = bsline.account_id
         res = self.pool.get('account.report.bs').read(self.cr, self.uid, [line_id], ['account_id', 'child_id'])[0]
         for acc_id in res['account_id']:
             acc = self.pool.get('account.account').browse(self.cr, self.uid, [acc_id], ctx)[0]
