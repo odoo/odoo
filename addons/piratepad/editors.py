@@ -28,17 +28,9 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
         return output[:form_insertion_point] + '''
             <form id="pad-form" action="/piratepad/link" method="post">
                 <label for="sidebar_pad_datas">${_("Name")}:</label>
-                <table width="100%">
-                <tr>
-                   <td width=60% style="padding-right:8px;">
-                        <input id="sidebar_pad_datas"
-                               name="pad_name" size="5" />
-                   </td>
-                    <td>
-                        <button>${_("Ok")}</button>
-                    </td>
-                </tr>
-               </table>
+                <input id="sidebar_pad_datas"
+                       name="pad_name" size="5" />
+                <button>${_("Ok")}</button>
             </form>
             <script type="text/javascript">
                 jQuery(document).ready(function() {
