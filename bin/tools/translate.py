@@ -630,14 +630,20 @@ def trans_generate(lang, modules, dbname=None):
                 except (IOError, etree.XMLSyntaxError):
                     logging.getLogger("i18n").exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
-        for constraint in pool.get(model)._constraints:
-            msg = constraint[1]
+        model_obj = pool.get(model)
+        def push_constraint_msg(module, term_type, model, msg):
             # Check presence of __call__ directly instead of using
             # callable() because it will be deprecated as of Python 3.0
             if not hasattr(msg, '__call__'):
-                push_translation(module, 'constraint', model, 0, encode(msg))
+                push_translation(module, term_type, model, 0, encode(msg))
 
-        for field_name,field_def in pool.get(model)._columns.items():
+        for constraint in model_obj._constraints:
+            push_constraint_msg(module, 'constraint', model, constraint[1])
+
+        for constraint in model_obj._sql_constraints:
+            push_constraint_msg(module, 'sql_constraint', model, constraint[2])
+
+        for field_name,field_def in model_obj._columns.items():
             if field_def.translate:
                 name = model + "," + field_name
                 try:
