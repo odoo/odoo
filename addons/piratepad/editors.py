@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-from openobject.widgets import JSLink
 import openobject.templating
 
 class SidebarTemplateEditor(openobject.templating.TemplateEditor):
