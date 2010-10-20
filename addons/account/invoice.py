@@ -57,17 +57,13 @@ class account_invoice(osv.osv):
                                             ('company_id', '=', company_id),
                                             ('refund_journal', '=', refund_journal.get(type_inv, False))],
                                                 limit=1)
-        if res:
-            return res[0]
-        else:
-            return False
+        return res and res[0] or False
 
     def _get_currency(self, cr, uid, context=None):
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0]
         if user.company_id:
             return user.company_id.currency_id.id
-        else:
-            return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
+        return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=', 1.0)])[0]
 
     def _get_journal_analytic(self, cr, uid, type_inv, context=None):
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
@@ -134,7 +130,6 @@ class account_invoice(osv.osv):
                 result = inv.amount_total - amount
             # Use is_zero function to avoid rounding trouble => should be fixed into ORM
             res[inv.id] = not self.pool.get('res.currency').is_zero(cr, uid, inv.company_id.currency_id, result) and result or 0.0
-
         return res
 
     # Give Journal Items related to the payment reconciled to this invoice
@@ -491,7 +486,6 @@ class account_invoice(osv.osv):
             res = {'value':{'date_due': pterm_list[-1]}}
         else:
              raise osv.except_osv(_('Data Insufficient !'), _('The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !'))
-
         return res
 
     def onchange_invoice_line(self, cr, uid, ids, lines):
@@ -504,6 +498,8 @@ class account_invoice(osv.osv):
         val = {}
         dom = {}
         obj_journal = self.pool.get('account.journal')
+        account_obj = self.pool.get('account.account')
+        inv_line_obj = self.pool.get('account.invoice.line')
         if company_id and part_id and type:
             acc_id = False
             partner_obj = self.pool.get('res.partner').browse(cr,uid,part_id)
@@ -528,7 +524,6 @@ class account_invoice(osv.osv):
                     else:
                         acc_id = pay_res_id
                     val= {'account_id': acc_id}
-            account_obj = self.pool.get('account.account')
             if ids:
                 if company_id:
                     inv_obj = self.browse(cr,uid,ids)
@@ -539,7 +534,7 @@ class account_invoice(osv.osv):
                                 if not result_id:
                                     raise osv.except_osv(_('Configuration Error !'),
                                         _('Can not find account chart for this company in invoice line account, Please Create account.'))
-                                self.pool.get('account.invoice.line').write(cr, uid, [line.id], {'account_id': result_id[0]})
+                                inv_line_obj.write(cr, uid, [line.id], {'account_id': result_id[0]})
             else:
                 if invoice_line:
                     for inv_line in invoice_line:
