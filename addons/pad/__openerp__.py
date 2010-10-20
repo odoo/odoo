@@ -1,5 +1,5 @@
 {
-    "name" : "Piratepad Controller methods",
+    "name" : "(Ether)Pad enhanced support",
     "version" : "1.0",
     "depends" : ["openerp"],
     "author" : "Tiny",
