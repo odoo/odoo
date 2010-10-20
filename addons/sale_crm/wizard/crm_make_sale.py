@@ -37,16 +37,16 @@ class crm_make_sale(osv.osv_memory):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
-        @return : default value of partner_id field.
+        @return: default value of partner_id field.
         """
         if not context:
             context = {}
- 
+
         lead_obj = self.pool.get('crm.lead')
         active_id = context and context.get('active_id', False) or False
         if not active_id:
             return False
- 
+
         lead = lead_obj.read(cr, uid, active_id, ['partner_id'])
         return lead['partner_id']
 
@@ -63,7 +63,7 @@ class crm_make_sale(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of crm make sale' ids
         @param context: A standard dictionary for contextual values
-        @return : Dictionary value of created sale order.
+        @return: Dictionary value of created sale order.
         """
         if not context:
             context = {}

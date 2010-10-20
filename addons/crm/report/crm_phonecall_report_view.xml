@@ -28,26 +28,6 @@
             </field>
         </record>
 
-<!-- Phone calls by user and section Form View -->
-
-        <record id="view_report_crm_phonecall_form" model="ir.ui.view">
-            <field name="name">crm.phonecall.report.form</field>
-            <field name="model">crm.phonecall.report</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Cases">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="section_id" select="1"/>
-                    <field name="nbr" select="1"/>
-                    <field name="delay_close"/>
-                    <field name="probability"/>
-                    <field name="state" select="1"/>
-                </form>
-            </field>
-        </record>
-
 <!-- Phone calls by user and section Graph View -->
 
         <record id="view_report_crm_phonecall_graph" model="ir.ui.view">
@@ -159,7 +139,7 @@
             <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_phonecall_tree"/>
             <field name="search_view_id" ref="view_report_crm_phonecall_filter"/>
-            <field name="help">Get an anlysis of Phone Calls number and delay to close, stage, user suits to different groups for a global or a fine grained analysis.</field>
+            <field name="help">From this report, you can analyse the performance of your sales team, based on their phone calls. You can group or filter the information according to several criteria and drill down the information, by adding more groups in the report.</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_report_crm_phonecall_tree">

@@ -11,7 +11,6 @@
 
         <record id="hr_payslip_line_houserantallowance1" model="hr.payslip.line">
             <field name="amount_type">per</field>
-<!--            <field name="account_id" ref="account.a_expense"/>-->
             <field eval="5" name="sequence"/>
             <field eval="0.4" name="amount"/>
             <field name="code">HRA</field>
@@ -23,7 +22,6 @@
 
         <record id="hr_payslip_line_convanceallowance1" model="hr.payslip.line">
             <field name="amount_type">fix</field>
-<!--            <field name="account_id" ref="account.a_expense"/>-->
             <field eval="10" name="sequence"/>
             <field eval="800.0" name="amount"/>
             <field name="code">CA</field>
@@ -35,7 +33,6 @@
 
         <record id="hr_payslip_line_professionaltax1" model="hr.payslip.line">
             <field name="amount_type">fix</field>
-<!--            <field name="account_id" ref="account.a_pay"/>-->
             <field eval="15" name="sequence"/>
             <field eval="200.0" name="amount"/>
             <field name="code">PT</field>
@@ -47,7 +44,6 @@
 
         <record id="hr_payslip_line_providentfund1" model="hr.payslip.line">
             <field name="amount_type">per</field>
-<!--            <field name="account_id" ref="account.a_pay"/>-->
             <field eval="20" name="sequence"/>
             <field eval="0.125" name="amount"/>
             <field name="code">PF</field>
@@ -84,14 +80,12 @@
         <!-- Payslip -->
         <record id="hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
             <field name="number">SLIP/001</field>
-<!--            <field name="journal_id" ref="account.expenses_journal"/>-->
             <field name="deg_id" ref="hr_payroll.structure_001"/>
             <field name="employee_id" ref="hr_employee_bonamy0"/>
             <field name="contract_id" ref="hr_contract_firstcontract1"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-5'"/>
-<!--            <field name="bank_journal_id" ref="account.bank_journal"/>-->
-            <field name="name">Salary Slip of Bonamy for June-2010</field>
+            <field name="name" eval="'Salary Slip of Bonamy for June-'+time.strftime('%Y')"/>
         </record>
     </data>
 </openerp>

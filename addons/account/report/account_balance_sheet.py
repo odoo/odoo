@@ -78,11 +78,9 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         db_pool = pooler.get_pool(self.cr.dbname)
 
         #Getting Profit or Loss Balance from profit and Loss report
-        result_pl = self.obj_pl.get_data(data)
         self.res_bl = self.obj_pl.final_result()
 
         account_pool = db_pool.get('account.account')
-        year_pool = db_pool.get('account.fiscalyear')
 
         types = [
             'liability',
@@ -110,7 +108,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         else:
             self.res_bl['type'] = 'Net Loss'
         pl_dict  = {
-            'code': False,
+            'code': self.res_bl['type'],
             'name': self.res_bl['type'],
             'level': False,
             'balance':self.res_bl['balance'],

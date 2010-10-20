@@ -399,9 +399,7 @@ class project_resource_allocation(osv.osv):
     def get_name(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for allocation in self.browse(cr, uid, ids, context=context):
-            name = allocation.resource_id.name
-            if allocation.user_id:
-                name = '%s' %(allocation.user_id.name)
+            name = allocation.phase_id.name
             name += ' (%s%%)' %(allocation.useability)
             res[allocation.id] = name
         return res

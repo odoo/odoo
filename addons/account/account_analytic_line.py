@@ -24,8 +24,6 @@ import time
 from osv import fields
 from osv import osv
 from tools.translate import _
-import tools
-from tools import config
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
@@ -82,12 +80,13 @@ class account_analytic_line(osv.osv):
             return {}
         product_obj = self.pool.get('product.product')
         analytic_journal_obj =self.pool.get('account.analytic.journal')
+        company_obj = self.pool.get('res.company')
+        product_price_type_obj = self.pool.get('product.price.type')
         j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
         prod = product_obj.browse(cr, uid, prod_id)
         if not company_id:
             company_id = j_id.company_id.id
         result = 0.0
-        is_purchase = False
 
         if j_id.type <> 'sale':
             a = prod.product_tmpl_id.property_account_expense.id
@@ -99,8 +98,6 @@ class account_analytic_line(osv.osv):
                                 'for this product: "%s" (id:%d)') % \
                                 (prod.name, prod.id,))
             amount_unit = prod.price_get('standard_price', context)[prod.id]
-            is_purchase = True
-
         else:
             a = prod.product_tmpl_id.property_account_income.id
             if not a:
@@ -113,7 +110,7 @@ class account_analytic_line(osv.osv):
             amount_unit = prod.price_get('list_price', context)[prod_id]
 
         if not company_id:
-            company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
+            company_id = company_obj._company_default_get(cr, uid, 'account.analytic.line', context=context)
             flag = False
             # Compute based on pricetype
             product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context)
@@ -128,15 +125,14 @@ class account_analytic_line(osv.osv):
             if pricetype.field == 'list_price':
                 flag = True
             amount_unit = prod.price_get(pricetype.field, context)[prod.id]
-            amount = amount_unit*unit_amount or 1.0
             prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-            amount = amount_unit*unit_amount or 1.0
+            amount = amount_unit*unit or 1.0
             result = round(amount, prec)
             if not flag:
                 result *= -1
-            return {'value': {
-                'amount': result,
-                'general_account_id': a,
+        return {'value': {
+            'amount': result,
+            'general_account_id': a,
             }
         }
 

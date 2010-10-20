@@ -118,7 +118,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
             <field name="context">{'search_default_to_invoice': 1}</field>
-            <field name="help">OpenERP automatically group the entries to be invoiced so you can keep an eye on them on real time in one glance.</field>
+            <field name="help">This lists show you every task work you can invoice to the customer. Select the lines in order to generate the invoices automatically.</field>
         </record>
         <menuitem
             action="action_hr_analytic_timesheet_open_tree"
@@ -126,13 +126,25 @@
             parent="account.menu_finance_periodical_processing_billing"
             sequence="1"/>
 
+        <record id="view_hr_timesheet_invoice_factor_search" model="ir.ui.view">
+            <field name="name">hr_timesheet_invoice.factor.search</field>
+            <field name="model">hr_timesheet_invoice.factor</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Type of invoicing">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </search>
+            </field>
+        </record>
         <record id="view_hr_timesheet_invoice_factor_form" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.form</field>
             <field name="model">hr_timesheet_invoice.factor</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Type of invoicing">
-                    <field colspan="1" name="name" select="1"/>
+                    <field colspan="1" name="name"/>
                     <field colspan="1" name="customer_name"/>
                     <field colspan="2" name="factor"/>
                 </form>
@@ -156,6 +168,7 @@
             <field name="res_model">hr_timesheet_invoice.factor</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_timesheet_invoice_factor_tree"/>
+            <field name="search_view_id" ref="view_hr_timesheet_invoice_factor_search"/>
         </record>
         <menuitem
             action="action_hr_timesheet_invoice_factor_form"

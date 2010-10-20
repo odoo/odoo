@@ -20,8 +20,9 @@
 ##############################################################################
 
 import time
-from mx import DateTime as dt
-
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from dateutil import parser
 from osv import fields, osv
 import tools
 from tools.translate import _
@@ -109,8 +110,8 @@ class hr_employee(osv.osv):
             context = {}
         for id in self.browse(cr, uid, self.search(cr, uid, [], context=context), context=context):
             if id.evaluation_plan_id and id.evaluation_date:
-                if (dt.ISO.ParseAny(id.evaluation_date) + dt.RelativeDateTime(months = int(id.evaluation_plan_id.month_next))).strftime('%Y-%m-%d') <= time.strftime("%Y-%m-%d"):
-                    self.write(cr, uid, id.id, {'evaluation_date' : (dt.ISO.ParseAny(id.evaluation_date) + dt.RelativeDateTime(months =+ int(id.evaluation_plan_id.month_next))).strftime('%Y-%m-%d')}, context=context)
+                if (parser.parse(id.evaluation_date) + relativedelta(months = int(id.evaluation_plan_id.month_next))).strftime('%Y-%m-%d') <= time.strftime("%Y-%m-%d"):
+                    self.write(cr, uid, id.id, {'evaluation_date' : (parser.parse(id.evaluation_date) + relativedelta(months =+ int(id.evaluation_plan_id.month_next))).strftime('%Y-%m-%d')}, context=context)
                     obj_evaluation.create(cr, uid, {'employee_id' : id.id, 'plan_id': id.evaluation_plan_id}, context=context)
         return True
 
@@ -123,11 +124,11 @@ class hr_employee(osv.osv):
             flag = False
             evaluation_plan =  evaluation_plan_obj.browse(cr, uid, [evaluation_plan_id], context=context)[0]
             if not evaluation_date:
-               evaluation_date=(dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d'))+ dt.RelativeDateTime(months=+evaluation_plan.month_first)).strftime('%Y-%m-%d')
+               evaluation_date=(parser.parse(datetime.date.today().strftime('%Y-%m-%d'))+ relativedelta(months=+evaluation_plan.month_first)).strftime('%Y-%m-%d')
                flag = True
             else:
-                if (dt.ISO.ParseAny(evaluation_date) + dt.RelativeDateTime(months = int(evaluation_plan.month_next))).strftime('%Y-%m-%d') <= time.strftime("%Y-%m-%d"):
-                    evaluation_date=(dt.ISO.ParseAny(evaluation_date)+ dt.RelativeDateTime(months=+evaluation_plan.month_next)).strftime('%Y-%m-%d')
+                if (parser.parse(evaluation_date) + relativedelta(months = int(evaluation_plan.month_next))).strftime('%Y-%m-%d') <= time.strftime("%Y-%m-%d"):
+                    evaluation_date=(parser.parse(evaluation_date)+ relativedelta(months=+evaluation_plan.month_next)).strftime('%Y-%m-%d')
                     flag = True
             if ids and flag:
                 obj_evaluation.create(cr, uid, {'employee_id': ids[0], 'plan_id': evaluation_plan_id}, context=context)
@@ -174,7 +175,7 @@ class hr_evaluation(osv.osv):
         'progress' : fields.float("Progress"),
     }
     _defaults = {
-        'date' : lambda *a: (dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d')) + dt.RelativeDateTime(months =+ 1)).strftime('%Y-%m-%d'),
+        'date' : lambda *a: (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
         'state' : lambda *a: 'draft',
     }
 
@@ -225,7 +226,7 @@ class hr_evaluation(osv.osv):
                     int_id = hr_eval_inter_obj.create(cr, uid, {
                         'evaluation_id': evaluation.id,
                         'survey_id': phase.survey_id.id,
-                        'date_deadline': (dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d')) + dt.RelativeDateTime(months =+ 1)).strftime('%Y-%m-%d'),
+                        'date_deadline': (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
                         'user_id': child.user_id.id,
                         'user_to_review_id': evaluation.employee_id.id
                     }, context=context)
@@ -235,12 +236,12 @@ class hr_evaluation(osv.osv):
                         hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [int_id], context=context)
 
                     if (not wait) and phase.mail_feature:
-                        body = phase.mail_body % {'employee_name': child.name, 'user_signature': user.signature,
+                        body = phase.mail_body % {'employee_name': child.name, 'user_signature': child.user_id.signature,
                             'eval_name': phase.survey_id.title, 'date': time.strftime('%Y-%m-%d'), 'time': time }
                         sub = phase.email_subject
                         dest = [child.work_email]
                         if dest:
-                           tools.email_send(src, dest, sub, body)
+                           tools.email_send(evaluation.employee_id.work_email, dest, sub, body)
 
         self.write(cr, uid, ids, {'state':'wait'}, context=context)
         return True
@@ -267,7 +268,18 @@ class hr_evaluation(osv.osv):
             context = {}
         self.write(cr, uid, ids,{'state':'cancel'}, context=context)
         return True
-
+        
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        if 'date' in vals:
+            new_vals = {'date_deadline': vals.get('date')}
+            obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
+            for evalutation in self.browse(cr, uid, ids, context=context):
+                for survey_req in evalutation.survey_request_ids:
+                    obj_hr_eval_iterview.write(cr, uid, [survey_req.id], new_vals, context=context)
+        return super(hr_evaluation, self).write(cr, uid, ids, vals, context=context)
+    
 hr_evaluation()
 
 class survey_request(osv.osv):
@@ -320,7 +332,7 @@ class hr_evaluation_interview(osv.osv):
         for id in self.browse(cr, uid, ids, context=context):
             flag = False
             wating_id = 0
-            tot_done_req = 0
+            tot_done_req = 1
             if not id.evaluation_id.id:
                 raise osv.except_osv(_('Warning !'),_("You cannot start evaluation without Evaluation."))
             records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_request_ids

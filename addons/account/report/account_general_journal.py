@@ -87,19 +87,19 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
-        self.cr.execute('SELECT j.code, j.name, l.amount_currency,c.code AS currency_code,l.currency_id , '
+        self.cr.execute('SELECT j.code, j.name, l.amount_currency,c.symbol AS currency_code,l.currency_id, '
                         'SUM(l.debit) AS debit, SUM(l.credit) AS credit '
                         'FROM account_move_line l '
                         'LEFT JOIN account_move am ON (l.move_id=am.id) '
                         'LEFT JOIN account_journal j ON (l.journal_id=j.id) '
                         'LEFT JOIN res_currency c on (l.currency_id=c.id)'
                         'WHERE am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' '
-                        'GROUP BY j.id, j.code, j.name, l.amount_currency, c.code, l.currency_id ',
+                        'GROUP BY j.id, j.code, j.name, l.amount_currency, c.symbol, l.currency_id ',
                         (tuple(move_state), period_id, tuple(self.journal_ids)))
         return self.cr.dictfetchall()
 
     def _set_get_account_currency_code(self, account_id):
-        self.cr.execute("SELECT c.code AS code "\
+        self.cr.execute("SELECT c.symbol AS code "\
                         "FROM res_currency c, account_account AS ac "\
                         "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
         result = self.cr.fetchone()
@@ -111,7 +111,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def _get_account(self, data):
         if data['model'] == 'account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).company_id.name
-        return super(journal_print ,self)._get_account(data)
+        return super(journal_print, self)._get_account(data)
 
     def _get_fiscalyear(self, data):
         if data['model'] == 'account.journal.period':

@@ -102,7 +102,7 @@
                     <filter string="Default UoM" icon="terp-mrp" context="{'group_by':'uom_name'}"/>
                     <filter string="Category of Product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id'}"/>
                     <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
-                    <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
+                    <filter string="Analytic Account" icon="terp-folder-violet" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
                     <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
@@ -125,7 +125,7 @@
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="view_id" ref="view_order_product_tree"/>
         <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
-        <field name="help">With Sales Analysis consult your sales total amount suits to different group criteria (salesman, partner, product, etc.)</field>
+        <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
     <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="11"/>

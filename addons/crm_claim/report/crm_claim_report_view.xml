@@ -29,30 +29,6 @@
             </field>
         </record>
 
-<!-- CRM Claim Report Form View -->
-
-        <record id="view_report_crm_claim_form" model="ir.ui.view">
-            <field name="name">crm.claim.report.form</field>
-            <field name="model">crm.claim.report</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Cases">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="section_id" select="1"/>
-                    <field name="nbr" select="1"/>
-                    <field name="delay_close"/>
-                    <field name="delay_expected"/>
-                    <field name="amount_revenue"/>
-                    <field name="amount_costs"/>
-                    <field name="amount_revenue_prob"/>
-                    <field name="probability"/>
-                    <field name="state" select="1"/>
-                </form>
-            </field>
-        </record>
-
 <!-- CRM Claim Report Graph View -->
 
         <record id="view_report_crm_claim_graph" model="ir.ui.view">
@@ -196,6 +172,7 @@
             <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_claim_tree"/>
             <field name="search_view_id" ref="view_report_crm_claim_filter"/>
+            <field name="help">Have a general overview of all claims processed in the system by sorting them with specific criteria.</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_report_crm_claim_tree">

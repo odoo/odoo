@@ -47,11 +47,6 @@ class project_installer(osv.osv_memory):
         'project_gtd': fields.boolean('Getting Things Done',
             help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
     }
-
-    _defaults={
-        'project_issue': True,
-    }
-
 project_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

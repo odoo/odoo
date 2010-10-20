@@ -23,7 +23,8 @@ import time
 import netsvc
 
 from osv import fields, osv
-from mx import DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from tools.translate import _
 
 class one2many_mod2(fields.one2many):
@@ -210,9 +211,9 @@ class hr_timesheet_sheet(osv.osv):
         if context is None:
             context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
-            if DateTime.now() <= DateTime.strptime(sheet.date_from, '%Y-%m-%d'):
+            if datetime.today() <= datetime.strptime(sheet.date_from, '%Y-%m-%d'):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,}, context=context)
-            elif DateTime.now() >= DateTime.strptime(sheet.date_to, '%Y-%m-%d'):
+            elif datetime.now() >= datetime.strptime(sheet.date_to, '%Y-%m-%d'):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,}, context=context)
             else:
                 self.write(cr, uid, [sheet.id], {'date_current': time.strftime('%Y-%m-%d')}, context=context)
@@ -222,11 +223,11 @@ class hr_timesheet_sheet(osv.osv):
         if context is None:
             context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
-            if DateTime.strptime(sheet.date_current, '%Y-%m-%d') <= DateTime.strptime(sheet.date_from, '%Y-%m-%d'):
+            if datetime.strptime(sheet.date_current, '%Y-%m-%d') <= datetime.strptime(sheet.date_from, '%Y-%m-%d'):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,}, context=context)
             else:
                 self.write(cr, uid, [sheet.id], {
-                    'date_current': (DateTime.strptime(sheet.date_current, '%Y-%m-%d') + DateTime.RelativeDateTime(days=-1)).strftime('%Y-%m-%d'),
+                    'date_current': (datetime.strptime(sheet.date_current, '%Y-%m-%d') + relativedelta(days=-1)).strftime('%Y-%m-%d'),
                 }, context=context)
         return True
 
@@ -234,11 +235,11 @@ class hr_timesheet_sheet(osv.osv):
         if context is None:
             context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
-            if DateTime.strptime(sheet.date_current, '%Y-%m-%d') >= DateTime.strptime(sheet.date_to, '%Y-%m-%d'):
+            if datetime.strptime(sheet.date_current, '%Y-%m-%d') >= datetime.strptime(sheet.date_to, '%Y-%m-%d'):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,}, context=context)
             else:
                 self.write(cr, uid, [sheet.id], {
-                    'date_current': (DateTime.strptime(sheet.date_current, '%Y-%m-%d') + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d'),
+                    'date_current': (datetime.strptime(sheet.date_current, '%Y-%m-%d') + relativedelta(days=1)).strftime('%Y-%m-%d'),
                 }, context=context)
         return True
 
@@ -246,9 +247,9 @@ class hr_timesheet_sheet(osv.osv):
         if context is None:
             context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
-            if DateTime.strptime(sheet.date_current, '%Y-%m-%d') <= DateTime.strptime(sheet.date_from, '%Y-%m-%d'):
+            if datetime.strptime(sheet.date_current, '%Y-%m-%d') <= datetime.strptime(sheet.date_from, '%Y-%m-%d'):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,}, context=context)
-            elif DateTime.strptime(sheet.date_current, '%Y-%m-%d') >= DateTime.strptime(sheet.date_to, '%Y-%m-%d'):
+            elif datetime.strptime(sheet.date_current, '%Y-%m-%d') >= datetime.strptime(sheet.date_to, '%Y-%m-%d'):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,}, context=context)
         return True
 
@@ -318,7 +319,7 @@ class hr_timesheet_sheet(osv.osv):
         if r=='month':
             return time.strftime('%Y-%m-01')
         elif r=='week':
-            return (DateTime.now() + DateTime.RelativeDateTime(weekday=(DateTime.Monday,0))).strftime('%Y-%m-%d')
+            return (datetime.today() + relativedelta(weekday=0)).strftime('%Y-%m-%d')
         elif r=='year':
             return time.strftime('%Y-01-01')
         return time.strftime('%Y-%m-%d')
@@ -327,9 +328,9 @@ class hr_timesheet_sheet(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         r = user.company_id and user.company_id.timesheet_range or 'month'
         if r=='month':
-            return (DateTime.now() + DateTime.RelativeDateTime(months=+1,day=1,days=-1)).strftime('%Y-%m-%d')
+            return (datetime.today() + relativedelta(months=+1,day=1,days=-1)).strftime('%Y-%m-%d')
         elif r=='week':
-            return (DateTime.now() + DateTime.RelativeDateTime(weekday=(DateTime.Sunday,0))).strftime('%Y-%m-%d')
+            return (datetime.today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')
         elif r=='year':
             return time.strftime('%Y-12-31')
         return time.strftime('%Y-%m-%d')

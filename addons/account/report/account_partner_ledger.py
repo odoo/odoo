@@ -46,8 +46,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'get_start_date': self._get_start_date,
             'get_end_date': self._get_end_date,
             'get_fiscalyear': self._get_fiscalyear,
-            'get_start_date':self._get_start_date,
-            'get_end_date': self._get_end_date,
             'get_journal': self._get_journal,
             'get_partners':self._get_partners,
             'get_intial_balance':self._get_intial_balance,
@@ -58,6 +56,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
     def set_context(self, objects, data, ids, report_type=None):
         obj_move = self.pool.get('account.move.line')
+        obj_partner = self.pool.get('res.partner')
         self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
         ctx2 = data['form'].get('used_context',{}).copy()
         ctx2.update({'initial_bal': True})
@@ -100,7 +99,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "AND l.account_id = account.id " \
                     "AND am.id = l.move_id " \
                     "AND am.state IN %s"
-                    "AND " + self.query +" " \
+#                    "AND " + self.query +" " \
                     "AND l.account_id IN %s " \
                     " " + PARTNER_REQUEST + " " \
                     "AND account.active ",
@@ -111,7 +110,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             partner_to_use.append(res_line['partner_id'])
         new_ids = partner_to_use
         self.partner_ids = new_ids
-        objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
+        objects = obj_partner.browse(self.cr, self.uid, new_ids)
         return super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
 
     def comma_me(self, amount):
@@ -139,7 +138,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         else:
             RECONCILE_TAG = "AND l.reconcile_id IS NULL"
         self.cr.execute(
-            "SELECT l.id, l.date, j.code, acc.code as a_code, acc.name as a_name, l.ref, m.name as move_name, l.name, l.debit, l.credit, l.amount_currency, c.symbol AS currency_code " \
+            "SELECT l.id, l.date, j.code, acc.code as a_code, acc.name as a_name, l.ref, m.name as move_name, l.name, l.debit, l.credit, l.amount_currency,l.currency_id, c.symbol AS currency_code " \
             "FROM account_move_line l " \
             "LEFT JOIN account_journal j " \
                 "ON (l.journal_id = j.id) " \
@@ -170,7 +169,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             "SELECT COALESCE(SUM(l.debit),0.0), COALESCE(SUM(l.credit),0.0), COALESCE(sum(debit-credit), 0.0) " \
             "FROM account_move_line AS l,  " \
             "account_move AS m "
-            "WHERE partner_id = %s " \
+            "WHERE l.partner_id = %s " \
             "AND m.id = l.move_id " \
             "AND m.state IN %s "
             "AND account_id IN %s" \
@@ -195,7 +194,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "SELECT sum(debit) " \
                     "FROM account_move_line AS l, " \
                     "account_move AS m "
-                    "WHERE partner_id = %s" \
+                    "WHERE l.partner_id = %s" \
                         "AND m.id = l.move_id " \
                         "AND m.state IN %s "
                         "AND account_id IN %s" \
@@ -212,7 +211,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                 "SELECT sum(debit) " \
                 "FROM account_move_line AS l, " \
                 "account_move AS m "
-                "WHERE partner_id = %s " \
+                "WHERE l.partner_id = %s " \
                     "AND m.id = l.move_id " \
                     "AND m.state IN %s "
                     "AND account_id IN %s" \
@@ -244,7 +243,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "SELECT sum(credit) " \
                     "FROM account_move_line AS l, " \
                     "account_move AS m  "
-                    "WHERE partner_id = %s" \
+                    "WHERE l.partner_id = %s" \
                         "AND m.id = l.move_id " \
                         "AND m.state IN %s "
                         "AND account_id IN %s" \
@@ -261,7 +260,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                 "SELECT sum(credit) " \
                 "FROM account_move_line AS l, " \
                 "account_move AS m "
-                "WHERE partner_id=%s " \
+                "WHERE l.partner_id=%s " \
                     "AND m.id = l.move_id " \
                     "AND m.state IN %s "
                     "AND account_id IN %s" \
@@ -286,7 +285,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #            return 0.0
 #        result_tmp = 0.0
 #        result_init = 0.0
-#        if self.reconcil :
+#        if self.reconcil:
 #            RECONCILE_TAG = " "
 #        else:
 #            RECONCILE_TAG = "AND reconcile_id IS NULL"
@@ -317,7 +316,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #                    "AND m.state IN %s "
 #                    "AND account_id IN %s" \
 #                    " " + RECONCILE_TAG + " " \
-#                    "AND " + self.query + " " ,
+#                    "AND " + self.query + " ",
 #                    (tuple(self.partner_ids), tuple(move_state) ,tuple(self.account_ids),))
 #        contemp = self.cr.fetchone()
 #        if contemp != None:
@@ -335,7 +334,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #            return 0.0
 #        result_tmp = 0.0
 #        result_init = 0.0
-#        if self.reconcil :
+#        if self.reconcil:
 #            RECONCILE_TAG = " "
 #        else:
 #            RECONCILE_TAG = "AND reconcile_id IS NULL"
@@ -366,7 +365,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #                    "AND m.state IN %s "
 #                    "AND account_id IN %s" \
 #                    " " + RECONCILE_TAG + " " \
-#                    "AND " + self.query + " " ,
+#                    "AND " + self.query + " ",
 #                    (tuple(self.partner_ids), tuple(move_state), tuple(self.account_ids),))
 #        contemp = self.cr.fetchone()
 #        if contemp != None:

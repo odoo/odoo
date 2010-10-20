@@ -86,7 +86,7 @@ class project_scrum_sprint(osv.osv):
             context = {}
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Sprint ') + " '" + name + "' "+ _("is Open.")
+            message = _("The sprint '%s' has been opened.") % (name,)
             self.log(cr, uid, id, message)
         return True
 
@@ -95,7 +95,7 @@ class project_scrum_sprint(osv.osv):
             context = {}
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Sprint ') + " '" + name + "' "+ _("is Closed.")
+            message = _("The sprint '%s' has been closed.") % (name,)
             self.log(cr, uid, id, message)
         return True
 
@@ -214,9 +214,6 @@ class project_scrum_product_backlog(osv.osv):
         if context is None:
             context = {}
         self.write(cr, uid, ids, {'state':'open'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Product Backlog ') + " '" + name + "' "+ _("is Open.")
-            self.log(cr, uid, id, message)
         return True
 
     def button_close(self, cr, uid, ids, context=None):
@@ -226,8 +223,6 @@ class project_scrum_product_backlog(osv.osv):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
             obj_project_task.write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'done'})
-            message = _('Product Backlog ') + " '" + backlog.name + "' "+ _("is Closed.")
-            self.log(cr, uid, backlog.id, message)
         return True
 
     def button_pending(self, cr, uid, ids, context=None):

@@ -336,6 +336,10 @@ class account_move_line(osv.osv):
                    analytic_line_obj.create(cr, uid, al_vals, context=context)
         return True
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
+        result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        return result
+
 account_move_line()
 
 class account_invoice(osv.osv):
@@ -424,5 +428,43 @@ class sale_order_line(osv.osv):
         return create_ids
 
 sale_order_line()
+
+
+class account_bank_statement(osv.osv):
+    _inherit = "account.bank.statement"
+    _name = "account.bank.statement"
+    
+    def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
+        account_move_line_pool = self.pool.get('account.move.line')
+        account_bank_statement_line_pool = self.pool.get('account.bank.statement.line')
+        st_line = account_bank_statement_line_pool.browse(cr, uid, st_line_id, context)
+        result = super(account_bank_statement,self).create_move_from_st_line(cr, uid, st_line_id, company_currency_id, st_line_number, context=context)
+        move = st_line.move_ids and st_line.move_ids[0] or False
+        if move:
+            for line in move.line_id:
+                account_move_line_pool.write(cr, uid, [line.id], {'analytics_id':st_line.analytics_id.id}, context=context)
+        return result
+
+    def button_confirm_bank(self, cr, uid, ids, context=None):
+        super(account_bank_statement,self).button_confirm_bank(cr, uid, ids, context=context)
+        for st in self.browse(cr, uid, ids, context):
+            for st_line in st.line_ids:
+                if st_line.analytics_id:
+                    if not st.journal_id.analytic_journal_id:
+                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (st.journal_id.name,))
+                if not st_line.amount:
+                    continue
+        return True
+    
+account_bank_statement()
+
+
+class account_bank_statement_line(osv.osv):
+    _inherit = "account.bank.statement.line"
+    _name = "account.bank.statement.line"
+    _columns = {
+        'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
+    }
+account_bank_statement_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

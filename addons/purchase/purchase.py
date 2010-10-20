@@ -19,16 +19,13 @@
 #
 ##############################################################################
 
-from mx import DateTime
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from osv import osv, fields
 import netsvc
-import ir
 import pooler
-from tools import config
 from tools.translate import _
 import decimal_precision as dp
 from osv.orm import browse_record, browse_null
@@ -37,6 +34,7 @@ from osv.orm import browse_record, browse_null
 # Model definition
 #
 class purchase_order(osv.osv):
+    
     def _calc_amount(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = {}
         for order in self.browse(cr, uid, ids):
@@ -44,7 +42,7 @@ class purchase_order(osv.osv):
             for oline in order.order_line:
                 res[order.id] += oline.price_unit * oline.product_qty
         return res
-
+         
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
@@ -269,9 +267,6 @@ class purchase_order(osv.osv):
 
     def wkf_approve_order(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
-        for (id,name) in self.name_get(cr, uid, ids):
-                message = _('Purchase order ') + " '" + name + "' "+_("is approved by the supplier")
-                self.log(cr, uid, id, message)
         return True
 
     #TODO: implement messages system
@@ -284,15 +279,12 @@ class purchase_order(osv.osv):
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
+            message = _("Purchase order '%s' is confirmed.") % (po.name,)
+            self.log(cr, uid, po.id, message)
         current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
-            for line in po.order_line:
-                product.append(line.product_id.default_code or '')
-                params = ', '.join(map(lambda x : str(x), product))
-            message = _('Purchase order ') + " '" + po.name + "' "+_('placed on')+ " '" + po.date_order + "' "+_('for')+" '" + params + "' "+ _("is confirmed")
-            self.log(cr, uid, id, message)
         return True
 
     def wkf_warn_buyer(self, cr, uid, ids):
@@ -335,8 +327,8 @@ class purchase_order(osv.osv):
             wf_service.trg_delete(uid, 'purchase.order', p_id, cr)
             wf_service.trg_create(uid, 'purchase.order', p_id, cr)
         for (id,name) in self.name_get(cr, uid, ids):
-                message = _('Purchase order') + " '" + name + "' "+ _("is in the draft state")
-                self.log(cr, uid, id, message)
+            message = _("Purchase order '%s' has been set in draft state.") % name
+            self.log(cr, uid, id, message)
         return True
 
     def action_invoice_create(self, cr, uid, ids, *args):
@@ -396,8 +388,6 @@ class purchase_order(osv.osv):
         return False
 
     def action_cancel(self, cr, uid, ids, context={}):
-        ok = True
-        purchase_order_line_obj = self.pool.get('purchase.order.line')
         for purchase in self.browse(cr, uid, ids):
             for pick in purchase.picking_ids:
                 if pick.state not in ('draft','cancel'):
@@ -416,8 +406,9 @@ class purchase_order(osv.osv):
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})
-        message = _('Purchase order ') + " '" + purchase.name + "' "+ _("is cancelled")
-        self.log(cr, uid, id, message)
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _("Purchase order '%s' is cancelled.") % name
+            self.log(cr, uid, id, message)
         return True
 
     def action_picking_create(self,cr, uid, ids, *args):
@@ -695,7 +686,6 @@ class purchase_order_line(osv.osv):
             'product_uom': uom}}
         domain = {}
 
-        partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
         taxes = self.pool.get('account.tax').browse(cr, uid,map(lambda x: x.id, prod.supplier_taxes_id))
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         res['value']['taxes_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
@@ -721,9 +711,6 @@ class purchase_order_line(osv.osv):
 
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context)
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Purchase order line') + " '" + name + "' "+ _("is confirmed")
-            self.log(cr, uid, id, message)
         return True
 
 purchase_order_line()
@@ -771,9 +758,8 @@ class procurement_order(osv.osv):
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
-            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-            newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
-            newdate = newdate - seller_delay
+            newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
+            newdate = (newdate - relativedelta(days=company.po_lead)) - relativedelta(days=seller_delay)
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})

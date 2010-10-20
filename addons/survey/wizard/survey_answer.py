@@ -76,29 +76,43 @@ class survey_question_wiz(osv.osv_memory):
                 sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id)
                 context.update({'sur_name_id' :wiz_id})
             else:
-                sur_name_rec = surv_name_wiz.browse(cr, uid, context.get('sur_name_id', False))
+                sur_name_rec = surv_name_wiz.browse(cr, uid, context['sur_name_id'])
 
             if context.has_key('active_id'):
                 context.pop('active_id')
 
             survey_id = context.get('survey_id', False)
+            if not survey_id:
+                # Try one more time to find it
+                if sur_name_rec.survey_id:
+                    survey_id = sur_name_rec.survey_id[0]
+                else:
+                    # raise osv.except_osv(_('Error!'), _("Cannot locate survey for the question wizard!"))
+                    # If this function is called without a survey_id in
+                    # its context, it makes no sense to return any view.
+                    # Just return the default, empty view for this object,
+                    # in order to please random calls to this fn().
+                    return super(survey_question_wiz, self).\
+                                fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context,
+                                        toolbar=toolbar, submenu=submenu)
+
             sur_rec = survey_obj.browse(cr, uid, survey_id)
             p_id = map(lambda x:x.id, sur_rec.page_ids)
             total_pages = len(p_id)
             pre_button = False
             readonly = 0
 
-            if context.has_key('response_id') and context.get('response_id', False) \
+            if context.get('response_id', False) \
                             and int(context['response_id'][0]) > 0:
                 readonly = 1
 
             if not sur_name_rec.page_no + 1 :
-                surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'store_ans':{}})
+                surv_name_wiz.write(cr, uid, [context['sur_name_id'],], {'store_ans':{}})
 
-            sur_name_read = surv_name_wiz.browse(cr, uid, context.get('sur_name_id',False))
+            sur_name_read = surv_name_wiz.browse(cr, uid, context['sur_name_id'])
             page_number = int(sur_name_rec.page_no)
             if sur_name_read.transfer or not sur_name_rec.page_no + 1:
-                surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer':False})
+                surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':False})
                 flag = False
                 fields = {}
                 if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
@@ -119,7 +133,7 @@ class survey_question_wiz(osv.osv_memory):
                             survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
 
                         p_id = p_id[sur_name_rec.page_no + 1]
-                        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'page_no' : sur_name_rec.page_no + 1})
+                        surv_name_wiz.write(cr, uid, [context['sur_name_id'],], {'page_no' : sur_name_rec.page_no + 1})
                         flag = True
                         page_number += 1
                     if sur_name_rec.page_no > - 1:
@@ -127,7 +141,7 @@ class survey_question_wiz(osv.osv_memory):
                 else:
                     if sur_name_rec.page_no != 0:
                         p_id = p_id[sur_name_rec.page_no - 1]
-                        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)],\
+                        surv_name_wiz.write(cr, uid, [context['sur_name_id'],],\
                                              {'page_no' : sur_name_rec.page_no - 1})
                         flag = True
                         page_number -= 1
@@ -140,6 +154,7 @@ class survey_question_wiz(osv.osv_memory):
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
                     if context.has_key('response_id') and context.get('response_id', False) \
                          and int(context.get('response_id',0)[0]) > 0:
+                        # TODO: l10n, cleanup this code to make it readable. Or template?
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '40', 'colspan': '4'})
                         record = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
                         etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr('Answer Of :- ' + record.user_id.name + ',  Date :- ' + record.date_create.split('.')[0]  )), 'align':"0.0"})
