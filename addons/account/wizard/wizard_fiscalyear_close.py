@@ -71,9 +71,9 @@ def _data_save(self, cr, uid, data, context):
     if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
         raise wizard.except_wizard(_('UserError'),
                 _('The journal must have default credit and debit account'))
-    if not new_journal.centralisation:
+    if (not new_journal.centralisation) or new_journal.entry_posted:
         raise wizard.except_wizard(_('UserError'),
-                _('The journal must have centralised counterpart'))
+                _('The journal must have centralised counterpart without the Skipping draft state option checked!'))
 
     move_ids = pool.get('account.move.line').search(cr, uid, [
         ('journal_id','=',new_journal.id),('period_id.fiscalyear_id','=',new_fyear.id)])
