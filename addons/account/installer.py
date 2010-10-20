@@ -35,19 +35,19 @@ class account_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     def _get_default_accounts(self, cr, uid, context=None):
-        accounts = [{'acc_name':'Current','account_type':'bank'},
-                    {'acc_name':'Deposit','account_type':'bank'},
-                    {'acc_name':'Cash','account_type':'cash'}]
+        accounts = [{'acc_name':'Current', 'account_type':'bank'},
+                    {'acc_name':'Deposit', 'account_type':'bank'},
+                    {'acc_name':'Cash', 'account_type':'cash'}]
         return accounts
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
-        ids = modules.search(cr, uid, [('category_id','=','Account Charts')])
+        ids = modules.search(cr, uid, [('category_id', '=', 'Account Charts')], context=context)
         charts = list(
             sorted(((m.name, m.shortdesc)
                     for m in modules.browse(cr, uid, ids)),
                    key=itemgetter(1)))
-        charts.insert(0,('configurable','Generic Chart Of Account'))
+        charts.insert(0, ('configurable','Generic Chart Of Account'))
         return charts
 
     _columns = {
@@ -59,7 +59,7 @@ class account_installer(osv.osv_memory):
                  "country."),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
-        'period': fields.selection([('month','Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
+        'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Your Bank and Cash Accounts'),
         'sale_tax': fields.float('Sale Tax(%)'),
         'purchase_tax': fields.float('Purchase Tax(%)'),
@@ -75,21 +75,21 @@ class account_installer(osv.osv_memory):
     def _get_default_charts(self, cr, uid, context=None):
         module_name = False
         company_id = self._default_company(cr, uid, context=context)
-        company = self.pool.get('res.company').browse(cr, uid, company_id)
+        company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
         address_id = self.pool.get('res.partner').address_get(cr, uid, [company.partner_id.id])
         if address_id['default']:
-            address = self.pool.get('res.partner.address').browse(cr, uid, address_id['default'])
+            address = self.pool.get('res.partner.address').browse(cr, uid, address_id['default'], context=context)
             code = address.country_id.code
             module_name = (code and 'l10n_' + code.lower()) or False
         if module_name:
-            module_id = self.pool.get('ir.module.module').search(cr, uid, [('name', '=', module_name)])
+            module_id = self.pool.get('ir.module.module').search(cr, uid, [('name', '=', module_name)], context=context)
             if module_id:
                 return module_name
         return 'configurable'
 
     _defaults = {
-        'date_start': lambda *a: time.strftime('%Y-01-01'),
-        'date_stop': lambda *a: time.strftime('%Y-12-31'),
+        'date_start': time.strftime('%Y-01-01'),
+        'date_stop': time.strftime('%Y-12-31'),
         'period': 'month',
         'sale_tax': 0.0,
         'purchase_tax': 0.0,
@@ -105,23 +105,26 @@ class account_installer(osv.osv_memory):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
-            return {'value':{'date_stop':end_date.strftime('%Y-%m-%d')}}
+            return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}
 
     def generate_configurable_chart(self, cr, uid, ids, context=None):
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
         obj_journal = self.pool.get('account.journal')
-        obj_sequence = self.pool.get('ir.sequence')
         obj_acc_template = self.pool.get('account.account.template')
+        obj_acc_tax_template = self.pool.get('account.tax.code.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
-        mod_obj = self.pool.get('ir.model.data')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
+        obj_acc_chart_template = self.pool.get('account.chart.template')
+        mod_obj = self.pool.get('ir.model.data')
+        obj_sequence = self.pool.get('ir.sequence')
+
 
         result = mod_obj._get_id(cr, uid, 'account', 'configurable_chart_template')
-        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-        obj_multi = self.pool.get('account.chart.template').browse(cr, uid, id)
+        id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
+        obj_multi = obj_acc_chart_template.browse(cr, uid, id, context=context)
 
         record = self.browse(cr, uid, ids, context=context)[0]
 
@@ -141,9 +144,9 @@ class account_installer(osv.osv_memory):
         todo_dict = {}
 
         #create all the tax code
-        children_tax_code_template = self.pool.get('account.tax.code.template').search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
+        children_tax_code_template = obj_acc_tax_template.search(cr, uid, [('parent_id', 'child_of', [tax_code_root_id])], order='id')
         children_tax_code_template.sort()
-        for tax_code_template in self.pool.get('account.tax.code.template').browse(cr, uid, children_tax_code_template):
+        for tax_code_template in obj_acc_tax_template.browse(cr, uid, children_tax_code_template):
             vals={
                 'name': (tax_code_root_id == tax_code_template.id) and company_id.name or tax_code_template.name,
                 'code': tax_code_template.code,
