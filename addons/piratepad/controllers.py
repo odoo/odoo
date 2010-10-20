@@ -13,7 +13,7 @@ class Form(form.Form):
         ctx = dict(rpc.session.context,
                    default_res_model=params.model, default_res_id=params.id,
                    active_id=False, active_ids=[])
-        
+
         pad_link = "http://piratepad.net/"+'-'.join(pad_name.split())
         attachment_id = rpc.RPCProxy('ir.attachment').create({
             'name': pad_name,
