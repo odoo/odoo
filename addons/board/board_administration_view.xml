@@ -49,8 +49,8 @@
                    </group>
                    <newline/>
                    <group  expand="1" string="Group By...">
-                       <filter string="Model" icon="terp-go-home" context="{'group_by':'res_model'}" />
-                        <separator orientation="vertical"/>
+                        <filter string="Model" icon="terp-go-home" context="{'group_by':'res_model'}" />
+                            <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today"
                             domain="[]" context="{'group_by':'day'}"/>
                         <filter string="Month" icon="terp-go-month"
@@ -80,7 +80,7 @@
        </record>
 
         <!-- Monthly Activity per Document -->
-		<record id="board_res_log_report_graph" model="ir.ui.view">
+        <record id="board_res_log_report_graph" model="ir.ui.view">
             <field name="name">board.res.log.report.graph</field>
             <field name="model">res.log.report</field>
             <field name="type">graph</field>
@@ -96,12 +96,13 @@
             <field name="res_model">res.log.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="context">{'group_by':['res_model'],'group_by_no_leaf':1}</field>
+            <field name="domain">[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
+            <field name="context">{'search_default_thismonth':1,'group_by':['res_model'],'group_by_no_leaf':1}</field>
             <field name="view_id" ref="board_res_log_report_graph"></field>
         </record>
 
         <!-- Weekly Global Activity -->
-	    <record id="board_weekly_res_log_report_graph" model="ir.ui.view">
+        <record id="board_weekly_res_log_report_graph" model="ir.ui.view">
             <field name="name">board.weekly.res.log.report.graph</field>
             <field name="model">res.log.report</field>
             <field name="type">graph</field>
@@ -117,7 +118,8 @@
             <field name="res_model">res.log.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="context">{'group_by':['day'],'group_by_no_leaf':1}</field>
+            <field name="domain">[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]</field>
+            <field name="context">{'search_default_thisweek':1,'group_by':['day'],'group_by_no_leaf':1}</field>
             <field name="view_id" ref="board_weekly_res_log_report_graph"></field>
         </record>
 
