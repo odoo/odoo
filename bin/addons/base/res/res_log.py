@@ -55,7 +55,7 @@ class res_log(osv.osv):
         unread_log_ids = self.search(cr, uid,
             [('user_id','=',uid), ('read', '=', False)], context=context)
         res = self.read(cr, uid, unread_log_ids,
-            ['name','res_model','res_id'],
+            ['name','res_model','res_id','context'],
             context=context)
         res.reverse()
         result = []

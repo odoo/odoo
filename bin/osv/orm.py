@@ -386,11 +386,14 @@ class orm_template(object):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        return self.pool.get('res.log').create(cr, uid, {
-            'name': message,
-            'res_model': self._name,
-            'secondary': secondary,
-            'res_id': id},
+        return self.pool.get('res.log').create(cr, uid,
+                {
+                    'name': message,
+                    'res_model': self._name,
+                    'secondary': secondary,
+                    'res_id': id,
+                    'context': context,
+                },
                 context=context
         )
 
