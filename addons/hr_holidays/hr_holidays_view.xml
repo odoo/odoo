@@ -361,12 +361,17 @@
                     </group>
 					<notebook colspan="4">
 					  <page string="Details">
-						<group name="selection" col="2" colspan="2">
-							<field name="active"/>
-							<newline/>
-							<field name="double_validation" />
-							<newline/>
-							<field name="limit" />
+						<group name="selection" col="4" colspan="4">
+							<group colspan="2">
+							<separator string="Validation" />
+								<newline/>
+							<field name="active" />
+								<newline/>							
+							<field name="double_validation"/>
+								<newline/>
+							<field name="limit"/>
+							</group>
+							<group name="second" colspan="2"/>
 						</group>
 					  </page>
 					</notebook>

@@ -403,18 +403,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <xpath expr="//group[@name='selection']" position="replace">
-				<group col="1">
-		          	<separator colspan="2" string="Validation"/>
-					<newline/>
-					<field name="active"/>
-					<field name="limit"/>
-					<field name="double_validation"/>
+				<group colspan="2">
+							<separator string="Validation" colspan="2"/>
+								<newline/>
+							<field name="active" />
+								<newline/>							
+							<field name="double_validation"/>
+								<newline/>
+							<field name="limit"/>
 			  	</group>
-				<group col="2">						
-					<separator colspan="2" string="Payroll Configurtion"/>
-					<field name="type"/>
-					<field name="head_id"/>
-					<field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/>
+				<group colspan="2">						
+					<separator colspan="2" string="Payroll Configurtion"/><newline/>
+					<field name="type"/><newline/>
+					<field name="head_id"/><newline/>
+					<field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/><newline/>
 					<field name="code" readonly="True"/>
 				</group>
 			</xpath>
