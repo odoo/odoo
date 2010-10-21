@@ -104,7 +104,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         account_ids = account_pool._get_children_and_consol(cr, uid, account_id, context=ctx)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
-        if self.res_bl['type'] == 'Net Profit C.F.B.L.':
+        if self.res_bl['type'] == 'Net Profit':
             self.res_bl['type'] = 'Net Profit'
         else:
             self.res_bl['type'] = 'Net Loss'

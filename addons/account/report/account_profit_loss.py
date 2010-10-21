@@ -62,12 +62,12 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         return self.res_pl
 
     def sum_dr(self):
-        if self.res_pl['type'] == 'Net Profit C.F.B.L.':
+        if self.res_pl['type'] == 'Net Profit':
             self.result_sum_dr += self.res_pl['balance']
         return self.result_sum_dr
 
     def sum_cr(self):
-        if self.res_pl['type'] == 'Net Loss C.F.B.L.':
+        if self.res_pl['type'] == 'Net Loss':
             self.result_sum_cr += self.res_pl['balance']
         return self.result_sum_cr
 
@@ -114,10 +114,10 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
                     else:
                         accounts_temp.append(account)
             if self.result_sum_dr > self.result_sum_cr:
-                self.res_pl['type'] = 'Net Loss C.F.B.L.'
+                self.res_pl['type'] = 'Net Loss'
                 self.res_pl['balance'] = (self.result_sum_dr - self.result_sum_cr)
             else:
-                self.res_pl['type'] = 'Net Profit C.F.B.L.'
+                self.res_pl['type'] = 'Net Profit'
                 self.res_pl['balance'] = (self.result_sum_cr - self.result_sum_dr)
             self.result[typ] = accounts_temp
             cal_list[typ] = self.result[typ]
