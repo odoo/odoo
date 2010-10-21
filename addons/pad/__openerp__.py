@@ -16,5 +16,5 @@ company customize which Pad installation should be used to link to new pads
     ],
     'installable': True,
     'active': False,
-#    'web': True,
+    'web': True,
 }
