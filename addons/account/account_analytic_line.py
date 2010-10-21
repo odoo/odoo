@@ -110,7 +110,7 @@ class account_analytic_line(osv.osv):
             amount_unit = prod.price_get('list_price', context)[prod_id]
 
         if not company_id:
-            company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
+            company_id = company_obj._company_default_get(cr, uid, 'account.analytic.line', context=context)
             flag = False
             # Compute based on pricetype
             product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context)
@@ -130,9 +130,9 @@ class account_analytic_line(osv.osv):
             result = round(amount, prec)
             if not flag:
                 result *= -1
-            return {'value': {
-                'amount': result,
-                'general_account_id': a,
+        return {'value': {
+            'amount': result,
+            'general_account_id': a,
             }
         }
 
