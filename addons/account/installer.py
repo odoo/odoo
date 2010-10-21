@@ -68,9 +68,7 @@ class account_installer(osv.osv_memory):
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return False
+        return user.company_id and user.company_id.id or False
 
     def _get_default_charts(self, cr, uid, context=None):
         module_name = False
@@ -126,7 +124,6 @@ class account_installer(osv.osv_memory):
         fields_obj = self.pool.get('ir.model.fields')
         obj_tax_fp = self.pool.get('account.fiscal.position.tax')
         obj_ac_fp = self.pool.get('account.fiscal.position.account')
-
 
         result = mod_obj._get_id(cr, uid, 'account', 'configurable_chart_template')
         id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
@@ -720,9 +717,6 @@ class account_bank_accounts_wizard(osv.osv_memory):
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'account_type': fields.selection([('cash','Cash'), ('check','Check'), ('bank','Bank')], 'Account Type', size=32),
     }
-#    _defaults = {
-#        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
-#    }
 
 account_bank_accounts_wizard()
 
@@ -730,7 +724,6 @@ class account_installer_modules(osv.osv_memory):
     _name = 'account.installer.modules'
     _inherit = 'res.config.installer'
     _columns = {
-        # Accounting
         'account_analytic_plans': fields.boolean('Multiple Analytic Plans',
             help="Allows invoice lines to impact multiple analytic accounts "
                  "simultaneously."),
@@ -747,9 +740,6 @@ class account_installer_modules(osv.osv_memory):
         'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
             help="This module will support the Anglo-Saxons accounting methodology by "
                 "changing the accounting logic with stock transactions."),
-#        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
-#            help="Extension Account Voucher module includes allows to link payment / receipt "
-#                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
     }
 
     _defaults = {
