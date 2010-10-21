@@ -182,9 +182,6 @@
                                     <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
-	                <form string="Payment Information">
-	                    <label string="Form view not available for Payment Lines"/>
-	                </form>
                             <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
                                 <tree string="Credits" editable="bottom">
                                     <field name="move_line_id"/>
