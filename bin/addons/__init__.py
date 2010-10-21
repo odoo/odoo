@@ -277,7 +277,7 @@ def get_module_resource(module, *args):
         res = '/'.join(args)
         if res in files:
             return opj(a, res)
-    elif os.path.isfile(res):
+    elif os.path.exists(res):
         return res
     return False
 
