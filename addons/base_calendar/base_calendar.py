@@ -945,6 +945,7 @@ class calendar_event(osv.osv):
         """
         if context is None:
             context = {}
+
         value = {}
         if not start_date:
             return value
@@ -967,6 +968,14 @@ class calendar_event(osv.osv):
         elif not end_date:
             end = start + timedelta(hours=duration)
             value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
+        elif end_date and duration:
+            # we have both, keep them synchronized:
+            # set duration based on end_date (arbitrary decision: this avoid 
+            # getting dates like 06:31:48 instead of 06:32:00)
+            end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+            diff = end - start
+            duration = float(diff.days)* 24 + (float(diff.seconds) / 3600)
+            value['duration'] = round(duration, 2)
 
         return {'value': value}
 
@@ -1477,14 +1486,23 @@ true, it will allow you to hide the event alarm information without removing it.
 
         if vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
+
+        updated_vals = self.onchange_dates(cr, uid, new_ids,
+            vals.get('date', False),
+            vals.get('duration', False),
+            vals.get('date_deadline', False),
+            vals.get('allday', False),
+            context=context)
+        vals.update(updated_vals.get('value', {}))
+
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
-        if (vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'))\
-                or (vals.has_key('date') or vals.has_key('duration') or vals.has_key('date_deadline')):
+
+        if ('alarm_id' in vals or 'base_calendar_alarm_id' in vals)\
+                or ('date' in vals or 'duration' in vals or 'date_deadline' in vals):
             # change alarm details
             alarm_obj = self.pool.get('res.alarm')
-            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', \
-                                            context=context)
+            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', context=context)
         return res
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process=None):
@@ -1609,8 +1627,10 @@ true, it will allow you to hide the event alarm information without removing it.
         """
         if context is None:
             context = {}
+
         if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
+
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
