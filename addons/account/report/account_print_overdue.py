@@ -21,8 +21,6 @@
 
 import time
 
-import ir
-from osv import osv
 from report import report_sxw
 import pooler
 
@@ -38,6 +36,7 @@ class Overdue(report_sxw.rml_parse):
         })
         self.context = context
     def _adr_get(self, partner, type):
+        print "ADDRESS"
         res = []
         res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
         res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')

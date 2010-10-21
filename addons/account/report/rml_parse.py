@@ -20,11 +20,8 @@
 ##############################################################################
 
 from report import report_sxw
-import xml.dom.minidom
 import time
-import osv
 import re
-import pooler
 import sys
 
 
