@@ -124,7 +124,7 @@ class hr_employee(osv.osv):
             flag = False
             evaluation_plan =  evaluation_plan_obj.browse(cr, uid, [evaluation_plan_id], context=context)[0]
             if not evaluation_date:
-               evaluation_date=(parser.parse(datetime.date.today().strftime('%Y-%m-%d'))+ relativedelta(months=+evaluation_plan.month_first)).strftime('%Y-%m-%d')
+               evaluation_date=(parser.parse(datetime.now().strftime('%Y-%m-%d'))+ relativedelta(months=+evaluation_plan.month_first)).strftime('%Y-%m-%d')
                flag = True
             else:
                 if (parser.parse(evaluation_date) + relativedelta(months = int(evaluation_plan.month_next))).strftime('%Y-%m-%d') <= time.strftime("%Y-%m-%d"):
