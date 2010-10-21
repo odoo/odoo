@@ -51,7 +51,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         })
 
     def set_context(self, objects, data, ids, report_type=None):
-        print "SET"
         self.display_partner = data['form'].get('display_partner', 'non-zero_balance')
         obj_move = self.pool.get('account.move.line')
         self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
