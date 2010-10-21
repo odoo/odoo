@@ -242,7 +242,7 @@ class account_cash_statement(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         sql = [
-                ('journal_id', '=', vals['journal_id']),
+                ('journal_id', '=', vals.get('journal_id', False)),
                 ('state', '=', 'open')
         ]
         open_jrnl = self.search(cr, uid, sql)
@@ -317,34 +317,35 @@ class account_cash_statement(osv.osv):
         else:
             return True
 
-    def _user_allow(self, cr, uid, ids, statement, context={}):
+    def _user_allow(self, cr, uid, statement_id, context=None):
         return True
 
     def button_open(self, cr, uid, ids, context=None):
-
         """ Changes statement state to Running.
         @return: True
         """
-        cash_pool = self.pool.get('account.cashbox.line')
+        if context is None:
+            context = {}
         statement_pool = self.pool.get('account.bank.statement')
-        statement = statement_pool.browse(cr, uid, ids[0])
-        vals = {}
+        for statement in statement_pool.browse(cr, uid, ids, context=context):
+            vals = {}
 
-        if not self._user_allow(cr, uid, ids, statement, context={}):
-            raise osv.except_osv(_('Error !'), _('User %s does not have rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
+            if not self._user_allow(cr, uid, statement.id, context=context):
+                raise osv.except_osv(_('Error !'), _('User %s does not have rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
 
-        if statement.name and statement.name == '/':
-            number = self.pool.get('ir.sequence').get(cr, uid, 'account.cash.statement')
+            if statement.name and statement.name == '/':
+                number = self.pool.get('ir.sequence').get(cr, uid, 'account.cash.statement')
+                vals.update({
+                    'name': number
+                })
+
             vals.update({
-                'name': number
+                'date':time.strftime("%Y-%m-%d %H:%M:%S"),
+                'state':'open',
+
             })
-
-        vals.update({
-            'date':time.strftime("%Y-%m-%d %H:%M:%S"),
-            'state':'open',
-
-        })
-        return self.write(cr, uid, ids, vals)
+            self.write(cr, uid, [statement.id], vals)
+        return True
 
     def balance_check(self, cr, uid, cash_id, journal_type='bank', context=None):
         if journal_type == 'bank':
