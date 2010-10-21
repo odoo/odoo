@@ -108,7 +108,7 @@
   <para style="P2"><font color="white"> </font></para>
 	<blockTable colWidths="538" style="Tableau1">
       <tr>
-        <td><para style="P12">Fiscal Year : [[ get_years(data['form'])['fname'] ]]</para></td>
+        <td><para style="P12">Fiscal Year : [[ get_years(data['form'])['fname'] or removeParentNode('para')]]</para></td>
       </tr>
       <tr>
         <td><para style="P12">Periods : [[ get_years(data['form'])['periods'] or removeParentNode('tr')]]</para></td>
