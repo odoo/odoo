@@ -21,6 +21,7 @@
 
 from osv import osv
 from tools.translate import _
+import tools
 
 class account_move_journal(osv.osv_memory):
     _name = "account.move.journal"
@@ -100,7 +101,7 @@ class account_move_journal(osv.osv_memory):
                 <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                 <button icon="terp-gtk-go-back-rtl" string="Open" name="action_open_window" default_focus="1" type="object"/>
             </group>
-        </form>""" % (str(journal), str(period))
+        </form>""" % (tools.ustr(journal), tools.ustr(period))
 
         res.update({
             'arch':view
