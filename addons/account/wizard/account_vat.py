@@ -26,15 +26,15 @@ class account_vat_declaration(osv.osv_memory):
     _description = 'Account Vat Declaration'
     _inherit = "account.common.report"
     _columns = {
-	    'based_on': fields.selection([('invoices', 'Invoices'),
+        'based_on': fields.selection([('invoices', 'Invoices'),
                                       ('payments', 'Payments'),],
                                       'Based On', required=True),
 #        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'chart_tax_id': fields.many2one('account.tax.code', 'Chart of Tax', help='Select Charts of Taxes', required=True, domain = [('parent_id','=',False)]),
+        'chart_tax_id': fields.many2one('account.tax.code', 'Chart of Tax', help='Select Charts of Taxes', required=True, domain = [('parent_id','=', False)]),
     }
 
     def _get_tax(self, cr, uid, context=None):
-        taxes = self.pool.get('account.tax.code').search(cr, uid, [('parent_id','=',False)], limit=1)
+        taxes = self.pool.get('account.tax.code').search(cr, uid, [('parent_id', '=', False)], limit=1)
         return taxes and taxes[0] or False
 
 #    def _get_company(self, cr, uid, context={}):
