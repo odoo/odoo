@@ -824,7 +824,7 @@ class account_invoice(osv.osv):
                         total_fixed += line.value_amount
                     if line.value == 'procent':
                         total_percent += line.value_amount
-                total_fixed = (total_fixed * 100) / inv.amount_total
+                total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
                     raise osv.except_osv(_('Error !'), _("Cannot create the invoice !\nThe payment term defined gives a computed amount greater than the total invoiced amount."))
 
