@@ -68,7 +68,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'partner_id': order.partner_id.id,
                 'address_invoice_id': order.partner_invoice_id.id,
                 'address_contact_id': order.partner_invoice_id.id,
-                'invoice_line': [(6,0,lines)],
+                'invoice_line': [(6, 0, lines)],
                 'currency_id' : order.pricelist_id.currency_id.id,
                 'comment': order.note,
                 'payment_term': pay_term,
@@ -81,7 +81,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
         sales_order_obj = self.pool.get('sale.order')
         wf_service = netsvc.LocalService('workflow')
         for line in sales_order_line_obj.browse(cr, uid, context['active_ids']):
-            if (not line.invoiced) and (line.state not in ('draft','cancel')):
+            if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
                 if not line.order_id.id in invoices:
                     invoices[line.order_id.id] = []
                 line_id = sales_order_line_obj.invoice_line_create(cr, uid,
@@ -105,7 +105,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                     break
             if flag:
                 wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
-                sales_order_obj.write(cr, uid, [line.order_id.id], {'state' : 'progress'})
+                sales_order_obj.write(cr, uid, [line.order_id.id], {'state': 'progress'})
 
         if not invoices:
             raise osv.except_osv(_('Warning'), _('Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either "draft" or "cancel"!\n2.The Sale Order Line is Invoiced!'))
