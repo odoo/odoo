@@ -151,7 +151,6 @@ class sale_open_invoice(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         for advance_pay in self.browse(cr, uid, ids):
             result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-            id = mod_obj.read(cr, uid, result, ['res_id'])
             form_id = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
             form_res = mod_obj.browse(cr, uid, form_id, context=context).res_id
             tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
