@@ -1,3 +1,5 @@
+import urlparse
+
 import cherrypy
 
 from openobject.tools import expose
@@ -5,15 +7,17 @@ from openobject.tools import expose
 import openerp.controllers
 from openerp.utils import rpc, TinyDict
 
-PIRATEPAD_ROOT = "http://piratepad.net/"
 class Piratepad(openerp.controllers.SecuredController):
     _cp_path = "/piratepad"
 
     def get_root(self):
-        return PIRATEPAD_ROOT
+        return rpc.RPCProxy('res.company').read(
+                [rpc.session.company_id], ['pad_index'])[0]['pad_index']
 
     def make_url(self, pad_name):
-        return self.get_root() + '-'.join(pad_name.split())
+        return urlparse.urljoin(
+            self.get_root(), '-'.join(pad_name.split())
+        )
 
     @expose('json', methods=('POST',))
     def link(self, pad_name):
