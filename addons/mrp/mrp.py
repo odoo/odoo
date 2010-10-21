@@ -350,48 +350,6 @@ def rounding(f, r):
         return f
     return round(f / r) * r
 
-class many2many_domain(fields.many2many):
-    def set(self, cr, obj, id, name, values, user=None, context=None):
-        return super(many2many_domain, self).set(cr, obj, id, name, values, user=user,
-                context=context)
-
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
-            context = {}
-
-        move_obj = obj.pool.get('stock.move')
-        res = {}
-        for i in ids:
-            res[i] = []
-        valid_move_ids = move_obj.search(cr, user, self._domain) # move ids relative to domain argument
-        if valid_move_ids:
-            cr.execute("SELECT production_id, move_id from mrp_production_move_ids where production_id in %s and move_id in %s",
-                [tuple(ids), tuple(valid_move_ids)])
-            related_move_map = cr.fetchall()
-            related_move_dict = dict((k, list(set([v[1] for v in itr]))) for k, itr in groupby(related_move_map, itemgetter(0)))
-            res.update(related_move_dict)
-
-        return res
-
-class one2many_domain(fields.one2many):
-    def set(self, cr, obj, id, field, values, user=None, context=None):
-        return super(one2many_domain, self).set(cr, obj, id, field, values,
-                                            user=user, context=context)
-
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
-            context = {}
-
-        move_obj = obj.pool.get('stock.move')
-        res = {}
-        for i in ids:
-            res[i] = []
-        move_ids = move_obj.search(cr, user, self._domain+[('production_id', 'in', tuple(ids))], context=context)
-        related_move_dict = dict([(o.production_id.id, [o.id]) for o in move_obj.browse(cr, user, move_ids, context=context)])
-        res.update(related_move_dict)
-
-        return res
-
 class mrp_production(osv.osv):
     """
     Production Orders / Manufacturing Orders
@@ -467,10 +425,10 @@ class mrp_production(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True,
             help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
-        'move_lines': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_lines2': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))]),
-        'move_created_ids': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_created_ids2': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))]),
+        'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
+        'move_lines2': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))]),
+        'move_created_ids': fields.one2many('stock.move', 'production_id', 'Moves Created', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
+        'move_created_ids2': fields.one2many('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))]),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
         'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
@@ -745,7 +703,7 @@ class mrp_production(osv.osv):
                 if rest_qty <= production_qty:
                    production_qty = rest_qty
                 if rest_qty > 0 :
-                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, production.location_dest_id.id, context=context)
+                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, context=context)
 
         for raw_product in production.move_lines2:
             new_parent_ids = []
