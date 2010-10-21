@@ -358,11 +358,18 @@
                         <field name="name" />
                         <field name="color_name"/>
                         <field name="categ_id" widget="selection" groups="base.group_extended"/>
-                        <newline/>
-                        <field name="limit"/>
-                        <field name="double_validation"/>
-                        <field name="active"/>
                     </group>
+					<notebook colspan="4">
+					  <page string="Details">
+						<group name="selection" col="2" colspan="2">
+							<field name="active"/>
+							<newline/>
+							<field name="double_validation" />
+							<newline/>
+							<field name="limit" />
+						</group>
+					  </page>
+					</notebook>
                 </form>
             </field>
         </record>
