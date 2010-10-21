@@ -542,7 +542,13 @@ class many2many(_column):
             warnings.warn("Specifying offset at a many2many.get() may produce unpredictable results.",
                       DeprecationWarning, stacklevel=2)
         obj = obj.pool.get(self._obj)
-        wquery = obj._where_calc(cr, user, self._domain, context=context)
+
+        # static domains are lists, and are evaluated both here and on client-side, while string 
+        # domains supposed by dynamic and evaluated on client-side only (thus ignored here)
+        # FIXME: make this distinction explicit in API!
+        domain = isinstance(self._domain, list) and self._domain or []
+
+        wquery = obj._where_calc(cr, user, domain, context=context)
         obj._apply_ir_rules(cr, user, wquery, 'read', context=context)
         from_c, where_c, where_params = wquery.get_sql()
         if where_c:
