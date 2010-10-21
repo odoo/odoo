@@ -23,7 +23,6 @@
 import time
 
 from osv import osv, fields
-from decimal import Decimal
 from tools.translate import _
 import decimal_precision as dp
 
@@ -296,8 +295,6 @@ class account_cash_statement(osv.osv):
         @param journal_id: Changed journal_id
         @return:  Dictionary of changed values
         """
-        cash_pool = self.pool.get('account.cashbox.line')
-        statement_pool = self.pool.get('account.bank.statement')
         res = {}
         balance_start = 0.0
 
