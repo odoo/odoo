@@ -280,7 +280,7 @@ def get_module_resource(module, *args):
             return opj(a, resource_path)
     elif os.path.exists(resource_path):
         return resource_path
-    raise False
+    return False
 
 
 
