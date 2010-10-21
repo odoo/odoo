@@ -970,12 +970,15 @@ class account_invoice(osv.osv):
             invtype = obj_inv.type
             number = obj_inv.number
             move_id = obj_inv.move_id and obj_inv.move_id.id or False
-            reference = obj_inv.reference or number or ''
+            reference = obj_inv.reference or ''
 
             self.write(cr, uid, ids, {'internal_number':number})
 
             if invtype in ('in_invoice', 'in_refund'):
-                ref = reference
+                if not reference:
+                    ref = self._convert_ref(cr, uid, number)
+                else:
+                    ref = reference
             else:
                 ref = self._convert_ref(cr, uid, number)
 
