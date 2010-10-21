@@ -29,24 +29,12 @@ class account_vat_declaration(osv.osv_memory):
         'based_on': fields.selection([('invoices', 'Invoices'),
                                       ('payments', 'Payments'),],
                                       'Based On', required=True),
-#        'company_id': fields.many2one('res.company', 'Company', required=True),
         'chart_tax_id': fields.many2one('account.tax.code', 'Chart of Tax', help='Select Charts of Taxes', required=True, domain = [('parent_id','=', False)]),
     }
 
     def _get_tax(self, cr, uid, context=None):
         taxes = self.pool.get('account.tax.code').search(cr, uid, [('parent_id', '=', False)], limit=1)
         return taxes and taxes[0] or False
-
-#    def _get_company(self, cr, uid, context={}):
-#        user_obj = self.pool.get('res.users')
-#        company_obj = self.pool.get('res.company')
-#        user = user_obj.browse(cr, uid, uid, context=context)
-#        if user.company_id:
-#            company_id = user.company_id.id
-#        else:
-#            company_id = company_obj.search(cr, uid, [('parent_id', '=', False)])
-#            company_id = company_id and company_id[0] or False
-#        return company_id
 
     _defaults = {
         'based_on': 'invoices',
