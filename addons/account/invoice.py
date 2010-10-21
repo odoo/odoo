@@ -970,7 +970,7 @@ class account_invoice(osv.osv):
             invtype = obj_inv.type
             number = obj_inv.number
             move_id = obj_inv.move_id and obj_inv.move_id.id or False
-            reference = obj_inv.reference or ''
+            reference = obj_inv.reference or number or ''
 
             self.write(cr, uid, ids, {'internal_number':number})
 
