@@ -270,7 +270,7 @@ def get_module_resource(module, *args):
     @return: absolute path to the resource
     """
     a = get_module_path(module)
-    if not a: raise ValueError('Could not find path for module %s'%module)
+    if not a: return False
     resource_path = opj(a, *args)
     if zipfile.is_zipfile( a +'.zip') :
         zip = zipfile.ZipFile( a + ".zip")
@@ -280,7 +280,7 @@ def get_module_resource(module, *args):
             return opj(a, resource_path)
     elif os.path.exists(resource_path):
         return resource_path
-    raise IOError('Could not find resource %s'%resource_path)
+    raise False
 
 
 
