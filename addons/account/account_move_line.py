@@ -1128,6 +1128,8 @@ class account_move_line(osv.osv):
                         'period_id': context['period_id'],
                         'journal_id': context['journal_id']
                     }
+                    if vals.get('ref', ''):
+                        v.update({'ref': vals['ref']})
                     move_id = move_obj.create(cr, uid, v, context)
                     vals['move_id'] = move_id
                 else:
