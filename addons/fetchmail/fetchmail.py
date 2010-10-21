@@ -73,7 +73,7 @@ class email_server(osv.osv):
     def check_duplicate(self, cr, uid, ids):
 	# RFC *-* Why this limitation? why not in SQL constraint?
         vals = self.read(cr, uid, ids, ['user', 'password'])[0]
-        cr.execute("select count(id) from email_server where user='%s' and password='%s'", (vals['user'], vals['password']))
+        cr.execute("select count(id) from email_server where user=%s and password=%s", (vals['user'], vals['password']))
         res = cr.fetchone()
         if res:
             if res[0] > 1:

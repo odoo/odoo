@@ -732,12 +732,16 @@ class email_template_preview(osv.osv_memory):
             ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id['object_name'][0], ['model'], context)['model']
             model_obj = self.pool.get(ref_obj_name)
             ref_obj_ids = model_obj.search(cr, uid, [], 0, 20, 'id desc', context=context)
+            if not ref_obj_ids:
+                ref_obj_ids = []
 
             # also add the default one if requested, otherwise it won't be available for selection:
             default_id = context.get('default_rel_model_ref')
             if default_id and default_id not in ref_obj_ids:
                 ref_obj_ids.insert(0, default_id)
             return model_obj.name_get(cr, uid, ref_obj_ids, context)
+        else:
+            return []
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
@@ -761,7 +765,7 @@ class email_template_preview(osv.osv_memory):
                                                    user,
                                                    context['template_id'],
                                                    ['object_name'],
-                                                   context)['object_name']
+                                                   context)['object_name'] or False
         
     _columns = {
         'ref_template':fields.many2one(
@@ -788,7 +792,7 @@ class email_template_preview(osv.osv_memory):
         'report':fields.char('Report Name', size=100, readonly=True),
     }
     _defaults = {
-        'ref_template': lambda self, cr, uid, ctx:ctx['template_id'],
+        'ref_template': lambda self, cr, uid, ctx:ctx['template_id'] or False,
         'rel_model': _default_model,
     }
     def on_change_ref(self, cr, uid, ids, rel_model_ref, context=None):
