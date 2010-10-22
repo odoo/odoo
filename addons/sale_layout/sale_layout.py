@@ -20,10 +20,8 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-from tools import config
+from osv import fields, osv
 import decimal_precision as dp
-from tools.translate import _
 
 class sale_order_line(osv.osv):
 
@@ -33,9 +31,10 @@ class sale_order_line(osv.osv):
         res = {}
         context = context or {}
         for line in self.browse(cr, uid, ids, context=context):
-            if line.layout_type=='article':
+            if line.layout_type == 'article':
                 return super(sale_order_line, self)._amount_line(cr, uid, ids, field_name, arg, context)
         return res
+    
     def invoice_line_create(self, cr, uid, ids, context={}):
         new_ids = []
         list_seq = []
@@ -52,8 +51,8 @@ class sale_order_line(osv.osv):
         return invoice_line_ids
 
     def onchange_sale_order_line_view(self, cr, uid, id, type, context={}, *args):
-            temp ={}
-            temp['value']= {}
+            temp = {}
+            temp['value'] = {}
             if (not type):
                 return {}
             if type != 'article':
@@ -68,7 +67,7 @@ class sale_order_line(osv.osv):
                     'discount': 0.0,
                     'invoice_line_tax_id': False,
                     'account_analytic_id': False,
-                    'product_uom_qty':0.0,
+                    'product_uom_qty': 0.0,
                     },
                 }
                 if type == 'line':
@@ -111,15 +110,15 @@ class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
     _columns = {
         'layout_type': fields.selection([
-                ('article','Product'),
-                ('title','Title'),
-                ('text','Note'),
-                ('subtotal','Sub Total'),
-                ('line','Separator Line'),
-                ('break','Page Break'),]
+                ('article', 'Product'),
+                ('title', 'Title'),
+                ('text', 'Note'),
+                ('subtotal', 'Sub Total'),
+                ('line', 'Separator Line'),
+                ('break', 'Page Break'),]
             ,'Layout Type', select=True, required=True),
         'sequence': fields.integer('Sequence Number'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2)),
         'product_uom': fields.many2one('product.uom', 'Product UoM'),
     }
@@ -139,7 +138,7 @@ class one2many_mod2(fields.one2many):
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids),('layout_type','=','article')], limit=self._limit)
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids), ('layout_type', '=', 'article')], limit=self._limit)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             res[r[self._fields_id]].append( r['id'] )
         return res
@@ -155,8 +154,8 @@ class sale_order(osv.osv):
 
     _inherit = "sale.order"
     _columns = {
-        'abstract_line_ids': fields.one2many('sale.order.line', 'order_id', 'Order Lines',readonly=True, states={'draft':[('readonly',False)]}),
-        'order_line': one2many_mod2('sale.order.line', 'order_id', 'Order Lines',readonly=True, states={'draft':[('readonly',False)]}),
+        'abstract_line_ids': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
+        'order_line': one2many_mod2('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
     }
 
 sale_order()

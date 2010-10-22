@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -39,7 +38,7 @@ class sale_order_dates(osv.osv):
             if dates_list:
                 res[order.id] = min(dates_list)
             else:
-                res[order.id] =False
+                res[order.id] = False
             return res
 
     def _get_commitment_date(self, cr, uid, ids, name, arg, context={}):

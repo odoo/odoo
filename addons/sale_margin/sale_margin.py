@@ -18,8 +18,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import pooler
+from osv import fields, osv
 from tools import config
 
 class sale_order_line(osv.osv):
@@ -33,7 +32,7 @@ class sale_order_line(osv.osv):
             lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag)
         if product:
             purchase_price = self.pool.get('product.product').browse(cr, uid, product).standard_price
-            res['value'].update({'purchase_price':purchase_price})
+            res['value'].update({'purchase_price': purchase_price})
         return res
 
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
@@ -42,9 +41,9 @@ class sale_order_line(osv.osv):
             res[line.id] = 0
             if line.product_id:
                 if line.purchase_price:
-                    res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.purchase_price*line.product_uos_qty),2)
+                    res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.purchase_price*line.product_uos_qty), 2)
                 else:
-                    res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.product_id.standard_price*line.product_uos_qty),2)
+                    res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.product_id.standard_price*line.product_uos_qty), 2)
         return res
 
     _columns = {
@@ -75,7 +74,7 @@ class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
     _columns = {
-        'invoice_ids': fields.many2many('account.invoice', 'picking_invoice_rel', 'picking_id', 'invoice_id', 'Invoices', domain=[('type','=','out_invoice')]),
+        'invoice_ids': fields.many2many('account.invoice', 'picking_invoice_rel', 'picking_id', 'invoice_id', 'Invoices', domain=[('type', '=', 'out_invoice')]),
     }
 
     def create_invoice(self, cr, uid, ids, *args):
@@ -86,7 +85,7 @@ class stock_picking(osv.osv):
         picking_obj.write(cr, uid, ids, {'invoice_state': '2binvoiced'})
         res = picking_obj.action_invoice_create(cr, uid, ids, type='out_invoice', context={})
         invoice_ids = res.values()
-        picking_obj.write(cr, uid, ids,{'invoice_ids': [[6,0,invoice_ids]]})
+        picking_obj.write(cr, uid, ids, {'invoice_ids': [[6, 0, invoice_ids]]})
         return True
 
 stock_picking()

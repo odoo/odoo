@@ -64,7 +64,7 @@ class mrp_production(osv.osv):
             if production.move_prod_id:
                 parent_move_line = get_parent_move(production.move_prod_id)
                 if parent_move_line:
-                    move = move_obj.browse(cr,uid,parent_move_line)
+                    move = move_obj.browse(cr, uid, parent_move_line)
                     if field_name == 'name':
                         res[production.id] = move.sale_line_id and move.sale_line_id.order_id.name or False
                     if field_name == 'client_order_ref':
