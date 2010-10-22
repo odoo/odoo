@@ -22,10 +22,29 @@
 import time
 
 import rml_parse
+from common_report_header import common_report_header
 from report import report_sxw
 
-class tax_report(rml_parse.rml_parse):
+class tax_report(rml_parse.rml_parse, common_report_header):
     _name = 'report.account.vat.declaration'
+
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
+        res = {}
+        self.period_ids = []
+        period_obj = self.pool.get('account.period')
+        res['periods'] = ''
+        res['fiscalyear'] = data['form']['fiscalyear_id']
+
+        if data['form']['period_from'] and data['form']['period_to']:
+            self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, data['form']['period_from'], data['form']['period_to'])
+            periods_l = period_obj.read(self.cr, self.uid, self.period_ids, ['name'])
+            for period in periods_l:
+                if res['periods'] == '':
+                    res['periods'] = period['name']
+                else:
+                    res['periods'] += ", "+ period['name']
+        return super(tax_report, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def __init__(self, cr, uid, name, context=None):
         super(tax_report, self).__init__(cr, uid, name, context=context)
@@ -35,31 +54,16 @@ class tax_report(rml_parse.rml_parse):
             'get_general': self._get_general,
             'get_currency': self._get_currency,
             'get_lines': self._get_lines,
-            'get_years': self.get_years,
+            'get_fiscalyear': self._get_fiscalyear,
+            'get_account': self._get_account,
+            'get_start_period': self.get_start_period,
+            'get_end_period': self.get_end_period,
+            'get_basedon': self._get_basedon,
         })
 
-    def get_years(self, form):
-        res = {}
-        self.period_ids = []
-        period_obj = self.pool.get('account.period')
-        fy_obj = self.pool.get('account.fiscalyear')
-        res['periods'] = ''
-        res['fname'] = ''
 
-        fiscal_year_name = fy_obj.name_get(self.cr, self.uid, form['fiscalyear_id'])
-        if fiscal_year_name:
-            res['fname'] = fiscal_year_name[0][1]
-            res['periods'] = ''
-
-        if form['period_from'] and form['period_to']:
-            self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, form['period_from'], form['period_to'])
-            periods_l = period_obj.read(self.cr, self.uid, self.period_ids, ['name'])
-            for period in periods_l:
-                if res['periods'] == '':
-                    res['periods'] = period['name']
-                else:
-                    res['periods'] += ", "+ period['name']
-        return res
+    def _get_basedon(self, form):
+        return form['form']['based_on']
 
     def _get_lines(self, based_on, company_id=False, parent=False, level=0, context=None):
         period_list = self.period_ids
