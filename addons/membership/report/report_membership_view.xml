@@ -78,11 +78,10 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Membership" type="bar">
-                    <field name="year"/>
-                    <field name="canceled_number"/>
-                    <field name="waiting_number"/>
-                    <field name="invoiced_number"/>
-                    <field name="paid_number"/>
+                    <field name="year" />
+                    <field name="num_waiting" operator="+"/>
+                    <field name="num_invoiced" operator="+"/>
+                    <field name="num_paid" operator="+"/>
                 </graph>
             </field>
         </record>
