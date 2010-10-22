@@ -401,13 +401,13 @@ class account_installer(osv.osv_memory):
         analitical_sale_ids = analytic_journal_obj.search(cr, uid, [('type','=','sale')], context=context)
         analitical_journal_sale = analitical_sale_ids and analitical_sale_ids[0] or False
 
-        vals_journal = {
+        vals_journal.update({
             'name': _('Sales Journal'),
             'type': 'sale',
             'code': _('SAJ'),
             'sequence_id': seq_id_sale,
             'analytic_journal_id': analitical_journal_sale
-        }
+        })
 
         if obj_multi.property_account_receivable:
             vals_journal.update({
@@ -420,13 +420,13 @@ class account_installer(osv.osv_memory):
         analitical_purchase_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'purchase')], context=context)
         analitical_journal_purchase = analitical_purchase_ids and analitical_purchase_ids[0] or False
 
-        vals_journal = {
+        vals_journal.update({
             'name': _('Purchase Journal'),
             'type': 'purchase',
             'code': _('EXJ'),
             'sequence_id': seq_id_purchase,
             'analytic_journal_id': analitical_journal_purchase
-        }
+        })
 
         if obj_multi.property_account_payable:
             vals_journal.update({
@@ -461,6 +461,7 @@ class account_installer(osv.osv_memory):
 
         # Purchase Refund Journal
         vals_journal = {
+            'view_id': view_id,
             'name': _('Purchase Refund Journal'),
             'type': 'purchase_refund',
             'refund_journal': True,
