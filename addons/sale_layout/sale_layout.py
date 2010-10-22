@@ -124,7 +124,7 @@ class sale_order_line(osv.osv):
     }
 
     _defaults = {
-        'layout_type': lambda *a: 'article',
+        'layout_type': 'article',
     }
 
 sale_order_line()
