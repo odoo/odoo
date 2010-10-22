@@ -257,7 +257,7 @@ class account_cash_statement(osv.osv):
                        if end[2]['pieces'] == dict_val['pieces']:
                            end[2]['number'] += dict_val['number']
             vals.update({
-                'ending_details_ids': open_close['start'],
+#                'ending_details_ids': open_close['start'],
                 'starting_details_ids': open_close['end']
             })
         else:
