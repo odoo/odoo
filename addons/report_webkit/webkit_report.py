@@ -84,8 +84,10 @@ class WebKitParser(report_sxw):
                             _('path to Wkhtmltopdf is not absolute'),
                             'for path %s'%(path)
                             )
-    def generate_pdf(self, comm_path, report_xml, header, footer, html_list):
+    def generate_pdf(self, comm_path, report_xml, header, footer, html_list, webkit_header=False):
         """Call webkit in order to generate pdf"""
+        if not webkit_header:
+            webkit_header = report_xml.webkit_header
         tmp_dir = tempfile.gettempdir()
         out = report_xml.name+str(time.time())+'.pdf'
         out = os.path.join(tmp_dir, out.replace(' ',''))
@@ -120,20 +122,22 @@ class WebKitParser(report_sxw):
             file_to_del.append(foot_file.name)
             command.append("--footer-html '%s'"%(foot_file.name))
             
-        if report_xml.webkit_header.margin_top :
-            command.append('--margin-top %s'%(report_xml.webkit_header.margin_top))
-        if report_xml.webkit_header.margin_bottom :
-            command.append('--margin-bottom %s'%(report_xml.webkit_header.margin_bottom))
-        if report_xml.webkit_header.margin_left :
-            command.append('--margin-left %s'%(report_xml.webkit_header.margin_left))
-        if report_xml.webkit_header.margin_right :
-            command.append('--margin-right %s'%(report_xml.webkit_header.margin_right))
-        if report_xml.webkit_header.orientation :
-            command.append("--orientation '%s'"%(report_xml.webkit_header.orientation))
-        if report_xml.webkit_header.format :
-            command.append(" --page-size '%s'"%(report_xml.webkit_header.format))
+        if webkit_header.margin_top :
+            command.append('--margin-top %s'%(webkit_header.margin_top))
+        if webkit_header.margin_bottom :
+            command.append('--margin-bottom %s'%(webkit_header.margin_bottom))
+        if webkit_header.margin_left :
+            command.append('--margin-left %s'%(webkit_header.margin_left))
+        if webkit_header.margin_right :
+            command.append('--margin-right %s'%(webkit_header.margin_right))
+        if webkit_header.orientation :
+            command.append("--orientation '%s'"%(webkit_header.orientation))
+        if webkit_header.format :
+            command.append(" --page-size '%s'"%(webkit_header.format))
+        count = 0
         for html in html_list :
-            html_file = file(os.path.join(tmp_dir, str(time.time()) + '.body.html'), 'w')
+            html_file = file(os.path.join(tmp_dir, str(time.time()) + str(count) +'.body.html'), 'w')
+            count += 1
             html_file.write(html)
             html_file.close()
             file_to_del.append(html_file.name)
@@ -168,6 +172,8 @@ class WebKitParser(report_sxw):
         """Translate String."""
         ir_translation = self.pool.get('ir.translation')
         res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid, self.name, 'report', self.localcontext.get('lang', 'en_US'), src)
+        if not res :
+            return src
         return res 
  
     def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False):

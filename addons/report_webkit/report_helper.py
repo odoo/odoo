@@ -51,7 +51,7 @@ class WebKitHelper(object):
             height = 'width="%spx"'%(height)
         else :
             height = ' '
-        toreturn = '<img %s %s src="data:image/%s;base64,%s">'%(
+        toreturn = '<img %s %s src="data:image/%s;base64,%s" />'%(
             width,
             height,
             type, 
