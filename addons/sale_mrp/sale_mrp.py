@@ -62,7 +62,7 @@ class mrp_production(osv.osv):
         for production in productions:
             res[production.id] = False
             if production.move_prod_id:
-                parent_move_line = get_parent_move(production.move_prod_id)
+                parent_move_line = get_parent_move(production.move_prod_id.id)
                 if parent_move_line:
                     move = move_obj.browse(cr, uid, parent_move_line)
                     if field_name == 'name':
@@ -73,7 +73,7 @@ class mrp_production(osv.osv):
 
     _columns = {
         'sale_name': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sale order.'),
-        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_ref', type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
+        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
     }
 
 mrp_production()
