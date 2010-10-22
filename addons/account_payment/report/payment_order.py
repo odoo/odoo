@@ -36,7 +36,6 @@ class payment_order(report_sxw.rml_parse):
             'get_amount_total_in_currency': self._get_amount_total_in_currency,
             'get_amount_total': self._get_amount_total,
             'get_account_name': self._get_account_name,
-
         })
 
     def _get_invoice_name(self, invoice_id):
