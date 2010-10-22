@@ -3211,19 +3211,19 @@ class orm(orm_template):
     def _check_concurrency(self, cr, ids, context):
         if not context:
             return
-        if context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access:
-            def key(oid):
-                return "%s,%s" % (self._name, oid)
-            santa = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = tools.flatten(((oid, context[self.CONCURRENCY_CHECK_FIELD][key(oid)])
-                                          for oid in ids[i:i+cr.IN_MAX]
-                                          if key(oid) in context[self.CONCURRENCY_CHECK_FIELD]))
-                if sub_ids:
-                    cr.execute("SELECT count(1) FROM %s WHERE %s" % (self._table, " OR ".join([santa]*(len(sub_ids)/2))), sub_ids)
-                    res = cr.fetchone()
-                    if res and res[0]:
-                        raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
+        if not (context.get(self.CONCURRENCY_CHECK_FIELD) or self._log_access):
+            return
+        def key(oid):
+            return "%s,%s" % (self._name, oid)
+        santa = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
+        for i in range(0, len(ids), cr.IN_MAX):
+            sub_ids = tools.flatten(((oid, context[self.CONCURRENCY_CHECK_FIELD][key(oid)])
+                                     for oid in ids[i:i+cr.IN_MAX]
+                                     if key(oid) in context[self.CONCURRENCY_CHECK_FIELD]))
+            if not sub_ids: continue
+            cr.execute("SELECT 1 FROM %s WHERE %s" % (self._table, " OR ".join([santa]*(len(sub_ids)/2))), sub_ids)
+            if cr.fetchone():
+                raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """Verifies that the operation given by ``operation`` is allowed for the user
