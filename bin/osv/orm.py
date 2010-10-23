@@ -3211,7 +3211,7 @@ class orm(orm_template):
     def _check_concurrency(self, cr, ids, context):
         if not context:
             return
-        if not (context.get(self.CONCURRENCY_CHECK_FIELD) or self._log_access):
+        if not (context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access):
             return
         def key(oid):
             return "%s,%s" % (self._name, oid)
