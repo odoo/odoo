@@ -1064,10 +1064,10 @@
                      <field name="response" readonly="1"/>
                     <group colspan="4" col="6">
                      <field name="state"/>
-                         <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
+                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
+                        <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
                         <button name="survey_req_waiting_answer" string="Watting Answer" states="draft" type="object" icon="gtk-new"/>
                         <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
-                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
