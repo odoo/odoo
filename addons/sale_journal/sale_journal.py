@@ -18,11 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 
 from osv import osv, fields
-import netsvc
-from tools.translate import _
 
 class sale_journal_invoice_type(osv.osv):
     _name = 'sale_journal.invoice.type'

@@ -26,8 +26,6 @@ import decimal_precision as dp
 class sale_order_line(osv.osv):
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
-        tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
         res = {}
         context = context or {}
         for line in self.browse(cr, uid, ids, context=context):
@@ -51,33 +49,33 @@ class sale_order_line(osv.osv):
         return invoice_line_ids
 
     def onchange_sale_order_line_view(self, cr, uid, id, type, context={}, *args):
-            temp = {}
-            temp['value'] = {}
-            if (not type):
-                return {}
-            if type != 'article':
-                temp = {
-                    'value': {
-                    'product_id': False,
-                    'uos_id': False,
-                    'account_id': False,
-                    'price_unit': 0.0,
-                    'price_subtotal': 0.0,
-                    'quantity': 0,
-                    'discount': 0.0,
-                    'invoice_line_tax_id': False,
-                    'account_analytic_id': False,
-                    'product_uom_qty': 0.0,
-                    },
-                }
-                if type == 'line':
-                    temp['value']['name'] = ' '
-                if type == 'break':
-                    temp['value']['name'] = ' '
-                if type == 'subtotal':
-                    temp['value']['name'] = 'Sub Total'
-                return temp
+        temp = {}
+        temp['value'] = {}
+        if (not type):
             return {}
+        if type != 'article':
+            temp = {
+                'value': {
+                'product_id': False,
+                'uos_id': False,
+                'account_id': False,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'quantity': 0,
+                'discount': 0.0,
+                'invoice_line_tax_id': False,
+                'account_analytic_id': False,
+                'product_uom_qty': 0.0,
+                },
+            }
+            if type == 'line':
+                temp['value']['name'] = ' '
+            if type == 'break':
+                temp['value']['name'] = ' '
+            if type == 'subtotal':
+                temp['value']['name'] = 'Sub Total'
+            return temp
+        return {}
 
     def create(self, cr, user, vals, context=None):
         if vals.has_key('layout_type'):
@@ -103,8 +101,6 @@ class sale_order_line(osv.osv):
         default['layout_type'] = self.browse(cr, uid, id).layout_type
         return super(sale_order_line, self).copy(cr, uid, id, default, context)
 
-
-    _name = "sale.order.line"
     _order = "order_id, sequence asc"
     _description = "Sale Order line"
     _inherit = "sale.order.line"

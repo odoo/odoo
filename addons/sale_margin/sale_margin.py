@@ -19,7 +19,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools import config
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
@@ -108,4 +107,5 @@ class account_invoice_line(osv.osv):
         return super(account_invoice_line, self).create(cr, uid, vals, context)
 
 account_invoice_line()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
