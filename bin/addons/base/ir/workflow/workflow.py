@@ -146,11 +146,18 @@ class wkf_transition(osv.osv):
     _columns = {
         'trigger_model': fields.char('Trigger Object', size=128),
         'trigger_expr_id': fields.char('Trigger Expression', size=128),
-        'signal': fields.char('Signal (button Name)', size=64),
-        'role_id': fields.many2one('res.roles', 'Role Required'),
-        'condition': fields.char('Condition', required=True, size=128),
-        'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True, ondelete='cascade'),
-        'act_to': fields.many2one('workflow.activity', 'Destination Activity', required=True, select=True, ondelete='cascade'),
+        'signal': fields.char('Signal (button Name)', size=64, 
+                              help="When the operation of transition comes from a button pressed in the client form, "\
+                              "signal tests the name of the pressed button. If signal is NULL, no button is necessary to validate this transition."),
+        'group_id': fields.many2one('res.groups', 'Group Required', 
+                                   help="The group that a user must have to be authorized to validate this transition."),
+        'condition': fields.char('Condition', required=True, size=128, 
+                                 help="Expression to be satisfied if we want the transition done."),
+        'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True, ondelete='cascade',
+                                    help="Source activity. When this activity is over, the condition is tested to determine if we can start the ACT_TO activity."),
+        'act_to': fields.many2one('workflow.activity', 'Destination Activity', required=True, select=True, ondelete='cascade',
+                                  help="The destination activity."),
+        'wkf_id': fields.related('act_from','wkf_id', type='many2one', relation='workflow', string='Workflow', select=True),
     }
     _defaults = {
         'condition': lambda *a: 'True',
@@ -164,7 +171,6 @@ class wkf_instance(osv.osv):
     _log_access = False
     _columns = {
         'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='cascade', select=True),
-        'uid': fields.integer('User ID'),
         'res_id': fields.integer('Resource ID', select=True),
         'res_type': fields.char('Resource Object', size=64, select=True),
         'state': fields.char('State', size=32, select=True),
@@ -174,11 +180,9 @@ class wkf_instance(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_res_type_state_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_instance_res_id_res_type_state_index ON wkf_instance (res_id, res_type, state)')
-            cr.commit()
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_wkf_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_instance_res_id_wkf_id_index ON wkf_instance (res_id, wkf_id)')
-            cr.commit()
 
 wkf_instance()
 
@@ -188,7 +192,8 @@ class wkf_workitem(osv.osv):
     _log_access = False
     _rec_name = 'state'
     _columns = {
-        'act_id': fields.many2one('workflow.activity', 'Activity', required=True, ondelete="cascade", select=True),
+        'act_id': fields.many2one('workflow.activity', 'Activity', required=True, ondelete="restrict", select=True),
+        'wkf_id': fields.related('act_id','wkf_id', type='many2one', relation='workflow', string='Workflow'),
         'subflow_id': fields.many2one('workflow.instance', 'Subflow', ondelete="cascade", select=True),
         'inst_id': fields.many2one('workflow.instance', 'Instance', required=True, ondelete="cascade", select=True),
         'state': fields.char('State', size=64, select=True),
@@ -210,7 +215,6 @@ class wkf_triggers(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_triggers_res_id_model_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_triggers_res_id_model_index ON wkf_triggers (res_id, model)')
-            cr.commit()
 wkf_triggers()
 
 

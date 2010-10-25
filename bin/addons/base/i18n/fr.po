@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-01-21 05:27+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-10-13 07:43+0000\n"
+"Last-Translator: Anup (OpenERP) <ach@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-01-22 04:34+0000\n"
+"X-Launchpad-Export-Date: 2010-10-14 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -34,7 +34,7 @@ msgstr "%j - Jour de l'année comme un nombre décimal [001,366]."
 #. module: base
 #: field:ir.values,meta_unpickle:0
 msgid "Metadata"
-msgstr "Métadonnées"
+msgstr "Méta-données"
 
 #. module: base
 #: field:ir.ui.view,arch:0
@@ -58,7 +58,7 @@ msgstr "Code (ex:fr__FR)"
 #: field:workflow.activity,wkf_id:0
 #: field:workflow.instance,wkf_id:0
 msgid "Workflow"
-msgstr "Processus"
+msgstr "Flux métier"
 
 #. module: base
 #: view:wizard.module.lang.export:0
@@ -74,7 +74,7 @@ msgstr "Hongrois / Magyar"
 #. module: base
 #: field:ir.actions.server,wkf_model_id:0
 msgid "Workflow On"
-msgstr "Diagramme de flux actif"
+msgstr "Flux métier sur objet"
 
 #. module: base
 #: view:ir.module.module:0
@@ -107,13 +107,11 @@ msgid ""
 "understand. You will be able to switch to the extended view later.\n"
 "            "
 msgstr ""
-"Choisir entre \"Interface Simplifée\" et \"Interface Étendue\".\n"
+"Choisissez entre \"Interface Simplifée\" et \"Interface Étendue\".\n"
 "Si vous testez ou utilisez OpenERP pour la première fois, nous vous "
-"suggerons d'utiliser\n"
-"l'interface simplifiée, qui a moins d'option et de champ mais qui sera plus "
-"facile a \n"
-"comprendre. Vous pourrez basculer ultérieurement dans la vue étendu plus "
-"tard.\n"
+"suggérons d'utiliser l'interface simplifiée, qui a moins d'options et de "
+"champs mais sera plus facile à comprendre. Vous pourrez basculer "
+"ultérieurement dans la vue étendue.\n"
 "            "
 
 #. module: base
@@ -260,11 +258,6 @@ msgstr "%y - Année dans le siècle comme un nombre décimal [00,99]."
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_GOTO_FIRST"
 msgstr "STOCK_GOTO_FIRST"
-
-#. module: base
-#: help:ir.rule.group,rules:0
-msgid "The rule is satisfied if at least one test is True"
-msgstr "La règle est satisfaite si au moins un test est Vrai"
 
 #. module: base
 #: selection:ir.report.custom.fields,operation:0
@@ -614,7 +607,7 @@ msgstr "Vous devrez réinstaller quelques packs de langue."
 #. module: base
 #: field:res.partner.address,mobile:0
 msgid "Mobile"
-msgstr "Téléphone mobile"
+msgstr "Port."
 
 #. module: base
 #: model:res.country,name:base.om
@@ -819,11 +812,6 @@ msgstr "ir.model.config"
 #: field:res.partner,website:0
 msgid "Website"
 msgstr "Site Web"
-
-#. module: base
-#: field:ir.rule.group,rules:0
-msgid "Tests"
-msgstr "Tests"
 
 #. module: base
 #: view:ir.module.repository:0
@@ -1121,6 +1109,9 @@ msgid ""
 "consider the present one as void. Do not hesitate to contact our accounting "
 "department at (+32).81.81.37.00."
 msgstr ""
+"Veuillez ne pas prendre en considération ce mail si votre paiement a été "
+"effectué après que nous vous l'ayons adressé. N'hésitez pas à contacter "
+"notre service comptable au (+ 32).81.81.37.00."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1367,7 +1358,6 @@ msgstr "Nombre de modules mis à jour"
 #: field:ir.actions.todo,groups_id:0
 #: field:ir.actions.wizard,groups_id:0
 #: field:ir.model.fields,groups:0
-#: field:ir.rule.group,groups:0
 #: field:ir.ui.menu,groups_id:0
 #: model:ir.ui.menu,name:base.menu_action_res_groups
 #: view:res.groups:0
@@ -1474,13 +1464,6 @@ msgid ""
 msgstr ""
 "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
 "caractères spéciaux !"
-
-#. module: base
-#: help:ir.rule.group,global:0
-msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr ""
-"Faire une règle globale, sinon il sera nécessaire de mettre un groupe ou "
-"utilisateur"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -2199,11 +2182,6 @@ msgid "Countries"
 msgstr "Pays"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "Record rules"
-msgstr "Enregistrer la règle"
-
-#. module: base
 #: field:res.partner,vat:0
 msgid "VAT"
 msgstr "TVA"
@@ -2411,6 +2389,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
+#: model:ir.ui.menu,name:base.menu_partner_form
 #: view:res.partner:0
 msgid "Customers"
 msgstr "Clients"
@@ -2838,11 +2817,6 @@ msgid "Benin"
 msgstr "Bénin"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "The rule is satisfied if all test are True (AND)"
-msgstr "La règle est satisfaite si tous les tests sont Vrai (ET)"
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CONNECT"
 msgstr "STOCK_CONNECT"
@@ -3166,7 +3140,6 @@ msgstr "Kazakhstan"
 #: field:ir.module.repository,name:0
 #: field:ir.property,name:0
 #: field:ir.report.custom.fields,name:0
-#: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
 #: field:res.bank,name:0
@@ -3284,7 +3257,7 @@ msgstr "Grouper par"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid ""
-"\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+"'%s' contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
 "\"%s\" contient trop de points. Les ids XML ne devraient pas contenir de "
@@ -3472,7 +3445,7 @@ msgstr "Configuration de l'action client"
 #: model:ir.ui.menu,name:base.menu_partner_address_form
 #: view:res.partner.address:0
 msgid "Partner Addresses"
-msgstr "Adresses des partenaires"
+msgstr "Carnet d'adresses"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -3841,11 +3814,6 @@ msgid "ir.translation"
 msgstr "ir.translation"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule_group
-msgid "ir.rule.group"
-msgstr "ir.rule.group"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
 #: model:ir.ui.menu,name:base.menu_module_tree_install
 msgid "Installed modules"
@@ -4171,11 +4139,6 @@ msgstr "a4"
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
 msgstr "Vue de recherche"
-
-#. module: base
-#: view:ir.rule.group:0
-msgid "Multiple rules on same objects are joined using operator OR"
-msgstr "Un \"ou\" est fait entre toutes les règles concernant le même objet."
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
@@ -4806,11 +4769,6 @@ msgid "Reunion (French)"
 msgstr "Réunion (Française)"
 
 #. module: base
-#: field:ir.rule.group,global:0
-msgid "Global"
-msgstr "Global"
-
-#. module: base
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr "République tchèque"
@@ -5058,7 +5016,6 @@ msgstr "Fournisseurs de composants"
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.actions.todo,users_id:0
 #: field:ir.default,uid:0
-#: field:ir.rule.group,users:0
 #: model:ir.ui.menu,name:base.menu_action_res_users
 #: model:ir.ui.menu,name:base.menu_users
 #: view:res.groups:0
@@ -6191,7 +6148,6 @@ msgstr "Retour"
 #: field:ir.model.data,model:0
 #: field:ir.model.grid,model:0
 #: field:ir.report.custom,model_id:0
-#: field:ir.rule.group,model_id:0
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
@@ -6919,10 +6875,6 @@ msgid "Landscape"
 msgstr "Paysage"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_form
-#: model:ir.ui.menu,name:base.menu_base_config_partner
-#: model:ir.ui.menu,name:base.menu_base_partner
-#: model:ir.ui.menu,name:base.menu_partner_form
 #: view:res.partner:0
 #: view:res.partner.category:0
 #: field:res.partner.category,partner_ids:0
@@ -7421,7 +7373,7 @@ msgstr "Salvador"
 #: field:res.bank,phone:0
 #: field:res.partner.address,phone:0
 msgid "Phone"
-msgstr "Numéro de téléphone"
+msgstr "Tél."
 
 #. module: base
 #: field:res.groups,menu_access:0
@@ -7981,12 +7933,6 @@ msgid "Seychelles"
 msgstr "Seychelles"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid "You can not have two users with the same login !"
-msgstr "VOus ne pouvez pas avoir deux utilsiateurs avec le même login !"
-
-#. module: base
 #: model:res.country,name:base.sl
 msgid "Sierra Leone"
 msgstr "Sierra Leone"
@@ -7995,7 +7941,7 @@ msgstr "Sierra Leone"
 #: view:res.company:0
 #: view:res.partner:0
 msgid "General Information"
-msgstr "Information générale"
+msgstr "Informations générales"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -8115,6 +8061,148 @@ msgstr "Sri Lanka"
 #: selection:module.lang.install,init,lang:0
 msgid "Russian / русский язык"
 msgstr "Russie / русский язык"
+
+#. module: base
+#: sql_constraint:res.user:0
+msgid "You cannot have two users with the same login !"
+msgstr "Vous ne pouvez pas avoir deux utilsiateurs avec le même login !"
+
+#. module: base
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "La taille du champ ne doit jamais être inférieure à 1 !"
+
+#. module: base
+#: sql_constraint:ir.ui.view_sc:0
+msgid "Shortcut for this menu already exists!"
+msgstr "Un raccourci pour ce menu existe déjà !"
+
+#. module: base
+#: sql_constraint:ir.model.data:0
+msgid ""
+"You cannot have multiple records with the same id for the same module !"
+msgstr ""
+"Vous ne pouvez pas avoir plusieurs enregistrements avec le même identifiant "
+"pour le même module !"
+
+#. module: base
+#: sql_constraint:maintenance.contract:0
+msgid "Your maintenance contract is already subscribed in the system !"
+msgstr "Votre contrat de maintenance est déjà enregistré dans le système !"
+
+#. module: base
+#: sql_constraint:ir.module.module:0
+#: sql_constraint:ir.module.web:0
+msgid "The name of the module must be unique !"
+msgstr "Le nom d'un module doit être unique !"
+
+#. module: base
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "L'ID du certificat pour un module doit être unique !"
+
+#. module: base
+#: sql_constraint:res.partner.function:0
+msgid "The Code of the Partner Function must be unique !"
+msgstr "Le Code de la Fonction du Partenaire doit être unique !"
+
+#. module: base
+#: sql_constraint:res.partner:0
+msgid "The name of the Partner must be unique !"
+msgstr "Le nom du Partenaire doit être unique !"
+
+#. module: base
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr "Le nom du pays doit être unique !"
+
+#. module: base
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr "Le code du pays doit être unique !"
+
+#. module: base
+#: sql_constraint:res.lang:0
+msgid "The name of the language must be unique !"
+msgstr "Le nom de la langue doit être unique !"
+
+#. module: base
+#: sql_constraint:res.lang:0
+msgid "The code of the language must be unique !"
+msgstr "Le code de la langue doit être unique"
+
+#. module: base
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "Le nom du groupe doit être unique !"
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid "Constraint Error"
+msgstr "Erreur de contrainte"
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still "
+"reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
+"L'opération n'a pas pu être terminée, probablement à la suite d'une :\n"
+"- suppression : vous avez essayer de supprimer un enregistrement auquel "
+"d'autres enregistrements font référence\n"
+"- création/modification : un champ requis n'a pas été correctement rempli"
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+"\n"
+"\n"
+"[objet ayant pour référence : %s - %s]"
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid "Integrity Error"
+msgstr "Erreur d'intégrité"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "User Error"
+msgstr "Erreur Utilisateur"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "Base Language 'en_US' can not be deleted !"
+msgstr "Langue de base 'en_US' ne peut pas être supprimée !"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is User's Preferred Language !"
+msgstr ""
+"Vous ne pouvez pas supprimer une langue qui est utilisée par un des "
+"utilisateurs !"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot delete the language which is Active !\n"
+"Please de-activate the language first."
+msgstr ""
+"Vous ne pouvez pas supprimer une langue qui est Active !\n"
+"Veuillez désactiver cette langue."
 
 #~ msgid "Others Partners"
 #~ msgstr "Autres partenaires"

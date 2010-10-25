@@ -25,9 +25,9 @@ import ir_ui_menu
 import ir_ui_view
 import ir_default
 import ir_actions
-import ir_report_custom
 import ir_attachment
 import ir_cron
+import ir_filters
 import ir_values
 import ir_translation
 import ir_exports

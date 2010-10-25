@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields,osv
+from tools.safe_eval import safe_eval as eval
 import tools
 import time
 from tools.config import config
@@ -27,15 +28,16 @@ from tools.translate import _
 import netsvc
 import re
 import copy
-import sys
+import os
 from xml import dom
+from report.report_sxw import report_sxw, report_rml
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
     _table = 'ir_actions'
     _columns = {
         'name': fields.char('Action Name', required=True, size=64),
-        'type': fields.char('Action Type', required=True, size=32),
+        'type': fields.char('Action Type', required=True, size=32,readonly=True),
         'usage': fields.char('Action Usage', size=32),
     }
     _defaults = {
@@ -43,23 +45,6 @@ class actions(osv.osv):
     }
 actions()
 
-class report_custom(osv.osv):
-    _name = 'ir.actions.report.custom'
-    _table = 'ir_act_report_custom'
-    _sequence = 'ir_actions_id_seq'
-    _columns = {
-        'name': fields.char('Report Name', size=64, required=True, translate=True),
-        'type': fields.char('Report Type', size=32, required=True),
-        'model':fields.char('Object', size=64, required=True),
-        'report_id': fields.integer('Report Ref.', required=True),
-        'usage': fields.char('Action Usage', size=32),
-        'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
-    }
-    _defaults = {
-        'multi': lambda *a: False,
-        'type': lambda *a: 'ir.actions.report.custom',
-    }
-report_custom()
 
 class report_xml(osv.osv):
 
@@ -88,47 +73,59 @@ class report_xml(osv.osv):
                 res[report.id] = False
         return res
 
+    def register_all(self, cr):
+        """Report registration handler that may be overridden by subclasses to
+           add their own kinds of report services.
+           Loads all reports with no manual loaders (auto==True) and
+           registers the appropriate services to implement them.
+        """
+        opj = os.path.join
+        cr.execute("SELECT * FROM ir_act_report_xml WHERE auto=%s ORDER BY id", (True,))
+        result = cr.dictfetchall()
+        svcs = netsvc.Service._services
+        for r in result:
+            if svcs.has_key('report.'+r['report_name']):
+                continue
+            if r['report_rml'] or r['report_rml_content_data']:
+                report_sxw('report.'+r['report_name'], r['model'],
+                        opj('addons',r['report_rml'] or '/'), header=r['header'])
+            if r['report_xsl']:
+                report_rml('report.'+r['report_name'], r['model'],
+                        opj('addons',r['report_xml']),
+                        r['report_xsl'] and opj('addons',r['report_xsl']))
+
     _name = 'ir.actions.report.xml'
     _table = 'ir_act_report_xml'
     _sequence = 'ir_actions_id_seq'
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
-        'type': fields.char('Report Type', size=32, required=True),
         'model': fields.char('Object', size=64, required=True),
-        'report_name': fields.char('Internal Name', size=64, required=True),
+        'type': fields.char('Action Type', size=32, required=True),
+        'report_name': fields.char('Service Name', size=64, required=True),
+        'usage': fields.char('Action Usage', size=32),
+        'report_type': fields.char('Report Type', size=32, required=True, help="Report Type, e.g. pdf, html, raw, sxw, odt, html2html, mako2html, ..."),
+        'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
+        'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
+        'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+        'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
+        'auto': fields.boolean('Custom python parser', required=True),
+
+        'header': fields.boolean('Add RML header', help="Add or not the coporate RML header"),
+
         'report_xsl': fields.char('XSL path', size=256),
-        'report_xml': fields.char('XML path', size=256),
-        'report_rml': fields.char('RML path', size=256,
-            help="The .rml path of the file or NULL if the content is in report_rml_content"),
-        'report_sxw': fields.function(_report_sxw, method=True, type='char',
-            string='SXW path'),
+        'report_xml': fields.char('XML path', size=256, help=''),
+
+        # Pending deprecation... to be replaced by report_file as this object will become the default report object (not so specific to RML anymore)
+        'report_rml': fields.char('Main report file path', size=256, help="The path to the main report file (depending on Report Type) or NULL if the content is in another data field"),
+        # temporary related field as report_rml is pending deprecation - this field will replace report_rml after v6.0
+        'report_file': fields.related('report_rml', type="char", size=256, required=False, readonly=False, string='Report file', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
+
+        'report_sxw': fields.function(_report_sxw, method=True, type='char', string='SXW path'),
         'report_sxw_content_data': fields.binary('SXW content'),
         'report_rml_content_data': fields.binary('RML content'),
-        'report_sxw_content': fields.function(_report_content,
-            fnct_inv=_report_content_inv, method=True,
-            type='binary', string='SXW content',),
-        'report_rml_content': fields.function(_report_content,
-            fnct_inv=_report_content_inv, method=True,
-            type='binary', string='RML content'),
-        'auto': fields.boolean('Automatic XSL:RML', required=True),
-        'usage': fields.char('Action Usage', size=32),
-        'header': fields.boolean('Add RML header',
-            help="Add or not the coporate RML header"),
-        'multi': fields.boolean('On multiple doc.',
-            help="If set to true, the action will not be displayed on the right toolbar of a form view."),
-        'report_type': fields.selection([
-            ('pdf', 'pdf'),
-            ('html', 'html'),
-            ('raw', 'raw'),
-            ('sxw', 'sxw'),
-            ('txt', 'txt'),
-            ('odt', 'odt'),
-            ('html2html','HTML from HTML'),
-            ('mako2html','HTML from HTML(Mako)'),
-            ], string='Type', required=True),
-        'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
-        'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
-        'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
+        'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, method=True, type='binary', string='SXW content',),
+        'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, method=True, type='binary', string='RML content'),
+
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.report.xml',
@@ -158,16 +155,6 @@ class act_window(osv.osv):
         (_check_model, 'Invalid model name in the action definition.', ['res_model','src_model'])
     ]
 
-    def get_filters(self, cr, uid, model):
-        cr.execute('SELECT id FROM ir_act_window a WHERE a.id not in (SELECT act_id FROM ir_act_window_user_rel) AND a.res_model=\''+model+'\' and a.filter=\'1\';')
-        all_ids = cr.fetchall()
-        filter_ids =  map(lambda x:x[0],all_ids)
-        act_ids = self.search(cr,uid,[('res_model','=',model),('filter','=',1),('default_user_ids','in',(','.join(map(str,[uid,])),))])
-        act_ids += filter_ids
-        act_ids = list(set(act_ids))
-        my_acts = self.read(cr, uid, act_ids, ['name', 'domain','context'])
-        return my_acts
-
     def _views_get_fnc(self, cr, uid, ids, name, arg, context={}):
         res={}
         for act in self.browse(cr, uid, ids):
@@ -191,7 +178,7 @@ class act_window(osv.osv):
                 return s.encode('utf8')
             return s
         for act in self.browse(cr, uid, ids):
-            fields_from_fields_get = self.pool.get(act.res_model).fields_get(cr, uid)
+            fields_from_fields_get = self.pool.get(act.res_model).fields_get(cr, uid, context=context)
             search_view_id = False
             if act.search_view_id:
                 search_view_id = act.search_view_id.id
@@ -231,17 +218,27 @@ class act_window(osv.osv):
                 res[act.id] = str(form_arch)
         return res
 
+    def _get_help_status(self, cr, uid, ids, name, arg, context={}):
+        activate_tips = self.pool.get('res.users').browse(cr, uid, uid).menu_tips
+        return dict([(id, activate_tips) for id in ids])
+
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
-        'domain': fields.char('Domain Value', size=250),
-        'context': fields.char('Context Value', size=250),
-        'res_model': fields.char('Object', size=64),
-        'src_model': fields.char('Source Object', size=64),
+        'domain': fields.char('Domain Value', size=250,
+            help="Optional domain filtering of the destination data, as a Python expression"),
+        'context': fields.char('Context Value', size=250, required=True,
+            help="Context dictionary as Python expression, empty by default (Default: {})"),
+        'res_model': fields.char('Object', size=64, required=True,
+            help="Model name of the object to open in the view window"),
+        'src_model': fields.char('Source Object', size=64,
+            help="Optional model name of the objects on which this action should be visible"),
         'target': fields.selection([('current','Current Window'),('new','New Window')], 'Target Window'),
-        'view_type': fields.selection((('tree','Tree'),('form','Form')),string='View Type'),
-        'view_mode': fields.char('View Mode', size=250),
+        'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
+            help="View type: set to 'tree' for a hierarchical tree view, or 'form' for other views"),
+        'view_mode': fields.char('View Mode', size=250, required=True,
+            help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)"),
         'usage': fields.char('Action Usage', size=32),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
         'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views'),
@@ -253,10 +250,15 @@ class act_window(osv.osv):
         'search_view_id': fields.many2one('ir.ui.view', 'Search View Ref.'),
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
-        'default_user_ids': fields.many2many('res.users', 'ir_act_window_user_rel', 'act_id', 'uid', 'Users'),
         'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
-        'menus': fields.char('Menus', size=4096)
+        'menus': fields.char('Menus', size=4096),
+        'help': fields.text('Action description',
+            help='Optional help text for the users with a description of the target view, such as its usage and purpose.'),
+        'display_menu_tip':fields.function(_get_help_status, type='boolean', method=True, string='Display Menu Tips',
+            help='It gives the status if the tip has to be displayed or not when a user executes an action'),
+        'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
+
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',
         'view_type': lambda *a: 'form',
@@ -265,8 +267,10 @@ class act_window(osv.osv):
         'limit': lambda *a: 80,
         'target': lambda *a: 'current',
         'auto_refresh': lambda *a: 0,
-        'auto_search':lambda *a: True
+        'auto_search':lambda *a: True,
+        'multi': False,
     }
+
 act_window()
 
 class act_window_view(osv.osv):
@@ -379,7 +383,7 @@ class actions_server(osv.osv):
     def _select_signals(self, cr, uid, context={}):
         cr.execute("SELECT distinct w.osv, t.signal FROM wkf w, wkf_activity a, wkf_transition t \
         WHERE w.id = a.wkf_id  AND t.act_from = a.id OR t.act_to = a.id AND t.signal!='' \
-        AND t.signal not in (null, NULL)")
+        AND t.signal NOT IN (null, NULL)")
         result = cr.fetchall() or []
         res = []
         for rs in result:
@@ -387,13 +391,13 @@ class actions_server(osv.osv):
                 line = rs[0], "%s - (%s)" % (rs[1], rs[0])
                 res.append(line)
         return res
-    
+
     def _select_objects(self, cr, uid, context={}):
         model_pool = self.pool.get('ir.model')
         ids = model_pool.search(cr, uid, [('name','not ilike','.')])
         res = model_pool.read(cr, uid, ids, ['model', 'name'])
         return [(r['model'], r['name']) for r in res] +  [('','')]
-    
+
     def change_object(self, cr, uid, ids, copy_object, state, context={}):
         if state == 'object_copy':
             model_pool = self.pool.get('ir.model')
@@ -455,7 +459,7 @@ class actions_server(osv.osv):
         'type': lambda *a: 'ir.actions.server',
         'sequence': lambda *a: 5,
         'code': lambda *a: """# You can use the following variables
-#    - object
+#    - object or obj
 #    - time
 #    - cr
 #    - uid
@@ -506,14 +510,21 @@ class actions_server(osv.osv):
 
         return obj
 
-    def merge_message(self, cr, uid, keystr, action, context):
+    def merge_message(self, cr, uid, keystr, action, context=None):
+        if context is None:
+            context = {}
         logger = netsvc.Logger()
         def merge(match):
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id)
             exp = str(match.group()[2:-2]).strip()
-            result = eval(exp, {'object':obj, 'context': context,'time':time})
+            result = eval(exp,
+                          {
+                            'object': obj,
+                            'context': dict(context), # copy context to prevent side-effects of eval
+                            'time': time,
+                          })
             if result in (None, False):
                 return str("--------")
             return tools.ustr(result)
@@ -530,14 +541,16 @@ class actions_server(osv.osv):
     #   False : Finnished correctly
     #   ACTION_ID : Action to launch
 
-    def run(self, cr, uid, ids, context={}):
+    # FIXME: refactor all the eval() calls in run()!
+    def run(self, cr, uid, ids, context=None):
         logger = netsvc.Logger()
-
+        if context is None:
+            context = {}
         for action in self.browse(cr, uid, ids, context):
             obj_pool = self.pool.get(action.model_id.model)
             obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
             cxt = {
-                'context':context,
+                'context': dict(context), # copy context to prevent side-effects of eval
                 'object': obj,
                 'time':time,
                 'cr': cr,
@@ -554,17 +567,18 @@ class actions_server(osv.osv):
                 return self.pool.get(action.action_id.type)\
                     .read(cr, uid, action.action_id.id, context=context)
 
-            if action.state == 'code':
+            if action.state=='code':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
-                    'context': context,
+                    'context': dict(context), # copy context to prevent side-effects of eval
                     'time': time,
                     'ids': ids,
                     'cr': cr,
                     'uid': uid,
-                    'object':obj
+                    'object':obj,
+                    'obj': obj,
                 }
-                exec action.code in localdict
+                eval(action.code, localdict, mode="exec", nocopy=True) # nocopy allows to return 'action'
                 if 'action' in localdict:
                     return localdict['action']
 
@@ -580,11 +594,11 @@ class actions_server(osv.osv):
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Partner Email address not Specified!')
                     continue
                 if not user:
-                    raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
-                
+                    raise osv.except_osv(_('Error'), _("Please specify server option --email-from !"))
+
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
-                
+
                 if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
@@ -618,9 +632,9 @@ class actions_server(osv.osv):
                 obj_pool = self.pool.get(action.model_id.model)
                 obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
                 cxt = {
-                    'context':context,
+                    'context': dict(context), # copy context to prevent side-effects of eval
                     'object': obj,
-                    'time':time,
+                    'time': time,
                     'cr': cr,
                     'pool' : self.pool,
                     'uid' : uid
@@ -638,7 +652,11 @@ class actions_server(osv.osv):
                     if exp.type == 'equation':
                         obj_pool = self.pool.get(action.model_id.model)
                         obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        cxt = {'context':context, 'object': obj, 'time':time}
+                        cxt = {
+                            'context': dict(context), # copy context to prevent side-effects of eval
+                            'object': obj,
+                            'time': time,
+                        }
                         expr = eval(euq, cxt)
                     else:
                         expr = exp.value
@@ -674,7 +692,12 @@ class actions_server(osv.osv):
                     if exp.type == 'equation':
                         obj_pool = self.pool.get(action.model_id.model)
                         obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        expr = eval(euq, {'context':context, 'object': obj, 'time':time})
+                        expr = eval(euq,
+                                    {
+                                        'context': dict(context), # copy context to prevent side-effects of eval
+                                        'object': obj,
+                                        'time': time,
+                                    })
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
@@ -683,10 +706,9 @@ class actions_server(osv.osv):
                 res_id = False
                 obj_pool = self.pool.get(action.srcmodel_id.model)
                 res_id = obj_pool.create(cr, uid, res)
-                cr.commit()
                 if action.record_id:
                     self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
-            
+
             if action.state == 'object_copy':
                 res = {}
                 for exp in action.fields_lines:
@@ -694,14 +716,19 @@ class actions_server(osv.osv):
                     if exp.type == 'equation':
                         obj_pool = self.pool.get(action.model_id.model)
                         obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        expr = eval(euq, {'context':context, 'object': obj, 'time':time})
+                        expr = eval(euq,
+                                    {
+                                        'context': dict(context), # copy context to prevent side-effects of eval
+                                        'object': obj,
+                                        'time': time,
+                                    })
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
 
                 obj_pool = None
                 res_id = False
-                
+
                 model = action.copy_object.split(',')[0]
                 cid = action.copy_object.split(',')[1]
                 obj_pool = self.pool.get(model)
@@ -721,10 +748,11 @@ class act_window_close(osv.osv):
 act_window_close()
 
 # This model use to register action services.
-TODO_STATES = [('open', 'Not Started'),
+TODO_STATES = [('open', 'To Do'),
                ('done', 'Done'),
                ('skip','Skipped'),
-               ('cancel','Cancel')]
+               ('cancel','Cancelled')]
+
 class ir_actions_todo(osv.osv):
     _name = 'ir.actions.todo'
     _columns={
@@ -732,17 +760,33 @@ class ir_actions_todo(osv.osv):
             'ir.actions.act_window', 'Action', select=True, required=True,
             ondelete='cascade'),
         'sequence': fields.integer('Sequence'),
-        'active': fields.boolean('Active'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
         'name':fields.char('Name', size=64),
+        'restart': fields.selection([('onskip','On Skip'),('always','Always'),('never','Never')],'Restart',required=True),
+        'groups_id':fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note':fields.text('Text', translate=True),
     }
     _defaults={
-        'state': lambda *a: 'open',
-        'sequence': lambda *a: 10,
-        'active': lambda *a: True,
+        'state': 'open',
+        'sequence': 10,
+        'restart': 'onskip',
     }
-    _order="sequence"
+    _order="sequence,id"
+
+    def action_launch(self, cr, uid, ids, context=None):
+        """ Launch Action of Wizard"""
+        if context is None:
+            context = {}
+        wizard_id = ids and ids[0] or False
+        wizard = self.browse(cr, uid, wizard_id, context=context)
+        res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, ['name', 'view_type', 'view_mode', 'res_model', 'context', 'views', 'type'], context=context)
+        res.update({'target':'new', 'nodestroy': True})
+        return res
+
+    def action_open(self, cr, uid, ids, context=None):
+        """ Sets configuration wizard in TODO state"""
+        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
+
 ir_actions_todo()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

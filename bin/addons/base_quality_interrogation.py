@@ -49,7 +49,7 @@ def to_decode(s):
                 return s
 
 def start_server(root_path, port, netport, addons_path):
-    os.system('python2.5 %sopenerp-server.py  --pidfile=openerp.pid  --port=%s --net_port=%s --addons-path=%s' %(root_path, str(port),str(netport),addons_path))
+    os.system('python2.5 %sopenerp-server.py  --pidfile=openerp.pid  --no-xmlrpcs --xmlrpc-port=%s --netrpc-port=%s --addons-path=%s' %(root_path, str(port),str(netport),addons_path))
 def clean():
     if os.path.isfile('openerp.pid'):
         ps = open('openerp.pid')
@@ -88,7 +88,7 @@ def import_translate(uri, user, pwd, dbname, translate_in):
     uid = login(uri, dbname, user, pwd)
     if uid:
         conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')
-        wiz_id = execute(conn,'create',dbname, uid, pwd, 'module.lang.import')
+        wiz_id = execute(conn,'create',dbname, uid, pwd, 'base.language.import')
         for trans_in in translate_in:
             lang,ext = os.path.splitext(trans_in.split('/')[-1])
             state = 'init'

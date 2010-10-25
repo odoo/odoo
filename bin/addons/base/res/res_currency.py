@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import time
@@ -27,26 +27,29 @@ from tools.misc import currency
 from tools.translate import _
 
 class res_currency(osv.osv):
-    def _current_rate(self, cr, uid, ids, name, arg, context={}):
-        res={}
+    def _current_rate(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        res = {}
         if 'date' in context:
-            date=context['date']
+            date = context['date']
         else:
-            date=time.strftime('%Y-%m-%d')
-        date= date or time.strftime('%Y-%m-%d')
+            date = time.strftime('%Y-%m-%d')
+        date = date or time.strftime('%Y-%m-%d')
         for id in ids:
-            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= '%s' ORDER BY name desc LIMIT 1" % (id, date))
+            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s ORDER BY name desc LIMIT 1" ,(id, date))
             if cr.rowcount:
-                id, rate=cr.fetchall()[0]
-                res[id]=rate
+                id, rate = cr.fetchall()[0]
+                res[id] = rate
             else:
-                res[id]=0
+                res[id] = 0
         return res
     _name = "res.currency"
     _description = "Currency"
     _columns = {
         'name': fields.char('Currency', size=32, required=True),
         'code': fields.char('Code', size=3),
+        'symbol': fields.char('Symbol', size=3),
         'rate': fields.function(_current_rate, method=True, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
@@ -70,24 +73,30 @@ class res_currency(osv.osv):
             if r.__contains__('rate_ids'):
                 rates=r['rate_ids']
                 if rates:
-                    currency_rate_obj=self.pool.get('res.currency.rate')
-                    currency_date=currency_rate_obj.read(cr,user,rates[0],['name'])['name']
-                    r['date']=currency_date
+                    currency_rate_obj=  self.pool.get('res.currency.rate')
+                    currency_date = currency_rate_obj.read(cr,user,rates[0],['name'])['name']
+                    r['date'] = currency_date
         return res
 
     def round(self, cr, uid, currency, amount):
         if currency.rounding == 0:
             return 0.0
         else:
-            return round(amount / currency.rounding,6) * currency.rounding
+            # /!\ First member below must be rounded to full unit!
+            # Do not pass a rounding digits value to round()
+            return round(amount / currency.rounding) * currency.rounding
 
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding
 
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}, account=None, account_invert=False):
+    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=None, account=None, account_invert=False):
+        if context is None:
+            context = {}
         if not from_currency_id:
             from_currency_id = to_currency_id
-        xc=self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
+        if not to_currency_id:
+            to_currency_id = from_currency_id
+        xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
         from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
         to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
         if from_currency['rate'] == 0 or to_currency['rate'] == 0:

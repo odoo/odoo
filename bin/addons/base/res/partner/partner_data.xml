@@ -3,8 +3,8 @@
     <data noupdate="True">
 
         <!--
-		Resource: res.partner.title
-		-->
+        Resource: res.partner.title
+        -->
         <record id="res_partner_title_pvt_ltd" model="res.partner.title">
             <field name="domain">partner</field>
             <field name="name">Corp.</field>
@@ -33,19 +33,6 @@
             <field name="shortcut">M.</field>
         </record>
 
-        <record id="function_director" model="res.partner.function">
-            <field name="name">Director</field>
-            <field name="code">CEO</field>
-        </record>
-        <record id="function_it" model="res.partner.function">
-            <field name="name">Chief Technical Officer</field>
-            <field name="code">CTO</field>
-        </record>
-        <record id="function_sale" model="res.partner.function">
-            <field name="name">Salesman</field>
-            <field name="code">SAL</field>
-        </record>
-
         <!-- Default bank account description -->
         <record id="bank_normal" model="res.partner.bank.type">
             <field name="name">Bank account</field>
@@ -60,6 +47,15 @@
             <field name="name">country_id</field>
             <field eval="True" name="readonly"/>
             <field name="bank_type_id" ref="bank_normal"/>
+        </record>
+
+        <!--
+        Resource: res.request.link
+        -->
+
+        <record id="req_link_partner" model="res.request.link">
+            <field name="name">Partner</field>
+            <field name="object">res.partner</field>
         </record>
     </data>
 </openerp>

@@ -24,6 +24,7 @@ import time
 import netsvc
 
 import tools
+from tools.safe_eval import safe_eval as eval
 import print_xml
 import render
 from interface import report_int
@@ -36,6 +37,7 @@ from pychart import *
 import misc
 import cStringIO
 from lxml import etree
+from tools.translate import _
 
 class external_pdf(render.render):
     def __init__(self, pdf):
@@ -71,7 +73,7 @@ class report_custom(report_int):
             for cond in conditions:
                 if cond and cond[0]:
                     c = cond[0]
-                    temp = c[0](eval('obj.'+c[1]))
+                    temp = c[0](eval('obj.'+c[1],{'obj': obj}))
                     if not eval('\''+temp+'\''+' '+c[2]+' '+'\''+str(c[3])+'\''):
                         tobreak = True
             if tobreak:
@@ -85,7 +87,7 @@ class report_custom(report_int):
                         row_canvas[i]=False
                 elif len(fields[i])==1:
                     if not isinstance(obj, browse_null):
-                        row.append(str(eval('obj.'+fields[i][0])))
+                        row.append(str(eval('obj.'+fields[i][0],{'obj': obj})))
                     else:
                         row.append(None)
                 else:
@@ -105,7 +107,7 @@ class report_custom(report_int):
                 else:
                     key = levels.keys()
                 for l in key:
-                    objs = eval('obj.'+l)
+                    objs = eval('obj.'+l,{'obj': obj})
                     if not isinstance(objs, browse_record_list) and type(objs) <> type([]):
                         objs = [objs]
                     field_new = []
@@ -190,7 +192,7 @@ class report_custom(report_int):
             def build_tree(obj, level, depth):
                 res = self._row_get(cr, uid,[obj], new_fields, new_cond)
                 level.append(depth)
-                new_obj = eval('obj.'+report['field_parent'][1])
+                new_obj = eval('obj.'+report['field_parent'][1],{'obj': obj})
                 if not isinstance(new_obj, list) :
                     new_obj = [new_obj]
                 for o in  new_obj:

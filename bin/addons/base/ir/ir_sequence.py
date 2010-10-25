@@ -27,8 +27,8 @@ import pooler
 class ir_sequence_type(osv.osv):
     _name = 'ir.sequence.type'
     _columns = {
-        'name': fields.char('Sequence Name',size=64, required=True),
-        'code': fields.char('Sequence Code',size=32, required=True),
+        'name': fields.char('Name',size=64, required=True),
+        'code': fields.char('Code',size=32, required=True),
     }
 ir_sequence_type()
 
@@ -39,14 +39,14 @@ def _code_get(self, cr, uid, context={}):
 class ir_sequence(osv.osv):
     _name = 'ir.sequence'
     _columns = {
-        'name': fields.char('Sequence Name',size=64, required=True),
-        'code': fields.selection(_code_get, 'Sequence Code',size=64, required=True),
+        'name': fields.char('Name',size=64, required=True),
+        'code': fields.selection(_code_get, 'Code',size=64, required=True),
         'active': fields.boolean('Active'),
-        'prefix': fields.char('Prefix',size=64),
-        'suffix': fields.char('Suffix',size=64),
-        'number_next': fields.integer('Next Number', required=True),
-        'number_increment': fields.integer('Increment Number', required=True),
-        'padding' : fields.integer('Number padding', required=True),
+        'prefix': fields.char('Prefix',size=64, help="Prefix value of the record for the sequence"),
+        'suffix': fields.char('Suffix',size=64, help="Suffix value of the record for the sequence"),
+        'number_next': fields.integer('Next Number', required=True, help="Next number of this sequence"),
+        'number_increment': fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
+        'padding' : fields.integer('Number padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
@@ -73,18 +73,15 @@ class ir_sequence(osv.osv):
         }
 
     def get_id(self, cr, uid, sequence_id, test='id', context=None):
-        try:
-            assert test in ('code','id')
-            cr.execute('SELECT id, number_next, prefix, suffix, padding FROM ir_sequence WHERE '+test+'=%s AND active=%s FOR UPDATE', (sequence_id, True))
-            res = cr.dictfetchone()
-            if res:
-                cr.execute('UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s AND active=%s', (res['id'], True))
-                if res['number_next']:
-                    return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
-                else:
-                    return self._process(res['prefix']) + self._process(res['suffix'])
-        finally:
-            cr.commit()
+        assert test in ('code','id')
+        cr.execute('SELECT id, number_next, prefix, suffix, padding FROM ir_sequence WHERE '+test+'=%s AND active=%s FOR UPDATE NOWAIT', (sequence_id, True))
+        res = cr.dictfetchone()
+        if res:
+            cr.execute('UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s AND active=%s', (res['id'], True))
+            if res['number_next']:
+                return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
+            else:
+                return self._process(res['prefix']) + self._process(res['suffix'])
         return False
 
     def get(self, cr, uid, code):

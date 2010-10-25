@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-02-07 05:12+0000\n"
+"PO-Revision-Date: 2010-10-12 07:49+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-02-08 04:45+0000\n"
+"X-Launchpad-Export-Date: 2010-10-13 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -256,11 +256,6 @@ msgstr "%y - Yıl, yüzyıl olmadan onluk sistemde [00,99]."
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_GOTO_FIRST"
 msgstr "STOCK_GOTO_FIRST"
-
-#. module: base
-#: help:ir.rule.group,rules:0
-msgid "The rule is satisfied if at least one test is True"
-msgstr "Testlerden en az biri Doğru ise kural sağlanır."
 
 #. module: base
 #: selection:ir.report.custom.fields,operation:0
@@ -816,11 +811,6 @@ msgid "Website"
 msgstr "Web sitesi"
 
 #. module: base
-#: field:ir.rule.group,rules:0
-msgid "Tests"
-msgstr "Sınamalar"
-
-#. module: base
 #: view:ir.module.repository:0
 msgid "Repository"
 msgstr "Depo"
@@ -1362,7 +1352,6 @@ msgstr "Bir kaç modül güncllendi"
 #: field:ir.actions.todo,groups_id:0
 #: field:ir.actions.wizard,groups_id:0
 #: field:ir.model.fields,groups:0
-#: field:ir.rule.group,groups:0
 #: field:ir.ui.menu,groups_id:0
 #: model:ir.ui.menu,name:base.menu_action_res_groups
 #: view:res.groups:0
@@ -1466,11 +1455,6 @@ msgstr "Madagaskar"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr "Nesne adı x_ ile başlamalı ve özel karakterler içermemelidir!"
-
-#. module: base
-#: help:ir.rule.group,global:0
-msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr "Kuralı genel geçer yapın yoksa bir gruba eklenmesi gerekir."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -2188,11 +2172,6 @@ msgid "Countries"
 msgstr "Ülkeler"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "Record rules"
-msgstr "Kayıt kuralları"
-
-#. module: base
 #: field:res.partner,vat:0
 msgid "VAT"
 msgstr "KDV"
@@ -2823,11 +2802,6 @@ msgid "Benin"
 msgstr "Benin"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "The rule is satisfied if all test are True (AND)"
-msgstr "Bu kural bütün sınamalar doğru (True) sonuçlanırsa sağlanır (AND)"
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CONNECT"
 msgstr "STOCK_CONNECT"
@@ -3149,7 +3123,6 @@ msgstr "Kazakistan"
 #: field:ir.module.repository,name:0
 #: field:ir.property,name:0
 #: field:ir.report.custom.fields,name:0
-#: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
 #: field:res.bank,name:0
@@ -3267,10 +3240,10 @@ msgstr "Gruplama Anahtarı"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid ""
-"\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+"'%s' contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
-"\"%s\" çok fazla nokta içermektedir. XML belirteçlerinde nokta bulunmaz ! "
+"'%s' çok fazla nokta içermektedir. XML belirteçlerinde nokta bulunmaz ! "
 "Nokta diğer modüllerin verilerine atıfta bulunmak için kullanılır. Örneğin, "
 "module.reference_id ."
 
@@ -3819,11 +3792,6 @@ msgid "ir.translation"
 msgstr "ir.translation"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule_group
-msgid "ir.rule.group"
-msgstr "ir.rule.group"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
 #: model:ir.ui.menu,name:base.menu_module_tree_install
 msgid "Installed modules"
@@ -4149,13 +4117,6 @@ msgstr "a4"
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
 msgstr "Arama Görüntüsü Referansı"
-
-#. module: base
-#: view:ir.rule.group:0
-msgid "Multiple rules on same objects are joined using operator OR"
-msgstr ""
-"Aynı nesne üzerindeki birden fazla kural OR operatörü kullanılarak "
-"birleştirilir"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
@@ -4783,11 +4744,6 @@ msgid "Reunion (French)"
 msgstr "Reunion (Fransız)"
 
 #. module: base
-#: field:ir.rule.group,global:0
-msgid "Global"
-msgstr "Evrensel"
-
-#. module: base
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr "Çek Cumhuriyeti"
@@ -5034,7 +4990,6 @@ msgstr "Parça Tedarikçisi"
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.actions.todo,users_id:0
 #: field:ir.default,uid:0
-#: field:ir.rule.group,users:0
 #: model:ir.ui.menu,name:base.menu_action_res_users
 #: model:ir.ui.menu,name:base.menu_users
 #: view:res.groups:0
@@ -6164,7 +6119,6 @@ msgstr "Ger Dönen"
 #: field:ir.model.data,model:0
 #: field:ir.model.grid,model:0
 #: field:ir.report.custom,model_id:0
-#: field:ir.rule.group,model_id:0
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
@@ -7944,12 +7898,6 @@ msgid "Seychelles"
 msgstr "Seyşeller"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid "You can not have two users with the same login !"
-msgstr "Aynı kullanıcı adı ile iki kullanıcı oluşturamazsınız !"
-
-#. module: base
 #: model:res.country,name:base.sl
 msgid "Sierra Leone"
 msgstr "Sierra Leone"
@@ -8078,6 +8026,135 @@ msgstr "Sri Lanka"
 #: selection:module.lang.install,init,lang:0
 msgid "Russian / русский язык"
 msgstr "Rusça / русский язык"
+
+#. module: base
+#: sql_constraint:res.user:0
+msgid "You cannot have two users with the same login !"
+msgstr "Aynı kullanıcı adı ile iki kullanıcı oluşturamazsınız !"
+
+#. module: base
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.ui.view_sc:0
+msgid "Shortcut for this menu already exists!"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.model.data:0
+msgid ""
+"You cannot have multiple records with the same id for the same module !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:maintenance.contract:0
+msgid "Your maintenance contract is already subscribed in the system !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.module.module:0
+#: sql_constraint:ir.module.web:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.partner.function:0
+msgid "The Code of the Partner Function must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.partner:0
+msgid "The name of the Partner must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.lang:0
+msgid "The name of the language must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.lang:0
+msgid "The code of the language must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid "Constraint Error"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still "
+"reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid "Integrity Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "User Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "Base Language 'en_US' can not be deleted !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is User's Preferred Language !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot delete the language which is Active !\n"
+"Please de-activate the language first."
+msgstr ""
 
 #, python-format
 #~ msgid ""

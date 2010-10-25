@@ -23,6 +23,7 @@ import os,types
 from lxml import etree
 import netsvc
 import tools
+from tools.safe_eval import safe_eval
 import print_fnc
 import copy
 from osv.orm import browse_null, browse_record
@@ -111,7 +112,7 @@ class document(object):
 #Pinky: Why not this ? eval(expr, browser) ?
 #       name = browser.name
 #       data_dict = browser._data[self.get_value(browser, 'id')]
-        return eval(expr, {}, {'obj': record})
+        return safe_eval(expr, {}, {'obj': record})
 
     def parse_node(self, node, parent, browser, datas=None):
             attrs = self.node_attrs_get(node)

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_base_import_language" model="ir.ui.view">
+            <field name="name">Import Translation</field>
+            <field name="model">base.language.import</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import Translation">
+                    <group col="8">
+                        <group colspan="3">
+                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
+                            <newline/>
+                            <label colspan="4" width="220" string="Supported file formats: *.csv (Comma-separated values) or *.po (GetText Portable Objects)"/>
+                            <label colspan="4" width="220" string="Please double-check that the file encoding is set to UTF-8 (sometimes called Unicode) when the translator exports it."/>
+                            <label colspan="4" width="220"/>
+                            <label colspan="4" width="220" string="When using CSV format, please also check that the first line of your file is one of the following:"/>
+                            <label colspan="4" width="220" string="- type,name,res_id,src,value"/>
+                            <label colspan="4" width="220" string="- module,type,name,res_id,src,value"/>
+                        </group>
+                        <separator orientation="vertical" rowspan="15"/>
+                        <group colspan="4" col="4">
+                            <separator string="Import Translation" colspan="4"/>
+                            <field name="name" width="200"/>
+                            <field name="code"/>
+                            <field name="data" colspan="4"/>
+                        </group>
+                        <group colspan="8" col="8">
+                            <separator string="" colspan="8"/>
+                            <label colspan="6" width="220"/>
+                                <button special="cancel" string="_Close" icon="gtk-cancel"/>
+                                <button name="import_lang" string="_Import" type="object" icon="gtk-ok"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_base_import_language" model="ir.actions.act_window">
+            <field name="name">Import Translation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.language.import</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+        action="action_view_base_import_language"
+        id="menu_view_base_import_language"
+        parent="menu_translation_export"/>
+
+    </data>
+</openerp>

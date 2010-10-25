@@ -25,7 +25,8 @@ import tools
 TRANSLATION_TYPE = [
     ('field', 'Field'),
     ('model', 'Object'),
-    ('rml', 'RML'),
+    ('rml', 'RML  (deprecated - use Report)'), # Pending deprecation - to be replaced by report!
+    ('report', 'Report/Template'),
     ('selection', 'Selection'),
     ('view', 'View'),
     ('wizard_button', 'Wizard Button'),
@@ -64,20 +65,30 @@ class ir_translation(osv.osv):
 
     def _auto_init(self, cr, context={}):
         super(ir_translation, self)._auto_init(cr, context)
+
+        # FIXME: there is a size limit on btree indexed values so we can't index src column with normal btree. 
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltns',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (lang, type, name, src)')
+        if cr.fetchone():
+            #temporarily removed: cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
+            cr.execute('DROP INDEX ir_translation_ltns')
             cr.commit()
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_lts',))
+        if cr.fetchone():
+            #temporarily removed: cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
+            cr.execute('DROP INDEX ir_translation_lts')
+            cr.commit()
+
+        # add separate hash index on src (no size limit on values), as postgres 8.1+ is able to combine separate indexes
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_src_hash_idx',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_translation_src_hash_idx ON ir_translation using hash (src)')
 
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltn',))
         if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (lang, type, name)')
+            cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
 
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_lts',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
-            cr.commit()
+
 
     @tools.cache(skiparg=3, multi='ids')
     def _get_ids(self, cr, uid, name, tt, lang, ids):
@@ -88,8 +99,8 @@ class ir_translation(osv.osv):
                     'where lang=%s ' \
                         'and type=%s ' \
                         'and name=%s ' \
-                        'and res_id in ('+','.join(map(str, ids))+')',
-                    (lang,tt,name))
+                        'and res_id IN %s',
+                    (lang,tt,name,tuple(ids)))
             for res_id, value in cr.fetchall():
                 translations[res_id] = value
         return translations
@@ -107,9 +118,8 @@ class ir_translation(osv.osv):
                 'where lang=%s ' \
                     'and type=%s ' \
                     'and name=%s ' \
-                    'and res_id in ('+','.join(map(str, ids))+')',
-                (lang,tt,name))
-        cr.commit()
+                    'and res_id IN %s',
+                (lang,tt,name,tuple(ids),))
         for id in ids:
             self.create(cr, uid, {
                 'lang':lang,
@@ -122,54 +132,75 @@ class ir_translation(osv.osv):
         return len(ids)
 
     @tools.cache(skiparg=3)
-    def _get_source(self, cr, uid, name, tt, lang, source=None):
+    def _get_source(self, cr, uid, name, types, lang, source=None):
+        """
+        Returns the translation for the given combination of name, type, language
+        and source. All values passed to this method should be unicode (not byte strings),
+        especially ``source``.
+
+        :param name: identification of the term to translate, such as field name
+        :param types: single string defining type of term to translate (see ``type`` field on ir.translation), or sequence of allowed types (strings)
+        :param lang: language code of the desired translation
+        :param source: optional source term to translate (should be unicode)
+        :rtype: unicode
+        :return: the request translation, or an empty unicode string if no translation was
+                 found and `source` was not passed
+        """
+        # FIXME: should assert that `source` is unicode and fix all callers to always pass unicode
+        # so we can remove the string encoding/decoding.
         if not lang:
-            return ''
+            return u''
+        if isinstance(types, basestring):
+            types = (types,)
         if source:
-            #if isinstance(source, unicode):
-            #   source = source.encode('utf8')
             cr.execute('select value ' \
                     'from ir_translation ' \
                     'where lang=%s ' \
-                        'and type=%s ' \
+                        'and type in %s ' \
                         'and name=%s ' \
                         'and src=%s',
-                    (lang, tt, tools.ustr(name), source))
+                    (lang or '', types, tools.ustr(name), source))
         else:
             cr.execute('select value ' \
                     'from ir_translation ' \
                     'where lang=%s ' \
-                        'and type=%s ' \
+                        'and type in %s ' \
                         'and name=%s',
-                    (lang, tt, tools.ustr(name)))
+                    (lang or '', types, tools.ustr(name)))
         res = cr.fetchone()
-        trad = res and res[0] or ''
+        trad = res and res[0] or u''
+        if source and not trad:
+            return tools.ustr(source)
         return trad
 
     def create(self, cursor, user, vals, context=None):
         if not context:
             context = {}
         ids = super(ir_translation, self).create(cursor, user, vals, context=context)
-        for trans_obj in self.read(cursor, user, [ids], ['name','type','res_id'], context=context):
-            self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], lang=context.get('lang','en_US'))
-            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], context.get('lang','en_US'), [trans_obj['res_id']])
+        for trans_obj in self.read(cursor, user, [ids], ['name','type','res_id','src','lang'], context=context):
+            self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
+            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
         if not context:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
-        for trans_obj in self.read(cursor, user, ids, ['name','type','res_id'], context=context):
-            self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], lang=context.get('lang','en_US'))
-            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], context.get('lang','en_US'), [trans_obj['res_id']])
+        for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
+            self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
+            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
         return result
 
     def unlink(self, cursor, user, ids, context=None):
         if not context:
             context = {}
-        for trans_obj in self.read(cursor, user, ids, ['name','type','res_id'], context=context):
-            self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], lang=context.get('lang','en_US'))
-            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], context.get('lang','en_US'), [trans_obj['res_id']])
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
+            self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
+            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 

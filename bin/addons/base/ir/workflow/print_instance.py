@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,11 +23,11 @@ import time, os
 
 import netsvc
 import report,pooler,tools
+from operator import itemgetter
 
-
-def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
+def graph_get(cr, graph, wkf_ids, nested=False, workitem={}):
     import pydot
-    cr.execute('select * from wkf_activity where wkf_id=%s', (wkf_id,))
+    cr.execute('select * from wkf_activity where wkf_id in ('+','.join(['%s']*len(wkf_ids))+')', wkf_ids)
     nodes = cr.dictfetchall()
     activities = {}
     actfrom = {}
@@ -56,9 +56,12 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
             graph.add_node(pydot.Node(n['id'], **args))
             actfrom[n['id']] = (n['id'],{})
             actto[n['id']] = (n['id'],{})
-    cr.execute('select * from wkf_transition where act_from in ('+','.join(map(lambda x: str(x['id']),nodes))+')')
+            node_ids = tuple(map(itemgetter('id'), nodes))
+    cr.execute('select * from wkf_transition where act_from IN %s', (node_ids,))
     transitions = cr.dictfetchall()
     for t in transitions:
+        if not t['act_to'] in activities:
+            continue
         args = {}
         args['label'] = str(t['condition']).replace(' or ', '\\nor ').replace(' and ', '\\nand ')
         if t['signal']:
@@ -77,9 +80,9 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
         activity_to = actto[t['act_to']][1].get(t['signal'], actto[t['act_to']][0])
         graph.add_edge(pydot.Edge( str(activity_from) ,str(activity_to), fontsize='10', **args))
     nodes = cr.dictfetchall()
-    cr.execute('select id from wkf_activity where flow_start=True and wkf_id=%s limit 1', (wkf_id,))
+    cr.execute('select * from wkf_activity where flow_start=True and wkf_id in ('+','.join(['%s']*len(wkf_ids))+')', wkf_ids)
     start = cr.fetchone()[0]
-    cr.execute("select 'subflow.'||name,id from wkf_activity where flow_stop=True and wkf_id=%s", (wkf_id,))
+    cr.execute("select 'subflow.'||name,id from wkf_activity where flow_stop=True and wkf_id in ("+','.join(['%s']*len(wkf_ids))+')', wkf_ids)
     stop = cr.fetchall()
     if (stop):
         stop = (stop[0][1], dict(stop))
@@ -90,8 +93,8 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
 
 def graph_instance_get(cr, graph, inst_id, nested=False):
     workitems = {}
-    cr.execute('select * from wkf_instance where id=%s', (inst_id,))
-    inst = cr.dictfetchone()
+    cr.execute('select wkf_id from wkf_instance where id=%s', (inst_id,))
+    inst = cr.fetchall()
 
     def workitem_get(instance):
         cr.execute('select act_id,count(*) from wkf_workitem where inst_id=%s group by act_id', (instance,))
@@ -101,7 +104,7 @@ def graph_instance_get(cr, graph, inst_id, nested=False):
         for (subflow_id,) in cr.fetchall():
             workitems.update(workitem_get(subflow_id))
         return workitems
-    graph_get(cr, graph, inst['wkf_id'], nested, workitem_get(inst_id))
+    graph_get(cr, graph, [x[0] for x in inst], nested, workitem_get(inst_id))
 
 #
 # TODO: pas clean: concurrent !!!
@@ -131,12 +134,9 @@ class report_graph_instance(object):
 (No workflow defined) show
 showpage'''
             else:
-                cr.execute('SELECT id FROM wkf_instance \
-                        WHERE res_id=%s AND wkf_id=%s \
-                        ORDER BY state LIMIT 1',
-                        (data['id'], wkfinfo['id']))
-                inst_id = cr.fetchone()
-                if not inst_id:
+                cr.execute('select i.id from wkf_instance i left join wkf w on (i.wkf_id=w.id) where res_id=%s and osv=%s',(data['id'],data['model']))
+                inst_ids = cr.fetchall()
+                if not inst_ids:
                     ps_string = '''%PS-Adobe-3.0
 /inch {72 mul} def
 /Times-Roman findfont 50 scalefont setfont
@@ -144,11 +144,14 @@ showpage'''
 (No workflow instance defined) show
 showpage'''
                 else:
-                    inst_id = inst_id[0]
-                    graph = pydot.Dot(fontsize='16', label="""\\\n\\nWorkflow: %s\\n OSV: %s""" % (wkfinfo['name'],wkfinfo['osv']),
-                                      size='7.3, 10.1', center='1', ratio='auto', rotate='0', rankdir='TB',                                      
-                                     )
-                    graph_instance_get(cr, graph, inst_id, data.get('nested', False))
+                    graph = pydot.Dot(
+                        fontsize='16',
+                        label="""\\\n\\nWorkflow: %s\\n OSV: %s""" % (wkfinfo['name'],wkfinfo['osv']),
+                        size='7.3, 10.1', center='1', ratio='auto', rotate='0', rankdir='TB',
+                    )
+                    for inst_id in inst_ids:
+                        inst_id = inst_id[0]
+                        graph_instance_get(cr, graph, inst_id, data.get('nested', False))
                     ps_string = graph.create(prog='dot', format='ps')
         except Exception, e:
             import traceback, sys

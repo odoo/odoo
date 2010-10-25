@@ -29,10 +29,10 @@ import pooler
 import copy
 import sys
 import traceback
-
-from psycopg2 import IntegrityError
+import logging
+from psycopg2 import IntegrityError, errorcodes
 from tools.func import wraps
-
+from tools.translate import _
 
 module_list = []
 module_class_list = {}
@@ -57,19 +57,39 @@ class osv_pool(netsvc.Service):
                 return f(self, dbname, *args, **kwargs)
             except orm.except_orm, inst:
                 if inst.name == 'AccessError':
-                    tb_s = "AccessError\n" + "".join(traceback.format_exception(*sys.exc_info()))
-                    self.logger.notifyChannel('web-services', netsvc.LOG_DEBUG, tb_s)
+                    self.logger.debug("AccessError", exc_info=True)
                 self.abortResponse(1, inst.name, 'warning', inst.value)
             except except_osv, inst:
                 self.abortResponse(1, inst.name, inst.exc_type, inst.value)
             except IntegrityError, inst:
                 for key in self._sql_error.keys():
                     if key in inst[0]:
-                        self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
-                self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
+                        self.abortResponse(1, _('Constraint Error'), 'warning', _(self._sql_error[key]))
+                if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
+                    msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
+                    self.logger.debug("IntegrityError", exc_info=True)
+                    try:
+                        errortxt = inst.pgerror.replace('«','"').replace('»','"')
+                        if '"public".' in errortxt:
+                            context = errortxt.split('"public".')[1]
+                            model_name = table = context.split('"')[1]
+                        else:
+                            last_quote_end = errortxt.rfind('"')
+                            last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
+                            model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
+                            print "MODEL", last_quote_begin, last_quote_end, model_name
+                        model = table.replace("_",".")
+                        model_obj = self.get(model)
+                        if model_obj:
+                            model_name = model_obj._description or model_obj._name
+                        msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
+                    except Exception:
+                        pass
+                    self.abortResponse(1, _('Integrity Error'), 'warning', msg)
+                else:
+                    self.abortResponse(1, _('Integrity Error'), 'warning', inst[0])
             except Exception, e:
-                tb_s = "".join(traceback.format_exception(*sys.exc_info()))
-                self.logger.notifyChannel('web-services', netsvc.LOG_ERROR, tb_s)
+                self.logger.exception("Uncaught exception")
                 raise
 
         return wrapper
@@ -84,7 +104,7 @@ class osv_pool(netsvc.Service):
         self._store_function = {}
         self._init = True
         self._init_parent = {}
-        self.logger = netsvc.Logger()
+        self.logger = logging.getLogger("web-services")
         netsvc.Service.__init__(self, 'object_proxy', audience='')
         self.exportMethod(self.obj_list)
         self.exportMethod(self.exec_workflow)
@@ -116,11 +136,10 @@ class osv_pool(netsvc.Service):
         try:
             try:
                 if method.startswith('_'):
-                    raise except_osv('Method Error', 'Private method %s can not be calleble.' % (method,))
+                    raise except_osv('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
                 res = pool.execute_cr(cr, uid, obj, method, *args, **kw)
                 if res is None:
-                    self.logger.notifyChannel("web-services", netsvc.LOG_WARNING,
-                    'Method can not return a None value (crash in XML-RPC)')
+                    self.logger.warning('The method %s of the object %s can not return `None` !', method, obj)
                 cr.commit()
             except Exception:
                 cr.rollback()
@@ -256,7 +275,8 @@ class osv(osv_base, orm.orm):
                             for c in cls.__dict__.get(s, []):
                                 exist = False
                                 for c2 in range(len(new)):
-                                    if new[c2][2]==c[2]:
+                                     #For _constraints, we should check field and methods as well
+                                     if new[c2][2]==c[2] and new[c2][0]==c[0]:
                                         new[c2] = c
                                         exist = True
                                         break

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-03-19 08:39+0000\n"
+"PO-Revision-Date: 2010-09-29 07:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-20 04:42+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -180,7 +180,7 @@ msgstr "Otsi partnerit"
 #: code:addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
 msgid "new"
-msgstr ""
+msgstr "uus"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -215,6 +215,8 @@ msgid ""
 "Save this document to a %s file and edit it with a specific software or a "
 "text editor. The file encoding is UTF-8."
 msgstr ""
+"Salvest see dokument %s faili ja muuda seda spetsiaaltarkvaraga või "
+"tekstiredaktoriga. Faili kodeering on UTF-8."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -225,13 +227,13 @@ msgstr "STOCK_DELETE"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Password mismatch !"
-msgstr ""
+msgstr "Salasõna ei klapi !"
 
 #. module: base
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "This url '%s' must provide an html file with links to zip modules"
-msgstr ""
+msgstr "See url '%s' peab andma html faili, mis viitab zip moodulitele"
 
 #. module: base
 #: selection:res.request,state:0
@@ -252,11 +254,6 @@ msgstr "%y - Aasta ilma sajandita kümnendarvuna [00,99]."
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_GOTO_FIRST"
 msgstr "STOCK_GOTO_FIRST"
-
-#. module: base
-#: help:ir.rule.group,rules:0
-msgid "The rule is satisfied if at least one test is True"
-msgstr "See reegel on rahuldatud kui vähemalt üks test on tõene"
 
 #. module: base
 #: selection:ir.report.custom.fields,operation:0
@@ -359,6 +356,8 @@ msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by OpenERP (updates, module installation, ...)"
 msgstr ""
+"Sa ei saa eemaldada kasutajat 'admin' sest seda kasutatakse siseselt Open "
+"ERP poolt loodud vahendite jaoks (uuendused, moodulite paigaldamine, ...)"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -381,6 +380,8 @@ msgid ""
 "If you check this, then the second time the user prints with same attachment "
 "name, it returns the previous report."
 msgstr ""
+"Selle kasti märgistamisel pöördutakse eelmise aruande juurde, kui kasutaja "
+"prindib olemasoleva manuse nimega"
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -464,7 +465,7 @@ msgstr "Laiendatud"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
-msgstr ""
+msgstr "Kohandatud väljadel peab olema nimi mis algab 'x_'-ga !"
 
 #. module: base
 #: help:ir.actions.server,action_id:0
@@ -495,7 +496,7 @@ msgstr "Jordaania"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not remove the model '%s' !"
-msgstr ""
+msgstr "Sa ei saa eemaldada mudelit '%s'!"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -805,11 +806,6 @@ msgid "Website"
 msgstr "Veebileht"
 
 #. module: base
-#: field:ir.rule.group,rules:0
-msgid "Tests"
-msgstr "Testid"
-
-#. module: base
 #: view:ir.module.repository:0
 msgid "Repository"
 msgstr "Varamu"
@@ -847,13 +843,13 @@ msgstr "RML"
 #. module: base
 #: selection:ir.ui.view,type:0
 msgid "Search"
-msgstr ""
+msgstr "Otsi"
 
 #. module: base
 #: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Pie charts need exactly two fields"
-msgstr ""
+msgstr "Sektordiagrammid vajavad täpselt kahte välja"
 
 #. module: base
 #: help:wizard.module.lang.export,lang:0
@@ -997,7 +993,7 @@ msgstr "STOCK_COPY"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Model %s Does not Exist !"
-msgstr ""
+msgstr "Mudelit %s ei eksisteeri !"
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -1006,6 +1002,8 @@ msgid ""
 "You try to install the module '%s' that depends on the module:'%s'.\n"
 "But this module is not available in your system."
 msgstr ""
+"Sa proovid installeerida moodulit '%s' mis sõltub moodulist:'%s'.\n"
+"Aga seda moodulit pole sinu süsteemis saadaval."
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_link
@@ -1063,7 +1061,7 @@ msgstr "Päev: %(day)s"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not read this document! (%s)"
-msgstr ""
+msgstr "Sa ei saa lugeda seda dokumenti! (%s)"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1125,7 +1123,7 @@ msgstr "Kohandatud aruanne"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (koopia)"
 
 #. module: base
 #: view:ir.sequence:0
@@ -1140,7 +1138,7 @@ msgstr "7. %H:%M:%S ==> 18:25:20"
 #. module: base
 #: help:res.users,company_id:0
 msgid "The company this user is currently working on."
-msgstr ""
+msgstr "Firma kus see kasutaja hetkel töötab."
 
 #. module: base
 #: help:ir.actions.server,message:0
@@ -1188,7 +1186,7 @@ msgstr "Valem"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "Can not remove root user!"
-msgstr ""
+msgstr "Ei saa eemaldada root kasutajat!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1290,7 +1288,7 @@ msgstr "STOCK_PROPERTIES"
 #. module: base
 #: view:res.partner.address:0
 msgid "Search Contact"
-msgstr ""
+msgstr "Otsi kontakti"
 
 #. module: base
 #: view:ir.module.module:0
@@ -1343,7 +1341,6 @@ msgstr "Uuendatud moodulite arv"
 #: field:ir.actions.todo,groups_id:0
 #: field:ir.actions.wizard,groups_id:0
 #: field:ir.model.fields,groups:0
-#: field:ir.rule.group,groups:0
 #: field:ir.ui.menu,groups_id:0
 #: model:ir.ui.menu,name:base.menu_action_res_groups
 #: view:res.groups:0
@@ -1355,7 +1352,7 @@ msgstr "Grupid"
 #. module: base
 #: constraint:res.users:0
 msgid "This user can not connect using this company !"
-msgstr ""
+msgstr "See kasutaja ei saa ühendada kasutades seda firmat !"
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -1394,14 +1391,8 @@ msgstr ""
 
 #. module: base
 #: help:ir.actions.server,expression:0
-msgid ""
-"Enter the field/expression that will return the list. E.g. select the sale "
-"order in Object, and you can have loop on the sales order line. Expression = "
-"`object.order_line`."
-msgstr ""
-"Sisesta väli/avaldis, mis tagastab nimekirja. Nt vali müügikorraldus "
-"objektis ja sul saab olla kordus müügikorralduse real. Avaldis = "
-"`object.order_line`."
+msgid "Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."
+msgstr "Sisesta väli/avaldis, mis tagastab nimekirja. Nt vali müügikorraldus objektis ja sul saab olla kordus müügikorralduse real. Avaldis = `object.order_line`."
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -1451,11 +1442,6 @@ msgstr ""
 "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: base
-#: help:ir.rule.group,global:0
-msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
 #: field:ir.report.custom,menu_id:0
 #: view:ir.ui.menu:0
@@ -1471,7 +1457,7 @@ msgstr "Hetke määr"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Greek / Ελληνικά"
-msgstr ""
+msgstr "Greeka / Ελληνικά"
 
 #. module: base
 #: view:ir.values:0
@@ -1506,7 +1492,7 @@ msgstr "Kinnitus"
 #: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Enter at least one field !"
-msgstr ""
+msgstr "Sisesta vähemalt üks väli!"
 
 #. module: base
 #: field:ir.ui.view_sc,name:0
@@ -1557,7 +1543,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not write in this document! (%s)"
-msgstr ""
+msgstr "Sa ei saa kirjutada sellesse dokumenti! (%s)"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -1717,7 +1703,7 @@ msgstr "Kehtiv"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not delete this document! (%s)"
-msgstr ""
+msgstr "Sa ei saa kustutada seda dokumenti! (%s)"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -1728,7 +1714,7 @@ msgstr "XSL"
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
-msgstr ""
+msgstr "Ei saa uuendata moodulit '%s'. See pole paigaldatud"
 
 #. module: base
 #: model:res.country,name:base.cu
@@ -1972,7 +1958,7 @@ msgstr "Moodul"
 #: model:ir.actions.act_window,name:base.action_res_bank_form
 #: model:ir.ui.menu,name:base.menu_action_res_bank_form
 msgid "Bank List"
-msgstr ""
+msgstr "Bankade nimekiri"
 
 #. module: base
 #: field:ir.attachment,description:0
@@ -2047,7 +2033,7 @@ msgstr ""
 #: code:addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify an action to launch !"
-msgstr ""
+msgstr "Palun määra toiming, mida alustada!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2113,7 +2099,7 @@ msgstr "terp-konto"
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "Recursion error in modules dependencies !"
-msgstr ""
+msgstr "Rekursiooni viga moodulite sõltuvustes !"
 
 #. module: base
 #: view:ir.model:0
@@ -2169,11 +2155,6 @@ msgstr "Rollid"
 #: model:ir.ui.menu,name:base.menu_country_partner
 msgid "Countries"
 msgstr "Riigid"
-
-#. module: base
-#: view:ir.rule.group:0
-msgid "Record rules"
-msgstr "Kirje reeglid"
 
 #. module: base
 #: field:res.partner,vat:0
@@ -2377,12 +2358,14 @@ msgid ""
 "spreadsheet software. The file encoding is UTF-8. You have to translate the "
 "latest column before reimporting it."
 msgstr ""
+"Salvetsa see dokument .CSV faili ja ava oma lemmik tabelarvutusprogrammiga. "
+"Faili kodeering on UTF-8. Sa pead tõlkima viimase veeru enne taasimportimist."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
 #: view:res.partner:0
 msgid "Customers"
-msgstr ""
+msgstr "Kliendid"
 
 #. module: base
 #: model:res.country,name:base.au
@@ -2556,6 +2539,8 @@ msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Sa püüad uuendada moodulit, mis sõltub moodulist: %s.\n"
+"Aga seda moodulit pole sinu süsteemis saadaval."
 
 #. module: base
 #: view:res.partner.address:0
@@ -2571,7 +2556,7 @@ msgstr "Litsents"
 #: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Invalid operation"
-msgstr ""
+msgstr "Sobimatu tegevus"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2615,7 +2600,7 @@ msgstr "Mooduli import"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not remove the field '%s' !"
-msgstr ""
+msgstr "Sa ei saa eemaldada välja '%s'!"
 
 #. module: base
 #: field:res.bank,zip:0
@@ -2647,7 +2632,7 @@ msgstr "%c - Sobiv kuupäeva ja aja esitlus."
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Finland / Suomi"
-msgstr ""
+msgstr "Soome / Suomi"
 
 #. module: base
 #: model:res.country,name:base.bo
@@ -2694,6 +2679,7 @@ msgstr "Reeglid"
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr ""
+"Proovid eemaldada moodulit, mis on juba paigaldatud või alles paigaldamisel"
 
 #. module: base
 #: help:ir.values,key2:0
@@ -2801,11 +2787,6 @@ msgid "Benin"
 msgstr "Benin"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "The rule is satisfied if all test are True (AND)"
-msgstr "Reegel on rahuldatud, kui kõik testid on Tõesed (AND)"
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CONNECT"
 msgstr "STOCK_CONNECT"
@@ -2855,7 +2836,7 @@ msgstr "Turvalisus"
 #: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Using a relation field which uses an unknown object"
-msgstr ""
+msgstr "Kasutan seose välja, mis omakorda kasutab tundmatut objekti"
 
 #. module: base
 #: model:res.country,name:base.za
@@ -3127,7 +3108,6 @@ msgstr "Kasahstan"
 #: field:ir.module.repository,name:0
 #: field:ir.property,name:0
 #: field:ir.report.custom.fields,name:0
-#: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
 #: field:res.bank,name:0
@@ -3165,7 +3145,7 @@ msgstr "Näidisandmed"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "English (UK)"
-msgstr ""
+msgstr "Inglise (Suurbritannia)"
 
 #. module: base
 #: model:res.country,name:base.aq
@@ -3190,7 +3170,7 @@ msgstr "Veeb"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "English (CA)"
-msgstr ""
+msgstr "Inglise (CA)"
 
 #. module: base
 #: field:res.partner.event,planned_revenue:0
@@ -3244,9 +3224,7 @@ msgstr "Rühmitamine"
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
-msgid ""
-"\"%s\" contains too many dots. XML ids should not contain dots ! These are "
-"used to refer to other modules data, as in module.reference_id"
+msgid "'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id"
 msgstr ""
 
 #. module: base
@@ -3315,7 +3293,7 @@ msgstr "Panga tüüp"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "The name of the group can not start with \"-\""
-msgstr ""
+msgstr "Grupi nimi ei tohi alata \"-\" märgiga"
 
 #. module: base
 #: wizard_view:module.upgrade,end:0
@@ -3380,7 +3358,7 @@ msgstr "Kuhja"
 #: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Tree can only be used in tabular reports"
-msgstr ""
+msgstr "Puud saab kasutada ainult tabulaarsetes aruannetes"
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -3795,11 +3773,6 @@ msgid "ir.translation"
 msgstr "ir.translation"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule_group
-msgid "ir.rule.group"
-msgstr "ir.rule.group"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
 #: model:ir.ui.menu,name:base.menu_module_tree_install
 msgid "Installed modules"
@@ -3908,7 +3881,7 @@ msgstr "Mosambiik"
 #: model:ir.actions.act_window,name:base.grant_menu_access
 #: model:ir.ui.menu,name:base.menu_grant_menu_access
 msgid "Manage Menus"
-msgstr ""
+msgstr "Halda menüüsid"
 
 #. module: base
 #: field:ir.actions.server,message:0
@@ -4012,7 +3985,7 @@ msgstr "Mongoolia"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Tõrge"
 
 #. module: base
 #: view:res.partner.som:0
@@ -4062,7 +4035,7 @@ msgstr "Failivorming"
 #. module: base
 #: field:res.lang,iso_code:0
 msgid "ISO code"
-msgstr ""
+msgstr "ISO kood"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config_view
@@ -4125,11 +4098,6 @@ msgstr "a4"
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
 msgstr ""
-
-#. module: base
-#: view:ir.rule.group:0
-msgid "Multiple rules on same objects are joined using operator OR"
-msgstr "Mitmikreeglid samadel objektidel ühendatakse operaatoriga O"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
@@ -4318,7 +4286,7 @@ msgstr "Objekti väli"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "French (CH) / Français (CH)"
-msgstr ""
+msgstr "Prantsuse (CH) / Français (CH)"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4392,7 +4360,7 @@ msgstr "Tühista eemaldus"
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Communication"
-msgstr ""
+msgstr "Suhtlemine"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
@@ -4403,7 +4371,7 @@ msgstr "ir.server.object.lines"
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "Module %s: Invalid Quality Certificate"
-msgstr ""
+msgstr "Moodul %s: Vigane kvaliteedisertifikaat"
 
 #. module: base
 #: model:res.country,name:base.kw
@@ -4439,7 +4407,7 @@ msgstr "res.partner.event"
 #. module: base
 #: field:res.company,user_ids:0
 msgid "Accepted Users"
-msgstr ""
+msgstr "Aksepteeritud kasutajad"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4600,6 +4568,8 @@ msgid ""
 "Can not create the module file:\n"
 " %s"
 msgstr ""
+"Ei saa luua mooduli faili:\n"
+" %s"
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_update
@@ -4615,7 +4585,7 @@ msgstr "Jätka"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Thai / ภาษาไทย"
-msgstr ""
+msgstr "Tai / ภาษาไทย"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
@@ -4712,7 +4682,7 @@ msgstr "Objektid"
 #. module: base
 #: field:ir.model.fields,selectable:0
 msgid "Selectable"
-msgstr ""
+msgstr "Valitav"
 
 #. module: base
 #: view:res.request.link:0
@@ -4756,11 +4726,6 @@ msgid "Reunion (French)"
 msgstr "Reunion (Prantsuse)"
 
 #. module: base
-#: field:ir.rule.group,global:0
-msgid "Global"
-msgstr "Globaalne"
-
-#. module: base
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr "Tšehhi"
@@ -4774,7 +4739,7 @@ msgstr "Saalomoni Saared"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "AccessError"
-msgstr ""
+msgstr "Ligipääsuviga"
 
 #. module: base
 #: view:res.lang:0
@@ -4903,12 +4868,12 @@ msgstr "STOCK_GO_BACK"
 #. module: base
 #: view:ir.actions.act_window:0
 msgid "General Settings"
-msgstr ""
+msgstr "Üldised seadistused"
 
 #. module: base
 #: model:ir.ui.menu,name:base.custom_shortcuts
 msgid "Custom Shortcuts"
-msgstr ""
+msgstr "Kohandatud kiirklahvid"
 
 #. module: base
 #: model:res.country,name:base.dz
@@ -4954,7 +4919,7 @@ msgstr "Python kood"
 #: code:addons/base/module/wizard/wizard_module_import.py:0
 #, python-format
 msgid "Can not create the module file: %s !"
-msgstr ""
+msgstr "Ei saa luua mooduli faili: %s !"
 
 #. module: base
 #: model:ir.module.module,description:base.module_meta_information
@@ -4980,7 +4945,7 @@ msgstr "Tühista"
 #: code:addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify server option --smtp-from !"
-msgstr ""
+msgstr "Palun määra serveril valik --smtp-from!"
 
 #. module: base
 #: selection:wizard.module.lang.export,format:0
@@ -5008,7 +4973,6 @@ msgstr "Komponentidega varustaja"
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.actions.todo,users_id:0
 #: field:ir.default,uid:0
-#: field:ir.rule.group,users:0
 #: model:ir.ui.menu,name:base.menu_action_res_users
 #: model:ir.ui.menu,name:base.menu_users
 #: view:res.groups:0
@@ -5378,7 +5342,7 @@ msgstr "Aktiivsed partneri sündmused"
 #: model:ir.ui.menu,name:base.menu_partner_function_form
 #: view:res.partner.function:0
 msgid "Contact Functions"
-msgstr ""
+msgstr "Kontaktifunktsioonid"
 
 #. module: base
 #: view:multi_company.default:0
@@ -5421,7 +5385,7 @@ msgstr "Valik"
 #. module: base
 #: field:ir.actions.act_window,search_view:0
 msgid "Search View"
-msgstr ""
+msgstr "Otsinguvaade"
 
 #. module: base
 #: field:ir.rule,domain_force:0
@@ -5531,7 +5495,7 @@ msgstr "Python toiming"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "English (US)"
-msgstr ""
+msgstr "Inglise (USA)"
 
 #. module: base
 #: field:res.partner.event,probability:0
@@ -5574,7 +5538,7 @@ msgstr "Tegevus"
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Postal Address"
-msgstr ""
+msgstr "Postiaadress"
 
 #. module: base
 #: field:res.company,parent_id:0
@@ -5719,7 +5683,7 @@ msgstr ""
 #: code:addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "This error occurs on database %s"
-msgstr ""
+msgstr "See viga juhtus andmebaasis %s"
 
 #. module: base
 #: wizard_button:base.module.import,init,import:0
@@ -5773,13 +5737,13 @@ msgstr "Kaskaad"
 #: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Field %d should be a figure"
-msgstr ""
+msgstr "Väli %d peaks olema number"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_inventory_form
 #: model:ir.ui.menu,name:base.menu_action_inventory_form
 msgid "Default Company per Object"
-msgstr ""
+msgstr "Vaikimisi firma objektikohta"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -6134,7 +6098,6 @@ msgstr ""
 #: field:ir.model.data,model:0
 #: field:ir.model.grid,model:0
 #: field:ir.report.custom,model_id:0
-#: field:ir.rule.group,model_id:0
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
@@ -7911,12 +7874,6 @@ msgid "Seychelles"
 msgstr "Seišellid"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid "You can not have two users with the same login !"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.sl
 msgid "Sierra Leone"
 msgstr "Sierra Leone"
@@ -8045,6 +8002,133 @@ msgstr "Sri Lanka"
 #: selection:module.lang.install,init,lang:0
 msgid "Russian / русский язык"
 msgstr "Vene keel / русский язык"
+
+#. module: base
+#: sql_constraint:res.user:0
+msgid "You cannot have two users with the same login !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.ui.view_sc:0
+msgid "Shortcut for this menu already exists!"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.model.data:0
+msgid ""
+"You cannot have multiple records with the same id for the same module !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:maintenance.contract:0
+msgid "Your maintenance contract is already subscribed in the system !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.module.module:0
+#: sql_constraint:ir.module.web:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.partner.function:0
+msgid "The Code of the Partner Function must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.partner:0
+msgid "The name of the Partner must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.lang:0
+msgid "The name of the language must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.lang:0
+msgid "The code of the language must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid "Constraint Error"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still "
+"reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid "Integrity Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "User Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "Base Language 'en_US' can not be deleted !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is User's Preferred Language !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is Active !\nPlease de-activate the language first."
+msgstr ""
 
 #~ msgid "Attached ID"
 #~ msgstr "Manustatud ID"

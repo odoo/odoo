@@ -70,6 +70,7 @@ class report_rml(report_int):
     def __init__(self, name, table, tmpl, xsl):
         super(report_rml, self).__init__(name)
         self.table = table
+        self.internal_header=False
         self.tmpl = tmpl
         self.xsl = xsl
         self.bin_datas = {}
@@ -110,6 +111,7 @@ class report_rml(report_int):
         return self.post_process_xml_data(cr, uid, xml, context)
 
     def post_process_xml_data(self, cr, uid, xml, context=None):
+
         if not context:
             context={}
         # find the position of the 3rd tag
@@ -136,9 +138,12 @@ class report_rml(report_int):
     # TODO: The translation doesn't work for "<tag t="1">textext<tag> tex</tag>text</tag>"
     #
     def create_rml(self, cr, xml, uid, context=None):
+        if self.tmpl=='' and not self.internal_header:
+            self.internal_header=True
         if not context:
             context={}
-        service = netsvc.LocalService("object_proxy")
+        pool = pooler.get_pool(cr.dbname)
+        ir_translation_obj = pool.get('ir.translation')
 
         # In some case we might not use xsl ...
         if not self.xsl:
@@ -159,9 +164,7 @@ class report_rml(report_int):
 
         def translate(doc, lang):
             for node in doc.xpath('//*[@t]'):
-                translation = service.execute(
-                    cr.dbname, uid, 'ir.translation', '_get_source',
-                    self.name2, 'xsl', lang, node.text)
+                translation = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, node.text)
                 if translation:
                     node.text = translation
 
@@ -175,6 +178,9 @@ class report_rml(report_int):
         return xml
 
     def create_pdf(self, rml, localcontext = None, logo=None, title=None):
+        if not localcontext:
+           localcontext={}
+        localcontext.update({'internal_header':self.internal_header})
         if logo:
             self.bin_datas['logo'] = logo
         else:
@@ -219,26 +225,6 @@ class report_rml(report_int):
         obj = render.makohtml2html(html,localcontext)
         obj.render()
         return obj.get()
-
-from report_sxw import report_sxw
-
-def register_all(db):
-    opj = os.path.join
-    cr = db.cursor()
-    cr.execute("SELECT * FROM ir_act_report_xml WHERE auto=%s ORDER BY id", (True,))
-    result = cr.dictfetchall()
-    cr.close()
-    svcs = netsvc.Service._services
-    for r in result:
-        if svcs.has_key('report.'+r['report_name']):
-            continue
-        if r['report_rml'] or r['report_rml_content_data']:
-            report_sxw('report.'+r['report_name'], r['model'],
-                    opj('addons',r['report_rml'] or '/'), header=r['header'])
-        if r['report_xsl']:
-            report_rml('report.'+r['report_name'], r['model'],
-                    opj('addons',r['report_xml']),
-                    r['report_xsl'] and opj('addons',r['report_xsl']))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

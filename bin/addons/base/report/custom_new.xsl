@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
-	<xsl:import href="../../base/report/custom_default.xsl"/>
-	<xsl:import href="../../base/report/custom_rml.xsl"/>
+	<xsl:import href="../../base/report/custom_default_printscreen.xsl"/>
+	<xsl:import href="../../base/report/custom_rml_printscreen.xsl"/>
 	<xsl:template match="/">
 		<xsl:call-template name="rml">
 			<xsl:with-param name="pageSize" select="report/config/PageSize"/>
@@ -14,8 +14,8 @@
 
 	<xsl:template name="stylesheet">
 		<paraStyle name="title" fontName="Helvetica-Bold" fontSize="22" alignment="center"/>
-		<paraStyle name="test" alignment="left" leftIndent="10.0"/>
-        <paraStyle name="float_right" alignment="right"/>
+		<paraStyle name="test" alignment="left" />
+        <paraStyle name="float_right" alignment="left"/>
         <paraStyle name="tbl_heading" alignment="left"/>
 		<blockTableStyle id="products">
 			<!--<blockBackground colorName="grey" start="0,0" stop="-1,0"/> -->
@@ -114,14 +114,24 @@
 							</para>
 						</xsl:when>
                        <xsl:when test="@tree='float'">
-                           <para style="float_right"><font fontName="Helvetica-bold" fontSize="9">
+                           <para style="float_right"><font fontName="Helvetica-bold" fontSize="9" color="black">
                                <xsl:value-of select="."/>
                                </font></para>
+                       </xsl:when>
+                       <xsl:when test="@tree='undefined'">
+                            <para>
+                                <xsl:attribute name="leftIndent">
+                                    <xsl:value-of select="@space"/>
+                                </xsl:attribute>
+                                <font fontName="Helvetica-Bold" fontSize="9" color="gray">
+                                    <xsl:value-of select="."/>
+                                </font>
+                            </para>
                        </xsl:when>
 
 						<xsl:otherwise>
 							<para>
-								<font fontName="Helvetica-bold" fontSize="9">
+								<font fontName="Helvetica-bold" fontSize="9" color="black">
 								<xsl:value-of select="."/>
 								</font>
 							</para>

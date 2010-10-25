@@ -22,11 +22,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Maintenance Contract">
-                    <separator string="Information" colspan="4"/>
-                    <field name="name" select="1" />
-                    <field name="state" />
-                    <field name="date_start" select="1"/>
-                    <field name="date_stop" select="1"/>
+                    <group col="6" colspan="4">
+	                    <field name="name"/>
+	                    <field name="date_start"/>
+	                    <field name="date_stop"/>
+	                </group>
                     <separator string="Covered Modules" colspan="4"/>
                     <field name="module_ids" nolabel="1" colspan="4">
                         <tree string="Covered Modules">
@@ -34,22 +34,49 @@
                             <field name="version" />
                         </tree>
                     </field>
+                    <field name="state" colspan="4"/>
                 </form>
             </field>
         </record>
 
+        <record id="maintenance_contract_search_view" model="ir.ui.view">
+            <field name="name">maintenance.contract.search</field>
+            <field name="model">maintenance.contract</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Maintenance Contract">
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="maintenance_contract_view_calendar" model="ir.ui.view">
+            <field name="name">maintenance.contract.calendar</field>
+            <field name="model">maintenance.contract</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar string="Maintenance Contract" date_start="date_start" color="state">
+                    <field name="name"/>
+                    <field name="state"/>
+                </calendar>
+            </field>
+        </record>
+
         <record id="action_maintenance_contract_form" model="ir.actions.act_window">
-            <field name="name">Your Maintenance Contracts</field>
+            <field name="name">Maintenance Contracts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">maintenance.contract</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="search_view_id" ref="maintenance_contract_search_view"/>
         </record>
 
         <menuitem
             name="Maintenance"
             id="maintenance"
-            parent="base.menu_administration"/>
+            parent="base.menu_administration" groups="base.group_extended"/>
 
         <menuitem
             action="action_maintenance_contract_form"
@@ -62,8 +89,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Add Maintenance Contract" col="2">
-                    <image name="gtk-dialog-info" />
-                    <group col="1">
+                        <group col="1">
                         <separator string="Add Maintenance Contract" />
                         <group states="draft">
                             <field name="name" width="250" />
@@ -79,7 +105,7 @@
                         </group>
                     </group>
                     <group colspan="4">
-                        <button type="object" string="_Cancel" icon="gtk-cancel" special="cancel" states="draft"/> 
+                        <button type="object" string="_Cancel" icon="gtk-cancel" special="cancel" states="draft"/>
                         <button type="object" string="_Validate" icon="gtk-apply" name="action_validate" states="draft"/>
                         <button type="object" string="_Close" icon="gtk-close" special="cancel" states="validated,unvalidated"/>
                     </group>

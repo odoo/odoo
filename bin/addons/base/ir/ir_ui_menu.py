@@ -31,6 +31,10 @@ def one_in(setA, setB):
             return True
     return False
 
+def cond(C, X, Y):
+    if C: return X
+    return Y
+
 class many2many_unique(fields.many2many):
     def set(self, cr, obj, id, name, values, user=None, context=None):
         if not values:
@@ -63,18 +67,41 @@ class ir_ui_menu(osv.osv):
         # radical but this doesn't frequently happen
         self._cache = {}
 
-    def search(self, cr, uid, args, offset=0, limit=2000, order=None,
-            context=None, count=False):
-        if context is None:
-            context = {}
-        ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order, context=context, count=(count and uid==1))
-        if uid==1:
-            return ids
+    def create_shortcut(self, cr, uid, values, context={}):
+        dataobj = self.pool.get('ir.model.data')
+        new_context = context.copy()
+        for key in context:
+            if key.startswith('default_'):
+                del new_context[key]
+
+        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut', new_context)
+        shortcut_menu_id  = int(dataobj.read(cr, uid, menu_id, ['res_id'], new_context)['res_id'])
+        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, values, new_context)
+        menu_data = {'name':values['name'],
+                    'sequence':10,
+                    'action':'ir.actions.act_window,'+str(action_id),
+                    'parent_id':shortcut_menu_id,
+                    'icon':'STOCK_JUSTIFY_FILL'}
+        menu_id =  self.pool.get('ir.ui.menu').create(cr, 1, menu_data)
+        sc_data= {'name':values['name'], 'sequence': 1,'res_id': menu_id }
+        sc_menu_id = self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, new_context)
+
+        user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
+        key = (cr.dbname, shortcut_menu_id, tuple(user_groups))
+        self._cache[key] = True
+        return action_id
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+               context=None, count=False):
+
+        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0,
+            limit=None, order=order, context=context, count=False)
 
         if not ids:
             if count:
                 return 0
             return []
+
 
         modelaccess = self.pool.get('ir.model.access')
         user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
@@ -85,8 +112,8 @@ class ir_ui_menu(osv.osv):
             if key in self._cache:
                 if self._cache[key]:
                     result.append(menu.id)
-                elif not menu.groups_id and not menu.action:
-                    result.append(menu.id)
+                #elif not menu.groups_id and not menu.action:
+                #    result.append(menu.id)
                 continue
 
             self._cache[key] = False
@@ -94,16 +121,15 @@ class ir_ui_menu(osv.osv):
                 restrict_to_groups = [g.id for g in menu.groups_id]
                 if not user_groups.intersection(restrict_to_groups):
                     continue
-                result.append(menu.id)
-                self._cache[key] = True
-                continue
+                #result.append(menu.id)
+                #self._cache[key] = True
+                #continue
 
             if menu.action:
                 # we check if the user has access to the action of the menu
                 data = menu.action
                 if data:
                     model_field = { 'ir.actions.act_window':    'res_model',
-                                    'ir.actions.report.custom': 'model',
                                     'ir.actions.report.xml':    'model',
                                     'ir.actions.wizard':        'model',
                                     'ir.actions.server':        'model_id',
@@ -121,6 +147,11 @@ class ir_ui_menu(osv.osv):
 
             result.append(menu.id)
             self._cache[key] = True
+
+        if offset:
+            result = result[long(offset):]
+        if limit:
+            result = result[:long(limit)]
 
         if count:
             return len(result)
@@ -156,7 +187,7 @@ class ir_ui_menu(osv.osv):
         rex=re.compile('\([0-9]+\)')
         concat=rex.findall(datas['name'])
         if concat:
-            next_num=eval(concat[0])+1
+            next_num=int(concat[0])+1
             datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
         else:
             datas['name']=datas['name']+'(1)'
@@ -220,6 +251,18 @@ class ir_ui_menu(osv.osv):
             return {}
         return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon,'ICON_SIZE_MENU'))}}
 
+    def _check_recursion(self, cr, uid, ids):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from ir_ui_menu where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+    
+    
+
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
@@ -227,7 +270,7 @@ class ir_ui_menu(osv.osv):
         'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
         'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
-                "If this field is empty, Open ERP will compute visibility based on the related object's read access."),
+                "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, method=True,
             string='Complete Name', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
@@ -235,7 +278,6 @@ class ir_ui_menu(osv.osv):
         'action': fields.function(_action, fnct_inv=_action_inv,
             method=True, type='reference', string='Action',
             selection=[
-                ('ir.actions.report.custom', 'ir.actions.report.custom'),
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
                 ('ir.actions.wizard', 'ir.actions.wizard'),
@@ -243,10 +285,13 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.server', 'ir.actions.server'),
             ]),
     }
+    _constraints = [
+        (_check_recursion, 'Error ! You can not create recursive Menu.', ['parent_id'])
+    ]
     _defaults = {
         'icon' : lambda *a: 'STOCK_OPEN',
         'icon_pict': lambda *a: ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
-        'sequence' : lambda *a: 10
+        'sequence' : lambda *a: 10,
     }
     _order = "sequence,id"
 ir_ui_menu()

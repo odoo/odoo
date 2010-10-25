@@ -22,7 +22,8 @@
 from osv import fields, osv
 from locale import localeconv
 import tools
-
+from tools.safe_eval import safe_eval as eval
+from tools.translate import _
 class lang(osv.osv):
     _name = "res.lang"
     _description = "Languages"
@@ -60,11 +61,11 @@ class lang(osv.osv):
         ('name_uniq', 'unique (name)', 'The name of the language must be unique !'),
         ('code_uniq', 'unique (code)', 'The code of the language must be unique !'),
     ]
-    
+
     @tools.cache(skiparg=3)
-    def _lang_data_get(self, cr, uid, lang_id):
+    def _lang_data_get(self, cr, uid, lang_id, monetary=False):
         conv = localeconv()
-        lang_obj=self.browse(cr,uid,lang_id)
+        lang_obj = self.browse(cr, uid, lang_id)
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
         decimal_point = lang_obj.decimal_point
         grouping = lang_obj.grouping
@@ -75,11 +76,29 @@ class lang(osv.osv):
             self._lang_data_get.clear_cache(cr.dbname,lang_id= lang_id)
         return super(lang, self).write(cr, uid, ids, vals, context)
 
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        languages = self.read(cr, uid, ids, ['code','active'], context=context)
+        for language in languages:
+            lang = context.get('lang')
+            if language['code']=='en_US':
+                raise osv.except_osv(_('User Error'), _("Base Language 'en_US' can not be deleted !"))
+            if lang and (language['code']==lang):
+                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is User's Preferred Language !"))
+            if language['active']:
+                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is Active !\nPlease de-activate the language first."))
+            trans_obj = self.pool.get('ir.translation')
+            trans_ids = trans_obj.search(cr, uid, [('lang','=',language['code'])], context=context)
+            trans_obj.unlink(cr, uid, trans_ids, context=context)
+        return super(lang, self).unlink(cr, uid, ids, context=context)
+
     def _group(self, cr, uid, ids, s, monetary=False, grouping=False, thousands_sep=''):
         grouping = eval(grouping)
         
         if not grouping:
             return (s, 0)
+
         result = ""
         seps = 0
         spaces = ""
@@ -120,7 +139,7 @@ class lang(osv.osv):
         if percent[0] != '%':
             raise ValueError("format() must be given exactly one %char format specifier")
 
-        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0])        
+        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0], monetary)        
 
         formatted = percent % value
         # floats and decimal ints need special action!
@@ -129,7 +148,7 @@ class lang(osv.osv):
             parts = formatted.split('.')
 
             if grouping:
-                 parts[0], seps = self._group(cr,uid,ids,parts[0], monetary=monetary, grouping=lang_grouping, thousands_sep=thousands_sep)
+                parts[0], seps = self._group(cr,uid,ids,parts[0], monetary=monetary, grouping=lang_grouping, thousands_sep=thousands_sep)
 
             formatted = decimal_point.join(parts)
             while seps:

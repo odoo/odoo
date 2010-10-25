@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,18 +23,19 @@ import codecs
 import csv
 import fnmatch
 import inspect
+import itertools
 import locale
 import os
 import re
 import tarfile
 import tempfile
 from os.path import join
+import logging
 
 from datetime import datetime
 from lxml import etree
 
-import osv, tools, pooler
-import ir
+import tools, pooler
 import netsvc
 from tools.misc import UpdateableStr
 
@@ -127,30 +128,55 @@ def translate(cr, name, source_type, lang, source=None):
     res = res_trans and res_trans[0] or False
     return res
 
+logger = logging.getLogger('translate')
+
 class GettextAlias(object):
+
+    def _get_cr(self, frame):
+        is_new_cr = False
+        cr = frame.f_locals.get('cr')
+        if not cr:
+            s = frame.f_locals.get('self', {})
+            cr = getattr(s, 'cr', False)
+            if not cr:
+                if frame.f_globals.get('pooler', False):
+                    # TODO: we should probably get rid of the 'is_new_cr' case: no cr in locals -> no translation for you
+                    dbs = frame.f_globals['pooler'].pool_dic.keys()
+                    if len(dbs) == 1:
+                        cr = pooler.get_db(dbs[0]).cursor()
+                        is_new_cr = True
+        return cr, is_new_cr
+    
+    def _get_lang(self, frame):
+        lang = frame.f_locals.get('context', {}).get('lang', False)
+        if not lang:
+            args = frame.f_locals.get('args', False)
+            if args:
+                lang = args[-1].get('lang', False)
+            if not lang:
+                s = frame.f_locals.get('self', {})
+                c = getattr(s, 'localcontext', {})
+                lang = c.get('lang', False)
+        return lang
+    
     def __call__(self, source):
+        is_new_cr = False
+        res = source
         try:
             frame = inspect.stack()[1][0]
-        except:
-            return source
+            cr, is_new_cr = self._get_cr(frame)
+            lang = self._get_lang(frame)
+            if lang and cr:
+                cr.execute('SELECT value FROM ir_translation WHERE lang=%s AND type IN (%s, %s) AND src=%s', (lang, 'code','sql_constraint', source))
+                res_trans = cr.fetchone()
+                res = res_trans and res_trans[0] or source
+        except Exception:
+            logger.debug('translation went wrong for string %s', repr(source))
+        finally:
+            if is_new_cr:
+                cr.close()
+        return res
 
-        cr = frame.f_locals.get('cr')
-        try:
-            lang = (frame.f_locals.get('context') or {}).get('lang', False)
-            if not (cr and lang):
-                args = frame.f_locals.get('args',False)
-                if args:
-                    lang = args[-1].get('lang',False)
-                    if frame.f_globals.get('pooler',False):
-                        cr = pooler.get_db(frame.f_globals['pooler'].pool_dic.keys()[0]).cursor()
-            if not (lang and cr):
-                return source
-        except:
-            return source
-
-        cr.execute('select value from ir_translation where lang=%s and type in (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
-        res_trans = cr.fetchone()
-        return res_trans and res_trans[0] or source
 _ = GettextAlias()
 
 
@@ -375,6 +401,9 @@ def trans_export(lang, modules, buffer, format, dbname=None):
     if newlang:
         lang = 'en_US'
     trans = trans_generate(lang, modules, dbname)
+    if newlang and format!='csv':
+        for trx in trans:
+            trx[-1] = ''
     modules = set([t[0] for t in trans[1:]])
     _process(format, modules, trans, buffer, lang, newlang)
     del trans
@@ -443,12 +472,12 @@ def trans_generate(lang, modules, dbname=None):
 
     query = 'SELECT name, model, res_id, module'    \
             '  FROM ir_model_data'
-    query_param = None
     if 'all_installed' in modules:
         query += ' WHERE module IN ( SELECT name FROM ir_module_module WHERE state = \'installed\') '
-    elif not 'all' in modules:
-        query += ' WHERE module IN (%s)' % ','.join(['%s']*len(modules))
-        query_param = modules
+    query_param = None
+    if 'all' not in modules:
+        query += ' WHERE module IN %s'
+        query_param = (tuple(modules),)
     query += ' ORDER BY module, model, name'
 
     cr.execute(query, query_param)
@@ -559,7 +588,7 @@ def trans_generate(lang, modules, dbname=None):
                         push_translation(module, 'model', name, 0, encode(obj_value[field_name]))
 
             if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
-                for key, val in field_def.selection:
+                for dummy, val in field_def.selection:
                     push_translation(module, 'selection', name, 0, encode(val))
 
         elif model=='ir.actions.report.xml':
@@ -568,23 +597,25 @@ def trans_generate(lang, modules, dbname=None):
             if obj.report_rml:
                 fname = obj.report_rml
                 parse_func = trans_parse_rml
-                report_type = "rml"
+                report_type = "report"
             elif obj.report_xsl:
                 fname = obj.report_xsl
                 parse_func = trans_parse_xsl
                 report_type = "xsl"
-            try:
-                xmlstr = tools.file_open(fname).read()
-                d = etree.XML(xmlstr)
-                for t in parse_func(d):
-                    push_translation(module, report_type, name, 0, t)
-            except IOError, etree.XMLSyntaxError:
-                if fname:
-                    logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
+            if fname and obj.report_type in ('pdf', 'xsl'):
+                try:
+                    d = etree.parse(tools.file_open(fname))
+                    for t in parse_func(d.iter()):
+                        push_translation(module, report_type, name, 0, t)
+                except (IOError, etree.XMLSyntaxError):
+                    logging.getLogger("i18n").exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
         for constraint in pool.get(model)._constraints:
             msg = constraint[1]
-            push_translation(module, 'constraint', model, 0, encode(msg))
+            # Check presence of __call__ directly instead of using
+            # callable() because it will be deprecated as of Python 3.0
+            if not hasattr(msg, '__call__'):
+                push_translation(module, 'constraint', model, 0, encode(msg))
 
         for field_name,field_def in pool.get(model)._columns.items():
             if field_def.translate:
@@ -596,23 +627,30 @@ def trans_generate(lang, modules, dbname=None):
                 push_translation(module, 'model', name, xml_name, encode(trad))
 
     # parse source code for _() calls
-    def get_module_from_path(path,mod_paths=None):
-        if not mod_paths:
-            # First, construct a list of possible paths
-            def_path = os.path.abspath(os.path.join(tools.config['root_path'], 'addons'))     # default addons path (base)
-            ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
-            mod_paths=[def_path]
-            for adp in ad_paths:
-                mod_paths.append(adp)
-                if not adp.startswith('/'):
-                    mod_paths.append(os.path.join(def_path,adp))
-                elif adp.startswith(def_path):
-                    mod_paths.append(adp[len(def_path)+1:])
-        
-        for mp in mod_paths:
-            if path.startswith(mp) and (os.path.dirname(path) != mp):
-                path = path[len(mp)+1:]
-                return path.split(os.path.sep)[0]
+    def get_module_from_path(path, mod_paths=None):
+#        if not mod_paths:
+##             First, construct a list of possible paths
+#            def_path = os.path.abspath(os.path.join(tools.config['root_path'], 'addons'))     # default addons path (base)
+#            ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
+#            mod_paths=[def_path]
+#            for adp in ad_paths:
+#                mod_paths.append(adp)
+#                if not adp.startswith('/'):
+#                    mod_paths.append(os.path.join(def_path,adp))
+#                elif adp.startswith(def_path):
+#                    mod_paths.append(adp[len(def_path)+1:])
+#        for mp in mod_paths:
+#            if path.startswith(mp) and (os.path.dirname(path) != mp):
+#                path = path[len(mp)+1:]
+#                return path.split(os.path.sep)[0]
+        path_dir = os.path.dirname(path[1:])
+        if path_dir:
+            if os.path.exists(os.path.join(tools.config['addons_path'],path[1:])):
+                return path.split(os.path.sep)[1]
+            else:
+                root_addons = os.path.join(tools.config['root_path'], 'addons')
+                if os.path.exists(os.path.join(root_addons,path[1:])):
+                    return path.split(os.path.sep)[1]
         return 'base'   # files that are not in a module are considered as being in 'base' module
 
     modobj = pool.get('ir.module.module')
@@ -626,22 +664,25 @@ def trans_generate(lang, modules, dbname=None):
     else :
         path_list = [root_path,tools.config['addons_path']]
 
-    for path in path_list:
-        for root, dirs, files in tools.osutil.walksymlinks(path):
-            for fname in fnmatch.filter(files, '*.py'):
-                fabsolutepath = join(root, fname)
-                frelativepath = fabsolutepath[len(path):]
-                module = get_module_from_path(fabsolutepath)
-                is_mod_installed = module in installed_modules
-                if (('all' in modules) or (module in modules)) and is_mod_installed:
-                    code_string = tools.file_open(fabsolutepath, subdir='').read()
-                    iter = re.finditer('[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)',
-                        code_string, re.S)
+    def export_code_terms_from_file(fname, path, root, terms_type):
+        fabsolutepath = join(root, fname)
+        frelativepath = fabsolutepath[len(path):]
+        module = get_module_from_path(frelativepath)
+        is_mod_installed = module in installed_modules
+        if (('all' in modules) or (module in modules)) and is_mod_installed:
+            code_string = tools.file_open(fabsolutepath, subdir='').read()
+            iter = re.finditer('[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)', code_string, re.S)
+            if module in installed_modules:
+                frelativepath = str("addons" + frelativepath)
+            for i in iter:
+                push_translation(module, terms_type, frelativepath, 0, encode(i.group(1)))
 
-                    if module in installed_modules :
-                        frelativepath =str("addons"+frelativepath)
-                    for i in iter:
-                        push_translation(module, 'code', frelativepath, 0, encode(i.group(1)))
+    for path in path_list:
+        for root, dummy, files in tools.osutil.walksymlinks(path):
+            for fname in itertools.chain(fnmatch.filter(files, '*.py')):
+                export_code_terms_from_file(fname, path, root, 'code')
+            for fname in itertools.chain(fnmatch.filter(files, '*.mako')):
+                export_code_terms_from_file(fname, path, root, 'report')
 
 
     out = [["module","type","name","res_id","src","value"]] # header
@@ -654,12 +695,12 @@ def trans_generate(lang, modules, dbname=None):
     cr.close()
     return out
 
-def trans_load(db_name, filename, lang, strict=False, verbose=True):
+def trans_load(db_name, filename, lang, strict=False, verbose=True, context={}):
     logger = netsvc.Logger()
     try:
         fileobj = open(filename,'r')
         fileformat = os.path.splitext(filename)[-1][1:].lower()
-        r = trans_load_data(db_name, fileobj, fileformat, lang, strict=strict, verbose=verbose)
+        r = trans_load_data(db_name, fileobj, fileformat, lang, strict=strict, verbose=verbose, context=context)
         fileobj.close()
         return r
     except IOError:
@@ -667,7 +708,7 @@ def trans_load(db_name, filename, lang, strict=False, verbose=True):
             logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True):
+def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True, context={}):
     logger = netsvc.Logger()
     if verbose:
         logger.notifyChannel("i18n", netsvc.LOG_INFO, 'loading translation file for language %s' % (lang))
@@ -699,6 +740,11 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             if not lang_name:
                 lang_name = tools.get_languages().get(lang, lang)
 
+            def fix_xa0(s):
+                if s == '\xa0':
+                    return '\xc2\xa0'
+                return s
+
             lang_info = {
                 'code': lang,
                 'iso_code': iso_lang,
@@ -706,9 +752,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 'translatable': 1,
                 'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
                 'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                'decimal_point' : str(locale.localeconv()['decimal_point']).replace('\xa0', '\xc2\xa0'),
-                'thousands_sep' : str(locale.localeconv()['thousands_sep']).replace('\xa0', '\xc2\xa0'),
+                'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
+                'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
             }
+
             try:
                 lang_obj.create(cr, uid, lang_info)
             finally:
@@ -767,7 +814,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 # the same source
                 obj = pool.get(model)
                 if obj:
-                    if not field in obj._columns:
+                    if field not in obj.fields_get_keys(cr, uid):
                         continue
                     ids = obj.search(cr, uid, [(field, '=', dic['src'])])
 
@@ -786,7 +833,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                             ('res_id', '=', dic['res_id'])
                         ])
                         if ids:
-                            trans_obj.write(cr, uid, ids, {'value': dic['value']})
+                            if context.get('overwrite', False):
+                                trans_obj.write(cr, uid, ids, {'value': dic['value']})
                         else:
                             trans_obj.create(cr, uid, dic)
             else:
@@ -797,7 +845,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                     ('src', '=', dic['src'])
                 ])
                 if ids:
-                    trans_obj.write(cr, uid, ids, {'value': dic['value']})
+                    if context.get('overwrite', False):
+                        trans_obj.write(cr, uid, ids, {'value': dic['value']})
                 else:
                     trans_obj.create(cr, uid, dic)
             cr.commit()

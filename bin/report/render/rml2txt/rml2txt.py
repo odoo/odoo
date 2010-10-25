@@ -33,7 +33,7 @@ Font_size= 10.0
 def verbose(text):
     sys.stderr.write(text+"\n");
 
-class textbox():
+class textbox(object):
     """A box containing plain text.
     It can have an offset, in chars.
     Lines can be either text strings, or textbox'es, recursively.

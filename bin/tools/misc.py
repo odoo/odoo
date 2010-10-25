@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -25,13 +26,28 @@ Miscelleanous tools used by OpenERP.
 
 import os, time, sys
 import inspect
+from datetime import datetime
 
 from config import config
 
 import zipfile
 import release
 import socket
+import logging
 import re
+from itertools import islice
+import threading
+from which import which
+
+import smtplib
+from email.MIMEText import MIMEText
+from email.MIMEBase import MIMEBase
+from email.MIMEMultipart import MIMEMultipart
+from email.Header import Header
+from email.Utils import formatdate, COMMASPACE
+from email.Utils import formatdate, COMMASPACE
+from email import Encoders
+import netsvc
 
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
@@ -40,13 +56,13 @@ else:
 
 from itertools import izip
 
+_logger = logging.getLogger('tools')
+
 # initialize a database with base/base.sql
 def init_db(cr):
     import addons
     f = addons.get_module_resource('base', 'base.sql')
-    for line in file_open(f).read().split(';'):
-        if (len(line)>0) and (not line.isspace()):
-            cr.execute(line)
+    cr.execute(file_open(f).read())
     cr.commit()
 
     for i in addons.get_modules():
@@ -94,11 +110,12 @@ def init_db(cr):
         id = cr.fetchone()[0]
         cr.execute('insert into ir_module_module \
                 (id, author, website, name, shortdesc, description, \
-                    category_id, state, certificate) \
-                values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (
+                    category_id, state, certificate, web) \
+                values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (
             id, info.get('author', ''),
             info.get('website', ''), i, info.get('name', False),
-            info.get('description', ''), p_id, state, info.get('certificate')))
+            info.get('description', ''), p_id, state, info.get('certificate') or None,
+            info.get('web') or False))
         cr.execute('insert into ir_model_data \
             (name,model,module, res_id, noupdate) values (%s,%s,%s,%s,%s)', (
                 'module_meta_information', 'ir.module.module', i, id, True))
@@ -109,23 +126,19 @@ def init_db(cr):
         cr.commit()
 
 def find_in_path(name):
-    if os.name == "nt":
-        sep = ';'
-    else:
-        sep = ':'
-    path = [dir for dir in os.environ['PATH'].split(sep)
-            if os.path.isdir(dir)]
-    for dir in path:
-        val = os.path.join(dir, name)
-        if os.path.isfile(val) or os.path.islink(val):
-            return val
-    return None
+    try:
+        return which(name)
+    except IOError:
+        return None
 
 def find_pg_tool(name):
+    path = None
     if config['pg_path'] and config['pg_path'] != 'None':
-        return os.path.join(config['pg_path'], name)
-    else:
-        return find_in_path(name)
+        path = config['pg_path']
+    try:
+        return which(name, path=path)
+    except IOError:
+        return None
 
 def exec_pg_command(name, *args):
     prog = find_pg_tool(name)
@@ -333,34 +346,39 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     If @body_id is provided then this is the tag where the
     body (not necessarily <body>) starts.
     """
+
+    html = ustr(html)
+
+    from lxml.etree import Element, tostring
     try:
-        from BeautifulSoup import BeautifulSoup, SoupStrainer, Comment
-    except:
-        return html
+        from lxml.html.soupparser import fromstring
+        kwargs = {}
+    except ImportError:
+        _logger.debug('tools.misc.html2plaintext: cannot use BeautifulSoup, fallback to lxml.etree.HTMLParser')
+        from lxml.etree import fromstring, HTMLParser
+        kwargs = dict(parser=HTMLParser())
 
-    urls = []
+    tree = fromstring(html, **kwargs)
+
     if body_id is not None:
-        strainer = SoupStrainer(id=body_id)
+        source = tree.xpath('//*[@id=%s]'%(body_id,))
     else:
-        strainer = SoupStrainer('body')
-
-    soup = BeautifulSoup(html, parseOnlyThese=strainer, fromEncoding=encoding)
-    for link in soup.findAll('a'):
-        title = link.renderContents()
-        for url in [x[1] for x in link.attrs if x[0]=='href']:
-            urls.append(dict(url=url, tag=str(link), title=title))
-
-    html = soup.__str__()
+        source = tree.xpath('//body')
+    if len(source):
+        tree = source[0]
 
     url_index = []
     i = 0
-    for d in urls:
-        if d['title'] == d['url'] or 'http://'+d['title'] == d['url']:
-            html = html.replace(d['tag'], d['url'])
-        else:
+    for link in tree.findall('.//a'):
+        title = link.text
+        url = link.get('href')
+        if url:
             i += 1
-            html = html.replace(d['tag'], '%s [%s]' % (d['title'], i))
-            url_index.append(d['url'])
+            link.tag = 'span'
+            link.text = '%s [%s]' % (link.text, i)
+            url_index.append(url)
+
+    html = ustr(tostring(tree, encoding=encoding))
 
     html = html.replace('<strong>','*').replace('</strong>','*')
     html = html.replace('<b>','*').replace('</b>','*')
@@ -368,35 +386,94 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace('<h2>','**').replace('</h2>','**')
     html = html.replace('<h1>','**').replace('</h1>','**')
     html = html.replace('<em>','/').replace('</em>','/')
-
-
-    # the only line breaks we respect is those of ending tags and
-    # breaks
-
-    html = html.replace('\n',' ')
-    html = html.replace('<br>', '\n')
     html = html.replace('<tr>', '\n')
-    html = html.replace('</p>', '\n\n')
-    html = re.sub('<br\s*/>', '\n', html)
+    html = html.replace('</p>', '\n')
+    html = re.sub('<br\s*/?>', '\n', html)
+    html = re.sub('<.*?>', ' ', html)
     html = html.replace(' ' * 2, ' ')
 
-
-    # for all other tags we failed to clean up, just remove then and
-    # complain about them on the stderr
-    def desperate_fixer(g):
-        #print >>sys.stderr, "failed to clean up %s" % str(g.group())
-        return ' '
-
-    html = re.sub('<.*?>', desperate_fixer, html)
-
-    # lstrip all lines
-    html = '\n'.join([x.lstrip() for x in html.splitlines()])
+    # strip all lines
+    html = '\n'.join([x.strip() for x in html.splitlines()])
+    html = html.replace('\n' * 2, '\n')
 
     for i, url in enumerate(url_index):
         if i == 0:
             html += '\n\n'
-        html += '[%s] %s\n' % (i+1, url)
+        html += ustr('[%s] %s\n') % (i+1, url)
+
     return html
+
+def generate_tracking_message_id(openobject_id):
+    """Returns a string that can be used in the Message-ID RFC822 header field so we
+       can track the replies related to a given object thanks to the "In-Reply-To" or
+       "References" fields that Mail User Agents will set.
+    """
+    return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
+
+def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False, debug=False):
+    """Low-level method to send directly a Message through the configured smtp server.
+        :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
+        :param smtp_to_list: RFC-822 envelope RCPT_TOs (not displayed to recipient)
+        :param message: an email.message.Message to send
+        :param debug: True if messages should be output to stderr before being sent,
+                      and smtplib.SMTP put into debug mode.
+        :return: True if the mail was delivered successfully to the smtp,
+                 else False (+ exception logged)
+    """
+    class WriteToLogger(object):
+        def __init__(self):
+            self.logger = netsvc.Logger()
+
+        def write(self, s):
+            self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
+
+    if openobject_id:
+        message['Message-Id'] = generate_tracking_message_id(openobject_id)
+
+    try:
+        smtp_server = config['smtp_server']
+
+        if smtp_server.startswith('maildir:/'):
+            from mailbox import Maildir
+            maildir_path = smtp_server[8:]
+            mdir = Maildir(maildir_path,factory=None, create = True)
+            mdir.add(msg.as_string(True))
+            return True
+
+        oldstderr = smtplib.stderr
+        if not ssl: ssl = config.get('smtp_ssl', False)
+        s = smtplib.SMTP()
+        try:
+            # in case of debug, the messages are printed to stderr.
+            if debug:
+                smtplib.stderr = WriteToLogger()
+
+            s.set_debuglevel(int(bool(debug)))  # 0 or 1
+            s.connect(smtp_server, config['smtp_port'])
+            if ssl:
+                s.ehlo()
+                s.starttls()
+                s.ehlo()
+
+            if config['smtp_user'] or config['smtp_password']:
+                s.login(config['smtp_user'], config['smtp_password'])
+
+            s.sendmail(smtp_from, smtp_to_list, message.as_string())
+        finally:
+            try:
+                s.quit()
+                if debug:
+                    smtplib.stderr = oldstderr
+            except:
+                # ignored, just a consequence of the previous exception
+                pass
+
+    except Exception, e:
+        _logger.error('could not deliver email', exc_info=True)
+        return False
+
+    return True
+
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attach=None, openobject_id=False, ssl=False, debug=False, subtype='plain', x_headers=None, priority='3'):
@@ -411,20 +488,9 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
     `email_to`: a sequence of addresses to send the mail to.
     """
-    import smtplib
-    from email.MIMEText import MIMEText
-    from email.MIMEBase import MIMEBase
-    from email.MIMEMultipart import MIMEMultipart
-    from email.Header import Header
-    from email.Utils import formatdate, COMMASPACE
-    from email.Utils import formatdate, COMMASPACE
-    from email import Encoders
-    import netsvc
-
     if x_headers is None:
         x_headers = {}
 
-    if not ssl: ssl = config.get('smtp_ssl', False)
 
     if not (email_from or config['email_from']):
         raise ValueError("Sending an email requires either providing a sender "
@@ -461,19 +527,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         msg['Bcc'] = COMMASPACE.join(email_bcc)
     msg['Date'] = formatdate(localtime=True)
 
-    # Add OpenERP Server information
-    msg['X-Generated-By'] = 'OpenERP (http://www.openerp.com)'
-    msg['X-OpenERP-Server-Host'] = socket.gethostname()
-    msg['X-OpenERP-Server-Version'] = release.version
-
     msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
 
     # Add dynamic X Header
     for key, value in x_headers.iteritems():
-        msg['X-OpenERP-%s' % key] = str(value)
-
-    if openobject_id:
-        msg['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
+        msg['%s' % key] = str(value)
 
     if attach:
         msg.attach(email_text)
@@ -484,56 +542,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
             msg.attach(part)
 
-    class WriteToLogger(object):
-        def __init__(self):
-            self.logger = netsvc.Logger()
-
-        def write(self, s):
-            self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
-
-    smtp_server = config['smtp_server']
-    if smtp_server.startswith('maildir:/'):
-        from mailbox import Maildir
-        maildir_path = smtp_server[8:]
-        try:
-            mdir = Maildir(maildir_path,factory=None, create = True)
-            mdir.add(msg.as_string(True))
-            return True
-        except Exception,e:
-            netsvc.Logger().notifyChannel('email_send (maildir)', netsvc.LOG_ERROR, e)
-            return False
-
-    try:
-        oldstderr = smtplib.stderr
-        s = smtplib.SMTP()
-        try:
-            # in case of debug, the messages are printed to stderr.
-            if debug:
-                smtplib.stderr = WriteToLogger()
-
-            s.set_debuglevel(int(bool(debug)))  # 0 or 1
-            s.connect(smtp_server, config['smtp_port'])
-            if ssl:
-                s.ehlo()
-                s.starttls()
-                s.ehlo()
-
-            if config['smtp_user'] or config['smtp_password']:
-                s.login(config['smtp_user'], config['smtp_password'])
-            s.sendmail(email_from,
-                       flatten([email_to, email_cc, email_bcc]),
-                       msg.as_string()
-                      )
-        finally:
-            s.quit()
-            if debug:
-                smtplib.stderr = oldstderr
-
-    except Exception, e:
-        netsvc.Logger().notifyChannel('email_send', netsvc.LOG_ERROR, e)
-        return False
-
-    return True
+    return _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, openobject_id=openobject_id, ssl=ssl, debug=debug)
 
 #----------------------------------------------------------
 # SMS
@@ -817,38 +826,62 @@ class cache(object):
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
-def ustr(value):
+def get_encodings(hint_encoding='utf-8'):
+    fallbacks = {
+        'latin1': 'latin9',
+        'iso-8859-1': 'iso8859-15',
+        'cp1252': '1252',
+    }
+    if hint_encoding:
+        yield hint_encoding
+        if hint_encoding.lower() in fallbacks:
+            yield fallbacks[hint_encoding.lower()]
+
+    # some defaults (also taking care of pure ASCII)
+    for charset in ['utf8','latin1']:
+        if not (hint_encoding) or (charset.lower() != hint_encoding.lower()):
+            yield charset
+
+    from locale import getpreferredencoding
+    prefenc = getpreferredencoding()
+    if prefenc and prefenc.lower() != 'utf-8':
+        yield prefenc
+        prefenc = fallbacks.get(prefenc.lower())
+        if prefenc:
+            yield prefenc
+
+
+def ustr(value, hint_encoding='utf-8'):
     """This method is similar to the builtin `str` method, except
-    it will return Unicode string.
+       it will return unicode() string.
 
     @param value: the value to convert
+    @param hint_encoding: an optional encoding that was detected
+                          upstream and should be tried first to
+                          decode ``value``.
 
     @rtype: unicode
     @return: unicode string
     """
+    if isinstance(value, Exception):
+        return exception_to_unicode(value)
 
     if isinstance(value, unicode):
         return value
 
-    if hasattr(value, '__unicode__'):
-        return unicode(value)
+    if not isinstance(value, basestring):
+        try:
+            return unicode(value)
+        except Exception:
+            raise UnicodeError('unable de to convert %r' % (value,))
 
-    if not isinstance(value, str):
-        value = str(value)
+    for ln in get_encodings(hint_encoding):
+        try:
+            return unicode(value, ln)
+        except Exception:
+            pass
+    raise UnicodeError('unable de to convert %r' % (value,))
 
-    try: # first try utf-8
-        return unicode(value, 'utf-8')
-    except:
-        pass
-
-    try: # then extened iso-8858
-        return unicode(value, 'iso-8859-15')
-    except:
-        pass
-
-    # else use default system locale
-    from locale import getlocale
-    return unicode(value, getlocale()[1])
 
 def exception_to_unicode(e):
     if (sys.version_info[:2] < (2,6)) and hasattr(e, 'message'):
@@ -906,12 +939,12 @@ def get_languages():
         'es_AR': u'Spanish (AR) / Español (AR)',
         'es_ES': u'Spanish / Español',
         'et_EE': u'Estonian / Eesti keel',
-        'fa_IR': u'Persian / Iran, Islamic Republic of',
+        'fa_IR': u'Persian / فارس',
         'fi_FI': u'Finland / Suomi',
         'fr_BE': u'French (BE) / Français (BE)',
         'fr_CH': u'French (CH) / Français (CH)',
         'fr_FR': u'French / Français',
-        'gl_ES': u'Galician / Spain',
+        'gl_ES': u'Galician / Galego',
         'gu_IN': u'Gujarati / India',
         'hi_IN': u'Hindi / India',
         'hr_HR': u'Croatian / hrvatski jezik',
@@ -936,8 +969,8 @@ def get_languages():
         'ro_RO': u'Romanian / limba română',
         'ru_RU': u'Russian / русский язык',
         'si_LK': u'Sinhalese / Sri Lanka',
-        'sk_SK': u'Slovak / Slovakia',
-        'sl_SL': u'Slovenian / slovenščina',
+        'sl_SI': u'Slovenian / slovenščina',
+        'sk_SK': u'Slovak / Slovenský jazyk',
         'sq_AL': u'Albanian / Shqipëri',
         'sr_RS': u'Serbian / Serbia',
         'sv_SE': u'Swedish / svenska',
@@ -969,14 +1002,15 @@ def get_user_companies(cr, user):
     def _get_company_children(cr, ids):
         if not ids:
             return []
-        cr.execute('SELECT id FROM res_company WHERE parent_id = ANY (%s)', (ids,))
-        res=[x[0] for x in cr.fetchall()]
+        cr.execute('SELECT id FROM res_company WHERE parent_id IN %s', (tuple(ids),))
+        res = [x[0] for x in cr.fetchall()]
         res.extend(_get_company_children(cr, res))
         return res
-    cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %s AND comp.id = u.company_id', (user,))
-    compids=[cr.fetchone()[0]]
-    compids.extend(_get_company_children(cr, compids))
-    return compids
+    cr.execute('SELECT company_id FROM res_users WHERE id=%s', (user,))
+    user_comp = cr.fetchone()[0]
+    if not user_comp:
+        return []
+    return [user_comp] + _get_company_children(cr, [user_comp])
 
 def mod10r(number):
     """
@@ -1115,6 +1149,16 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 'terp-account', 'terp-crm', 'terp-mrp', 'terp-product', 'terp-purchase',
 'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
 'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph',
+'terp-check','terp-go-month','terp-go-year','terp-go-today','terp-document-new','terp-camera_test',
+'terp-emblem-important','terp-gtk-media-pause','terp-gtk-stop','terp-gnome-cpu-frequency-applet+',
+'terp-dialog-close','terp-gtk-jump-to-rtl','terp-gtk-jump-to-ltr','terp-accessories-archiver',
+'terp-stock_align_left_24','terp-stock_effects-object-colorize','terp-go-home','terp-gtk-go-back-rtl',
+'terp-gtk-go-back-ltr','terp-personal','terp-personal-','terp-personal+','terp-accessories-archiver-minus',
+'terp-accessories-archiver+','terp-stock_symbol-selection','terp-call-start','terp-dolar',
+'terp-face-plain','terp-folder-blue','terp-folder-green','terp-folder-orange','terp-folder-yellow',
+'terp-gdu-smart-failing','terp-go-week','terp-gtk-select-all','terp-locked','terp-mail-forward',
+'terp-mail-message-new','terp-mail-replied','terp-rating-rated','terp-stage','terp-stock_format-scientific',
+'terp-dolar_ok!','terp-idea','terp-stock_format-default','terp-mail-','terp-mail_delete'
 ])
 
 def extract_zip_file(zip_file, outdirectory):
@@ -1136,6 +1180,11 @@ def extract_zip_file(zip_file, outdirectory):
     zf.close()
 
 def detect_ip_addr():
+    """Try a very crude method to figure out a valid external
+       IP or hostname for the current machine. Don't rely on this
+       for binding to an interface, but it could be used as basis
+       for constructing a remote URL to the server.
+    """
     def _detect_ip_addr():
         from array import array
         import socket
@@ -1207,7 +1256,7 @@ def get_win32_timezone():
             res = str(_winreg.QueryValueEx(current_tz_key,"StandardName")[0])  # [0] is value, [1] is type code
             _winreg.CloseKey(current_tz_key)
             _winreg.CloseKey(hklm)
-        except:
+        except Exception:
             pass
     return res
 
@@ -1266,10 +1315,118 @@ def detect_server_timezone():
         "No valid timezone could be detected, using default UTC timezone. You can specify it explicitly with option 'timezone' in the server configuration.")
     return 'UTC'
 
+def get_server_timezone():
+    # timezone detection is safe in multithread, so lazy init is ok here
+    if (not config['timezone']):
+        config['timezone'] = detect_server_timezone()
+    return config['timezone']
+
+
+DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
+DEFAULT_SERVER_TIME_FORMAT = "%H:%M:%S"
+DEFAULT_SERVER_DATETIME_FORMAT = "%s %s" % (
+    DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_TIME_FORMAT)
+
+def server_to_local_timestamp(src_tstamp_str, src_format, dst_format, dst_tz_name,
+        tz_offset=True, ignore_unparsable_time=True):
+    """
+    Convert a source timestamp string into a destination timestamp string, attempting to apply the
+    correct offset if both the server and local timezone are recognized, or no
+    offset at all if they aren't or if tz_offset is false (i.e. assuming they are both in the same TZ).
+
+    WARNING: This method is here to allow formatting dates correctly for inclusion in strings where
+             the client would not be able to format/offset it correctly. DO NOT use it for returning
+             date fields directly, these are supposed to be handled by the client!!
+
+    @param src_tstamp_str: the str value containing the timestamp in the server timezone.
+    @param src_format: the format to use when parsing the server timestamp.
+    @param dst_format: the format to use when formatting the resulting timestamp for the local/client timezone.
+    @param dst_tz_name: name of the destination timezone (such as the 'tz' value of the client context)
+    @param ignore_unparsable_time: if True, return False if src_tstamp_str cannot be parsed
+                                   using src_format or formatted using dst_format.
+
+    @return: local/client formatted timestamp, expressed in the local/client timezone if possible
+            and if tz_offset is true, or src_tstamp_str if timezone offset could not be determined.
+    """
+    if not src_tstamp_str:
+        return False
+
+    res = src_tstamp_str
+    if src_format and dst_format:
+        # find out server timezone
+        server_tz = get_server_timezone()
+        try:
+            # dt_value needs to be a datetime.datetime object (so no time.struct_time or mx.DateTime.DateTime here!)
+            dt_value = datetime.strptime(src_tstamp_str, src_format)
+            if tz_offset and dst_tz_name:
+                try:
+                    import pytz
+                    src_tz = pytz.timezone(server_tz)
+                    dst_tz = pytz.timezone(dst_tz_name)
+                    src_dt = src_tz.localize(dt_value, is_dst=True)
+                    dt_value = src_dt.astimezone(dst_tz)
+                except Exception:
+                    pass
+            res = dt_value.strftime(dst_format)
+        except Exception:
+            # Normal ways to end up here are if strptime or strftime failed
+            if not ignore_unparsable_time:
+                return False
+    return res
+
+
+def split_every(n, iterable, piece_maker=tuple):
+    """Splits an iterable into length-n pieces. The last piece will be shorter
+       if ``n`` does not evenly divide the iterable length.
+       @param ``piece_maker``: function to build the pieces
+       from the slices (tuple,list,...)
+    """
+    iterator = iter(iterable)
+    piece = piece_maker(islice(iterator, n))
+    while piece:
+        yield piece
+        piece = piece_maker(islice(iterator, n))
 
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
+
+class upload_data_thread(threading.Thread):
+    def __init__(self, email, data, type):
+        self.args = [('email',email),('type',type),('data',data)]
+        super(upload_data_thread,self).__init__()
+    def run(self):
+        try:
+            import urllib
+            args = urllib.urlencode(self.args)
+            fp = urllib.urlopen('http://www.openerp.com/scripts/survey.php', args)
+            fp.read()
+            fp.close()
+        except:
+            pass
+
+def upload_data(email, data, type='SURVEY'):
+    a = upload_data_thread(email, data, type)
+    a.start()
+    return True
+
+
+# port of python 2.6's attrgetter with support for dotted notation 
+def resolve_attr(obj, attr):
+    for name in attr.split("."):
+        obj = getattr(obj, name)
+    return obj
+
+def attrgetter(*items):
+    if len(items) == 1:
+        attr = items[0]
+        def g(obj):
+            return resolve_attr(obj, attr)
+    else:
+        def g(obj):
+            return tuple(resolve_attr(obj, attr) for attr in items)
+    return g
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

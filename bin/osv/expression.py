@@ -29,7 +29,7 @@ class expression(object):
     parse a domain expression
     use a real polish notation
     leafs are still in a ('foo', '=', 'bar') format
-    For more info: http://christophe-simonis-at-tiny.blogspot.com/2008/08/new-new-domain-notation.html 
+    For more info: http://christophe-simonis-at-tiny.blogspot.com/2008/08/new-new-domain-notation.html
     """
 
     def _is_operator(self, element):
@@ -50,16 +50,15 @@ class expression(object):
             if op in ['<','>','>=','<=']:
                 cr.execute('SELECT "%s"'    \
                                '  FROM "%s"'    \
-                               ' WHERE "%s" %s %s' % (s, f, w, op, ids[0]))
+                               ' WHERE "%s" %s %%s' % (s, f, w, op), (ids[0],))
                 res.extend([r[0] for r in cr.fetchall()])
             else:
                 for i in range(0, len(ids), cr.IN_MAX):
                     subids = ids[i:i+cr.IN_MAX]
                     cr.execute('SELECT "%s"'    \
                                '  FROM "%s"'    \
-                               '  WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
-                               subids)
-                    res.extend([r[0] for r in cr.fetchall()])                                     
+                               '  WHERE "%s" IN %%s' % (s, f, w),(tuple(subids),))
+                    res.extend([r[0] for r in cr.fetchall()])
         else:
             cr.execute('SELECT distinct("%s")'    \
                            '  FROM "%s" where "%s" is not null'  % (s, f, s)),
@@ -71,11 +70,15 @@ class expression(object):
         if not reduce(lambda acc, val: acc and (self._is_operator(val) or self._is_leaf(val)), exp, True):
             raise ValueError('Bad domain expression: %r' % (exp,))
         self.__exp = exp
-        self.__tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
+        self.__field_tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
+        self.__all_tables = set()
         self.__joins = []
         self.__main_table = None # 'root' table. set by parse()
         self.__DUMMY_LEAF = (1, '=', 1) # a dummy leaf that must not be parsed or sql generated
 
+    @property
+    def exp(self):
+        return self.__exp[:]
 
     def parse(self, cr, uid, table, context):
         """ transform the leafs of the expression """
@@ -103,6 +106,7 @@ class expression(object):
                 return [(left, 'in', rg(ids, table, parent or table._parent_name))]
 
         self.__main_table = table
+        self.__all_tables.add(table)
 
         i = -1
         while i + 1<len(self.__exp):
@@ -111,24 +115,23 @@ class expression(object):
             if self._is_operator(e) or e == self.__DUMMY_LEAF:
                 continue
             left, operator, right = e
+            operator = operator.lower()
             working_table = table
             main_table = table
             fargs = left.split('.', 1)
-            index = i
             if fargs[0] in table._inherit_fields:
                 while True:
                     field = main_table._columns.get(fargs[0], False)
                     if field:
                         working_table = main_table
-                        self.__tables[i] = working_table
+                        self.__field_tables[i] = working_table
                         break
                     working_table = main_table.pool.get(main_table._inherit_fields[fargs[0]][0])
-                    if working_table not in self.__tables.values():
-                        self.__joins.append(('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]), working_table._table))
-                        self.__tables[index] = working_table
-                        index += 1
+                    if working_table not in self.__all_tables:
+                        self.__joins.append('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]))
+                        self.__all_tables.add(working_table)
                     main_table = working_table
-            
+
             field = working_table._columns.get(fargs[0], False)
             if not field:
                 if left == 'id' and operator == 'child_of':
@@ -176,20 +179,20 @@ class expression(object):
                     else:
                         dom = _rec_get(ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
-                
-                else:    
+
+                else:
                     call_null = True
-                    
+
                     if right:
                         if isinstance(right, basestring):
                             ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context, limit=None)]
                             if ids2:
-                                operator = 'in' 
+                                operator = 'in'
                         else:
                             if not isinstance(right,list):
                                 ids2 = [right]
                             else:
-                                ids2 = right    
+                                ids2 = right
                         if not ids2:
                             if operator in ['like','ilike','in','=']:
                                 #no result found with given search criteria
@@ -204,12 +207,12 @@ class expression(object):
                             if operator in  ['not like','not ilike','not in','<>','!=']:
                                 o2m_op = 'not in'
                             self.__exp[i] = ('id', o2m_op, self.__execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', ids2, operator, field._type))
-                    
+
                     if call_null:
                         o2m_op = 'not in'
                         if operator in  ['not like','not ilike','not in','<>','!=']:
-                            o2m_op = 'in'                         
-                        self.__exp[i] = ('id', o2m_op, self.__execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', [], operator, field._type) or [0])      
+                            o2m_op = 'in'
+                        self.__exp[i] = ('id', o2m_op, self.__execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', [], operator, field._type) or [0])
 
             elif field._type == 'many2many':
                 #FIXME
@@ -233,7 +236,7 @@ class expression(object):
                         if isinstance(right, basestring):
                             res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context)]
                             if res_ids:
-                                opeartor = 'in'
+                                operator = 'in'
                         else:
                             if not isinstance(right, list):
                                 res_ids = [right]
@@ -244,20 +247,20 @@ class expression(object):
                                 #no result found with given search criteria
                                 call_null_m2m = False
                                 self.__exp[i] = ('id','=',0)
-                            else: 
+                            else:
                                 call_null_m2m = True
                                 operator = 'in' # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
-                            m2m_op = 'in'        
+                            m2m_op = 'in'
                             if operator in  ['not like','not ilike','not in','<>','!=']:
                                 m2m_op = 'not in'
-                            
+
                             self.__exp[i] = ('id', m2m_op, self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, res_ids, operator, field._type) or [0])
                     if call_null_m2m:
                         m2m_op = 'not in'
                         if operator in  ['not like','not ilike','not in','<>','!=']:
-                            m2m_op = 'in'                         
+                            m2m_op = 'in'
                         self.__exp[i] = ('id', m2m_op, self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, [], operator,  field._type) or [0])
 
             elif field._type == 'many2one':
@@ -276,26 +279,61 @@ class expression(object):
                         dom = _rec_get(ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
-                    if isinstance(right, basestring): # and not isinstance(field, fields.related):
+                    def _get_expression(field_obj,cr, uid, left, right, operator, context=None):
+                        if context is None:
+                            context = {}                        
                         c = context.copy()
                         c['active_test'] = False
+                        #Special treatment to ill-formed domains
+                        operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
+                        
+                        dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in','<>':'not in'}
+                        if isinstance(right,tuple):
+                            right = list(right)
+                        if (not isinstance(right,list)) and operator in ['not in','in']:
+                            operator = dict_op[operator]
+                        elif isinstance(right,list) and operator in ['<>','!=','=']: #for domain (FIELD,'=',['value1','value2'])
+                            operator = dict_op[operator]
                         res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)
-                        right = map(lambda x: x[0], res_ids)
-                        self.__exp[i] = (left, 'in', right)
+                        if not res_ids:
+                           return ('id','=',0)
+                        else:
+                            right = map(lambda x: x[0], res_ids)
+                            return (left, 'in', right)
+
+                    m2o_str = False
+                    if right:
+                        if isinstance(right, basestring): # and not isinstance(field, fields.related):
+                            m2o_str = True
+                        elif isinstance(right,(list,tuple)):
+                            m2o_str = True
+                            for ele in right:
+                                if not isinstance(ele, basestring): 
+                                    m2o_str = False
+                                    break
+                    else:
+                        new_op = '='
+                        if operator in  ['not like','not ilike','not in','<>','!=']:
+                            new_op = '!='
+                        #Is it ok to put 'left' and not 'id' ?
+                        self.__exp[i] = (left,new_op,False)
+                        
+                    if m2o_str:
+                        self.__exp[i] = _get_expression(field_obj,cr, uid, left, right, operator, context=context)
             else:
                 # other field type
                 # add the time part to datetime field when it's not there:
                 if field._type == 'datetime' and self.__exp[i][2] and len(self.__exp[i][2]) == 10:
-                    
+
                     self.__exp[i] = list(self.__exp[i])
-                    
+
                     if operator in ('>', '>='):
                         self.__exp[i][2] += ' 00:00:00'
                     elif operator in ('<', '<='):
                         self.__exp[i][2] += ' 23:59:59'
-                    
+
                     self.__exp[i] = tuple(self.__exp[i])
-                        
+
                 if field.translate:
                     if operator in ('like', 'ilike', 'not like', 'not ilike'):
                         right = '%%%s%%' % right
@@ -338,7 +376,7 @@ class expression(object):
         if leaf == self.__DUMMY_LEAF:
             return ('(1=1)', [])
         left, operator, right = leaf
-        
+
         if operator == 'inselect':
             query = '(%s.%s in (%s))' % (table._table, left, right[0])
             params = right[1]
@@ -352,7 +390,7 @@ class expression(object):
             len_after = len(params)
             check_nulls = len_after != len_before
             query = '(1=0)'
-            
+
             if len_after:
                 if left == 'id':
                     instr = ','.join(['%s'] * len_after)
@@ -369,7 +407,7 @@ class expression(object):
                 query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
         else:
             params = []
-            
+
             if right == False and (leaf[0] in table._columns)  and table._columns[leaf[0]]._type=="boolean"  and (operator == '='):
                 query = '(%s.%s IS NULL or %s.%s = false )' % (table._table, left,table._table, left)
             elif (((right == False) and (type(right)==bool)) or (right is None)) and (operator == '='):
@@ -430,7 +468,7 @@ class expression(object):
         params = []
         for i, e in reverse_enumerate(self.__exp):
             if self._is_leaf(e, internal=True):
-                table = self.__tables.get(i, self.__main_table)
+                table = self.__field_tables.get(i, self.__main_table)
                 q, p = self.__leaf_to_sql(e, table)
                 params.insert(0, p)
                 stack.append(q)
@@ -444,13 +482,13 @@ class expression(object):
                     stack.append('(%s %s %s)' % (q1, ops[e], q2,))
 
         query = ' AND '.join(reversed(stack))
-        joins = ' AND '.join(map(lambda j: j[0], self.__joins))
+        joins = ' AND '.join(self.__joins)
         if joins:
             query = '(%s) AND (%s)' % (joins, query)
         return (query, flatten(params))
 
     def get_tables(self):
-        return ['"%s"' % t._table for t in set(self.__tables.values()+[self.__main_table])]
+        return ['"%s"' % t._table for t in self.__all_tables]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

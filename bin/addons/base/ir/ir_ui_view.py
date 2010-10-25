@@ -22,20 +22,22 @@
 from osv import fields,osv
 from lxml import etree
 from tools import graph
+from tools.safe_eval import safe_eval as eval
 import tools
 import netsvc
 import os
+import logging
 
 def _check_xml(self, cr, uid, ids, context={}):
+    logger = logging.getLogger('init')
     for view in self.browse(cr, uid, ids, context):
         eview = etree.fromstring(view.arch.encode('utf8'))
         frng = tools.file_open(os.path.join('base','rng','view.rng'))
         relaxng_doc = etree.parse(frng)
         relaxng = etree.RelaxNG(relaxng_doc)
         if not relaxng.validate(eview):
-            logger = netsvc.Logger()
-            logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view does not fit the required schema !')
-            logger.notifyChannel('init', netsvc.LOG_ERROR, tools.ustr(relaxng.error_log.last_error))
+            for error in relaxng.error_log:
+                logger.error(tools.ustr(error))
             return False
     return True
 
@@ -53,7 +55,7 @@ class view(osv.osv):
     _columns = {
         'name': fields.char('View Name',size=64,  required=True),
         'model': fields.char('Object', size=64, required=True),
-        'priority': fields.integer('Priority', required=True),
+        'priority': fields.integer('Sequence', required=True),
         'type': fields.selection((
             ('tree','Tree'),
             ('form','Form'),
@@ -66,32 +68,17 @@ class view(osv.osv):
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade'),
         'field_parent': fields.char('Child Field',size=64),
+        'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="XML ID",
+                                  method=True, help="ID of the view defined in xml file"),
     }
     _defaults = {
-        'arch': lambda *a: '<?xml version="1.0"?>\n<tree string="Unknwown">\n\t<field name="name"/>\n</tree>',
-        'priority': lambda *a: 16
+        'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
+        'priority': 16
     }
     _order = "priority"
     _constraints = [
         (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
-
-    def create(self, cr, uid, vals, context={}):
-       if 'inherit_id' in vals and vals['inherit_id']:
-           obj=self.browse(cr,uid,vals['inherit_id'])
-           child=self.pool.get(vals['model'])
-           error="Inherited view model [%s] and \
-                                 \n\n base view model [%s] do not match \
-                                 \n\n It should be same as base view model " \
-                                 %(vals['model'],obj.model)
-           try:
-               if obj.model==child._inherit:
-                pass
-           except:
-               if not obj.model==vals['model']:
-                raise Exception(error)
-
-       return super(view,self).create(cr, uid, vals, context={})
 
     def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
 
@@ -132,13 +119,15 @@ class view(osv.osv):
 
         return super(view, self).write(cr, uid, ids, vals, context)
 
-    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node,signal,scale,context={}):
+    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node,label,scale,context={}):
+        if not label:
+            label = []
         nodes=[]
         nodes_name=[]
         transitions=[]
         start=[]
         tres={}
-        sig={}
+        labels={}
         no_ancester=[]
         blank_nodes = []
 
@@ -177,9 +166,14 @@ class view(osv.osv):
             for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
                 transitions.append((a['id'], t[des_node][0]))
                 tres[str(t['id'])] = (a['id'],t[des_node][0])
-                if t.has_key(str(signal)) and str(t[signal])=='False':
-                    t[signal]=' '
-                sig[str(t['id'])] = (a['id'],t.get(signal,' '))
+                label_string = ""
+                if label:
+                    for lbl in eval(label):
+                        if t.has_key(str(lbl)) and str(t[lbl])=='False':
+                            label_string = label_string + ' '
+                        else:
+                            label_string = label_string + " " + t[lbl]
+                labels[str(t['id'])] = (a['id'],label_string)
         g  = graph(nodes, transitions, no_ancester)
         g.process(start)
         g.scale(*scale)
@@ -188,7 +182,11 @@ class view(osv.osv):
         for node in nodes_name:
             results[str(node[0])] = result[node[0]]
             results[str(node[0])]['name'] = node[1]
-        return {'nodes': results, 'transitions': tres, 'signal' : sig, 'blank_nodes': blank_nodes}
+        return {'nodes': results,
+                'transitions': tres,
+                'label' : labels,
+                'blank_nodes': blank_nodes,
+                'node_parent_field': _Model_Field,}
 view()
 
 class view_sc(osv.osv):
@@ -210,6 +208,10 @@ class view_sc(osv.osv):
         'resource': lambda *a: 'ir.ui.menu',
         'user_id': lambda obj, cr, uid, context: uid,
     }
+    _sql_constraints = [
+        ('shortcut_unique', 'unique(res_id, resource, user_id)', 'Shortcut for this menu already exists!'),
+    ]
+
 view_sc()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
