@@ -73,8 +73,9 @@
         'security/base_security.xml',
         'maintenance/maintenance_view.xml',
 
-        'security/ir.model.access.csv'
-
+        'security/ir.model.access.csv',
+        'res/res_widget_view.xml',
+        'res/res_widget_data.xml',
     ],
     'demo_xml': [
         'base_demo.xml',

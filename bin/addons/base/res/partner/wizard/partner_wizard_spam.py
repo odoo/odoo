@@ -47,7 +47,7 @@ class partner_wizard_spam(osv.osv_memory):
 
         nbr = 0
         partner_pool = self.pool.get('res.partner')
-        data = self.browse(cr, uid, ids, context=context)
+        data = self.browse(cr, uid, ids[0], context=context)
         event_pool = self.pool.get('res.partner.event')
         active_ids = context and context.get('active_ids', [])
         partners = partner_pool.browse(cr, uid, active_ids, context)
@@ -61,7 +61,7 @@ class partner_wizard_spam(osv.osv_memory):
                     tools.email_send(data.email_from, [to], data.subject, data.text,subtype='html')
                     nbr += 1
             event_pool.create(cr, uid,
-                    {'name': 'Email sent through mass mailing',
+                    {'name': 'Email(s) sent through mass mailing',
                      'partner_id': partner.id,
                      'description': data.text })
     #TODO: log number of message sent

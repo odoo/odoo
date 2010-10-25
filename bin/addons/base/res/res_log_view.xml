@@ -7,6 +7,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Logs">
+                    <filter icon="terp-stock_align_left_24" string="Read" domain="[('read','=',True)]" name="read"/>
+                    <filter icon="terp-stock_align_left_24" string="Unread" domain="[('read','&lt;&gt;',True)]" name="unread"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-stock_align_left_24" string="My Logs" domain="[('user_id','=',uid)]" name="my"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
@@ -23,8 +26,8 @@
             <field name="arch" type="xml">
                 <tree string="Logs">
                     <field name="create_date"/>
-                    <field name="name"/>
                     <field name="user_id"/>
+                    <field name="name"/>
                 </tree>
             </field>
         </record>
@@ -34,13 +37,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Logs">
-                    <field name="name"/>
-                    <field name="create_date"/>
-                    <group colspan="4" col="6">
-                        <field name="user_id" />
-                        <field name="res_model"/>
-                        <field name="res_id"/>
-                    </group>
+                  <group colspan="4" col="6">
+                      <field name="name"/>
+                      <field name="create_date"/>
+                      <field name="read"/>
+                      <field name="user_id" />
+                      <field name="res_model"/>
+                      <field name="res_id"/>
+                  </group>
                 </form>
             </field>
         </record>
@@ -54,6 +58,6 @@
         <menuitem
             action="res_log_act_window"
             id="menu_res_log_act_window"
-            parent="base.next_id_4"/>
+            parent="base.menu_audit"/>
     </data>
 </openerp>

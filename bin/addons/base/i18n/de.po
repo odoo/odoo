@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-09-09 17:58+0000\n"
-"Last-Translator: Anup (OpenERP) <ach@tinyerp.com>\n"
+"PO-Revision-Date: 2010-10-12 08:02+0000\n"
+"Last-Translator: Ferdinand-chricar <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-10-13 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -256,11 +256,6 @@ msgstr "%y - Jahr ohne Jahrtausend [00,99]."
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_GOTO_FIRST"
 msgstr "STOCK_GOTO_FIRST"
-
-#. module: base
-#: help:ir.rule.group,rules:0
-msgid "The rule is satisfied if at least one test is True"
-msgstr "Die Regel ist erfüllt wenn mindestens ein Test korrekt ist."
 
 #. module: base
 #: selection:ir.report.custom.fields,operation:0
@@ -815,11 +810,6 @@ msgid "Website"
 msgstr "Website"
 
 #. module: base
-#: field:ir.rule.group,rules:0
-msgid "Tests"
-msgstr "Tests"
-
-#. module: base
 #: view:ir.module.repository:0
 msgid "Repository"
 msgstr "Verzeichnis"
@@ -1367,7 +1357,6 @@ msgstr "Anzahl Module mit Updates"
 #: field:ir.actions.todo,groups_id:0
 #: field:ir.actions.wizard,groups_id:0
 #: field:ir.model.fields,groups:0
-#: field:ir.rule.group,groups:0
 #: field:ir.ui.menu,groups_id:0
 #: model:ir.ui.menu,name:base.menu_action_res_groups
 #: view:res.groups:0
@@ -1425,10 +1414,9 @@ msgid ""
 "order in Object, and you can have loop on the sales order line. Expression = "
 "`object.order_line`."
 msgstr ""
-"Eingabe des Feldes/Ausdruckes, das die Liste erzeugt. \r\n"
-"zB Auswahl von \"sale order\" in Objekt und alle Averkaufsauftragszeilen "
-"werden ausgewählt.\r\n"
-"Ausdruck = `object.order_line`."
+"Eingabe des Feldes/Ausdruckes, das die Liste erzeugt. zB Auswahl von sale "
+"order in Objekt und alle Averkaufsauftragszeilen werden ausgewählt.Ausdruck "
+"= `object.order_line`."
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -1477,13 +1465,6 @@ msgid ""
 msgstr ""
 "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
 "beinhalten"
-
-#. module: base
-#: help:ir.rule.group,global:0
-msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr ""
-"Mache die Regel global gültig, ansonsten muss diese auf Gruppeneben "
-"definiert werden."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -2201,11 +2182,6 @@ msgid "Countries"
 msgstr "Länder"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "Record rules"
-msgstr "Aufzeichnung Regel"
-
-#. module: base
 #: field:res.partner,vat:0
 msgid "VAT"
 msgstr "USt."
@@ -2837,11 +2813,6 @@ msgid "Benin"
 msgstr "Benin"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "The rule is satisfied if all test are True (AND)"
-msgstr "Die Regel ist für mich o.K. falls alle Tests erfolgreich verlaufen."
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CONNECT"
 msgstr "STOCK_CONNECT"
@@ -3162,7 +3133,6 @@ msgstr "Kasachstan"
 #: field:ir.module.repository,name:0
 #: field:ir.property,name:0
 #: field:ir.report.custom.fields,name:0
-#: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
 #: field:res.bank,name:0
@@ -3280,10 +3250,10 @@ msgstr "Gruppiere nach"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid ""
-"\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+"'%s' contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
-"\"%s\" beinhaltet zu viele Punkte. XML IDs sollen keine Punkte enthalten. "
+"'%s' beinhaltet zu viele Punkte. XML IDs sollen keine Punkte enthalten. "
 "Punkte werdfen verwendet um andere Module zu ferferenzieren wie zB. "
 "module.reference_id"
 
@@ -3835,11 +3805,6 @@ msgid "ir.translation"
 msgstr "ir.translation"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule_group
-msgid "ir.rule.group"
-msgstr "ir.rule.group"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
 #: model:ir.ui.menu,name:base.menu_module_tree_install
 msgid "Installed modules"
@@ -4167,12 +4132,6 @@ msgid "Search View Ref."
 msgstr "Suche Ansicht Referenz"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "Multiple rules on same objects are joined using operator OR"
-msgstr ""
-"Mehrere Regeln für dasselbe Objekt werden mit dem Operator OR verbunden"
-
-#. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
 msgid "acc_number"
 msgstr "acc_number"
@@ -4463,11 +4422,9 @@ msgid ""
 "Keep empty to not save the printed reports. You can use a python expression "
 "with the object and time variables."
 msgstr ""
-"Das ist der Dateiname des Anhanges unter dem Ausdrucke gespeichert "
-"werden.\r\n"
-"Leer lassen, wenn Ausdrucke nicht gespeichert wreden sollen.\r\n"
-"Die Verwendung von Python Ausdrücken sowie Objekt und Zeitvariablen ist "
-"möglich."
+"Das ist der Dateiname des Anhanges unter dem Ausdrucke gespeichert werden. "
+"Leer lassen, wenn Ausdrucke nicht gespeichert wreden sollen. Die Verwendung "
+"von Python Ausdrücken sowie Objekt und Zeitvariablen ist möglich."
 
 #. module: base
 #: model:res.country,name:base.ng
@@ -4803,11 +4760,6 @@ msgid "Reunion (French)"
 msgstr "Reunion (franz.)"
 
 #. module: base
-#: field:ir.rule.group,global:0
-msgid "Global"
-msgstr "Global"
-
-#. module: base
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr "Tschechische Republik"
@@ -5055,7 +5007,6 @@ msgstr "Komponenten Lieferant"
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.actions.todo,users_id:0
 #: field:ir.default,uid:0
-#: field:ir.rule.group,users:0
 #: model:ir.ui.menu,name:base.menu_action_res_users
 #: model:ir.ui.menu,name:base.menu_users
 #: view:res.groups:0
@@ -6186,7 +6137,6 @@ msgstr "Rückgabe"
 #: field:ir.model.data,model:0
 #: field:ir.model.grid,model:0
 #: field:ir.report.custom,model_id:0
-#: field:ir.rule.group,model_id:0
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
@@ -8109,75 +8059,76 @@ msgstr "2 Benuzter können nicht den gleichen Login Code haben!"
 #. module: base
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "Die Feldlänge kann niemals kleiner als 1 sein!"
 
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
 msgid "Shortcut for this menu already exists!"
-msgstr ""
+msgstr "Die Verknüpfung existiert bereits für dieses Menü!"
 
 #. module: base
 #: sql_constraint:ir.model.data:0
 msgid ""
 "You cannot have multiple records with the same id for the same module !"
 msgstr ""
+"Mehrere Datensätze dürfen nicht die selbe ID für dasselbe Modul besitzen!"
 
 #. module: base
 #: sql_constraint:maintenance.contract:0
 msgid "Your maintenance contract is already subscribed in the system !"
-msgstr ""
+msgstr "Ihr Wartungsvertrag wurde bereits in Ihrem System registriert!"
 
 #. module: base
 #: sql_constraint:ir.module.module:0
 #: sql_constraint:ir.module.web:0
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Der Name des Moduls muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Die Zertifikats-ID muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.partner.function:0
 msgid "The Code of the Partner Function must be unique !"
-msgstr ""
+msgstr "Der Code der Partnerfunktion muss eindeutig sein."
 
 #. module: base
 #: sql_constraint:res.partner:0
 msgid "The name of the Partner must be unique !"
-msgstr ""
+msgstr "Der Name des Partners muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr ""
+msgstr "Der Name des Landes muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
-msgstr ""
+msgstr "Der Code des Landes muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr ""
+msgstr "Der Name der Sprache muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The code of the language must be unique !"
-msgstr ""
+msgstr "Der Code  der Sprache muss eindeutig sein!"
 
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr ""
+msgstr "Der Name der Gruppe muss eindeutig sein!"
 
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Constraint Error"
-msgstr ""
+msgstr "Abhängigkeitsfehler"
 
 #. module: base
 #: code:addons/osv/osv.py:0
@@ -8188,6 +8139,12 @@ msgid ""
 "reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
+"Die Aktion kann nicht fertiggestellt werden, wahrscheinlich aufgrund einer "
+"der folgenden Fehler:\n"
+"- Löschen: Sie versuchen einen Datensatz zu löschen, auf den noch andere "
+"Datensätze referenzieren\n"
+"- Neu/Aktualisierung: Ein Pflicht-Feld wurde nicht oder nicht richtig "
+"ausgefüllt"
 
 #. module: base
 #: code:addons/osv/osv.py:0
@@ -8197,12 +8154,45 @@ msgid ""
 "\n"
 "[object with reference: %s - %s]"
 msgstr ""
+"\n"
+"\n"
+"[Objekt mit Referenz: %s - %s]"
 
 #. module: base
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Integrity Error"
+msgstr "Datenintegritäts Fehler"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "User Error"
+msgstr "Benutzerfehler"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "Base Language 'en_US' can not be deleted !"
+msgstr "Basis Sprache 'en_US' kann nicht gelöscht werden !"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is User's Preferred Language !"
 msgstr ""
+"Eine Sprache, die in einer Benutzereinstellung definiert ist, kann nicht "
+"gelöscht werden."
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot delete the language which is Active !\n"
+"Please de-activate the language first."
+msgstr ""
+"Eine aktive Sprache kann nicht gelöscht werden !\n"
+"Bitte diese vorher deaktivieren."
 
 #~ msgid "Attached ID"
 #~ msgstr "Sie können dieses Dokument nicht lesen ! (%s)"

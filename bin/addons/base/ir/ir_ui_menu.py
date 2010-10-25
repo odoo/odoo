@@ -69,22 +69,27 @@ class ir_ui_menu(osv.osv):
 
     def create_shortcut(self, cr, uid, values, context={}):
         dataobj = self.pool.get('ir.model.data')
-        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut', context)
-        shortcut_menu_id  = int(dataobj.read(cr, uid, menu_id, ['res_id'], context)['res_id'])
-        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, values, context)
+        new_context = context.copy()
+        for key in context:
+            if key.startswith('default_'):
+                del new_context[key]
+
+        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut', new_context)
+        shortcut_menu_id  = int(dataobj.read(cr, uid, menu_id, ['res_id'], new_context)['res_id'])
+        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, values, new_context)
         menu_data = {'name':values['name'],
                     'sequence':10,
                     'action':'ir.actions.act_window,'+str(action_id),
                     'parent_id':shortcut_menu_id,
                     'icon':'STOCK_JUSTIFY_FILL'}
-        menu_id =  self.pool.get('ir.ui.menu').create(cr, uid, menu_data)
+        menu_id =  self.pool.get('ir.ui.menu').create(cr, 1, menu_data)
         sc_data= {'name':values['name'], 'sequence': 1,'res_id': menu_id }
-        sc_menu_id = self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, context)
+        sc_menu_id = self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, new_context)
 
         user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
         key = (cr.dbname, shortcut_menu_id, tuple(user_groups))
         self._cache[key] = True
-        return True
+        return action_id
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
                context=None, count=False):
@@ -255,6 +260,8 @@ class ir_ui_menu(osv.osv):
                 return False
             level -= 1
         return True
+    
+    
 
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
@@ -284,7 +291,7 @@ class ir_ui_menu(osv.osv):
     _defaults = {
         'icon' : lambda *a: 'STOCK_OPEN',
         'icon_pict': lambda *a: ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
-        'sequence' : lambda *a: 10
+        'sequence' : lambda *a: 10,
     }
     _order = "sequence,id"
 ir_ui_menu()

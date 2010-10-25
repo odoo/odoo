@@ -114,9 +114,13 @@ class report_xml(osv.osv):
 
         'report_xsl': fields.char('XSL path', size=256),
         'report_xml': fields.char('XML path', size=256, help=''),
-        'report_rml': fields.char('RML path', size=256, help="The .rml path of the file or NULL if the content is in report_rml_content"),
-        'report_sxw': fields.function(_report_sxw, method=True, type='char', string='SXW path'),
 
+        # Pending deprecation... to be replaced by report_file as this object will become the default report object (not so specific to RML anymore)
+        'report_rml': fields.char('Main report file path', size=256, help="The path to the main report file (depending on Report Type) or NULL if the content is in another data field"),
+        # temporary related field as report_rml is pending deprecation - this field will replace report_rml after v6.0
+        'report_file': fields.related('report_rml', type="char", size=256, required=False, readonly=False, string='Report file', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
+
+        'report_sxw': fields.function(_report_sxw, method=True, type='char', string='SXW path'),
         'report_sxw_content_data': fields.binary('SXW content'),
         'report_rml_content_data': fields.binary('RML content'),
         'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, method=True, type='binary', string='SXW content',),
@@ -214,6 +218,10 @@ class act_window(osv.osv):
                 res[act.id] = str(form_arch)
         return res
 
+    def _get_help_status(self, cr, uid, ids, name, arg, context={}):
+        activate_tips = self.pool.get('res.users').browse(cr, uid, uid).menu_tips
+        return dict([(id, activate_tips) for id in ids])
+
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
@@ -246,8 +254,11 @@ class act_window(osv.osv):
         'menus': fields.char('Menus', size=4096),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.'),
-
+        'display_menu_tip':fields.function(_get_help_status, type='boolean', method=True, string='Display Menu Tips',
+            help='It gives the status if the tip has to be displayed or not when a user executes an action'),
+        'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
+
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',
         'view_type': lambda *a: 'form',
@@ -256,7 +267,8 @@ class act_window(osv.osv):
         'limit': lambda *a: 80,
         'target': lambda *a: 'current',
         'auto_refresh': lambda *a: 0,
-        'auto_search':lambda *a: True
+        'auto_search':lambda *a: True,
+        'multi': False,
     }
 
 act_window()
@@ -273,8 +285,7 @@ class act_window_view(osv.osv):
             ('form', 'Form'),
             ('graph', 'Graph'),
             ('calendar', 'Calendar'),
-            ('gantt', 'Gantt'),
-            ('gallery', 'Gallery')), string='View Type', required=True),
+            ('gantt', 'Gantt')), string='View Type', required=True),
         'act_window_id': fields.many2one('ir.actions.act_window', 'Action', ondelete='cascade'),
         'multi': fields.boolean('On Multiple Doc.',
             help="If set to true, the action will not be displayed on the right toolbar of a form view."),

@@ -26,13 +26,14 @@
 #   adapted by Nicolas Évrard <nicoe@altern.org>
 #
 
-import imp
 import sys
 import os
 from os.path import join, isfile, basename
 import glob
 
-from setuptools import setup, find_packages
+from pprint import pprint as pp
+
+from setuptools import setup as official_setup, find_packages
 from setuptools.command.install import install
 from distutils.sysconfig import get_python_lib
 
@@ -92,12 +93,16 @@ def data_files():
     '''Build list of data files to be installed'''
     files = []
     if os.name == 'nt':
-        for root, _, names in os.walk(join('bin','addons')):
-            files.append((root, [join(root, name) for name in names]))
+        os.chdir('bin')
+        for (dp, dn, names) in os.walk('addons'):
+            files.append((dp, map(lambda x: join('bin', dp, x), names)))
+        os.chdir('..')
+        #for root, _, names in os.walk(join('bin','addons')):
+        #    files.append((root, [join(root, name) for name in names]))
         for root, _, names in os.walk('doc'):
             files.append((root, [join(root, name) for name in names]))
-        for root, _, names in os.walk('pixmaps'):
-            files.append((root, [join(root, name) for name in names]))
+        #for root, _, names in os.walk('pixmaps'):
+        #    files.append((root, [join(root, name) for name in names]))
         files.append(('.', [join('bin', 'import_xml.rng'),
                             join('bin', 'server.pkey'),
                             join('bin', 'server.cert')]))
@@ -179,6 +184,10 @@ options = {
     }
 }
 
+def setup(**kwargs):
+    #pp(kwargs)
+    return official_setup(**kwargs)
+
 setup(name             = name,
       version          = version,
       description      = description,
@@ -194,8 +203,13 @@ setup(name             = name,
       },
       scripts          = ['openerp-server'],
       packages = [
-          '.'.join(['openerp-server'] + package.split('.')[1:]) for package in find_packages()
+          '.'.join(['openerp-server'] + package.split('.')[1:])
+          for package in find_packages()
       ],
+      include_package_data = True,
+      package_data = {
+          '': ['*.yml', '*.xml', '*.po', '*.pot', '*.csv'],
+      },
       package_dir      = find_package_dirs(),
       console = [
           {
@@ -204,53 +218,27 @@ setup(name             = name,
           }
       ],
       options = options,
-      install_requires = ['lxml',
-                          'mako',
-                          'python-dateutil',
-                          'psycopg2',
-                          'pychart',
-                          'pydot',
-                          'pytz',
-                          'reportlab',
-                          'caldav',
-                          'pyyaml',
-                          'sqlalchemy',
-                          'django',
-                          'pywebdav'
-                          'cx_Oracle',
-                          'mysqldb',
-                          'feedparser',
-                          'bsddb3',
-                          'egenix-mx-base'],
+      install_requires = [
+          'lxml',
+          'mako',
+          'python-dateutil',
+          'psycopg2',
+          'pychart',
+          'pydot',
+          'pytz',
+          'reportlab',
+          'caldav',
+          'pyyaml',
+          #'django',
+          'pywebdav'
+          #'cx_Oracle',
+          #'mysqldb',
+          'feedparser',
+          #'bsddb3',
+          'egenix-mx-base'
+      ],
       extras_require={
           'SSL' : ['pyopenssl'],
       }
 )
-
-if has_py2exe:
-  # Sometime between pytz-2008a and pytz-2008i common_timezones started to
-  # include only names of zones with a corresponding data file in zoneinfo.
-  # pytz installs the zoneinfo directory tree in the same directory
-  # as the pytz/__init__.py file. These data files are loaded using
-  # pkg_resources.resource_stream. py2exe does not copy this to library.zip so
-  # resource_stream can't find the files and common_timezones is empty when
-  # read in the py2exe executable.
-  # This manually copies zoneinfo into the zip. See also
-  # http://code.google.com/p/googletransitdatafeed/issues/detail?id=121
-  import pytz
-  import zipfile
-  # Make sure the layout of pytz hasn't changed
-  assert (pytz.__file__.endswith('__init__.pyc') or
-          pytz.__file__.endswith('__init__.py')), pytz.__file__
-  zoneinfo_dir = join(os.path.dirname(pytz.__file__), 'zoneinfo')
-  # '..\\Lib\\pytz\\__init__.py' -> '..\\Lib'
-  disk_basedir = os.path.dirname(os.path.dirname(pytz.__file__))
-  zipfile_path = join(options['py2exe']['dist_dir'], 'library.zip')
-  z = zipfile.ZipFile(zipfile_path, 'a')
-  for absdir, directories, filenames in os.walk(zoneinfo_dir):
-    assert absdir.startswith(disk_basedir), (absdir, disk_basedir)
-    zip_dir = absdir[len(disk_basedir):]
-    for f in filenames:
-      z.write(join(absdir, f), join(zip_dir, f))
-  z.close()
 

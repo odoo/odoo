@@ -42,6 +42,7 @@ from lxml import etree
 import copy
 import locale
 import traceback, sys
+import tools
 from tools.safe_eval import safe_eval as eval
 import logging
 
@@ -176,7 +177,7 @@ def attr_get(node, attrs, dict={}):
     for key in dict:
         if node.get(key):
             if dict[key]=='str':
-                res[key] = str(node.get(key))
+                res[key] = tools.ustr(node.get(key))
             elif dict[key]=='bool':
                 res[key] = bool_get(node.get(key))
             elif dict[key]=='int':

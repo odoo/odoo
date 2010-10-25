@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-09-09 18:37+0000\n"
+"PO-Revision-Date: 2010-10-12 08:03+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:45+0000\n"
+"X-Launchpad-Export-Date: 2010-10-13 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -257,11 +257,6 @@ msgstr "%y - Ano sem o século como um numero decimal [00,99]."
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_GOTO_FIRST"
 msgstr "STOCK_GOTO_FIRST"
-
-#. module: base
-#: help:ir.rule.group,rules:0
-msgid "The rule is satisfied if at least one test is True"
-msgstr "A regra é valida se pelo menos um teste for verdadeiro"
 
 #. module: base
 #: selection:ir.report.custom.fields,operation:0
@@ -816,11 +811,6 @@ msgid "Website"
 msgstr "Página Web"
 
 #. module: base
-#: field:ir.rule.group,rules:0
-msgid "Tests"
-msgstr "Testes"
-
-#. module: base
 #: view:ir.module.repository:0
 msgid "Repository"
 msgstr "Repositório"
@@ -1364,7 +1354,6 @@ msgstr "Numero de módulos actualizados"
 #: field:ir.actions.todo,groups_id:0
 #: field:ir.actions.wizard,groups_id:0
 #: field:ir.model.fields,groups:0
-#: field:ir.rule.group,groups:0
 #: field:ir.ui.menu,groups_id:0
 #: model:ir.ui.menu,name:base.menu_action_res_groups
 #: view:res.groups:0
@@ -1470,12 +1459,6 @@ msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
-
-#. module: base
-#: help:ir.rule.group,global:0
-msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr ""
-"Estabeleça a regra como global, de outro modo terá de ser colocada num grupo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -2193,11 +2176,6 @@ msgid "Countries"
 msgstr "Países"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "Record rules"
-msgstr "Regras de gravação"
-
-#. module: base
 #: field:res.partner,vat:0
 msgid "VAT"
 msgstr "VAT"
@@ -2828,11 +2806,6 @@ msgid "Benin"
 msgstr "Benim"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "The rule is satisfied if all test are True (AND)"
-msgstr "A regra é satisfeita se todos os testes forem verdadeiras (AND)"
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CONNECT"
 msgstr "STOCK_CONNECT"
@@ -3155,7 +3128,6 @@ msgstr "Cazaquistão"
 #: field:ir.module.repository,name:0
 #: field:ir.property,name:0
 #: field:ir.report.custom.fields,name:0
-#: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
 #: field:res.bank,name:0
@@ -3273,10 +3245,10 @@ msgstr "Agrupar por"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid ""
-"\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+"'%s' contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
-"\"%s\" contem demasiados pontos. Ids XML não devem conter pontos! Pontos são "
+"'%s' contem demasiados pontos. Ids XML não devem conter pontos! Pontos são "
 "usados para referir dados de outros módulos, como em module.reference_id"
 
 #. module: base
@@ -3825,11 +3797,6 @@ msgid "ir.translation"
 msgstr "ir.translation"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule_group
-msgid "ir.rule.group"
-msgstr "ir.rule.group"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
 #: model:ir.ui.menu,name:base.menu_module_tree_install
 msgid "Installed modules"
@@ -4155,11 +4122,6 @@ msgstr "a4"
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
 msgstr "Ref. da vista de pesquisa"
-
-#. module: base
-#: view:ir.rule.group:0
-msgid "Multiple rules on same objects are joined using operator OR"
-msgstr "Multiplas funções no mesmo objecto são ligadas usando o operador OR"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
@@ -4788,11 +4750,6 @@ msgid "Reunion (French)"
 msgstr "Reunião (França)"
 
 #. module: base
-#: field:ir.rule.group,global:0
-msgid "Global"
-msgstr "Global"
-
-#. module: base
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr "República Checa"
@@ -5040,7 +4997,6 @@ msgstr "Fornecedor de componentes"
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.actions.todo,users_id:0
 #: field:ir.default,uid:0
-#: field:ir.rule.group,users:0
 #: model:ir.ui.menu,name:base.menu_action_res_users
 #: model:ir.ui.menu,name:base.menu_users
 #: view:res.groups:0
@@ -6172,7 +6128,6 @@ msgstr "A retornar"
 #: field:ir.model.data,model:0
 #: field:ir.model.grid,model:0
 #: field:ir.report.custom,model_id:0
-#: field:ir.rule.group,model_id:0
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
@@ -8185,6 +8140,32 @@ msgstr ""
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Integrity Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "User Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "Base Language 'en_US' can not be deleted !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is User's Preferred Language !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot delete the language which is Active !\n"
+"Please de-activate the language first."
 msgstr ""
 
 #~ msgid "Attached ID"
