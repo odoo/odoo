@@ -365,7 +365,7 @@ class account_move_line(osv.osv):
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
 
-    def _invoice_search(self, cursor, user, obj, name, args, context):
+    def _invoice_search(self, cursor, user, obj, name, args, context=None):
         if not args:
             return []
         invoice_obj = self.pool.get('account.invoice')
@@ -410,7 +410,7 @@ class account_move_line(osv.osv):
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
 
-    def _get_move_lines(self, cr, uid, ids, context={}):
+    def _get_move_lines(self, cr, uid, ids, context=None):
         result = []
         for move in self.pool.get('account.move').browse(cr, uid, ids, context=context):
             for line in move.line_id:
@@ -460,7 +460,7 @@ class account_move_line(osv.osv):
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
-    def _get_date(self, cr, uid, context):
+    def _get_date(self, cr, uid, context=None):
         period_obj = self.pool.get('account.period')
         dt = time.strftime('%Y-%m-%d')
         if ('journal_id' in context) and ('period_id' in context):
@@ -476,7 +476,9 @@ class account_move_line(osv.osv):
                 dt = period.date_start
         return dt
 
-    def _get_currency(self, cr, uid, context={}):
+    def _get_currency(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if not context.get('journal_id', False):
             return False
         cur = self.pool.get('account.journal').browse(cr, uid, context['journal_id']).currency
