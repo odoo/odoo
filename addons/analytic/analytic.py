@@ -66,17 +66,17 @@ class account_analytic_account(osv.osv):
         cr.execute("""
               SELECT a.id,
                      sum(
-			CASE WHEN l.amount > 0
-			THEN l.amount 
-			ELSE 0.0
-			END
-		     ) as debit,
-		     sum(
-			CASE WHEN l.amount < 0
-			THEN -l.amount
-			ELSE 0.0 
-			END
-		     ) as credit,
+                         CASE WHEN l.amount > 0
+                         THEN l.amount 
+                         ELSE 0.0
+                         END
+                          ) as debit,
+                     sum(
+                         CASE WHEN l.amount < 0
+                         THEN -l.amount
+                         ELSE 0.0 
+                         END
+                          ) as credit,
                      COALESCE(SUM(l.amount),0) AS balance,
                      COALESCE(SUM(l.unit_amount),0) AS quantity
               FROM account_analytic_account a 
