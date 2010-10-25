@@ -954,10 +954,8 @@ class calendar_event(osv.osv):
             value['duration'] = duration
 
         if allday: # For all day event
-            value = {
-                 'duration': 24
-                 }
-            duration = 0.0
+            value = {'duration': 24}
+            duration = 24.0
 
         start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         if end_date and not duration:
@@ -968,7 +966,7 @@ class calendar_event(osv.osv):
         elif not end_date:
             end = start + timedelta(hours=duration)
             value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
-        elif end_date and duration:
+        elif end_date and duration and not allday:
             # we have both, keep them synchronized:
             # set duration based on end_date (arbitrary decision: this avoid 
             # getting dates like 06:31:48 instead of 06:32:00)
