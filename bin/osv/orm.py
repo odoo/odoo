@@ -4151,9 +4151,9 @@ class orm(orm_template):
                 old_record, new_record = self.read(cr, uid, [old_id, new_id], [field_name], context=context)
                 # here we rely on the order of the ids to match the translations
                 # as foreseen in copy_data()
-                old_childs = sorted(old_record[field_name])
-                new_childs = sorted(new_record[field_name])
-                for (old_child, new_child) in zip(old_childs, new_childs):
+                old_children = sorted(old_record[field_name])
+                new_children = sorted(new_record[field_name])
+                for (old_child, new_child) in zip(old_children, new_children):
                     # recursive copy of translations here
                     target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
             # and for translatable fields we keep them for copy
