@@ -1286,7 +1286,6 @@ class orm_template(object):
                     'fields': xfields
                 }
                 attrs = {'views': views}
-                view = False
                 fields = views.get('field', False) and views['field'].get('fields', False)
             if node.get('name'):
                 attrs = {}
@@ -2212,7 +2211,6 @@ class orm(orm_template):
 
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
-        sum = {}
         flist = ''
         group_by = groupby
         if groupby:
@@ -2233,10 +2231,10 @@ class orm(orm_template):
                 or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
         for f in fields_pre:
             if f not in ['id', 'sequence']:
-                operator = fget[f].get('group_operator', 'sum')
+                group_operator = fget[f].get('group_operator', 'sum')
                 if flist:
                     flist += ','
-                flist += operator+'('+f+') as '+f
+                flist += group_operator+'('+f+') as '+f
 
         gb = groupby and (' GROUP BY '+groupby) or ''
 
