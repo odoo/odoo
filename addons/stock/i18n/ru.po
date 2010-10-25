@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-10-21 20:23+0000\n"
+"PO-Revision-Date: 2010-10-23 06:58+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-22 04:39+0000\n"
+"X-Launchpad-Export-Date: 2010-10-24 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -40,7 +40,7 @@ msgstr "Localizações encadeadas se afixado"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Put in a new pack"
-msgstr ""
+msgstr "Поместить в новый пакет"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -115,6 +115,7 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
 msgstr ""
+"Внутренний номер, если он отличается от серийного номера производителя"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -199,6 +200,7 @@ msgid ""
 "Optional address where goods are to be delivered, specifically used for "
 "allotment"
 msgstr ""
+"Дополнительный адрес доставки товара, используется специально для выделения"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:0
@@ -246,11 +248,13 @@ msgid ""
 "If checked, all product quantities will be set to zero to help ensure a real "
 "physical inventory is done"
 msgstr ""
+"Если отмечено, обнулить количество товаров для уверенности в проведении "
+"реальной инвентаризации"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
 msgid "Split lines"
-msgstr ""
+msgstr "Разделение позиций"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -262,6 +266,7 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel picking because stock move is in done state !"
 msgstr ""
+"Вы не можете отменить комплектование так, как складские перемещения сделаны !"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -302,7 +307,7 @@ msgstr "Партнер"
 #: code:addons/stock/wizard/stock_return_picking.py:0
 #, python-format
 msgid "No invoicing"
-msgstr ""
+msgstr "Нет счета"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -628,7 +633,7 @@ msgstr "Август"
 #: model:ir.ui.menu,name:stock.menu_action_tracking_form
 #: view:stock.tracking:0
 msgid "Packs"
-msgstr ""
+msgstr "Пакет"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -832,6 +837,8 @@ msgid ""
 "Total quantity after split exceeds the quantity to split ' \\n               "
 "                     'for this product: \"%s\" (id: %d)"
 msgstr ""
+"Общее количество после разделения превышает разделяемое количество ' \\n "
+"'для этой продукции: \"%s\" (id: %d)"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -866,18 +873,18 @@ msgstr "terp-dolar"
 #. module: stock
 #: view:board.board:0
 msgid "Incoming Products Delay"
-msgstr ""
+msgstr "Задержка входящей продукции"
 
 #. module: stock
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Qty"
-msgstr ""
+msgstr "Будущее Кол-во"
 
 #. module: stock
 #: view:stock.location:0
 msgid "Stock Locations"
-msgstr ""
+msgstr "Местоположения запасов"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -904,7 +911,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-gtk-jump-to-ltr"
-msgstr ""
+msgstr "terp-gtk-jump-to-ltr"
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -914,7 +921,7 @@ msgstr "Срочно"
 #. module: stock
 #: view:stock.picking:0
 msgid "Journal"
-msgstr ""
+msgstr "Журнал"
 
 #. module: stock
 #: field:product.category,property_stock_variation:0
@@ -943,40 +950,42 @@ msgstr ""
 #. module: stock
 #: field:report.stock.move,day_diff:0
 msgid "Execution Lead Time (Days)"
-msgstr ""
+msgstr "Время исполнения (в днях)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
 msgid "Stock by Location"
-msgstr ""
+msgstr "Запасы по местоположию"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_SAVE_AS"
-msgstr ""
+msgstr "STOCK_SAVE_AS"
 
 #. module: stock
 #: view:report.stock.move:0
 msgid "Month-1"
-msgstr ""
+msgstr "Месяц-1"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-stock_symbol-selection"
-msgstr ""
+msgstr "terp-stock_symbol-selection"
 
 #. module: stock
 #: help:stock.location,active:0
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
+"Убрав отметку с активного поля, вы можете скрыть местоположение без его "
+"удаления."
 
 #. module: stock
 #: help:stock.location,posx:0
 #: help:stock.location,posy:0
 #: help:stock.location,posz:0
 msgid "Optional localization details, for information purpose only"
-msgstr ""
+msgstr "Дополнительные подробности локализации, только в информативных целях"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -992,7 +1001,7 @@ msgstr "Вид"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_DIALOG_ERROR"
-msgstr ""
+msgstr "STOCK_DIALOG_ERROR"
 
 #. module: stock
 #: field:stock.location,parent_left:0
@@ -1002,17 +1011,17 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_INDEX"
-msgstr ""
+msgstr "STOCK_INDEX"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-stage"
-msgstr ""
+msgstr "terp-stage"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_GOTO_BOTTOM"
-msgstr ""
+msgstr "STOCK_GOTO_BOTTOM"
 
 #. module: stock
 #: field:stock.move.track,quantity:0
@@ -1039,7 +1048,7 @@ msgstr "Расположение производства"
 #. module: stock
 #: help:stock.picking,address_id:0
 msgid "Address of partner"
-msgstr ""
+msgstr "Адрес партнера"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_tinyshop0
@@ -1092,7 +1101,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_GO_FORWARD"
-msgstr ""
+msgstr "STOCK_GO_FORWARD"
 
 #. module: stock
 #: field:stock.production.lot.revision,author_id:0
@@ -1102,29 +1111,29 @@ msgstr "Автор"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_UNDELETE"
-msgstr ""
+msgstr "STOCK_UNDELETE"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Delivery Order"
-msgstr ""
+msgstr "Заказ на доставку"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_EXECUTE"
-msgstr ""
+msgstr "STOCK_EXECUTE"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:0
 #, python-format
 msgid "No invoice were created"
-msgstr ""
+msgstr "Счет не был создан"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_DIALOG_QUESTION"
-msgstr ""
+msgstr "STOCK_DIALOG_QUESTION"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1135,7 +1144,7 @@ msgstr "Ручное управление"
 #: view:stock.location:0
 #: view:stock.move:0
 msgid "Supplier"
-msgstr ""
+msgstr "Поставщик"
 
 #. module: stock
 #: field:stock.picking,date_done:0
@@ -1145,17 +1154,17 @@ msgstr ""
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Expected Shipping Date"
-msgstr ""
+msgstr "Ожидаемая дата отгрузки"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-accessories-archiver-minus"
-msgstr ""
+msgstr "terp-accessories-archiver-minus"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "March"
-msgstr ""
+msgstr "Март"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_inventory_line_split
@@ -1163,17 +1172,17 @@ msgstr ""
 #: view:stock.inventory:0
 #: view:stock.inventory.line:0
 msgid "Split inventory lines"
-msgstr ""
+msgstr "Разделить позиции инвентаризации"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Physical Inventory"
-msgstr ""
+msgstr "Физическая инвентаризация"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_SELECT_FONT"
-msgstr ""
+msgstr "STOCK_SELECT_FONT"
 
 #. module: stock
 #: help:stock.location,chained_company_id:0
@@ -1185,12 +1194,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_PASTE"
-msgstr ""
+msgstr "STOCK_PASTE"
 
 #. module: stock
 #: view:stock.move.split:0
 msgid "Lot number"
-msgstr ""
+msgstr "Номер партии"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
@@ -1215,12 +1224,12 @@ msgstr ""
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 msgid "Total quantity"
-msgstr ""
+msgstr "Общее количество"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_ZOOM_FIT"
-msgstr ""
+msgstr "STOCK_ZOOM_FIT"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_consume
@@ -1231,7 +1240,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_7
 msgid "European Customers"
-msgstr ""
+msgstr "Европейские заказчики"
 
 #. module: stock
 #: help:stock.location,chained_delay:0
@@ -1241,7 +1250,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-calendar"
-msgstr ""
+msgstr "terp-calendar"
 
 #. module: stock
 #: view:stock.fill.inventory:0
@@ -1275,6 +1284,9 @@ msgid ""
 "default one, as the source location for stock moves generated by production "
 "orders"
 msgstr ""
+"Для текущей продукции, это местоположение будет использоваться (вместо "
+"местоположения по умолчанию), как источник местоположения для перемещения "
+"запасов, генерируемых заказами на производство"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -1287,7 +1299,7 @@ msgstr ""
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "is in draft state."
-msgstr ""
+msgstr "в состоянии \"Черновик\""
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -1296,11 +1308,13 @@ msgid ""
 "There is no stock output account defined ' \\n                               "
 "             'for this product: \"%s\" (id: %d)"
 msgstr ""
+"Не определен счет для исходящих запасов' \\n 'для этой продукции: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_RECORD"
-msgstr ""
+msgstr "STOCK_MEDIA_RECORD"
 
 #. module: stock
 #: field:stock.location,chained_auto_packing:0
@@ -1335,12 +1349,12 @@ msgstr ""
 #: view:stock.picking:0
 #: view:stock.split.into:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Отмена"
 
 #. module: stock
 #: view:stock.move:0
 msgid "Ready"
-msgstr ""
+msgstr "Готово"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1350,7 +1364,7 @@ msgstr "Вид календаря"
 #. module: stock
 #: view:stock.picking:0
 msgid "Additional Info"
-msgstr ""
+msgstr "Доп. инфо"
 
 #. module: stock
 #: report:stock.inventory.move:0
@@ -1360,7 +1374,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_YES"
-msgstr ""
+msgstr "STOCK_YES"
 
 #. module: stock
 #: field:stock.location.product,from_date:0
@@ -1387,7 +1401,7 @@ msgstr "Ревизии партий изделий"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking List"
-msgstr ""
+msgstr "Внутренний комплектовочный лист"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -1407,18 +1421,18 @@ msgstr "Разделить"
 #. module: stock
 #: view:stock.picking:0
 msgid "Search Stock Picking"
-msgstr ""
+msgstr "Искать комплектацию запасов"
 
 #. module: stock
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Company is not specified in Location"
-msgstr ""
+msgstr "Компания не определена в местоположении"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-report"
-msgstr ""
+msgstr "terp-report"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -1429,12 +1443,12 @@ msgstr "Тип"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
 msgid "Generic IT Suppliers"
-msgstr ""
+msgstr "Общие поставщики ИТ"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_FILE"
-msgstr ""
+msgstr "STOCK_FILE"
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -1442,7 +1456,7 @@ msgstr ""
 #: field:stock.production.lot,date:0
 #: field:stock.tracking,date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Дата создания"
 
 #. module: stock
 #: field:report.stock.lines.date,id:0
@@ -1452,22 +1466,22 @@ msgstr "Id позиции инвентаризации"
 #. module: stock
 #: help:stock.location,address_id:0
 msgid "Address of  customer or supplier."
-msgstr ""
+msgstr "Адрес заказчика или поставщика"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-gdu-smart-failing"
-msgstr ""
+msgstr "terp-gdu-smart-failing"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_EDIT"
-msgstr ""
+msgstr "STOCK_EDIT"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_CONNECT"
-msgstr ""
+msgstr "STOCK_CONNECT"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -1478,7 +1492,7 @@ msgstr "Упаковка"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_GO_DOWN"
-msgstr ""
+msgstr "STOCK_GO_DOWN"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1490,23 +1504,23 @@ msgstr "Местоположение клиента"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_OK"
-msgstr ""
+msgstr "STOCK_OK"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Неверное действие !"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-emblem-important"
-msgstr ""
+msgstr "terp-emblem-important"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replacement
 msgid "Stock Replacement"
-msgstr ""
+msgstr "Замена запасов"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1526,7 +1540,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_company
 msgid "OpenERP S.A."
-msgstr ""
+msgstr "OpenERP S.A."
 
 #. module: stock
 #: help:stock.incoterms,active:0
@@ -1539,7 +1553,7 @@ msgstr ""
 #: view:stock.picking:0
 #: field:stock.picking,date:0
 msgid "Order Date"
-msgstr ""
+msgstr "Дата заказа"
 
 #. module: stock
 #: field:stock.location,location_id:0
@@ -1562,12 +1576,13 @@ msgstr ""
 #: help:stock.location,company_id:0
 msgid "Let this field empty if this location is shared between all companies"
 msgstr ""
+"Оставьте это поле пустым, если это местоположение общее для всех компаний"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Please provide a positive quantity to scrap!"
-msgstr ""
+msgstr "Пожалуйста предоставьте положительное количество в брак!"
 
 #. module: stock
 #: field:stock.location,chained_delay:0
@@ -1578,12 +1593,12 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Cannot deliver products which are already delivered !"
-msgstr ""
+msgstr "Невозможно доставить продукцию, которая уже доставлена !"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_UNINDENT"
-msgstr ""
+msgstr "STOCK_UNINDENT"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
@@ -1593,7 +1608,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-face-plain"
-msgstr ""
+msgstr "terp-face-plain"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1606,28 +1621,28 @@ msgstr "Местоположение поставщика"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "were scrapped"
-msgstr ""
+msgstr "были забракованы"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_FIND"
-msgstr ""
+msgstr "STOCK_FIND"
 
 #. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Partial"
-msgstr ""
+msgstr "Частично"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "September"
-msgstr ""
+msgstr "Сентябрь"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_HELP"
-msgstr ""
+msgstr "STOCK_HELP"
 
 #. module: stock
 #: help:stock.picking,backorder_id:0
@@ -1639,19 +1654,19 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
 msgid "Stock Statistics"
-msgstr ""
+msgstr "Статистика запасов"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #: code:addons/stock/wizard/stock_partial_picking.py:0
 #, python-format
 msgid "Currency"
-msgstr ""
+msgstr "Валюта"
 
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "Отслеживание производимых партий"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:0
@@ -1673,12 +1688,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_UNDO"
-msgstr ""
+msgstr "STOCK_UNDO"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-gnome-cpu-frequency-applet+"
-msgstr ""
+msgstr "terp-gnome-cpu-frequency-applet+"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -1700,7 +1715,7 @@ msgstr "Запланированная дата обработки этого п
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-gtk-media-pause"
-msgstr ""
+msgstr "terp-gtk-media-pause"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -1710,37 +1725,37 @@ msgstr "Созданные перемещения товаров"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-stock_format-scientific"
-msgstr ""
+msgstr "terp-stock_format-scientific"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_GO_BACK"
-msgstr ""
+msgstr "STOCK_GO_BACK"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
 msgid "Shelf 2"
-msgstr ""
+msgstr "Полка 2"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Счет будет выставлен"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_PRINT"
-msgstr ""
+msgstr "STOCK_PRINT"
 
 #. module: stock
 #: field:stock.report.tracklots,tracking_id:0
 msgid "Tracking lot"
-msgstr ""
+msgstr "Отслеживаемая партия"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-go-today"
-msgstr ""
+msgstr "terp-go-today"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -1749,6 +1764,7 @@ msgid ""
 "There is no stock input account defined ' \\n                                "
 "            'for this product: \"%s\" (id: %d)"
 msgstr ""
+"Не определен счет входящих запасов ' \\n 'для этой продукции: \"%s\" (id: %d)"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1764,30 +1780,30 @@ msgstr ""
 #. module: stock
 #: view:stock.location:0
 msgid "Localization"
-msgstr ""
+msgstr "Локализация"
 
 #. module: stock
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Delivered Qty"
-msgstr ""
+msgstr "Доставленое кол-во"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.track_line
 #: view:stock.inventory.line.split:0
 #: view:stock.move.split:0
 msgid "Split in lots"
-msgstr ""
+msgstr "Разделение в партиях"
 
 #. module: stock
 #: view:stock.move.split:0
 msgid "Production Lot Numbers"
-msgstr ""
+msgstr "Номера партий продукции"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_JUSTIFY_FILL"
-msgstr ""
+msgstr "STOCK_JUSTIFY_FILL"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1809,58 +1825,58 @@ msgstr "Дата"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Расширенные фильтры..."
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-administration"
-msgstr ""
+msgstr "terp-administration"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_CANCEL"
-msgstr ""
+msgstr "STOCK_CANCEL"
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
-msgstr ""
+msgstr "Местоположение запасов"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_APPLY"
-msgstr ""
+msgstr "STOCK_APPLY"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:0
 #, python-format
 msgid "Merging is only allowed on draft inventories."
-msgstr ""
+msgstr "Объединение возможно только в черновиках инвентаризаций"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-gtk-go-back-rtl"
-msgstr ""
+msgstr "terp-gtk-go-back-rtl"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_dashboard_stock
 msgid "Dashboard"
-msgstr ""
+msgstr "Инф. панель"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_track
 msgid "Track moves"
-msgstr ""
+msgstr "Отслеживать перемещения"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-crm"
-msgstr ""
+msgstr "terp-crm"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_STRIKETHROUGH"
-msgstr ""
+msgstr "STOCK_STRIKETHROUGH"
 
 #. module: stock
 #: field:stock.incoterms,code:0
@@ -1870,24 +1886,24 @@ msgstr "Код"
 #. module: stock
 #: view:stock.inventory.line.split:0
 msgid "Lots Number"
-msgstr ""
+msgstr "Номер партий"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.open_board_warehouse
 #: model:ir.ui.menu,name:stock.menu_board_warehouse
 msgid "Warehouse Dashboard"
-msgstr ""
+msgstr "Инф. панель склада"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-mail-"
-msgstr ""
+msgstr "terp-mail-"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You can not remove a lot line !"
-msgstr ""
+msgstr "Вы не можете удалить позицию партии"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_scrap
@@ -1895,12 +1911,12 @@ msgstr ""
 #: view:stock.move.scrap:0
 #: view:stock.picking:0
 msgid "Scrap Products"
-msgstr ""
+msgstr "Бракованная продукция"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_PREFERENCES"
-msgstr ""
+msgstr "STOCK_PREFERENCES"
 
 #. module: stock
 #: view:stock.inventory.line.split:0
@@ -1941,33 +1957,33 @@ msgstr "Информация"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Shipping Address :"
-msgstr ""
+msgstr "Адрес доставки:"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:0
 #, python-format
 msgid "Provide the quantities of the returned products."
-msgstr ""
+msgstr "Предоставьте количество возвращенной продукции"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MISSING_IMAGE"
-msgstr ""
+msgstr "STOCK_MISSING_IMAGE"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_REMOVE"
-msgstr ""
+msgstr "STOCK_REMOVE"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-call-start"
-msgstr ""
+msgstr "terp-call-start module: stock"
 
 #. module: stock
 #: view:stock.change.standard.price:0
 msgid "Cost Price"
-msgstr ""
+msgstr "Себестоимость"
 
 #. module: stock
 #: view:product.product:0
@@ -1978,13 +1994,13 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "Создать счет"
 
 #. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Process Later"
-msgstr ""
+msgstr "Обработать позже"
 
 #. module: stock
 #: help:res.partner,property_stock_supplier:0
@@ -1992,11 +2008,14 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
+"Это местоположение будет использоваться (вместо местоположения по "
+"умолчанию), как источник местоположения для продукции полученной вами от "
+"текущего партнера"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not from Picking"
-msgstr ""
+msgstr "Не из комплектования"
 
 #. module: stock
 #: field:stock.warehouse,partner_address_id:0
@@ -2011,27 +2030,27 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_JUSTIFY_LEFT"
-msgstr ""
+msgstr "STOCK_JUSTIFY_LEFT"
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
 msgid "Planned Lead Time (Days)"
-msgstr ""
+msgstr "Планируемое время выполнения (в днях)"
 
 #. module: stock
 #: field:stock.change.standard.price,new_price:0
 msgid "Price"
-msgstr ""
+msgstr "Цена"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Search Inventory"
-msgstr ""
+msgstr "Искать инвентаризацию"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
 msgid "Stock report by tracking lots"
-msgstr ""
+msgstr "Отчет о запасах по отслеживаемым партиям"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -2040,16 +2059,18 @@ msgid ""
 "There is no stock input account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Не определен счет входящих запасов для этой продукции или категории: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "January"
-msgstr ""
+msgstr "Январь"
 
 #. module: stock
 #: field:stock.production.lot,ref:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "Внутренняя ссылка"
 
 #. module: stock
 #: help:stock.production.lot,prefix:0
@@ -2057,11 +2078,13 @@ msgid ""
 "Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL "
 "[INT_REF]"
 msgstr ""
+"Необязательный префикс для вывода этого серийного номера: PREFIX/SERIAL "
+"[INT_REF]"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_HARDDISK"
-msgstr ""
+msgstr "STOCK_HARDDISK"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
@@ -2114,11 +2137,14 @@ msgid ""
 "default one, as the source location for stock moves generated when you do an "
 "inventory"
 msgstr ""
+"Для текущей продукции, это местоположение будет использоваться (вместо "
+"местоположения по умолчанию), как источник местоположения для перемещения "
+"запасов, генерируемых в процессе инвентаризации"
 
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Stockable"
-msgstr ""
+msgstr "Хранимое"
 
 #. module: stock
 #: selection:product.product,valuation:0
@@ -2133,12 +2159,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-locked"
-msgstr ""
+msgstr "terp-locked"
 
 #. module: stock
 #: view:stock.change.standard.price:0
 msgid "_Apply"
-msgstr ""
+msgstr "_Применить"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -2152,12 +2178,12 @@ msgstr "]"
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 msgid "Total value"
-msgstr ""
+msgstr "Общая стоимость"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-personal"
-msgstr ""
+msgstr "terp-personal"
 
 #. module: stock
 #: help:stock.location,chained_journal_id:0
@@ -2281,7 +2307,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Input Picking List"
-msgstr ""
+msgstr "Входящий комплектовочный лист"
 
 #. module: stock
 #: field:stock.move,product_uom:0
@@ -2352,7 +2378,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr ""
+msgstr "Частичное комплектование"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_scrapped
@@ -2493,7 +2519,7 @@ msgstr ""
 #. module: stock
 #: help:stock.picking,min_date:0
 msgid "Expected date for the picking to be processed"
-msgstr ""
+msgstr "Ожидаемая дата обработки комплектования"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -2568,7 +2594,7 @@ msgstr "Инвентаризация"
 #: model:ir.model,name:stock.model_stock_picking
 #: field:stock.move,picking_id:0
 msgid "Picking List"
-msgstr ""
+msgstr "Комплектовочный лист"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -2745,7 +2771,7 @@ msgstr "Просмотр товаров на складах"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking list"
-msgstr ""
+msgstr "Внутренний комплектовочный лист"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2990,7 +3016,7 @@ msgstr ""
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Internal picking"
-msgstr ""
+msgstr "Внутреннее комплектование"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -3046,7 +3072,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_out
 msgid "Customers Packings"
-msgstr ""
+msgstr "Упаковки заказчиков"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -3088,6 +3114,8 @@ msgstr "Дата выполнения"
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
+"Пожалуйста установите партнера на комплектовочный лист, если вы хотите "
+"создать счет."
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -3243,7 +3271,7 @@ msgstr "Ед.изм. продукции"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You cannot remove the picking which is in %s state !"
-msgstr ""
+msgstr "Вы не можете удалить комплектование в состоянии: %s !"
 
 #. module: stock
 #: field:stock.picking,address_id:0
@@ -3541,7 +3569,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:0
 #, python-format
 msgid "This picking list does not require invoicing."
-msgstr ""
+msgstr "Этот комплектовочный лист не требует выставления счета."
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -3593,6 +3621,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
 msgstr ""
+"Это местоположение будет использоваться (вместо местоположения по "
+"умолчанию), как место назначения продукции отправляемой этому партнеру"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -3654,7 +3684,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
 msgid "Related Picking"
-msgstr ""
+msgstr "Связанное комплектование"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -3886,7 +3916,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Picking"
-msgstr ""
+msgstr "Авто-комплектование"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
@@ -3959,6 +3989,9 @@ msgid ""
 "For the current product, this stock location will be used, instead of the "
 "default one, as the source location for stock moves generated by procurements"
 msgstr ""
+"Для текущей продукции, это местоположение будет использоваться (вместо "
+"местоположения по умолчанию), как источник местоположения для перемещения "
+"запасов, генерируемых в процессе снабжения"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -3969,7 +4002,7 @@ msgstr ""
 #. module: stock
 #: help:stock.picking,origin:0
 msgid "Reference of the document that produced this picking."
-msgstr ""
+msgstr "Ссылка на документ создавший это комплектование."
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
@@ -3990,7 +4023,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:0
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr ""
+msgstr "Нет комплектовочных листов требующих выставления счетов."
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -4245,7 +4278,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Picking"
-msgstr ""
+msgstr "Комплектование"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
