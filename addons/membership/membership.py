@@ -314,7 +314,7 @@ class Partner(osv.osv):
                     'Membership amount', digits=(16, 2),
                     help = 'The price negotiated by the partner'),
         'membership_state': fields.function(
-                    __get_membership_state, method = True,
+                    __get_membership_state, method=True,
                     string = 'Current Membership State', type = 'selection',
                     selection = STATE,
                     store = {
@@ -329,7 +329,7 @@ class Partner(osv.osv):
     -Invoiced Member: A member whose invoice has been created.
     -Paid Member: A member who has paid the membership amount."""),
         'membership_start': fields.function(
-                    _membership_date, method = True, multi = 'membeship_start',
+                    _membership_date, method=True, multi = 'membeship_start',
                     string = 'Start membership date', type = 'date',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
@@ -337,15 +337,15 @@ class Partner(osv.osv):
                         'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
                     }, help="Date from which membership becomes active."),
         'membership_stop': fields.function(
-                    _membership_date, method = True,
-                    string = 'Stop membership date', type = 'date', multi='membership_stop',
+                    _membership_date, method=True,
+                    string = 'Stop membership date', type='date', multi='membership_stop',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
                         'res.partner': (lambda self, cr, uid, ids, c={}:ids, ['free_member'], 10)
                     }, help="Date until which membership remains active."),
         'membership_cancel': fields.function(
-                    _membership_date, method = True,
+                    _membership_date, method=True,
                     string = 'Cancel membership date', type='date', multi='membership_cancel',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 11),
