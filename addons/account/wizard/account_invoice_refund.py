@@ -36,7 +36,7 @@ class account_invoice_refund(osv.osv_memory):
        'period': fields.many2one('account.period', 'Force period'),
        'journal_id': fields.many2one('account.journal', 'Refund Journal', help='You can select here the journal to use for the refund invoice that will be created. If you leave that field empty, it will use the same journal as the current invoice.'),
        'description': fields.char('Description', size=128, required=True),
-       'filter_refund': fields.selection([('modify', 'Modify'), ('refund', 'Refund'), ('cancel', 'Cancel')], "Refund Type", required=True, help='Refund invoice base on this type. You can not Modify and Cancel if the invoice is already rencociled'),
+       'filter_refund': fields.selection([('modify', 'Modify'), ('refund', 'Refund'), ('cancel', 'Cancel')], "Refund Type", required=True, help='Refund invoice base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
     }
 
     def _get_journal(self, cr, uid, context=None):
@@ -214,7 +214,7 @@ class account_invoice_refund(osv.osv_memory):
             invoice_domain.append(('id', '=', created_inv))
             result['domain'] = invoice_domain
             return result
-        
+
     def invoice_refund(self, cr, uid, ids, context=None):
         data_refund = self.read(cr, uid, ids, [],context=context)[0]['filter_refund']
         return self.compute_refund(cr, uid, ids, data_refund, context=context)
