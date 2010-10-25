@@ -2215,7 +2215,7 @@ class stock_move(osv.osv):
                     'product_qty': quantity,
                     'product_uos_qty': uos_qty,
                     'state': move.state,
-                    'location_id': location_id
+                    'location_id': location_id or move.location_id.id,
                 }
                 if move.product_id.track_production and location_id:
                     # IF product has checked track for production lot, move lines will be split by 1
@@ -2238,9 +2238,8 @@ class stock_move(osv.osv):
                     update_val = {
                         'product_qty' : quantity_rest,
                         'product_uos_qty' : uos_qty_rest,
-                        'location_id': location_id
+                        'location_id': location_id or move.location_id.id
                     }
-
                     self.write(cr, uid, [move.id], update_val)
 
             product_obj = self.pool.get('product.product')

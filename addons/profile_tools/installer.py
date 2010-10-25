@@ -31,6 +31,11 @@ class misc_tools_installer(osv.osv_memory):
         'idea':fields.boolean('Ideas Box',help='Promote ideas of the employees, votes and discussion on best ideas.'),
         'share':fields.boolean('Share Data / Portals',help='This module allows you to easily give restricted access of any filtered list of objects to any customer or supplier.' \
             'Just click on the share icon to give access to your customers on their project\'s tasks, support requests, invoices, etc.'),
+        'pad': fields.boolean('Native pad integration',
+            help="This module creates a tighter integration between a Pad "
+                 "instance of your choosing and your OpenERP Web Client by "
+                 "letting you easily link pads to OpenERP objects via "
+                 "OpenERP attachments."),
     }
     _defaults = {
     }
