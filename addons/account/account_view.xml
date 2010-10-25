@@ -1164,6 +1164,13 @@
                         <field name="period_id" context="{'period_id':self, 'search_default_period_id':self}"/>
                     </group>
                     <newline/>
+                    <group expand="0" string="Extended options...">
+                        <field name="ref" select="1" string="Reference"/>
+                        <field name="name" select="1"/>
+                        <field name="narration" select="1"/>
+                        <field name="balance" string="Debit/Credit" select='1'/>
+                    </group>
+                    <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
                         <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
@@ -1173,12 +1180,6 @@
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended options...">
-                        <field name="ref" select="1" string="Reference"/>
-                        <field name="name" select="1"/>
-                        <field name="narration" select="1"/>
-                        <field name="balance" string="Debit/Credit" select='1'/>
-                    </group>
                 </search>
             </field>
         </record>
