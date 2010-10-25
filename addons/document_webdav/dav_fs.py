@@ -307,7 +307,7 @@ class openerp_dav_handler(dav_interface):
                 fp = node.full_path()
                 if fp and len(fp):
                     fp = '/'.join(fp)
-                    self.parent.log_message('childs for: %s' % fp)
+                    self.parent.log_message('children for: %s' % fp)
                 else:
                     fp = None
                 domain = None
@@ -345,7 +345,7 @@ class openerp_dav_handler(dav_interface):
         except DAV_Error:
             raise
         except Exception, e:
-            self.parent.log_error("cannot get_childs: "+ str(e))
+            self.parent.log_error("cannot get_children: "+ str(e))
             raise
         finally:
             if cr: cr.close()
