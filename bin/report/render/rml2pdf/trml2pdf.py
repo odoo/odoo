@@ -618,7 +618,6 @@ class _rml_flowable(object):
             rowheights = [utils.unit_get(f.strip()) for f in node.get('rowHeights').split(',')]
             if len(rowheights) == 1:
                 rowheights = rowheights[0]
-        print "Calling table..!!",data
         table = platypus.LongTable(data = data, colWidths=colwidths, rowHeights=rowheights, **(utils.attr_get(node, ['splitByRow'] ,{'repeatRows':'int','repeatCols':'int'})))
         if node.get('style'):
             table.setStyle(self.styles.table_styles[node.get('style')])
