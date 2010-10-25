@@ -290,7 +290,7 @@ class share_create(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         result_obj = self.pool.get('share.wizard.result.line')
         share_root_url = wizard_data.share_root_url
-        format_url = '%(login)' in share_root_url and '%(password)' in share_root_url
+        format_url = '%(login)s' in share_root_url and '%(password)s' in share_root_url
         existing_passwd_str = _('*usual password*')
         if wizard_data.user_type == 'new':
             for email in wizard_data.new_users.split('\n'):
@@ -430,7 +430,7 @@ class share_create(osv.osv_memory):
                 else:
                     body += _("This additional data has been automatically added to your current access.\n")
                     body += _("You may use your existing login and password to view it. As a reminder, your login is %s.\n") % result_line.login
-    
+
                 if not tools.email_send(
                                             user.user_email,
                                             email_to,
