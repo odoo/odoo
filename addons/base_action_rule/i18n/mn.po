@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-19 12:20+0000\n"
-"PO-Revision-Date: 2010-09-29 11:46+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-10-20 07:23+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-10-21 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -36,7 +36,7 @@ msgstr "Харилцагчийн ангилал"
 #. module: base_action_rule
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: base_action_rule
 #: help:base.action.rule,act_remind_user:0
@@ -62,6 +62,11 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,act_state:0
 msgid "Set State to"
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule,act_email_from:0
+msgid "Email From"
 msgstr ""
 
 #. module: base_action_rule
@@ -110,11 +115,6 @@ msgstr ""
 
 #. module: base_action_rule
 #: view:base.action.rule:0
-msgid "Email Reminders"
-msgstr "Имэйл сануулагууд"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
 msgid "Conditions on Model Partner"
 msgstr ""
 
@@ -134,9 +134,9 @@ msgid "%(object_subject)s = Object subject"
 msgstr ""
 
 #. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+#: view:base.action.rule:0
+msgid "Email Reminders"
+msgstr "Имэйл сануулагууд"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -210,6 +210,13 @@ msgid "None"
 msgstr "Хоосон"
 
 #. module: base_action_rule
+#: help:base.action.rule,act_email_to:0
+msgid ""
+"Use a python expression to specify the right field on which one than we will "
+"use for the 'To' field of the header"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_user_phone)s = Responsible phone"
 msgstr "%(object_user_phone)s = Хариуцлагатай утас"
@@ -227,6 +234,11 @@ msgid "Delay type"
 msgstr "Саатлын төрөл"
 
 #. module: base_action_rule
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: base_action_rule
 #: help:base.action.rule,regex_name:0
 msgid ""
 "Regular expression for matching name of the resource\n"
@@ -239,6 +251,11 @@ msgstr ""
 #: field:base.action.rule,act_method:0
 msgid "Call Object Method"
 msgstr "Объектын метод дуудах"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_email_to:0
+msgid "Email To"
+msgstr ""
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_watchers:0
@@ -256,6 +273,13 @@ msgstr "%(partner)s = Түншийн нэр"
 #: view:base.action.rule:0
 msgid "Note"
 msgstr "Тэмдэглэл"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_email_from:0
+msgid ""
+"Use a python expression to specify the right field on which one than we will "
+"use for the 'From' field of the header"
+msgstr ""
 
 #. module: base_action_rule
 #: constraint:ir.ui.menu:0
@@ -376,11 +400,6 @@ msgstr "%(partner_email)s = Түншийн имэйл"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
-msgid "%(object_date)s = Creation date"
-msgstr "%(object_date)s = Үүсгэх огноо"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
 msgid "%(object_user_email)s = Responsible Email"
 msgstr "%(object_user_email)s = Хариуцлагатай имэйл"
 
@@ -479,3 +498,6 @@ msgstr "Нөхцөл байдал"
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Гарааны огноо"
+
+#~ msgid "%(object_date)s = Creation date"
+#~ msgstr "%(object_date)s = Үүсгэх огноо"
