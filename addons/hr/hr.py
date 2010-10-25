@@ -25,6 +25,8 @@ from osv import fields, osv
 import tools
 from tools.translate import _
 
+import addons
+
 class hr_employee_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
@@ -180,12 +182,8 @@ class hr_employee(osv.osv):
         return {'value': {'work_email' : work_email}}
 
     def _get_photo(self, cr, uid, context=None):
-        paths = tools.config['addons_path'].split(",")
-        for path in paths:
-            full_path = os.path.join(path, 'hr/image', 'photo.png')
-            if os.path.exists(full_path):
-                return open(full_path,'rb') .read().encode('base64')
-        raise Exception("photo.png could not be found")
+        res_path = addons.get_module_resource("hr","image/photo.png")
+        return open(res_path,'rb').read().encode('base64')
 
     _defaults = {
         'active': 1,
