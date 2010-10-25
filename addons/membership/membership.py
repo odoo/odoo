@@ -156,12 +156,12 @@ class membership_line(osv.osv):
                         'account.invoice': (_get_membership_lines, ['state'], 10),
                         'res.partner': (_get_partners, ['membership_state'], 12),
                         }, help="""It indicates the membership state.
-    -Non Member: A member who has not applied for any membership.
-    -Cancelled Member: A member who has cancelled his membership.
-    -Old Member: A member whose membership date has expired.
-    -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.
-    -Invoiced Member: A member whose invoice has been created.
-    -Paid Member: A member who has paid the membership amount."""),
+                        -Non Member: A member who has not applied for any membership.
+                        -Cancelled Member: A member who has cancelled his membership.
+                        -Old Member: A member whose membership date has expired.
+                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.
+                        -Invoiced Member: A member whose invoice has been created.
+                        -Paid Member: A member who has paid the membership amount."""),
         'company_id': fields.related('account_invoice_line', 'invoice_id', 'company_id', type="many2one", relation="res.company", string="Company", readonly=True, store=True)
     }
     _rec_name = 'partner'
@@ -331,12 +331,12 @@ class Partner(osv.osv):
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
                         'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="""It indicates the membership state.
-    -Non Member: A member who has not applied for any membership.
-    -Cancelled Member: A member who has cancelled his membership.
-    -Old Member: A member whose membership date has expired.
-    -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.
-    -Invoiced Member: A member whose invoice has been created.
-    -Paid Member: A member who has paid the membership amount."""),
+                    -Non Member: A member who has not applied for any membership.
+                    -Cancelled Member: A member who has cancelled his membership.
+                    -Old Member: A member whose membership date has expired.
+                    -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.
+                    -Invoiced Member: A member whose invoice has been created.
+                    -Paid Member: A member who has paid the membership amount."""),
         'membership_start': fields.function(
                     _membership_date, method=True, multi = 'membeship_start',
                     string = 'Start membership date', type = 'date',
@@ -351,7 +351,7 @@ class Partner(osv.osv):
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
-                        'res.partner': (lambda self, cr, uid, ids, c={}:ids, ['free_member'], 10)
+                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
                     }, help="Date until which membership remains active."),
         'membership_cancel': fields.function(
                     _membership_date, method=True,
@@ -359,7 +359,7 @@ class Partner(osv.osv):
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 11),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
-                        'res.partner': (lambda self, cr, uid, ids, c={}:ids, ['free_member'], 10)
+                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
                     }, help="Date on which membership has been cancelled"),
     }
     _defaults = {
@@ -395,7 +395,7 @@ class Partner(osv.osv):
     def create_membership_invoice(self, cr, uid, ids, product_id=None, datas=None, context=None):
         """ Create Customer Invoice of Membership for partners.
         @param datas: datas has dictionary value which consist Id of Membership product and Cost Amount of Membership.
-                      datas = {'membership_product_id': None, 'amount':None}
+                      datas = {'membership_product_id': None, 'amount': None}
         """
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
@@ -452,7 +452,7 @@ Partner()
 class product_template(osv.osv):
     _inherit = 'product.template'
     _columns = {
-        'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price')),
+        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price')),
     }
 product_template()
 
