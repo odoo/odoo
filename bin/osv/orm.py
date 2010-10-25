@@ -3191,15 +3191,17 @@ class orm(orm_template):
             return
         if not (context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access):
             return
-        def key(oid):
-            return "%s,%s" % (self._name, oid)
-        santa = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
-        for i in range(0, len(ids), cr.IN_MAX):
-            sub_ids = tools.flatten(((oid, context[self.CONCURRENCY_CHECK_FIELD][key(oid)])
-                                     for oid in ids[i:i+cr.IN_MAX]
-                                     if key(oid) in context[self.CONCURRENCY_CHECK_FIELD]))
-            if not sub_ids: continue
-            cr.execute("SELECT 1 FROM %s WHERE %s" % (self._table, " OR ".join([santa]*(len(sub_ids)/2))), sub_ids)
+        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
+        for sub_ids in cr.split_for_in_conditions(ids):
+            ids_to_check = []
+            for id in sub_ids:
+                id_ref = "%s,%s" % (self._name, id)
+                update_date = context[self.CONCURRENCY_CHECK_FIELD].pop(id_ref, None)
+                if update_date:
+                    ids_to_check.extend([id, update_date])
+            if not ids_to_check:
+                continue
+            cr.execute("SELECT 1 FROM %s WHERE %s" % (self._table, " OR ".join([check_clause]*(len(ids_to_check)/2))), tuple(ids_to_check))
             if cr.fetchone():
                 raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
 
