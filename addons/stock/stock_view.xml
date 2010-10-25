@@ -758,6 +758,8 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
+                        <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Internal Pickings to invoice"/>
+                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="address_id"/>
                         <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
@@ -770,11 +772,7 @@
                         <separator orientation="vertical" />
                         <filter string="Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <separator orientation="vertical" />
-                        <filter string="Journal" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
-                        <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Internal Pickings to invoice"/>
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
                     </group>
                 </search>
             </field>
