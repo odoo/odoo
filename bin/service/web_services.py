@@ -722,7 +722,10 @@ class report_spool(netsvc.ExportService):
                 logger = netsvc.Logger()
                 logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
-                self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
+                if hasattr(exception, 'name') and hasattr(exception, 'value'):
+                    self._reports[id]['exception'] = ExceptionWithTraceback(tools.ustr(exception.name), tools.ustr(exception.value))
+                else:
+                    self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
                 self._reports[id]['state'] = True
             cr.commit()
             cr.close()
@@ -733,8 +736,9 @@ class report_spool(netsvc.ExportService):
 
     def _check_report(self, report_id):
         result = self._reports[report_id]
-        if result['exception']:
-            raise result['exception']
+        exc = result['exception']
+        if exc:
+            self.abortResponse(exc, exc.message, 'warning', exc.traceback)
         res = {'state': result['state']}
         if res['state']:
             if tools.config['reportgz']:
@@ -754,7 +758,6 @@ class report_spool(netsvc.ExportService):
         return res
 
     def exp_report_get(self, db, uid, report_id):
-
         if report_id in self._reports:
             if self._reports[report_id]['uid'] == uid:
                 return self._check_report(report_id)

@@ -276,7 +276,7 @@ class res_company(osv.osv):
         'rml_header':_get_header,
         'rml_header2': _get_header2,
         'rml_header3': _get_header3,
-        'logo':_get_logo
+        #'logo':_get_logo
     }
 
     _constraints = [

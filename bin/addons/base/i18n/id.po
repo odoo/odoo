@@ -259,11 +259,6 @@ msgid "STOCK_GOTO_FIRST"
 msgstr "STOCK_GOTO_FIRST"
 
 #. module: base
-#: help:ir.rule.group,rules:0
-msgid "The rule is satisfied if at least one test is True"
-msgstr "Aturan ini memuaskan jika setidaknya satu test Benar"
-
-#. module: base
 #: selection:ir.report.custom.fields,operation:0
 msgid "Get Max"
 msgstr "Dapatkan Mak"
@@ -808,11 +803,6 @@ msgid "Website"
 msgstr ""
 
 #. module: base
-#: field:ir.rule.group,rules:0
-msgid "Tests"
-msgstr ""
-
-#. module: base
 #: view:ir.module.repository:0
 msgid "Repository"
 msgstr ""
@@ -1338,7 +1328,6 @@ msgstr ""
 #: field:ir.actions.todo,groups_id:0
 #: field:ir.actions.wizard,groups_id:0
 #: field:ir.model.fields,groups:0
-#: field:ir.rule.group,groups:0
 #: field:ir.ui.menu,groups_id:0
 #: model:ir.ui.menu,name:base.menu_action_res_groups
 #: view:res.groups:0
@@ -1387,10 +1376,7 @@ msgstr ""
 
 #. module: base
 #: help:ir.actions.server,expression:0
-msgid ""
-"Enter the field/expression that will return the list. E.g. select the sale "
-"order in Object, and you can have loop on the sales order line. Expression = "
-"`object.order_line`."
+msgid "Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."
 msgstr ""
 
 #. module: base
@@ -1437,11 +1423,6 @@ msgstr ""
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: base
-#: help:ir.rule.group,global:0
-msgid "Make the rule global, otherwise it needs to be put on a group"
 msgstr ""
 
 #. module: base
@@ -2154,11 +2135,6 @@ msgid "Countries"
 msgstr ""
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "Record rules"
-msgstr ""
-
-#. module: base
 #: field:res.partner,vat:0
 msgid "VAT"
 msgstr ""
@@ -2769,11 +2745,6 @@ msgid "Benin"
 msgstr ""
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "The rule is satisfied if all test are True (AND)"
-msgstr ""
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CONNECT"
 msgstr ""
@@ -3092,7 +3063,6 @@ msgstr ""
 #: field:ir.module.repository,name:0
 #: field:ir.property,name:0
 #: field:ir.report.custom.fields,name:0
-#: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
 #: field:res.bank,name:0
@@ -3207,9 +3177,7 @@ msgstr ""
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
-msgid ""
-"\"%s\" contains too many dots. XML ids should not contain dots ! These are "
-"used to refer to other modules data, as in module.reference_id"
+msgid "'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id"
 msgstr ""
 
 #. module: base
@@ -3753,11 +3721,6 @@ msgid "ir.translation"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule_group
-msgid "ir.rule.group"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
 #: model:ir.ui.menu,name:base.menu_module_tree_install
 msgid "Installed modules"
@@ -4082,11 +4045,6 @@ msgstr ""
 #. module: base
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
-msgstr ""
-
-#. module: base
-#: view:ir.rule.group:0
-msgid "Multiple rules on same objects are joined using operator OR"
 msgstr ""
 
 #. module: base
@@ -4706,11 +4664,6 @@ msgid "Reunion (French)"
 msgstr ""
 
 #. module: base
-#: field:ir.rule.group,global:0
-msgid "Global"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr ""
@@ -4956,7 +4909,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.actions.todo,users_id:0
 #: field:ir.default,uid:0
-#: field:ir.rule.group,users:0
 #: model:ir.ui.menu,name:base.menu_action_res_users
 #: model:ir.ui.menu,name:base.menu_users
 #: view:res.groups:0
@@ -6069,7 +6021,6 @@ msgstr ""
 #: field:ir.model.data,model:0
 #: field:ir.model.grid,model:0
 #: field:ir.report.custom,model_id:0
-#: field:ir.rule.group,model_id:0
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
@@ -8047,4 +7998,28 @@ msgstr ""
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Integrity Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "User Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "Base Language 'en_US' can not be deleted !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is User's Preferred Language !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is Active !\nPlease de-activate the language first."
 msgstr ""

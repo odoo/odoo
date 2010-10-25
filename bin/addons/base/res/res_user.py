@@ -37,7 +37,7 @@ class groups(osv.osv):
         'name': fields.char('Group Name', size=64, required=True),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
-            'group_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
+            'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment',size=250),
     }
@@ -81,32 +81,6 @@ class groups(osv.osv):
         return data_obj.browse(cr, uid, extended_group_data_id, context=context).res_id
 
 groups()
-
-class roles(osv.osv):
-    _name = "res.roles"
-    _columns = {
-        'name': fields.char('Role Name', size=64, required=True),
-        'parent_id': fields.many2one('res.roles', 'Parent', select=True,
-            help="The parent role can be used to construct a hierarchy of roles. Parent roles inherit from the roles of their descendants."),
-        'child_id': fields.one2many('res.roles', 'parent_id', 'Children'),
-        'users': fields.many2many('res.users', 'res_roles_users_rel', 'rid', 'uid', 'Users'),
-        'description': fields.text('Description', help="Description of this role and where it is relevant in workflows and processes"),
-        'workflow_transition_ids': fields.one2many('workflow.transition', 'role_id', 'Workflow Transitions',
-            help="The workflow transitions associated with this role"),
-    }
-    def check(self, cr, uid, ids, role_id):
-        """Verifies that the role with id ``role_id`` is granted directly or indirectly to a
-           user that possesses the roles with ids ``ids``. Indirectly means that one of the
-           roles with id in ``ids`` is an ancestor role of the role with id ``role_id``.
-        """
-        if role_id in ids:
-            return True
-        cr.execute('select parent_id from res_roles where id=%s', (role_id,))
-        roles = cr.fetchone()[0]
-        if roles:
-            return self.check(cr, uid, ids, roles)
-        return False
-roles()
 
 def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
@@ -219,7 +193,7 @@ class users(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=True,
+        'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
                                  " and most listings"),
         'login': fields.char('Login', size=64, required=True,
@@ -236,7 +210,6 @@ class users(osv.osv):
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
-        'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 
         # Special behavior for this field: res.company.search() will only return the companies
         # available to the current user (should be the user's companies?), when the user_preference
@@ -328,8 +301,16 @@ class users(osv.osv):
 
     def _get_group(self,cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
-        dummy,group_id = dataobj.get_object_reference(cr, 1, 'base', 'group_user')
-        return [group_id]
+        result = []
+        try:
+            dummy,group_id = dataobj.get_object_reference(cr, 1, 'base', 'group_user')
+            result.append(group_id)
+            dummy,group_id = dataobj.get_object_reference(cr, 1, 'base', 'group_partner_manager')
+            result.append(group_id)
+        except ValueError:
+            # If these groups does not exists anymore
+            pass
+        return result
 
     _defaults = {
         'password' : lambda *a : '',
@@ -358,9 +339,10 @@ class users(osv.osv):
                 if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
                     break
             else:
-                # check that user is not selecting an invalid company_id
-                if 'company_id' not in values or (values.get('company_id') in self.read(cr, uid, uid, ['company_ids'], context=context)['company_ids']):
-                    uid = 1 # safe fields only, so we write as super-user to bypass access rights
+                if 'company_id' in values:
+                    if not (values['company_id'] in self.read(cr, uid, uid, ['company_ids'], context=context)['company_ids']):
+                        del values['company_id']
+                uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
         res = super(users, self).write(cr, uid, ids, values, context=context)
 

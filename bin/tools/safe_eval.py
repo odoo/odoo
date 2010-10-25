@@ -40,7 +40,7 @@ import os
 __all__ = ['test_expr', 'literal_eval', 'safe_eval', 'const_eval', 'ext_eval' ]
 
 _CONST_OPCODES = set(opmap[x] for x in [
-    'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP',
+    'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP','POP_BLOCK','SETUP_LOOP',
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
     'LOAD_CONST', 'RETURN_VALUE', 'STORE_SUBSCR'] if x in opmap)
 
@@ -55,7 +55,7 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'STORE_MAP', 'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
     'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'JUMP_ABSOLUTE',
-    'DELETE_NAME', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE','MAKE_FUNCTION',
+    'DELETE_NAME', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE','MAKE_FUNCTION','JUMP_FORWARD'
     ] if x in opmap))
 
 _logger = logging.getLogger('safe_eval')
@@ -264,7 +264,8 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'reduce': reduce,
                 'filter': filter,
                 'round': round,
-                'len': len
+                'len': len,
+                'set' : set
             }
     )
     return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)

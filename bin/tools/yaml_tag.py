@@ -4,6 +4,7 @@ import logging
 class YamlTag(object):
     """
     Superclass for constructors of custom tags defined in yaml file.
+    __str__ are overriden in subclass and used for serialization in module recorder.
     """
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
@@ -27,6 +28,8 @@ class Record(YamlTag):
         self.model = model
         self.id = id
         super(Record, self).__init__(**kwargs)
+    def __str__(self):
+        return '!record {model: %s, id: %s}:' % (str(self.model,), str(self.id,))
     
 class Python(YamlTag):
     def __init__(self, model, severity=logging.WARNING, name="", **kwargs):
@@ -34,6 +37,8 @@ class Python(YamlTag):
         self.severity = severity
         self.name = name
         super(Python, self).__init__(**kwargs)
+    def __str__(self):
+        return '!python {model: %s}: |' % (str(self.model), )
 
 class Menuitem(YamlTag):
     def __init__(self, id, name, **kwargs):
@@ -42,10 +47,13 @@ class Menuitem(YamlTag):
         super(Menuitem, self).__init__(**kwargs)
 
 class Workflow(YamlTag):
-    def __init__(self, model, action, **kwargs):
+    def __init__(self, model, action, ref=None, **kwargs):
         self.model = model
         self.action = action
+        self.ref = ref
         super(Workflow, self).__init__(**kwargs)
+    def __str__(self):
+        return '!workflow {model: %s, action: %s, ref: %s}' % (str(self.model,), str(self.action,), str(self.ref,))
 
 class ActWindow(YamlTag):
     def __init__(self, **kwargs):
@@ -80,10 +88,15 @@ class Eval(YamlTag):
     def __init__(self, expression):
         self.expression = expression
         super(Eval, self).__init__()
+    def __str__(self):
+        return 'eval(%s)' % (str(self.expr,))
     
 class Ref(YamlTag):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, expr="False", *args, **kwargs):
+        self.expr = expr
         super(Ref, self).__init__(*args, **kwargs)
+    def __str__(self):
+        return 'ref(%s)' % (str(self.expr,))
     
 class IrSet(YamlTag):
     def __init__(self):
@@ -167,3 +180,4 @@ def add_constructors():
     yaml.add_multi_constructor(u"!ref", ref_constructor)
     yaml.add_constructor(u"!ir_set", ir_set_constructor)
 add_constructors()
+

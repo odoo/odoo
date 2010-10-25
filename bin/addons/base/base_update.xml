@@ -144,12 +144,9 @@
                                 <field colspan="2" name="signature" nolabel="1"/>
                             </group>
                             <group colspan="2" col="2" expand="1">
-                                <separator string="Access Rights (groups)" colspan="2"/>
+                                <separator string="Groups" colspan="2"/>
                                 <field colspan="2" nolabel="1" name="groups_id"/>
                             </group>
-                        </page>
-                        <page string="Roles">
-                            <field colspan="4" nolabel="1" name="roles_id"/>
                         </page>
                         <page string="Companies" groups="base.group_multi_company">
                             <field colspan="4" nolabel="1" name="company_ids" select="1"/>
@@ -322,7 +319,7 @@
                 </form>
                 <xpath expr="//label[@string='description']"
                      position="attributes">
-                <attribute name="string">OpenERP allows you to select between a simplified and extended interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface. You can always switch later from the user preferences.</attribute>
+                <attribute name="string">If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences.</attribute>
               </xpath>
               <xpath expr='//separator[@string="title"]' position='attributes'>
                     <attribute name='string'>Configure Your Interface</attribute>
@@ -359,6 +356,7 @@
         </record>
         <record id="config_wizard_simple_view" model="ir.actions.todo">
             <field name="action_id" ref="action_config_simple_view_form"/>
+            <field name="restart">always</field>
             <field name="sequence">1</field>
         </record>
     </data>

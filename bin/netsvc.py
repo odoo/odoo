@@ -464,6 +464,14 @@ class OpenERPDispatcherException(Exception):
         self.exception = exception
         self.traceback = traceback
 
+def replace_request_password(args):
+    # password is always 3rd argument in a request, we replace it in RPC logs
+    # so it's easier to forward logs for diagnostics/debugging purposes...
+    args = list(args)
+    if len(args) > 2:
+        args[2] = '*'
+    return args
+
 class OpenERPDispatcher:
     def log(self, title, msg, channel=logging.DEBUG_RPC, depth=2):
         logger = logging.getLogger(title)
@@ -476,7 +484,7 @@ class OpenERPDispatcher:
             logger = logging.getLogger('result')
             self.log('service', service_name)
             self.log('method', method)
-            self.log('params', params, depth=(logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) and 3 or 1))
+            self.log('params', replace_request_password(params), depth=(logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) and 3 or 1))
             auth = getattr(self, 'auth_provider', None)
             result = ExportService.getService(service_name).dispatch(method, auth, params)
             self.log('result', result, channel=logging.DEBUG_RPC_ANSWER, depth=(logger.isEnabledFor(logging.DEBUG_SQL) and 5 or 3))

@@ -6,13 +6,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-09-09 18:06+0000\n"
+"PO-Revision-Date: 2010-10-12 07:49+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-10-13 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -260,11 +260,6 @@ msgstr "%y - Χρονολογία χωρίς τον αιώνα, σε δεκαδ�
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_GOTO_FIRST"
 msgstr "STOCK_GOTO_FIRST"
-
-#. module: base
-#: help:ir.rule.group,rules:0
-msgid "The rule is satisfied if at least one test is True"
-msgstr "Ο κανόνας πληροίται αν τουλάχιστον ένα τεστ είναι Ορθό"
 
 #. module: base
 #: selection:ir.report.custom.fields,operation:0
@@ -820,11 +815,6 @@ msgid "Website"
 msgstr "Ιστοσελίδα"
 
 #. module: base
-#: field:ir.rule.group,rules:0
-msgid "Tests"
-msgstr "Tests"
-
-#. module: base
 #: view:ir.module.repository:0
 msgid "Repository"
 msgstr "Αποθήκευση αρχείων"
@@ -1365,7 +1355,6 @@ msgstr "Αριθμός Αρθρωμάτων που ενημερώθηκαν"
 #: field:ir.actions.todo,groups_id:0
 #: field:ir.actions.wizard,groups_id:0
 #: field:ir.model.fields,groups:0
-#: field:ir.rule.group,groups:0
 #: field:ir.ui.menu,groups_id:0
 #: model:ir.ui.menu,name:base.menu_action_res_groups
 #: view:res.groups:0
@@ -1471,11 +1460,6 @@ msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
-
-#. module: base
-#: help:ir.rule.group,global:0
-msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr "Κάντε τον κανόνα γενικό, αλλιώς πρέπει να μπει σε ένα μια ομάδα"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -2195,11 +2179,6 @@ msgid "Countries"
 msgstr "Χώρες"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "Record rules"
-msgstr "Καταχώρηση κανόνων"
-
-#. module: base
 #: field:res.partner,vat:0
 msgid "VAT"
 msgstr "ΦΠΑ"
@@ -2836,11 +2815,6 @@ msgid "Benin"
 msgstr "Benin"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "The rule is satisfied if all test are True (AND)"
-msgstr "Ο κανόνας πληροίται αν τουλάχιστον ένα τεστ είναι Ορθό (AND)"
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CONNECT"
 msgstr "STOCK_CONNECT"
@@ -3164,7 +3138,6 @@ msgstr "Kazakhstan"
 #: field:ir.module.repository,name:0
 #: field:ir.property,name:0
 #: field:ir.report.custom.fields,name:0
-#: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
 #: field:res.bank,name:0
@@ -3282,10 +3255,10 @@ msgstr "Ομαδοποίηση Ανά"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid ""
-"\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+"'%s' contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
-"\"%s\" περιέχει πολλές τελείες. Οι XML ταυτότητες (ids) δεν πρέπει να "
+"'%s' περιέχει πολλές τελείες. Οι XML ταυτότητες (ids) δεν πρέπει να "
 "περιέχουν τελείες! Οι τελείες χρησιμοποιούνται σε αναφορές σε άλλες ενότητες "
 "όπως στο module.reference_id"
 
@@ -3836,11 +3809,6 @@ msgid "ir.translation"
 msgstr "ir.translation"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule_group
-msgid "ir.rule.group"
-msgstr "ir.rule.group"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
 #: model:ir.ui.menu,name:base.menu_module_tree_install
 msgid "Installed modules"
@@ -4168,13 +4136,6 @@ msgstr "Α4"
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
 msgstr ""
-
-#. module: base
-#: view:ir.rule.group:0
-msgid "Multiple rules on same objects are joined using operator OR"
-msgstr ""
-"Πολλαπλοί κανόνες στα ίδια αντικείμενα συνδέονται μέσω της λογικής "
-"συνάρτησης 'Ή'"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
@@ -4803,11 +4764,6 @@ msgid "Reunion (French)"
 msgstr "Reunion (French)"
 
 #. module: base
-#: field:ir.rule.group,global:0
-msgid "Global"
-msgstr "Παγκόσμια"
-
-#. module: base
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr "Czech Republic"
@@ -5055,7 +5011,6 @@ msgstr "Προμηθευτής Μερών"
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.actions.todo,users_id:0
 #: field:ir.default,uid:0
-#: field:ir.rule.group,users:0
 #: model:ir.ui.menu,name:base.menu_action_res_users
 #: model:ir.ui.menu,name:base.menu_users
 #: view:res.groups:0
@@ -6188,7 +6143,6 @@ msgstr ""
 #: field:ir.model.data,model:0
 #: field:ir.model.grid,model:0
 #: field:ir.report.custom,model_id:0
-#: field:ir.rule.group,model_id:0
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
@@ -8203,6 +8157,32 @@ msgstr ""
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Integrity Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "User Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "Base Language 'en_US' can not be deleted !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is User's Preferred Language !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot delete the language which is Active !\n"
+"Please de-activate the language first."
 msgstr ""
 
 #, python-format

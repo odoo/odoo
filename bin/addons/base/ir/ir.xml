@@ -433,15 +433,14 @@
 
                         <field name="report_name" select="1"/>
                         <field name="report_type"/>
+                        <field name="report_file"/>
                     </group>
 
                     <notebook colspan="4">
                         <page string="Other Configuration">
                             <group col="2" colspan="2">
                                 <separator string="RML Report" colspan="2"/>
-                                <field name="report_rml"/>
                                 <field name="header"/>
-                                <field name="auto"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator string="XML Report" colspan="2"/>
@@ -456,6 +455,7 @@
                             <group col="2" colspan="2">
                                 <separator string="Miscellaneous" colspan="2"/>
                                 <field name="multi"/>
+                                <field name="auto"/>
                             </group>
                         </page>
                         <page string="Security">
@@ -708,7 +708,7 @@
         </record>
         <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_res_company_global"/>
 
-        <!-- User Roles -->
+        <!-- Users -->
         <record id="action_res_users" model="ir.actions.act_window">
             <field name="name">Users</field>
             <field name="type">ir.actions.act_window</field>
@@ -760,68 +760,6 @@
         </record>
         <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"
             groups="base.group_extended"/>
-
-        <record id="view_roles_form" model="ir.ui.view">
-            <field name="name">res.roles.form</field>
-            <field name="model">res.roles</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Role">
-                    <field name="name"/>
-                    <field name="parent_id"/>
-                    <separator string="Description" colspan="4"/>
-                    <field name="description" nolabel="1" colspan="4"/>
-                    <separator string="Workflow transitions" colspan="4"/>
-                     <field name="workflow_transition_ids" nolabel="1" colspan="4">
-                        <tree string="Workflow transitions">
-                            <field name="wkf_id"/>
-                            <field name="act_from"/>
-                            <field name="act_to"/>
-                            <field name="signal"/>
-                            <field name="condition"/>
-                        </tree>
-                     </field>
-                </form>
-            </field>
-        </record>
-        <record id="view_roles_tree" model="ir.ui.view">
-            <field name="name">res.roles.tree</field>
-            <field name="model">res.roles</field>
-            <field name="type">tree</field>
-            <field name="field_parent">child_id</field>
-            <field name="arch" type="xml">
-                <tree string="Roles">
-                    <field name="name"/>
-                    <field name="parent_id"/>
-                    <field name="description"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_roles_search" model="ir.ui.view">
-            <field name="name">res.roles.search</field>
-            <field name="model">res.roles</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Role">
-                    <field name="name"/>
-                    <field name="parent_id"/>
-                    <field name="description"/>
-                    <newline/>
-                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
-                        <filter string="Parent" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'parent_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-       <record id="action_res_roles_form" model="ir.actions.act_window">
-            <field name="name">Roles</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.roles</field>
-            <field name="view_type">form</field>
-            <field name="search_view_id" ref="view_roles_search"/>
-        </record>
-        <menuitem action="action_res_roles_form" id="menu_action_res_roles_form" parent="base.menu_users"/>
 
         <!-- View -->
         <record id="view_view_form" model="ir.ui.view">
@@ -916,8 +854,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Attachments">
-                    <field name="name" />
-                    <field name="type"/>
+                    <group colspan="4" col="6">
+                        <field name="name" />
+                        <field name="type"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    </group>
                     <notebook colspan="4">
                     <page string="Attachment">
                     <group col="4" colspan="4">
@@ -958,6 +899,8 @@
                 <tree string="Attachments">
                     <field name="name"/>
                     <field name="datas_fname"/>
+                    <field name="type" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="create_uid"/>
                     <field name="create_date"/>
                 </tree>
@@ -970,20 +913,31 @@
             <field name="arch" type="xml">
                 <search string="Attachments">
                     <group colspan="4" col="10">
-                      <filter icon="terp-stage"
-                        string="URL"
-                        domain="[('type','=','url')]"/>
-                      <filter icon="terp-stock_align_left_24"
-                        string="Binary"
-                        domain="[('type','=','binary')]"/>
-                    <separator orientation="vertical"/>
+                        <filter icon="terp-stage"
+                            string="URL"
+                            domain="[('type','=','url')]"/>
+                        <filter icon="terp-stock_align_left_24"
+                            string="Binary"
+                            domain="[('type','=','binary')]"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-go-month" string="Month"
+                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
+                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="type"/>
                         <field name="datas_fname"/>
+                        <field name="create_uid">
+                            <filter icon="terp-personal"
+                                domain="[('create_uid','=',uid)]"
+                                help="Filter on my documents" />
+                        </field>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Creator" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
+                        <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator orientation="vertical"/>
                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                 </search>
@@ -1221,7 +1175,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Module data">
+                <form string="Object Identifiers">
                     <field name="name"/>
                     <field name="module"/>
                     <field name="model"/>
@@ -1239,7 +1193,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Module Data">
+                <tree string="Object Identifiers">
                     <field name="module"/>
                     <field name="name"/>
                     <field name="model"/>
@@ -1253,7 +1207,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Module Data">
+                <search string="Object Identifiers">
                     <filter icon="terp-camera_test"
                         string="Updatable"
                         domain="[('noupdate', '=', False)]"/>
@@ -1293,12 +1247,12 @@
         <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
 
         <record id="action_model_data" model="ir.actions.act_window">
-            <field name="name">Module data</field>
+            <field name="name">Object Identifiers</field>
             <field name="res_model">ir.model.data</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_model_data_list"/>
         </record>
-        <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_9"
+        <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_5"
                   groups="base.group_extended"/>
 
         <!-- Translations -->

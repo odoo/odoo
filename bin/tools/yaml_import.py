@@ -607,6 +607,7 @@ class YamlInterpreter(object):
             'usage': node.usage,
             'limit': node.limit,
             'auto_refresh': node.auto_refresh,
+            'multi': getattr(node, 'multi', False),
         }
 
         self._set_group_values(node, values)
@@ -675,7 +676,7 @@ class YamlInterpreter(object):
         for dest, f in (('name','string'), ('model','model'), ('report_name','name')):
             values[dest] = getattr(node, f)
             assert values[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
+        for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
             if getattr(node, field):
                 values[dest] = getattr(node, field)
         if node.auto:
