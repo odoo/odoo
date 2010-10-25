@@ -322,7 +322,7 @@ class account_installer(osv.osv_memory):
                     #create the bank journal
                     vals_journal = {}
                     vals_journal = {
-                        'name': vals_bnk['name'] + ' Journal',
+                        'name': vals_bnk['name'] + _(' Journal'),
                         'code': _(vals_bnk['name'][:3]).upper(),
                         'sequence_id': seq_id,
                         'type': 'cash',
