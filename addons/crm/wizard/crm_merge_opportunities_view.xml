@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Merge Opportunities  -->
+
+        <record model="ir.ui.view" id="merge_opportunity_form">
+            <field name="name">crm.merge.opportunity.form</field>
+            <field name="model">crm.merge.opportunity</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Merge Opportunities">
+                    <separator string="Select Opportunities" colspan="4"/>
+                    <field name="opportunity_ids" nolabel="1" colspan="4" width="550" height="300"/>
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <field name="state" />
+                        <button string="_Cancel" icon="gtk-cancel" special="cancel" />
+                        <button name="action_merge" type="object"
+                                string="_Merge" icon="gtk-ok" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!--  Merge Opportunities action -->
+
+        <record model="ir.actions.act_window" id="merge_opportunity_act">
+            <field name="name">Merge Opportunities</field>
+            <field name="res_model">crm.merge.opportunity</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="merge_opportunity_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <act_window id="action_merge_opportunities"
+            multi="True"
+            key2="client_action_multi" name="Merge Opportunities"
+            res_model="crm.merge.opportunity" src_model="crm.lead"
+            view_mode="form" target="new" view_type="form" />
+
+    </data>
+</openerp>

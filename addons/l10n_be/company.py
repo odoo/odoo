@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,19 +15,17 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import osv
 
 class res_company(osv.osv):
     _inherit = "res.company"
-    _description = 'res.company'
-
+    _description = 'Company'
 
     def _get_default_ad(self, addresses):
-        city = post_code = address = ""
+        city = post_code = address = country_code = ""
         for ads in addresses:
             if ads.type == 'default':
                 city = ads.city or ""
@@ -36,7 +34,9 @@ class res_company(osv.osv):
                     address = ads.street or ""
                 if ads.street2:
                     address += " " + ads.street2
-        return city, post_code, address
+                if ads.country_id:
+                    country_code = ads.country_id and ads.country_id.code or ""
+        return city, post_code, address, country_code
 res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

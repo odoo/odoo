@@ -22,14 +22,13 @@
 # TODO:
 #   Error treatment: exception, request, ... -> send request to user_id
 
-from mx import DateTime
 import time
 from osv import fields,osv
 from tools.translate import _
 
 class subscription_document(osv.osv):
     _name = "subscription.document"
-    _description = "Subscription document"
+    _description = "Subscription Document"
     _columns = {
         'name': fields.char('Name', size=60, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the subscription document without removing it."),
@@ -49,11 +48,11 @@ subscription_document()
 
 class subscription_document_fields(osv.osv):
     _name = "subscription.document.fields"
-    _description = "Subscription document fields"
+    _description = "Subscription Document Fields"
     _rec_name = 'field'
     _columns = {
         'field': fields.many2one('ir.model.fields', 'Field', domain="[('model_id', '=', parent.model)]", required=True),
-        'value': fields.selection([('false','False'),('date','Current Date')], 'Default Value', size=40),
+        'value': fields.selection([('false','False'),('date','Current Date')], 'Default Value', size=40, help="Default value is considered for field when new document is generated."),
         'document_id': fields.many2one('subscription.document', 'Subscription Document', ondelete='cascade'),
     }
     _defaults = {}
@@ -77,9 +76,10 @@ class subscription_subscription(osv.osv):
         'exec_init': fields.integer('Number of documents'),
         'date_init': fields.datetime('First Date'),
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State'),
-        'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
+        'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128, help="User can choose the source document on which he wants to create documents"),
         'doc_lines': fields.one2many('subscription.subscription.history', 'subscription_id', 'Documents created', readonly=True),
-        'cron_id': fields.many2one('ir.cron', 'Cron Job')
+        'cron_id': fields.many2one('ir.cron', 'Cron Job', help="Scheduler which runs on subscription"),
+        'note': fields.text('Notes', help="Description or Summary of Subscription"),
     }
     _defaults = {
         'date_init': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),

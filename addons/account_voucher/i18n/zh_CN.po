@@ -4,27 +4,27 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 07:30+0000\n"
+"PO-Revision-Date: 2010-09-29 11:37+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-21 04:42+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_account_acount_move_line_open1
 msgid "Opening Balance Entry"
-msgstr "期初余额凭证"
+msgstr "期初余额"
 
 #. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_receipt_bakreceipt_voucher_list
 msgid "Bank Receipts"
-msgstr "银行收入"
+msgstr "银行票据"
 
 #. module: account_voucher
 #: rml:voucher.cash_amount:0
@@ -41,13 +41,13 @@ msgstr "状态:"
 #. module: account_voucher
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+msgstr "在行动定义中的模式名称无效"
 
 #. module: account_voucher
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid "Ref. :"
-msgstr "参考:"
+msgstr "关联单号:"
 
 #. module: account_voucher
 #: selection:account.move,voucher_type:0
@@ -69,12 +69,12 @@ msgstr "公司"
 #: model:ir.actions.act_window,name:account_voucher.action_view_jour_voucher_form
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_voucher_form
 msgid "Journal Voucher"
-msgstr "原始凭证分类帐"
+msgstr "手工凭证"
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt.drcr:0
 msgid ","
-msgstr ""
+msgstr ","
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -84,12 +84,12 @@ msgstr "设为草稿"
 #. module: account_voucher
 #: wizard_button:account.voucher.open,init,open:0
 msgid "Open Voucher Entries"
-msgstr "打开原始凭证记录"
+msgstr "打开原始凭证"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Line"
-msgstr "原始凭证明细"
+msgstr "原始凭证行"
 
 #. module: account_voucher
 #: view:account.move:0
@@ -105,7 +105,7 @@ msgstr "科目"
 #. module: account_voucher
 #: rml:voucher.cash_amount:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account_voucher
 #: field:account.account,level:0
@@ -115,7 +115,7 @@ msgstr "级"
 #. module: account_voucher
 #: view:account.move:0
 msgid "Account Entry Line"
-msgstr "凭证明细"
+msgstr "凭证行"
 
 #. module: account_voucher
 #: view:account.move:0
@@ -139,13 +139,13 @@ msgstr "收款人签字"
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid "No."
-msgstr ""
+msgstr "No."
 
 #. module: account_voucher
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid "Amount (in words) :"
-msgstr "金额:"
+msgstr "金额(口头上):"
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -159,13 +159,13 @@ msgstr "辅助核算项目"
 #: model:ir.actions.act_window,name:account_voucher.action_view_jour_sale_voucher_form
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_sale_voucher_form
 msgid "Journal Sale Voucher"
-msgstr "销售原始凭证分类帐"
+msgstr "销售手工凭证"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_receipt_vou_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_action_receipt_vou_voucher_list
 msgid "Receipt Vouchers"
-msgstr "收入原始凭证"
+msgstr "收入手工凭证"
 
 #. module: account_voucher
 #: rml:voucher.cash_amount:0
@@ -184,7 +184,7 @@ msgstr "在科目:"
 #: model:ir.actions.act_window,name:account_voucher.action_payments_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_action_payments_voucher_list
 msgid "Payment Vouchers"
-msgstr "付款原始凭证"
+msgstr "付款手工凭证"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -226,7 +226,7 @@ msgstr "类型"
 #. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_voucher_list
 msgid "Voucher Entries"
-msgstr "原始凭证记录"
+msgstr "手工凭证记录"
 
 #. module: account_voucher
 #: rml:voucher.cash_amount:0
@@ -238,20 +238,20 @@ msgstr "授权的签字人"
 #: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 msgid "Vouchers"
-msgstr "原始凭证"
+msgstr "手工凭证"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher.line,voucher_id:0
 #: model:res.request.link,name:account_voucher.req_link_voucher
 msgid "Voucher"
-msgstr "原始凭证"
+msgstr "手工凭证"
 
 #. module: account_voucher
 #: wizard_view:account.voucher.open,init:0
 #: model:ir.ui.menu,name:account_voucher.menu_wizard_account_voucher_open
 msgid "Open Vouchers"
-msgstr "打开原始凭证"
+msgstr "打开手工凭证"
 
 #. module: account_voucher
 #: constraint:ir.ui.view:0
@@ -282,9 +282,9 @@ msgstr "新的银行付款"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: field:account.voucher,payment_ids:0
+#: field:account.voucher,line_ids:0
 msgid "Voucher Lines"
-msgstr "原始凭证明细"
+msgstr "手工凭证行"
 
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
@@ -302,7 +302,7 @@ msgstr "描述"
 #. module: account_voucher
 #: field:account.voucher,reference:0
 msgid "Voucher Reference"
-msgstr "原始凭证参考"
+msgstr "手工凭证关联单号"
 
 #. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_cash_rec_voucher_form
@@ -312,7 +312,7 @@ msgstr "新的现金收入"
 #. module: account_voucher
 #: model:ir.actions.report.xml,name:account_voucher.report_account_voucher_amt
 msgid "Voucher Report"
-msgstr "原始凭证报表"
+msgstr "手工凭证报表"
 
 #. module: account_voucher
 #: field:account.account,open_bal:0
@@ -346,7 +346,7 @@ msgstr "新的现金付款"
 #. module: account_voucher
 #: view:account.move:0
 msgid "Optional Information"
-msgstr "其它信息"
+msgstr "可选择信息"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -362,7 +362,7 @@ msgstr "日期"
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid ":"
-msgstr ""
+msgstr "："
 
 #. module: account_voucher
 #: field:account.account,type1:0
@@ -373,13 +373,13 @@ msgstr "借/贷"
 #. module: account_voucher
 #: model:ir.actions.report.xml,name:account_voucher.report_account_voucher
 msgid "Voucher Report (Cr/Dr)"
-msgstr "原始凭证报表(贷/借)"
+msgstr "手工凭证报表(贷/借)"
 
 #. module: account_voucher
 #: field:account.move,voucher_type:0
 #: wizard_field:account.voucher.open,init,type:0
 msgid "Voucher Type"
-msgstr "原始凭证类型"
+msgstr "手工凭证类型"
 
 #. module: account_voucher
 #: selection:account.account,type1:0
@@ -398,12 +398,12 @@ msgstr "通过:"
 #. module: account_voucher
 #: field:account.voucher,reference_type:0
 msgid "Reference Type"
-msgstr "参考类型"
+msgstr "关联类型"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr "原始凭证"
+msgstr "手工凭证"
 
 #. module: account_voucher
 #: field:account.voucher,period_id:0
@@ -459,13 +459,13 @@ msgstr "原始凭证记录"
 #. module: account_voucher
 #: field:res.currency,sub_name:0
 msgid "Sub Currency"
-msgstr "货币细分"
+msgstr "子货币"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_other_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_action_other_voucher_list
 msgid "Other Vouchers"
-msgstr "其它原始凭证"
+msgstr "其它手工凭证"
 
 #. module: account_voucher
 #: field:account.voucher.line,name:0
@@ -476,7 +476,7 @@ msgstr "说明"
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid "Canceled"
-msgstr "取消"
+msgstr "已取消"
 
 #. module: account_voucher
 #: selection:account.move,voucher_type:0
@@ -486,18 +486,18 @@ msgstr "取消"
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid "Cash Payment Voucher"
-msgstr "现金付款原始凭证"
+msgstr "现金付款手工凭证"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_receipt_bakreceipt_voucher_list
 msgid "Bank Receipt"
-msgstr "银行收入"
+msgstr "银行收据"
 
 #. module: account_voucher
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #. module: account_voucher
 #: selection:account.move,voucher_type:0
@@ -506,17 +506,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_view_jour_pur_voucher_form
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_pur_voucher_form
 msgid "Journal Purchase Voucher"
-msgstr "采购原始凭证分类帐"
+msgstr "采购手工凭证业务类型"
 
 #. module: account_voucher
 #: view:account.account:0
 msgid "Closing Balance"
-msgstr "期末结余"
+msgstr "期末余额"
 
 #. module: account_voucher
 #: field:account.voucher.line,ref:0
 msgid "Ref."
-msgstr "参考"
+msgstr "关联单号"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -524,7 +524,7 @@ msgstr "参考"
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid "Posted"
-msgstr "已审核"
+msgstr "已登账"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
@@ -539,7 +539,7 @@ msgstr "实际凭证"
 #. module: account_voucher
 #: model:ir.actions.wizard,name:account_voucher.wizard_account_voucher_open
 msgid "Open a Voucher Entry"
-msgstr "打开一原始凭证记录"
+msgstr "打开一手工凭证"
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
@@ -549,12 +549,12 @@ msgstr "凭证"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Entry Lines"
-msgstr "凭证明细"
+msgstr "凭证行"
 
 #. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_bank_rec_voucher_form
 msgid "New Bank Receipt"
-msgstr "新的银行收入"
+msgstr "新的银行收据"
 
 #. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_payments_cashpay_voucher_list
@@ -569,7 +569,7 @@ msgstr "现金付款"
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid "Cash Receipt Voucher"
-msgstr "现金收入原始凭证"
+msgstr "现金收入手工凭证"
 
 #. module: account_voucher
 #: selection:account.move,voucher_type:0
@@ -579,7 +579,7 @@ msgstr "现金收入原始凭证"
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid "Bank Payment Voucher"
-msgstr "银行付款原始凭证"
+msgstr "银行付款手工凭证"
 
 #. module: account_voucher
 #: selection:account.move,voucher_type:0
@@ -589,10 +589,10 @@ msgstr "银行付款原始凭证"
 #: rml:voucher.cash_amount:0
 #: rml:voucher.cash_receipt.drcr:0
 msgid "Bank Receipt Voucher"
-msgstr "银行收入原始凭证"
+msgstr "银行收据手工凭证"
 
 #. module: account_voucher
 #: field:account.account,journal_id:0
 #: field:account.voucher,journal_id:0
 msgid "Journal"
-msgstr "分类帐"
+msgstr "业务类型"

@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import event_registration
-import make_invoice
-import event_registrations_partner
-import confirm_registration
+import event_make_invoice
+import event_confirm_registration
+import event_confirm
+import partner_event_registration
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

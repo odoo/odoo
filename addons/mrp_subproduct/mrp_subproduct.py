@@ -24,7 +24,7 @@ from osv import osv
 
 class mrp_subproduct(osv.osv):
     _name = 'mrp.subproduct'
-    _description = 'Mrp Sub Product'
+    _description = 'Sub Product'
     _columns={
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Product Qty', required=True),
@@ -35,10 +35,15 @@ class mrp_subproduct(osv.osv):
     _defaults={
         'subproduct_type': lambda *args: 'fixed'
     }
+    
     def onchange_product_id(self, cr, uid, ids, product_id,context={}):
+        """ Changes UoM if product_id changes.
+        @param product_id: Changed product_id
+        @return: Dictionary of changed values
+        """
         if product_id:
-            prod=self.pool.get('product.product').browse(cr,uid,product_id)
-            v = {'product_uom':prod.uom_id.id}
+            prod = self.pool.get('product.product').browse(cr, uid, product_id)
+            v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
 
@@ -48,6 +53,7 @@ class mrp_bom(osv.osv):
     _name = 'mrp.bom'
     _description = 'Bill of Material'
     _inherit='mrp.bom'
+    
     _columns={
         'sub_products':fields.one2many('mrp.subproduct', 'bom_id', 'sub_products'),
     }
@@ -59,20 +65,25 @@ class mrp_production(osv.osv):
     _inherit= 'mrp.production'   
 
     def action_confirm(self, cr, uid, ids):
-         picking_id=super(mrp_production,self).action_confirm(cr, uid, ids)
-         for production in self.browse(cr, uid, ids):
-             source = production.product_id.product_tmpl_id.property_stock_production.id
-             for sub_product in production.bom_id.sub_products:
-                 qty1 = sub_product.product_qty
-                 qty2 = production.product_uos and production.product_uos_qty or False
-                 if sub_product.subproduct_type=='variable':
+        """ Confirms production order and calculates quantity based on subproduct_type.
+        @return: Newly generated picking Id.
+        """
+        picking_id = super(mrp_production,self).action_confirm(cr, uid, ids)
+        for production in self.browse(cr, uid, ids):
+            source = production.product_id.product_tmpl_id.property_stock_production.id
+            if not production.bom_id:
+                continue
+            for sub_product in production.bom_id.sub_products:
+                qty1 = sub_product.product_qty
+                qty2 = production.product_uos and production.product_uos_qty or False
+                if sub_product.subproduct_type == 'variable':
                     if production.product_qty:
                         qty1 *= production.product_qty / (production.bom_id.product_qty or 1.0)
                     if production.product_uos_qty:
                         qty2 *= production.product_uos_qty / (production.bom_id.product_uos_qty or 1.0)
-                 data = {
-                    'name':'PROD:'+production.name,
-                    'date_planned': production.date_planned,
+                data = {
+                    'name': 'PROD:'+production.name,
+                    'date': production.date_planned,
                     'product_id': sub_product.product_id.id,
                     'product_qty': qty1,
                     'product_uom': sub_product.product_uom.id,
@@ -82,10 +93,10 @@ class mrp_production(osv.osv):
                     'location_dest_id': production.location_dest_id.id,
                     'move_dest_id': production.move_prod_id.id,
                     'state': 'waiting',
-                    'production_id':production.id
-                 }
-                 sub_prod_ids=self.pool.get('stock.move').create(cr, uid,data)
-         return picking_id
+                    'production_id': production.id
+                }
+                self.pool.get('stock.move').create(cr, uid, data)
+        return picking_id
 
 mrp_production()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

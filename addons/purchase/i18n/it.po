@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-01-09 14:07+0000\n"
-"Last-Translator: Carlo Vettore <Unknown>\n"
+"PO-Revision-Date: 2010-08-03 10:02+0000\n"
+"Last-Translator: eLBati - albatos.com <lorenzo.battistini@albatos.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -73,6 +73,7 @@ msgstr "Acquisto Confermato"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Eccezione Fattura"
 
@@ -131,6 +132,7 @@ msgstr "Approva Acquisto"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Approvato"
 
@@ -281,6 +283,7 @@ msgstr "Riga Ordine"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Confermato"
 
@@ -307,6 +310,7 @@ msgstr "RFQ"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "In attesa"
 
@@ -388,6 +392,7 @@ msgstr "Rif. Ordine"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Completato"
 
@@ -438,6 +443,7 @@ msgstr "Approva l'ordine di Acquisto dopo la conferma"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Eccezione Spedizione"
 
@@ -691,7 +697,7 @@ msgstr "Annulla"
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchases Properties"
-msgstr ""
+msgstr "Proprietà d'acquisto"
 
 #. module: purchase
 #: field:purchase.order.line,order_id:0
@@ -891,3 +897,39 @@ msgstr ""
 #: view:purchase.order.line:0
 msgid "Stock Moves"
 msgstr "Movimenti di magazzino"
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Waiting Schedule"
+msgstr ""
+
+#. module: purchase
+#: field:report.purchase.order.category,price_total:0
+#: field:report.purchase.order.product,price_total:0
+msgid "Total Price"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Quotation"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Manual in progress"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "In progress"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr ""

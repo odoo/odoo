@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    	<record id="view_event_make_invoice" model="ir.ui.view">
+            <field name="name">event.make.invoice</field>
+            <field name="model">event.make.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+             <form string="Create invoices">
+                <separator colspan="4" string="Do you really want to create the invoice(s) ?" />
+                <field name="grouped" />
+                <field name="invoice_date"/>
+                <group colspan="4">
+	                <separator string="" colspan="4" />
+	                <label string="" colspan="2"/>
+	                <button special="cancel" string="Close" icon="gtk-close"/>
+	                <button name="make_invoice" string="Done" type="object" icon="gtk-ok"/>
+                </group>
+             </form>
+            </field>
+		</record>
+
+		<record id="action_event_confirm_registration" model="ir.actions.act_window">
+            <field name="name">Make Invoices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">event.make.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_event_make_invoice"/>
+            <field name="target">new</field>
+    	</record>
+
+        <act_window id="action_make_invoices"
+    		key2 = "client_action_multi"   name="Make Invoice"
+    		res_model="event.make.invoice"  src_model="event.registration"
+    		view_mode="form" target="new"  view_type="form" />
+
+    </data>
+</openerp>

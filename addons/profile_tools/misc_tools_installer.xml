@@ -8,30 +8,35 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Tools Modules Installation</attribute>
+            <attribute name="string">Extra Tools Configuration</attribute>
           </form>
+          <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                <attribute name='string'></attribute>
+          </xpath>
 
           <separator string="title" position="attributes">
-            <attribute name="string">Select Tools To Install</attribute>
+            <attribute name="string">Configure Extra Tools</attribute>
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
-            <attribute name="string"
-                       >Here are a few useful applications which, while they don't directly contribute to your business, can improve on it or improve your OpenERP experience</attribute>
+            <attribute name="string">Here are applications that can help you improve your organization without being key in its management.</attribute>
+          </xpath>
+          <xpath expr="//button[@string='Install Modules']" position="attributes">
+              <attribute name="string">Configure</attribute>
           </xpath>
           <group colspan="8">
-            <separator string="Tools" colspan="4"/>
+            <field name="share"/>
             <field name="lunch"/>
-            <field name="subscription"/>
+            <field name="idea"/>
             <field name="survey"/>
-            <field name="audittrail"/>
+            <field name="subscription" groups="base.group_extended"/>
           </group>
         </data>
       </field>
     </record>
 
     <record id="action_misc_tools_installer" model="ir.actions.act_window">
-      <field name="name">Tools Modules Installation</field>
+      <field name="name">Tools Configuration</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">misc_tools.installer</field>
       <field name="view_id" ref="view_misc_tools_installer"/>
@@ -42,6 +47,7 @@
 
     <record id="misc_tools_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_misc_tools_installer"/>
+        <field name="restart">always</field>
       <field name="sequence">3</field>
     </record>
   </data>

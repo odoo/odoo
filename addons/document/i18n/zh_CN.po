@@ -4,22 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 08:19+0000\n"
+"PO-Revision-Date: 2010-09-09 07:04+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-21 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
 #: field:document.directory,create_date:0
 msgid "Date Created"
-msgstr "建立日期"
+msgstr "创建日期"
 
 #. module: document
 #: field:document.directory,ressource_id:0
@@ -77,7 +77,7 @@ msgstr "文件大小"
 msgid ""
 "Check this field if you want that the name of the file start by the record "
 "name."
-msgstr "如果你想文件名开始是记录名称请选择它."
+msgstr "如果你想文件名是这记录的名称请选择它."
 
 #. module: document
 #: selection:document.directory,type:0
@@ -87,7 +87,7 @@ msgstr "其它资源"
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
 msgid "Parent Model"
-msgstr "上级式样"
+msgstr "上级模型"
 
 #. module: document
 #: view:document.configuration.wizard:0
@@ -102,7 +102,7 @@ msgstr "附件"
 #. module: document
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+msgstr "在动作定义中使用了无效的模快名。"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -112,20 +112,20 @@ msgstr "静态目录"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
-msgstr "目录内容分类"
+msgstr "目录内容类型"
 
 #. module: document
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr "如果你想使用可见资源的自动过滤这是使用的范围"
+msgstr "如果你想对可得到的资源自动过滤, 规定一个范围"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
-msgstr "如果你想在系统中使用相同的对象树状结构请选择这"
+msgstr "如果你想使用树结构象系统选定对象, 请选择这"
 
 #. module: document
 #: field:document.directory,type:0
@@ -178,14 +178,14 @@ msgstr "树结构"
 #. module: document
 #: field:ir.attachment,title:0
 msgid "Resource Title"
-msgstr "标题"
+msgstr "资源标题"
 
 #. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
 msgid ""
 "This wizard will configure the URL of the server of the document management "
 "system."
-msgstr "这向导将配置文档管理系统的URL"
+msgstr "这向导将配置服务器文档管理系统的URL"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content
@@ -197,7 +197,7 @@ msgstr "目录内容"
 msgid ""
 "If you put an object here, this directory template will appear bellow all of "
 "these objects. Don't put a parent directory if you select a parent model."
-msgstr "如果你在这填上对象,这目录的模板将涵盖所有的对象.如果您选择母公司模式不要填入父目录"
+msgstr "如果你在这填上对象, 这目录的模板将出现在所有的对象. 如果您选择上级模式不要填入上级目录"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document
@@ -263,7 +263,7 @@ msgstr "定义"
 #. module: document
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
+msgstr "无效的视图结构xml文件!"
 
 #. module: document
 #: model:ir.module.module,description:document.module_meta_information
@@ -286,7 +286,7 @@ msgstr "名称"
 #. module: document
 #: field:document.directory.content.type,code:0
 msgid "Extension"
-msgstr "延伸"
+msgstr "扩展"
 
 #. module: document
 #: selection:ir.attachment,store_method:0
@@ -307,7 +307,7 @@ msgstr "目录"
 #. module: document
 #: view:document.directory:0
 msgid "Seq."
-msgstr "序号"
+msgstr "序列"
 
 #. module: document
 #: model:ir.module.module,shortdesc:document.module_meta_information
@@ -329,7 +329,7 @@ msgstr "拥有者"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
 msgid "document.configuration.wizard"
-msgstr "文档结构向导"
+msgstr ""
 
 #. module: document
 #: view:ir.attachment:0
@@ -374,10 +374,7 @@ msgstr "日志"
 msgid ""
 "Select an object here and Open ERP will create a mapping for each of these "
 "objects, using the given domain, when browsing through FTP."
-msgstr ""
-"选择一对象,系统将创建一个每个对象的列表,使用给定的域,通过FTP浏览\"\n"
-"document,view,document.directory,0,Seq.,序列\n"
-"document,field,document.directory.content"
+msgstr "通过FTP浏览, 使用给定的域, 在这选择一对象, 系统将创建一个每个对象的列表,"
 
 #. module: document
 #: view:ir.attachment:0
@@ -387,7 +384,7 @@ msgstr "其它信息"
 #. module: document
 #: field:document.directory,domain:0
 msgid "Domain"
-msgstr "隶属"
+msgstr "域"
 
 #. module: document
 #: field:document.directory,write_date:0
@@ -475,6 +472,168 @@ msgstr "子目录"
 #: view:document.directory:0
 msgid "Contents"
 msgstr "内容"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_partner
+msgid "Files Per Month"
+msgstr "每月文件"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_wall
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_shame
+#: view:report.document.wall:0
+msgid "Wall of Shame"
+msgstr "耻辱之墙"
+
+#. module: document
+#: model:ir.model,name:document.model_report_files_partner
+msgid "Files details by Partners"
+msgstr "业务伙伴的文件详情"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all
+msgid "All Months"
+msgstr "所有月份"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all_myfile
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this_myfile
+msgid "My files"
+msgstr "我的文件"
+
+#. module: document
+#: view:report.document.user:0
+msgid "Files by users"
+msgstr "用户的文件"
+
+#. module: document
+#: view:report.files.partner:0
+msgid "Files per Month"
+msgstr "每月的文件"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_my_document_tree1
+msgid "My files (All months)"
+msgstr "我的文件(所有月份)"
+
+#. module: document
+#: field:report.document.wall,file_name:0
+msgid "Last Posted File Name"
+msgstr "最近上传的文件"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report
+msgid "Reporting"
+msgstr "报表"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_wall
+msgid "Users that did not inserted documents since one month"
+msgstr "一个月内没有新文件的用户"
+
+#. module: document
+#: view:report.files.partner:0
+msgid "Files By Partner"
+msgstr "业务伙伴文件"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this
+msgid "This Month"
+msgstr "本月"
+
+#. module: document
+#: field:report.document.user,user:0 field:report.document.wall,user:0
+msgid "User"
+msgstr "用户"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all_userfile
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this_userfile
+msgid "All Users files"
+msgstr "所有用户的文件"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_my_document_tree
+msgid "My files (This months)"
+msgstr "我的文件（本月）"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_user
+msgid "Files details by Users"
+msgstr "用户的文件详情"
+
+#. module: document
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
+#: field:report.files.partner,nbr:0
+msgid "# of Files"
+msgstr "# 文件"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_user_graph
+msgid "Files By Users"
+msgstr "用户的文件"
+
+#. module: document
+#: model:ir.module.module,shortdesc:report_document.module_meta_information
+msgid "Document Management - Reporting"
+msgstr "文档管理 - 报表"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files (All months)"
+msgstr "所有用户的文件（所有月份）"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_file
+msgid "Files details by Directory"
+msgstr "目录文件详情"
+
+#. module: document
+#: field:report.document.user,change_date:0
+#: field:report.files.partner,change_date:0
+msgid "Modified Date"
+msgstr "修改日期"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_size_month
+#: view:report.document.file:0
+msgid "File Size by Month"
+msgstr "按月度排列文件大小"
+
+#. module: document
+#: field:report.document.user,file_title:0
+#: field:report.files.partner,file_title:0
+msgid "File Name"
+msgstr "文件名"
+
+#. module: document
+#: field:report.document.file,month:0 field:report.document.user,month:0
+#: field:report.document.user,name:0 field:report.document.wall,month:0
+#: field:report.document.wall,name:0 field:report.files.partner,name:0
+msgid "Month"
+msgstr "月份"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
+#: view:report.document.user:0
+msgid "Files by Month"
+msgstr "按月度排列文件"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
+#: view:report.document.user:0
+msgid "Files by Resource Type"
+msgstr "文件的资源类型"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree
+msgid "All Users files (This month)"
+msgstr "所有用户的文件（本月）"
+
+#. module: document
+#: field:report.document.wall,last:0
+msgid "Last Posted Time"
+msgstr "最近的发布时间"
 
 #~ msgid "Active"
 #~ msgstr "生效"

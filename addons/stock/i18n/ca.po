@@ -4,17 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-31 12:47+0000\n"
-"Last-Translator: Albert Cervera i Areny - http://www.NaN-tic.com <albert@nan-"
-"tic.com>\n"
+"PO-Revision-Date: 2010-08-07 09:45+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:39+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -45,7 +45,7 @@ msgstr "terp-account"
 #. module: stock
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nom de model no vàlid en la definició de l'acció."
+msgstr "Nom de model no vàlid a la definició de l'acció."
 
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
@@ -71,7 +71,7 @@ msgstr "STOCK_MEDIA_FORWARD"
 #. module: stock
 #: rml:lot.location:0
 msgid "Total :"
-msgstr ""
+msgstr "Total :"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -87,7 +87,7 @@ msgstr "UdM"
 #. module: stock
 #: model:ir.actions.wizard,name:stock.return_picking
 msgid "Return packing"
-msgstr "Retorna albarà"
+msgstr "Albarà de devolució"
 
 #. module: stock
 #: field:product.category,property_stock_journal:0
@@ -121,7 +121,7 @@ msgstr "Productes rebuts"
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 msgid "Incoming Products"
-msgstr "Productes entrants"
+msgstr "Albarans d'entrada"
 
 #. module: stock
 #: field:stock.picking,name:0
@@ -148,7 +148,7 @@ msgstr "Obligueu a utilitzar un lot de producció durant la recepció"
 #: field:stock.move,move_history_ids:0
 #: field:stock.move,move_history_ids2:0
 msgid "Move History"
-msgstr "Històric moviment"
+msgstr "Històric moviments"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -207,7 +207,7 @@ msgstr "Realitza enviaments parcials"
 #. module: stock
 #: wizard_view:stock.partial_picking,end2:0
 msgid "Packing result"
-msgstr "Resultat empaquetament"
+msgstr "Resultat albarà"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -268,7 +268,7 @@ msgstr "STOCK_GOTO_FIRST"
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree6
 msgid "Internal Moves"
-msgstr "Moviments interns"
+msgstr "Albarans interns"
 
 #. module: stock
 #: field:stock.move,product_packaging:0
@@ -285,7 +285,7 @@ msgstr "Ordre (origen)"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Grand Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: stock
 #: view:stock.location:0
@@ -296,7 +296,7 @@ msgstr "Informació addicional"
 #. module: stock
 #: selection:stock.invoice_onshipping,init,type:0
 msgid "Customer Refund"
-msgstr "Factura d'abonament de client"
+msgstr "Factura rectificativa (abonament) de client"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -355,12 +355,24 @@ msgstr "STOCK_UNDERLINE"
 #. module: stock
 #: view:stock.picking.move.wizard:0
 msgid "Move Lines"
-msgstr "Línies de moviment"
+msgstr "Línies moviment"
 
 #. module: stock
 #: wizard_field:stock.fill_inventory,init,recursive:0
 msgid "Include all children for the location"
 msgstr "Inclou tots els descendents de la ubicació"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Bad Lot Assignation !"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You are moving %.2f products but only %.2f available in this lot."
+msgstr ""
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -420,7 +432,7 @@ msgstr "Processa ara"
 #. module: stock
 #: field:stock.location,address_id:0
 msgid "Location Address"
-msgstr "Direcció de la ubicació"
+msgstr "Adreça ubicació"
 
 #. module: stock
 #: help:stock.move,prodlot_id:0
@@ -593,7 +605,7 @@ msgstr "STOCK_GOTO_BOTTOM"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 #: model:ir.ui.menu,name:stock.menu_action_picking_form
 msgid "New Reception Packing"
-msgstr "Nova recepció albarà"
+msgstr "Nou albarà d'entrada"
 
 #. module: stock
 #: wizard_field:stock.move.track,init,quantity:0
@@ -748,7 +760,7 @@ msgstr "Revisions de lot de producció"
 #. module: stock
 #: view:stock.picking:0
 msgid "Packing Done"
-msgstr "Paquet realitzat"
+msgstr "Albarà realitzat"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -762,7 +774,7 @@ msgstr "En espera"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree7
 #: model:ir.ui.menu,name:stock.menu_picking_waiting
 msgid "Available Packing"
-msgstr "Empaquetat disponible"
+msgstr "Albarà disponible"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -815,7 +827,7 @@ msgstr "STOCK_CONNECT"
 #: model:ir.ui.menu,name:stock.menu_action_picking_all
 #: wizard_field:stock.picking.make,init,pickings:0
 msgid "Packing"
-msgstr "Paquet/Albarà"
+msgstr "Albarà"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -921,7 +933,7 @@ msgstr "Data creació"
 #. module: stock
 #: selection:stock.picking,type:0
 msgid "Sending Goods"
-msgstr "Envia mercaderies"
+msgstr "Enviament mercaderies"
 
 #. module: stock
 #: view:stock.picking:0
@@ -973,7 +985,7 @@ msgstr "Mètode assignació"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-administration"
-msgstr "terp-administració"
+msgstr "terp-administration"
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
@@ -988,7 +1000,7 @@ msgstr "STOCK_APPLY"
 #. module: stock
 #: wizard_view:stock.partial_picking,end2:0
 msgid "The packing has been successfully made !"
-msgstr "El paquet ha estat realitzat correctament!"
+msgstr "L'albarà ha estat realitzat correctament!"
 
 #. module: stock
 #: field:stock.move,address_id:0
@@ -1130,7 +1142,7 @@ msgstr "STOCK_HARDDISK"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
 msgid "Related Picking"
-msgstr "Paquet relacionat"
+msgstr "Albarà relacionat"
 
 #. module: stock
 #: field:stock.incoterms,name:0
@@ -1174,7 +1186,7 @@ msgstr "STOCK_COPY"
 #. module: stock
 #: selection:stock.invoice_onshipping,init,type:0
 msgid "Supplier Refund"
-msgstr "Factura d'abonament de proveïdor"
+msgstr "Factura rectificativa (abonament) de proveïdor"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -1190,7 +1202,7 @@ msgstr "Compte sortida estoc"
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
-msgstr "Automàtic pas no afegit"
+msgstr "Mov. automàtic, pas no afegit"
 
 #. module: stock
 #: wizard_view:stock.location.products,init:0
@@ -1299,7 +1311,7 @@ msgstr "Mètode lliurament"
 #. module: stock
 #: model:ir.actions.wizard,name:stock.partial_picking
 msgid "Partial packing"
-msgstr "Empaquetat parcial"
+msgstr "Albarà parcial"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1351,7 +1363,7 @@ msgstr "Ordres de lliurament a processar"
 #. module: stock
 #: field:stock.move,priority:0
 msgid "Priority"
-msgstr "Prioritat (0=Molt urgent)"
+msgstr "Prioritat"
 
 #. module: stock
 #: wizard_field:inventory.merge.stock.zero,init,location_id:0
@@ -1375,7 +1387,7 @@ msgstr "Estat de facturació"
 #. module: stock
 #: rml:lot.location:0
 msgid "Units"
-msgstr ""
+msgstr "Unitats"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1432,7 +1444,7 @@ msgstr "Data prevista"
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree
 msgid "Outgoing Products"
-msgstr "Productes sortints"
+msgstr "Albarans de sortida"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1572,7 +1584,7 @@ msgstr "Quantitat (UdV)"
 #: model:ir.actions.act_window,name:stock.action_picking_tree5
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree5
 msgid "Packing to Process"
-msgstr "Paquets a processar"
+msgstr "Albarans a processar"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1582,7 +1594,7 @@ msgstr "STOCK_MEDIA_STOP"
 #. module: stock
 #: view:stock.move:0
 msgid "Set Available"
-msgstr "Fixa disponible"
+msgstr "Canvia a disponible"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.make_picking
@@ -1630,7 +1642,7 @@ msgstr "Incoterms"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1919,8 +1931,8 @@ msgstr ""
 "S'utilitza només si seleccioneu un tipus d'ubicació encadenada.\n"
 "L'opció 'Moviment automàtic' crearà un moviment d'estoc després de l'actual "
 "que es validarà automàticament. Amb 'Operació manual', el moviment d'estoc "
-"ha de ser validat per un treballador. Amb 'Automàtic pas no afegit', la "
-"ubicació es reemplaça en el moviment original."
+"ha de ser validat per un treballador. Amb 'Mov. automàtic, pas no afegit', "
+"la ubicació es reemplaça en el moviment original."
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -1936,7 +1948,7 @@ msgstr "Seguiment"
 #: wizard_button:stock.move.track,init,track:0
 #: wizard_button:stock.picking.make,init,make:0
 msgid "Ok"
-msgstr "Ok"
+msgstr "D'acord"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
@@ -2010,7 +2022,7 @@ msgstr ""
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Confirmed"
-msgstr "Confirmada"
+msgstr "Confirmat"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2020,7 +2032,7 @@ msgstr "STOCK_MEDIA_PREVIOUS"
 #. module: stock
 #: view:stock.move:0
 msgid "Confirm"
-msgstr "Confirmat"
+msgstr "Confirma"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2173,7 +2185,7 @@ msgstr "STOCK_JUSTIFY_CENTER"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree3
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree8
 msgid "Confirmed Packing Waiting Availability"
-msgstr "Paquet confirmat esperant disponibilitat"
+msgstr "Albarà confirmat esperant disponibilitat"
 
 #. module: stock
 #: field:stock.location,posy:0
@@ -2271,6 +2283,8 @@ msgid ""
 "Scheduled date for the movement of the products or real date if the move is "
 "done."
 msgstr ""
+"Data programada per al moviment de productes o data real si el moviment ha "
+"estat realizat."
 
 #. module: stock
 #: view:stock.picking:0
@@ -2290,7 +2304,7 @@ msgstr "Tanca"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
 msgid "Print Item Labels"
-msgstr "Imprimeix etiquetes d'elements"
+msgstr "Imprimeix etiquetes"
 
 #. module: stock
 #: view:stock.move:0
@@ -2409,35 +2423,3 @@ msgstr "Estat de moviments"
 #: model:stock.location,name:stock.stock_location_locations
 msgid "Physical Locations"
 msgstr "Ubicacions físiques"
-
-#~ msgid "Stock Management"
-#~ msgstr "Gestió d'estocs"
-
-#~ msgid ""
-#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "El mòdul de gestió d'estocs d'OpenERP pot gestionar multi-magatzems i multi-"
-#~ "ubicacions jeràrquiques d'estoc.\n"
-#~ "Gràcies a la gestió de partida doble, el control d'inventari és potent i "
-#~ "flexible:\n"
-#~ "* Historial de moviments i planificació,\n"
-#~ "* Mètodes d'inventari diferents (FIFO, LIFO ...)\n"
-#~ "* Valoració d'existències (estàndard o preu mig ...)\n"
-#~ "* Robustesa davant les diferències d'inventari\n"
-#~ "* Regles automàtiques de proveïment (nivell d'estoc mínim, JIT ...)\n"
-#~ "* Suport a codi de barres\n"
-#~ "* Detecció ràpida d'errors a través de sistema de partida doble\n"
-#~ "* Traçabilitat (cap amunt/avall, lots de producció, número de sèrie ...)\n"
-#~ "    "

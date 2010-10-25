@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
 import wizard
 import osv
@@ -27,246 +27,125 @@ import urllib
 import base64
 import tools
 from tools.translate import _
+from osv import osv, fields
 
-intro_form = '''<?xml version="1.0"?>
-<form string="Report designer">
-    <separator string="Report designer introduction" colspan="4"/>
-    <field name="text" colspan="4" nolabel="1"/>
-</form>'''
+class base_report_sxw(osv.osv_memory):
+    """Base Report sxw """
+    _name = 'base.report.sxw'
 
-intro_fields = {
-    'text': {
-        'string': 'Introduction',
-        'type': 'text',
-        'readonly': True,
-        'default': lambda *args: """This system must be used with the Tiny OpenOffice plugin. If you
-did not installed yet, you can find this package on:
-    http://www.openerp.com
-
-This wizard will provide you the .SXW report that you can modify
-in OpenOffice. After having modified it, you will be able to reupload
-it to the Open ERP server.
-"""},
-    'operation': {
-        'string': 'Operation',
-        'type': 'selection',
-        'selection': [
-            ('create','Create a new report'),
-            ('modify','Modify an existing report')
-            ],
-        'size': 32,
-        'required': True,
-        'default': lambda *args: 'create',
-    },
-}
-
-get_form = '''<?xml version="1.0"?>
-<form string="Get a report">
-    <separator string="Select your report" colspan="4"/>
-    <field name="report_id"/>
-</form>'''
-
-get_fields = {
-    'report_id': {
-        'string': 'Report',
-        'type': 'many2one',
-        'relation': 'ir.actions.report.xml',
-        'required': True,
-        'domain': [('report_sxw_content','<>',False)],
-    },
-}
-
-get_form_result = '''<?xml version="1.0"?>
-<form string="Get a report">
-    <separator string="The .SXW report" colspan="4"/>
-    <field name="report_id"/>
-    <newline/>
-    <field name="file_sxw"/>
-    <newline/>
-    <label colspan="4" string="This is the template of your requested report.\nSave it as a .SXW file and open it with OpenOffice.\nDon't forget to install the Tiny OpenOffice package to modify it.\nOnce it is modified, re-upload it in Open ERP using this wizard." align="0.0"/>
-</form>'''
-
-get_form_fields = {
-    'report_id': {
-        'string': 'Report',
-        'type': 'many2one',
-        'relation': 'ir.actions.report.xml',
-        'readonly': True,
-    },
-    'file_sxw': {
-        'string': 'Your .SXW file',
-        'type': 'binary',
-        'readonly': True,
+    _columns = {
+        'report_id': fields.many2one('ir.actions.report.xml', "Report", required=True,domain=[('report_sxw_content','<>',False)],),
     }
-}
 
 
-send_form_result_arch = '''<?xml version="1.0"?>
-<form string="Report modified">
-    <separator string="Report modified" colspan="4"/>
-    <label string="Your report has been modified."/>
-</form>'''
+    def get_report(self, cr, uid, ids, context):
+        data=self.read(cr,uid,ids)[0]
+        data_obj = self.pool.get('ir.model.data')
+        id2 = data_obj._get_id(cr, uid, 'base_report_designer', 'view_base_report_file_sxw')
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context)
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'base.report.file.sxw',
+            'views': [(id2, 'form')],
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
 
-send_form_result_fields = {
-}
+base_report_sxw()
 
+class base_report_file_sxw(osv.osv_memory):
+    """Base Report File sxw """
+    _name = 'base.report.file.sxw'
 
-send_form_arch = '''<?xml version="1.0"?>
-<form string="Get a report">
-    <separator string="Upload your modified report" colspan="4"/>
-    <field name="report_id"/>
-    <newline/>
-    <field name="file_sxw"/>
-</form>'''
+    def default_get(self, cr, uid, fields, context=None):
+        """
+             To get default values for the object.
 
-send_form_fields = {
-    'report_id': {
-        'string': 'Report',
-        'type': 'many2one',
-        'relation': 'ir.actions.report.xml',
-        'required': True,
-        'domain': [('report_sxw_content','<>',False)]
-    },
-    'file_sxw': {
-        'string': 'Your .SXW file',
-        'type': 'binary',
-        'required': True
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for which we want default values
+             @param context: A standard dictionary
+
+             @return: A dictionary which of fields with values.
+
+        """
+
+        res = super(base_report_file_sxw, self).default_get(cr, uid, fields, context=context)
+        report_id1 = self.pool.get('base.report.sxw').search(cr,uid,[])
+        data=self.pool.get('base.report.sxw').read(cr,uid,report_id1)[0]
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context)
+        if not context:
+            context={}
+        if 'report_id' in fields:
+            res['report_id'] = data['report_id']
+            res['file_sxw'] = base64.encodestring(report.report_sxw_content)
+        return res
+
+    _columns = {
+        'report_id': fields.many2one('ir.actions.report.xml', "Report", readonly=True),
+        'file_sxw':fields.binary('Your .SXW file',readonly=True),
+        'file_sxw_upload':fields.binary('Your .SXW file',required=True)
     }
-}
 
-rml_form_arch = '''<?xml version="1.0"?>
-<form string="Save As" colspan="4">
-    <field name="file_rml"/>
-</form>
-'''
-
-rml_form_fields = {
-       'file_rml': {
-        'string': 'Save As',
-        'type': 'binary',
-    } 
-}
-
-save_rml_arch = '''<?xml version="1.0"?>
-<form string="File saved">
-    <separator string="File saved" colspan="4"/>
-    <label string="Your .rml file is saved and report has been modified."/>
-</form>'''
-
-def _get_default(obj, cursor, user, data, context):
-    return {}
-
-
-class base_report_designer_modify(wizard.interface):
-    def _upload_report_clear(self, cr, uid, data, context):
-        return {'file_sxw': False}
-
-    def _upload_report(self, cr, uid, data, context):
-        import tiny_sxw2rml
+    def upload_report(self, cr, uid, ids, context):
+        from base_report_designer import  openerp_sxw2rml
         import StringIO
-        pool = pooler.get_pool(cr.dbname)
-        sxwval = StringIO.StringIO(base64.decodestring(data['form']['file_sxw']))
-        fp = tools.file_open('normalized_oo2rml.xsl',subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
-        newrmlcontent = str(tiny_sxw2rml.sxw2rml(sxwval, xsl=fp.read()))
-        report = pool.get('ir.actions.report.xml').write(cr, uid, [data['form']['report_id']], {
-            'report_sxw_content': base64.decodestring(data['form']['file_sxw']),
+        data=self.read(cr,uid,ids)[0]
+        sxwval = StringIO.StringIO(base64.decodestring(data['file_sxw_upload']))
+        fp = tools.file_open('normalized_oo2rml.xsl',subdir='addons/base_report_designer/openerp_sxw2rml')
+        newrmlcontent = str(openerp_sxw2rml.sxw2rml(sxwval, xsl=fp.read()))
+        report = self.pool.get('ir.actions.report.xml').write(cr, uid, [data['report_id']], {
+            'report_sxw_content': base64.decodestring(data['file_sxw_upload']),
             'report_rml_content': newrmlcontent
         })
-        return {'file_rml': base64.encodestring(newrmlcontent)}
+        cr.commit()
+        data_obj = self.pool.get('ir.model.data')
+        id2 = data_obj._get_id(cr, uid, 'base_report_designer', 'view_base_report_file_rml')
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context)
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'base.report.rml.save',
+            'views': [(id2, 'form')],
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
+base_report_file_sxw()
 
-    def _get_report(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        report = pool.get('ir.actions.report.xml').browse(cr, uid, data['form']['report_id'], context)
-        try:
-            return {'file_sxw': base64.encodestring(report.report_sxw_content)}
-        except:
-            raise wizard.except_wizard(_('Error'), _('Report does not contain the sxw content!'))
+class base_report_rml_save(osv.osv_memory):
+    """Base Report file Save"""
+    _name = 'base.report.rml.save'
+    def default_get(self, cr, uid, fields, context=None):
+        """
+             To get default values for the object.
 
-    states = {
-        'init': {
-            'actions': [],
-            'result': {
-                'type': 'form',
-                'arch': intro_form,
-                'fields': intro_fields,
-                'state': [
-                    ('end','Cancel'),
-                    ('get_form','Modify a report')
-                ]
-            }
-        },
-        'get_form': {
-            'actions': [_get_default],
-            'result': {
-                'type': 'form',
-                'arch': get_form,
-                'fields': get_fields,
-                'state': [
-                    ('end','Cancel'),
-                    ('get_form_result', 'Continue'),
-                ]
-            }
-        },
-        'get_form_result': {
-            'actions': [_get_report],
-            'result': {
-                'type': 'form',
-                'arch': get_form_result,
-                'fields': get_form_fields,
-                'state': [
-                    ('end','Close'),
-                    ('send_form', 'Upload the modified report'),
-                ]
-            }
-        },
-        'send_form': {
-            'actions': [_upload_report_clear],
-            'result': {
-                'type': 'form',
-                'arch': send_form_arch,
-                'fields': send_form_fields,
-                'state': [
-                    ('end','Close'),
-                    ('save_rml_to', 'Update the report'),
-                ]
-            }
-        },
-        'save_rml_to': {
-            'actions': [_upload_report],
-            'result': {
-                    'type': 'form',
-                    'arch': rml_form_arch,
-                    'fields': rml_form_fields,
-                    'state': [
-                            ('save_rml', 'Save rml'),
-                            ('send_form_result','Skip'),
-                        ]
-            }
-        },
-        'send_form_result': {
-            'actions': [],
-            'result': {
-                'type': 'form',
-                'arch': send_form_result_arch,
-                'fields': send_form_result_fields,
-                'state': [
-                    ('end','Close'),
-                ]
-            }
-        },
-        'save_rml': {
-            'actions': [],
-            'result': {
-                'type': 'form',
-                'arch': save_rml_arch, 'fields': {},
-                'state': [
-                    ('end','Close'),
-                ]
-            }
-        },
-    }
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for which we want default values
+             @param context: A standard dictionary
+             @return: A dictionary which of fields with values.
 
-base_report_designer_modify('base_report_designer.modify')
+        """
+        res = super(base_report_rml_save, self).default_get(cr, uid, fields, context=context)
+        report_id = self.pool.get('base.report.sxw').search(cr,uid,[])
+        data=self.pool.get('base.report.file.sxw').read(cr,uid,report_id)[0]
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context)
+        if not context:
+            context={}
+        if 'file_rml' in fields:
+            res['file_rml'] =  base64.encodestring(report.report_rml_content)
+        return res
+    _columns = {
+         'file_rml':fields.binary('Save As'),
+         }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+base_report_rml_save()

@@ -42,7 +42,7 @@ class order(report_sxw.rml_parse):
             tax_ids = [t[0] for t in res]
         else:
             tax_ids = res[0]
-        res = [tax.name for tax in pooler.get_pool(cr.dbname).get('account.tax').browse(self.cr, self.uid, tax_ids)]
+        res = [tax.name for tax in pooler.get_pool(self.cr.dbname).get('account.tax').browse(self.cr, self.uid, tax_ids)]
         return ",\n ".join(res)
     
     def _get_tax(self, order_obj):
@@ -55,7 +55,7 @@ class order(report_sxw.rml_parse):
             tax_ids = [t[0] for t in res]
         else:
             tax_ids = res[0]
-        tax_obj = pooler.get_pool(cr.dbname).get('account.tax')
+        tax_obj = pooler.get_pool(self.cr.dbname).get('account.tax')
         res = []
         for tax in tax_obj.browse(self.cr, self.uid, tax_ids):
             self.cr.execute("SELECT DISTINCT order_line_id FROM purchase_order_line, purchase_order_taxe \
@@ -67,7 +67,7 @@ class order(report_sxw.rml_parse):
                 else:
                     line_ids = lines[0]
                 base = 0
-                for line in pooler.get_pool(cr.dbname).get('purchase.order.line').browse(self.cr, self.uid, line_ids):
+                for line in pooler.get_pool(self.cr.dbname).get('purchase.order.line').browse(self.cr, self.uid, line_ids):
                     base += line.price_subtotal
                 res.append({'code':tax.name,
                     'base':base,

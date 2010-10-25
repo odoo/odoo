@@ -20,21 +20,15 @@
 ##############################################################################
 
 import base64
-
 from osv import osv, fields
-import urlparse
-
 import os
 
-import pooler
-import netsvc
-#import StringIO
-
-from psycopg2 import Binary
+# from psycopg2 import Binary
 #from tools import config
 import tools
 from tools.translate import _
 import nodes
+import logging
 
 DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['root_path'], 'filestore'))
 
@@ -46,16 +40,19 @@ class document_file(osv.osv):
 
     def _data_get(self, cr, uid, ids, name, arg, context):
         fbrl = self.browse(cr, uid, ids, context=context)
-        nctx = nodes.get_node_context(cr, uid, context)
+        nctx = nodes.get_node_context(cr, uid, context={})
+        # nctx will /not/ inherit the caller's context. Most of
+        # it would be useless, anyway (like active_id, active_model,
+        # bin_size etc.)
         result = {}
         bin_size = context.get('bin_size', False)
         for fbro in fbrl:
-                fnode = nodes.node_file(None, None, nctx, fbro)
-                if not bin_size:
-                        data = fnode.get_data(cr, fbro)
-                        result[fbro.id] = base64.encodestring(data or '')
-                else:
-                        result[fbro.id] = fnode.get_data_len(cr, fbro)
+            fnode = nodes.node_file(None, None, nctx, fbro)
+            if not bin_size:
+                    data = fnode.get_data(cr, fbro)
+                    result[fbro.id] = base64.encodestring(data or '')
+            else:
+                    result[fbro.id] = fnode.get_data_len(cr, fbro)
 
         return result
 
@@ -66,34 +63,39 @@ class document_file(osv.osv):
         if not value:
             return True
         fbro = self.browse(cr, uid, id, context=context)
-        nctx = nodes.get_node_context(cr, uid, context)
+        nctx = nodes.get_node_context(cr, uid, context={})
         fnode = nodes.node_file(None, None, nctx, fbro)
         res = fnode.set_data(cr, base64.decodestring(value), fbro)
         return res
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'Owner', select=1),
-        'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
-        # the directory id now is mandatory. It can still be computed automatically.
-        'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True),
-        'file_size': fields.integer('File Size', required=True),
-        'file_type': fields.char('Content Type', size=64),
+        # Columns from ir.attachment:
+        'create_date': fields.datetime('Date Created', readonly=True),
+        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
+        'write_date': fields.datetime('Date Modified', readonly=True),
+        'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
+        'res_model': fields.char('Attached Model', size=64, readonly=True),
+        'res_id': fields.integer('Attached ID', readonly=True),
+
         # If ir.attachment contained any data before document is installed, preserve
         # the data, don't drop the column!
         'db_datas': fields.binary('Data', oldname='datas'),
-        'index_content': fields.text('Indexed Content'),
-        'write_date': fields.datetime('Date Modified', readonly=True),
-        'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
-        'create_date': fields.datetime('Date Created', readonly=True),
-        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
-        'store_method': fields.selection([('db', 'Database'), ('fs', 'Filesystem'), ('link', 'Link')], "Storing Method"),
         'datas': fields.function(_data_get, method=True, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
-        'store_fname': fields.char('Stored Filename', size=200),
-        'res_model': fields.char('Attached Model', size=64), #res_model
-        'res_id': fields.integer('Attached ID'), #res_id
+
+        # Fields of document:
+        'user_id': fields.many2one('res.users', 'Owner', select=1),
+        # 'group_ids': fields.many2many('res.groups', 'document_group_rel', 'item_id', 'group_id', 'Groups'),
+        # the directory id now is mandatory. It can still be computed automatically.
+        'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True),
+        'index_content': fields.text('Indexed Content'),
         'partner_id':fields.many2one('res.partner', 'Partner', select=1),
-        'title': fields.char('Resource Title', size=64),
+        'file_size': fields.integer('File Size', required=True),
+        'file_type': fields.char('Content Type', size=128),
+
+        # fields used for file storage
+        'store_fname': fields.char('Stored Filename', size=200),
     }
+    _order = "create_date desc"
 
     def __get_def_directory(self, cr, uid, context=None):
         dirobj = self.pool.get('document.directory')
@@ -102,11 +104,10 @@ class document_file(osv.osv):
     _defaults = {
         'user_id': lambda self, cr, uid, ctx:uid,
         'file_size': lambda self, cr, uid, ctx:0,
-        'store_method': lambda *args: 'db',
         'parent_id': __get_def_directory
     }
     _sql_constraints = [
-        ('filename_uniq', 'unique (name,parent_id,res_id,res_model)', 'The file name must be unique !')
+        # filename_uniq is not possible in pure SQL
     ]
     def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
         name = vals.get('name', False)
@@ -114,7 +115,7 @@ class document_file(osv.osv):
         res_model = vals.get('res_model', False)
         res_id = vals.get('res_id', 0)
         if op == 'write':
-            for file in self.browse(cr, uid, ids):
+            for file in self.browse(cr, uid, ids): # FIXME fields_only
                 if not name:
                     name = file.name
                 if not parent_id:
@@ -141,6 +142,7 @@ class document_file(osv.osv):
         return super(document_file, self).copy(cr, uid, id, default, context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        result = False
         if not isinstance(ids, list):
             ids = [ids]
         res = self.search(cr, uid, [('id', 'in', ids)])
@@ -148,14 +150,48 @@ class document_file(osv.osv):
             return False
         if not self._check_duplication(cr, uid, vals, ids, 'write'):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
-        result = super(document_file, self).write(cr, uid, ids, vals, context=context)
-        cr.commit()
+
+        # if nodes call this write(), they must skip the code below
+        from_node = context and context.get('__from_node', False)
+        if (('parent_id' in vals) or ('name' in vals)) and not from_node:
+            # perhaps this file is renaming or changing directory
+            nctx = nodes.get_node_context(cr,uid,context={})
+            dirobj = self.pool.get('document.directory')
+            if 'parent_id' in vals:
+                dbro = dirobj.browse(cr, uid, vals['parent_id'], context=context)
+                dnode = nctx.get_dir_node(cr, dbro)
+            else:
+                dbro = None
+                dnode = None
+            ids2 = []
+            for fbro in self.browse(cr, uid, ids, context=context):
+                if ('parent_id' not in vals or fbro.parent_id.id == vals['parent_id']) \
+                    and ('name' not in vals or fbro.name == vals['name']) :
+                        ids2.append(fbro.id)
+                        continue
+                fnode = nctx.get_file_node(cr, fbro)
+                res = fnode.move_to(cr, dnode or fnode.parent, vals.get('name', fbro.name), fbro, dbro, True)
+                if isinstance(res, dict):
+                    vals2 = vals.copy()
+                    vals2.update(res)
+                    wid = res.get('id', fbro.id)
+                    result = super(document_file,self).write(cr,uid,wid,vals2,context=context)
+                    # TODO: how to handle/merge several results?
+                elif res == True:
+                    ids2.append(fbro.id)
+                elif res == False:
+                    pass
+            ids = ids2
+        if 'file_size' in vals: # only write that field using direct SQL calls
+            del vals['file_size']
+        if len(ids) and len(vals):
+            result = super(document_file,self).write(cr, uid, ids, vals, context=context)
+        cr.commit() # ?
         return result
 
     def create(self, cr, uid, vals, context=None):
-        if not context:
+        if context is None:
             context = {}
-        vals['title'] = vals['name']
         vals['parent_id'] = context.get('parent_id', False) or vals.get('parent_id', False)
         if not vals['parent_id']:
             vals['parent_id'] = self.pool.get('document.directory')._get_root_directory(cr,uid, context)
@@ -163,28 +199,10 @@ class document_file(osv.osv):
             vals['res_id'] = context.get('default_res_id', False)
         if not vals.get('res_model', False) and context.get('default_res_model', False):
             vals['res_model'] = context.get('default_res_model', False)
-        if vals.get('res_id', False) and vals.get('res_model', False):
-            obj_model = self.pool.get(vals['res_model'])
-            result = obj_model.read(cr, uid, [vals['res_id']], context=context)
-            if len(result):
-                obj = result[0]
-                if obj.get('name', False):
-                    vals['title'] = (obj.get('name', ''))[:60]
-                if obj_model._name == 'res.partner':
-                    vals['partner_id'] = obj['id']
-                elif obj.get('address_id', False):
-                    if isinstance(obj['address_id'], tuple) or isinstance(obj['address_id'], list):
-                        address_id = obj['address_id'][0]
-                    else:
-                        address_id = obj['address_id']
-                    address = self.pool.get('res.partner.address').read(cr, uid, [address_id], context=context)
-                    if len(address):
-                        vals['partner_id'] = address[0]['partner_id'][0] or False
-                elif obj.get('partner_id', False):
-                    if isinstance(obj['partner_id'], tuple) or isinstance(obj['partner_id'], list):
-                        vals['partner_id'] = obj['partner_id'][0]
-                    else:
-                        vals['partner_id'] = obj['partner_id']
+        if vals.get('res_id', False) and vals.get('res_model', False) \
+                and not vals.get('partner_id', False):
+            vals['partner_id'] = self.__get_partner_id(cr, uid, \
+                vals['res_model'], vals['res_id'], context)
 
         datas = None
         if vals.get('link', False) :
@@ -193,14 +211,34 @@ class document_file(osv.osv):
         else:
             datas = vals.get('datas', False)
 
-        vals['file_size'] = datas and len(datas) or 0
+        if datas:
+            vals['file_size'] = len(datas)
+        else:
+            if vals.get('file_size'):
+                del vals['file_size']
         if not self._check_duplication(cr, uid, vals):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
         result = super(document_file, self).create(cr, uid, vals, context)
-        cr.commit()
+        cr.commit() # ?
         return result
 
-    def unlink(self, cr, uid, ids, context={}):
+    def __get_partner_id(self, cr, uid, res_model, res_id, context):
+        """ A helper to retrieve the associated partner from any res_model+id
+            It is a hack that will try to discover if the mentioned record is
+            clearly associated with a partner record.
+        """
+        obj_model = self.pool.get(res_model)
+        if obj_model._name == 'res.partner':
+            return res_id
+        elif 'partner_id' in obj_model._columns and obj_model._columns['partner_id']._obj == 'res.partner':
+            bro = obj_model.browse(cr, uid, res_id, context=context)
+            return bro.partner_id.id
+        elif 'address_id' in obj_model._columns and obj_model._columns['address_id']._obj == 'res.partner.address':
+            bro = obj_model.browse(cr, uid, res_id, context=context)
+            return bro.address_id.partner_id.id
+        return False
+
+    def unlink(self, cr, uid, ids, context=None):
         stor = self.pool.get('document.storage')
         unres = []
         # We have to do the unlink in 2 stages: prepare a list of actual
@@ -210,9 +248,21 @@ class document_file(osv.osv):
 
         for f in self.browse(cr, uid, ids, context):
             # TODO: update the node cache
-            r = stor.prepare_unlink(cr, uid, f.parent_id.storage_id, f)
-            if r:
-                unres.append(r)
+            par = f.parent_id
+            storage_id = None
+            while par:
+                if par.storage_id:
+                    storage_id = par.storage_id
+                    break
+                par = par.parent_id
+            #assert storage_id, "Strange, found file #%s w/o storage!" % f.id #TOCHECK: after run yml, it's fail
+            if storage_id:
+                r = stor.prepare_unlink(cr, uid, storage_id, f)
+                if r:
+                    unres.append(r)
+            else:
+                logging.getLogger('document').warning("Unlinking attachment #%s %s that has no storage",
+                                                f.id, f.name)
         res = super(document_file, self).unlink(cr, uid, ids, context)
         stor.do_unlink(cr, uid, unres)
         return res

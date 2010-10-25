@@ -1,439 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_account_journal_form">
-            <field name="name">Journal</field>
+        <record model="ir.ui.view" id="view_account_journal_pos_user_form">
+            <field name="name">POS Journal</field>
             <field name="model">account.journal</field>
             <field name="type">form</field>
-            <field name="priority">10</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
-              <field name="invoice_sequence_id" position="after">
-                    <field  name="statement_sequence_id"/>
-                    <field  name="auto_cash"/>
-                    <field  name="check_dtls"/>
-                    <field  name="special_journal"/>
-              </field>
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Point of Sale">
+                        <group col="6" colspan="4">
+                            <separator colspan="6" string="Extended Configureation"/>
+                            <field name="check_dtls" groups="point_of_sale.group_pos_manager"/>
+                            <field name="auto_cash"/>
+                            <field name="special_journal"/>
+                        </group>
+                        <separator colspan="4" string="Users"/>
+                        <field name="journal_users" nolabel="1" colspan="4"/>
+                    </page>
+                </xpath>
             </field>
-          </record>
+        </record>
 
-<!-- Bank Statement -->
+        <menuitem name="Cash Register" parent="point_of_sale.menu_point_root" id="menu_cash_register" 
+                sequence="4" groups="point_of_sale.group_pos_manager"/>
 
-       <record id="view_bank_statement_tree" model="ir.ui.view">
+        <!--<menuitem
+            name="All Cash Registers"
+            parent="menu_cash_register"
+            action="account.action_view_bank_statement_tree"
+            id="menu_all_menu_cash_register"
+            sequence="4"
+        />-->
+        
+        <record id="view_pos_open_cash_statement_filter" model="ir.ui.view">
+            <field name="name">account.bank.statement.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Cash Statements">
+                    <group col="8" colspan="4">
+                        <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <field name="name"/>
+                        <field name="journal_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
+                        <separator orientation="vertical"/>
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="view_pos_confirm_cash_statement_filter" model="ir.ui.view">
+            <field name="name">account.bank.statement.inherit2</field>
+            <field name="model">account.bank.statement</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Cash Statements">
+                    <group col="8" colspan="4">
+                        <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                        <filter string="Confirm" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <field name="name"/>
+                        <field name="journal_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
+                        <separator orientation="vertical"/>
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_new_bank_statement_tree" model="ir.actions.act_window">
+            <field name="name">Cash Register</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
+            <field name="domain">[('journal_id.type', '=', 'cash')]</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account.view_bank_statement_tree"/>
+            <field name="act_window_id" ref="action_new_bank_statement_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement2_all">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="act_window_id" ref="action_new_bank_statement_tree"/>
+        </record>
+
+        <record id="view_cash_statement_pos_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="type">tree</field>
+            <field name="inherit_id" ref="account.view_cash_statement_tree"/>
             <field name="arch" type="xml">
-                <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end)" string="Statement">
-                    <field name="date"/>
-                    <field name="name"/>
-                    <field name="journal_id"/>
-                    <field name="period_id"/>
-                    <field name="balance_start"/>
-                    <field name="balance_end_real"/>
-                    <field name="balance_end"/>
+                <field name="journal_id" position="after">
                     <field name="user_id"/>
-                    <field name="state"/>
-                </tree>
+                </field>
             </field>
         </record>
 
-        <record id="view_bank_statement_form2" model="ir.ui.view">
-            <field name="name">account.bank.statement.form</field>
-            <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Statement">
-                    <field name="name" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="company_id" select="1"/>
-                    <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash'),('auto_cash','=',False)]" select="1" />
-                    <newline/>
-                    <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
-                    <field name="closing_date" select="1" attrs="{'readonly':[('state','=','confirm')]}"/>
-                    <field name="balance_start"/>
-                    <field name="balance_end_real"/>
-                    <notebook colspan="4">
-                    <page string="Starting Details">
-                    	<field name="starting_details_ids" nolabel = "1" colspan="4">
-                    		<tree string = "Starting Details" editable="bottom">
-                    			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
-                        		<field name="subtotal" sum="Total"/>
-                    		</tree>
-                    		<form string = "Ending Details">
-                    			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
-                        		<field name="subtotal"/>
-                    		</form>
-                    	</field>
-                    </page>
-                    <page string="Ending Details">
-                    	<field name="ending_details_ids" nolabel = "1" colspan="4">
-                    		<tree string = "Ending Details" editable="bottom">
-                    			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
-                        		<field name="subtotal" sum="Total"/>
-                    		</tree>
-                    		<form string = "Ending Details">
-                    			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
-                        		<field name="subtotal"/>
-                    		</form>
-                    	</field>
-                    </page>
-                        <page string="Entry encoding">
-                            <field colspan="4" name="line_ids" nolabel="1">
-                                <tree editable="bottom" string="Statement lines">
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
-                                    <field name="amount"/>
-                                </tree>
-                                <form string="Statement lines">
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
-                                    <field name="amount"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <separator colspan="4" string="Notes"/>
-                                    <field colspan="4" name="note" nolabel="1"/>
-                                </form>
-                            </field>
-                        </page>
-                    </notebook>
-                    <group col="7" colspan="4">
-                        <field name="state" select="2" colspan="4"/>
-                        <field name="total_entry_encoding"/>
-                        </group>
-                        <group colspan="4">
-                        <button name="button_dummy" states="draft" string="Compute"/>
-                        <button name="button_confirm" states="open" string="Close CashBox" type="object"/>
-                        <button name="button_open" states="draft" string="Open CashBox" type="object"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" groups="base.group_extended"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_bank_statement_form1" model="ir.ui.view">
-            <field name="name">account.bank.statement.form</field>
-            <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Statement">
-                    <field name="name" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="company_id" select="1"/>
-                    <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash')]" select="1" readonly="1"/>
-                    <newline/>
-                    <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
-                    <field name="closing_date" select="1" attrs="{'readonly':[('state','=','confirm')]}"/>
-                    <field name="balance_start"/>
-                    <field name="balance_end_real"/>
-                    <notebook colspan="4">
-                    <page string="Details">
-                    	<field name="ending_details_ids" nolabel = "1" colspan="4">
-                    		<tree string = "Ending Details" editable="bottom">
-                    			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
-                        		<field name="subtotal" sum="Total"/>
-                    		</tree>
-                    		<form string = "Ending Details">
-                    			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
-                        		<field name="subtotal"/>
-                    		</form>
-                    	</field>
-                    </page>
-                        <page string="Entry encoding">
-                            <field colspan="4" name="line_ids" nolabel="1">
-                                <tree editable="bottom" string="Statement lines">
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
-                                    <field name="amount"/>
-                                </tree>
-                                <form string="Statement lines">
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
-                                    <field name="amount"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <separator colspan="4" string="Notes"/>
-                                    <field colspan="4" name="note" nolabel="1"/>
-                                </form>
-                            </field>
-                        </page>
-                    </notebook>
-                    <group col="7" colspan="4">
-                        <field name="state" select="2" colspan="4"/>
-                        <field name="total_entry_encoding"/>
-                        </group>
-                        <group colspan="4">
-                        <button name="button_dummy" states="draft" string="Compute"/>
-                        <button name="button_confirm" states="open" string="Close CashBox" type="object"/>
-                        <button name="button_open" states="draft" string="Open CashBox" type="object"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" groups="base.group_extended"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="action_bank_statement_tree_all" model="ir.actions.act_window">
-            <field name="name">My CashBoxes</field>
-            <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_bank_statement_tree"/>
-            <field name="domain">[('user_id','=',uid)]</field>
-        </record>
-		<record model="ir.actions.act_window.view" id="act_statement1_all">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">tree</field>
-					<field name="view_id" ref="view_bank_statement_tree"/>
-					<field name="act_window_id" ref="action_bank_statement_tree_all"/>
-		</record>
-		<record model="ir.actions.act_window.view" id="act_statement2_all">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">form</field>
-					<field name="view_id" ref="view_bank_statement_form1"/>
-					<field name="act_window_id" ref="action_bank_statement_tree_all"/>
-		</record>
-
-       <!-- <menuitem action="action_bank_statement_tree_all" id="menu_statement_tree_all" parent="point_of_sale.menu_point_root" sequence="2"/-->
-<!--        <menuitem action="action_bank_statement_tree_all" id="menu_statement_tree_all" parent="point_of_sale.menu_point_root" sequence="2"/>
--->
-        <menuitem name="Cashboxes" parent="point_of_sale.menu_point_root" id="menu_statement_tree_all" sequence="3"/>
-
-        <record id="action_bank_statement_tree1" model="ir.actions.act_window">
-            <field name="name">My Cashboxes to Close</field>
-            <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_bank_statement_tree"/>
-            <field name="domain">[('state','=','open'), ('user_id','=',uid)]</field>
-
-
-        </record>
-		<record model="ir.actions.act_window.view" id="act_statement1">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">tree</field>
-					<field name="view_id" ref="view_bank_statement_tree"/>
-					<field name="act_window_id" ref="action_bank_statement_tree1"/>
-		</record>
-		<record model="ir.actions.act_window.view" id="act_statement2">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">form</field>
-					<field name="view_id" ref="view_bank_statement_form1"/>
-					<field name="act_window_id" ref="action_bank_statement_tree1"/>
-		</record>
-
-<!--        <menuitem action="action_bank_statement_tree1" id="menu_statement_tree1" parent="menu_statement_tree_all" sequence="2"/>-->
-
-        <record id="view_bank_statement_form3" model="ir.ui.view">
-            <field name="name">account.bank.statement.form</field>
-            <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Statement">
-                    <field name="name" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="company_id" select="1"/>
-                    <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash')]" select="1" readonly="1"/>
-                    <newline/>
-                    <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
-                    <field name="closing_date" select="1" attrs="{'readonly':[('state','=','confirm')]}"/>
-                    <field name="balance_start"/>
-                    <field name="balance_end_real"/>
-                    <notebook colspan="4">
-                        <page string="Entry encoding">
-                            <field colspan="4" name="line_ids" nolabel="1">
-                                <tree editable="bottom" string="Statement lines">
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
-                                    <field name="amount" />
-                                </tree>
-                                <form string="Statement lines">
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
-                                    <field name="amount"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <separator colspan="4" string="Notes"/>
-                                    <field colspan="4" name="note" nolabel="1"/>
-                                </form>
-                            </field>
-                        </page>
-                    <page string="Starting Details">
-                        <field name="balance_end" colspan="4" nolabel="1"/>
-                        <newline/>
-                    	<field name="starting_details_ids" nolabel = "1" colspan="4">
-                    		<tree string = "Starting Details" editable="bottom">
-                    			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub(pieces,number)"/>
-                        		<field name="subtotal" sum="Total"/>
-                    		</tree>
-                    		<form string = "Starting Details">
-                    			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub(pieces,number)"/>
-                        		<field name="subtotal"/>
-                    		</form>
-                    	</field>
-                    </page>
-                    <page string="Ending Details">
-                    	<field name="ending_details_ids" nolabel = "1" colspan="4">
-                    		<tree string = "Ending Details" editable="bottom">
-                    			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub(pieces,number)"/>
-                        		<field name="subtotal" sum="Total"/>
-                    		</tree>
-                    		<form string = "Ending Details">
-                    			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub(pieces,number)"/>
-                        		<field name="subtotal"/>
-                    		</form>
-                    	</field>
-                    </page>
-                    </notebook>
-                    <group col="7" colspan="4">
-                        <field name="state" select="2" colspan="4"/>
-                        <field name="total_entry_encoding"/>
-                      </group>
-                      <group colspan="4">
-                        <button name="button_dummy" states="draft" string="Compute"/>
-                        <button name="button_open" states="draft" string="Open CashBox" type="object" />
-                        <button name="button_confirm" states="open" string="Confirm" type="object" />
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" groups="base.group_extended"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-       <record id="view_bank_statement_tree2" model="ir.ui.view">
-            <field name="name">account.bank.statement.tree</field>
-            <field name="model">account.bank.statement</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end)" string="Statement">
-                    <field name="date"/>
-                    <field name="name"/>
-                    <field name="journal_id"/>
-                    <field name="period_id"/>
-                    <field name="balance_start"/>
-                    <field name="balance_end_real"/>
-                    <field name="balance_end"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_bank_statement_treenew" model="ir.actions.act_window">
-            <field name="name">Open a CashBox</field>
-            <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_bank_statement_form2"/>
-            <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
-
-        </record>
-		<record model="ir.actions.act_window.view" id="act_statement12">
-					<field name="sequence" eval="2"/>
-					<field name="view_mode">tree</field>
-					<field name="view_id" ref="view_bank_statement_tree2"/>
-					<field name="act_window_id" ref="action_bank_statement_treenew"/>
-		</record>
-		<record model="ir.actions.act_window.view" id="act_statement22">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">form</field>
-					<field name="view_id" ref="view_bank_statement_form2"/>
-					<field name="act_window_id" ref="action_bank_statement_treenew"/>
-		</record>
-       <!-- <menuitem action="action_bank_statement_treenew" id="menu_statement_tree2" parent="menu_statement_tree_all" sequence="1"/>-->
-
-
-        <menuitem action="action_bank_statement_treenew" id="menu_statement_tree2" parent="menu_statement_tree_all" sequence="1"/>
-
-		<record model="ir.actions.act_window" id="action_pos_account_bank_statment">
-            <field name="name">All Cashboxes</field>
+        <record id="action_new_bank_statement_all_tree" model="ir.actions.act_window">
+            <field name="name">Registers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
         </record>
-		<record model="ir.actions.act_window.view" id="act_statement_a1">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">tree</field>
-					<field name="view_id" ref="view_bank_statement_tree"/>
-					<field name="act_window_id" ref="action_pos_account_bank_statment"/>
-		</record>
-		<record model="ir.actions.act_window.view" id="act_statement_a2">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">form</field>
-					<field name="view_id" ref="view_bank_statement_form3"/>
-					<field name="act_window_id" ref="action_pos_account_bank_statment"/>
-		</record>
-		<menuitem name="All Cashboxes" parent="menu_point_report_register"
-		 		action="action_pos_account_bank_statment" id="menu_pos_bank_statment_tree" groups="base.group_extended" sequence="4"/>
-
-		<record model="ir.actions.act_window" id="action_my_all_pos_account_bank_statment">
-            <field name="name">All My Cashboxes</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('user_id','=',uid)]</field>
+        <record model="ir.actions.act_window.view" id="act_cash_statement_all_register1">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_cash_statement_pos_tree"/>
+            <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
-        <record model="ir.actions.act_window.view" id="act_my_all_statement_a1">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">tree</field>
-					<field name="view_id" ref="view_bank_statement_tree"/>
-					<field name="act_window_id" ref="action_my_all_pos_account_bank_statment"/>
-		</record>
-
-		<record model="ir.actions.act_window.view" id="act_my_all_statement_a2">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">form</field>
-					<field name="view_id" ref="view_bank_statement_form1"/>
-					<field name="act_window_id" ref="action_my_all_pos_account_bank_statment"/>
-		</record>
-<!--		 <menuitem name="All My Cashboxes" parent="menu_statement_tree_all"-->
-<!--		 		action="action_my_all_pos_account_bank_statment" id="menu_my_pos_bank_statment_tree" sequence="3"/>-->
-
-		<record model="ir.actions.act_window" id="action_cashboxes_to_close">
-            <field name="name">Cashboxes to Close</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','draft')]</field>
+        <record model="ir.actions.act_window.view" id="act_cash_statement_all_register">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
-		<record model="ir.actions.act_window.view" id="act_statement_a5">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">tree</field>
-					<field name="view_id" ref="view_bank_statement_tree"/>
-					<field name="act_window_id" ref="action_cashboxes_to_close"/>
-		</record>
-		<record model="ir.actions.act_window.view" id="act_statement_a6">
-					<field name="sequence" eval="1"/>
-					<field name="view_mode">form</field>
-					<field name="view_id" ref="view_bank_statement_form1"/>
-					<field name="act_window_id" ref="action_cashboxes_to_close"/>
-		</record>
 
-		<menuitem name="Cashboxes to Close" parent="menu_pos_bank_statment_tree"
-		 		action="action_cashboxes_to_close" id="menu_cashboxes_to_close_tree" groups="base.group_extended"/>
+        <menuitem
+            name="Registers"
+            parent="menu_cash_register"
+            action="action_new_bank_statement_all_tree"
+            id="menu_all_menu_all_register"
+            sequence="4"
+        />
 
-		<menuitem
-            name="Open Statements" parent="point_of_sale.menu_point_config"
-            string="Open Statements"
-            action="open_statement"
-            type="wizard"
-            id="menu_open_statement" sequence="3" />
-       <menuitem icon="STOCK_PRINT"
-       			 action="wizard_all_closed_cashbox_of_the_day"
-				 id="menu_all_closed_cashbox_of_the_day"
-				 parent="menu_statement_tree_all"
-				 type="wizard"/>
+        <menuitem name="Register management" parent="point_of_sale.menu_point_root"
+            id="menu_point_open_config" sequence="1"/>
+        <menuitem
+            name="Open Registers" parent="menu_point_open_config"
+            string="Open Registers"
+            action="action_pos_open_statement"
+            id="menu_open_statement" sequence="1" />
 
-		<menuitem
-            name="Close Statements" parent="point_of_sale.menu_point_config"
-            string="Close Statements"
-            action="close_statement"
-            type="wizard"
-            id="menu_close_statement" sequence="3" />
-	</data>
+        <menuitem
+            name="Close Registers" parent="menu_point_open_config"
+            string="Close Registers"
+            action="action_pos_close_statement"
+            id="menu_close_statement" sequence="2" />
+
+    </data>
 </openerp>

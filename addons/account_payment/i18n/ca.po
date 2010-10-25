@@ -4,20 +4,20 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 09:29+0000\n"
+"PO-Revision-Date: 2010-08-13 11:45+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
-#: field:payment.order,date_planned:0
+#: field:payment.order,date_scheduled:0
 msgid "Scheduled date if fixed"
 msgstr "Data planificada si fixa"
 
@@ -133,7 +133,7 @@ msgstr "Referència"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
-msgstr "Ordres de pagament"
+msgstr "Ordres de pagament/cobrament"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -174,7 +174,7 @@ msgid "Payment lines"
 msgstr "Línies de pagament"
 
 #. module: account_payment
-#: help:payment.order,date_planned:0
+#: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr ""
 "Seleccioneu una data si heu seleccionat que la data preferida sigui fixa."
@@ -320,7 +320,7 @@ msgstr "Tipus de pagament"
 #. module: account_payment
 #: help:payment.line,amount_currency:0
 msgid "Payment amount in the partner currency"
-msgstr "Quantitat pagada en la moneda de la seva empresa"
+msgstr "Quantitat pagada en la moneda de l'empresa"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -400,7 +400,7 @@ msgstr "Data venciment"
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import payment lines"
-msgstr "Import línies de pagament"
+msgstr "Importa línies de pagament"
 
 #. module: account_payment
 #: help:payment.type,code:0
@@ -435,7 +435,7 @@ msgstr "La seva referència"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Payment order"
-msgstr "Ordres de pagament"
+msgstr "Ordre de pagament/cobrament"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -475,24 +475,24 @@ msgstr ""
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_pay_payment
 msgid "Pay"
-msgstr "Pagar"
+msgstr "Paga"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
-msgstr "Ordre de pagament"
+msgstr "Ordre de pagament/cobrament"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_draft
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_draft
 msgid "Draft Payment Order"
-msgstr "Ordre de pagament esborrany"
+msgstr "Ordres de pagament/cobrament esborranys"
 
 #. module: account_payment
 #: help:payment.line,amount:0
 msgid "Payment amount in the company currency"
-msgstr "Quantitat pagada en la moneda de la nostra empresa"
+msgstr "Quantitat pagada en la moneda de la companyia"
 
 #. module: account_payment
 #: wizard_view:populate_payment,init:0
@@ -502,7 +502,7 @@ msgstr "Busca línies de pagament"
 #. module: account_payment
 #: field:payment.line,amount_currency:0
 msgid "Amount in Partner Currency"
-msgstr "Import en la moneda de la empresa"
+msgstr "Import en la moneda de l'empresa"
 
 #. module: account_payment
 #: field:payment.line,communication2:0
@@ -512,7 +512,7 @@ msgstr "Comunicació 2"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank account"
-msgstr "Compte bancària destí"
+msgstr "Compte bancari destí"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -541,12 +541,12 @@ msgstr "Moneda de la companyia"
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
-msgstr "Pagament"
+msgstr "Pagaments/Cobraments"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
-msgstr "Línia de l'assentament"
+msgstr "Apunt"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -577,7 +577,7 @@ msgstr "Informació de l'assentament"
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement
 msgid "Populate Statement with Payment lines"
-msgstr "Propaga extractes amb línies de pagament"
+msgstr "Omple un extracte amb línies de pagament"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -588,7 +588,7 @@ msgstr "Ordre"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_open
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_open
 msgid "Payment Orders to Validate"
-msgstr "Ordres de pagament a validar"
+msgstr "Ordres de pagament/cobrament a validar"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_type
@@ -620,7 +620,7 @@ msgstr "Mode de pagament"
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr "Compte bancària per la forma de pagament"
+msgstr "Compte bancari per la forma de pagament"
 
 #. module: account_payment
 #: field:payment.mode,journal:0

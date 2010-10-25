@@ -19,7 +19,6 @@
 #
 ##############################################################################
 from osv import fields, osv
-import netsvc
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
@@ -28,7 +27,7 @@ class base_setup_installer(osv.osv_memory):
     _install_if = {
         ('sale','crm'): ['sale_crm'],
         ('sale','project'): ['project_mrp'],
-        }
+    }
     _columns = {
         # Generic modules
         'crm':fields.boolean('Customer Relationship Management',
@@ -46,53 +45,61 @@ class base_setup_installer(osv.osv_memory):
             help="Lets you install addons geared towards sharing knowledge "
                  "with and between your employees."),
         'stock':fields.boolean('Warehouse Management',
-            help="Helps you manage your stocks and stocks locations, as well "
-                 "as the flow of stock between warehouses."),
+            help="Helps you manage your inventory and main stock operations: delivery orders, receptions, etc."),
         'mrp':fields.boolean('Manufacturing',
             help="Helps you manage your manufacturing processes and generate "
                  "reports on those processes."),
-        'account':fields.boolean('Financial & Accounting',
-            help="Helps you handle your accounting needs, as well as create "
-                 "and track your budgets."),
+        'account_voucher':fields.boolean('Invoicing',
+            help="Allows you to create your invoices and track the payments. It is an easier version of the accounting module for managers who are not accountants."),
+        'account_accountant':fields.boolean('Accounting & Finance',
+            help="Helps you handle your accounting needs, if you are not an accountant, we suggest you to install only the Invoicing "),
         'purchase':fields.boolean('Purchase Management',
             help="Helps you manage your purchase-related processes such as "
                  "requests for quotations, supplier invoices, etc..."),
         'hr':fields.boolean('Human Resources',
-            help="Helps you manage your human resources by encoding your "
-                 "employee structure, generating work sheets, tracking "
-                 "attendance and more."),
+            help="Helps you manage your human resources by encoding your employees structure, generating work sheets, tracking attendance and more."),
         'point_of_sale':fields.boolean('Point of Sales',
             help="Helps you get the most out of your points of sales with "
                  "fast sale encoding, simplified payment mode encoding, "
                  "automatic picking lists generation and more."),
         'marketing':fields.boolean('Marketing',
             help="Helps you manage your marketing campaigns step by step."),
-        'misc_tools':fields.boolean('Miscellaneous Tools',
-            help="Lets you install various interesting but non-essential "
-                 "tools."),
+        'profile_tools':fields.boolean('Extra Tools',
+            help="Lets you install various interesting but non-essential tools "
+                "like Survey, Lunch and Ideas box."),
         'report_designer':fields.boolean('Advanced Reporting',
             help="Lets you install various tools to simplify and enhance "
                  "OpenERP's report creation."),
         # Vertical modules
-        'profile_association':fields.boolean('Associations',
+        'product_expiry':fields.boolean('Food Industry',
+            help="Installs a preselected set of OpenERP applications "
+                "which will help you manage your industry."),
+        'association':fields.boolean('Associations',
             help="Installs a preselected set of OpenERP "
                  "applications which will help you manage your association "
                  "more efficiently."),
-        'profile_training':fields.boolean('Training Centers',
-            help="Helps you manage your training sessions and "
-                 "centers, from the conception of a training project to the "
-                 "gathering of trainee feedback."),
-        'profile_auction':fields.boolean('Auction Houses',
+        'auction':fields.boolean('Auction Houses',
             help="Installs a preselected set of OpenERP "
                  "applications selected to help you manage your auctions "
                  "as well as the business processes around them."),
-        'profile_bookstore':fields.boolean('Book Stores',
-            help="Installs a preselected set of OpenERP "
-                 "applications which will help you manage your book store "
-                 "or your library."),
         }
-    _defaults = {
-        'crm': True,
-        }
-base_setup_installer()
 
+    def _if_knowledge(self, cr, uid, ids, context=None):
+        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
+               .view == 'simple':
+            return ['document_ftp']
+        return None
+
+    def _if_misc_tools(self, cr, uid, ids, context=None):
+        return ['profile_tools']
+
+    def onchange_moduleselection(self, cr, uid, ids, *args, **kargs):
+        value = {}
+        # Calculate progress
+        closed, total = self.get_current_progress(cr, uid)
+        progress = round(100. * closed / (total + len(filter(None, args))))
+        value.update({'progress':progress})
+        if progress < 10.:
+            progress = 10.
+        return {'value':value}
+base_setup_installer()

@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-02-04 05:56+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-10-17 07:57+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-10-18 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -34,7 +34,7 @@ msgstr "Подтверждение котировки"
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr "Порядок доставки"
+msgstr "Заказ на доставку"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -44,12 +44,12 @@ msgstr "Долевой участник"
 #. module: sale
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Недопустимое имя модели в определении действия."
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Waiting Schedule"
-msgstr ""
+msgstr "В ожидании расписания"
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -63,12 +63,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "from stock"
-msgstr ""
+msgstr "из запасов"
 
 #. module: sale
 #: field:sale.config.picking_policy,step:0
 msgid "Steps To Deliver a Sale Order"
-msgstr "Шаги для получения Порядка продажи"
+msgstr "Шаги по доставке заказа на продажу"
 
 #. module: sale
 #: wizard_field:sale.advance_payment_inv,init,qtty:0
@@ -79,19 +79,19 @@ msgstr "Количество"
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "You invoice has been successfully created !"
-msgstr ""
+msgstr "Ваш счет был успешно создан !"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Automatic Declaration"
-msgstr ""
+msgstr "Автоматическое объявление"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree3
 msgid "Uninvoiced and Delivered Lines"
-msgstr ""
+msgstr "Позиции, поставленные без выставления счета"
 
 #. module: sale
 #: view:sale.order:0
@@ -101,33 +101,33 @@ msgstr "Установить в 'Черновик'"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Исключительная ситуация счета"
 
 #. module: sale
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this invoice"
-msgstr ""
+msgstr "Это список отборочных листов, созданных для этого счета"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
 msgid "Delivery, from the warehouse to the customer."
-msgstr ""
+msgstr "Доставка клиенту со склада."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_picking_policy
 msgid "sale.config.picking_policy"
-msgstr ""
+msgstr "sale.config.picking_policy"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
 msgid "Validate"
-msgstr "Проверить"
+msgstr "Утвердить"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Make Invoice"
-msgstr "Выпустить счет"
+msgstr "Сделать счет"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -168,7 +168,7 @@ msgstr "Примечания"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 msgid "Invoice after delivery"
-msgstr ""
+msgstr "Счет после доставки"
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -184,17 +184,18 @@ msgstr ""
 #. module: sale
 #: field:sale.order,order_policy:0
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Политика доставки"
 
 #. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Отменено"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Shipping Exception"
-msgstr ""
+msgstr "Исключительная ситуация доставки"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -214,7 +215,7 @@ msgstr "Адрес выставления счета"
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
 msgid "Outgoing Products"
-msgstr ""
+msgstr "Изделия к отправке"
 
 #. module: sale
 #: view:sale.order:0
@@ -224,12 +225,12 @@ msgstr "Ссылка"
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "All at Once"
-msgstr ""
+msgstr "Все за раз"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleprocurement0
 msgid "Procurement is created after confirmation of sale order."
-msgstr ""
+msgstr "Снабжение осуществляется после подтверждения заказа на продажу."
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -240,7 +241,7 @@ msgstr "Счет аналитики"
 #. module: sale
 #: rml:sale.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "НДС"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -255,7 +256,7 @@ msgstr "Доп. информация"
 #. module: sale
 #: rml:sale.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "Факс :"
 
 #. module: sale
 #: field:sale.order.line,price_net:0
@@ -266,12 +267,12 @@ msgstr "Цена до налогов"
 #: model:ir.actions.act_window,name:sale.action_order_tree9
 #: model:ir.ui.menu,name:sale.menu_action_order_tree9
 msgid "My sales order in progress"
-msgstr "Мои заказы в процессе выполнения"
+msgstr ""
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "Количество (UoS)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -281,6 +282,10 @@ msgid ""
 "choose if you invoice based on ordered or shipped quantities. If the product "
 "is a service, shipped quantities means hours spent on the associated tasks."
 msgstr ""
+"Заказ на продажу автоматически создаст черновик счета. Заказанные и "
+"отправленные количества могут не совпадать. Вы должны выбрать на чем основан "
+"счет на заказанном или на отправленном. Если вы продаете услуги, то "
+"отправленное количество это потраченные часы."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -296,7 +301,7 @@ msgstr "Условия платежа по умолчанию"
 #: model:ir.actions.act_window,name:sale.action_order_tree_all
 #: model:ir.ui.menu,name:sale.menu_action_order_tree_all
 msgid "All Sales Order"
-msgstr "Все заказы"
+msgstr "Все заказы на продажу"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
@@ -306,23 +311,23 @@ msgstr "Подтвердить"
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
-msgstr "Адрес поставки"
+msgstr "Адрес доставки"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Shipped Quantities"
-msgstr ""
+msgstr "Отправленное количество"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
-msgstr ""
+msgstr "Счет, основанный на заказе на продажу"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
 #: view:sale.shop:0
 msgid "Sale Shop"
-msgstr ""
+msgstr "Магазин"
 
 #. module: sale
 #: field:sale.shop,warehouse_id:0
@@ -332,7 +337,7 @@ msgstr "Склад"
 #. module: sale
 #: rml:sale.order:0
 msgid "Order N°"
-msgstr ""
+msgstr "Заказ №"
 
 #. module: sale
 #: field:sale.order,order_line:0
@@ -343,7 +348,7 @@ msgstr "Позиции заказа"
 #. module: sale
 #: rml:sale.order:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Дисконт (%)"
 
 #. module: sale
 #: view:sale.order:0
@@ -368,17 +373,20 @@ msgid ""
 "Packing list is created when 'Assign' is being clicked after confirming the "
 "sale order. This transaction moves the sale order to packing list."
 msgstr ""
+"Упаковочный лист создается при нажатии на \"Назначить\" после подтверждения "
+"заказа на продажу. Это действие создает упаковочный лист из заказа на "
+"продажу."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree8
 #: model:ir.ui.menu,name:sale.menu_action_order_tree8
 msgid "My sales order waiting Invoice"
-msgstr ""
+msgstr "Мои заказы на продажу, ожидающие счета."
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Shipping address :"
-msgstr "Адрес поставки"
+msgstr "Адрес доставки :"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -390,7 +398,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
-msgstr ""
+msgstr "Доставка целиком"
 
 #. module: sale
 #: view:sale.order:0
@@ -400,14 +408,14 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr ""
+msgstr "Количество  (ед.изм.)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree1
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree1
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr "Позиции заказа"
+msgstr "Позиции заказа на продажу"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -417,12 +425,12 @@ msgstr "Заказанное кол-во"
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
 msgid "Sale Order Procurement"
-msgstr ""
+msgstr "Заказ на продажу - снабжение"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
 msgid "Packing"
-msgstr ""
+msgstr "Упаковка"
 
 #. module: sale
 #: rml:sale.order:0
@@ -450,7 +458,7 @@ msgstr "Выполнено"
 #: field:sale.order,pricelist_id:0
 #: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
-msgstr "Каталог"
+msgstr "Прайс-лист"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_shop_configuration
@@ -460,7 +468,7 @@ msgstr "Настройки"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on Order After Delivery"
-msgstr ""
+msgstr "Счет по заказу после доставки"
 
 #. module: sale
 #: constraint:ir.ui.view:0
@@ -475,12 +483,14 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,payment_account_id:0
 msgid "Payment Accounts"
-msgstr ""
+msgstr "Бух. счета платежа"
 
 #. module: sale
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
 msgstr ""
+"Ошибка. Единицы продажи и единицы измерения должны принадлежать к разным "
+"категориям."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -490,7 +500,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Sales orders"
-msgstr "Заказы"
+msgstr "Заказы на продажу"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -501,18 +511,18 @@ msgstr "Снабжение"
 #. module: sale
 #: view:sale.shop:0
 msgid "Payment accounts"
-msgstr ""
+msgstr "Бух. счета платежа"
 
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,create,end:0
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_invoice0
 #: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Черновик счета"
 
 #. module: sale
 #: wizard_field:sale.order.line.make_invoice,init,grouped:0
@@ -534,18 +544,18 @@ msgstr "Скидка (%)"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "Draft customer invoice, to be reviewed by accountant."
-msgstr ""
+msgstr "Черновик счета клиенту будет проверен бухгалтером."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree3
 #: model:ir.ui.menu,name:sale.menu_action_order_tree3
 msgid "Sales Order To Be Invoiced"
-msgstr ""
+msgstr "Счет будет из заказа на продажу"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
 msgid "Procurement for each line"
-msgstr ""
+msgstr "Снабжение для каждой позиции"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree10
@@ -556,7 +566,7 @@ msgstr "Мои предложения"
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "Invoices"
-msgstr ""
+msgstr "Счета"
 
 #. module: sale
 #: view:sale.order:0
@@ -581,7 +591,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "Упаковка"
 
 #. module: sale
 #: model:ir.module.module,shortdesc:sale.module_meta_information
@@ -597,7 +607,7 @@ msgstr "Ссылка на заказ"
 #. module: sale
 #: view:sale.order:0
 msgid "Recreate Invoice"
-msgstr ""
+msgstr "Воссоздать счет"
 
 #. module: sale
 #: field:sale.order,user_id:0
@@ -614,7 +624,7 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Налоги :"
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
@@ -625,7 +635,7 @@ msgstr "Выставлен счет"
 #. module: sale
 #: model:ir.actions.wizard,name:sale.advance_payment
 msgid "Advance Invoice"
-msgstr ""
+msgstr "Предварительный счет"
 
 #. module: sale
 #: field:sale.order,state:0
@@ -636,7 +646,7 @@ msgstr "Состояние заказа"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree2
 msgid "Uninvoiced Lines"
-msgstr ""
+msgstr "Позиции без счета"
 
 #. module: sale
 #: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
@@ -648,7 +658,7 @@ msgstr ""
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
 msgid "Sales Process"
-msgstr ""
+msgstr "Процесс продаж"
 
 #. module: sale
 #: wizard_view:sale.order.line.make_invoice,init:0
@@ -663,6 +673,8 @@ msgstr "Создать счета"
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
+"Ошибка. ед.изм. по умолчанию и закупочные ед.изм. должны иметь одинаковую "
+"категорию."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree7
@@ -673,7 +685,7 @@ msgstr ""
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Sales Configuration"
-msgstr ""
+msgstr "Настройка продаж"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
@@ -704,13 +716,13 @@ msgstr "Закупка скорректирована"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Shipping & Manual Invoice"
-msgstr ""
+msgstr "Доставка & счет вручную"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleorderprocurement0
 #: model:process.transition,name:sale.process_transition_saleprocurement0
 msgid "Sale Procurement"
-msgstr ""
+msgstr "Снабжение продаж"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -750,7 +762,7 @@ msgstr ""
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
 msgid "One procurement for each product."
-msgstr ""
+msgstr "Одна закупка для каждого товара."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_form
@@ -761,12 +773,12 @@ msgstr "Заказы"
 #. module: sale
 #: field:product.product,pricelist_sale:0
 msgid "Sale Pricelists"
-msgstr ""
+msgstr "Каталоги продаж"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "Direct Delivery"
-msgstr ""
+msgstr "Прямая доставка"
 
 #. module: sale
 #: view:sale.order:0
@@ -819,7 +831,7 @@ msgstr "Заказы в процессе выполнения"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
 msgid "Assign"
-msgstr ""
+msgstr "Назначить"
 
 #. module: sale
 #: view:sale.order:0
@@ -893,7 +905,7 @@ msgstr "Цена за ед."
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Налоговая позиция"
 
 #. module: sale
 #: rml:sale.order:0
@@ -1175,7 +1187,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 msgid "Configure Picking Policy for Sale Order"
-msgstr ""
+msgstr "Настроить принцип отбора для заказа на продажу"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_order0
@@ -1242,7 +1254,7 @@ msgstr "Вес"
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "After confirming order, Create the invoice."
-msgstr ""
+msgstr "После подтверждения заказа, создать счет."
 
 #. module: sale
 #: constraint:product.product:0
@@ -1280,3 +1292,243 @@ msgstr "Мой заказ"
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sale Order line"
 msgstr "Позиция заказа"
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Dashboard for sales"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sale Dashboard"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales of the month"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales manager board"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "Cases of the month"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "My open quotations"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "Cases statistics"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "Top ten sales of the month"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,price_average:0
+#: field:report.sale.order.product,price_average:0
+msgid "Average Price"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_created
+msgid "Report of Created Sale Order"
+msgstr ""
+
+#. module: sale
+#: view:report.sale.order.category:0
+msgid "Sales Orders by category"
+msgstr ""
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_6
+#: model:ir.report.custom,title:sale.ir_report_custom_6
+msgid "Monthly cumulated sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_product
+msgid "Sales Orders by Products"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu1
+msgid "Monthly Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_product_tree
+#: model:ir.model,name:sale.model_report_turnover_per_product
+#: view:report.turnover.per.product:0
+msgid "Turnover Per Product"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_82
+msgid "All Months"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,price_total:0
+#: field:report.sale.order.product,price_total:0
+msgid "Total Price"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_category
+msgid "Sales Orders by Categories"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_sale_list
+#: model:ir.ui.menu,name:sale.menu_report_order_sale_list
+msgid "Sales of the Month"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_product
+msgid "Sales by Product (this month)"
+msgstr ""
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_4
+#: model:ir.report.custom,title:sale.ir_report_custom_4
+msgid "Monthly sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_category_all
+#: view:report.sale.order.category:0
+msgid "Sales by Category of Products"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu3
+msgid "Monthly Cumulated Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,quantity:0
+#: field:report.sale.order.product,quantity:0
+msgid "# of Products"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_product_all
+#: view:report.sale.order.product:0
+msgid "Sales by Product"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_81
+msgid "This Month"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,category_id:0
+msgid "Categories"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_created_sale_order_dashboard
+msgid "Created Sale Orders"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_80
+msgid "Reporting"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_month_tree
+#: model:ir.model,name:sale.model_report_turnover_per_month
+#: view:report.turnover.per.month:0
+msgid "Turnover Per Month"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu2
+msgid "Daily Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_83
+msgid "Graphs"
+msgstr ""
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "Manual in progress"
+msgstr ""
+
+#. module: sale
+#: field:report.turnover.per.month,turnover:0
+#: field:report.turnover.per.product,turnover:0
+msgid "Total Turnover"
+msgstr ""
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "In progress"
+msgstr "Выполняется"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_category
+msgid "Sales by Category of Product (this month)"
+msgstr ""
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_5
+#: model:ir.report.custom,title:sale.ir_report_custom_5
+msgid "Daily sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,name:0
+#: field:report.sale.order.product,name:0
+#: field:report.turnover.per.month,name:0
+msgid "Month"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,count:0
+#: field:report.sale.order.product,count:0
+msgid "# of Lines"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.created,create_date:0
+msgid "Create Date"
+msgstr ""
+
+#. module: sale
+#: view:report.sale.order.created:0
+msgid "Created Sales orders"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_so_pipeline
+#: view:sale.order:0
+msgid "Sales by State"
+msgstr ""

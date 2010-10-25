@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- Create the functions -->
-        <record id="res_partner_function_privateaddress0" model="res.partner.function">
-            <field eval="&quot;&quot;&quot;Private Address&quot;&quot;&quot;" name="name"/>
-            <field name="code">PA</field>
-        </record>
 
         <!-- Create the contacts -->
         <record id="res_partner_contact_mortier0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Benoit&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Mortier&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field name="title" ref="base.res_partner_title_sir"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_jacot0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Laurent&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Jacot&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_passot0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Thomas&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Passot&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_lacarte0" model="res.partner.contact">
@@ -42,25 +37,25 @@
         <record id="res_partner_contact_lavente0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Jean-Guy&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Lavente&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_lelitre0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Sylvie&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Lelitre&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Mss&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_grosbonnet0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Arthur&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Grosbonnet&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_lesbrouffe0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Karine&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Lesbrouffe&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Ms.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_madam" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_zen0" model="res.partner.contact">
@@ -71,73 +66,73 @@
             <field eval="&quot;&quot;&quot;http://fptiny.blogspot.com/&quot;&quot;&quot;" name="website"/>
             <field eval="&quot;&quot;&quot;Fabien&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Pinckaers&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_debois0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Marc&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Debois&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_luu0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Phuong&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Luu&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Ms.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_madam" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_elkhayat0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Najlaa&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Khayat&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Ms.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_madam" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_depaoli0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Quentin&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Paolino&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_semal0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Fabian&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;W.&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_vandewerve0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Yvan&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;van de Werve&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_lambotte0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Henry&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Lambotte&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_laurent0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Olivier&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Laurent&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_simonis0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Christophe&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Dupont&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_wirtel0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Stéphane&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Andre&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_partner_contact_mignon0" model="res.partner.contact">
             <field eval="&quot;&quot;&quot;Philippe&quot;&quot;&quot;" name="first_name"/>
             <field eval="&quot;&quot;&quot;Antoine&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
+            <field ref="base.res_partner_title_sir" name="title"/>
             <field eval="1" name="active"/>
         </record>
 
@@ -171,35 +166,35 @@
         <!-- Create the jobs -->
         <record id="res_partner_job_0" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_1"/>
-            <field name="function_id" ref="base.function_sale"/>
+            <field name="function">Salesman</field>
             <field name="contact_id" ref="res_partner_contact_mortier0"/>
             <field name="sequence_partner">2</field>
         </record>
         <record id="res_partner_job_1" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_2"/>
-            <field name="function_id" ref="base.function_sale"/>
+            <field name="function">Salesman</field>
             <field eval="&quot;&quot;&quot;contact@tecsas.fr&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_jacot0"/>
         </record>
         <record id="res_partner_job_2" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_3"/>
-            <field name="function_id" ref="base.function_it"/>
-            <field eval="&quot;&quot;&quot;info@mediapole.net&quot;&quot;&quot;" name="email"/>
+            <field name="function">CTO</field>
+            <field eval="&quot;&quot;&quot;info@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_passot0"/>
         </record>
         <record id="res_partner_job_3" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_tang"/>
-            <field name="function_id" ref="base.function_sale"/>
+            <field name="function">Salesman</field>
             <field name="contact_id" ref="res_partner_contact_tang0"/>
         </record>
         <record id="res_partner_job_4" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_wong"/>
-            <field name="function_id" ref="base.function_sale"/>
+            <field name="function">Salesman</field>
             <field name="contact_id" ref="res_partner_contact_wong0"/>
         </record>
         <record id="res_partner_job_5" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_6"/>
-            <field name="function_id" ref="base.function_director"/>
+            <field name="function">CEO</field>
             <field name="contact_id" ref="res_partner_contact_lacarte0"/>
             <field name="sequence_contact">1</field>
             <field name="sequence_partner">0</field>
@@ -207,120 +202,120 @@
         </record>
         <record id="res_partner_job_6" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_7"/>
-            <field name="function_id" ref="base.function_sale"/>
+            <field name="function">Salesman</field>
             <field name="contact_id" ref="res_partner_contact_lavente0"/>
         </record>
         <record id="res_partner_job_7" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_8"/>
-            <field name="function_id" ref="base.function_it"/>
+            <field name="function">CTO</field>
             <field name="contact_id" ref="res_partner_contact_lelitre0"/>
         </record>
         <record id="res_partner_job_8" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_9"/>
-            <field name="function_id" ref="base.function_director"/>
+            <field name="function">CEO</field>
             <field name="contact_id" ref="res_partner_contact_grosbonnet0"/>
         </record>
         <record id="res_partner_job_9" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_10"/>
-            <field name="function_id" ref="base.function_sale"/>
+            <field name="function">Salesman</field>
             <field name="contact_id" ref="res_partner_contact_lesbrouffe0"/>
         </record>
         <record id="res_partner_job_10" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_zen"/>
-            <field name="function_id" ref="base.function_it"/>
+            <field name="function">CTO</field>
             <field name="contact_id" ref="res_partner_contact_zen0"/>
         </record>
         <record id="res_partner_job_11" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_sale"/>
+            <field name="function">Salesman</field>
             <field eval="&quot;&quot;&quot;re@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_mignon0"/>
         </record>
         <record id="res_partner_job_12" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_it"/>
+            <field name="function">CTO</field>
             <field eval="&quot;&quot;&quot;st@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_wirtel0"/>
         </record>
         <record id="res_partner_job_13" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_it"/>
+            <field name="function">CTO</field>
             <field eval="&quot;&quot;&quot;ch@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_simonis0"/>
         </record>
         <record id="res_partner_job_14" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_it"/>
+            <field name="function">CTO</field>
             <field eval="&quot;&quot;&quot;ol@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_laurent0"/>
         </record>
         <record id="res_partner_job_15" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_it"/>
+            <field name="function">CTO</field>
             <field eval="&quot;&quot;&quot;fl@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_lambotte0"/>
         </record>
         <record id="res_partner_job_16" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_sale"/>
+            <field name="function">Salesman</field>
             <field eval="&quot;&quot;&quot;av@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_vandewerve0"/>
         </record>
         <record id="res_partner_job_17" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_it"/>
+            <field name="function">CTO</field>
             <field eval="&quot;&quot;&quot;fb@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_semal0"/>
         </record>
         <record id="res_partner_job_18" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_it"/>
+            <field name="function">CTO</field>
             <field eval="&quot;&quot;&quot;qd@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_depaoli0"/>
         </record>
         <record id="res_partner_job_19" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_it"/>
+            <field name="function">CTO</field>
             <field eval="&quot;&quot;&quot;ne@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_elkhayat0"/>
         </record>
         <record id="res_partner_job_20" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_it"/>
+            <field name="function">CTO</field>
             <field eval="&quot;&quot;&quot;ph@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_luu0"/>
         </record>
         <record id="res_partner_job_21" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_director"/>
+            <field name="function">CEO</field>
             <field eval="&quot;&quot;&quot;fp@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_pinckears0"/>
             <field name="sequence_partner">-1</field>
         </record>
         <record id="res_partner_job_22" model="res.partner.job">
             <field name="address_id" ref="base.main_address"/>
-            <field name="function_id" ref="base.function_sale"/>
+            <field name="function">Salesman</field>
             <field eval="&quot;&quot;&quot;cd@mycompany.com&quot;&quot;&quot;" name="email"/>
             <field name="contact_id" ref="res_partner_contact_debois0"/>
         </record>
         <record id="res_partner_job_23" model="res.partner.job">
             <field name="address_id" ref="res_partner_address_0"/>
             <field name="contact_id" ref="res_partner_contact_mortier0"/>
-            <field name="function_id" ref="res_partner_function_privateaddress0"/>
             <field name="sequence_contact">5</field>
+            <field name="function">PA</field>
         </record>
         <record id="res_partner_job_24" model="res.partner.job">
             <field eval="1" name="sequence_contact"/>
             <field name="address_id" ref="res_partner_address_1"/>
             <field name="contact_id" ref="res_partner_contact_lacarte0"/>
-            <field name="function_id" ref="res_partner_function_privateaddress0"/>
+            <field name="function">PA</field>
             <field name="sequence_contact">5</field>
         </record>
         <record id="res_partner_job_25" model="res.partner.job">
             <field eval="2" name="sequence_contact"/>
             <field name="address_id" ref="base.res_partner_address_1"/>
             <field name="contact_id" ref="res_partner_contact_lacarte0"/>
-            <field name="function_id" ref="base.function_director"/>
+            <field name="function">CEO</field>
             <field name="sequence_contact">1</field>
         </record>
     </data>

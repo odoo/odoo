@@ -19,11 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields, osv
+from tools.translate import _
 import crm
+import time
 
 AVAILABLE_STATES = [
-    ('draft','New'),
+    ('draft','Draft'),
     ('open','Open'),
     ('cancel', 'Lost'),
     ('done', 'Converted'),
@@ -31,53 +33,180 @@ AVAILABLE_STATES = [
 ]
 
 class crm_opportunity(osv.osv):
-    _name = "crm.opportunity"
-    _description = "Opportunity Cases"
-    _order = "id desc"
-    _inherit = 'crm.case'
+    """ Opportunity Cases """
+    _order = "priority,date_action,id desc"
+    _inherit = 'crm.lead'
     _columns = {
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Resource Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'probability': fields.float('Probability (%)'),
+        # From crm.case
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+                                 domain="[('partner_id','=',partner_id)]"), 
+
+        # Opportunity fields
+        'probability': fields.float('Probability (%)',group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue'),
-        'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
-        'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesman'),
+        'ref': fields.reference('Reference', selection=crm._links_get, size=128),
+        'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'phone': fields.char("Phone", size=64),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-    }
+        'date_deadline': fields.date('Expected Closing'),
+        'date_action': fields.date('Next Action Date'),
+        'title_action': fields.char('Next Action', size=64),
+     }
+    def case_close(self, cr, uid, ids, *args):
+        """Overrides close for crm_case for setting probability and close date
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
+        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 100)]})
+        if not stage_id:
+            raise osv.except_osv(_('Warning !'), _('There is no stage for won opportunities defined for this Sale Team.'))
+        value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+
+        self.write(cr, uid, ids, value)
+        for (id, name) in self.name_get(cr, uid, ids):
+            opp = self.browse(cr, uid, id)
+            if opp.type == 'opportunity':
+                message = _("The opportunity '%s' has been won.") % name
+                self.log(cr, uid, id, message)
+        return res
+
+    def case_mark_lost(self, cr, uid, ids, *args):
+        """Mark the case as lost: state = done and probability = 0%
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
+        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 0)]})
+        value = {}
+        if stage_id:
+            value = self.onchange_stage_id(cr, uid, ids, stage_id, context={}).get('value', {})
+            value['stage_id'] = stage_id
+        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+        res = self.write(cr, uid, ids, value)
+        for (id, name) in self.name_get(cr, uid, ids):
+            opp = self.browse(cr, uid, id)
+            if opp.type == 'opportunity':
+                message = _("The opportunity '%s' has been marked as lost.") % name
+                self.log(cr, uid, id, message)
+        return res
+
+    def case_cancel(self, cr, uid, ids, *args):
+        """Overrides cancel for crm_case for setting probability
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_cancel(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'probability' : 0.0})
+        return res
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Overrides reset as draft in order to set the stage field as empty
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_reset(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'stage_id': False})
+        return res
+   
+ 
+    def case_open(self, cr, uid, ids, *args):
+        """Overrides open for crm_case for setting Open Date
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
+        res = super(crm_opportunity, self).case_open(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
+
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of stage’s IDs
+            @stage_id: change state id on run time """
+
         if not stage_id:
             return {'value':{}}
+
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
             return {'value':{}}
-        return {'value':{'probability':stage.probability}}
-
-    def stage_next(self, cr, uid, ids, context={}):
-        res = super(crm_opportunity, self).stage_next(cr, uid, ids, context=context)
-        for case in self.browse(cr, uid, ids, context):
-            if case.stage_id and case.stage_id.on_change:                                
-                self.write(cr, uid, [case.id], {'probability': case.stage_id.probability})
-        return res
-
-    def stage_previous(self, cr, uid, ids, context={}):
-        res = super(crm_opportunity, self).stage_previous(cr, uid, ids, context=context)
-        for case in self.browse(cr, uid, ids, context):
-            if case.stage_id and case.stage_id.on_change:                                
-                self.write(cr, uid, [case.id], {'probability': case.stage_id.probability})
-        return res 
+        return {'value':{'probability': stage.probability}}
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.opportunity', context=c),
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
+        'priority': crm.AVAILABLE_PRIORITIES[2][0],
     }
+
+    def action_makeMeeting(self, cr, uid, ids, context=None):
+        """
+        This opens Meeting's calendar view to schedule meeting on current Opportunity
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Opportunity to Meeting IDs
+        @param context: A standard dictionary for contextual values
+
+        @return : Dictionary value for created Meeting view
+        """
+        value = {}
+        for opp in self.browse(cr, uid, ids):
+            data_obj = self.pool.get('ir.model.data')
+
+            # Get meeting views
+            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
+            res = data_obj.read(cr, uid, result, ['res_id'])
+            id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
+            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
+            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
+            if id1:
+                id1 = data_obj.browse(cr, uid, id1, context=context).res_id
+            if id2:
+                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+            if id3:
+                id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+
+            context = {
+                'default_opportunity_id': opp.id,
+                'default_partner_id': opp.partner_id and opp.partner_id.id or False,
+                'default_user_id': uid, 
+                'default_section_id': opp.section_id and opp.section_id.id or False,
+                'default_email_from': opp.email_from,
+                'default_state': 'open',  
+                'default_name': opp.name
+            }
+            value = {
+                'name': _('Meetings'),
+                'context': context,
+                'view_type': 'form',
+                'view_mode': 'calendar,form,tree',
+                'res_model': 'crm.meeting',
+                'view_id': False,
+                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': res['res_id'],
+                'nodestroy': True
+            }
+        return value
 
 crm_opportunity()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

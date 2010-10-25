@@ -8,9 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Files">
                     <field name="name" select="1"/>
-                    <field name="file_title" select="1"/>
                     <field name="user" select="1"/>
                     <field name="directory" select="1"/>
+                    <field name="datas_fname" select="1"/>
                     <field name="file_size"/>
                     <field name="create_date"/>
                 </form>
@@ -26,33 +26,31 @@
                 <tree string="Files">
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
-                    <field name="file_title"/>
-                    <field name="user" select="1"/>
-                    <field name="directory" select="1"/>
-                    <field name="file_size"/>
-                    <field name="create_date"/>
+                    <field name="user" select="1" invisible="1"/>
+                    <field name="directory" select="1" invisible="1"/>
+                    <field name="file_size" invisible="1"/>
+                    <field name="create_date" invisible="1"/>
+                    <field name="nbr"/>
                 </tree>
             </field>
         </record>
 
-		<record id="view_report_document_user_search" model="ir.ui.view">
+        <record id="view_report_document_user_search" model="ir.ui.view">
             <field name="name">report.document.user.search</field>
             <field name="model">report.document.user</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="All users files">
-                	<group col="12" colspan="4">
-                		<filter icon="terp-stock" string="My" domain="[('user','=',uid)]" help="My Files"/>
+                        <group col="12" colspan="4">
                         <separator orientation="vertical"/>
-						<filter icon="terp-stock" string="This Year" domain="[('name','=',time.localtime()[0])]" help="All Months Files"/>
-						<filter icon="terp-stock" string="This Month" domain="[('month','=',time.localtime()[1])]" help="This Months Files"/>
-						<separator orientation="vertical"/>
-						<field name="name" select="1"/>
-						<field name="month" select="1"/>
-						<field name="file_title" select="1"/>
-	                    <field name="user" select="1"/>
-	                    <field name="directory" select="1"/>
-	           		</group>
+                            <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.localtime()[0])]" help="All Months Files"/>
+                            <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.localtime()[1])]" help="This Months Files"/>
+                            <separator orientation="vertical"/>
+                            <field name="name" select="1"/>
+                            <field name="month" select="1"/>
+                            <field name="user" select="1"/>
+                            <field name="directory" select="1"/>
+                        </group>
                </search>
             </field>
         </record>
@@ -64,7 +62,8 @@
             <field name="name">All Users files</field>
             <field name="res_model">report.document.user</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'group_by': ['name','month']}</field>
             <field name="search_view_id" ref="view_report_document_user_search"/>
         </record>
 
@@ -79,12 +78,10 @@
                 <form string="Wall of Shame">
                     <field name="user_id" select="1"/>
                     <field name="month" select="1"/>
-                    <field name="file_name" select="1"/>
                     <field name="last"/>
                 </form>
             </field>
         </record>
-
 
         <record model="ir.ui.view" id="view_document_wall_tree">
             <field name="name">report.document.wall.tree</field>
@@ -94,7 +91,6 @@
                 <tree string="Wall of Shame">
                     <field name="user_id" select="1"/>
                     <field name="month" select="1"/>
-                    <field name="file_name"/>
                     <field name="last"/>
                 </tree>
             </field>
@@ -118,30 +114,18 @@
             <field name="arch" type="xml">
                 <graph string="Files by Resource Type" type="pie">
                     <field name="type" />
-<!--                    <field name="file_size" operator="+"/>-->
                     <field name="nbr" operator="+"/>
                 </graph>
             </field>
         </record>
 
-<!--        <record model="ir.ui.view" id="view_document_by_resourcetype_tree">-->
-<!--            <field name="name">report.document.resource.tree.view</field>-->
-<!--            <field name="model">report.document.user</field>-->
-<!--            <field name="type">tree</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <tree string="Files by Resource Type">-->
-<!--                    <field name="type" />-->
-<!--                    <field name="nbr"/>-->
-<!--                </tree>-->
-<!--            </field>-->
-<!--        </record>-->
 
         <record model="ir.actions.act_window" id="action_view_document_by_resourcetype_graph">
             <field name="name">Files by Resource Type</field>
             <field name="res_model">report.document.user</field>
-            <field name="view_id" ref="view_document_by_resourcetype_graph"></field>
+            <field name="view_id" ref="view_document_by_resourcetype_graph"/>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">graph,tree</field>
         </record>
 
 <!--***************************************************************************************-->
@@ -156,7 +140,7 @@
                     <field name="file_size" operator="+"/>
                 </graph>
             </field>
-        </record>
+    </record>
 
     <record model="ir.ui.view" id="view_size_month_tree">
             <field name="name">report.document.user.tree</field>

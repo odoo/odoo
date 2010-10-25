@@ -1,35 +1,44 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_crm_segmentation","crm.segmentation","model_crm_segmentation","crm.group_crm_manager",1,1,1,1
-"access_crm_segmentation_line","crm.segmentation.line","model_crm_segmentation_line","crm.group_crm_manager",1,1,1,1
-"access_crm_case_section","crm.case.section","model_crm_case_section","crm.group_crm_user",1,0,0,0
-"access_crm_case_categ","crm.case.categ","model_crm_case_categ","crm.group_crm_user",1,0,0,0
-"access_crm_case_manger","crm.case manager","model_crm_case","crm.group_crm_user",1,1,1,1
-"access_crm_case","crm.case","model_crm_case","crm.group_crm_manager",1,1,1,1
-"access_crm_claim","crm.claim","model_crm_claim","crm.group_crm_manager",1,1,1,1
-"access_crm_fundraising","crm.fundraising","model_crm_fundraising","crm.group_crm_manager",1,1,1,1
-"access_crm_helpdesk","crm.helpdesk","model_crm_helpdesk","crm.group_crm_manager",1,1,1,1
-"access_crm_meeting","crm.meeting","model_crm_meeting","crm.group_crm_manager",1,1,1,1
-"access_crm_lead","crm.lead","model_crm_lead","crm.group_crm_manager",1,1,1,1
-"access_crm_opportunity","crm.opportunity","model_crm_opportunity","crm.group_crm_manager",1,1,1,1
-"access_crm_phonecall","crm.phonecall","model_crm_phonecall","crm.group_crm_manager",1,1,1,1
-"access_crm_case_log","crm.case.log","model_crm_case_log","crm.group_crm_user",1,1,1,1
-"access_crm_case_history","crm.case.history","model_crm_case_history","crm.group_crm_user",1,1,1,1
-"access_crm_case_section_manager","crm.case.section.manager","model_crm_case_section","crm.group_crm_manager",1,1,1,1
-"access_crm_case_categ_manager","crm.case.categ.manager","model_crm_case_categ","crm.group_crm_manager",1,1,1,1
-"access_crm_case_log_manager","crm.case.log manager","model_crm_case_log","crm.group_crm_manager",1,1,1,1
-"access_crm_case_history_manager","crm.case.history manager","model_crm_case_history","crm.group_crm_manager",1,1,1,1
-"access_crm_email_add_cc_manager","crm.email.add.cc","model_crm_email_add_cc","crm.group_crm_manager",1,1,1,1
-"access_crm_email_add_cc_user","crm.email.add.cc","model_crm_email_add_cc","crm.group_crm_user",1,0,0,0
-"access_crm_case_stage","crm.case.stage","model_crm_case_stage","crm.group_crm_user",1,0,0,0
-"access_crm_case_stage_manager","crm.case.stage","model_crm_case_stage","crm.group_crm_manager",1,1,1,1
-"access_crm_case_resource_type_user","crm_case_resource_type user","model_crm_case_resource_type","crm.group_crm_user",1,0,0,0
-"access_crm_case_resource_type_manager","crm_case_resource_type manager","model_crm_case_resource_type","crm.group_crm_manager",1,1,1,1
-"access_crm_case_report_user","crm.case.report","model_crm_case_report","crm.group_crm_user",1,0,0,0
-"access_crm_case_report_manager","crm.case.report manager","model_crm_case_report","crm.group_crm_manager",1,1,1,1
-"access_crm_claim_report_user","crm.claim.report","model_crm_claim_report","crm.group_crm_user",1,0,0,0
-"access_crm_fundraising_report_user","crm.fundraising.report","model_crm_fundraising_report","crm.group_crm_user",1,0,0,0
-"access_crm_lead_report_user","crm.lead.report","model_crm_lead_report","crm.group_crm_user",1,0,0,0
-"access_crm_phonecall_report_user","crm.phonecall.report","model_crm_phonecall_report","crm.group_crm_user",1,0,0,0
-"access_crm_opportunity_report_user","crm.opportunity.report","model_crm_opportunity_report","crm.group_crm_user",1,0,0,0
-"access_report_crm_case_service_dashboard","report.crm.case.service.dashboard","model_report_crm_case_service_dashboard","crm.group_crm_user",1,0,0,0
-"access_report_crm_helpdesk","report.crm.helpdesk","model_crm_helpdesk_report","crm.group_crm_user",1,0,0,0
+"access_crm_segmentation_user","crm.segmentation user","model_crm_segmentation","base.group_sale_salesman",1,0,0,0
+"access_crm_segmentation_line_user","crm.segmentation.line user","model_crm_segmentation_line","base.group_sale_salesman",1,0,0,0
+"access_crm_segmentation","crm.segmentation","model_crm_segmentation","base.group_sale_manager",1,1,1,1
+"access_crm_segmentation_line","crm.segmentation.line","model_crm_segmentation_line","base.group_sale_manager",1,1,1,1
+"access_crm_case_section","crm.case.section","model_crm_case_section","base.group_sale_salesman",1,1,1,0
+"access_crm_case_categ","crm.case.categ","model_crm_case_categ","base.group_sale_salesman",1,1,1,0
+"access_crm_meeting_manager","crm.meeting.manager","model_crm_meeting","base.group_sale_manager",1,1,1,1
+"access_crm_lead_manager","crm.lead.manager","model_crm_lead","base.group_sale_manager",1,1,1,1
+"access_crm_phonecall_manager","crm.phonecall.manager","model_crm_phonecall","base.group_sale_manager",1,1,1,1
+"access_crm_case_categ","crm.case.categ","model_crm_case_categ","base.group_user",1,0,0,0
+"access_crm_meeting","crm.meeting","model_crm_meeting","base.group_sale_salesman",1,1,1,0
+"access_crm_meeting_all","crm.meeting_allll","model_crm_meeting","base.group_user",1,0,0,0
+"access_crm_lead","crm.lead","model_crm_lead","base.group_sale_salesman",1,1,1,0
+"access_crm_lead.all","crm.lead.all","model_crm_lead","base.group_user",1,0,0,0
+"access_crm_phonecall","crm.phonecall","model_crm_phonecall","base.group_sale_salesman",1,1,1,0
+"access_crm_phonecall.all","crm.phonecall.all","model_crm_phonecall","base.group_user",1,0,0,0
+"access_crm_case_section_user","crm.case.section.user","model_crm_case_section","base.group_sale_salesman",1,1,1,0
+"access_crm_case_section_manager","crm.case.section.manager","model_crm_case_section","base.group_sale_manager",1,1,1,1
+"access_crm_case_stage","crm.case.stage","model_crm_case_stage","base.group_user",1,0,0,0
+"access_crm_case_stage_manager","crm.case.stage","model_crm_case_stage","base.group_sale_manager",1,1,1,1
+"access_crm_case_resource_type_user","crm_case_resource_type user","model_crm_case_resource_type","base.group_sale_salesman",1,1,1,0
+"access_crm_case_resource_type_manager","crm_case_resource_type manager","model_crm_case_resource_type","base.group_sale_manager",1,1,1,1
+"access_crm_phonecall_report_user","crm.phonecall.report.user","model_crm_phonecall_report","base.group_sale_salesman",1,0,0,0
+"access_crm_lead_report_manager","crm.lead.report","model_crm_lead_report","base.group_sale_manager",1,1,1,1
+"access_crm_phonecall_report_manager","crm.phonecall.report","model_crm_phonecall_report","base.group_sale_manager",1,1,1,1
+"access_res_partner_manager","res.partner.crm.manager","base.model_res_partner","base.group_sale_manager",1,0,0,0
+"access_res_partner_address_manager","res.partner.address.crm.user.manager","base.model_res_partner_address","base.group_sale_manager",1,0,0,0
+"access_res_partner_category_manager","res.partner.category.crm.manager","base.model_res_partner_category","base.group_sale_manager",1,0,0,0
+"mail_gateway_mailgate_message_manager","mail_gateway.mailgate.message.manager","mail_gateway.model_mailgate_message","base.group_sale_manager",1,0,0,0
+"mail_gateway_mailgate_thread_manager","mail_gateway.mailgate.thread.manager","mail_gateway.model_mailgate_thread","base.group_sale_manager",1,1,1,1
+"access_calendar_attendee_crm_user","calendar.attendee.crm.user","model_calendar_attendee","base.group_sale_salesman",1,1,1,0
+"access_calendar_attendee_crm_manager","calendar.attendee.crm.manager","model_calendar_attendee","base.group_sale_manager",1,1,1,1
+"access_res_partner","res.partner.crm.user","base.model_res_partner","base.group_sale_salesman",1,1,1,0
+"access_res_partner_address","res.partner.address.crm.user","base.model_res_partner_address","base.group_sale_salesman",1,1,1,0
+"access_res_partner_category","res.partner.category.crm.user","base.model_res_partner_category","base.group_sale_salesman",1,1,1,0
+"mail_gateway_mailgate_thread","mail_gateway.mailgate.thread","mail_gateway.model_mailgate_thread","base.group_sale_salesman",1,1,1,1
+"mail_gateway_mailgate_message_user","mail_gateway.mailgate.message.user","mail_gateway.model_mailgate_message","base.group_sale_salesman",1,1,1,1
+"access_crm_case_categ_manager","crm.case.categ manager","model_crm_case_categ","base.group_sale_manager",1,1,1,1
+"access_base_action_rule_manager","base.action.rule manager","model_base_action_rule","base.group_sale_manager",1,1,1,1
+"access_crm_lead_report_user","crm.lead.report user","model_crm_lead_report","base.group_sale_salesman",1,1,1,1
+"access_res_partner_bank_type_crm_user","res.partner.bank.type.crm.user","base.model_res_partner_bank_type","base.group_sale_salesman",1,0,0,0
+"access_res_partner_bank_type_crm_manager","res.partner.bank.type.crm.manager","base.model_res_partner_bank_type","base.group_sale_manager",1,0,0,0
+"access_res_partner_canal_manager","res.partner.canal.manager","base.model_res_partner_canal","base.group_sale_manager",1,1,1,1

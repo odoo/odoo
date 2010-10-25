@@ -1,25 +1,20 @@
 # -*- encoding: utf-8 -*-
+
 import os
 import time
 from tarfile import filemode
-import StringIO
-import base64
+import logging
+import errno
 
 import glob
 import fnmatch
 
 import pooler
 import netsvc
-import os
+
 from service import security
 from osv import osv
-from document.nodes import node_res_dir, node_res_obj
-import stat
-
-def log(message):
-    logger = netsvc.Logger()
-    logger.notifyChannel('DMS', netsvc.LOG_ERROR, message)
-
+from document.nodes import get_node_context
 
 def _get_month_name(month):
     month=int(month)
@@ -36,75 +31,10 @@ def _get_month_name(month):
     elif month==11:return 'Nov'
     elif month==12:return 'Dec'
 
-def _to_unicode(s):
-    try:
-        return s.decode('utf-8')
-    except UnicodeError:
-        try:
-            return s.decode('latin')
-        except UnicodeError:
-            try:
-                return s.encode('ascii')
-            except UnicodeError:
-                return s
-
-def _to_decode(s):
-    try:
-        return s.encode('utf-8')
-    except UnicodeError:
-        try:
-            return s.encode('latin')
-        except UnicodeError:
-            try:
-                return s.decode('ascii')
-            except UnicodeError:
-                return s  
-    
-			
-class file_wrapper(StringIO.StringIO):
-    def __init__(self, sstr='', ressource_id=False, dbname=None, uid=1, name=''):
-        StringIO.StringIO.__init__(self, sstr)
-        self.ressource_id = ressource_id
-        self.name = name
-        self.dbname = dbname
-        self.uid = uid
-    def close(self, *args, **kwargs):
-        db,pool = pooler.get_db_and_pool(self.dbname)
-        cr = db.cursor()
-        cr.commit()
-        try:
-            val = self.getvalue()
-            val2 = {
-                'datas': base64.encodestring(val),
-                'file_size': len(val),
-            }
-            pool.get('ir.attachment').write(cr, self.uid, [self.ressource_id], val2)
-        finally:
-            cr.commit()
-            cr.close()
-        StringIO.StringIO.close(self, *args, **kwargs)
-
-class content_wrapper(StringIO.StringIO):
-    def __init__(self, dbname, uid, pool, node, name=''):
-        StringIO.StringIO.__init__(self, '')
-        self.dbname = dbname
-        self.uid = uid
-        self.node = node
-        self.pool = pool
-        self.name = name
-    def close(self, *args, **kwargs):
-        db,pool = pooler.get_db_and_pool(self.dbname)
-        cr = db.cursor()
-        cr.commit()
-        try:
-            getattr(self.pool.get('document.directory.content'), 'process_write_'+self.node.content.extension[1:])(cr, self.uid, self.node, self.getvalue())
-        finally:
-            cr.commit()
-            cr.close()
-        StringIO.StringIO.close(self, *args, **kwargs)
+from ftpserver import _to_decode, _to_unicode
 
 
-class abstracted_fs:
+class abstracted_fs(object):
     """A class used to interact with the file system, providing a high
     level, cross-platform interface compatible with both Windows and
     UNIX style filesystems.
@@ -117,13 +47,22 @@ class abstracted_fs:
      - (str) root: the user home directory.
      - (str) cwd: the current working directory.
      - (str) rnfr: source file to be renamed.
+
     """
+
+    def __init__(self):
+        self.root = None
+        self.cwd = '/'
+        self.cwd_node = None
+        self.rnfr = None
+        self._log = logging.getLogger('FTP.fs')
 
     # Ok
     def db_list(self):
-        #return pooler.pool_dic.keys()
+        """Get the list of available databases, with FTPd support
+        """
         s = netsvc.ExportService.getService('db')
-        result = s.exp_list()
+        result = s.exp_list(document=True)
         self.db_name_list = []
         for db_name in result:
             db, cr = None, None
@@ -134,206 +73,108 @@ class abstracted_fs:
                     cr.execute("SELECT 1 FROM pg_class WHERE relkind = 'r' AND relname = 'ir_module_module'")
                     if not cr.fetchone():
                         continue
-    
-                    cr.execute("select id from ir_module_module where name like 'document%' and state='installed' ")
+
+                    cr.execute("SELECT id FROM ir_module_module WHERE name = 'document_ftp' AND state IN ('installed', 'to install', 'to upgrade') ")
                     res = cr.fetchone()
                     if res and len(res):
                         self.db_name_list.append(db_name)
                     cr.commit()
-                except Exception, e:
-                    log(e)
+                except Exception:
+                    self._log.warning('Cannot use db "%s"', db_name)
             finally:
                 if cr is not None:
                     cr.close()
-                #if db is not None:
-                #    pooler.close_db(db_name)        
         return self.db_name_list
 
-    # Ok
-    def __init__(self):
-        self.root = None
-        self.cwd = '/'
-        self.rnfr = None
-
-    # --- Pathname / conversion utilities
-
-    # Ok
     def ftpnorm(self, ftppath):
         """Normalize a "virtual" ftp pathname (tipically the raw string
-        coming from client) depending on the current working directory.
+        coming from client).
 
-        Example (having "/foo" as current working directory):
-        'x' -> '/foo/x'
-
-        Note: directory separators are system independent ("/").
-        Pathname returned is always absolutized.
+        Pathname returned is relative!.
         """
-        if os.path.isabs(ftppath):
-            p = os.path.normpath(ftppath)
-        else:
-            p = os.path.normpath(os.path.join(self.cwd, ftppath))
+        p = os.path.normpath(ftppath)
         # normalize string in a standard web-path notation having '/'
-        # as separator.
+        # as separator. xrg: is that really in the spec?
         p = p.replace("\\", "/")
         # os.path.normpath supports UNC paths (e.g. "//a/b/c") but we
         # don't need them.  In case we get an UNC path we collapse
         # redundant separators appearing at the beginning of the string
         while p[:2] == '//':
             p = p[1:]
-        # Anti path traversal: don't trust user input, in the event
-        # that self.cwd is not absolute, return "/" as a safety measure.
-        # This is for extra protection, maybe not really necessary.
-        if not os.path.isabs(p):
-            p = "/"
+        if p == '.':
+            return ''
         return p
 
-    # Ok
-    def ftp2fs(self, path_orig, data):
-        path = self.ftpnorm(path_orig)        
-        if not data or (path and path=='/'):
-            return None               
-        path2 = filter(None,path.split('/'))[1:]
-        (cr, uid, pool) = data
-        if len(path2):     
-            path2[-1]=_to_unicode(path2[-1])        
-        res = pool.get('document.directory').get_object(cr, uid, path2[:])
-        if not res:
-            raise OSError(2, 'Not such file or directory.')
-        return res
+    def get_cwd(self):
+        """ return the cwd, decoded in utf"""
+        return _to_decode(self.cwd)
 
-    # Ok
-    def fs2ftp(self, node):        
+    def ftp2fs(self, path_orig, data):
+        raise DeprecationWarning()
+
+    def fs2ftp(self, node):
+        """ Return the string path of a node, in ftp form
+        """
         res='/'
         if node:
             paths = node.full_path()
-            paths = map(lambda x: '/' +x, paths)
-            res = os.path.normpath(''.join(paths))
-            res = res.replace("\\", "/")        
-            while res[:2] == '//':
-                res = res[1:]
-            res = '/' + node.context.dbname + '/' + _to_decode(res)            
-            
-        #res = node and ('/' + node.cr.dbname + '/' + _to_decode(self.ftpnorm(node.path))) or '/'
+            res = '/' + node.context.dbname + '/' +  \
+                _to_decode(os.path.join(*paths))
+
         return res
 
-    # Ok
     def validpath(self, path):
         """Check whether the path belongs to user's home directory.
-        Expected argument is a "real" filesystem pathname.
-
-        If path is a symbolic link it is resolved to check its real
-        destination.
-
-        Pathnames escaping from user's root directory are considered
-        not valid.
+        Expected argument is a datacr tuple
         """
-        return path and True or False
+        # TODO: are we called for "/" ?
+        return isinstance(path, tuple) and path[1] and True or False
 
     # --- Wrapper methods around open() and tempfile.mkstemp
 
-    # Ok
-    def create(self, node, objname, mode):
-        objname = _to_unicode(objname) 
-        cr = None       
+    def create(self, datacr, objname, mode):
+        """ Create a children file-node under node, open it
+            @return open node_descriptor of the created node
+        """
+        objname = _to_unicode(objname)
+        cr , node, rem = datacr
         try:
-            uid = node.context.uid
-            pool = pooler.get_pool(node.context.dbname)
-            cr = pooler.get_db(node.context.dbname).cursor()
             child = node.child(cr, objname)
             if child:
-                if child.type in ('collection','database'):
+                if child.type not in ('file','content'):
                     raise OSError(1, 'Operation not permited.')
-                if child.type == 'content':
-                    s = content_wrapper(node.context.dbname, uid, pool, child)
-                    return s
-            fobj = pool.get('ir.attachment')
-            ext = objname.find('.') >0 and objname.split('.')[1] or False
 
-            # TODO: test if already exist and modify in this case if node.type=file
-            ### checked already exits
-            object2 = False
-            if isinstance(node, node_res_obj):
-                object2 = node and pool.get(node.context.context['res_model']).browse(cr, uid, node.context.context['res_id']) or False            
-            
-            cid = False
-            object = node.context._dirobj.browse(cr, uid, node.dir_id)
-            where = [('name','=',objname)]
-            if object and (object.type in ('directory')) or object2:
-                where.append(('parent_id','=',object.id))
-            else:
-                where.append(('parent_id','=',False))
-
-            if object2:
-                where += [('res_id','=',object2.id),('res_model','=',object2._name)]
-            cids = fobj.search(cr, uid,where)
-            if len(cids):
-                cid = cids[0]
-
-            if not cid:
-                val = {
-                    'name': objname,
-                    'datas_fname': objname,
-                    'parent_id' : node.dir_id, 
-                    'datas': '',
-                    'file_size': 0L,
-                    'file_type': ext,
-                    'store_method' :  (object.storage_id.type == 'filestore' and 'fs')\
-                                 or  (object.storage_id.type == 'db' and 'db')
-                }
-                if object and (object.type in ('directory')) or not object2:
-                    val['parent_id']= object and object.id or False
-                partner = False
-                if object2:
-                    if 'partner_id' in object2 and object2.partner_id.id:
-                        partner = object2.partner_id.id
-                    if object2._name == 'res.partner':
-                        partner = object2.id
-                    val.update( {
-                        'res_model': object2._name,
-                        'partner_id': partner,
-                        'res_id': object2.id
-                    })
-                cid = fobj.create(cr, uid, val, context={})
-            cr.commit()
-
-            s = file_wrapper('', cid, node.context.dbname, uid, )
-            return s
+                ret = child.open_data(cr, mode)
+                cr.commit()
+                return ret
+        except EnvironmentError:
+            raise
         except Exception,e:
-            log(e)
-            raise OSError(1, 'Operation not permited.')
-        finally:
-            if cr:
-                cr.close()
+            self._log.exception('Cannot locate item %s at node %s', objname, repr(node))
+            pass
 
-    # Ok
-    def open(self, node, mode):
-        if not node:
+        try:
+            child = node.create_child(cr, objname, data=None)
+            ret = child.open_data(cr, mode)
+            cr.commit()
+            return ret
+        except EnvironmentError:
+            raise
+        except Exception:
+            self._log.exception('Cannot create item %s at node %s', objname, repr(node))
             raise OSError(1, 'Operation not permited.')
-        # Reading operation        
-        if node.type == 'file':
-            cr = pooler.get_db(node.context.dbname).cursor()
-            uid = node.context.uid
-            if not self.isfile(node):
-                raise OSError(1, 'Operation not permited.')
-            fobj = node.context._dirobj.pool.get('ir.attachment').browse(cr, uid, node.file_id, context=node.context.context)
-            if fobj.store_method and fobj.store_method== 'fs' :
-                s = StringIO.StringIO(node.get_data(cr, fobj))
-            else:
-                s = StringIO.StringIO(base64.decodestring(fobj.db_datas or ''))
-            s.name = node
-            cr.close()
-            return s
-        elif node.type == 'content':
-            uid = node.context.uid
-            cr = pooler.get_db(node.context.dbname).cursor()
-            pool = pooler.get_pool(node.context.dbname)
-            res = getattr(pool.get('document.directory.content'), 'process_read')(cr, uid, node)
-            res = StringIO.StringIO(res)
-            res.name = node
-            cr.close()
-            return res
-        else:
+
+    def open(self, datacr, mode):
+        if not (datacr and datacr[1]):
             raise OSError(1, 'Operation not permited.')
+        # Reading operation
+        cr, node, rem = datacr
+        try:
+            res = node.open_data(cr, mode)
+            cr.commit()
+        except TypeError:
+            raise IOError(errno.EINVAL, "No data")
+        return res
 
     # ok, but need test more
 
@@ -342,20 +183,7 @@ class abstracted_fs:
         name.  Unlike mkstemp it returns an object with a file-like
         interface.
         """
-        raise 'Not Yet Implemented'
-#        class FileWrapper:
-#            def __init__(self, fd, name):
-#                self.file = fd
-#                self.name = name
-#            def __getattr__(self, attr):
-#                return getattr(self.file, attr)
-#
-#        text = not 'b' in mode
-#        # max number of tries to find out a unique file name
-#        tempfile.TMP_MAX = 50
-#        fd, name = tempfile.mkstemp(suffix, prefix, dir, text=text)
-#        file = os.fdopen(fd, mode)
-#        return FileWrapper(file, name)
+        raise NotImplementedError # TODO
 
         text = not 'b' in mode
         # for unique file , maintain version if duplicate file
@@ -369,310 +197,216 @@ class abstracted_fs:
             if len(res):
                 pre = prefix.split('.')
                 prefix=pre[0] + '.v'+str(len(res))+'.'+pre[1]
-            #prefix = prefix + '.'
         return self.create(dir,suffix+prefix,text)
 
 
 
     # Ok
-    def chdir(self, path):        
-        if not path:
+    def chdir(self, datacr):
+        if (not datacr) or datacr == (None, None, None):
             self.cwd = '/'
-            return None        
-        if path.type in ('collection','database'):
-            self.cwd = self.fs2ftp(path)
-        elif path.type in ('file'):            
-            parent_path = path.full_path()[:-1]            
-            self.cwd = os.path.normpath(''.join(parent_path))
-        else:
-            raise OSError(1, 'Operation not permited.')
+            self.cwd_node = None
+            return None
+        if not datacr[1]:
+            raise OSError(1, 'Operation not permitted')
+        if datacr[1].type not in  ('collection','database'):
+            raise OSError(2, 'Path is not a directory')
+        self.cwd = '/'+datacr[1].context.dbname + '/'
+        self.cwd += '/'.join(datacr[1].full_path())
+        self.cwd_node = datacr[1]
 
     # Ok
-    def mkdir(self, node, basename):
+    def mkdir(self, datacr, basename):
         """Create the specified directory."""
-        cr = False
+        cr, node, rem = datacr or (None, None, None)
         if not node:
             raise OSError(1, 'Operation not permited.')
+
         try:
             basename =_to_unicode(basename)
-            cr = pooler.get_db(node.context.dbname).cursor()
-            uid = node.context.uid
-            pool = pooler.get_pool(node.context.dbname)
-            object2 = False            
-            if isinstance(node, node_res_obj):
-                object2 = node and pool.get(node.context.context['res_model']).browse(cr, uid, node.context.context['res_id']) or False            
-            obj = node.context._dirobj.browse(cr, uid, node.dir_id)            
-            if obj and (obj.type == 'ressource') and not object2:
-                raise OSError(1, 'Operation not permited.')
-            val = {
-                'name': basename,
-                'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
-                'ressource_id': object2 and object2.id or False,
-                'parent_id' : False
-            }
-            if (obj and (obj.type in ('directory'))) or not object2:                
-                val['parent_id'] =  obj and obj.id or False            
-            # Check if it alreayd exists !
-            pool.get('document.directory').create(cr, uid, val)
-            cr.commit()            
-        except Exception,e:
-            log(e)
+            cdir = node.create_child_collection(cr, basename)
+            self._log.debug("Created child dir: %r", cdir)
+            cr.commit()
+        except Exception:
+            self._log.exception('Cannot create dir "%s" at node %s', basename, repr(node))
             raise OSError(1, 'Operation not permited.')
-        finally:
-            if cr: cr.close()
 
-    # Ok
     def close_cr(self, data):
-        if data:
+        if data and data[0]:
             data[0].close()
         return True
 
-    def get_cr(self, path):
-        path = self.ftpnorm(path)
-        if path=='/':
-            return None
-        dbname = path.split('/')[1]
-        if dbname not in self.db_list():
-            return None
-        try:
-            db,pool = pooler.get_db_and_pool(dbname)
-        except:
-            raise OSError(1, 'Operation not permited.')
-        cr = db.cursor()
-        uid = security.login(dbname, self.username, self.password)
-        if not uid:
-            raise OSError(2, 'Authentification Required.')
-        return cr, uid, pool
+    def get_cr(self, pathname):
+        raise DeprecationWarning()
 
-    # Ok
-    def listdir(self, path):
+    def get_crdata(self, line, mode='file'):
+        """ Get database cursor, node and remainder data, for commands
+
+        This is the helper function that will prepare the arguments for
+        any of the subsequent commands.
+        It returns a tuple in the form of:
+        @code        ( cr, node, rem_path=None )
+
+        @param line An absolute or relative ftp path, as passed to the cmd.
+        @param mode A word describing the mode of operation, so that this
+                    function behaves properly in the different commands.
+        """
+        path = self.ftpnorm(line)
+        if self.cwd_node is None:
+            if not os.path.isabs(path):
+                path = os.path.join(self.root, path)
+
+        if path == '/' and mode in ('list', 'cwd'):
+            return (None, None, None )
+
+        path = _to_unicode(os.path.normpath(path)) # again, for '/db/../ss'
+        if path == '.': path = ''
+
+        if os.path.isabs(path) and self.cwd_node is not None \
+                and path.startswith(self.cwd):
+            # make relative, so that cwd_node is used again
+            path = path[len(self.cwd):]
+            if path.startswith('/'):
+                path = path[1:]
+
+        p_parts = path.split('/') # hard-code the unix sep here, by spec.
+
+        assert '..' not in p_parts
+
+        rem_path = None
+        if mode in ('create',):
+            rem_path = p_parts[-1]
+            p_parts = p_parts[:-1]
+
+        if os.path.isabs(path):
+            # we have to start from root, again
+            while p_parts and p_parts[0] == '':
+                p_parts = p_parts[1:]
+            # self._log.debug("Path parts: %r ", p_parts)
+            if not p_parts:
+                raise IOError(errno.EPERM, 'Cannot perform operation at root dir')
+            dbname = p_parts[0]
+            if dbname not in self.db_list():
+                raise IOError(errno.ENOENT,'Invalid database path: %s' % dbname)
+            try:
+                db = pooler.get_db(dbname)
+            except Exception:
+                raise OSError(1, 'Database cannot be used.')
+            cr = db.cursor()
+            try:
+                uid = security.login(dbname, self.username, self.password)
+            except Exception:
+                cr.close()
+                raise
+            if not uid:
+                cr.close()
+                raise OSError(2, 'Authentification Required.')
+            n = get_node_context(cr, uid, {})
+            node = n.get_uri(cr, p_parts[1:])
+            return (cr, node, rem_path)
+        else:
+            # we never reach here if cwd_node is not set
+            if p_parts and p_parts[-1] == '':
+                p_parts = p_parts[:-1]
+            cr, uid = self.get_node_cr_uid(self.cwd_node)
+            if p_parts:
+                node = self.cwd_node.get_uri(cr, p_parts)
+            else:
+                node = self.cwd_node
+            if node is False and mode not in ('???'):
+                cr.close()
+                raise IOError(errno.ENOENT, 'Path does not exist')
+            return (cr, node, rem_path)
+
+    def get_node_cr_uid(self, node):
+        """ Get cr, uid, pool from a node
+        """
+        assert node
+        db = pooler.get_db(node.context.dbname)
+        return db.cursor(), node.context.uid
+
+    def get_node_cr(self, node):
+        """ Get the cursor for the database of a node
+
+        The cursor is the only thing that a node will not store
+        persistenly, so we have to obtain a new one for each call.
+        """
+        return self.get_node_cr_uid(node)[0]
+
+    def listdir(self, datacr):
         """List the content of a directory."""
         class false_node(object):
-            write_date = None
-            create_date = None
+            write_date = 0.0
+            create_date = 0.0
+            unixperms = 040550
+            content_length = 0L
+            uuser = 'root'
+            ugroup = 'root'
             type = 'database'
-            def __init__(self, db):
-                self.path = '/'+db
 
-        if path is None:
+            def __init__(self, db):
+                self.path = db
+
+        if datacr[1] is None:
             result = []
             for db in self.db_list():
                 try:
-                    uid = security.login(db, self.username, self.password)
-                    if uid:
-                        result.append(false_node(db))                    
-                except osv.except_osv:          
+                    result.append(false_node(db))
+                except osv.except_osv:
                     pass
             return result
-        cr = pooler.get_db(path.context.dbname).cursor()        
-        res = path.children(cr)
-        cr.close()
+        cr, node, rem = datacr
+        res = node.children(cr)
         return res
 
-    # Ok
-    def rmdir(self, node):
+    def rmdir(self, datacr):
         """Remove the specified directory."""
+        cr, node, rem = datacr
         assert node
-        cr = pooler.get_db(node.context.dbname).cursor()
-        uid = node.context.uid
-        pool = pooler.get_pool(node.context.dbname)        
-        object = node.context._dirobj.browse(cr, uid, node.dir_id)
-        if not object:
-            raise OSError(2, 'Not such file or directory.')
-        if object._table_name == 'document.directory':            
-            if node.children(cr):
-                raise OSError(39, 'Directory not empty.')
-            res = pool.get('document.directory').unlink(cr, uid, [object.id])
-        else:
-            raise OSError(1, 'Operation not permited.')
-
+        node.rmcol(cr)
         cr.commit()
-        cr.close()
 
-    # Ok
-    def remove(self, node):
-        assert node
-        if node.type == 'collection':
-            return self.rmdir(node)
-        elif node.type == 'file':
-            return self.rmfile(node)
+    def remove(self, datacr):
+        assert datacr[1]
+        if datacr[1].type == 'collection':
+            return self.rmdir(datacr)
+        elif datacr[1].type == 'file':
+            return self.rmfile(datacr)
         raise OSError(1, 'Operation not permited.')
 
-    def rmfile(self, node):
+    def rmfile(self, datacr):
         """Remove the specified file."""
-        assert node
-        if node.type == 'collection':
-            return self.rmdir(node)
-        uid = node.context.uid
-        pool = pooler.get_pool(node.context.dbname)
-        cr = pooler.get_db(node.context.dbname).cursor()
-        object = pool.get('ir.attachment').browse(cr, uid, node.file_id)
-        if not object:
-            raise OSError(2, 'Not such file or directory.')
-        if object._table_name == 'ir.attachment':
-            res = pool.get('ir.attachment').unlink(cr, uid, [object.id])
-        else:
-            raise OSError(1, 'Operation not permited.')
+        assert datacr[1]
+        cr = datacr[0]
+        datacr[1].rm(cr)
         cr.commit()
-        cr.close()
 
-    # Ok
-    def rename(self, src, dst_basedir, dst_basename):
-        """
-            Renaming operation, the effect depends on the src:
+    def rename(self, src, datacr):
+        """ Renaming operation, the effect depends on the src:
             * A file: read, create and remove
             * A directory: change the parent and reassign children to ressource
         """
-        cr = False
+        cr = datacr[0]
         try:
-            dst_basename = _to_unicode(dst_basename)
-            cr = pooler.get_db(src.context.dbname).cursor()
-            uid = src.context.uid                       
-            if src.type == 'collection':
-                obj2 = False
-                dst_obj2 = False
-                pool = pooler.get_pool(src.context.dbname)
-                if isinstance(src, node_res_obj):
-                    obj2 = src and pool.get(src.context.context['res_model']).browse(cr, uid, src.context.context['res_id']) or False            
-                obj = src.context._dirobj.browse(cr, uid, src.dir_id)                 
-                if isinstance(dst_basedir, node_res_obj):
-                    dst_obj2 = dst_basedir and pool.get(dst_basedir.context.context['res_model']).browse(cr, uid, dst_basedir.context.context['res_id']) or False
-                dst_obj = dst_basedir.context._dirobj.browse(cr, uid, dst_basedir.dir_id)                 
-                if obj._table_name <> 'document.directory':
-                    raise OSError(1, 'Operation not permited.')
-                result = {
-                    'directory': [],
-                    'attachment': []
-                }
-                # Compute all children to set the new ressource ID                
-                child_ids = [src]
-                while len(child_ids):
-                    node = child_ids.pop(0)                    
-                    child_ids += node.children(cr)                        
-                    if node.type == 'collection':
-                        object2 = False                                            
-                        if isinstance(node, node_res_obj):                  
-                            object2 = node and pool.get(node.context.context['res_model']).browse(cr, uid, node.context.context['res_id']) or False                           
-                        object = node.context._dirobj.browse(cr, uid, node.dir_id)                         
-                        result['directory'].append(object.id)
-                        if (not object.ressource_id) and object2:
-                            raise OSError(1, 'Operation not permited.')
-                    elif node.type == 'file':
-                        result['attachment'].append(object.id)
-                
-                if obj2 and not obj.ressource_id:
-                    raise OSError(1, 'Operation not permited.')
-                
-                if (dst_obj and (dst_obj.type in ('directory'))) or not dst_obj2:
-                    parent_id = dst_obj and dst_obj.id or False
-                else:
-                    parent_id = False              
-                
-                
-                if dst_obj2:                    
-                    ressource_type_id = pool.get('ir.model').search(cr, uid, [('model','=',dst_obj2._name)])[0]
-                    ressource_id = dst_obj2.id
-                    title = dst_obj2.name
-                    ressource_model = dst_obj2._name                    
-                    if dst_obj2._name == 'res.partner':
-                        partner_id = dst_obj2.id
-                    else:                                                
-                        partner_id = pool.get(dst_obj2._name).fields_get(cr, uid, ['partner_id']) and dst_obj2.partner_id.id or False
-                else:
-                    ressource_type_id = False
-                    ressource_id = False
-                    ressource_model = False
-                    partner_id = False
-                    title = False                
-                pool.get('document.directory').write(cr, uid, result['directory'], {
-                    'name' : dst_basename,
-                    'ressource_id': ressource_id,
-                    'ressource_parent_type_id': ressource_type_id,
-                    'parent_id' : parent_id
-                })
-                val = {
-                    'res_id': ressource_id,
-                    'res_model': ressource_model,
-                    'title': title,
-                    'partner_id': partner_id
-                }
-                pool.get('ir.attachment').write(cr, uid, result['attachment'], val)
-                if (not val['res_id']) and result['attachment']:
-                    cr.execute('update ir_attachment set res_id=NULL where id in ('+','.join(map(str,result['attachment']))+')')
-
-                cr.commit()
-
-            elif src.type == 'file':    
-                pool = pooler.get_pool(src.context.dbname)                
-                obj = pool.get('ir.attachment').browse(cr, uid, src.file_id)                
-                dst_obj2 = False                     
-                if isinstance(dst_basedir, node_res_obj):
-                    dst_obj2 = dst_basedir and pool.get(dst_basedir.context.context['res_model']).browse(cr, uid, dst_basedir.context.context['res_id']) or False            
-                dst_obj = dst_basedir.context._dirobj.browse(cr, uid, dst_basedir.dir_id)  
-             
-                val = {
-                    'partner_id':False,
-                    #'res_id': False,
-                    'res_model': False,
-                    'name': dst_basename,
-                    'datas_fname': dst_basename,
-                    'title': dst_basename,
-                }
-
-                if (dst_obj and (dst_obj.type in ('directory','ressource'))) or not dst_obj2:
-                    val['parent_id'] = dst_obj and dst_obj.id or False
-                else:
-                    val['parent_id'] = False
-
-                if dst_obj2:
-                    val['res_model'] = dst_obj2._name
-                    val['res_id'] = dst_obj2.id
-                    val['title'] = dst_obj2.name
-                    if dst_obj2._name == 'res.partner':
-                        val['partner_id'] = dst_obj2.id
-                    else:                        
-                        val['partner_id'] = pool.get(dst_obj2._name).fields_get(cr, uid, ['partner_id']) and dst_obj2.partner_id.id or False
-                elif obj.res_id:
-                    # I had to do that because writing False to an integer writes 0 instead of NULL
-                    # change if one day we decide to improve osv/fields.py
-                    cr.execute('update ir_attachment set res_id=NULL where id=%s', (obj.id,))
-
-                pool.get('ir.attachment').write(cr, uid, [obj.id], val)
-                cr.commit()
-            elif src.type=='content':
-                src_file = self.open(src,'r')
-                dst_file = self.create(dst_basedir, dst_basename, 'w')
-                dst_file.write(src_file.getvalue())
-                dst_file.close()
-                src_file.close()
-                cr.commit()
-            else:
-                raise OSError(1, 'Operation not permited.')
-        except Exception,err:
-            log(err)
+            nname = _to_unicode(datacr[2])
+            ret = src.move_to(cr, datacr[1], new_name=nname)
+            # API shouldn't wait for us to write the object
+            assert (ret is True) or (ret is False)
+            cr.commit()
+        except EnvironmentError:
+            raise
+        except Exception:
+            self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, datacr[2], datacr[1])
             raise OSError(1,'Operation not permited.')
-        finally:
-            if cr: cr.close()
 
-
-
-    # Nearly Ok
     def stat(self, node):
-        r = list(os.stat('/'))
-        if self.isfile(node):
-            r[0] = 33188
-        r[6] = self.getsize(node)
-        r[7] = self.getmtime(node)
-        r[8] =  self.getmtime(node)
-        r[9] =  self.getmtime(node)
-        return os.stat_result(r)
-    lstat = stat
+        raise NotImplementedError()
 
     # --- Wrapper methods around os.path.*
 
     # Ok
     def isfile(self, node):
-        if node and (node.type not in ('collection','database')):
+        if node and (node.type in ('file','content')):
             return True
         return False
 
@@ -681,7 +415,6 @@ class abstracted_fs:
         """Return True if path is a symbolic link."""
         return False
 
-    # Ok
     def isdir(self, node):
         """Return True if path is a directory."""
         if node is None:
@@ -690,19 +423,20 @@ class abstracted_fs:
             return True
         return False
 
-    # Ok
-    def getsize(self, node):
+    def getsize(self, datacr):
         """Return the size of the specified file in bytes."""
-        result = 0L
-        if node.type=='file':
-            result = node.content_length or 0L
-        return result
+        if not (datacr and datacr[1]):
+            raise IOError(errno.ENOENT, "No such file or directory")
+        if datacr[1].type in ('file', 'content'):
+            return datacr[1].get_data_len(datacr[0]) or 0L
+        return 0L
 
     # Ok
-    def getmtime(self, node):
+    def getmtime(self, datacr):
         """Return the last modified time as a number of seconds since
         the epoch."""
-        
+
+        node = datacr[1]
         if node.write_date or node.create_date:
             dt = (node.write_date or node.create_date)[:19]
             result = time.mktime(time.strptime(dt, '%Y-%m-%d %H:%M:%S'))
@@ -723,7 +457,9 @@ class abstracted_fs:
         """Return True if path refers to an existing path, including
         a broken or circular symbolic link.
         """
+        raise DeprecationWarning()
         return path and True or False
+
     exists = lexists
 
     # Ok, can be improved
@@ -742,23 +478,20 @@ class abstracted_fs:
 
     # note: the following operations are no more blocking
 
-    # Ok
-    def get_list_dir(self, path):
+    def get_list_dir(self, datacr):
         """"Return an iterator object that yields a directory listing
         in a form suitable for LIST command.
-        """        
-        if self.isdir(path):
-            listing = self.listdir(path)
-            #listing.sort()
-            return self.format_list(path and path.path or '/', listing)
+        """
+        if not datacr:
+            return None
+        elif self.isdir(datacr[1]):
+            listing = self.listdir(datacr)
+            return self.format_list(datacr[0], datacr[1], listing)
         # if path is a file or a symlink we return information about it
-        elif self.isfile(path):
-            basedir, filename = os.path.split(path.path)
-            self.lstat(path)  # raise exc in case of problems
-            return self.format_list(basedir, [path])
+        elif self.isfile(datacr[1]):
+            par = datacr[1].parent
+            return self.format_list(datacr[0], par, [datacr[1]])
 
-
-    # Ok
     def get_stat_dir(self, rawline, datacr):
         """Return an iterator object that yields a list of files
         matching a dirname pattern non-recursively in a form
@@ -781,13 +514,12 @@ class abstracted_fs:
                     listing.sort()
                 return self.format_list(basedir, listing)
 
-    # Ok    
-    def format_list(self, basedir, listing, ignore_err=True):
+    def format_list(self, cr, parent_node, listing, ignore_err=True):
         """Return an iterator object that yields the entries of given
         directory emulating the "/bin/ls -lA" UNIX command output.
 
-         - (str) basedir: the absolute dirname.
-         - (list) listing: the names of the entries in basedir
+         - (str) basedir: the parent directory node. Can be None
+         - (list) listing: a list of nodes
          - (bool) ignore_err: when False raise exception if os.lstat()
          call fails.
 
@@ -803,35 +535,35 @@ class abstracted_fs:
         drwxrwxrwx   1 owner   group          0 Aug 31 18:50 e-books
         -rw-rw-rw-   1 owner   group        380 Sep 02  3:40 module.py
         """
-        for file in listing:
-            try:
-                st = self.lstat(file)
-            except os.error:
-                if ignore_err:
-                    continue
-                raise
-            perms = filemode(st.st_mode)  # permissions
-            nlinks = st.st_nlink  # number of links to inode
-            if not nlinks:  # non-posix system, let's use a bogus value
-                nlinks = 1
-            size = st.st_size  # file size
-            uname = "owner"
-            gname = "group"
+        for node in listing:
+            perms = filemode(node.unixperms)  # permissions
+            nlinks = 1
+            size = node.content_length or 0L
+            uname = _to_decode(node.uuser)
+            gname = _to_decode(node.ugroup)
             # stat.st_mtime could fail (-1) if last mtime is too old
             # in which case we return the local time as last mtime
             try:
-                mname=_get_month_name(time.strftime("%m", time.localtime(st.st_mtime)))               
-                mtime = mname+' '+time.strftime("%d %H:%M", time.localtime(st.st_mtime))
+                st_mtime = node.write_date or 0.0
+                if isinstance(st_mtime, basestring):
+                    st_mtime = time.strptime(st_mtime, '%Y-%m-%d %H:%M:%S')
+                elif isinstance(st_mtime, float):
+                    st_mtime = time.localtime(st_mtime)
+                mname=_get_month_name(time.strftime("%m", st_mtime ))
+                mtime = mname+' '+time.strftime("%d %H:%M", st_mtime)
             except ValueError:
                 mname=_get_month_name(time.strftime("%m"))
-                mtime = mname+' '+time.strftime("%d %H:%M")            
-            # formatting is matched with proftpd ls output            
-            path=_to_decode(file.path) #file.path.encode('ascii','replace').replace('?','_')                    
+                mtime = mname+' '+time.strftime("%d %H:%M")
+            fpath = node.path
+            if isinstance(fpath, (list, tuple)):
+                fpath = fpath[-1]
+            # formatting is matched with proftpd ls output
+            path=_to_decode(fpath)
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
-                                                     size, mtime, path.split('/')[-1])
+                                                     size, mtime, path)
 
     # Ok
-    def format_mlsx(self, basedir, listing, perms, facts, ignore_err=True):
+    def format_mlsx(self, cr, basedir, listing, perms, facts, ignore_err=True):
         """Return an iterator object that yields the entries of a given
         directory or of a single file in a form suitable with MLSD and
         MLST commands.
@@ -864,17 +596,11 @@ class abstracted_fs:
         if 'd' in perms:
             permdir += 'p'
         type = size = perm = modify = create = unique = mode = uid = gid = ""
-        for file in listing:                        
-            try:
-                st = self.stat(file)
-            except OSError:
-                if ignore_err:
-                    continue
-                raise
+        for node in listing:
             # type + perm
-            if stat.S_ISDIR(st.st_mode):
+            if self.isdir(node):
                 if 'type' in facts:
-                    type = 'type=dir;'                    
+                    type = 'type=dir;'
                 if 'perm' in facts:
                     perm = 'perm=%s;' %permdir
             else:
@@ -883,29 +609,37 @@ class abstracted_fs:
                 if 'perm' in facts:
                     perm = 'perm=%s;' %permfile
             if 'size' in facts:
-                size = 'size=%s;' %st.st_size  # file size
+                size = 'size=%s;' % (node.content_length or 0L)
             # last modification time
             if 'modify' in facts:
                 try:
-                    modify = 'modify=%s;' %time.strftime("%Y%m%d%H%M%S",
-                                           time.localtime(st.st_mtime))
+                    st_mtime = node.write_date or 0.0
+                    if isinstance(st_mtime, basestring):
+                        st_mtime = time.strptime(st_mtime, '%Y-%m-%d %H:%M:%S')
+                    elif isinstance(st_mtime, float):
+                        st_mtime = time.localtime(st_mtime)
+                    modify = 'modify=%s;' %time.strftime("%Y%m%d%H%M%S", st_mtime)
                 except ValueError:
                     # stat.st_mtime could fail (-1) if last mtime is too old
                     modify = ""
             if 'create' in facts:
                 # on Windows we can provide also the creation time
                 try:
-                    create = 'create=%s;' %time.strftime("%Y%m%d%H%M%S",
-                                           time.localtime(st.st_ctime))
+                    st_ctime = node.create_date or 0.0
+                    if isinstance(st_ctime, basestring):
+                        st_ctime = time.strptime(st_ctime, '%Y-%m-%d %H:%M:%S')
+                    elif isinstance(st_mtime, float):
+                        st_ctime = time.localtime(st_ctime)
+                    create = 'create=%s;' %time.strftime("%Y%m%d%H%M%S",st_ctime)
                 except ValueError:
                     create = ""
             # UNIX only
             if 'unix.mode' in facts:
-                mode = 'unix.mode=%s;' %oct(st.st_mode & 0777)
+                mode = 'unix.mode=%s;' %oct(node.unixperms & 0777)
             if 'unix.uid' in facts:
-                uid = 'unix.uid=%s;' %st.st_uid
+                uid = 'unix.uid=%s;' % _to_decode(node.uuser)
             if 'unix.gid' in facts:
-                gid = 'unix.gid=%s;' %st.st_gid
+                gid = 'unix.gid=%s;' % _to_decode(node.ugroup)
             # We provide unique fact (see RFC-3659, chapter 7.5.2) on
             # posix platforms only; we get it by mixing st_dev and
             # st_ino values which should be enough for granting an
@@ -914,10 +648,12 @@ class abstracted_fs:
             # Implementors who want to provide unique fact on other
             # platforms should use some platform-specific method (e.g.
             # on Windows NTFS filesystems MTF records could be used).
-            if 'unique' in facts:
-                unique = "unique=%x%x;" %(st.st_dev, st.st_ino)
-            path=_to_decode(file.path)
-            path = path and path.split('/')[-1] or None
+            # if 'unique' in facts: todo
+            #    unique = "unique=%x%x;" %(st.st_dev, st.st_ino)
+            path = node.path
+            if isinstance (path, (list, tuple)):
+                path = path[-1]
+            path=_to_decode(path)
             yield "%s%s%s%s%s%s%s%s%s %s\r\n" %(type, size, perm, modify, create,
                                                 mode, uid, gid, unique, path)
 

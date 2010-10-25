@@ -1,399 +1,596 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    License, or (at your option) any later version
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU Affero General Public License for more details
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-###########################################################################################
+##############################################################################
 
-import re
-import email, mimetypes
-from email.Header import decode_header
-from email.MIMEText import MIMEText
-import xmlrpclib
-import os
-import binascii
-import time, socket
-
-from tools.translate import _
-
+from osv import osv, fields
+import time
 import tools
-from osv import fields,osv,orm
-from osv.orm import except_orm
+import binascii
 import email
-import netsvc
-from poplib import POP3, POP3_SSL
-from imaplib import IMAP4, IMAP4_SSL   
+from email.header import decode_header
+import base64
+import re
+from tools.translate import _
+import logging
+import xmlrpclib
 
-class mail_gateway_server(osv.osv):
-    _name = "mail.gateway.server"
-    _description = "Email Gateway Server"
-    _columns = {
-        'name': fields.char('Server Address',size=64,required=True ,help="IMAP/POP Address Of Email gateway Server"),
-        'login': fields.char('User',size=64,required=True,help="User Login Id of Email gateway"),
-        'password': fields.char('Password',size=64,required=True,help="User Password Of Email gateway"),
-        'server_type': fields.selection([("pop","POP"),("imap","Imap")],"Type of Server", required=True, help="Type of Email gateway Server"),
-        'port': fields.integer("Port" , help="Port Of Email gateway Server. If port is omitted, the standard POP3 port (110) is used for POP EMail Server and the standard IMAP4 port (143) is used for IMAP Sever."),
-        'ssl': fields.boolean('SSL',help ="Use Secure Authentication"),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the email gateway server without removing it."),
-    }
-    _defaults = {
-        'server_type':lambda * a:'pop',
-        'active':lambda * a:True,
-    }
-    
-    def check_duplicate(self, cr, uid, ids):
-        vals = self.read(cr, uid, ids, ['name', 'login'])[0]
-        cr.execute("select count(id) from mail_gateway_server \
-                        where name='%s' and login='%s'" % \
-                        (vals['name'], vals['login']))
-        res = cr.fetchone()
-        if res:
-            if res[0] > 1:
-                return False
-        return True 
+_logger = logging.getLogger('mailgate')
 
-    _constraints = [
-        (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['name', 'login'])
-    ]
-    
-    def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
-        port = 0
-        if server_type == 'pop':
-            port = ssl and 995 or 110
-        elif server_type == 'imap':
-            port = ssl and 993 or 143
-        return {'value':{'port':port}}
-    
-mail_gateway_server()
-
-
-class mail_gateway(osv.osv):
-    _name = "mail.gateway"
-    _description = "Email Gateway"
+class mailgate_thread(osv.osv):
+    '''
+    Mailgateway Thread
+    '''
+    _name = 'mailgate.thread'
+    _description = 'Mailgateway Thread'
 
     _columns = {
-        'name': fields.char('Name',size=64,help="Name of Mail Gateway."),
-        'server_id': fields.many2one('mail.gateway.server',"Gateway Server", required=True),
-        'object_id': fields.many2one('ir.model',"Model", required=True),
-        'reply_to': fields.char('TO', size=64, help="Email address used in reply to/from of outgoing messages"),
-        'email_default': fields.char('Default eMail',size=64,help="Default eMail in case of any trouble."),        
-        'mail_history': fields.one2many("mail.gateway.history","gateway_id","History", readonly=True)
-    }
-    _defaults = {
-        'reply_to': lambda * a:tools.config.get('email_from',False)
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', readonly=True),
     }
 
-    def _fetch_mails(self, cr, uid, ids=False, context={}):
-        '''
-        Function called by the scheduler to fetch mails
-        '''
-        cr.execute('select * from mail_gateway gateway \
-                inner join mail_gateway_server server \
-                on server.id = gateway.server_id where server.active = True')
-        ids2 = map(lambda x: x[0], cr.fetchall() or [])
-        return self.fetch_mails(cr, uid, ids=ids2, context=context)
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Overrides orm copy method.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: Id of mailgate thread
+        @param default: Dictionary of default values for copy.
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
 
-    def parse_mail(self, cr, uid, gateway_id, email_message, context={}):
-        msg_id, res_id, note = (False, False, False)        
-        mail_history_obj = self.pool.get('mail.gateway.history')        
-        mailgateway = self.browse(cr, uid, gateway_id, context=context)
-        try :
-            msg_txt = email.message_from_string(email_message)
-            msg_id =  msg_txt['Message-ID']
-            res_id = self.msg_parse(cr, uid, gateway_id, msg_txt)            
-        except Exception, e:
-            import traceback
-            note = "Error in Parsing Mail: %s " %(str(e))            
-            netsvc.Logger().notifyChannel('Emailgate: Parsing mail:%s' % (mailgateway and (mailgateway.name or
-                     '%s (%s)'%(mailgateway.server_id.login, mailgateway.server_id.name))) or ''
-                     , netsvc.LOG_ERROR, traceback.format_exc())
+        default.update({
+            'message_ids': [],
+            'date_closed': False,
+            'date_open': False
+        })
+        return super(mailgate_thread, self).copy(cr, uid, id, default, context=context)
 
-        mail_history_obj.create(cr, uid, {'name': msg_id, 'res_id': res_id, 'gateway_id': mailgateway.id, 'note': note})
-        return res_id,  note
+    def message_new(self, cr, uid, msg, context):
+        raise Exception, _('Method is not implemented')
 
-    def fetch_mails(self, cr, uid, ids=[], context={}):        
-        log_messages = []
-        mailgate_server = False
-        new_messages = []
-        for mailgateway in self.browse(cr, uid, ids):
-            try :
-                mailgate_server = mailgateway.server_id
-                if not mailgate_server.active:
-                    continue
-                mailgate_name =  mailgateway.name or "%s (%s)" % (mailgate_server.login, mailgate_server.name)
-                res_model = mailgateway.object_id.name
-                log_messages.append("Mail Server : %s" % mailgate_name)
-                log_messages.append("="*40)
-                new_messages = []
-                if mailgate_server.server_type == 'pop':
-                    if mailgate_server.ssl:
-                        pop_server = POP3_SSL(mailgate_server.name or 'localhost', mailgate_server.port or 995)
-                    else:
-                        pop_server = POP3(mailgate_server.name or 'localhost', mailgate_server.port or 110)
-                    pop_server.user(mailgate_server.login)
-                    pop_server.pass_(mailgate_server.password)
-                    pop_server.list()
-                    (numMsgs, totalSize) = pop_server.stat()
-                    for i in range(1, numMsgs + 1):
-                        (header, msges, octets) = pop_server.retr(i)
-                        res_id, note = self.parse_mail(cr, uid, mailgateway.id, '\n'.join(msges))
-                        log = ''
-                        if res_id:
-                            log = _('Object Successfully Created : %d of %s'% (res_id, res_model))
-                        if note:
-                            log = note
-                        log_messages.append(log)
-                        new_messages.append(i)
-                    pop_server.quit()
+    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
+        raise Exception, _('Method is not implemented')
 
-                elif mailgate_server.server_type == 'imap':
-                    if mailgate_server.ssl:
-                        imap_server = IMAP4_SSL(mailgate_server.name or 'localhost', mailgate_server.port or 993)
-                    else:
-                        imap_server = IMAP4(mailgate_server.name or 'localhost', mailgate_server.port or 143)
-                    imap_server.login(mailgate_server.login, mailgate_server.password)
-                    imap_server.select()
-                    typ, data = imap_server.search(None, '(UNSEEN)')
-                    for num in data[0].split():
-                        typ, data = imap_server.fetch(num, '(RFC822)')
-                        res_id, note = self.parse_mail(cr, uid, mailgateway.id, data[0][1])
-                        log = ''
-                        if res_id:
-                            log = _('Object Successfully Created/Modified: %d of %s'% (res_id, res_model))
-                        if note:
-                            log = note
-                        log_messages.append(log)
-                        new_messages.append(num)
-                    imap_server.close()
-                    imap_server.logout()
-
-            except Exception, e:
-                 import traceback
-                 log_messages.append("Error in Fetching Mail: %s " %(str(e)))                 
-                 netsvc.Logger().notifyChannel('Emailgate: Fetching mail:[%d]%s' % 
-                    (mailgate_server and mailgate_server.id or 0, mailgate_server and mailgate_server.name or ''),
-                     netsvc.LOG_ERROR, traceback.format_exc())
-
-            log_messages.append("-"*25)
-            log_messages.append("Total Read Mail: %d\n\n" %(len(new_messages)))
-        return log_messages    
-
-    def emails_get(self, email_from):
-        res = tools.email_re.search(email_from)
-        return res and res.group(1)
-
-    def partner_get(self, cr, uid, email):
-        mail = self.emails_get(email)
-        adr_ids = self.pool.get('res.partner.address').search(cr, uid, [('email', '=', mail)])
-        if not adr_ids:
-            return {}
-        adr = self.pool.get('res.partner.address').read(cr, uid, adr_ids, ['partner_id'])
+    def message_followers(self, cr, uid, ids, context=None):
+        """ Get a list of emails of the people following this thread
+        """
         res = {}
-        if len(adr):
-            res = {
-                'partner_address_id': adr[0]['id'],
-                'partner_id': adr[0].get('partner_id',False) and adr[0]['partner_id'][0] or False
-            }
+        if isinstance(ids, (str, int, long)):
+            ids = [long(ids)]
+        for thread in self.browse(cr, uid, ids, context=context):
+            l=[]
+            for message in thread.message_ids:
+                l.append((message.user_id and message.user_id.email) or '')
+                l.append(message.email_from or '')
+                l.append(message.email_cc or '')
+            res[thread.id] = l
         return res
 
-    def _decode_header(self, s):
-        from email.Header import decode_header
-        s = decode_header(s)
-        return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
+    def msg_send(self, cr, uid, id, *args, **argv):
+        raise Exception, _('Method is not implemented')
 
-    def msg_new(self, cr, uid, msg, model):
-        message = self.msg_body_get(msg)
-        res_model = self.pool.get(model)
-        res_id = res_model.msg_new(cr, uid, msg)
-        if res_id:
-            attachments = message['attachment']
+    def history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, \
+                    email_from=False, message_id=False, references=None, attach=None, email_cc=None, \
+                    email_bcc=None, email_date=None, context=None):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param cases: a browse record list
+        @param keyword: Case action keyword e.g.: If case is closed "Close" keyword is used
+        @param history: Value True/False, If True it makes entry in case History otherwise in Case Log
+        @param email: Email-To / Recipient address
+        @param email_from: Email From / Sender address if any
+        @param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
+        @param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To addresses if any
+        @param email_date: Email Date string if different from now, in server Timezone
+        @param details: Description, Details of case history if any
+        @param atach: Attachment sent in email
+        @param context: A standard dictionary for contextual values"""
+        if context is None:
+            context = {}
+        if attach is None:
+            attach = []
 
-            for attach in attachments or []:
-                data_attach = {
-                    'name': str(attach),
-                    'datas':binascii.b2a_base64(str(attachments[attach])),
-                    'datas_fname': str(attach),
-                    'description': 'Mail attachment',
-                    'res_model': model,
-                    'res_id': res_id
+        # The mailgate sends the ids of the cases and not the object list
+
+        if all(isinstance(case_id, (int, long)) for case_id in cases):
+            cases = self.browse(cr, uid, cases, context=context)
+
+        att_obj = self.pool.get('ir.attachment')
+        obj = self.pool.get('mailgate.message')
+
+        for case in cases:
+            attachments = []
+            for att in attach:
+                    attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
+
+            partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
+            if not partner_id and case._name == 'res.partner':
+                partner_id = case.id
+            data = {
+                'name': keyword,
+                'user_id': uid,
+                'model' : case._name,
+                'partner_id': partner_id,
+                'res_id': case.id,
+                'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'message_id': message_id,
+                'description': details or (hasattr(case, 'description') and case.description or False),
+                'attachment_ids': [(6, 0, attachments)]
+            }
+
+            if history:
+                for param in (email, email_cc, email_bcc):
+                    if isinstance(param, list):
+                        param = ", ".join(param)
+
+                data = {
+                    'name': subject or _('History'),
+                    'history': True,
+                    'user_id': uid,
+                    'model' : case._name,
+                    'res_id': case.id,
+                    'date': email_date or time.strftime('%Y-%m-%d %H:%M:%S'),
+                    'description': details or (hasattr(case, 'description') and case.description or False),
+                    'email_to': email,
+                    'email_from': email_from or \
+                        (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
+                         case.user_id.address_id.email),
+                    'email_cc': email_cc,
+                    'email_bcc': email_bcc,
+                    'partner_id': partner_id,
+                    'references': references,
+                    'message_id': message_id,
+                    'attachment_ids': [(6, 0, attachments)]
                 }
-                self.pool.get('ir.attachment').create(cr, uid, data_attach)
-        return res_id
+            obj.create(cr, uid, data, context=context)
+        return True
+mailgate_thread()
 
+def format_date_tz(date, tz=None):
+    if not date:
+        return 'n/a'
+    format = tools.DEFAULT_SERVER_DATETIME_FORMAT
+    return tools.server_to_local_timestamp(date, format, format, tz)
 
-    def msg_body_get(self, msg):        
-        message = {};
-        message['body'] = '';
-        message['attachment'] = {};
-        attachment = message['attachment'];
-        counter = 1;
-        def replace(match):
-            return ''        
-        for part in msg.walk():
-            if part.get_content_maintype() == 'multipart':
-                continue
+class mailgate_message(osv.osv):
+    '''
+    Mailgateway Message
+    '''
+    def open_document(self, cr, uid, ids, context):
+        """ To Open Document
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID of messages
+        @param context: A standard dictionary
+        """
+        action_data = False
+        if ids:
+            message_id = ids[0]
+            mailgate_data = self.browse(cr, uid, message_id)
+            model = mailgate_data.model
+            res_id = mailgate_data.res_id
 
-            if part.get_content_maintype()=='text':
-                buf = part.get_payload(decode=True)
-                if buf:
-                    txt = buf.decode(part.get_charsets()[0] or 'ascii', 'replace')
-                    txt = re.sub("<(\w)>", replace, txt)
-                    txt = re.sub("<\/(\w)>", replace, txt)
-                if txt and part.get_content_subtype() == 'plain':
-                    message['body'] += txt 
-                elif txt and part.get_content_subtype() == 'html':                                                               
-                    message['body'] += tools.html2plaintext(txt)  
-                
-                filename = part.get_filename();
-                if filename :
-                    attachment[filename] = part.get_payload(decode=True);
-                    
-            elif part.get_content_maintype()=='application' or part.get_content_maintype()=='image' or part.get_content_maintype()=='text':
-                filename = part.get_filename();
-                if filename :
-                    attachment[filename] = part.get_payload(decode=True);
-                else:
-                    filename = 'attach_file'+str(counter);
-                    counter += 1;
-                    attachment[filename] = part.get_payload(decode=True);
-                #end if
-            #end if
-            message['attachment'] = attachment
-        #end for              
-        return message
-    #end def
+            action_pool = self.pool.get('ir.actions.act_window')
+            action_ids = action_pool.search(cr, uid, [('res_model', '=', model)])
+            if action_ids:
+                action_data = action_pool.read(cr, uid, action_ids[0], context=context)
+                action_data.update({
+                    'domain' : "[('id','=',%d)]"%(res_id),
+                    'nodestroy': True
+                    })
+        return action_data
 
-    def msg_update(self, cr, uid, msg, res_id, res_model, user_email):        
-        if user_email and self.emails_get(user_email)==self.emails_get(self._decode_header(msg['From'])):
-            return self.msg_user(cr, uid, msg, res_id, res_model)
+    def open_attachment(self, cr, uid, ids, context):
+        """ To Open attachments
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID of messages
+        @param context: A standard dictionary
+        """
+        action_data = False
+        action_pool = self.pool.get('ir.actions.act_window')
+        message_pool = self.browse(cr ,uid, ids)[0]
+        action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
+        if action_ids:
+            action_data = action_pool.read(cr, uid, action_ids[0], context=context)
+            action_data.update({
+                'domain': [('res_id','=',message_pool.res_id),('res_model','=',message_pool.model)],
+                'nodestroy': True
+                })
+        return action_data
+
+    def truncate_data(self, cr, uid, data, context=None):
+        data_list = data and data.split('\n') or []
+        if len(data_list) > 3:
+            res = '\n\t'.join(data_list[:3]) + '...'
         else:
-            return self.msg_partner(cr, uid, msg, res_id, res_model)
+            res = '\n\t'.join(data_list)
+        return res
 
-    def msg_act_get(self, msg):
-        body = self.msg_body_get(msg)
-
-        # handle email body commands (ex: Set-State: Draft)
-        actions = {}
-        body_data = ''
-        for line in body['body'].split('\n'):
-            res = tools.command_re.match(line)
-            if res:
-                actions[res.group(1).lower()] = res.group(2).lower()
+    def _get_display_text(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        tz = context.get('tz')
+        result = {}
+        for message in self.browse(cr, uid, ids, context=context):
+            msg_txt = ''
+            if message.history:
+                msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
+                if message.description:
+                    msg_txt += self.truncate_data(cr, uid, message.description, context=context)
             else:
-                body_data += line+'\n'
-        return actions, body_data
+                msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
+                if message.name == _('Opportunity'):
+                    msg_txt += _("Converted to Opportunity")
+                elif message.name == _('Note'):
+                    msg_txt = (message.user_id.name or '/') + _(' added note on ') + format_date_tz(message.date, tz) + ':\n\t'
+                    msg_txt += self.truncate_data(cr, uid, message.description, context=context)
+                else:
+                    msg_txt += _("Changed Status to: ") + message.name
+            result[message.id] = msg_txt
+        return result
 
-    def msg_user(self, cr, uid, msg, res_id, res_model):
-        actions, body_data = self.msg_act_get(msg)        
-        data = {}
-        if 'user' in actions:
-            uids = self.pool.get('res.users').name_search(cr, uid, actions['user'])
-            if uids:
-                data['user_id'] = uids[0][0]
-
-        res_model = self.pool.get(res_model)        
-        return res_model.msg_update(cr, uid, res_id, msg, data=data, default_act='pending')        
-
-    def msg_send(self, msg, reply_to, emails, priority=None, res_id=False):         
-        if not emails:
-            return False                
-        msg_to = [emails[0]]
-        msg_subject = msg['Subject']        
-        msg_cc = []
-        msg_body = self.msg_body_get(msg)        
-        if len(emails)>1:            
-            msg_cc = emails[1:]
-        msg_attachment = map(lambda x: (x[0], x[1]), msg_body['attachment'].items())                  
-        return tools.email_send(reply_to, msg_to, msg_subject , msg_body['body'], email_cc=msg_cc, 
-                         reply_to=reply_to, attach=msg_attachment, openobject_id=res_id, priority=priority)
-        
-
-    def msg_partner(self, cr, uid, msg, res_id, res_model):
-        res_model = self.pool.get(res_model)        
-        return res_model.msg_update(cr, uid, res_id, msg, data={}, default_act='open')      
-
-    
-
-    def msg_parse(self, cr, uid, mailgateway_id, msg):
-        mailgateway = self.browse(cr, uid, mailgateway_id)
-        res_model = mailgateway.object_id.model
-        res_str = tools.reference_re.search(msg.get('References', ''))
-        if res_str:
-            res_str = res_str.group(1)
-        else:
-            res_str = tools.res_re.search(msg.get('Subject', ''))
-            if res_str:
-                res_str = res_str.group(1)
-
-        def msg_test(res_str):
-            emails = ('', '', '', '')
-            if not res_str:
-                return (False, emails)  
-            res_str = int(res_str)          
-            if hasattr(self.pool.get(res_model), 'emails_get'):
-                emails = self.pool.get(res_model).emails_get(cr, uid, [res_str])[0]
-            return (res_str, emails)
-
-        (res_id, emails) = msg_test(res_str)
-        user_email, from_email, cc_email, priority = emails
-        if res_id:
-            self.msg_update(cr, uid, msg, res_id, res_model, user_email)
-            
-        else:
-            res_id = self.msg_new(cr, uid, msg, res_model)
-            (res_id, emails) = msg_test(res_id)
-            user_email, from_email, cc_email, priority = emails
-            subject = self._decode_header(msg['subject'])
-            if msg.get('Subject', ''):
-                del msg['Subject']
-            msg['Subject'] = '[%s] %s' %(str(res_id), subject)            
-
-        em = [user_email, from_email] + (cc_email or '').split(',')
-        emails = map(self.emails_get, filter(None, em))
-
-        mm = [self._decode_header(msg['From']), self._decode_header(msg['To'])]+self._decode_header(msg.get('Cc','')).split(',')
-        msg_mails = map(self.emails_get, filter(None, mm))
-
-        emails = filter(lambda m: m and m not in msg_mails, emails)        
-        try:
-            self.msg_send(msg, mailgateway.reply_to, emails, priority, res_id)
-            if hasattr(self.pool.get(res_model), 'msg_send'):
-                emails = self.pool.get(res_model).msg_send(cr, uid, res_id)
-        except Exception, e:
-            if mailgateway.email_default:
-                a = self._decode_header(msg['Subject'])
-                del msg['Subject']
-                msg['Subject'] = '[OpenERP-Error] ' + a
-                self.msg_send(msg, mailgateway.reply_to, mailgateway.email_default.split(','), res_id)
-            raise e 
-        return res_id
-
-mail_gateway()
-
-class mail_gateway_history(osv.osv):
-    _name = "mail.gateway.history"
-    _description = "Mail Gateway History"
+    _name = 'mailgate.message'
+    _description = 'Mailgateway Message'
+    _order = 'date desc'
     _columns = {
-        'name': fields.char('Message Id', size=64, help="Message Id in Email Server."),
-        'res_id': fields.integer("Resource ID"),        
-        'gateway_id': fields.many2one('mail.gateway',"Mail Gateway", required=True),
-        'model_id':fields.related('gateway_id', 'object_id', type='many2one', relation='ir.model', string='Model'), 
-        'note': fields.text('Notes'),
-        'create_date': fields.datetime('Created Date'),
+        'name':fields.text('Subject', readonly=True),
+        'model': fields.char('Object Name', size=128, select=1, readonly=True),
+        'res_id': fields.integer('Resource ID', select=1, readonly=True),
+        'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
+        'date': fields.datetime('Date', readonly=True),
+        'history': fields.boolean('Is History?', readonly=True),
+        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
+        'message': fields.text('Description', readonly=True),
+        'email_from': fields.char('From', size=128, help="Email From", readonly=True),
+        'email_to': fields.char('To', help="Email Recipients", size=256, readonly=True),
+        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256, readonly=True),
+        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256, readonly=True),
+        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email.", select=True),
+        'references': fields.text('References', readonly=True, help="References emails."),
+        'description': fields.text('Description', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', required=False),
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
+        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
     }
-    _order = 'id desc'
-mail_gateway_history()
+
+    def init(self, cr):
+        cr.execute("""SELECT indexname
+                      FROM pg_indexes
+                      WHERE indexname = 'mailgate_message_res_id_model_idx'""")
+        if not cr.fetchone():
+            cr.execute("""CREATE INDEX mailgate_message_res_id_model_idx
+                          ON mailgate_message (model, res_id)""")
+
+mailgate_message()
+
+class mailgate_tool(osv.osv_memory):
+
+    _name = 'email.server.tools'
+    _description = "Email Server Tools"
+
+    def _decode_header(self, text):
+        """Returns unicode() string conversion of the the given encoded smtp header"""
+        if text:
+            text = decode_header(text.replace('\r', ''))
+            return ''.join([tools.ustr(x[0], x[1]) for x in text])
+
+    def to_email(self,text):
+        return re.findall(r'([^ ,<@]+@[^> ,]+)',text)
+
+    def history(self, cr, uid, model, res_ids, msg, attach, context=None):
+        """This function creates history for mails fetched
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param model: OpenObject Model
+        @param res_ids: Ids of the record of OpenObject model created
+        @param msg: Email details
+        @param attach: Email attachments
+        """
+        if isinstance(res_ids, (int, long)):
+            res_ids = [res_ids]
+
+        msg_pool = self.pool.get('mailgate.message')
+        for res_id in res_ids:
+            case = self.pool.get(model).browse(cr, uid, res_id, context=context)
+            partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
+            if not partner_id and model == 'res.partner':
+                partner_id = res_id
+            msg_data = {
+                'name': msg.get('subject', 'No subject'),
+                'date': msg.get('date'),
+                'description': msg.get('body', msg.get('from')),
+                'history': True,
+                'partner_id': partner_id,
+                'model': model,
+                'email_cc': msg.get('cc'),
+                'email_from': msg.get('from'),
+                'email_to': msg.get('to'),
+                'message_id': msg.get('message-id'),
+                'references': msg.get('references') or msg.get('in-reply-to'),
+                'res_id': res_id,
+                'user_id': uid,
+                'attachment_ids': [(6, 0, attach)]
+            }
+            msg_pool.create(cr, uid, msg_data, context=context)
+        return True
+
+    def email_forward(self, cr, uid, model, res_ids, msg, email_error=False, context=None):
+        """Sends an email to all people following the thread
+        @param res_id: Id of the record of OpenObject model created from the email message
+        @param msg: email.message.Message to forward
+        @param email_error: Default Email address in case of any Problem
+        """
+        model_pool = self.pool.get(model)
+
+        for res in model_pool.browse(cr, uid, res_ids, context=context):
+            message_followers = model_pool.message_followers(cr, uid, [res.id])[res.id]
+            message_followers_emails = self.to_email(','.join(filter(None, message_followers)))
+            message_recipients = self.to_email(','.join(filter(None,
+                                                         [self._decode_header(msg['from']),
+                                                         self._decode_header(msg['to']),
+                                                         self._decode_header(msg['cc'])])))
+            message_forward = [i for i in message_followers_emails if (i and (i not in message_recipients))]
+
+            if message_forward:
+                # TODO: we need an interface for this for all types of objects, not just leads
+                if hasattr(res, 'section_id'):
+                    del msg['reply-to']
+                    msg['reply-to'] = res.section_id.reply_to
+
+                smtp_from = self.to_email(msg['from'])
+                if not tools.misc._email_send(smtp_from, message_forward, msg, openobject_id=res.id) and email_error:
+                    subj = msg['subject']
+                    del msg['subject'], msg['to'], msg['cc'], msg['bcc']
+                    msg['subject'] = '[OpenERP-Forward-Failed] %s' % subj
+                    msg['to'] = email_error
+                    tools.misc._email_send(smtp_from, self.to_email(email_error), msg, openobject_id=res.id)
+
+    def process_email(self, cr, uid, model, message, custom_values=None, attach=True, context=None):
+        """This function Processes email and create record for given OpenERP model
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param model: OpenObject Model
+        @param message: Email details, passed as a string or an xmlrpclib.Binary
+        @param attach: Email attachments
+        @param context: A standard dictionary for contextual values"""
+
+        # extract message bytes, we are forced to pass the message as binary because
+        # we don't know its encoding until we parse its headers and hence can't
+        # convert it to utf-8 for transport between the mailgate script and here.
+        if isinstance(message, xmlrpclib.Binary):
+            message = str(message.data)
+
+        if not context:
+            context = {}
+
+        if custom_values is None or not isinstance(custom_values, dict):
+            custom_values = {}
+
+        model_pool = self.pool.get(model)
+        res_id = False
+
+        # Create New Record into particular model
+        def create_record(msg):
+            att_ids = []
+            if hasattr(model_pool, 'message_new'):
+                res_id = model_pool.message_new(cr, uid, msg, context)
+                if custom_values:
+                    model_pool.write(cr, uid, [res_id], custom_values, context=context)
+            else:
+                data = {
+                    'name': msg.get('subject'),
+                    'email_from': msg.get('from'),
+                    'email_cc': msg.get('cc'),
+                    'user_id': False,
+                    'description': msg.get('body'),
+                    'state' : 'draft',
+                }
+                data.update(self.get_partner(cr, uid, msg.get('from'), context=context))
+                res_id = model_pool.create(cr, uid, data, context=context)
+
+                if attach:
+                    for attachment in msg.get('attachments', []):
+                        data_attach = {
+                            'name': attachment,
+                            'datas': binascii.b2a_base64(str(attachments.get(attachment))),
+                            'datas_fname': attachment,
+                            'description': 'Mail attachment',
+                            'res_model': model,
+                            'res_id': res_id,
+                        }
+                        att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
+
+            return res_id, att_ids
+
+        # Warning: message_from_string doesn't always work correctly on unicode,
+        # we must use utf-8 strings here :-(
+        if isinstance(message, unicode):
+            message = message.encode('utf-8')
+        msg_txt = email.message_from_string(message)
+        message_id = msg_txt.get('message-id', False)
+        msg = {}
+
+        if not message_id:
+            # Very unusual situation, be we should be fault-tolerant here
+            message_id = time.time()
+            msg_txt['message-id'] = message_id
+            _logger.info('Message without message-id, generating a random one: %s', message_id)
+
+        fields = msg_txt.keys()
+        msg['id'] = message_id
+        msg['message-id'] = message_id
+
+        if 'Subject' in fields:
+            msg['subject'] = self._decode_header(msg_txt.get('Subject'))
+
+        if 'Content-Type' in fields:
+            msg['content-type'] = msg_txt.get('Content-Type')
+
+        if 'From' in fields:
+            msg['from'] = self._decode_header(msg_txt.get('From'))
+
+        if 'Delivered-To' in fields:
+            msg['to'] = self._decode_header(msg_txt.get('Delivered-To'))
+
+        if 'CC' in fields:
+            msg['cc'] = self._decode_header(msg_txt.get('CC'))
+
+        if 'Reply-to' in fields:
+            msg['reply'] = self._decode_header(msg_txt.get('Reply-To'))
+
+        if 'Date' in fields:
+            msg['date'] = self._decode_header(msg_txt.get('Date'))
+
+        if 'Content-Transfer-Encoding' in fields:
+            msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
+
+        if 'References' in fields:
+            msg['references'] = msg_txt.get('References')
+
+        if 'In-Reply-To' in fields:
+            msg['in-reply-to'] = msg_txt.get('In-Reply-To')
+
+        if 'X-Priority' in fields:
+            msg['priority'] = msg_txt.get('X-Priority', '3 (Normal)').split(' ')[0]
+
+        if not msg_txt.is_multipart() or 'text/plain' in msg.get('Content-Type', ''):
+            encoding = msg_txt.get_content_charset()
+            body = msg_txt.get_payload(decode=True)
+            msg['body'] = tools.ustr(body, encoding)
+
+        attachments = {}
+        has_plain_text = False
+        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
+            body = ""
+            for part in msg_txt.walk():
+                if part.get_content_maintype() == 'multipart':
+                    continue
+
+                encoding = part.get_content_charset()
+                filename = part.get_filename()
+                if part.get_content_maintype()=='text':
+                    content = part.get_payload(decode=True)
+                    if filename:
+                        attachments[filename] = content
+                    elif not has_plain_text:
+                        # main content parts should have 'text' maintype
+                        # and no filename. we ignore the html part if
+                        # there is already a plaintext part without filename,
+                        # because presumably these are alternatives.
+                        content = tools.ustr(content, encoding)
+                        if part.get_content_subtype() == 'html':
+                            body = tools.ustr(tools.html2plaintext(content))
+                        elif part.get_content_subtype() == 'plain':
+                            body = content
+                            has_plain_text = True
+                elif part.get_content_maintype() in ('application', 'image'):
+                    if filename :
+                        attachments[filename] = part.get_payload(decode=True)
+                    else:
+                        res = part.get_payload(decode=True)
+                        body += tools.ustr(res, encoding)
+
+            msg['body'] = body
+            msg['attachments'] = attachments
+        res_ids = []
+        attachment_ids = []
+        new_res_id = False
+        if msg.get('references') or msg.get('in-reply-to'):
+            references = msg.get('references') or msg.get('in-reply-to')
+            if '\r\n' in references:
+                references = references.split('\r\n')
+            else:
+                references = references.split(' ')
+            for ref in references:
+                ref = ref.strip()
+                res_id = tools.misc.reference_re.search(ref)
+                if res_id:
+                    res_id = res_id.group(1)
+                else:
+                    res_id = tools.misc.res_re.search(msg['subject'])
+                    if res_id:
+                        res_id = res_id.group(1)
+                if res_id:
+                    res_id = int(res_id)
+                    model_pool = self.pool.get(model)
+                    if model_pool.exists(cr, uid, res_id):
+                        res_ids.append(res_id)
+                        if hasattr(model_pool, 'message_update'):
+                            model_pool.message_update(cr, uid, [res_id], {}, msg, context=context)
+                        else:
+                            raise NotImplementedError('model %s does not support updating records, mailgate API method message_update() is missing'%model)
+
+        if not len(res_ids):
+            new_res_id, attachment_ids = create_record(msg)
+            res_ids = [new_res_id]
+
+        # Store messages
+        context.update({'model' : model})
+        if hasattr(model_pool, 'history'):
+            model_pool.history(cr, uid, res_ids, _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments.items(),
+                            context = context)
+        else:
+            self.history(cr, uid, model, res_ids, msg, attachment_ids, context=context)
+        self.email_forward(cr, uid, model, res_ids, msg_txt)
+        return new_res_id
+
+    def get_partner(self, cr, uid, from_email, context=None):
+        """This function returns partner Id based on email passed
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks
+        @param from_email: email address based on that function will search for the correct
+        """
+        address_pool = self.pool.get('res.partner.address')
+        res = {
+            'partner_address_id': False,
+            'partner_id': False
+        }
+        from_email = self.to_email(from_email)[0]
+        address_ids = address_pool.search(cr, uid, [('email', 'like', from_email)])
+        if address_ids:
+            address = address_pool.browse(cr, uid, address_ids[0])
+            res['partner_address_id'] = address_ids[0]
+            res['partner_id'] = address.partner_id.id
+
+        return res
+
+mailgate_tool()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

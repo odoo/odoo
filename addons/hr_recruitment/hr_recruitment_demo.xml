@@ -9,7 +9,7 @@
     <record id="hr_case_salesman0" model="hr.applicant">
         <field eval="time.strftime('%Y-%m-01 10:35:50')" name="date"/>
         <field eval="time.strftime('%Y-%m-03')" name="date_deadline"/>
-        <field name="type_id" ref="type_job1"/>
+        <field name="type_id" ref="degree_graduate"/>
         <field name="partner_id" ref="base.res_partner_asus"/>
         <field eval="'2'" name="priority"/>
         <field name="user_id" ref="base.user_root"/>
@@ -27,9 +27,8 @@
     <record id="hr_case_traineemca0" model="hr.applicant">
         <field model="res.partner.canal" name="canal_id" search="[('name','=','E-mail')]"/>
         <field name="partner_address_id" ref="base.res_partner_address_14"/>
-        <field name="som" ref="base.som_fury"/>
         <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date"/>
-        <field name="type_id" ref="type_job3"/>
+        <field name="type_id" ref="degree_bac5"/>
         <field name="partner_id" ref="base.res_partner_15"/>
         <field eval="'3'" name="priority"/>
         <field name="user_id" ref="base.user_root"/>
@@ -47,10 +46,9 @@
     </record>
     <record id="hr_case_fresher0" model="hr.applicant">
         <field model="res.partner.canal" name="canal_id" search="[('name','=','direct')]"/>
-        <field name="som" ref="base.som_happy"/>
         <field eval="time.strftime('%Y-%m-15 16:10:00')" name="date"/>
         <field eval="time.strftime('%Y-%m-18')" name="date_deadline"/>
-        <field name="type_id" ref="type_job2"/>
+        <field name="type_id" ref="degree_licenced"/>
         <field name="partner_id" ref="base.res_partner_5"/>
         <field eval="'1'" name="priority"/>
         <field name="user_id" ref="base.user_root"/>
@@ -68,7 +66,7 @@
         <field eval="time.strftime('%Y-%m-25 16:25:52')" name="date"/>
         <field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
         <field name="categ_id" ref="categ_job2"/>
-        <field name="type_id" ref="type_job3"/>
+        <field name="type_id" ref="degree_bac5"/>
         <field name="partner_id" ref="base.res_partner_10"/>
         <field eval="'3'" name="priority"/>
         <field name="user_id" ref="base.user_root"/>
@@ -83,7 +81,7 @@
     <record id="hr_case_marketingjob0" model="hr.applicant">
         <field eval="time.strftime('%Y-%m-26 17:15:32')" name="date"/>
         <field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
-        <field name="type_id" ref="type_job2"/>
+        <field name="type_id" ref="degree_licenced"/>
         <field name="partner_id" ref="base.res_partner_11"/>
         <field eval="'4'" name="priority"/>
         <field name="user_id" ref="base.user_demo"/>
@@ -101,7 +99,7 @@
     <record id="hr_case_financejob0" model="hr.applicant">
         <field eval="time.strftime('%Y-%m-26 17:39:42')" name="date"/>
         <field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
-        <field name="type_id" ref="type_job2"/>
+        <field name="type_id" ref="degree_licenced"/>
         <field name="partner_id" ref="base.res_partner_11"/>
         <field eval="'4'" name="priority"/>
         <field name="user_id" ref="base.user_root"/>
@@ -119,9 +117,8 @@
     <record id="hr_case_traineemca1" model="hr.applicant">
         <field model="res.partner.canal" name="canal_id" search="[('name','=','E-mail')]"/>
         <field name="partner_address_id" ref="base.res_partner_address_14"/>
-        <field name="som" ref="base.som_fury"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
-        <field name="type_id" ref="type_job3"/>
+        <field name="type_id" ref="degree_bac5"/>
         <field name="partner_id" ref="base.res_partner_15"/>
         <field eval="'3'" name="priority"/>
         <field name="user_id" ref="base.user_root"/>
@@ -148,6 +145,7 @@
             <field eval="[(6,0,[])]" name="users"/>
             <field name="type" ref="survey.survey_type1"/>
             <field name="responsible_id" ref="base.user_root"/>
+            <field name="response_user">5</field>
         </record>
     </data>
     <data>

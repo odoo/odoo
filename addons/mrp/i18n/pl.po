@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 07:35+0000\n"
-"Last-Translator: Piotr Strębski <strebski@o2.pl>\n"
+"PO-Revision-Date: 2010-08-03 08:24+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:42+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -33,9 +33,9 @@ msgid ""
 "under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
 msgstr ""
-"Wyzwala automatyczne nabycie dla wszystkich produktów o zapasie poniżej 0. "
-"Prawdopodobnie nie powinieneś stosować tej opcji. Sugerujemy ustawienie "
-"konfiguracji produktów 'Na zamówienie'."
+"Wyzwala automatyczne zapotrzebowanie dla wszystkich produktów o zapasie "
+"poniżej 0. Prawdopodobnie nie powinieneś stosować tej opcji. Sugerujemy "
+"ustawienie konfiguracji produktów 'Na zamówienie'."
 
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
@@ -45,7 +45,7 @@ msgstr "Planowanie zasobów produkcyjnych (MRP)"
 #. module: mrp
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: mrp
 #: field:mrp.bom.revision,indice:0
@@ -62,7 +62,7 @@ msgstr "Oblicz tylko reguły minimalnych zapasów"
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action5
 msgid "Exceptions Procurements"
-msgstr "Wyjątki nabycia"
+msgstr "Wyjątki zapotrzebowania"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -105,7 +105,7 @@ msgstr "Konfiguracja"
 #. module: mrp
 #: field:mrp.production,name:0
 msgid "Reference"
-msgstr "Odnośnik"
+msgstr "Numer"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -173,7 +173,7 @@ msgstr "Pytaj o nowe produkty"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reordering
 msgid "Automatic Procurements"
-msgstr "Automatyczne nabycia"
+msgstr "Automatyczne zapotrzebowania"
 
 #. module: mrp
 #: wizard_field:change_production_qty,confirm,product_qty:0
@@ -206,7 +206,7 @@ msgstr "Wyjątek przesunięcia"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_orderrfq0
 msgid "A purchase order is created for a sub-contracting demand."
-msgstr ""
+msgstr "Zamówienie zakupu zostało utworzone dla podwykonawcy."
 
 #. module: mrp
 #: rml:mrp.production.order:0
@@ -257,7 +257,7 @@ msgstr "Zestaw / Fantom"
 #. module: mrp
 #: wizard_view:mrp.procurement.compute,init:0
 msgid "This wizard will schedule procurements."
-msgstr "Ten kreator zaplanuje nabycia."
+msgstr "Ten kreator zaplanuje zapotrzebowania."
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -299,7 +299,7 @@ msgid ""
 "procurement to bring the virtual stock to the Max Quantity."
 msgstr ""
 "Kiedy zapas wirtualny będzie poniżej ilości minimalnej, to Open ERP "
-"wygeneruje nabycie, aby zapas wzrósł do wartości maksymalnej."
+"wygeneruje zapotrzebowanie, aby zapas wzrósł do wartości maksymalnej."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockmts0
@@ -330,7 +330,7 @@ msgstr "Nie pilne"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0
 msgid "Procure Service Product"
-msgstr ""
+msgstr "Zapotrzebowanie na usługę"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -341,7 +341,7 @@ msgstr "Potwierdź produkcję"
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 #: field:stock.move,procurements:0
 msgid "Procurements"
-msgstr "Nabycia"
+msgstr "Zapotrzebowania"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -361,12 +361,12 @@ msgstr "Szczegóły"
 #. module: mrp
 #: model:process.process,name:mrp.process_process_procurementprocess0
 msgid "Procurement Process"
-msgstr "Proces nabycia"
+msgstr "Proces zapotrzebowania"
 
 #. module: mrp
 #: field:mrp.production,date_planned_date:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Zaplanowana data"
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
@@ -431,7 +431,7 @@ msgstr "Drukuj cenę produktu"
 #. module: mrp
 #: wizard_view:product.product.procurement,done:0
 msgid "Make Procurement"
-msgstr "Wykonaj nabycie"
+msgstr "Wykonaj zapotrzebowanie"
 
 #. module: mrp
 #: field:mrp.bom.revision,date:0
@@ -494,17 +494,17 @@ msgstr "JS produktu"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Production Procure Products"
-msgstr ""
+msgstr "Zapotrzebowanie produktów z produkcji"
 
 #. module: mrp
 #: model:process.process,name:mrp.process_process_serviceproductprocess0
 msgid "Service Product Process"
-msgstr ""
+msgstr "Proces usługi"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "Procurement convert into the draft purchase order."
-msgstr "Nabycie zmienia się w projekt zamówienia zakupu."
+msgstr "Zapotrzebowanie zmienia się w projekt zamówienia zakupu."
 
 #. module: mrp
 #: field:mrp.procurement,message:0
@@ -553,7 +553,7 @@ msgstr "Czas produkcji"
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action4
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action4
 msgid "Exceptions Procurements to Fix"
-msgstr ""
+msgstr "Wyjątki zapotrzebowania do poprawienia"
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
@@ -582,7 +582,7 @@ msgid "Time in hours for doing one cycle."
 msgstr "Czas wykonania jednego cyklu w godzinach"
 
 #. module: mrp
-#: field:mrp.production,date_finnished:0
+#: field:mrp.production,date_finished:0
 msgid "End Date"
 msgstr "Data końcowa"
 
@@ -695,7 +695,7 @@ msgstr "Hierarchia Zest. Mat."
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Procurement Lines"
-msgstr "Pozycje nabycia"
+msgstr "Pozycje zapotrzebowania"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -745,8 +745,8 @@ msgid ""
 "This wizard will planify the procurement for this product. This procurement "
 "may generate task, production orders or purchase orders."
 msgstr ""
-"Ten kreator zaplanuje nabycie dla tego produktu. Nabycie może wygenerować "
-"zadania, zamówienia produkcji lub zamówienia zakupu."
+"Ten kreator zaplanuje zapotrzebowanie dla tego produktu. Zapotrzebowanie "
+"może wygenerować zadania, zamówienia produkcji lub zamówienia zakupu."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_mts0
@@ -761,7 +761,7 @@ msgstr "Zamówienie usług Rejestrowanych"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
 msgid "From minimum stock rules, it goes for procure product."
-msgstr "Z reguł minimalnych zapasów jest tworzone nabycie produktu."
+msgstr "Z reguł minimalnych zapasów jest tworzone zapotrzebowanie produktu."
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stockproduct0
@@ -918,7 +918,7 @@ msgstr "Jednostka miary wielkości"
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Run procurement"
-msgstr "Uruchom nabycie"
+msgstr "Uruchom zapotrzebowanie"
 
 #. module: mrp
 #: help:res.company,schedule_range:0
@@ -927,9 +927,9 @@ msgid ""
 "procurements. All procurement that are not between today and today+range are "
 "skipped for futur computation."
 msgstr ""
-"To jest rama czasowa do obliczeń planisty. Wszystkie babycia, które nie "
-"znajdują się dzisiaj a dzisiaj + zakres planowania są pomijane w "
-"obliczeniach."
+"To jest rama czasowa do obliczeń planisty. Wszystkie zapotrzebowania, "
+"których daty są poza zakresem od (dzisiaj) do (dzisiaj + zakres planowania) "
+"są pomijane w obliczeniach."
 
 #. module: mrp
 #: field:mrp.workcenter,time_efficiency:0
@@ -969,7 +969,7 @@ msgstr "Jednostka miary"
 #. module: mrp
 #: field:mrp.procurement,procure_method:0
 msgid "Procurement Method"
-msgstr "Metoda nabycia"
+msgstr "Metoda zpotrzebowania"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -986,7 +986,7 @@ msgstr "Na tydzień"
 #: wizard_button:mrp.procurement.compute.all,init,compute:0
 #: wizard_button:mrp.procurement.orderpoint.compute,init,compute:0
 msgid "Compute Procurements"
-msgstr "Oblicz nabycia"
+msgstr "Oblicz zapotrzebowania"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stock0
@@ -1001,7 +1001,7 @@ msgstr "Zatwierdź"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
 msgid "Procurement Purchase"
-msgstr "Nabycie przez zakup"
+msgstr "Zapotrzebowanie zakupu"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
@@ -1092,7 +1092,7 @@ msgstr "Strefa magazynowa"
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_new
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_new
 msgid "New Procurement"
-msgstr "Nowe nabycie"
+msgstr "Nowe zapotrzebowanie"
 
 #. module: mrp
 #: rml:mrp.production.order:0
@@ -1120,7 +1120,7 @@ msgstr "Planowana data"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
 msgid "Procurement orders"
-msgstr "Zamówienia nabycia"
+msgstr "Zapotrzebowania"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_mts0
@@ -1146,12 +1146,12 @@ msgstr "Ilość maks."
 #: model:ir.model,name:mrp.model_mrp_procurement
 #: view:mrp.procurement:0
 msgid "Procurement"
-msgstr "Nabycie"
+msgstr "Zapotrzebowanie"
 
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.product_procurement_wizard
 msgid "Procurement Request"
-msgstr ""
+msgstr "Utwórz zapotrzebowanie"
 
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_price
@@ -1161,7 +1161,7 @@ msgstr "Struktura kosztów produktu"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
 msgid "Minimum Stock Procure"
-msgstr "Nabycie zapasu minimalnego"
+msgstr "Zapotrzebowanie z zapasu minimalnego"
 
 #. module: mrp
 #: help:res.company,po_lead:0
@@ -1191,7 +1191,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
 msgid "Procurement for raw materials."
-msgstr "Nabycie dla materiałów do produkcji."
+msgstr "Zapotrzebowanie na materiały do produkcji."
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -1203,7 +1203,7 @@ msgstr "Uwaga"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
 msgid "Procure Stockable Product"
-msgstr ""
+msgstr "Zapotrzebowanie na produkty rejestrowane"
 
 #. module: mrp
 #: field:mrp.bom,method:0
@@ -1231,7 +1231,7 @@ msgstr "Aktywne"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
 msgid "Procure Products"
-msgstr "Nabądź produkty"
+msgstr "Zapotrzebowanie na produkty"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1267,7 +1267,8 @@ msgstr "Definiuj strukturę produktu z produktami ubocznymi lub komponentami."
 msgid ""
 "Procurement is created if the product quantity is lower than the minimum "
 "limit."
-msgstr "Nabycie jest tworzone gdy ilość produktu jest niższa niż minimum."
+msgstr ""
+"Zapotrzebowanie jest tworzone, gdy ilość produktu jest niższa niż minimum."
 
 #. module: mrp
 #: field:mrp.procurement,date_close:0
@@ -1309,7 +1310,7 @@ msgstr "Wykonano"
 #. module: mrp
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will by rounded up to this multiple."
-msgstr "Ilość nabycia będzie zaokrąglona do tej wielokrotności."
+msgstr "Ilość zapotrzebowania będzie zaokrąglona do tej wielokrotności."
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,logic:0
@@ -1327,7 +1328,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
 msgid "Central document to procure products"
-msgstr "Centralny dokument do nabycia produktów"
+msgstr "Centralny dokument na zapotrzebowanie produktów"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1389,7 +1390,7 @@ msgid ""
 "Reference of the document that created this procurement.\n"
 "This is automatically completed by Open ERP."
 msgstr ""
-"Oznaczenie dokumentu, który utworzył to nabycie\n"
+"Oznaczenie dokumentu, który utworzył to zapotrzebowanie\n"
 "Jest automatycznie wypełniane przez OpenERP."
 
 #. module: mrp
@@ -1457,8 +1458,8 @@ msgid ""
 "If you encode manually a procurement, you probably want to use a make to "
 "order method."
 msgstr ""
-"Jeśli wprowadziłeś nabycie ręcznie, to prawdopodobnie chcesz zastosowac "
-"metodę 'Na zamówienie'."
+"Jeśli wprowadziłeś zapotrzebowanie ręcznie, to prawdopodobnie chcesz "
+"zastosować metodę 'Na zamówienie'."
 
 #. module: mrp
 #: rml:mrp.production.order:0
@@ -1495,7 +1496,7 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procurestockableproduct0
 msgid "if Product type is Stockable in procurement order"
-msgstr "Jeśli w zamówieniu nabycia produkt jest typu Rejestrowany."
+msgstr "Jeśli w zapotrzebowaniu produkt jest typu Rejestrowany."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
@@ -1582,7 +1583,7 @@ msgstr "Kategorie właściwości"
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc1
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
 msgid "Compute Procurements Only"
-msgstr "Oblicz tylko nabycia"
+msgstr "Oblicz tylko zapotrzebowania"
 
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
@@ -1604,7 +1605,7 @@ msgstr "Ważne do"
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action11
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action11
 msgid "Temporary Procurement Exceptions"
-msgstr "Tymczasowe wyjątki nabycia"
+msgstr "Tymczasowe wyjątki zapotrzebowania"
 
 #. module: mrp
 #: field:mrp.bom,date_start:0
@@ -1711,7 +1712,7 @@ msgstr "Liczba godzin"
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action
 msgid "Procurement Orders"
-msgstr "Zamówienia nabycia"
+msgstr "Zapotrzebowania"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property
@@ -1809,7 +1810,7 @@ msgstr "Normalne"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_productionprocureproducts0
 msgid "When any procuere products, it comes into the prpcurement orders"
-msgstr "Wszystkie nabycia produktów stają się zamówieniami nabycia"
+msgstr "Kiedy produkt jest potrzebny, to powstaje zapotrzebowanie"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
@@ -1820,7 +1821,7 @@ msgstr "Zamówienia produkcji do rozpoczęcia"
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Procurement Reason"
-msgstr "Powód nabycia"
+msgstr "Powód zapotrzebowania"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
@@ -1848,7 +1849,7 @@ msgstr "Zestawienia materiałowe"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procureserviceproduct0
 msgid "In procurement order, if product type is service"
-msgstr "W zamówieniach nabycia, jeśli typ produktu jest Usługa"
+msgstr "W zapotrzebowaniach, jeśli typ produktu jest Usługa"
 
 #. module: mrp
 #: selection:mrp.procurement,procure_method:0
@@ -1939,7 +1940,7 @@ msgstr "Produkowanie"
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action3
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action3
 msgid "Unscheduled procurements"
-msgstr "Nabycia nie zaplanowane"
+msgstr "Zapotrzebowania nie zaplanowane"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_tree_action
@@ -1960,7 +1961,7 @@ msgstr "Czas czyszczenia w godzinach"
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Procurement Details"
-msgstr "Szczegóły nabycia"
+msgstr "Szczegóły zapotrzebowania"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
@@ -1992,3 +1993,56 @@ msgstr "Numeracja"
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Materials Components"
 msgstr "Komponenty zestawienia materiałowego"
+
+#. module: mrp
+#: field:report.mrp.inout,date:0 field:report.workcenter.load,name:0
+msgid "Week"
+msgstr "Tydzień"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.next_id_77
+msgid "Reporting"
+msgstr "Raportowanie"
+
+#. module: mrp
+#: view:report.workcenter.load:0
+msgid "Workcenters load"
+msgstr "Obciążenie centrów roboczych"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_workcenter_load
+msgid "Workcenter Load"
+msgstr "Obciążenie centrum roboczego"
+
+#. module: mrp
+#: model:ir.module.module,shortdesc:report_mrp.module_meta_information
+msgid "MRP Management - Reporting"
+msgstr "Zarządzanie MRP - Raportowanie"
+
+#. module: mrp
+#: field:report.mrp.inout,value:0
+msgid "Stock value"
+msgstr "Wycena zapasów"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
+#: model:ir.ui.menu,name:mrp.menu_report_workcenter_load
+msgid "Workcenter Loads"
+msgstr "Obciążenia centrum roboczego"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
+#: model:ir.ui.menu,name:mrp.menu_report_in_out_picking
+msgid "Weekly Stock Value Variation"
+msgstr "Tygodniowe odchylenie wartości zapasów"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_inout
+#: view:report.mrp.inout:0
+msgid "Stock value variation"
+msgstr "Zmiany wartości zapasów"
+
+#. module: mrp
+#: view:board.board:0
+msgid "Next production orders"
+msgstr "Następne zamówienie produkcji"

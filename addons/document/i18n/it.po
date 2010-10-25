@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* document
+# 	* document
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 15:15+0000\n"
-"Last-Translator: LucaSub <subluca@gmail.com>\n"
+"PO-Revision-Date: 2010-08-18 09:58+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -24,12 +24,12 @@ msgstr "Data di creazione"
 #. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "ID Risorsa"
 
 #. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
-msgstr ""
+msgstr "Includi il nome della registrazione"
 
 #. module: document
 #: constraint:ir.model:0
@@ -47,7 +47,7 @@ msgstr "ID Modello"
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr ""
+msgstr "Errore! Non puoi creare Direcroty ricorsive"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_configuration
@@ -86,12 +86,12 @@ msgstr ""
 #. module: document
 #: selection:document.directory,type:0
 msgid "Other Resources"
-msgstr ""
+msgstr "Altre Risorse"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
 msgid "Parent Model"
-msgstr ""
+msgstr "Modello Padre"
 
 #. module: document
 #: view:document.configuration.wizard:0
@@ -106,7 +106,7 @@ msgstr "Allegato"
 #. module: document
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome del modulo non valido nella definizione dell'azione."
 
 #. module: document
 #: selection:document.directory,type:0
@@ -123,6 +123,7 @@ msgstr "Tipo di Contenuto della Cartella"
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
 msgstr ""
+"Usa un Dominio se vui applicare un filtro automatico sulle risorse visibili"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -130,6 +131,8 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
+"Spunta se vuoi usare la stessa struttura ad albero come l'oggetto "
+"selezionato nel sistema"
 
 #. module: document
 #: field:document.directory,type:0
@@ -145,7 +148,7 @@ msgstr "Strutture delle Cartelle"
 #. module: document
 #: field:document.directory,parent_id:0
 msgid "Parent Item"
-msgstr ""
+msgstr "Articolo Padre"
 
 #. module: document
 #: view:ir.attachment:0
@@ -167,7 +170,7 @@ msgstr "Nome file Memorizzati"
 #: field:document.directory,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
-msgstr ""
+msgstr "Ultimo utente che ha modificato"
 
 #. module: document
 #: view:document.configuration.wizard:0
@@ -190,6 +193,8 @@ msgid ""
 "This wizard will configure the URL of the server of the document management "
 "system."
 msgstr ""
+"Questa procedura automatica configura l'URL del server del Gestore "
+"Documentale"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content
@@ -202,6 +207,9 @@ msgid ""
 "If you put an object here, this directory template will appear bellow all of "
 "these objects. Don't put a parent directory if you select a parent model."
 msgstr ""
+"Se metti un oggetto qui, questo modello di directory comparirà sotto tutti "
+"questi oggetti. Non mettere una directory padre se selezioni un modello di "
+"partner."
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document
@@ -280,6 +288,10 @@ msgid ""
 "    * User Authentication\n"
 "    * Document Indexation\n"
 msgstr ""
+"Questo è un completo Sistema di Gestione Documentale:\n"
+"    * Interfaccia FTP\n"
+"    * Autenticazione Utente\n"
+"    * Indicizzazione Documenti\n"
 
 #. module: document
 #: field:document.directory,name:0
@@ -315,7 +327,7 @@ msgstr "Seq."
 #. module: document
 #: model:ir.module.module,shortdesc:document.module_meta_information
 msgid "Integrated Document Management System"
-msgstr ""
+msgstr "Sistema di gestione documentale integrato"
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -332,7 +344,7 @@ msgstr "Proprietario"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
 msgid "document.configuration.wizard"
-msgstr ""
+msgstr "document.configuration.wizard"
 
 #. module: document
 #: view:ir.attachment:0
@@ -378,6 +390,8 @@ msgid ""
 "Select an object here and Open ERP will create a mapping for each of these "
 "objects, using the given domain, when browsing through FTP."
 msgstr ""
+"Seleziona un oggetto qui e Open ERP creerà un abbinamento per tutti questi "
+"oggetti, usando il dominio fornito, quando verrà sfogliato attraverso FTP."
 
 #. module: document
 #: view:ir.attachment:0
@@ -454,7 +468,7 @@ msgstr "Cancella"
 #. module: document
 #: field:ir.attachment,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: document
 #: view:document.directory:0
@@ -469,9 +483,171 @@ msgstr "Tipo di documento"
 #. module: document
 #: field:document.directory,child_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Figlio"
 
 #. module: document
 #: view:document.directory:0
 msgid "Contents"
 msgstr "Contenuti"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_partner
+msgid "Files Per Month"
+msgstr "File per mesi"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_wall
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_shame
+#: view:report.document.wall:0
+msgid "Wall of Shame"
+msgstr "Muro della vergogna"
+
+#. module: document
+#: model:ir.model,name:document.model_report_files_partner
+msgid "Files details by Partners"
+msgstr "Dettagli file per Partner"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all
+msgid "All Months"
+msgstr "Tutti i Mesi"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all_myfile
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this_myfile
+msgid "My files"
+msgstr "I Miei File"
+
+#. module: document
+#: view:report.document.user:0
+msgid "Files by users"
+msgstr "File per utenti"
+
+#. module: document
+#: view:report.files.partner:0
+msgid "Files per Month"
+msgstr "File per mesi"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_my_document_tree1
+msgid "My files (All months)"
+msgstr "I Miei file (Tutti i mesi)"
+
+#. module: document
+#: field:report.document.wall,file_name:0
+msgid "Last Posted File Name"
+msgstr "Ultimo file inviato"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report
+msgid "Reporting"
+msgstr "Reportistica"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_wall
+msgid "Users that did not inserted documents since one month"
+msgstr "Utenti che non inviano documenti da un mese"
+
+#. module: document
+#: view:report.files.partner:0
+msgid "Files By Partner"
+msgstr "Files per Partner"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this
+msgid "This Month"
+msgstr "Questo Mese"
+
+#. module: document
+#: field:report.document.user,user:0 field:report.document.wall,user:0
+msgid "User"
+msgstr "Utente"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all_userfile
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this_userfile
+msgid "All Users files"
+msgstr "Tutti i files utente"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_my_document_tree
+msgid "My files (This months)"
+msgstr "I miei files"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_user
+msgid "Files details by Users"
+msgstr "Dettaglio files per utente"
+
+#. module: document
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
+#: field:report.files.partner,nbr:0
+msgid "# of Files"
+msgstr "Num. di files"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_user_graph
+msgid "Files By Users"
+msgstr "File per utenti"
+
+#. module: document
+#: model:ir.module.module,shortdesc:report_document.module_meta_information
+msgid "Document Management - Reporting"
+msgstr "Gestione documentale - Stampe"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files (All months)"
+msgstr "Tutti i files degli utenti (Tutti i mesi)"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_file
+msgid "Files details by Directory"
+msgstr "Dettaglio files per Directory"
+
+#. module: document
+#: field:report.document.user,change_date:0
+#: field:report.files.partner,change_date:0
+msgid "Modified Date"
+msgstr "Data modificata"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_size_month
+#: view:report.document.file:0
+msgid "File Size by Month"
+msgstr "Dimensione File per Mese"
+
+#. module: document
+#: field:report.document.user,file_title:0
+#: field:report.files.partner,file_title:0
+msgid "File Name"
+msgstr "Nome File"
+
+#. module: document
+#: field:report.document.file,month:0 field:report.document.user,month:0
+#: field:report.document.user,name:0 field:report.document.wall,month:0
+#: field:report.document.wall,name:0 field:report.files.partner,name:0
+msgid "Month"
+msgstr "Mese"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
+#: view:report.document.user:0
+msgid "Files by Month"
+msgstr "Files per mese"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
+#: view:report.document.user:0
+msgid "Files by Resource Type"
+msgstr "File per tipo di risorsa"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree
+msgid "All Users files (This month)"
+msgstr "Tutti i file degli utenti (Mese attuale)"
+
+#. module: document
+#: field:report.document.wall,last:0
+msgid "Last Posted Time"
+msgstr "Ora ultimo invio"

@@ -19,67 +19,45 @@
 #
 ##############################################################################
 
-import wizard
-import netsvc
-import time
-import pooler
+from osv import fields, osv
 
-from osv import osv
+class action_traceability(osv.osv_memory):
+    """ 
+    This class defines a function action_traceability for wizard
 
-def action_traceability(type='move_history_ids', field='tracking_id'):
-    def open_tab(self, cr, uid, data, context):
-        obj = pooler.get_pool(cr.dbname).get('stock.move')
-        ids = obj.search(cr, uid, [(field, 'in', data['ids'])])
-        cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type, 'tree'))
+    """
+    _name = "action.traceability"
+    _description = "Action traceability "
+     
+    def action_traceability(self, cr, uid, ids, context={}):
+        """ It traces the information of a product
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected 
+        @param context: A standard dictionary 
+        @return: A dictionary of values
+        """
+
+        type1 = context['type'] or 'move_history_ids2'
+        field = context['field'] or 'tracking_id'
+        obj = self.pool.get('stock.move')
+        ids = obj.search(cr, uid, [(field, 'in',context['active_ids'])])
+        cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type1, 'tree'))
         view_id = cr.fetchone()[0]
         value = {
             'domain': "[('id','in',["+','.join(map(str, ids))+"])]",
-            'name': ((type=='move_history_ids') and 'Upstream Traceability') or 'Downstream Traceability',
+            'name': ((type1=='move_history_ids2') and 'Upstream Traceability') or 'Downstream Traceability',
             'view_type': 'tree',
             'res_model': 'stock.move',
-            'field_parent': type,
+            'field_parent': type1,
             'view_id': (view_id,'View'),
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'nodestroy':True,            
         }
         return value
-    return open_tab
 
-class wiz_journal(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'action', 'action': action_traceability('move_history_ids2'), 'state':'end'}
-        }
-    }
-wiz_journal('stock.traceability.downstream')
-
-class wiz_journal2(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'action', 'action': action_traceability(), 'state':'end'}
-        }
-    }
-wiz_journal2('stock.traceability.upstream')
-
-class wiz_journal3(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'action', 'action': action_traceability(field='prodlot_id'), 'state':'end'}
-        }
-    }
-wiz_journal3('stock.traceability.lot.upstream')
-
-class wiz_journal4(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'action', 'action': action_traceability('move_history_ids2', 'prodlot_id'), 'state':'end'}
-        }
-    }
-wiz_journal4('stock.traceability.lot.downstream')
-
+action_traceability()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

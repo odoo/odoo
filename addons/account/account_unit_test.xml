@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
         <!-- This file must be loaded  _after_  account_demo.xml ! --> 
         <record id="test_invoice_1" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
@@ -14,6 +14,13 @@
             <field name="name">Test invoice 1</field>
             <field name="address_contact_id" ref="base.res_partner_address_tang"/>
         </record>
+        <record id="test_tax_line" model="account.invoice.tax">
+            <field name="name">Test Tax</field>
+            <field name="base">5.00</field>
+            <field name="amount">100.00</field>
+            <field name="account_id" ref="account.ova"/>
+            <field name="invoice_id" ref="test_invoice_1"/>            
+        </record>            
         <record id="test_invoice_1_line_1" model="account.invoice.line">
             <field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
             <field name="invoice_id" ref="test_invoice_1"/>
@@ -27,7 +34,7 @@
             <field name="price_unit">800</field>
             <field name="quantity">2</field>
             <field name="account_id" ref="account.a_sale"/>
-        </record>
+        </record>        
         
         <assert id="test_invoice_1" model="account.invoice" string="The currency unit of Test invoice 1 is EUR">
             <test expr="currency_id.code">EUR</test>
@@ -44,14 +51,16 @@
             <test expr="state">open</test>
         </assert>
         <function model="account.invoice" name="pay_and_reconcile">
-			<!-- ids = -->					<value eval="[ref('test_invoice_1')]"/>
-			<!-- pay_amount = -->			<value eval="1850"/>
-			<!-- pay_account_id = -->		<value eval="ref('cash')"/>
-			<!-- period_id = -->			<value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
-			<!-- pay_journal_id = -->		<value eval="ref('bank_journal')"/>
-			<!-- writeoff_acc_id = -->		<value eval="ref('cash')"/>
-			<!-- writeoff_period_id = -->	<value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
-			<!-- writeoff_journal_id = -->	<value eval="ref('bank_journal')"/>
+            <!-- ids = -->                    <value eval="[ref('test_invoice_1')]"/>
+            <!-- pay_amount = -->            <value eval="1850"/>
+            <!-- pay_account_id = -->        <value eval="ref('cash')"/>
+            <!-- period_id = -->            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <!-- pay_journal_id = -->        <value eval="ref('bank_journal')"/>
+            <!-- writeoff_acc_id = -->        <value eval="ref('cash')"/>
+            <!-- writeoff_period_id = -->    <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <!-- writeoff_journal_id = -->    <value eval="ref('bank_journal')"/>
+            <!-- context = -->              <value eval="{}"/>
+            <!-- name = -->                 <value eval="str('Payment from ASUStek')"/>
         </function>
         
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now paid">

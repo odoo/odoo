@@ -2,27 +2,10 @@
 <openerp>
     <data>
 
-    <record id="config_call_account_template" model="ir.actions.todo">
+    <record id="config_call_account_template_lu" model="ir.actions.todo">
         <field name="action_id" ref="account.action_wizard_multi_chart"/>
+        <field name="restart">onskip</field>
     </record>
-
-    <menuitem
-        id="legal_lu"
-        parent="account.menu_finance_legal_statement"
-        name="Luxembourg"/>
-
-    <wizard
-        id="wizard_print_vat"
-        menu="False"
-        model="account.tax.code"
-        name="l10n_lu.tax.report.wizard" string="VAT Declaration"/>
-
-    <menuitem
-        id="legal_lu_vat"
-        parent="legal_lu"
-        type="wizard"
-        action="wizard_print_vat"/>
-
 
     </data>
 </openerp>

@@ -1,0 +1,53 @@
+<openerp>
+    <data>
+
+        <record id="account_invoice_confirm_view" model="ir.ui.view">
+            <field name="name">account.invoice.confirm.form</field>
+            <field name="model">account.invoice.confirm</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Confirm Draft Invoices">
+                <separator string="Confirm Draft Invoices" colspan="4"/>
+                    <group colspan="4" col="6">
+                        <button icon="gtk-cancel" special="cancel" string="Close"/>
+                        <button icon="terp-camera_test" string="Confirm Invoices" name="invoice_confirm" type="object" default_focus="1"/>
+                   </group>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_account_invoice_confirm" model="ir.actions.act_window">
+            <field name="name">Confirm Draft Invoices</field>
+            <field name="res_model">account.invoice.confirm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_invoice_confirm_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="account_invoice_cancel_view" model="ir.ui.view">
+            <field name="name">account.invoice.cancel.form</field>
+            <field name="model">account.invoice.cancel</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Cancel Selected Invoices">
+                <separator string="Cancel Selected Invoices" colspan="4"/>
+                    <group colspan="4" col="6">
+                        <button icon="gtk-cancel" string="Cancel Invoices" name="invoice_cancel" type="object" default_focus="1"/>
+                        <button icon="terp-dialog-close" special="cancel" string="Close"/>
+                   </group>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_account_invoice_cancel" model="ir.actions.act_window">
+            <field name="name">Cancel Selected Invoices</field>
+            <field name="res_model">account.invoice.cancel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_invoice_cancel_view"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

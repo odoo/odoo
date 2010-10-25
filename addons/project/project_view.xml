@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
-        <menuitem id="menu_project_management" name="Project Management" parent="base.menu_main_pm" sequence="1"/>
+
+        <menuitem
+            icon="terp-project" id="base.menu_main_pm"
+            name="Project" sequence="10"
+            groups="group_project_manager,group_project_user"/>
+
+        <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
 
         <!-- Project -->
@@ -15,56 +20,65 @@
                     <group colspan="6" col="6">
                         <field name="name" string="Project Name" select="1"/>
                         <field name="parent_id" string="Parent Project"/>
-                        <field name="user_id" string="Project Manager" select="1"/>
-                        <field name="date_start"/>
-                        <field name="date"/>
+                        <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
+                        <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
+                        <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="progress_rate" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Administration">
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="2" groups="base.group_extended">
                                 <separator colspan="2" string="Scheduling"/>
                                 <field name="priority"/>
-                                <field name="active" select="2"/>
+                                <field name="active"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Performance"/>
                                 <field name="planned_hours" widget="float_time"/>
-                                <field name="effective_hours" widget="float_time"/>
+                                <field name="effective_hours" widget="float_time" />
                             </group>
                             <group col="2" colspan="2" name="misc">
                                 <separator colspan="2" string="Miscelleanous"/>
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                                 <field name="warn_manager"/>
                             </group>
-
                             <newline/>
-                            <separator colspan="4" string="Project's members"/>
-                            <field colspan="4" name="members" nolabel="1"/>
+                            <separator colspan="4"/>
                             <group col="9" colspan="8">
-                                <field name="state" select="1"/>
-                                <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
-                                <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,done" icon="gtk-ok"/>
-                                <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
+                                <field name="state" select="1" readonly="1"/>
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
-                                <button name="set_done" string="Done" type="object" states="open,pending" icon="gtk-jump-to"/>
+                                <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert" groups="base.group_extended"/>
+                                <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
+                                <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
+                                <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
                                 <button
                                     string="New Project Based on Template"
-                                    name="%(wizard_duplicate_template)d"  type="action"
-                                    states="template" icon="gtk-new"/>
+                                    name="duplicate_template"  type="object"
+                                    states="template" icon="gtk-new" context="{'parent_id':parent_id}"/>
                             </group>
                         </page>
-                        <page groups="base.group_extended" string="Partner Info">
-                            <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" select="2"/>
+                        <page string="Members">
+                            <field colspan="4" name="members" nolabel="1">
+                                <tree string="Members">
+                                    <field name="name"/>
+                                    <field name="user_email"/>
+                                    <field name="address_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Billing" groups="account.group_account_invoice">
+                            <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Invoice Address"/>
                             <field name="warn_customer"/>
                             <newline/>
-                            <separator colspan="2" string="Mail Header"/>
-                            <separator colspan="2" string="Mail Footer"/>
-                            <field name="warn_header" nolabel="1" colspan="2"/>
-                            <field name="warn_footer" nolabel="1" colspan="2"/>
-                            <group col="3" colspan="4">
+                            <group colspan="4" col="4" groups="base.group_extended">
+                                <separator colspan="2" string="Mail Header"/>
+                                <separator colspan="2" string="Mail Footer"/>
+                                <field name="warn_header" nolabel="1" colspan="2"/>
+                                <field name="warn_footer" nolabel="1" colspan="2"/>
+                            </group>
+                            <group col="3" colspan="4" groups="base.group_extended">
                                 <separator string="Automatic variables for headers and footer. Use exactly the same notation." colspan="4"/>
                                 <label string="Task: %%(name)s"/>
                                 <label string="User: %%(user_id)s"/>
@@ -86,23 +100,6 @@
             </field>
         </record>
 
-        <record id="view_project_list" model="ir.ui.view">
-            <field name="name">project.project.list</field>
-            <field name="model">project.project</field>
-            <field name="type">tree</field>
-            <field name="priority" eval="5"/>
-            <field name="arch" type="xml">
-                <tree string="Projects">
-                    <field name="complete_name" string="Project Name"/>
-                    <field name="user_id" string="Project Manager"/>
-                    <field name="partner_id" string="Partner"/>
-                    <field name="effective_hours" widget="float_time"/>
-                    <field name="total_hours" widget="float_time"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
        <record id="view_project_project_filter" model="ir.ui.view">
             <field name="name">project.project.select</field>
             <field name="model">project.project</field>
@@ -110,19 +107,23 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group col='15' colspan='4'>
-                       <filter icon="terp-project" string="Open" domain="[('state', '=', 'open')]" help="Open Projects" default="1"/>
-                       <filter icon="terp-project" string="Pending" domain="[('state', '=', 'pending')]" help="Pending Projects"/>
+                       <filter icon="terp-check" string="Current" name="Current" domain="[('state', 'in',('open','pending'))]" help="Open and Pending Projects" default="1"/>
                        <separator orientation="vertical"/>
-                       <filter icon="terp-project" string="Manager" domain="[('user_id', '=', uid)]" help="Projects in which I am a manager."/>
-                       <filter icon="terp-project" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member." default="1"/>
-                       <separator orientation="vertical"/>
-                       <filter icon="terp-project" string="Templates" domain="[('state','=','template')]" help="Template Projects"/>
+                       <filter icon="terp-personal+" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member." default="1"/>
                        <separator orientation="vertical"/>
                        <field name="name" string="Project Name"/>
-                       <field name="user_id" string="Project Manager"/>
+                       <field name="user_id" string="Project Manager" default="1">
+                            <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manage" icon="terp-personal"/>
+                       </field>
                        <field name="partner_id" string="Partner"/>
-                       <field name="state"/>
                    </group>
+                   <newline />
+                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                        <filter string="Manager" name="Manager"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Partner" name="Partner" icon="terp-partner" domain = "[]" context="{'group_by':'partner_id'}"/>
+                         <separator orientation="vertical"/>
+                        <filter string="Parent" name="Parent"  help="Parent Project" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
+                    </group>
                </search>
             </field>
         </record>
@@ -133,11 +134,13 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree string="Projects">
+                <tree colors="red:date and (date&lt;current_date) and (state in ('open'));blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
                     <field name="sequence" invisible="1"/>
+                    <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Partner"/>
+                    <field name="parent_id" invisible="1"/>
                     <field name="planned_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
                     <field name="effective_hours" widget="float_time"/>
@@ -154,6 +157,8 @@
             <field name="domain">[]</field>
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
+            <field name="context">{'search_default_Current':1}</field>
+            <field name="help">A project contains a set of tasks or issues that will be performed by your resources assigned on it. A project can be put into a hierarchy, as a child of a Parent Project. This allows you to  design large project structure with different phases spread over the project duration cycle. Each user can set his default project in his own preferences, in order to filter automatically the tasks or issues he usually works on.</field>
         </record>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
@@ -164,8 +169,6 @@
             <field name="domain">[('state','=','template')]</field>
             <field name="view_id" ref="view_project"/>
         </record>
-        <menuitem  id="menu_template_project_specification" parent="project.menu_definitions" name="Specification" sequence="1"/>
-        <menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_template_project_specification" name="Specification Template"/>
 
         <record id="view_task_work_form" model="ir.ui.view">
             <field name="name">project.task.work.form</field>
@@ -196,32 +199,6 @@
             </field>
         </record>
 
-        <record id="view_config_compute_remaining" model="ir.ui.view">
-            <field name="name">Compute Remaining Hours </field>
-            <field name="model">config.compute.remaining</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Remaining Hours">
-                    <separator colspan="4" string="Change Remaining Hours"/>
-                    <newline/>
-                    <field name="remaining_hours" widget="float_time"/>
-                    <group col="4" colspan="4">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-refresh" name="compute_hours" string="Update" type="object"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_config_compute_remaining" model="ir.actions.act_window">
-            <field name="name">Compute Remaining Hours</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">config.compute.remaining</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
         <!-- Task -->
         <record id="view_task_form2" model="ir.ui.view">
             <field name="name">project.task.form</field>
@@ -232,29 +209,30 @@
                 <form string="Task edition">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
-                        <field name="project_id" required="1" select="1" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
+                        <field name="project_id" select="1" domain="[('user_id','=',uid)]"/>
                         <field name="total_hours" widget="float_time"/>
-                        <field name="date_deadline" select="2"/>
-                        <field name="user_id" select="1"/>
+                        <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
+                        <field name="user_id" select="1" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                         <field name="progress" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Information">
-                            <group col="3" colspan="2">
-                            <field
-                                name="planned_hours"
-                                widget="float_time"
-                                attrs="{'readonly':[('state','!=','draft')]}"
-                                on_change="onchange_planned(planned_hours, effective_hours)"/>
-                                <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
-                                <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
-                            </group>
                             <group col="2" colspan="2">
-                            <field name="delay_hours" widget="float_time"/>
-                            <field name="effective_hours" widget="float_time"/>
+                                <field
+                                    name="planned_hours"
+                                    widget="float_time"
+                                    attrs="{'readonly':[('state','!=','draft')]}"
+                                    on_change="onchange_planned(planned_hours, effective_hours)"/>
+                                <field name="effective_hours" widget="float_time"/>
+                            </group>
+                            <group col="3" colspan="2">
+                                <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
+                                <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
+
+                                <field name="delay_hours" widget="float_time"/>
                             </group>
 
-                            <field colspan="4" name="description" nolabel="1" select="2"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
+                            <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['draft','done'])]}">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
@@ -266,13 +244,13 @@
                             <newline/>
                             <group col="11" colspan="4">
                                 <field name="state" select="1"/>
+                                <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
                                 <button name="do_draft" states="open" string="Draft" type="object" icon="gtk-indent"/>
                                 <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute"/>
-                                <button name="%(action_config_compute_remaining)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
+                                <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
                                 <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
-                                <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
-                                <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
-                                <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
+                                <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
+                                <button name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close"/>
                             </group>
                         </page>
                         <page groups="base.group_extended" string="Delegations">
@@ -302,16 +280,16 @@
                                 <separator string="Dates" colspan="2"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
+                                <field name="create_date"/>
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
-                            <field name="partner_id" select="2"/>
+                            <field name="partner_id"/>
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <group col="4" colspan="2">
-                                <field name="type" widget="selection" />
+                                <field name="type_id" widget="selection" readonly="1"/>
                                 <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                                 <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                             </group>
-                            <field name="active" select="2"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
@@ -326,19 +304,15 @@
             <field name="type">tree</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
-                    <field name="sequence" invisible="1"/>
+                <tree colors="grey:state in ('cancelled','done');blue:state == 'pending';red:date_deadline and (date_deadline&lt;current_date) and (state in ('draft','pending','open'))" string="Tasks">
+                    <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>
-                    <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
-                    <field name="user_id"/>
+                    <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]" invisible="context.get('user_invisible', False)"/>
+                    <field name="user_id" invisible="context.get('user_invisible', False)"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
-                    <field name="planned_hours" widget="float_time" />
-                    <field name="total_hours" widget="float_time"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" invisible="context.get('set_visible',False)"/>
-                    <field name="date_deadline" invisible="context.get('set_visible',False)"/>
-                    <field name="type" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
-                    <field name="date_start" invisible="1"/>
-                    <field name="date_end" invisible="1"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)"/>
+                    <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
+                    <field name="type_id" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"
                         states="draft,open,pending"
                         string="Change Stage"
@@ -346,12 +320,14 @@
                         icon="gtk-go-forward"
                         groups="base.group_extended"
                         help="Change Type"/>
+                    <field name="date_start" invisible="1"/>
+                    <field name="date_end" invisible="1"/>
                     <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
                     <field name="state" invisible="context.get('set_visible',False)"/>
-                    <button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
-                    <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-execute" help="For changing to delegate state"/>
-                    <button name="%(wizard_close_task)d" states="draft,pending,open" string="Done" type="action" icon="gtk-jump-to" help="For changing to done state"/>
                     <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
+                    <button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
+                    <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-sort-descending" help="For changing to delegate state"/>
+                    <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close" help="For changing to done state"/>
                 </tree>
             </field>
         </record>
@@ -403,32 +379,38 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Tasks" icon="terp-project" default="1"/>
-                        <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
-                        <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-project"/>
+                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress tasks" icon="terp-check" default="1"/>
+                        <filter string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
+                        <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
-                        <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-project"/>
+                        <filter name="edit"
+                            string="Edit" context="{'set_editable':True,'seq_visible': True}"
+                            icon="gtk-execute"
+                            groups="base.group_extended"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1" widget="selection" default="context.get('project_id', False)">
-                             <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-project"/>
-                             <filter domain="[('project_id','=',False)]" help="Tasks not assigned to a project" icon="terp-project"/>
+                        <field name="project_id" select="1">
+                             <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                         </field>
-                        <field name="user_id" select="1" widget="selection">
-                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" default="1"/>
-                            <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
+                        <field name="user_id" select="1">
+                            <filter domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" separator="1"/>
                         </field>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Stage" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
-                        <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                    <group expand="0" string="Group By..." colspan="4" col="20">
+                        <filter string="Users" name="group_user_id" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Deadline" icon="terp-project" domain="[]" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
-                        <filter string="End Date" icon="terp-project" domain="[]" context="{'group_by':'date_end'}"/>
+                        <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
                     </group>
                 </search>
             </field>
@@ -441,9 +423,11 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
+            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid, "search_default_current": 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to antoher user. If you delegate a task to another user, you get a new task in pending state, which will be re-opened when you have to review the work achieved. If you install the project_timesheet module, tasks works can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
         </record>
-        <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="2"/>
+        <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="3"/>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
@@ -482,7 +466,8 @@
                 <form string="Task Stage">
                     <field name="name" select="1"/>
                     <field name="sequence"/>
-                    <field colspan="4" name="description" select="1"/>
+                    <separator string="Description" colspan="4"/>
+                    <field colspan="4" name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -500,14 +485,17 @@
         </record>
 
         <record id="open_task_type_form" model="ir.actions.act_window">
-            <field name="name">Task Types</field>
+            <field name="name">Stages</field>
             <field name="res_model">project.task.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="task_type_tree"/>
+            <field name="help">Define here the steps that will be used on the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress of the resolution of a task or an issue.</field>
         </record>
-        <menuitem action="open_task_type_form" id="menu_task_types" parent="project.menu_definitions"/>
 
-        <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
+        <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>
+        <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_tasks_config" sequence="1"/>
+
+        <act_window context="{'search_default_user_id': [active_id]}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
         <act_window
             domain="[('project_id', '=', active_id)]"
@@ -532,109 +520,33 @@
             </field>
         </record>
 
-
       <!--     User Form-->
       <record id="view_project_users_form_simple" model="ir.ui.view">
-	      <field name="name">res.users.project.form1</field>
-	      <field name="model">res.users</field>
-	      <field name="type">form</field>
-	      <field name="inherit_id" ref="base.view_users_form"/>
-	      <field eval="18" name="priority"/>
-	      <field name="arch" type="xml">
-	          <field name="password" position="after">
-	           <field name="context_project_id" completion="1" widget="selection"/>
-	          </field>
-	      </field>
+          <field name="name">res.users.project.form1</field>
+          <field name="model">res.users</field>
+          <field name="type">form</field>
+          <field name="inherit_id" ref="base.view_users_form"/>
+          <field eval="18" name="priority"/>
+          <field name="arch" type="xml">
+              <field name="password" position="after">
+                   <field name="context_project_id"/>
+              </field>
+          </field>
      </record>
 
      <record model="ir.ui.view" id="view_users_form_project_modif_inherited1">
-	     <field name="name">view.users.form.project.modif.inherited1</field>
-	     <field name="model">res.users</field>
-	     <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-	     <field name="type">form</field>
-	     <field eval="18" name="priority"/>
-	     <field name="arch" type="xml">
+         <field name="name">view.users.form.project.modif.inherited1</field>
+         <field name="model">res.users</field>
+         <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+         <field name="type">form</field>
+         <field eval="18" name="priority"/>
+         <field name="arch" type="xml">
             <page string="Current Activity" position="inside">
-                <field name="context_project_id" completion="1" widget="selection" context="{'user_prefence':True}"/>
+                <field name="context_project_id" completion="1" context="{'user_prefence':True}" widget="selection" readonly="0"/>
             </page>
        </field>
     </record>
-
-<!--- Messages-->
-     <record id="view_project_message_form" model="ir.ui.view">
-            <field name="name">project.message.form</field>
-            <field name="model">project.message</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Messages">
-                    <group colspan="6">
-                        <field name="subject" select="1"/>
-                        <field name="project_id"/>
-                        <field name="user_id" select="1"/>
-                          <field name="date" select="2"/>
-                     </group>
-                        <separator string="Description"  colspan="4"/>
-                        <field name="description"  nolabel="1" colspan="4"/>
-                </form>
-            </field>
-       </record>
-
-     <record id="view_project_message_tree" model="ir.ui.view">
-            <field name="name">project.message.tree</field>
-            <field name="model">project.message</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Messages">
-                    <field name="subject" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="project_id" select="1"/>
-                    <field name="date" select="1"/>
-                </tree>
-            </field>
-       </record>
-
-        <record id="view_project_message_search" model="ir.ui.view">
-           <field name="name">project.message.search</field>
-           <field name="model">project.message</field>
-           <field name="type">search</field>
-           <field name="arch" type="xml">
-               <search string="Messages">
-                   <group col="20" colspan="4">
-                       <filter domain="[('date','&gt;=',time.strftime('%%Y-%%m-01'))]" icon="terp-project" string="This Month" />
-                       <filter domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" icon="terp-project" string="Today" />
-
-	                   <separator orientation="vertical"/>
-	                   <field name="subject"/>
-	                   <field name="project_id" select="1" widget="selection"/>
-	                   <field name="user_id" select="1" widget="selection">
-	                       <filter domain="[('user_id','=',uid)]" help="My Message" icon="gtk-execute" default="1"/>
-	                   </field>
-                   </group>
-                   <newline/>
-                   <group expand="1" string="Group By..." colspan="4" col="20">
-                       <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
-                       <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
-                       <filter string="Date" icon="terp-project" domain="[]" context="{'group_by':'date'}"/>
-                   </group>
-               </search>
-           </field>
-        </record>
-
-        <record id="action_view_project_messages_tree" model="ir.actions.act_window">
-            <field name="name">Messages</field>
-            <field name="res_model">project.message</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_project_message_tree"/>
-            <field name="search_view_id" ref="view_project_message_search"/>
-       </record>
-
-        <!--<menuitem id="menu_message_main" name="Message" parent="base.menu_main_pm"/>-->
-        <menuitem action="action_view_project_messages_tree" id="menu_message_tree" parent="menu_project_management" sequence="11"/>
-
-        <act_window domain="[('user_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
-
-        <act_window domain="[('user_id', '=', active_id),('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
-
+    <act_window context="{'search_default_user_id': [active_id]}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+    <act_window context="{'search_default_user_id': [active_id]}" domain="[('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
     </data>
 </openerp>

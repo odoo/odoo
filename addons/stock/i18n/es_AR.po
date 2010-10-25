@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:40+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -360,6 +360,18 @@ msgstr "Líneas del movimiento"
 #: wizard_field:stock.fill_inventory,init,recursive:0
 msgid "Include all children for the location"
 msgstr "Incluir todos los descendientes de la ubicación"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Bad Lot Assignation !"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You are moving %.2f products but only %.2f available in this lot."
+msgstr ""
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -816,7 +828,7 @@ msgstr "STOCK_CONNECT"
 #: model:ir.ui.menu,name:stock.menu_action_picking_all
 #: wizard_field:stock.picking.make,init,pickings:0
 msgid "Packing"
-msgstr "Packing"
+msgstr "Empaque"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2067,7 +2079,7 @@ msgstr "Movimientos rastreados"
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
 msgid "Reporting"
-msgstr "Informes"
+msgstr "Reporte"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.wizard_invoice_onshipping
@@ -2413,13 +2425,152 @@ msgid "Physical Locations"
 msgstr "Ubicaciones físicas"
 
 #, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "Producciones futuras"
-
-#, python-format
 #~ msgid "You cannot delete any record!"
 #~ msgstr "¡No puede eliminar ningún registro!"
 
+#~ msgid "Stock Management"
+#~ msgstr "Gestión de inventario"
+
 #, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "Recepciones futuras"
+#~ msgid "Invoice cannot be created from Packing."
+#~ msgstr "La factura no puede ser creada desde Packing"
+
+#, python-format
+#~ msgid "No product in this location."
+#~ msgstr "Sin productos en ésta ubicación"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Error de usuario"
+
+#, python-format
+#~ msgid "Invoice state"
+#~ msgstr "Estado de la factura"
+
+#, python-format
+#~ msgid "Delivered Qty"
+#~ msgstr "Ctdad enviada"
+
+#, python-format
+#~ msgid "Invoice is not created"
+#~ msgstr "La favtura no está creada"
+
+#, python-format
+#~ msgid "Please select at least two inventories."
+#~ msgstr "Por favor, seleccione por lo menos dos inventarios."
+
+#, python-format
+#~ msgid "Merging is only allowed on draft inventories."
+#~ msgstr "La fusión sólo es permitida en inventarios borrador."
+
+#, python-format
+#~ msgid "Provide the quantities of the returned products."
+#~ msgstr "﻿Proporcione las cantidades de los productos devueltos."
+
+#, python-format
+#~ msgid "You can not remove a lot line !"
+#~ msgstr "¡No puede eliminar una línea de lote!"
+
+#, python-format
+#~ msgid "Received Qty"
+#~ msgstr "Ctdad recibida"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Error"
+
+#, python-format
+#~ msgid "Invoice is already created."
+#~ msgstr "La factura no ha sido creada aún"
+
+#, python-format
+#~ msgid "Products: "
+#~ msgstr "Productos: "
+
+#, python-format
+#~ msgid "P&L Qty"
+#~ msgstr "Ctdad P&L"
+
+#~ msgid ""
+#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
+#~ "structured stock locations.\n"
+#~ "Thanks to the double entry management, the inventory controlling is powerful "
+#~ "and flexible:\n"
+#~ "* Moves history and planning,\n"
+#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
+#~ "* Stock valuation (standard or average price, ...)\n"
+#~ "* Robustness faced with Inventory differences\n"
+#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
+#~ "* Bar code supported\n"
+#~ "* Rapid detection of mistakes through double entry system\n"
+#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+#~ "    "
+#~ msgstr ""
+#~ "El módulo de gestión de stocks de OpenERP puede gestionar multi-almacenes y "
+#~ "multi-ubicaciones jerárquicas de stock.\n"
+#~ "Gracias a la gestión de partida doble, el control de inventario es potente y "
+#~ "flexible:\n"
+#~ "* Historial de movimientos y planificación,\n"
+#~ "* Métodos de inventario diferentes (FIFO, LIFO ...)\n"
+#~ "* Valoración de existencias (estándar o precio medio ...)\n"
+#~ "* Robustez frente a las diferencias de inventario\n"
+#~ "* Reglas automáticas de abastecimiento (nivel de stock mínimo, JIT ...)\n"
+#~ "* Soporte a código de barras\n"
+#~ "* Detección rápida de errores a través de sistema de partida doble\n"
+#~ "* Trazabilidad (hacia arriba/abajo, lotes de producción, número de serie "
+#~ "...)\n"
+#~ "    "
+
+#, python-format
+#~ msgid "No production sequence defined"
+#~ msgstr "No se ha definido una secuencia de producción"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "¡Error!"
+
+#, python-format
+#~ msgid "Error, no partner !"
+#~ msgstr "¡Error,sin partner!"
+
+#, python-format
+#~ msgid ""
+#~ "Please put a partner on the picking list if you want to generate invoice."
+#~ msgstr ""
+#~ "Por favor indique una empresa en el albarán si desea generar factura."
+
+#, python-format
+#~ msgid "Return lines"
+#~ msgstr "Líneas de devolución"
+
+#, python-format
+#~ msgid "Message !"
+#~ msgstr "Mensaje !"
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Error !"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Advertencia"
+
+#, python-format
+#~ msgid "Unplanned Qty"
+#~ msgstr "Ctdad no planificada"
+
+#, python-format
+#~ msgid "to be invoiced"
+#~ msgstr "Para facturar"
+
+#, python-format
+#~ msgid "Produced Qty"
+#~ msgstr "Ctdad producida"
+
+#, python-format
+#~ msgid "You can only delete draft moves."
+#~ msgstr "Sólo puede eliminar movimientos en borrador."
+
+#, python-format
+#~ msgid "Please select one and only one inventory !"
+#~ msgstr "¡ Por favor, seleccione un y sólo un inventario !"

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="view_analytic_entries_report_tree" model="ir.ui.view">
+        <field name="name">analytic.entries.report.tree</field>
+        <field name="model">analytic.entries.report</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Analytic Entries Analysis">
+                <field name="date" invisible="1"/>
+                <field name="year" invisible="1"/>
+                <field name="day" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="user_id" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
+                <field name="general_account_id" invisible="1"/>
+                <field name="journal_id" invisible="1"/>
+                <field name="product_id" invisible="1"/>
+                <field name="product_uom_id" invisible="1"/>
+                <field name="nbr" sum="Entries"/>
+                <field name="unit_amount" sum="Quantity"/>
+                <field name="amount" sum="Amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_analytic_entries_report_search" model="ir.ui.view">
+        <field name="name">analytic.entries.report.search</field>
+        <field name="model">analytic.entries.report</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Analytic Entries Analysis">
+              <group col="10" colspan="12">
+                    <filter icon="terp-go-year" string="  365 Days  "
+                            domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                            help="Analytic Entries of last 365 days"/>
+                    <filter icon="terp-go-month" string="   30 Days   "
+                            name="month"
+                            domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                            help="Analytic Entries of last 30 days"/>
+                    <filter icon="terp-go-week"
+                            string="    7 Days    "
+                            separator="1"
+                            domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                            help="Analytic Entries during last 7 days"/>
+                    <separator orientation="vertical"/>
+                    <field name="date" />
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="product_id" />
+                    <field name="user_id">
+                    <filter icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
+                    </field>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By...">
+                    <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
+                    <filter string="General Account" icon="terp-folder-orange" context="{'group_by':'general_account_id'}"/>
+                    <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                    <filter string="Product UOM" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
+                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
+                    <filter string="Month" name="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_account_analytic_entries_search" model="ir.ui.view">
+         <field name="name">account.analytic.entries.graph</field>
+         <field name="model">analytic.entries.report</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Analytic Entries Analysis" type="bar">
+                <field name="user_id"/>
+                <field name="unit_amount" operator="+"/>
+                <field name="amount" operator="+"/>
+             </graph>
+         </field>
+    </record>
+    <record id="action_analytic_entries_report" model="ir.actions.act_window">
+        <field name="name">Analytic Entries Analysis</field>
+        <field name="res_model">analytic.entries.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_month':1, 'group_by_no_leaf':1, 'search_default_Account':1, 'search_default_Month':1, 'group_by':[]}</field>
+        <field name="search_view_id" ref="view_analytic_entries_report_search"/>
+        <field name="help">A tool search lets you know statistics on your analytics records that match your needs.</field>
+    </record>
+
+    <menuitem action="action_analytic_entries_report" 
+        id="menu_action_analytic_entries_report"
+        groups="analytic.group_analytic_accounting,group_account_manager"
+        parent="account.menu_finance_statistic_report_statement" sequence="4"/>
+
+</data>
+</openerp>

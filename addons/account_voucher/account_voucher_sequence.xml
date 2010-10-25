@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record model="res.request.link" id="req_link_voucher">
+            <field name="name">Voucher</field>
+            <field name="object">account.voucher</field>
+        </record>
+        <!--
+        Sequences types for vouchers
+        -->
+        <record model="ir.sequence.type" id="seq_type_cash_rec_voucher">
+            <field name="name">Cash Receipt</field>
+            <field name="code">rec_voucher</field>
+        </record>
+        
+        <record model="ir.sequence.type" id="seq_type_cash_pay_voucher">
+            <field name="name">Cash Payment</field>
+            <field name="code">pay_voucher</field>
+        </record>
+        <record model="ir.sequence.type" id="seq_type_bank_rec_voucher">
+            <field name="name">Bank Receipt</field>
+            <field name="code">bank_rec_voucher</field>
+        </record>
+        <record model="ir.sequence.type" id="seq_type_bank_pay_voucher">
+            <field name="name">Bank Payment</field>
+            <field name="code">bank_pay_voucher</field>
+        </record>
+        <record model="ir.sequence.type" id="seq_type_contra_voucher">
+            <field name="name">Contra Entry</field>
+            <field name="code">cont_voucher</field>
+        </record>
+        <record model="ir.sequence.type" id="seq_type_jou_sale_voucher">
+            <field name="name">Sales Entry</field>
+            <field name="code">journal_sale_vou</field>
+        </record>
+        <record model="ir.sequence.type" id="seq_type_jou_pur_voucher">
+            <field name="name">Purchase Entry</field>
+            <field name="code">journal_pur_vou</field>
+        </record>
+        
+        <!--
+        Sequences for vouchers
+        -->
+        <record model="ir.sequence" id="seq_cash_rec_voucher">
+            <field name="name">Cash Receipt</field>
+            <field name="code">rec_voucher</field>
+            <field name="padding" eval="3"/>
+            <field name="prefix">%(year)s/</field>
+        </record>
+        
+        <record model="ir.sequence" id="seq_cash_pay_voucher">
+            <field name="name">Cash Payment</field>
+            <field name="code">pay_voucher</field>
+            <field name="padding" eval="3"/>
+            <field name="prefix">%(year)s/</field>
+        </record>
+        <record model="ir.sequence" id="seq_bank_rec_voucher">
+            <field name="name">Bank Receipt</field>
+            <field name="code">bank_rec_voucher</field>
+            <field name="padding" eval="3"/>
+            <field name="prefix">%(year)s/</field>
+        </record>
+        <record model="ir.sequence" id="seq_bank_pay_voucher">
+            <field name="name">Bank Payment</field>
+            <field name="code">bank_pay_voucher</field>
+            <field name="padding" eval="3"/>
+            <field name="prefix">%(year)s/</field>
+        </record>
+        <record model="ir.sequence" id="seq_contra_voucher">
+            <field name="name">Contra Entry</field>
+            <field name="code">cont_voucher</field>
+            <field name="padding" eval="3"/>
+            <field name="prefix">%(year)s/</field>
+        </record>
+        <record model="ir.sequence" id="seq_jou_sale_voucher">
+            <field name="name">Sales Entry</field>
+            <field name="code">journal_sale_vou</field>
+            <field name="padding" eval="3"/>
+            <field name="prefix">%(year)s/</field>
+        </record>
+        <record model="ir.sequence" id="seq_jou_pur_voucher">
+            <field name="name">Purchase Entry</field>
+            <field name="code">journal_pur_vou</field>
+            <field name="padding" eval="3"/>
+            <field name="prefix">%(year)s/</field>
+        </record>
+
+    </data>
+</openerp>
+

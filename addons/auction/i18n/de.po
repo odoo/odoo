@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* auction
+# 	* auction
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-22 18:52+0000\n"
-"Last-Translator: Ferdinand @ ChriCar <Unknown>\n"
+"PO-Revision-Date: 2010-08-29 10:17+0000\n"
+"Last-Translator: Ferdinand-chricar <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
@@ -288,7 +288,9 @@ msgstr "Termine"
 #. module: auction
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Fehler: UOS sollte in einer anderen Kategorie sein als UOM"
+msgstr ""
+"Fehler: Verkaufseinheit sollte in einer anderen Kategorie sein als "
+"Mengeneinheit (ME)"
 
 #. module: auction
 #: rml:auction.total.rml:0
@@ -1584,8 +1586,8 @@ msgstr "Erzeuge Rechnungen"
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
-"Fehler: Die Standard UOM sowie die Beschaffungs UOM muss in derselben "
-"Kategorie sein."
+"Fehler: Die Standard Mengeneinheit sowie die Beschaffungs Mengeneinheit muss "
+"in derselben Kategorie sein."
 
 #. module: auction
 #: xsl:report.auction.vnd_bordereau:0
@@ -2571,3 +2573,88 @@ msgstr "Auktionen Historie"
 #: xsl:report.auction.lots.list.landscape:0
 msgid "Orders"
 msgstr "Aufträge"
+
+#. module: auction
+#: view:board.board:0
+msgid "Objects by day"
+msgstr "Objekte nach Tagen"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_board_auction_manager
+msgid "Auction Manager"
+msgstr "Auktionen Manager"
+
+#. module: auction
+#: view:board.board:0
+msgid "Summary pointing by user"
+msgstr "Summierung nach Benutzern"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_board_auction
+msgid "Auction Member"
+msgstr "Auktionen Teilnehmer"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.open_board_auction
+msgid "Auction member board"
+msgstr "Auktion Mitglieder Tafel"
+
+#. module: auction
+#: view:board.board:0
+msgid "Auction manager "
+msgstr "Auktionen Manager "
+
+#. module: auction
+#: model:ir.module.module,shortdesc:auction.module_meta_information
+msgid "Board for Auction"
+msgstr "Tafel für Auktion"
+
+#. module: auction
+#: view:board.board:0
+msgid "Estimations/Adjudication"
+msgstr "Erwartungen/Schätzwerte"
+
+#. module: auction
+#: view:board.board:0
+msgid "Total Adjudications"
+msgstr "Summe Versteigerungen"
+
+#. module: auction
+#: view:board.board:0
+msgid "Latest objects"
+msgstr "Letzte Objekte"
+
+#. module: auction
+#: view:board.board:0
+msgid "Latest deposits"
+msgstr "Letzte Einlagen"
+
+#. module: auction
+#: view:board.board:0
+msgid "Menu"
+msgstr "Menü"
+
+#. module: auction
+#: view:board.board:0
+msgid "My objects By Day"
+msgstr "Meine Objekte nach Tagen"
+
+#. module: auction
+#: view:board.board:0
+msgid "My board"
+msgstr "Mein Dashboard"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.open_board_auction_manager
+msgid "Auction manager board"
+msgstr "Auktionen Manager Dashboard"
+
+#. module: auction
+#: view:board.board:0
+msgid "Min/Adj/Max"
+msgstr "Min / +/- 0 /Max"
+
+#. module: auction
+#: view:board.board:0
+msgid "My Latest Objects"
+msgstr "Meine letzten Objekte"

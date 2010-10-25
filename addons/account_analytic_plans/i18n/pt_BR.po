@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-12 23:52+0000\n"
-"Last-Translator: Emerson <Unknown>\n"
+"PO-Revision-Date: 2010-09-01 06:55+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-14 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
@@ -136,7 +136,7 @@ msgstr "Selecione Informação"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
-msgstr ""
+msgstr "ID Conta3"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
@@ -157,27 +157,27 @@ msgstr "Ref. Conta Analítica"
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
-msgstr ""
+msgstr "Conta Analítica:"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Line"
-msgstr ""
+msgstr "Linha do Plano Analítico"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account Reference:"
-msgstr ""
+msgstr "Conta Analítica Referencia"
 
 #. module: account_analytic_plans
 #: model:ir.actions.wizard,name:account_analytic_plans.create_model
 msgid "Create Model"
-msgstr ""
+msgstr "Criar Modelo"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan,default_instance_id:0
 msgid "Default Entries"
-msgstr ""
+msgstr "Lançamentos padrões"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan:0
@@ -185,32 +185,32 @@ msgstr ""
 #: field:account.journal,plan_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
-msgstr ""
+msgstr "Planos Analíticos"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
-msgstr ""
+msgstr "Mínimo Permitido (%)"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
 msgid "Account1 Id"
-msgstr ""
+msgstr "Id Conta1"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,max_required:0
 msgid "Maximum Allowed (%)"
-msgstr ""
+msgstr "Máximo Permitido (%)"
 
 #. module: account_analytic_plans
 #: wizard_view:create.model,info:0
 msgid "Distribution Model Saved"
-msgstr ""
+msgstr "Modelo de Distribuição Arquivado (Salvo)"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
-msgstr ""
+msgstr "Instância do Plano Analítico"
 
 #. module: account_analytic_plans
 #: constraint:ir.ui.view:0
@@ -220,7 +220,7 @@ msgstr "Invalido XML para Arquitetura da View"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
 msgid "Distribution Models"
-msgstr ""
+msgstr "Modelos de Distribuição"
 
 #. module: account_analytic_plans
 #: model:ir.module.module,description:account_analytic_plans.module_meta_information
@@ -256,88 +256,119 @@ msgid ""
 "for one account entry.\n"
 "        "
 msgstr ""
+"Este modelo permite o uso de vários planos analíticos, de acordo com o "
+"diário geral,\n"
+"de forma que várias linhas analíticas são criadas quando a fatura ou "
+"lançamento\n"
+"são confirmadas.\n"
+"\n"
+"Por exemplo, você pode definir a seguinte estrutura analítica:\n"
+"  Projetos\n"
+"      Projeto 1\n"
+"        SubProj 1.1\n"
+"        SubProj 1.2\n"
+"      Projeto 2\n"
+"  Vendedor\n"
+"      Erico\n"
+"      Fabiano\n"
+"\n"
+"No exemplo temos dois planos: Projetos e Vendedores. Uma fatura deve\n"
+"ser capaz de escrever lançamentos analíticos nos 2 planos: SubProj 1.1 e\n"
+"Fabiano. A conta também pode ser separada. O exemplo a seguir é para\n"
+"uma fatura que envolve os 2 subprojetos e está associada a um vendedor:\n"
+"\n"
+"Plano1:\n"
+"    SubProjeto 1.1: 50%\n"
+"    SubProjeto 1.2: 50%\n"
+"Plano2:\n"
+"    Eric: 100%\n"
+"\n"
+"Quando esta linha da fatura for confirmada, ela vai gerar 3 linhas\n"
+"analíticas, para um lançamento na conta,\n"
+"        "
 
 #. module: account_analytic_plans
 #: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
 msgid "Multiple-plans management in Analytic Accounting"
-msgstr ""
+msgstr "Múltiplos-planos gerenciados na Contabilidade Analítica"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Lines"
-msgstr ""
+msgstr "Linhas do Plano Analítico"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Crossovered Analytic -"
-msgstr ""
+msgstr "Cruzamento Analítico"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
-msgstr ""
+msgstr "Plano do Modelo"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account2_ids:0
 msgid "Account2 Id"
-msgstr ""
+msgstr "Id Conta2"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Amount"
-msgstr ""
+msgstr "Valor"
 
 #. module: account_analytic_plans
 #: help:account.analytic.plan.line,root_analytic_id:0
 msgid "Root account of this plan."
-msgstr ""
+msgstr "Conta raiz para este plano."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
 msgid "Account6 Id"
-msgstr ""
+msgstr "Id Conta6"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantidade"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account_ids:0
 msgid "Account Id"
-msgstr ""
+msgstr "Id Conta"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #. module: account_analytic_plans
 #: wizard_button:create.model,info,end:0
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
 msgid "Root Account"
-msgstr ""
+msgstr "Conta Raiz"
 
 #. module: account_analytic_plans
 #: wizard_view:create.model,info:0
 msgid ""
 "This distribution model has been saved. You will be able to reuse it later."
 msgstr ""
+"Este modelo de distribuição foi salvo. Você poderá reutilizá-lo mais tarde."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequência"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Conta analítica"
 
 #. module: account_analytic_plans
 #: field:account.analytic.default,analytics_id:0
@@ -346,29 +377,29 @@ msgstr ""
 #: field:account.invoice.line,analytics_id:0
 #: field:account.move.line,analytics_id:0
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Distribuição Analítica"
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
-msgstr ""
+msgstr "Modelos de Distribuição Analítica"
 
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date1:0
 msgid "Start Date"
-msgstr ""
+msgstr "Data de Início"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "at"
-msgstr ""
+msgstr "em"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
-msgstr ""
+msgstr "Data Inicial"

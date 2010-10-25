@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-s
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -19,10 +19,8 @@
 #
 ##############################################################################
 
-import compute_phases_date
-import compute_tasks_date
-import schedule_tasks
-import working_calendar
+import project_compute_phases
+import project_compute_tasks
+import project_schedule_tasks
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

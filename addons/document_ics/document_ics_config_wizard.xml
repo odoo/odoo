@@ -11,12 +11,22 @@
                 <form position="attributes">
                   <attribute name="string">Configure Calendars for CRM Sections</attribute>
                 </form>
-                <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0"
-                         string="OpenERP can create and pre-configure a series of integrated calendar for you."/>
-                  <separator string="Create Pre-Configured Calendars"
-                             colspan="4"/>
-                  <newline/>
+                <separator string="title" position="attributes">
+                <attribute name="string"
+                       >Create Pre-Configured Calendars</attribute>
+                  </separator>
+                  <xpath expr="//label[@string='description']" position="attributes">
+                    <attribute name="string">OpenERP can create and pre-configure a series of integrated calendar for you.</attribute>
+                    <attribute name="width">200</attribute>
+                  </xpath>
+                   <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                          <attribute name='rowspan'>15</attribute>
+                          <attribute name='string'></attribute>
+                  </xpath>
+                  <xpath expr="//button[@name='action_next']" position="attributes">
+                    <attribute name="string">Configure</attribute>
+                   </xpath>
+                  <group string="res_config_contents" position="replace">
                   <field name="meeting"/>
                   <field name="opportunity"/>
                   <field name="phonecall"/>
@@ -27,8 +37,6 @@
                   <field name="jobs"/>
                   <field name="fund"/>
                 </group>
-                <xpath expr='//button[@name="action_skip"]'
-                       position='replace'/>
               </data>
             </field>
         </record>
@@ -43,9 +51,10 @@
             <field name="target">new</field>
         </record>
 
-        <!-- register configuration wizard -->
+         register configuration wizard
         <record id="config_wizard_step_case_section_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_view_document_ics_config_directories"/>
+            <field name="restart">always</field>
         </record>
      </data>
 </openerp>

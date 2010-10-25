@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_calendar_event_subscribe" model="ir.ui.view">
+            <field name="name">calendar.event.subscribe.form</field>
+            <field name="model">calendar.event.subscribe</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Subscribe to Remote Calendar">
+                    <group colspan="4" >
+                         <separator string="Provide path for Remote Calendar"/>
+                          <field name="url_path" colspan="4" width="300" nolabel="1" widget="url"/>
+                    </group>
+                        <separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                        <button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
+                        <button  icon="gtk-ok"  name="process_imp_ics"  string="_Subscribe" type="object"/>
+                   </group>
+               </form>
+            </field>
+        </record>
+        
+        <record id="view_calendar_event_subscribe_display" model="ir.ui.view">
+            <field name="name">calendar.event.subscribe.form.display</field>
+            <field name="model">calendar.event.subscribe</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Message...">
+                    <group colspan="4" >
+                          <field name="msg" colspan="4" width="300" nolabel="1"/>
+                    </group>
+                        <separator string="" colspan="4" />
+                    <group colspan="4">
+                        <button  icon="gtk-ok" special="cancel" string="Ok"/>
+                   </group>
+               </form>
+            </field>
+        </record>
+        
+        <record id="action_calendar_event_subscribe" model="ir.actions.act_window">
+            <field name="name">Subscribe</field>
+            <field name="res_model">calendar.event.subscribe</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_calendar_event_subscribe"/> 
+           <field name="target">new</field>
+        </record>
+        
+        <act_window id="action_calendar_event_subscribe_values"
+            key2="client_action_multi" name="Subscribe"
+            res_model="calendar.event.subscribe" src_model="basic.calendar"
+            view_mode="form" target="new" view_type="form" />
+        
+    </data>
+</openerp>

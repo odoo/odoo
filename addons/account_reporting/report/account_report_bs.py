@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,7 +24,6 @@ import pooler
 import locale
 from report import report_sxw
 
-#from addons.account.wizard import wizard_account_balance_report
 
 parents = {
     'tr':1,
@@ -61,7 +60,7 @@ class account_report_bs(report_sxw.rml_parse):
         if object:
             ids = [object.id]
         elif not ids:
-            ids = self.ids    
+            ids = self.ids
         if not ids:
             return []
         if not done:
@@ -69,7 +68,7 @@ class account_report_bs(report_sxw.rml_parse):
         result = []
         ctx = self.context.copy()
         ctx['fiscalyear'] = form['fiscalyear']
-        ctx['periods'] = form['periods'][0][2]
+        ctx['periods'] = form['periods']
         report_objs = self.pool.get('account.report.bs').browse(self.cr, self.uid, ids)
         title_name = False
         if level==1:
@@ -124,41 +123,12 @@ class account_report_bs(report_sxw.rml_parse):
                                 res1['level'] = r['level'] + 1
                                 break
                     result.append(res1)
-                    #res1 = self.check_child_id(account_id,level,ctx,report_type)
-                    #result += res1
             if report_obj.child_id:
                 ids2 = [(x.code,x.id) for x in report_obj.child_id]
                 ids2.sort()
                 result += self.lines(form,[x[1] for x in ids2], done, level+1,object=False)
-                
+
         return result
-
-#    def check_child_id(self,account_id,level,ctx,report_type):
-#        account = self.pool.get('account.account').browse(self.cr,self.uid,[account_id],ctx)[0]
-#        result = []
-#        res = {
-#            'code': account.code,
-#            'name': account.name,
-#            'level': level+1,
-#            'balance': account.balance,
-#            'color_font' : 'black',
-#            'color_back' :'white',
-#            'font_style' : 'Helvetica',
-#            }
-#        result.append(res)
-#        if report_type != 'with_account':
-#            acc_child_id  = self.pool.get('account.account').search(self.cr,self.uid,[('parent_id','=',[account_id]),('type','=','view')])
-#            for child_id in acc_child_id :
-#                result += self.check_child_id(child_id,level+1,ctx,report_type)
-#        return result
-
-
-
-#   def _sum_credit(self):
-#       return self.sum_credit
-#
-#   def _sum_debit(self):
-#       return self.sum_debit
 
 report_sxw.report_sxw('report.account.report.bs', 'account.report.bs', 'addons/account_reporting/report/account_report_bs.rml', parser=account_report_bs)
 

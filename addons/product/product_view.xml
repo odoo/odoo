@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="50"/>
+        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="9"/>
+
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
             <field name="model">product.product</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                   <filter string="Services" icon="terp-stock" domain="[('type','=','service')]"/>
-                   <filter string="Stockable" icon="terp-stock" domain="['|',('type','=','product'),('type','=','consu')]"/>
+                   <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>                   
+                   <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
                    <separator orientation="vertical"/>
-                   <filter string="Can be sold" icon="terp-stock" domain="[('sale_ok','=',1)]"/>
-                   <filter string="Can be Purchased" icon="terp-stock" domain="[('purchase_ok', '=', 1)]" />
+                   <filter string="To Sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <filter string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
                    <separator orientation="vertical"/>
-                   <field name="default_code" select="1"/>
-                   <field name="name" select="1"/>
-                   <field name="categ_id" select="1" widget="selection" operator="child_of"/>
+                   <field name="default_code"/>
+                   <field name="name"/>
+                   <field name="categ_id" widget="selection" operator="child_of" groups="base.group_extended"/>
                    <newline/>
-                   <group col='8' colspan='14' expand="1" string="Extended options...">
-                       <field name="pricelist_id" select="1" widget="selection" context="{'pricelist': self}" />
+                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
                    </group>
                    <newline/>
-                   <group col='8' colspan='15' expand='1' string='Group by...'>
-                       <filter string='Category' icon="terp-stock" domain="[]" context="{'group_by' : 'categ_id'}" />
+                   <group  expand='0' string='Group by...' groups="base.group_extended">
+                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
+                       <separator orientation="vertical"/>
+                       <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
+                       <separator orientation="vertical"/>
+                       <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
                    </group>
+                   
                 </search>
             </field>
         </record>
@@ -38,15 +44,16 @@
                 <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
-                    <field name="categ_id" />
+                    <field name="categ_id" invisible="1"/>
                     <field name="variants" groups="product.group_product_variant"/>
-                    <field name="uom_id"/>
+                    <field name="uom_id" string="UoM"/>
+                    <field name="type"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
                     <field name="lst_price"/>
                     <field name="standard_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="state"/>
+                    <field name="state" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -59,30 +66,39 @@
                 <form string="Product">
                    <group colspan="4" col="6">
                     <group colspan="4" col="2">
-                        <separator string="Product Description" colspan="4"/>
-                        <field name="name" select="1"  />
-                        <field groups="product.group_product_variant" name="variants" select="2" />
+                        <separator string="Name" colspan="2"/>
+                        <field name="name"/>
+                        <field groups="product.group_product_variant" name="variants" />
                     </group>
                     <group colspan="1" col="2">
                         <separator string="Codes" colspan="2"/>
-                        <field name="default_code" select="1"/>
-                        <field groups="base.group_extended" name="ean13" select="2"/>
+                        <field name="default_code"/>
+                        <field name="ean13" groups="base.group_extended"/>
                     </group>
                     <group colspan="1" col="2">
-                        <separator string="Product Characteristics" colspan="2"/>
-                        <field name="sale_ok" select="2"/>
-                        <field name="purchase_ok" select="2"/>
-                        <field groups="base.group_extended" name="rental" select="2"/>
+                        <separator string="Characteristics" colspan="2"/>
+                        <field name="sale_ok"/>
+                        <field name="purchase_ok"/>
                     </group>
                    </group>
 
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
-                                <separator string="    Requisition" colspan="2"/>
-                                <field name="type" select="2"/>
-                                <field name="procure_method"/>
+                                <separator string="Procurement" colspan="2"/>
+                                <field name="type"/>
+                                <field name="procure_method" groups="base.group_extended"/>
                                 <field name="supply_method"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Base Prices" colspan="2"/>
+                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                <field name="list_price"/>
+                                <newline/>
+                                <field name="price_margin" groups="product.group_product_variant"/>
+                                <field name="price_extra" groups="product.group_product_variant"/>
+                                <newline/>
+                                <field groups="base.group_extended" name="cost_method"/>
                             </group>
 
                             <group colspan="2" col="2" groups="base.group_extended">
@@ -92,17 +108,17 @@
                                 <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
-                            <group colspan="2" col="2" name="status">
+                            <group colspan="2" col="2" name="status" groups="base.group_extended">
                                 <separator string="Status" colspan="2"/>
-                                <field name="categ_id" select="1"/>
-                                <field name="state" select="2"/>
-                                <field groups="base.group_extended" name="product_manager" select="2"/>
+                                <field name="categ_id"/>
+                                <field name="state"/>
+                                <field name="product_manager"/>
                             </group>
 
                             <group colspan="2" col="2" name="uom">
-                                <separator string="UOM" colspan="2"/>
-                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
-                                <field name="uom_po_id"/>
+                                <separator string="Unit of Measure" colspan="2"/>
+                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" widget="selection"/>
+                                <field name="uom_po_id" widget="selection" groups="base.group_extended"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
@@ -113,7 +129,7 @@
                             </group>
 
                         </page>
-                        <page string="Requisition &amp; Locations">
+                        <page string="Procurement &amp; Locations">
                             <group colspan="2" col="2" name="delay">
                                 <separator string="Delays" colspan="2"/>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
@@ -122,28 +138,19 @@
                             </group>
                             <group colspan="2" col="2" name="store">
                                 <separator string="Storage Localisation" colspan="2"/>
-                                <field name="loc_rack"/>
-                                <field name="loc_row"/>
-                                <field name="loc_case"/>
+                                <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}" />
+                                <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
-                            <group colspan="2" col="2" name="misc">
+                            <group colspan="2" col="2" name="misc" groups="base.group_extended">
                                 <separator string="Miscellaneous" colspan="2"/>
-                                <field name="active" select="2"/>
-                                <field name="company_id" select="2" groups="base.group_multi_company" widget="selection"/>
+                                <field name="active"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
 
                         </page>
-                        <page string="Prices &amp; Suppliers">
-                            <separator string="Base Prices" colspan="4"/>
-                            <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
-                            <field name="list_price"/>
-                            <newline/>
-                            <field name="price_margin" select="1"/>
-                            <field name="price_extra" select="1"/>
-                            <newline/>
-                            <field groups="base.group_extended" name="cost_method"/>
-                            <newline/>
+                        <page string="Suppliers">
                             <field colspan="4" name="seller_ids" nolabel="1"/>
                         </page>
                         <page string="Descriptions">
@@ -157,10 +164,10 @@
                         <page groups="base.group_extended" string="Packaging">
                             <field colspan="4" name="packaging" nolabel="1">
                                 <form string="Packaging">
-                                    <field name="ean" select="1"/>
-                                    <field name="sequence"/>
+                                    <field name="ean"/>
+                                    <field name="sequence" invisible="1"/>
                                     <newline/>
-                                    <field name="qty" select="1"/>
+                                    <field name="qty"/>
                                     <field name="ul"/>
                                     <field name="weight_ul"/>
                                     <separator colspan="4" string="Palletization"/>
@@ -171,8 +178,8 @@
                                     <field name="height"/>
                                     <field name="width"/>
                                     <field name="length"/>
-                                    <separator colspan="4" string="Other Info"/>
-                                    <field colspan="4" name="name" select="1"/>
+                                    <separator colspan="4" string="Description"/>
+                                    <field colspan="4" name="name" nolabel="1"/>
                                 </form>
                             </field>
                         </page>
@@ -187,11 +194,11 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="help">You must define a Product for everything you buy or sell. They can be raw materials, stockable products, consumables or services. The Product form contains a detailed information of your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
 
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="4"/>
-        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1"/>
-<!--        <menuitem action="product_normal_action" id="menu_products" parent="product.menu_main_product" sequence="1"/>-->
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9" groups="group_product_manager,base.group_sale_salesman"/>
+        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1" groups="base.group_sale_salesman,base.group_sale_manager,group_product_manager"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -201,6 +208,7 @@
             <field name="domain">[('purchase_ok','=',1)]</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="help">Products can be purchased and/or sold. They can be raw materials, stockable products, consumables or services. The Product form contains a detailed information on your  products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
 
         <record id="product_category_form_view" model="ir.ui.view">
@@ -211,7 +219,8 @@
                 <form string="Product Categories">
                     <field name="name" select="1"/>
                     <field name="parent_id"/>
-                    <field name="sequence"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="type"/>
                     <newline/>
                 </form>
             </field>
@@ -245,9 +254,14 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
+            <field name="help">Here is a list of all your products classified by category. You can click on a category to get the list of all products linked to this category or to a child of this category.</field>
         </record>
-<!--        <menuitem action="product_category_action" id="menu_product_category_action" parent="product.menu_main_product" sequence="3"/>-->
-
+        <menuitem
+            action="product_category_action"
+            id="product.menu_products_category"
+            groups="base.group_extended"
+            parent="base.menu_product"
+            sequence="0"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
             <field name="name">Products Categories</field>
             <field name="type">ir.actions.act_window</field>
@@ -255,8 +269,10 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_category_list_view"/>
         </record>
-<!--        <menuitem action="product_category_action_form" id="menu_product_category_action_form" parent="product.menu_config_product" sequence="1"/>-->
-        <menuitem action="product_category_action_form" id="menu_product_category_action_form" parent="prod_config_main" sequence="60"/>
+        <menuitem action="product_category_action_form"
+            groups="base.group_extended"
+            id="menu_product_category_action_form"
+            parent="prod_config_main" sequence="2"/>
 
 
         <record id="product_normal_action_tree" model="ir.actions.act_window">
@@ -288,8 +304,6 @@
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="factor"/>
-                    <field name="factor_inv"/>
-                    <field name="rounding"/>
                 </tree>
             </field>
         </record>
@@ -300,12 +314,31 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Units of Measure">
-                    <field name="name" select="1"/>
-                    <field name="category_id" select="1"/>
-                    <field name="factor" select="1"/>
-                    <field name="factor_inv" select="1"/>
-                    <field name="rounding"/>
-                    <field name="active"/>
+                    <group col="6" colspan="4">
+                        <group col="2"  colspan="2">
+                            <separator string="Unit of Measure Properties" colspan="4"/>
+                            <field name="name" select="1"/>
+                            <field name="category_id" select="1" widget="selection"/>
+                            <field name="active"/>
+                        </group>
+                        <group col="4"  colspan="4">
+                            <separator string="Ratio &amp; Precision" colspan="4"/>
+                            <group colspan="2" col="2">
+                                 <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                                 <field name="rounding"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                  <group col="2" colspan="2" attrs="{'invisible':[('uom_type','!=','smaller')]}">
+                                        <field name="factor"/>
+                                        <label colspan="2" string="  e.g: 1 * (reference unit) = ratio * (this unit)"/>
+                                   </group>
+                                   <group col="2" colspan="2" attrs="{'invisible':[('uom_type','!=','bigger')]}">
+                                        <field name="factor_inv"/>
+                                        <label colspan="2"  string="  e.g: 1 * (this unit) = ratio * (reference unit)"/>
+                                   </group>
+                            </group>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -315,6 +348,7 @@
             <field name="res_model">product.uom</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_uom_tree_view"/>
+            <field name="help">Create and manage the units of measure you want to be used in your system. You can define a conversion rate to be used between the several Unit of Measure within the same category.</field>
         </record>
         <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="65"/>
         <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16"/>
@@ -335,6 +369,7 @@
             <field name="res_model">product.uom.categ</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Create and manage the units of measure categories you want to be used in your system. If several units of measures are in the same category, they can be converted within each other. For example, in the unit of measure category "Time", you will have the following UoM: Hours, Days.</field>
         </record>
         <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.next_id_16" sequence="5"/>
 
@@ -366,9 +401,10 @@
             <field name="res_model">product.ul</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Create and manage your packaging dimensions and types you want to be maintained in your system.</field>
         </record>
-<!--        <menuitem action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="product.menu_config_product" sequence="4"/>-->
-        <menuitem action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="65"/>
+        <menuitem
+            action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
@@ -376,7 +412,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Packaging">
-                    <field name="sequence"/>
+                    <field name="sequence" invisible="1"/>
                     <field name="ean"/>
                     <field name="qty"/>
                     <field name="ul"/>
@@ -393,7 +429,7 @@
                     <field name="product_id" select="1"/>
                     <newline/>
                     <field name="ean" select="1"/>
-                    <field name="sequence"/>
+                    <field name="sequence" invisible="1"/>
                     <newline/>
                     <field name="qty" select="1"/>
                     <field name="ul"/>
@@ -420,10 +456,11 @@
                 <form string="Supplier Information">
                     <field name="name"/>
                     <field name="sequence"/>
-                    <field name="product_name"/>
-                    <field name="product_code"/>
+                    <field name="product_name" groups="base.group_extended"/>
+                    <field name="product_code" groups="base.group_extended"/>
+                    <field name="min_qty"/>
+                    <field name="product_uom" widget="selection"/>
                     <field name="delay"/>
-                    <field name="qty"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field colspan="4" groups="base.group_extended" name="pricelist_ids" nolabel="1" widget="one2many_list">
                         <tree editable="bottom" string="Pricelist">
@@ -447,8 +484,7 @@
                     <field name="sequence" string="Seq"/>
                     <field name="name"/>
                     <field name="delay"/>
-                    <field name="qty"/>
-                    <field name="product_code"/>
+                    <field name="min_qty"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
@@ -460,8 +496,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Variant">
-                    <separator colspan="4" string="Description"/>
-                    <field name="product_tmpl_id" select="1"/>
+                     <field name="product_tmpl_id" select="1"/>
                     <field name="active" select="1"/>
                     <field name="variants" select="1"/>
                     <field name="default_code" select="1"/>
@@ -496,7 +531,7 @@
                     <field name="name"/>
                     <field name="categ_id"/>
                     <field name="type"/>
-                    <field name="state"/>
+                    <field name="state" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -513,17 +548,23 @@
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Product Type" colspan="2"/>
-                        <field name="sale_ok" select="2"/>
-                        <field name="purchase_ok" select="2"/>
-                        <field groups="base.group_extended" name="rental" select="2"/>
+                        <field name="sale_ok"/>
+                        <field name="purchase_ok"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
-                                <separator string="Requisition" colspan="2"/>
-                                <field name="type" select="2"/>
-                                <field name="procure_method"/>
+                                <separator string="Procurement" colspan="2"/>
+                                <field name="type"/>
+                                <field name="procure_method" groups="base.group_extended"/>
                                 <field name="supply_method"/>
+                            </group>
+
+                            <group colspan="2" col="2">
+                                <separator string="Base Prices" colspan="2"/>
+                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                <field name="list_price"/>
+                                <field groups="base.group_extended" name="cost_method"/>
                             </group>
 
                             <group colspan="2" col="2" groups="base.group_extended">
@@ -533,17 +574,17 @@
                                 <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
-                            <group colspan="2" col="2" name="status">
+                            <group colspan="2" col="2" name="status" groups="base.group_extended">
                                 <separator string="Status" colspan="2"/>
                                 <field name="categ_id" select="1"/>
-                                <field name="state" select="2"/>
-                                <field groups="base.group_extended" name="product_manager" select="2"/>
+                                <field name="state"/>
+                                <field name="product_manager"/>
                             </group>
 
                             <group colspan="2" col="2" name="uom">
                                 <separator string="UOM" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
-                                <field name="uom_po_id"/>
+                                <field name="uom_po_id" groups="base.group_extended"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
@@ -554,7 +595,7 @@
                             </group>
 
                         </page>
-                        <page string="Requisition &amp; Locations">
+                        <page string="Procurement &amp; Locations" groups="base.group_extended">
                             <group colspan="2" col="2" name="delay">
                                 <separator string="Delays" colspan="2"/>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
@@ -567,18 +608,12 @@
                                 <field name="loc_row"/>
                                 <field name="loc_case"/>
                             </group>
-
                             <group colspan="2" col="2" name="misc">
                                 <separator string="Miscelleanous" colspan="2"/>
                             </group>
 
                         </page>
-                        <page string="Prices &amp; Suppliers">
-                            <separator string="Base Prices" colspan="4"/>
-                            <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
-                            <field name="list_price"/>
-                            <field groups="base.group_extended" name="cost_method"/>
-                            <newline/>
+                        <page string="Suppliers">
                             <field colspan="4" name="seller_ids" nolabel="1"/>
                         </page>
                         <page string="Descriptions">
@@ -601,11 +636,12 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_template_tree_view"/>
         </record>
-
-        <!--
-        <menuitem action="product_template_action_tree" id="menu_templates" parent="product.menu_products" sequence="2"
-                  groups="product.group_product_variant" />
-        -->
+        <record id="ir_ui_view_sc_product0" model="ir.ui.view_sc">
+            <field name="name">Products</field>
+            <field name="resource">ir.ui.menu</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="res_id" ref="product.menu_products"/>
+        </record>
 
     </data>
 </openerp>

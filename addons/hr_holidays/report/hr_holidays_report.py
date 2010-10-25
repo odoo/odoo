@@ -22,51 +22,39 @@
 import tools
 from osv import fields,osv
 
-class hr_holidays_report(osv.osv):
-    _name = "hr.holidays.report"
-    _description = "Leaves Statistics"
+class hr_holidays_remaining_leaves_user(osv.osv):
+    _name = "hr.holidays.remaining.leaves.user"
+    _description = "Total holidays by type"
     _auto = False
-    _rec_name = 'date'
     _columns = {
-        'date': fields.datetime('Date', readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'date_from' : fields.datetime('Start Date', readonly=True),
-        'date_to' : fields.datetime('End Date', readonly=True),
-        'number_of_days_temp': fields.float('Number of Days', readonly=True),
-        'employee_id' : fields.many2one('hr.employee', "Employee's Name",readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'state': fields.selection([('draft', 'Draft'),
-                                   ('confirm', 'Waiting Validation'),
-                                   ('refuse', 'Refused'),
-                                   ('validate', 'Validated'),
-                                   ('cancel', 'Cancelled')]
-                                   ,'State', readonly=True),
-    }
-    _order = 'date desc'
+        'name': fields.char('Employee', size=64),
+        'no_of_leaves': fields.integer('Remaining leaves'),
+        'user_id': fields.many2one('res.users', 'User'),
+        'leave_type': fields.char('Leave Type', size=64),
+        }
+
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'hr_holidays_report')
+        tools.drop_view_if_exists(cr, 'hr_holidays_remaining_leaves_user')
         cr.execute("""
-            create or replace view hr_holidays_report as (
-                 select
-                     min(s.id) as id,
-                     date_trunc('seconds',s.create_date) as date,
-                     date_trunc('day',s.date_from) as date_from,
-                     date_trunc('day',s.date_to) as date_to,
-                     s.number_of_days_temp,
-                     s.employee_id,
-                     s.user_id as user_id,
-                     to_char(s.create_date, 'YYYY') as year,
-                     to_char(s.create_date, 'MM') as month,
-                     s.state
-                     from
-                 hr_holidays s
-                 group by
-                     s.create_date,s.state,s.date_from,s.date_to,
-                     s.number_of_days_temp,s.employee_id,s.user_id
+            CREATE or REPLACE view hr_holidays_remaining_leaves_user as (
+                 SELECT
+                    min(hrs.id) as id,
+                    rr.name as name,
+                    sum(hrs.number_of_days) as no_of_leaves,
+                    rr.user_id as user_id,
+                    hhs.name as leave_type
+                FROM
+                    hr_holidays as hrs, hr_employee as hre,
+                    resource_resource as rr,hr_holidays_status as hhs
+                WHERE
+                    hrs.employee_id = hre.id and
+                    hre.resource_id =  rr.id and
+                    hhs.id = hrs.holiday_status_id
+                GROUP BY
+                    rr.name,rr.user_id,hhs.name
             )
         """)
-hr_holidays_report()
 
+hr_holidays_remaining_leaves_user()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

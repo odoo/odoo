@@ -18,12 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+import time
 import ir
 import pooler
 from report.interface import report_rml
 from report.interface import toxml
-
+from tools import to_xml
+from report import report_sxw
+from datetime import datetime
 from tools.translate import _
 
 
@@ -31,148 +33,156 @@ from tools.translate import _
 class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, datas, context={}):
         number = (datas.get('form', False) and datas['form']['number']) or 1
-
-        def process_bom(bom, currency_id):
+        pool = pooler.get_pool(cr.dbname)
+        product_pool = pool.get('product.product')
+        product_uom_pool = pool.get('product.uom')
+        supplier_info_pool = pool.get('product.supplierinfo')
+        workcenter_pool = pool.get('mrp.workcenter')
+        user_pool = pool.get('res.users')
+        bom_pool = pool.get('mrp.bom')
+        rml_obj=report_sxw.rml_parse(cr, uid, product_pool._name,context)
+        rml_obj.localcontext.update({'lang':context.get('lang',False)})
+        company_currency = user_pool.browse(cr, uid, uid).company_id.currency_id
+        def process_bom(bom, currency_id, factor=1):
             xml = '<row>'
             sum = 0
             sum_strd = 0
-            prod = pooler.get_pool(cr.dbname).get('product.product').browse(cr, uid, bom['product_id'])
+            prod = product_pool.browse(cr, uid, bom['product_id'])
 
             prod_name = bom['name']
-            prod_qtty = bom['product_qty']
-            prod_uom = prod.uom_id.name
+            prod_qtty = factor * bom['product_qty']
+            product_uom = product_uom_pool.browse(cr, uid, bom['product_uom'], context=context)
             level = 1
-            main_sp_price = ''
-            main_sp_name = ''
-            main_strd_price = ''
-            main_strd_price = ''
-            if prod.seller_ids and prod.seller_ids[0] :
-                main_sp_name = '<b>' + prod.seller_ids[0].name.name + '</b>\r\n'
-                pricelist_id = prod.seller_ids[0].name.property_product_pricelist_purchase.id
-                if pricelist_id:
-                    pricelist_obj = pooler.get_pool(cr.dbname).get('product.pricelist')
-                    price = pricelist_obj.price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0).setdefault(pricelist_id, 0)
-                    price = pooler.get_pool(cr.dbname).get('res.currency').compute(cr, uid, pricelist_obj.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
-                else:
-                    price = 0
-                main_sp_price = '%.2f' % price + '\r\n'
+            main_sp_price, main_sp_name , main_strd_price = '','',''
+            sellers, sellers_price = '',''
+
+            if prod.seller_id:
+                main_sp_name = "<b>%s</b>\r\n" %(prod.seller_id.name)
+                price = supplier_info_pool.price_get(cr, uid, prod.seller_id.id, prod.id, number*prod_qtty)[prod.seller_id.id]
+                price = product_uom_pool._compute_price(cr, uid, prod.uom_id.id, price, to_uom_id=product_uom.id)
+                main_sp_price = """<b>"""+rml_obj.formatLang(price)+' '+ company_currency.symbol+"""</b>\r\n"""
                 sum += prod_qtty*price
-
-            main_strd_price = '%.2f' % prod.standard_price + '\r\n'
-            sum_strd = prod_qtty*prod.standard_price
-
-            sellers = ''
-            sellers_price = ''
+            std_price = product_uom_pool._compute_price(cr, uid, prod.uom_id.id, prod.standard_price, to_uom_id=product_uom.id)
+            main_strd_price = str(std_price) + '\r\n'
+            sum_strd = prod_qtty*std_price
             for seller_id in prod.seller_ids:
                 sellers +=  '- <i>'+ seller_id.name.name +'</i>\r\n'
-                pricelist_id = seller_id.name.property_product_pricelist_purchase.id
-                if pricelist_id:
-                    pricelist_obj = pooler.get_pool(cr.dbname).get('product.pricelist')
-                    price = pricelist_obj.price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0).setdefault(pricelist_id, 0)
-                    price = pooler.get_pool(cr.dbname).get('res.currency').compute(cr, uid, pricelist_obj.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
-                else:
-                    price = 0
-                sellers_price += '%.2f' % price + '\r\n'
-
-            xml += "<col para='yes'>" + prod_name + '</col>'
-            xml += "<col para='no'>" + main_sp_name +  sellers + '</col>'
-            xml += "<col para='yes'>" + str(prod_qtty) + '</col>'
-            xml += "<col para='yes'>" + prod_uom + '</col>'
-            xml += "<col para='yes'>" + main_strd_price + '</col>'
-            xml += "<col para='no'>" + main_sp_price +  sellers_price + '</col>'
-
+                price = supplier_info_pool.price_get(cr, uid, seller_id.name.id, prod.id, number*prod_qtty)[seller_id.name.id]
+                price = product_uom_pool._compute_price(cr, uid, prod.uom_id.id, price, to_uom_id=product_uom.id)
+                sellers_price += """<i>"""+rml_obj.formatLang(price) +' '+ company_currency.symbol +"""</i>\r\n"""
+            xml += """<col para='yes'> """+ prod_name +""" </col>
+                    <col para='yes'> """+ main_sp_name + sellers + """ </col>
+                    <col f='yes'>"""+ rml_obj.formatLang(prod_qtty) +' '+ product_uom.name +"""</col>
+                    <col f='yes'>"""+ rml_obj.formatLang(float(main_strd_price)) +' '+ company_currency.symbol +"""</col>
+                    <col f='yes'>""" + main_sp_price + sellers_price + """</col>'"""
 
             xml += '</row>'
             return xml, sum, sum_strd
 
         def process_workcenter(wrk):
+            workcenter = workcenter_pool.browse(cr, uid, wrk['workcenter_id'])
+            cost_cycle = wrk['cycle']*workcenter.costs_cycle
+            cost_hour = wrk['hour']*workcenter.costs_hour
+            total = cost_cycle + cost_hour
             xml = '<row>'
-
-            workcenter = pooler.get_pool(cr.dbname).get('mrp.workcenter').browse(cr, uid, wrk['workcenter_id'])
-
-            xml += "<col para='yes'>" + wrk['name'] + '</col>'
-            xml += "<col para='yes'>" +  '</col>'
-            xml += "<col para='no'>" + '</col>'
+            xml += "<col para='yes'>" + workcenter.name + '</col>'
             xml += "<col/>"
-            xml += "<col para='no'>" + str(wrk['cycle']*workcenter.costs_cycle) + '</col>'
-            xml += "<col para='yes'>" + str(wrk['hour']*workcenter.costs_hour) + '</col>'
-
-
+            xml += """<col f='yes'>"""+rml_obj.formatLang(cost_cycle)+' '+ company_currency.symbol + """</col>"""
+            xml += """<col f='yes'>"""+rml_obj.formatLang(cost_hour)+' '+ company_currency.symbol + """</col>"""
+            xml += """<col f='yes'>"""+rml_obj.formatLang(cost_hour + cost_cycle)+' '+ company_currency.symbol + """</col>"""
             xml += '</row>'
-            return xml, wrk['cycle']*workcenter.costs_cycle+wrk['hour']*workcenter.costs_hour
+
+            return xml, total
 
 
         xml = ''
         config_start = """
         <config>
-            <date>09/09/2005</date>
+            <date>""" + to_xml(rml_obj.formatLang(datetime.now().strftime('%Y-%m-%d %H:%M:%S'),date_time=True)) + """</date>
+            <company>%s</company>
             <PageSize>210.00mm,297.00mm</PageSize>
             <PageWidth>595.27</PageWidth>
             <PageHeight>841.88</PageHeight>
-            <tableSize>60.00mm,60.00mm, 20.00mm, 20.00mm, 20.00mm, 20.00mm</tableSize>
-            """
+            <tableSize>55.00mm,58.00mm,29.00mm,29.00mm,29.00mm</tableSize>
+            """ % (user_pool.browse(cr, uid, uid).company_id.name)
         config_stop = """
-            <report-footer>Generated by Open ERP</report-footer>
+            <report-footer>Generated by OpenERP</report-footer>
         </config>
         """
-        header = """
-            <header>
-            <field>%s</field>
-            <field>%s</field>
-            <field>%s</field>
-            <field>%s</field>
-            <field>%s</field>
-            <field>%s</field>
-            </header>
-            """ % (_('Product name'), _('Product supplier'), _('Product quantity'), _('Product uom'), _('Product Standard Price'), _('Unit Product Price'))
+
         workcenter_header = """
             <lines style='header'>
                 <row>
                     <col>%s</col>
-                    <col/>
-                    <col/>
-                    <col/>
-                    <col>%s</col>
-                    <col>%s</col>
+                    <col t='yes'/>
+                    <col t='yes'>%s</col>
+                    <col t='yes'>%s</col>
+                    <col t='yes'>%s</col>
                 </row>
             </lines>
-        """ % (_('Work Center name'), _('Cycles Cost'), _('Total hourly costs'))
+        """ % (_('Work Center name'), _('Cycles Cost'), _('Hourly Cost'),_('Work Cost'))
         prod_header = """
-            <lines style='header'>
                 <row>
-                    <col para='yes'>%s</col>
-                    <col para='yes'>%s</col>
-                    <col para='yes'>%s</col>
-                    <col para='yes'>%s</col>
-                    <col para='yes'>%s</col>
-                    <col para='yes'>%s</col>
+                    <col>%s</col>
+                    <col>%s</col>
+                    <col t='yes'>%s</col>
+                    <col t='yes'>%s</col>
+                    <col t='yes'>%s</col>
                 </row>
-            </lines>
-        """ % (_('Product name'), _('Product supplier'), _('Product Quantity'), _('Product uom'), _('Product Standard Price'), _('Unit Product Price'))
+        """ % (_('Component'), _('Component suppliers'), _('Quantity'),_('Cost Price per Uom'), _('Supplier Price per Uom'))
 
-        company_currency = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid).company_id.currency_id.id
-        first = True
-        for prod_id in ids:
-            bom_ids = pooler.get_pool(cr.dbname).get('mrp.bom').search(cr, uid, [('product_id','=',prod_id)])
-            prod = pooler.get_pool(cr.dbname).get('product.product').browse(cr, uid, prod_id)
+        purchase_price_digits = rml_obj.get_digits(dp='Purchase Price')
 
-            for bom_id in bom_ids:
-                bom = pooler.get_pool(cr.dbname).get('mrp.bom').browse(cr, uid, bom_id)
-
-                sub_boms = pooler.get_pool(cr.dbname).get('mrp.bom')._bom_explode(cr, uid, bom, number, [])
+        for product in product_pool.browse(cr, uid, ids, context=context):
+            bom_id = bom_pool._bom_find(cr, uid, product.id, product.uom_id.id)
+            title = "<title>%s</title>" %(_("Cost Structure"))
+            title += "<title>%s</title>" %product.name
+            xml += "<lines style='header'>" + title + prod_header + "</lines>"
+            if not bom_id:
+                total_strd = number * product.standard_price
+                total = number * product_pool.price_get(cr, uid, [product.id], 'standard_price')[product.id]
+                xml += """<lines style='lines'><row>
+                    <col para='yes'>-</col>
+                    <col para='yes'>-</col>
+                    <col para='yes'>-</col>
+                    <col para='yes'>-</col>
+                    <col para='yes'>-</col>
+                    </row></lines>"""
+                xml += """<lines style='total'> <row>
+                    <col> """ + _('Total Cost ') + _('of ') + str(number) +' '+ product.uom_id.name + """: </col>
+                    <col/>
+                    <col f='yes'/>
+                    <col t='yes'>"""+ rml_obj.formatLang(total_strd, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
+                    <col t='yes'>"""+ rml_obj.formatLang(total, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
+                    </row></lines>'"""
+            else:
+                bom = bom_pool.browse(cr, uid, bom_id, context=context)
+                factor = number * product.uom_id.factor / bom.product_uom.factor
+                sub_boms = bom_pool._bom_explode(cr, uid, bom, factor / bom.product_qty)
                 total = 0
                 total_strd = 0
-                parent_bom = {'product_qty': bom.product_qty, 'name': bom.product_id.name, 'product_uom': bom.product_id.uom_id.factor, 'product_id': bom.product_id.id}
+                parent_bom = {
+                        'product_qty': bom.product_qty,
+                        'name': bom.product_id.name,
+                        'product_uom': bom.product_uom.id,
+                        'product_id': bom.product_id.id
+                }
                 xml_tmp = ''
                 for sub_bom in (sub_boms and sub_boms[0]) or [parent_bom]:
-                    txt, sum, sum_strd = process_bom(sub_bom, company_currency)
+                    txt, sum, sum_strd = process_bom(sub_bom, company_currency.id)
                     xml_tmp +=  txt
                     total += sum
                     total_strd += sum_strd
-                if not first:
-                    xml += prod_header
+
                 xml += "<lines style='lines'>" + xml_tmp + '</lines>'
-                xml += "<lines style='sub_total'><row><col>%s : </col><col>(" % (_('SUBTOTAL')) + str(number) + " %s)</col><col/><col/><col>" % (_('products')) + '%.2f' % total_strd + '</col><col>' + '%.2f' % total  + '</col></row></lines>'
+                xml += """<lines style='sub_total'> <row>
+                    <col> """ + _('Cost ') + _('of ') + str(number) +' '+ product.uom_id.name + """: </col>
+                    <col/>
+                    <col t='yes'/>
+                    <col t='yes'>"""+ rml_obj.formatLang(total_strd, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
+                    <col t='yes'>"""+ rml_obj.formatLang(total, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
+                    </row></lines>'"""
+
                 total2 = 0
                 xml_tmp = ''
                 for wrk in (sub_boms and sub_boms[1]):
@@ -182,16 +192,23 @@ class report_custom(report_rml):
                 if xml_tmp:
                     xml += workcenter_header
                     xml += "<lines style='lines'>" + xml_tmp + '</lines>'
-                    xml += "<lines style='sub_total'><row><col>%s : </col><col>(" % (_('SUBTOTAL')) + str(number) + " %s)</col><col/><col/><col/><col>" % (_('products')) + '%.2f' % total2 + '</col></row></lines>'
-                xml += "<lines style='total'><row><col>%s : </col><col>(" % (_('TOTAL')) + str(number) + " %s)</col><col/><col/><col>" % (_('products')) + '%.2f' % (total_strd+total2) + "</col><col>" + '%.2f' % (total+total2) + '</col></row></lines>'
+                    xml += """<lines style='sub_total'> <row>
+                    <col> """ + _('Work Cost ') + _('of ') + str(number) +' '+ product.uom_id.name +""": </col>
+                    <col/>
+                    <col/>
+                    <col/>
+                    <col t='yes'>"""+ rml_obj.formatLang(total2, digits=purchase_price_digits) +' '+ company_currency.symbol +"""</col>
+                    </row></lines>'"""
+                xml += """<lines style='total'> <row>
+                    <col> """ + _('Total Cost ') + _('of ') + str(number) +' '+ product.uom_id.name + """: </col>
+                    <col/>
+                    <col t='yes'/>
+                    <col t='yes'>"""+ rml_obj.formatLang(total_strd+total2, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
+                    <col t='yes'>"""+ rml_obj.formatLang(total+total2, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
+                    </row></lines>'"""
 
-                first = False
-
-        xml = '<?xml version="1.0" ?><report>' + config_start + '<report-header>%s\n\r' % (_('Product Cost Structure')) + prod.name  + '</report-header>'+ config_stop +  header + xml + '</report>'
+        xml = '<?xml version="1.0" ?><report>' + config_start + config_stop + xml + '</report>'
 
         return xml
 
 report_custom('report.product.price', 'product.product', '', 'addons/mrp/report/price.xsl')
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <record id="survey_2" model="survey">
             <field name="title">Employee Evaluation</field>
             <field name="max_response_limit">20</field>
             <field eval="[(6,0,[])]" name="users"/>
             <field name="type" ref="survey.survey_type1"/>
             <field name="responsible_id" ref="base.user_demo"/>
+            <field name="response_user">5</field>
+            <field name="state">open</field>
         </record>
     </data>
+
     <data>
         <record id="survey_3" model="survey">
             <field name="title">Employee Opinion</field>
@@ -16,8 +20,10 @@
             <field eval="[(6,0,[])]" name="users"/>
             <field name="type" ref="survey.survey_type1"/>
             <field name="responsible_id" ref="base.user_root"/>
+            <field name="response_user">5</field>
         </record>
     </data>
+
     <data>
         <record id="survey_page_1" model="survey.page">
             <field name="title">Employee Evaluation Form</field>
@@ -25,6 +31,7 @@
             <field eval="1" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_page_2" model="survey.page">
             <field name="title">Process</field>
@@ -40,6 +47,7 @@
             <field eval="2" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_page_6" model="survey.page">
             <field name="title">Employee Performance In Key Areas</field>
@@ -78,8 +86,6 @@
             <field eval="5" name="sequence"/>
         </record>
     </data>
-
-
 
     <data>
         <record id="survey_question_0" model="survey.question">
@@ -130,6 +136,7 @@
             <field eval="0" name="allow_comment"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_3" model="survey.question">
             <field name="in_visible_answer_type">1</field>
@@ -154,6 +161,7 @@
             <field eval="0" name="allow_comment"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_4" model="survey.question">
             <field name="in_visible_answer_type">1</field>
@@ -201,30 +209,10 @@
             <field eval="0" name="allow_comment"/>
         </record>
     </data>
+
     <data>
-        <!--record id="survey_question_7" model="survey.question">
-            <field name="in_visible_answer_type">1</field>
-            <field name="validation_type">do_not_validate</field>
-            <field name="comment_valid_type">do_not_validate</field>
-            <field name="make_comment_field_err_msg">Please enter a comment.</field>
-            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
-            <field eval="0" name="comment_column"/>
-            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
-            <field eval="0" name="rating_allow_one_column_require"/>
-            <field name="req_error_msg">This question requires an answer.</field>
-            <field eval="2" name="sequence"/>
-            <field name="question">Process</field>
-            <field eval="0" name="is_require_answer"/>
-            <field name="type">comment</field>
-            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
-            <field eval="0" name="make_comment_field"/>
-            <field eval="0" name="in_visible_menu_choice"/>
-            <field name="page_id" ref="survey_page_2"/>
-            <field name="comment_label">Other</field>
-            <field eval="0" name="in_visible_rating_weight"/>
-            <field eval="0" name="allow_comment"/>
-        </record-->
     </data>
+
     <data>
         <record id="survey_question_8" model="survey.question">
             <field name="in_visible_answer_type">1</field>
@@ -302,8 +290,6 @@
         </record>
     </data>
 
-
-
     <data>
         <record id="survey_question_14" model="survey.question">
             <field name="in_visible_answer_type">1</field>
@@ -329,7 +315,6 @@
         </record>
     </data>
 
-
     <data>
         <record id="survey_question_17" model="survey.question">
             <field name="in_visible_answer_type">1</field>
@@ -354,6 +339,7 @@
             <field eval="0" name="allow_comment"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_18" model="survey.question">
             <field name="in_visible_answer_type">1</field>
@@ -378,8 +364,6 @@
             <field eval="0" name="allow_comment"/>
         </record>
     </data>
-
-
 
     <data>
         <record id="survey_question_23" model="survey.question">
@@ -434,6 +418,7 @@
             <field eval="0" name="allow_comment"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_40" model="survey.question">
             <field name="in_visible_answer_type">1</field>
@@ -458,6 +443,7 @@
             <field eval="0" name="allow_comment"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_41" model="survey.question">
             <field name="in_visible_answer_type">1</field>
@@ -500,7 +486,6 @@
             <field name="type">descriptive_text</field>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field name="descriptive_text">* It is the joint responsibility of the employee and the supervisor (appraiser) to establish a feasible work plan for the coming year, including major employee responsibilities and corresponding benchmarks against which results will be evaluated.
-
 * Critical or key elements of performance and professional development needs (if any), should also be noted at this time</field>
             <field eval="0" name="make_comment_field"/>
             <field eval="1" name="in_visible_menu_choice"/>
@@ -530,7 +515,7 @@
             <field name="descriptive_text">* The employee will be responsible for completing a draft of the Appraisal Form as a tool for self-evaluation and a starting point for the supervisor’s evaluation. The employee can add examples of achievements for each criterion.
 Once the form had been filled, the employee send it to his supervisor.
 
-* It is the primary responsibility of the supervisor to gather the necessary input from     the appropriate sources of feedback (internal and/or external customers, peers). In case of collaboration with Tiny Belgium, the supervisor must receive completed evaluation form from the employee's Belgian project manager.
+* It is the primary responsibility of the supervisor to gather the necessary input from     the appropriate sources of feedback (internal and/or external customers, peers). In case of collaboration with OpenERP SA Belgium, the supervisor must receive completed evaluation form from the employee's Belgian project manager.
 
 * The supervisor synthesizes and integrates all input into the completed appraisal. He motivates his evaluation in the ad hoc fields.
 
@@ -581,50 +566,6 @@ Once the form had been filled, the employee send it to his supervisor.
         </record>
     </data>
 
-
-    <!--data>
-        <record id="survey_question_42" model="survey.question">
-            <field name="in_visible_answer_type">1</field>
-            <field name="validation_type">do_not_validate</field>
-            <field name="comment_valid_type">do_not_validate</field>
-            <field name="make_comment_field_err_msg">Please enter a comment.</field>
-            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
-            <field eval="0" name="comment_column"/>
-            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
-            <field eval="0" name="rating_allow_one_column_require"/>
-            <field name="req_error_msg">This question requires an answer.</field>
-            <field eval="3" name="sequence"/>
-            <field name="question">Evaluation Process</field>
-            <field eval="0" name="is_require_answer"/>
-            <field name="type">descriptive_text</field>
-            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
-            <field name="descriptive_text">1). At the outset of the appraisal time period:
-
-     * It is the joint responsibility of the employee and the supervisor (appraiser) to establish a feasible work plan for the coming year, including major employee responsibilities and corresponding benchmarks against which results will be evaluated.
-
-     * Critical or key elements of performance and professional development needs (if any), should also be noted at this time
-
-2). At the conclusion of the appraisal time period:
-
-     * The employee will be responsible for completing a draft of the Appraisal Form as a tool for self-evaluation and a starting point for the supervisor’s evaluation. The employee can add examples of achievements for each criterion.
-Once the form had been filled, the employee send it to his supervisor.
-
-     * It is the primary responsibility of the supervisor to gather the necessary input from the appropriate sources of feedback (internal and/or external customers, peers). In case of collaboration with Tiny Belgium, the supervisor must receive completed evaluation form from the employee's Belgian project manager.
-
-     * The supervisor synthesizes and integrates all input into the completed appraisal. He motivates his evaluation in the ad hoc fields.
-
-     * The employee may choose to offer comments or explanation regarding the completed review.
-
-     * The supervisor send the form to the HR department in India and in Belgium.
-</field>
-            <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
-            <field name="page_id" ref="hr_evaluation.survey_page_1"/>
-            <field name="comment_label">Other</field>
-            <field eval="1" name="in_visible_rating_weight"/>
-            <field eval="0" name="allow_comment"/>
-        </record>
-    </data-->
 
     <data>
         <record id="survey_question_17_1" model="survey.question">
@@ -725,6 +666,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="0" name="allow_comment"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_4" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -733,6 +675,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_4"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_5" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -741,6 +684,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_4"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_6" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -749,6 +693,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_4"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_7" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -757,6 +702,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_4"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_8" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -765,6 +711,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_4"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_9" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -773,6 +720,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_8"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_10" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -781,6 +729,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_8"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_11" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -789,6 +738,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_8"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_12" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -797,6 +747,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_8"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_13" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -805,6 +756,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_8"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_14" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -813,6 +765,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_3"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_15" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -821,6 +774,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_3"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_16" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -829,6 +783,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_3"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_17" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -837,6 +792,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_3"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_18" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -845,6 +801,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_3"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_19" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -853,6 +810,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_6"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_20" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -861,6 +819,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_6"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_21" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -869,6 +828,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_6"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_22" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -877,6 +837,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_6"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_23" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -885,6 +846,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_6"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_24" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -893,6 +855,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_10"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_25" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -901,6 +864,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_10"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_26" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -909,6 +873,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_10"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_27" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -917,6 +882,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_10"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_28" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -925,6 +891,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_10"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_29" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -933,6 +900,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_14"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_30" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -941,6 +909,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_14"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_31" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -949,6 +918,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_14"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_32" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -957,6 +927,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_14"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_33" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -965,6 +936,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_14"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_34" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -973,6 +945,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_18"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_35" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -981,6 +954,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_18"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_36" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -989,6 +963,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_18"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_37" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -997,6 +972,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_18"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_38" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -1005,6 +981,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_18"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_39" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -1013,6 +990,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_40"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_40" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -1021,6 +999,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_40"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_41" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -1029,6 +1008,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_40"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_42" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -1037,6 +1017,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_40"/>
         </record>
     </data>
+
     <data>
         <record id="survey_question_column_heading_43" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -1054,6 +1035,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_1" model="survey.answer">
             <field name="answer">Name</field>
@@ -1062,6 +1044,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_2" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1070,6 +1053,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_3" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1078,6 +1062,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_4" model="survey.answer">
             <field name="in_visible_answer_type">0</field>
@@ -1087,6 +1072,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_5" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1095,6 +1081,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_6" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1103,6 +1090,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_7" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1111,6 +1099,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_8" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1119,6 +1108,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="2" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_9" model="survey.answer">
             <field name="in_visible_answer_type">0</field>
@@ -1128,6 +1118,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="2" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_10" model="survey.answer">
             <field name="answer">Position Title</field>
@@ -1136,6 +1127,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="2" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_11" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1144,6 +1136,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="2" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_12" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1152,6 +1145,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="2" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_13" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1160,6 +1154,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="2" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_14" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1168,6 +1163,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="2" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_15" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1176,6 +1172,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="2" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_16" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1185,6 +1182,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="3" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_17" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1193,6 +1191,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="3" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_18" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1201,6 +1200,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="3" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_19" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1209,6 +1209,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="3" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_20" model="survey.answer">
             <field name="answer">Appraisal for Period</field>
@@ -1217,6 +1218,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="3" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_21" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1225,6 +1227,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="3" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_22" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1233,6 +1236,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="4" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_23" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1241,6 +1245,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="4" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_24" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1249,6 +1254,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="4" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_25" model="survey.answer">
             <field name="answer">Date of Review</field>
@@ -1257,6 +1263,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="4" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_26" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1265,6 +1272,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_27" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1273,8 +1281,6 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
-
-
 
     <data>
         <record id="survey_answer_31" model="survey.answer">
@@ -1285,7 +1291,6 @@ Once the form had been filled, the employee send it to his supervisor.
         </record>
     </data>
 
-
     <data>
         <record id="survey_answer_43" model="survey.answer">
             <field name="answer">Appraiser</field>
@@ -1294,6 +1299,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_44" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1302,6 +1308,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_45" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1310,6 +1317,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_46" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1318,6 +1326,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_47" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1326,6 +1335,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_48" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1334,6 +1344,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_49" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1342,6 +1353,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_50" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1350,6 +1362,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_51" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1358,6 +1371,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_52" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1375,6 +1389,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_68" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1383,6 +1398,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_69" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1391,6 +1407,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_70" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1399,6 +1416,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_71" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1407,6 +1425,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_72" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1415,6 +1434,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_73" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1423,6 +1443,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_74" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1431,6 +1452,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_75" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1439,6 +1461,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_76" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1447,6 +1470,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_77" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1455,6 +1479,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="5" name="sequence"/>
         </record>
     </data>
+
     <data>
         <record id="survey_answer_78" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -1481,6 +1506,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_9"/>
         </record>
     </data>
+
     <data>
         <record id="survey_tbl_column_heading_results0" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -1489,6 +1515,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_9"/>
         </record>
     </data>
+
     <data>
         <record id="survey_tbl_column_heading_comments0" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -1498,16 +1525,6 @@ Once the form had been filled, the employee send it to his supervisor.
         </record>
     </data>
 
-
-<!--    <data noupdate="1">-->
-<!--        <record id="survey_request_1" model="survey.request">-->
-<!--            <field name="state">waiting_answer</field>-->
-<!--            <field name="survey_id" ref="hr_evaluation.survey_2"/>-->
-<!--            <field name="user_id" ref="base.user_root"/>-->
-<!--            <field name="email">fp@tinyerp.com</field>-->
-<!--            <field name="date_deadline">2010-02-21</field>-->
-<!--        </record>-->
-<!--    </data>-->
     <data noupdate="1">
         <record id="hr_evaluation_plan_managersevaluationplan0" model="hr_evaluation.plan">
             <field eval="1" name="active"/>
@@ -1517,6 +1534,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="company_id" ref="base.main_company"/>
         </record>
     </data>
+
     <data noupdate="1">
         <record id="hr_evaluation_plan_phase_sendtosubordinates0" model="hr_evaluation.plan.phase">
             <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
@@ -1532,6 +1550,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="0" name="wait"/>
         </record>
     </data>
+
     <data noupdate="1">
         <record id="hr_evaluation_plan_phase_sendtomanagers0" model="hr_evaluation.plan.phase">
             <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
@@ -1547,6 +1566,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="0" name="wait"/>
         </record>
     </data>
+
     <data noupdate="1">
         <record id="hr_evaluation_plan_phase_sendtoemployee0" model="hr_evaluation.plan.phase">
             <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
@@ -1562,6 +1582,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="0" name="wait"/>
         </record>
     </data>
+
     <data noupdate="1">
         <record id="hr_evaluation_plan_phase_finalinterviewwithmanager0" model="hr_evaluation.plan.phase">
             <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
@@ -1577,42 +1598,32 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="wait"/>
         </record>
     </data>
-    
-<!--    <data noupdate="1">-->
-<!--        <record id="hr_evaluation_interview_1" model="survey.request">-->
-<!--            <field name="state">waiting_answer</field>-->
-<!--            <field name="survey_id" ref="hr_evaluation.survey_2"/>-->
-<!--            <field name="user_id" ref="base.user_root"/>-->
-<!--            <field name="email">fp@tinyerp.com</field>-->
-<!--            <field name="date_deadline">2010-02-21</field>-->
-<!--        </record>-->
-<!--    </data>-->
-<!--    <data noupdate="1">-->
-<!--        <record id="hr_evaluation_evaluation_0" model="hr_evaluation.evaluation">-->
-<!--            <field name="rating">0</field>-->
-<!--            <field name="employee_id" ref="hr.employee1"/>-->
-<!--            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>-->
-<!--            <field name="state">draft</field>-->
-<!--            <field eval="[(6,0,[ref('hr_evaluation_interview_1')])]" name="survey_request_ids"/>-->
-<!--            <field name="date">2010-01-21</field>-->
-<!--            <field name="phase_id" ref="hr_evaluation_plan_phase_sendtomanagers0"/>-->
-<!--            <field name="manager_id" ref="base.user_root"/>-->
-<!--        </record>-->
-<!--    </data>-->
 
-		<data>
-		  <record forcecreate="True" id="ir_cron_scheduler_evaluation"
-		   model="ir.cron">
-		   <field name="name">Run Employee Evaluation</field>
-		   <field eval="True" name="active" />
-		   <field name="user_id" ref="base.user_root" />
-		   <field name="interval_number">1</field>
-		   <field name="interval_type">minutes</field>
-		   <field name="numbercall">-1</field>
-		   <field eval="'hr.employee'" name="model" />
-		   <field eval="'run_employee_evaluation'" name="function" />
-		   <field eval="'(False,)'" name="args" />
-		  </record>
-		 </data>
+        <data>
+          <record forcecreate="True" id="ir_cron_scheduler_evaluation" model="ir.cron">
+           <field name="name">Run Employee Evaluation</field>
+           <field eval="True" name="active" />
+           <field name="user_id" ref="base.user_root" />
+           <field name="interval_number">1</field>
+           <field name="interval_type">minutes</field>
+           <field name="numbercall">-1</field>
+           <field eval="'hr.employee'" name="model" />
+           <field eval="'run_employee_evaluation'" name="function" />
+           <field eval="'(False,)'" name="args" />
+          </record>
+
+        <record id="property_rule_evaluation" model="ir.rule">
+            <field name="name">Employee Evaluation</field>
+            <field model="ir.model" name="model_id" ref="model_hr_evaluation_evaluation"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4,ref('base.group_hr_user'))]"/>
+        </record>
+        <record id="property_rule_evaluation_manager" model="ir.rule">
+            <field name="name">Manager Evaluation</field>
+            <field model="ir.model" name="model_id" ref="model_hr_evaluation_evaluation"/>
+            <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id.parent_id.user_id','=',user.id )]</field>
+            <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+        </record>
+         </data>
 
 </openerp>

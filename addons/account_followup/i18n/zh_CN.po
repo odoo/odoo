@@ -4,22 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 07:04+0000\n"
+"PO-Revision-Date: 2010-09-29 10:27+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-21 04:42+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Date :"
-msgstr "打印日期:"
+msgstr "日期:"
 
 #. module: account_followup
 #: wizard_field:account_followup.followup.print.all,next,partner_ids:0
@@ -29,18 +29,18 @@ msgstr "业务伙伴"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Customer Ref :"
-msgstr "客户参考:"
+msgstr "关联客户:"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 #: model:ir.ui.menu,name:account_followup.menu_account_move_open_unreconcile_payable
 msgid "All payable entries"
-msgstr "所有应付款凭证"
+msgstr "所有应付款"
 
 #. module: account_followup
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+msgstr "在动作定义使用了无效的模式名称。"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -66,7 +66,7 @@ msgstr "借方合计"
 #: view:account_followup.followup.line:0
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(user_signature)s: User name"
-msgstr "%(user_signature)s:用户名 %(user_signature)"
+msgstr "%(user_signature)s：用户名"
 
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
@@ -97,7 +97,7 @@ msgstr "科目类型"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Ref"
-msgstr "参考"
+msgstr "关联单号"
 
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
@@ -191,7 +191,7 @@ msgstr "业务伙伴选择"
 #. module: account_followup
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构XML文件!"
+msgstr "无效XML视图结构!"
 
 #. module: account_followup
 #: field:account_followup.followup.line,start:0
@@ -211,7 +211,7 @@ msgstr "给业务伙伴一个提醒电子邮件"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Li."
-msgstr ""
+msgstr "Li."
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -242,7 +242,7 @@ msgstr ""
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,summary,end:0
@@ -269,7 +269,7 @@ msgstr "月末"
 #: view:account_followup.followup.line:0
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(company_name)s: User's Company name"
-msgstr "公司名称:%(company_currency)s"
+msgstr "用户公司名称:%(company_currency)s"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
@@ -291,7 +291,7 @@ msgstr "发送跟进"
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
-msgstr "跟进期限"
+msgstr "跟进等级"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -327,7 +327,7 @@ msgstr "跟进明细"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr "客户科目报表"
+msgstr "文档: 客户科目对帐单"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -337,7 +337,7 @@ msgstr "跟进明细"
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(company_currency)s: User's Company Currency"
-msgstr "当前公司:%(company_currency)s"
+msgstr "当前用户公司:%(company_currency)s"
 
 #. module: account_followup
 #: field:account_followup.stat,balance:0
@@ -379,6 +379,17 @@ msgid ""
 "Best Regards,\n"
 "\t\t\t"
 msgstr ""
+"\n"
+"尊敬的%(partner_name)s,\n"
+"\n"
+"我们不得不发这个通知, 你的帐户已经严重逾期\n"
+"请立即支付, 否则我们不得不停止你的帐户, 并停止一切业务.\n"
+"\n"
+"请采取措施确保在8天内支付.\n"
+"如有疑问请立即联系我们.\n"
+"                                                                             "
+"                 商祺\n"
+"\t\t\t"
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
@@ -413,7 +424,7 @@ msgstr "最后"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Maturity"
-msgstr "到期"
+msgstr "到期日期"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
@@ -459,7 +470,7 @@ msgstr "到期日期"
 #: view:account_followup.followup.line:0
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "Legend"
-msgstr "说明"
+msgstr "图表"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -508,9 +519,6 @@ msgstr "拖延天数"
 msgid "Print Follow Ups & Send Mails"
 msgstr "打印跟进&发送电子邮件"
 
-#~ msgid "Follow-up Message"
-#~ msgstr "跟进消息"
-
 #~ msgid ""
 #~ "\n"
 #~ "    Modules to automate letters for unpaid invoices, with multi-level "
@@ -551,11 +559,3 @@ msgstr "打印跟进&发送电子邮件"
 #~ "注意:如果你想要变更一业务伙伴/凭证的跟进级别,你可以在菜单:\n"
 #~ "          财务管理/报表/跟进/所有应收账款凭证\n"
 #~ "\n"
-
-#~ msgid ""
-#~ "Do not change message text, if you want to send email in partner language, "
-#~ "or configre from company"
-#~ msgstr "如果你想在发送的电子邮件中用业务伙伴的语言,请不要改变着消息的文本"
-
-#~ msgid "Send Email in Partner Language"
-#~ msgstr "发送到业务伙伴Email的语言"

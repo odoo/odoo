@@ -42,6 +42,17 @@
                 </field>
             </field>
         </record>
+        <record id="view_partner_iban_list" model="ir.ui.view">
+            <field name="name">res.partner.form.iban.inherit.list</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
+                	<field name="iban"/>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>

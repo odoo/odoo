@@ -1,20 +1,21 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* crm
-#
+# * crm
+# Giedrius Slavinskas <giedrius.slavinskas@gmail.com>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-01-05 05:59+0000\n"
-"PO-Revision-Date: 2009-12-12 12:18+0000\n"
-"Last-Translator: Donatas Stonys TeraxIT <donatelonow@hotmail.com>\n"
+"PO-Revision-Date: 2010-09-09 07:19+0000\n"
+"Last-Translator: Giedrius Slavinskas <giedrius.slavinskas@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+"Language: lt\n"
 
 #. module: crm
 #: field:crm.email.add.cc,name:0
@@ -70,7 +71,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,trg_state_to:0
 msgid "Button Pressed"
-msgstr "Mygtukas paspaustas"
+msgstr "Nuspaustas mygtukas"
 
 #. module: crm
 #: view:crm.case:0
@@ -95,7 +96,7 @@ msgstr ""
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act
 #: model:ir.ui.menu,name:crm.next_id_51
 msgid "Cases"
-msgstr "Klausimai"
+msgstr "Įvykiai"
 
 #. module: crm
 #: help:crm.segmentation,categ_id:0
@@ -103,6 +104,8 @@ msgid ""
 "The partner category that will be added to partners that match the "
 "segmentation criterions after computation."
 msgstr ""
+"Partnerio kategorija, kuri bus pridėta partneriams, kurie atitinka "
+"segmentavimo kriterijus po segmentavimo."
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_hr
@@ -144,7 +147,7 @@ msgstr ""
 #: code:addons/crm/wizard/crm_phonecall_wizard.py:0
 #, python-format
 msgid "Warning !"
-msgstr "Įspėjimas!"
+msgstr "Perspėjimas!"
 
 #. module: crm
 #: code:addons/crm/wizard/wizard_crm_new_send_email.py:0
@@ -220,7 +223,7 @@ msgstr "Partneris"
 #: field:crm.case.stage,section_id:0
 #: model:ir.model,name:crm.model_crm_case_section
 msgid "Case Section"
-msgstr "Klausimo sekcija"
+msgstr "Įvykio sekcija"
 
 #. module: crm
 #: view:crm.job:0
@@ -248,17 +251,17 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,act_mail_to_email:0
 msgid "Mail to these emails"
-msgstr "Rašyti šiems adresatams"
+msgstr "Išsiųsti el. paštą adresams"
 
 #. module: crm
 #: selection:crm.case.rule,trg_date_type:0
 msgid "None"
-msgstr "Niekas"
+msgstr "Nėra"
 
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Special Keywords to Be Used in The Body"
-msgstr "Specialūs raktažodžiai, skirti naudoti žinutėje"
+msgstr "Specialūs raktažodžiai naudojami tekste"
 
 #. module: crm
 #: view:crm.case:0
@@ -273,7 +276,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.history:0
 msgid "My Histories"
-msgstr "Mano istorijos"
+msgstr "Mano įvykių istorija"
 
 #. module: crm
 #: field:crm.segmentation,segmentation_line:0
@@ -299,7 +302,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.case.rule,trg_date_type:0
 msgid "Last Action Date"
-msgstr "Paskutinio veiksmo data"
+msgstr "Paskutinė veiksmo data"
 
 #. module: crm
 #: view:crm.job:0
@@ -341,7 +344,7 @@ msgstr "Datos"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Segmentation Test"
-msgstr "Segmentacijos testavimas"
+msgstr "Segmentacijos testas"
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadpartner0
@@ -368,7 +371,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,trg_date_range_type:0
 msgid "Delay type"
-msgstr "Delsos tipas"
+msgstr "Uždelsimo tipas"
 
 #. module: crm
 #: view:crm.claim:0
@@ -430,11 +433,13 @@ msgid ""
 "The rule use a AND operator. The case must match all non empty fields so "
 "that the rule execute the action described in the 'Actions' tab."
 msgstr ""
+"Taisyklė naudoja IR operatorių. Įvykis turi atitikti visus ne tuščius "
+"laukus, kad taisyklė atliktų veiksmą, apibūdintą 'Veiksmai' kortelėje."
 
 #. module: crm
 #: field:crm.case,history_line:0
 msgid "Communication"
-msgstr "Komunikacija"
+msgstr "Ryšiai"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -496,7 +501,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(partner)s = Partner name"
-msgstr "%(partner)s = Partnerio vardas"
+msgstr "%(partner)s = Partnerio pavadinimas"
 
 #. module: crm
 #: view:crm.case:0
@@ -511,13 +516,14 @@ msgstr "Veiksmo informacija"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_user_phone)s = Responsible phone"
-msgstr "%(case_user_phone)s = Atsakingo telefonas"
+msgstr "%(case_user_phone)s = Atsakingo asmens telefonas"
 
 #. module: crm
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
 
 #. module: crm
 #: constraint:ir.actions.act_window:0
@@ -532,14 +538,14 @@ msgstr "Sąlygos"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ0-act_open
 msgid "Open Cases"
-msgstr "Atviri klausimai"
+msgstr "Atviri įvykiai"
 
 #. module: crm
 #: field:crm.case.log,name:0
 #: view:crm.claim:0
 #: view:crm.job:0
 msgid "Status"
-msgstr "Būklė"
+msgstr "Būsena"
 
 #. module: crm
 #: wizard_view:crm.case.opportunity.partner_opportunity,init:0
@@ -574,7 +580,7 @@ msgstr ""
 #: view:crm.opportunity:0
 #, python-format
 msgid "Escalate"
-msgstr "Plėtoti"
+msgstr "Plėtojama"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ_meet
@@ -584,7 +590,7 @@ msgstr ""
 #. module: crm
 #: model:ir.module.module,shortdesc:crm.module_meta_information
 msgid "Customer & Supplier Relationship Management"
-msgstr "Klientų ir tiekėjų santykių valdymas"
+msgstr "Ryšių su klientais ir tiekėjais valdymas"
 
 #. module: crm
 #: view:crm.email.add.cc:0
@@ -603,7 +609,7 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation,som_interval_default:0
 msgid "Default (0=None)"
-msgstr "Numatytasys (0=Nieko)"
+msgstr "Numatytasis (0=Nieko)"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_job7
@@ -636,7 +642,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_id)s = Case ID"
-msgstr "%(case_id)s = Klausimo ID"
+msgstr "%(case_id)s = Įvykio ID"
 
 #. module: crm
 #: model:crm.case.category2,name:crm.category_oppor2
@@ -670,7 +676,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.categ:0
 msgid "Case Category"
-msgstr "Klausimo kategorija"
+msgstr "Įvykio kategorija"
 
 #. module: crm
 #: help:crm.segmentation,som_interval_default:0
@@ -678,6 +684,9 @@ msgid ""
 "Default state of mind for period preceeding the 'Max Interval' computation. "
 "This is the starting state of mind by default if the partner has no event."
 msgstr ""
+"Numatytoji nuotaika naudojama dėl periodo apdorojimo ir \"Maksimalus "
+"intervalas\" skaičiavimo. Tai pradinė būsena pagal nutylėjimą, jei partneris "
+"neturi įvykių."
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_claim3
@@ -692,6 +701,8 @@ msgstr ""
 msgid ""
 "You must define a responsible user for this case in order to use this action!"
 msgstr ""
+"Jūs turite nurodyti atsakingą naudotoją šiam įvykiui, norint įgyvendinti šį "
+"veiksmą!"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -701,7 +712,7 @@ msgstr ""
 #. module: crm
 #: view:res.partner.events:0
 msgid "Partner Events"
-msgstr "Partnerio renginiai"
+msgstr "Partnerio įvykiai"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_job4
@@ -773,7 +784,7 @@ msgstr ""
 #. module: crm
 #: view:crm.segmentation.line:0
 msgid "Partner Segmentation Lines"
-msgstr "Partnerio segmentacijos eilutės"
+msgstr "Partnerių segmentavimo eilutės"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_leads_all
@@ -789,7 +800,7 @@ msgstr ""
 #: view:crm.segmentation:0
 #: model:ir.model,name:crm.model_crm_segmentation
 msgid "Partner Segmentation"
-msgstr "Partnerio segmentacija"
+msgstr "Partnerio segmentavimas"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_job5
@@ -823,12 +834,14 @@ msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Open ERP about "
 "cases in this section"
 msgstr ""
+"El. pašto adresu įrašytu į \"Atsakyti (kam)\" siunčiami visi el. laiškai "
+"išsiųsti Open ERP apie įvykius iš šios sekcijos."
 
 #. module: crm
 #: view:crm.case.rule:0
 #: model:ir.model,name:crm.model_crm_case_rule
 msgid "Case Rule"
-msgstr "Klausimo taisyklė"
+msgstr "Įvykio taisyklė"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:0
@@ -881,12 +894,12 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation,som_interval:0
 msgid "Days per Periode"
-msgstr "Dienų per periodą"
+msgstr "Dienų skaičius periode"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_value:0
 msgid "Value"
-msgstr "Reikšmė"
+msgstr "Vertė"
 
 #. module: crm
 #: help:caldav.crm.export,init,name:0
@@ -906,11 +919,14 @@ msgid ""
 "criterions. If checked, remove the category from partners that doesn't match "
 "segmentation criterions"
 msgstr ""
+"Pažymėkite, jeigu kategorija yra limituojama partneriams, kurie atitinka "
+"segmentavimo kriterijus. Jeigu pažymėta, pašalina kategoriją iš partnerių, "
+"kurie neatitinka segmentacijos kriterijų."
 
 #. module: crm
 #: field:crm.segmentation,exclusif:0
 msgid "Exclusive"
-msgstr "Ypatingas"
+msgstr "Išorinis"
 
 #. module: crm
 #: help:crm.case,categ_id:0
@@ -922,7 +938,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,act_state:0
 msgid "Set state to"
-msgstr "Nustatyti būklę į"
+msgstr "Nustatyti būseną"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -943,12 +959,12 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Conditions on States"
-msgstr ""
+msgstr "Būsenų sąlygos"
 
 #. module: crm
 #: field:crm.case.rule,trg_date_type:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "Iškilusios problemos data"
 
 #. module: crm
 #: view:crm.case.history:0
@@ -982,12 +998,12 @@ msgstr "Partnerio kategorija"
 #. module: crm
 #: field:crm.segmentation,sales_purchase_active:0
 msgid "Use The Sales Purchase Rules"
-msgstr "Naudoti pardavimų/pirkimų taisykles"
+msgstr "Naudoti pirkimų/pardavimų taisykles"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
 msgid "Purchase Amount"
-msgstr "Pirkimo suma"
+msgstr "Pirkimų suma"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -1082,7 +1098,7 @@ msgstr "Planuojamos išlaidos"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_history
 msgid "Case history"
-msgstr "Klausimo istorija"
+msgstr "Įvykio istorija"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_job2
@@ -1097,7 +1113,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.categ,name:0
 msgid "Case Category Name"
-msgstr "Klausimo kategorijos pavadinimas"
+msgstr "Įvykio kategorijos pavadinimas"
 
 #. module: crm
 #: model:crm.case.category2,name:crm.category_claim2
@@ -1129,6 +1145,8 @@ msgstr ""
 msgid ""
 "Check this if you want the rule to send a reminder by email to the partner."
 msgstr ""
+"Pažymėkite, jeigu norite taisyklės, kuri siunčia partneriui priminimą el. "
+"paštu."
 
 #. module: crm
 #: code:addons/crm/crm_meeting.py:0
@@ -1143,7 +1161,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Conditions on Case Fields"
-msgstr ""
+msgstr "Įvykio laukų sąlygos"
 
 #. module: crm
 #: field:crm.case,date_action_next:0
@@ -1173,7 +1191,7 @@ msgstr ""
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
-msgstr "Partnerio segmentacijos"
+msgstr "Partnerio segmentavimai"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1183,7 +1201,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_categ
 msgid "Category of case"
-msgstr "Klausimo kategorija"
+msgstr "Kategorija pagal įvykį"
 
 #. module: crm
 #: field:crm.email.add.cc,subject:0
@@ -1227,6 +1245,27 @@ msgid ""
 "The CRM module has a email gateway for the synchronisation interface\n"
 "between mails and Open ERP."
 msgstr ""
+"Open ERP CRM\n"
+"sistema leidžia grupei žmonių protingai ir veiksmingai valdyti\n"
+"klientų galimybes, užduotis, klausimus, prašymus, klaidas, nusiskundimus ir "
+"t.t.\n"
+"Ji valdo pagrindines užduotis, tokias kaip bendravimo, identifikavimo,\n"
+"paskyrimo, sprendimo ir pranešimo.\n"
+"\n"
+"Open ERP užtikrina, kad visais atvejais yra sėkmingai susieti naudotojai, "
+"klientai ir\n"
+"tiekėjai. Jis gali automatiškai siųsti priminimus, pateikti užklausas, "
+"iššaukti\n"
+"specialius metodus ir daug kitų veiksmų, pagal Jūsų įmonės taisykles.\n"
+"\n"
+"Geriausia šios sistemos savybė, kad naudotojams nereikia daryti nieko\n"
+"ypatingo. Jie gali tiesiog siųskite laišką su prašymu. Open ERP \n"
+"padėkos už Jūsų pranešimą, automatiškai nusiųs jį\n"
+"atsakingiems asmenims ir užtikrins, kad ateityje analogiški pranešimai "
+"pasieks tinkamą\n"
+"vietą.\n"
+"\n"
+"CRM modulis turi el. pašto vartus ir sąsają tarp pašto ir Open ERP."
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadpartner0
@@ -1258,7 +1297,7 @@ msgstr ""
 #: field:crm.case.log,som:0
 #: selection:crm.segmentation.line,expr_name:0
 msgid "State of Mind"
-msgstr "Nusiteikimas"
+msgstr "Kliento reakcinė nuotaika"
 
 #. module: crm
 #: view:crm.claim:0
@@ -1276,7 +1315,7 @@ msgstr ""
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Compute Segmentation"
-msgstr "Apskaičiuoti segmentaciją"
+msgstr "Apskaičiuoti segmentą"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1289,7 +1328,7 @@ msgstr ""
 #: model:ir.ui.menu,name:crm.menu_crm_segmentation-act
 #: model:ir.ui.menu,name:crm.next_id_53
 msgid "Segmentations"
-msgstr "Segmentacijos"
+msgstr "Segmentacija"
 
 #. module: crm
 #: selection:crm.case.rule,trg_date_type:0
@@ -1317,7 +1356,7 @@ msgstr "%(partner_email)s = Partnerio el. paštas"
 #: view:crm.opportunity:0
 #: view:crm.phonecall:0
 msgid "Reset to Draft"
-msgstr "Grąžinti į juodraštį"
+msgstr "Atstatyti į juodraštį"
 
 #. module: crm
 #: model:ir.model,name:crm.model_report_crm_case_section_categ_categ2
@@ -1336,7 +1375,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.act_res_partner_canal_2_crm_case_opened
 #: model:ir.actions.act_window,name:crm.act_res_users_2_crm_case_opened
 msgid "Open cases"
-msgstr "Atviri klausimai"
+msgstr "Atviri įvykiai"
 
 #. module: crm
 #: field:crm.case,stage_id:0
@@ -1405,13 +1444,13 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation,partner_id:0
 msgid "Max Partner ID processed"
-msgstr "Apdorotas maks. partnerio ID"
+msgstr "Maksimalus galimas partnerio ID"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "You can not delete this case. You should better cancel it."
-msgstr "Negalite ištrinti šio klausimo. Geriau jį atšaukite."
+msgstr "Jūs negalite ištrinti šio įvykio. Jūs geriau atšaukite jį."
 
 #. module: crm
 #: wizard_button:caldav.crm.subscribe,init,open:0
@@ -1421,7 +1460,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,trg_priority_from:0
 msgid "Minimum Priority"
-msgstr "Minimalus prioritetas"
+msgstr "Mažiausias svarbumas"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_meeting_generic_wizard_act
@@ -1452,7 +1491,7 @@ msgstr ""
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "done"
-msgstr "atlikta"
+msgstr "užbaigtas"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1466,17 +1505,19 @@ msgid ""
 "Check if you want to use this tab as part of the segmentation rule. If not "
 "checked, the criteria beneath will be ignored"
 msgstr ""
+"Pažymėkite, jeigu norite naudoti šią kortelę kaip dalį segmentavimo "
+"taisyklės. Jeigu nepažymėta, žemiau esantys kriterijai bus nepaisomi."
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "open"
-msgstr "atidaryti"
+msgstr "atvertas"
 
 #. module: crm
 #: field:crm.case.rule,act_remind_attach:0
 msgid "Remind with attachment"
-msgstr "Priminti su priedu"
+msgstr "Priminti su prisegamais dokumentais"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_lead6
@@ -1487,12 +1528,12 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,act_remind_user:0
 msgid "Remind responsible"
-msgstr "Priminti atsakingam"
+msgstr "Priminti atsakingam darbuotojui"
 
 #. module: crm
 #: field:crm.segmentation,state:0
 msgid "Execution Status"
-msgstr "Atlikimo būklė"
+msgstr "Vykdymo būsena"
 
 #. module: crm
 #: help:crm.menu.config_wizard,jobs:0
@@ -1510,7 +1551,7 @@ msgstr ""
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "draft"
-msgstr "juodraštis"
+msgstr "sukurtas"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_claim5
@@ -1605,7 +1646,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case:0
 msgid "Send Reminder"
-msgstr "Siųsti priminimą"
+msgstr "Išsiųsti priminimą"
 
 #. module: crm
 #: view:crm.case:0
@@ -1645,13 +1686,13 @@ msgstr "Nuorodos"
 #: wizard_button:crm.send.mail,init,end:0
 #, python-format
 msgid "Cancel"
-msgstr "Atšaukti"
+msgstr "Atšaukta"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
-msgstr ""
+msgstr "Jūsų kompanijos adrese nerastas el. pašto ID!"
 
 #. module: crm
 #: view:crm.fundraising:0
@@ -1671,7 +1712,7 @@ msgstr ""
 #. module: crm
 #: view:res.partner.events:0
 msgid "General Description"
-msgstr "Bendras aprašymas"
+msgstr "Bendrasis aprašymas"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1712,7 +1753,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,act_priority:0
 msgid "Set priority to"
-msgstr "Nustatyti svarbą į"
+msgstr "Nustatyti svarbumą"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_oppor2
@@ -1727,7 +1768,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,act_mail_body:0
 msgid "Mail body"
-msgstr "Laiško turinys"
+msgstr "El. laiško tekstas"
 
 #. module: crm
 #: help:crm.menu.config_wizard,meeting:0
@@ -1737,7 +1778,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
 msgid "Sale Amount"
-msgstr "Pardavimo suma"
+msgstr "Pardavimų suma"
 
 #. module: crm
 #: view:crm.case:0
@@ -1760,7 +1801,7 @@ msgstr "="
 #: field:crm.menu.config_wizard,name:0
 #: field:crm.segmentation,name:0
 msgid "Name"
-msgstr "Vardas"
+msgstr "Pavadinimas"
 
 #. module: crm
 #: view:crm.opportunity:0
@@ -1794,7 +1835,7 @@ msgstr ""
 #. module: crm
 #: help:crm.case.section,allow_unlink:0
 msgid "Allows to delete non draft cases"
-msgstr "Leidžia ištrinti nejuodraštinius klausimus"
+msgstr "Leidžia ištrinti ne juodraštinius įvykius"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_oppor7
@@ -1823,7 +1864,7 @@ msgstr "Veiksmai"
 #: selection:crm.case.rule,trg_priority_from:0
 #: selection:crm.case.rule,trg_priority_to:0
 msgid "High"
-msgstr "Aukštas"
+msgstr "Didelis"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_partner0
@@ -1848,7 +1889,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Delay After Trigger Date:"
-msgstr "Delsa po starto datos:"
+msgstr "Atidėti po įvykio datos:"
 
 #. module: crm
 #: model:crm.case.category2,name:crm.category_lead5
@@ -1863,7 +1904,7 @@ msgstr ""
 #. module: crm
 #: view:crm.segmentation:0
 msgid "State of Mind Computation"
-msgstr "Nusiteikimo įvertinimas"
+msgstr "Nuotaikos įvertinimas"
 
 #. module: crm
 #: code:addons/crm/wizard/wizard_crm_new_send_email.py:0
@@ -1932,7 +1973,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm
 msgid "CRM & SRM"
-msgstr "CRM & SRM"
+msgstr "CRM ir SRM"
 
 #. module: crm
 #: help:crm.menu.config_wizard,document_ics:0
@@ -1960,7 +2001,7 @@ msgstr "Priminti partneriui"
 #: selection:crm.case.rule,trg_priority_from:0
 #: selection:crm.case.rule,trg_priority_to:0
 msgid "Highest"
-msgstr "Aukščiausias"
+msgstr "Didžiausias"
 
 #. module: crm
 #: view:crm.job:0
@@ -1985,7 +2026,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,reply_to:0
 msgid "Reply-To"
-msgstr "Atsakyti-Kam"
+msgstr "Atsakyti (kam)"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_action_report_crm_case_lead_categ
@@ -2011,7 +2052,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,trg_priority_to:0
 msgid "Maximim Priority"
-msgstr "Maks. prioritetas"
+msgstr "Didžiausias svarbumas"
 
 #. module: crm
 #: selection:crm.meeting,transparent:0
@@ -2070,7 +2111,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,trg_state_from:0
 msgid "Case State"
-msgstr "Klausimo būklė"
+msgstr "Įvykio būsena"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -2086,7 +2127,7 @@ msgstr "Siųsti"
 #: view:crm.lead:0
 #: view:crm.opportunity:0
 msgid "Priority"
-msgstr "Prioritetas"
+msgstr "Svarbumas"
 
 #. module: crm
 #: view:crm.opportunity:0
@@ -2121,7 +2162,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.section:0
 msgid "Case section"
-msgstr "Klausimo sekcija"
+msgstr "Įvykio sekcija"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_meeting0
@@ -2142,7 +2183,7 @@ msgstr "Klaida!"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Fields to Change"
-msgstr "Laukai keitimui"
+msgstr "Laukų nustatymas"
 
 #. module: crm
 #: model:crm.case.category2,name:crm.category_lead1
@@ -2152,12 +2193,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_case_history-act_main
 msgid "Cases Histories"
-msgstr "Klausimų istorijos"
+msgstr "Įvykių istorija"
 
 #. module: crm
 #: field:crm.case,create_date:0
 msgid "Created"
-msgstr "Sukurta"
+msgstr "Sukurtas"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2167,7 +2208,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
 msgid "Segmentation line"
-msgstr "Segmentacijos eilutė"
+msgstr "Segmentavimo eilutė"
 
 #. module: crm
 #: wizard_field:crm.job.reschedule_phone_call,init,deadline:0
@@ -2244,7 +2285,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_date)s = Creation date"
-msgstr ""
+msgstr "%(case_date)s = Sukūrimo data"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_phone3
@@ -2255,7 +2296,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,act_mail_to_user:0
 msgid "Mail to responsible"
-msgstr "Rašyti atsakingam"
+msgstr "Siųsti atsakingam asmeniui"
 
 #. module: crm
 #: view:crm.job:0
@@ -2280,7 +2321,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Template of Email to Send"
-msgstr "Pašto šablonas siuntimui"
+msgstr "El. pašto šablonas"
 
 #. module: crm
 #: field:report.crm.case.section.categ.categ2,month:0
@@ -2332,7 +2373,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.history,log_id:0
 msgid "Log"
-msgstr "Log'ai"
+msgstr "Įvykių istorija"
 
 #. module: crm
 #: help:crm.menu.config_wizard,fund:0
@@ -2358,7 +2399,7 @@ msgstr "Stebėtojų el. paštai"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Note"
-msgstr "Pastaba"
+msgstr "Užrašai"
 
 #. module: crm
 #: field:report.crm.case.section.categ.categ2,delay_close:0
@@ -2374,7 +2415,7 @@ msgstr ""
 #: selection:crm.case.rule,trg_priority_from:0
 #: selection:crm.case.rule,trg_priority_to:0
 msgid "Low"
-msgstr "Žemas"
+msgstr "Mažas"
 
 #. module: crm
 #: field:crm.case,date_closed:0
@@ -2387,7 +2428,7 @@ msgstr "Žemas"
 #: selection:report.crm.case.section.categ2,state:0
 #: selection:report.crm.case.section.stage,state:0
 msgid "Closed"
-msgstr "Uždaryta"
+msgstr "Užbaigtas"
 
 #. module: crm
 #: view:crm.job:0
@@ -2398,7 +2439,7 @@ msgstr ""
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "cancel"
-msgstr "atšaukti"
+msgstr "atšauktas"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_meet2
@@ -2485,7 +2526,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.history:0
 msgid "Case History"
-msgstr "Klausimo istorija"
+msgstr "Įvykių istorija"
 
 #. module: crm
 #: field:crm.case,partner_phone:0
@@ -2502,7 +2543,7 @@ msgstr ""
 #: field:crm.case.rule,active:0
 #: field:crm.case.section,active:0
 msgid "Active"
-msgstr "Aktyvuota"
+msgstr "Aktyvus"
 
 #. module: crm
 #: help:crm.case.rule,act_remind_attach:0
@@ -2510,11 +2551,13 @@ msgid ""
 "Check this if you want that all documents attached to the case be attached "
 "to the reminder email sent."
 msgstr ""
+"Pažymėkite, jei jūs norite, kad visi prie įvykio prisegti dokumentai, būtų "
+"prisegti prie priminimo el. laiško."
 
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
 msgid "Mandatory Expression"
-msgstr "Privalomoji išraiška"
+msgstr "Privaloma išraiška"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_operator:0
@@ -2584,7 +2627,7 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation,som_interval_decrease:0
 msgid "Decrease (0>1)"
-msgstr "Mažėjimas (0>1)"
+msgstr "Sumažėjimas (0>1)"
 
 #. module: crm
 #: model:ir.actions.wizard,name:crm.wizard_case_history_event
@@ -2605,7 +2648,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_user_email)s = Responsible email"
-msgstr "%(case_user_email)s = Atsakingo paštas"
+msgstr "%(case_user_email)s = Atsakingo asmens el. paštas"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_presale
@@ -2616,7 +2659,7 @@ msgstr ""
 #: view:crm.case:0
 #: view:crm.phonecall:0
 msgid "General"
-msgstr "Bendra"
+msgstr "Bendras"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
@@ -2647,7 +2690,7 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation,som_interval_max:0
 msgid "Max Interval"
-msgstr "Maks. intervalas"
+msgstr "Maksimalus intervalas"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
@@ -2673,7 +2716,7 @@ msgstr ""
 #: selection:report.crm.case.section.stage,state:0
 #, python-format
 msgid "Open"
-msgstr "Atidaryta"
+msgstr "Atverta"
 
 #. module: crm
 #: selection:crm.meeting,class:0
@@ -2748,8 +2791,8 @@ msgid ""
 "You can not escalate this case.\n"
 "You are already at the top level."
 msgstr ""
-"Nebegalima plėtoti šio klausimo.\n"
-"Jis jau aukščiausiame lygyje."
+"Jūs negalite plėtoti šio įvykio.\n"
+"Jūs esate jau aukščiausiame lygmenyje."
 
 #. module: crm
 #: view:crm.lead:0
@@ -2764,7 +2807,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,trg_max_history:0
 msgid "Maximum Communication History"
-msgstr "Maximali komunikavimo istorija"
+msgstr "Maksimali komunikavimo istorija"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2838,6 +2881,8 @@ msgid ""
 "The computation is made on all events that occured during this interval, the "
 "past X periods."
 msgstr ""
+"Skaičiavimas atliekamas su visais įvykiais, kurie įvyko per šį intervalą, "
+"praėjus X periodų."
 
 #. module: crm
 #: field:crm.case,case_id:0
@@ -2857,7 +2902,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.log,user_id:0
 msgid "User Responsible"
-msgstr "Atsakingas naudotojas"
+msgstr "Atsakingas darbuotojas"
 
 #. module: crm
 #: code:addons/crm/wizard/wizard_crm_new_send_email.py:0
@@ -2873,7 +2918,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case,email_last:0
 msgid "Latest E-Mail"
-msgstr "Naujausi laiškai"
+msgstr "Vėliausiasis el. paštas"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -2893,7 +2938,7 @@ msgstr "ID"
 #. module: crm
 #: field:crm.case,log_ids:0
 msgid "Logs History"
-msgstr "Log'ų istorija"
+msgstr "Įvykių istorija"
 
 #. module: crm
 #: wizard_field:crm.lead.opportunity_set,opportunity,name:0
@@ -2914,7 +2959,7 @@ msgstr "Tęsti procesą"
 #. module: crm
 #: view:crm.case.history:0
 msgid "Case Description"
-msgstr "Klausimo aprašymas"
+msgstr "Įvykio aprašymas"
 
 #. module: crm
 #: wizard_field:crm.job.reschedule_phone_call,init,user_id:0
@@ -2950,7 +2995,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.menu,name:crm.next_id_52
 msgid "All Cases"
-msgstr "Visi klausimai"
+msgstr "Visi įvykiai"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_wizard.py:0
@@ -3016,12 +3061,12 @@ msgstr ""
 #. module: crm
 #: selection:crm.segmentation,state:0
 msgid "Running"
-msgstr "Einamasis"
+msgstr "Vykdomas"
 
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_user)s = Responsible name"
-msgstr "%(case_user)s = Atsakingo vardas"
+msgstr "%(case_user)s = Atsakingas asmuo"
 
 #. module: crm
 #: wizard_field:crm.job.reschedule_phone_call,init,note:0
@@ -3135,12 +3180,12 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation.line,expr_operator:0
 msgid "Operator"
-msgstr "Operatorius"
+msgstr "Valdiklis"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_log
 msgid "Case Communication History"
-msgstr "Klausimų komunikacijos istorija"
+msgstr "Įvykio komunikavimo istorija"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_action_report_crm_case_oppor_categ
@@ -3150,7 +3195,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_subject)s = Case subject"
-msgstr "%(case_subject)s = Klausimo tema"
+msgstr "%(case_subject)s = Įvykio tema"
 
 #. module: crm
 #: field:crm.case,section_id:0
@@ -3173,7 +3218,7 @@ msgstr "Sekcija"
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
 msgid "Optional Expression"
-msgstr "Būtina išraiška"
+msgstr "Pasirenkama išraiška"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_fund1
@@ -3208,7 +3253,7 @@ msgstr "El. paštas"
 #: field:crm.case,canal_id:0
 #: field:crm.case.log,canal_id:0
 msgid "Channel"
-msgstr "Kanalas"
+msgstr "Šaltinis"
 
 #. module: crm
 #: help:crm.case.rule,act_mail_to_email:0
@@ -3223,7 +3268,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "E-Mail Reminders (includes the content of the case)"
-msgstr "El. pašto priminimai (įtraukia klausimo turinį)"
+msgstr "El. pašto priminimai (įtraukia įvykio turinį)"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_action_report_crm_case_lead_stage
@@ -3269,7 +3314,7 @@ msgstr ""
 #: selection:report.crm.case.section.stage,state:0
 #, python-format
 msgid "Pending"
-msgstr "Laukia"
+msgstr "Laukiama"
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadopportunity0
@@ -3351,7 +3396,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,act_user_id:0
 msgid "Set responsible to"
-msgstr "Nustatyti atsakingą į"
+msgstr "Nustatyti atsakingą asmenį"
 
 #. module: crm
 #: view:crm.job:0
@@ -3384,12 +3429,12 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Condition on Communication History"
-msgstr "Būklės ir komunikavimo istorija"
+msgstr "Komunikavimo istorijos sąlygos"
 
 #. module: crm
 #: field:crm.case.rule,act_mail_to_partner:0
 msgid "Mail to partner"
-msgstr "Laiškas partneriui"
+msgstr "Išsiųsti el. paštą partneriui"
 
 #. module: crm
 #: view:crm.fundraising:0
@@ -3399,7 +3444,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,act_method:0
 msgid "Call Object Method"
-msgstr "Objekto iškvietimo metodas"
+msgstr "Susisiekimo metodas"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_fund_all1
@@ -3431,7 +3476,7 @@ msgstr "Nuoroda 2"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Sales Purchase"
-msgstr ""
+msgstr "Pardavimai Pirkimai"
 
 #. module: crm
 #: view:crm.job:0
@@ -3467,7 +3512,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.segmentation,state:0
 msgid "Not Running"
-msgstr "Ne einamasis"
+msgstr "Nevykdomas"
 
 #. module: crm
 #: wizard_field:crm.case.opportunity.partner_opportunity,init,probability:0
@@ -3494,7 +3539,7 @@ msgstr "Juodraštis"
 #. module: crm
 #: field:crm.case.rule,trg_date_range:0
 msgid "Delay after trigger date"
-msgstr "Delsa po starto datos"
+msgstr "Atidėti po datos"
 
 #. module: crm
 #: view:crm.lead:0
@@ -3504,7 +3549,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,act_section_id:0
 msgid "Set section to"
-msgstr "Nustatyti sekciją į"
+msgstr "Nustatyti sekciją"
 
 #. module: crm
 #: selection:crm.case,priority:0
@@ -3512,7 +3557,7 @@ msgstr "Nustatyti sekciją į"
 #: selection:crm.case.rule,trg_priority_from:0
 #: selection:crm.case.rule,trg_priority_to:0
 msgid "Normal"
-msgstr "Normalus"
+msgstr "Vidutinis"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -3520,7 +3565,7 @@ msgstr "Normalus"
 #: code:addons/crm/wizard/wizard_crm_send_email.py:0
 #, python-format
 msgid "You must put a Partner eMail to use this action!"
-msgstr "You must put a Partner eMail to use this action!"
+msgstr "Jūs turite nurodyti partnerio el. paštą norint naudoti šį veiksmą!"
 
 #. module: crm
 #: wizard_view:crm.job.partner_create,init:0
@@ -3574,7 +3619,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,parent_id:0
 msgid "Parent Section"
-msgstr "Pirminė sekcija"
+msgstr "Tėvinė sekcija"
 
 #. module: crm
 #: wizard_view:crm.job.reschedule_phone_call,init:0
@@ -3592,7 +3637,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Can not send mail with empty body,you should have description in the body"
-msgstr ""
+msgstr "Negalima siųsti el. pašto be turinio"
 
 #. module: crm
 #: selection:report.crm.case.section.categ.categ2,month:0
@@ -3610,7 +3655,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,child_ids:0
 msgid "Child Sections"
-msgstr "Šalutinės sesijos"
+msgstr "Vaikinės sekcijos"
 
 #. module: crm
 #: view:crm.case:0
@@ -3639,7 +3684,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case,partner_address_id:0
 msgid "Partner Contact"
-msgstr "Partnerio kontaktas"
+msgstr "Partnerio adresas"
 
 #. module: crm
 #: model:crm.case.category2,name:crm.category_meet1
@@ -3673,7 +3718,7 @@ msgstr "Atsakingas naudotojas"
 #: view:crm.case:0
 #, python-format
 msgid "Close"
-msgstr "Uždaryta"
+msgstr "Užverta"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_helpdesk_assign_wizard
@@ -3683,7 +3728,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Conditions on Case Partner"
-msgstr ""
+msgstr "Partnerio sąlygos"
 
 #. module: crm
 #: field:crm.case.section,code:0
@@ -3758,6 +3803,8 @@ msgstr ""
 msgid ""
 "Check this if you want the rule to send a reminder by email to the user."
 msgstr ""
+"Pažymėkite, jei jūs norite, kad taisyklė nusiųstu priminimą elektroniniu "
+"paštu naudotojui."
 
 #. module: crm
 #: view:crm.case:0
@@ -3796,7 +3843,7 @@ msgstr ""
 #: model:res.request.link,name:crm.req_link_case
 #, python-format
 msgid "Case"
-msgstr "Klausimas"
+msgstr "Įvykis"
 
 #. module: crm
 #: selection:crm.case,priority:0
@@ -3804,7 +3851,7 @@ msgstr "Klausimas"
 #: selection:crm.case.rule,trg_priority_from:0
 #: selection:crm.case.rule,trg_priority_to:0
 msgid "Lowest"
-msgstr "Žemiausias"
+msgstr "Mažiausias"
 
 #. module: crm
 #: selection:report.crm.case.section.categ.categ2,month:0
@@ -3824,7 +3871,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Conditions on Priority Range"
-msgstr ""
+msgstr "Svarbumo sąlygos"
 
 #. module: crm
 #: help:crm.segmentation,som_interval_decrease:0
@@ -3832,6 +3879,8 @@ msgid ""
 "If the partner has not purchased (or buied) during a period, decrease the "
 "state of mind by this factor. It's a multiplication"
 msgstr ""
+"Jeigu partneris nepirko (nepardavė) per periodą, nuotaika sumažinama pagal "
+"šį rodiklį. Mažinant atliekama daugyba."
 
 #. module: crm
 #: wizard_view:crm.new.send.mail,init:0
@@ -3893,12 +3942,12 @@ msgstr ""
 #. module: crm
 #: view:crm.case.log:0
 msgid "Case logs"
-msgstr "Klausimų log'ai"
+msgstr "Įvykių žurnalas"
 
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Conditions on Timing"
-msgstr ""
+msgstr "Laiko sąlygos"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_helpdesk
@@ -3931,13 +3980,13 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation.line,expr_name:0
 msgid "Control Variable"
-msgstr "Kontroliuoti kintamąjį"
+msgstr "Kontrolinis kintamasis"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
 #: model:ir.ui.menu,name:crm.menu_crm_case_section_act_tree
 msgid "Cases by section"
-msgstr "Klausimai pagal sekciją"
+msgstr "Įvykiai pagal sekciją"
 
 #. module: crm
 #: view:crm.job:0
@@ -3954,8 +4003,147 @@ msgstr ""
 msgid "Newsletter"
 msgstr ""
 
+#~ msgid "Add Last Mail for Replying"
+#~ msgstr "Pridėti atsakymui paskutinį laišką"
+
+#~ msgid "Extra Info"
+#~ msgstr "Papildoma informacija"
+
+#~ msgid "All Draft "
+#~ msgstr "Visi juodraščiai "
+
+#~ msgid "My Draft "
+#~ msgstr "Mano juodraščiai "
+
+#~ msgid "crm.case.section.open"
+#~ msgstr "crm.case.section.open"
+
+#~ msgid "New Form"
+#~ msgstr "Nauja forma"
+
+#~ msgid "Tree View"
+#~ msgstr "Medžio rodinys"
+
 #~ msgid "My "
 #~ msgstr "Mano "
 
 #~ msgid "New "
 #~ msgstr "Naujas "
+
+#~ msgid "All Late "
+#~ msgstr "Visi vėluojantys "
+
+#~ msgid "My Late "
+#~ msgstr "Mano vėluojantys "
+
+#~ msgid "My Pending "
+#~ msgstr "Mano laukiantys "
+
+#~ msgid "New With Calendar"
+#~ msgstr "Naujas su kalendoriumi"
+
+#~ msgid "List With Calendar"
+#~ msgstr "Sąrašas su kalendoriumi"
+
+#~ msgid "All Unassigned "
+#~ msgstr "Visi nepriskirti "
+
+#~ msgid "Don't Create"
+#~ msgstr "Nesukurti"
+
+#~ msgid "Created Menus"
+#~ msgstr "Sukurti meniu"
+
+#~ msgid "All Canceled "
+#~ msgstr "Visi atšaukti "
+
+#~ msgid "All "
+#~ msgstr "Visi "
+
+#~ msgid "List"
+#~ msgstr "Sąrašas"
+
+#~ msgid "Update The Proposed Menus To Be Created"
+#~ msgstr "Pasirinkite meniu, kuriuos norite sukurti"
+
+#~ msgid "Base Information"
+#~ msgstr "Pagrindinė informacija"
+
+#~ msgid "All Open "
+#~ msgstr "Visi atviri "
+
+#~ msgid "Create menus for a case section"
+#~ msgstr "Sukurti įvykio sekcijos meniu"
+
+#~ msgid "Create menu Entries"
+#~ msgstr "Sukurti meniu įrašams"
+
+#~ msgid "All Unclosed and Unassigned "
+#~ msgstr "Visi neužverti ir nepriskirti "
+
+#~ msgid "My Open "
+#~ msgstr "Mano atviri "
+
+#~ msgid "Select Views (empty for default)"
+#~ msgstr "Pasirinkite rodinius (tuščias pagal nutylėjimą)"
+
+#~ msgid "Mail to watchers (Cc)"
+#~ msgstr "Išsiųsti stebėtojams (Cc)"
+
+#~ msgid "My cases"
+#~ msgstr "Mano įvykiai"
+
+#~ msgid "My Open Cases"
+#~ msgstr "Mano atviri įvykiai"
+
+#~ msgid "My Unclosed "
+#~ msgstr "Mano neužverti "
+
+#~ msgid ""
+#~ "These people will receive a copy of the futur communication between partner "
+#~ "and users by email"
+#~ msgstr ""
+#~ "Šie žmonės gaus el. laiško kopiją būsimos komunikacijos tarp partnerio ir "
+#~ "naudotojų"
+
+#~ msgid "Calendar View"
+#~ msgstr "Kalendoriaus rodinys"
+
+#~ msgid "Parent Menu"
+#~ msgstr "Tėvinis meniu"
+
+#~ msgid "Base Menu Name"
+#~ msgstr "Pagrindinio meniu pavadinimas"
+
+#~ msgid "All Unclosed "
+#~ msgstr "Visi neužverti "
+
+#~ msgid "Complete this if you use the mail gateway."
+#~ msgstr "Užpildykite, jeigu naudosite el. paštą"
+
+#~ msgid "Create Menus For Cases"
+#~ msgstr "Sukurti meniu įvykiams"
+
+#~ msgid "All Pending "
+#~ msgstr "Visi laukiantys "
+
+#~ msgid "Send Partner & Historize"
+#~ msgstr "Išsiųsti partneriui ir archyvuoti"
+
+#~ msgid "All Histories"
+#~ msgstr "Visų įvykių istorija"
+
+#~ msgid "My Canceled "
+#~ msgstr "Mano atšaukti "
+
+#~ msgid "Form View"
+#~ msgstr "Formos rodinys"
+
+#~ msgid "this wizard will create all sub-menus, within the selected menu."
+#~ msgstr "Šis vedlys sukurs visus vaikinius meniu, pažymėto meniu viduje."
+
+#~ msgid ""
+#~ "You may want to create a new parent menu to put all the created menus in."
+#~ msgstr ""
+#~ "Jūs galite norėti sukurti naują tėvinį meniu, kad įdėtumėte visus sukurtus "
+#~ "meniu."

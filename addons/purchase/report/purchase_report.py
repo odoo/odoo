@@ -26,71 +26,113 @@
 from osv import fields,osv
 import tools
 
-class report_purchase_order(osv.osv):
-    _name = "report.purchase.order"
+class purchase_report(osv.osv):
+    _name = "purchase.report"
     _description = "Purchases Orders"
     _auto = False
     _columns = {
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Order Date', readonly=True, help="Date on which this document has been created"),
         'name': fields.char('Year',size=64,required=False, readonly=True),
-        'state': fields.selection([
-            ('draft','Quotation'),
-            ('waiting_date','Waiting Schedule'),
-            ('manual','Manual in progress'),
-            ('progress','In progress'),
-            ('shipping_except','Shipping Exception'),
-            ('invoice_except','Invoice Exception'),
-            ('done','Done'),
-            ('cancel','Cancel')
-        ], 'Order State', readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
+        'state': fields.selection([('draft', 'Request for Quotation'),
+                                    ('wait', 'Waiting'),
+                                     ('confirmed', 'Waiting Supplier Ack'),
+                                      ('approved', 'Approved'),
+                                      ('except_picking', 'Shipping Exception'),
+                                      ('except_invoice', 'Invoice Exception'),
+                                      ('done', 'Done'),
+                                      ('cancel', 'Cancelled')],'Order State', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
-        'category_id': fields.many2one('product.category', 'Categories', readonly=True),
-        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
+        'location_id': fields.many2one('stock.location', 'Destination', readonly=True),
+        'partner_id':fields.many2one('res.partner', 'Supplier', readonly=True),
+        'partner_address_id':fields.many2one('res.partner.address', 'Address Contact Name', readonly=True),
+        'dest_address_id':fields.many2one('res.partner.address', 'Dest. Address Contact Name',readonly=True),
+        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', readonly=True),
+        'date_approve':fields.date('Date Approved', readonly=True),
+        'expected_date':fields.date('Expected Date', readonly=True),
+        'validator' : fields.many2one('res.users', 'Validated By', readonly=True),
+        'product_uom' : fields.many2one('product.uom', 'Product UoM', required=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
-        'quantity': fields.float('# of Products', readonly=True),
+        'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
+        'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
+        'quantity': fields.float('Quantity', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
-        'price_average': fields.float('Average Price', readonly=True),
-        'count': fields.integer('# of Lines', readonly=True),
+        'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
+        'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
+        'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
+        'nbr': fields.integer('# of Lines', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'category_id': fields.many2one('product.category', 'Category', readonly=True)
 
     }
     _order = 'name desc,price_total desc'
     def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'report_purchase_order')
+        tools.sql.drop_view_if_exists(cr, 'purchase_report')
         cr.execute("""
-            create or replace view report_purchase_order as (
+            create or replace view purchase_report as (
                 select
                     min(l.id) as id,
                     s.date_order as date,
                     to_char(s.date_order, 'YYYY') as name,
                     to_char(s.date_order, 'MM') as month,
+                    to_char(s.date_order, 'YYYY-MM-DD') as day,
                     s.state,
+                    s.date_approve,
+                    date_trunc('day',s.minimum_planned_date) as expected_date,
+                    s.partner_address_id,
+                    s.dest_address_id,
+                    s.pricelist_id,
+                    s.validator,
                     s.warehouse_id as warehouse_id,
                     s.partner_id as partner_id,
                     s.create_uid as user_id,
                     s.company_id as company_id,
                     l.product_id,
                     t.categ_id as category_id,
+                    l.product_uom as product_uom,
+                    s.location_id as location_id,
                     sum(l.product_qty*u.factor) as quantity,
-                    count(*),
-                    sum(l.product_qty*l.price_unit) as price_total,
+                    extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
+                    extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
+                    count(*) as nbr,
+                    (l.price_unit*l.product_qty*u.factor)::decimal(16,2) as price_total,
+                    avg(100.0 * (l.price_unit*l.product_qty*u.factor) / (t.standard_price*l.product_qty*u.factor))::decimal(16,2) as negociation,
+                    sum(t.standard_price*l.product_qty*u.factor)::decimal(16,2) as price_standard,
                     (sum(l.product_qty*l.price_unit)/sum(l.product_qty*u.factor))::decimal(16,2) as price_average
                 from purchase_order s
                     left join purchase_order_line l on (s.id=l.order_id)
-                    left join product_product p on (p.id=l.product_id)
-                    left join product_template t on (t.id=p.product_tmpl_id)
+                        left join product_product p on (l.product_id=p.id)
+                            left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
                 where l.product_id is not null
-                group by s.company_id,s.create_uid,s.partner_id,
-                         t.categ_id,l.product_id,s.date_order,
-                         to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),s.state,
-                         s.warehouse_id
+                group by
+                    s.company_id,
+                    s.create_uid,
+                    s.partner_id,
+                    l.product_qty,
+                    u.factor,
+                    s.location_id,
+                    l.price_unit,
+                    s.date_approve,
+                    l.date_planned,
+                    l.product_uom,
+                    date_trunc('day',s.minimum_planned_date),
+                    s.partner_address_id,
+                    s.pricelist_id,
+                    s.validator,
+                    s.dest_address_id,
+                    l.product_id,
+                    t.categ_id,
+                    s.date_order,
+                    to_char(s.date_order, 'YYYY'),
+                    to_char(s.date_order, 'MM'),
+                    to_char(s.date_order, 'YYYY-MM-DD'),
+                    s.state,
+                    s.warehouse_id
             )
         """)
-report_purchase_order()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+purchase_report()
 

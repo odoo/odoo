@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,62 +15,39 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard
-import pooler
-import netsvc
+from osv import fields, osv
 
-class invoice_directly(wizard.interface):
-    def _test_action(obj, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        pick = pool.get('stock.picking').browse(cr, uid, data['id'], context=context)
-        if not pick.invoice_state == '2binvoiced':
-            return 'end_final'
-        return 'invoice'
+class invoice_directly(osv.osv_memory):
+    _inherit = 'stock.partial.picking'
 
-    def _open_action(obj, cr, uid, data, context):
-        res = {
-            'name': 'stock.invoice_onshipping',
-            'type': 'ir.actions.wizard',
-            'wiz_name': 'stock.invoice_onshipping'
-        }
-        if data['form'].get('new_picking', False):
-            res['context'] = "{'new_picking':%d}" % (data['form']['new_picking'],)
-        return res
+    def do_partial(self, cr, uid, ids, context):
+        """ Makes partial moves and pickings done and 
+            launches Create invoice wizard if invoice state is To be Invoiced.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param context: A standard dictionary
+        @return:
+        """
+        result = super(invoice_directly, self).do_partial(cr, uid, ids, context)
+        pick_obj = self.pool.get('stock.picking')
+        picking_ids = context.get('active_ids', False)
+        pick = pick_obj.browse(cr, uid, picking_ids, context)[0]
+        if pick.invoice_state == '2binvoiced':
+            return {
+                'name': 'Create Invoice',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.invoice.onshipping',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+            }
+        return {}
 
-    end_final = {
-        'actions':[],
-        'result': {
-            'type': 'state',
-            'state': 'end',
-        }
-    }
-
-    choice = {
-        'actions':[],
-        'result': {
-            'type': 'choice',
-            'next_state': _test_action,
-        }
-    }
-
-    call_invoice = {
-        'actions':[],
-        'result': {
-            'type': 'action',
-            'action': _open_action,
-            'state': 'end'
-        }
-    }
-    def __init__(self, *args):
-        service = netsvc.LocalService("wizard.stock.partial_picking")
-        service._service.states['split']['result']['state'] = 'test_choice'
-        service._service.states['invoice'] = self.call_invoice
-        service._service.states['test_choice'] = self.choice
-        service._service.states['end_final'] = self.end_final
-invoice_directly('stock.picking.invoice.directly')
+invoice_directly()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

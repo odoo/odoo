@@ -1,75 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-        
-        <record id="req_link_case" model="res.request.link">
-            <field name="name">Case</field>
-            <field name="object">crm.case</field>
-        </record>
-        
-        <record id="event_type_case_create" model="res.partner.event.type">
-            <field name="name">CRM: Create Case</field>
-            <field name="key">crm_case_draft</field>
-        </record>
-        
-        <record id="event_type_case_open" model="res.partner.event.type">
-            <field name="name">CRM: Open Case</field>
-            <field name="key">crm_case_open</field>
-        </record>
-        
-        <record id="event_type_case_pending" model="res.partner.event.type">
-            <field name="name">CRM: Pending Case</field>
-            <field name="key">crm_case_pending</field>
-        </record>
-        
-        <record id="event_type_case_cancel" model="res.partner.event.type">
-            <field name="name">CRM: Cancel Case</field>
-            <field name="key">crm_case_cancel</field>
-        </record>
-        
-        <record id="event_type_case_close" model="res.partner.event.type">
-            <field name="name">CRM: Close Case</field>
-            <field name="key">crm_case_done</field>
-        </record>
-        
-    </data>
-    
     <data noupdate="1">
-		<record model="crm.case.section" id="section_sales_department">
-			<field name="name">Sales Department</field>
-			<field name="code">Sales</field>
-		</record>
-        
-        <record id="event_type_case_create" model="res.partner.event.type">
-            <field eval="False" name="active"/>
+        <record model="crm.case.section" id="section_sales_department">
+            <field name="name">Sales Department</field>
+            <field name="code">Sales</field>
         </record>
-        
-        <record id="event_type_case_open" model="res.partner.event.type">
-            <field eval="True" name="active"/>
-        </record>
-        
-        <record id="event_type_case_pending" model="res.partner.event.type">
-            <field eval="False" name="active"/>
-        </record>
-        
-        <record id="event_type_case_close" model="res.partner.event.type">
-            <field eval="True" name="active"/>
-        </record>
-        
-        <record id="event_type_case_cancel" model="res.partner.event.type">
-            <field eval="False" name="active"/>
-        </record>
-        
-        <record id="ir_cron_crm_action" model="ir.cron">
-            <field name="name">Check cases rules</field>
-            <field name="interval_number">4</field>
-            <field name="interval_type">hours</field>
-            <field name="numbercall">-1</field>
-            <field eval="False" name="doall"/>
-            <field eval="'crm.case'" name="model"/>
-            <field eval="'_check'" name="function"/>
-            <field eval="'()'" name="args"/>
-        </record>      
-                
     </data>
 </openerp>

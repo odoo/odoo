@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_fiscalyear_close_state" model="ir.ui.view">
+            <field name="name">account.fiscalyear.close.state.form</field>
+            <field name="model">account.fiscalyear.close.state</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Close states of Fiscal year and periods">
+						<label string ="This wizard will definitelly close a fiscal year and its related periods. That means that no one will be able to create or modify journal entries in it." colspan="4"/>
+						<separator colspan="4" />
+						<field name="fy_id"  domain = "[('state','=','draft')]" colspan="4"/>
+						<separator colspan="4" />
+						<group colspan="4" col="6">
+						    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+						    <button icon="terp-locked" string="Close Fiscalyear" name="data_save" type="object"/>
+						</group>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_account_fiscalyear_close_state" model="ir.actions.act_window">
+            <field name="name">Close a Fiscal Year</field>
+            <field name="res_model">account.fiscalyear.close.state</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_fiscalyear_close_state"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_account_fiscalyear_close_state"
+            id="menu_wizard_fy_close_state"
+            sequence="20"
+            parent="menu_account_end_year_treatments" />
+
+    </data>
+</openerp>

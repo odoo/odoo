@@ -1,12 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-	<wizard	string="Invoices with Layout and Message"
-			model="account.invoice"
-			name="wizard.notify_message"
-			id="wizard_notify_message"
-			keyword="client_print_multi"
-			/>
 
 	<report id="account_invoices_1"
 			string="Invoices with Layout"
@@ -14,5 +8,14 @@
 			name="account.invoice.layout"
 			rml="account_invoice_layout/report/report_account_invoice_layout.rml"
 			auto="False"/>
+	
+	<report id="account_invoices_layout_message"
+			menu="False"
+			string="Invoices with Layout and Message"
+			model="account.invoice"
+			name="notify_account.invoice"
+			rml="account_invoice_layout/report/special_message_invoice.rml"
+			auto="False"/>
+
 	</data>
 </openerp>

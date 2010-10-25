@@ -1,0 +1,132 @@
+-
+  In order to test the Sale module in OpenERP,
+  I create a Sale Order for Slider Mobile for 500 quantity having Shipping Policy 'Shipping & Manual Invoice' and Invoice on 'Ordered quantities' 
+  in order to create an invoice based on the ordered quantity
+-
+  !record {model: sale.order, id: sale_order_so9}:
+    date_order: '2010-07-17'
+    invoice_quantity: order
+    name: Test_SO006
+    order_line:
+      - name: Slider Mobile
+        price_unit: 200
+        product_uom: product.product_uom_unit
+        product_uom_qty: 200.0
+        state: draft
+        delay: 7.0
+        product_id: sale.product_product_slidermobile0
+        product_uos_qty: 200.0
+        type: make_to_order
+    order_policy: manual
+    invoice_quantity: order
+    partner_id: sale.res_partner_cleartrail0
+    partner_invoice_id: sale.res_partner_address_2
+    partner_order_id: sale.res_partner_address_1
+    partner_shipping_id: sale.res_partner_address_3
+    picking_policy: direct
+    pricelist_id: product.list0
+    shop_id: sale.shop
+- 
+  I confirm the Sale Order.
+- 
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so9}
+-
+  I verify that the picking has been generated for the sale order
+- 
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so9"))
+    assert so.picking_ids,"Picking has not been generated for sale_order_so9"
+-
+  Then I confirm the picking
+-
+  !record {model: stock.partial.picking, id: stock_partial_picking_0}:
+    date: '2010-07-17 17:52:09'
+-
+  Then I done the picking
+- 
+  !python {model: stock.picking }: |
+    import time
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so9"))
+    picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
+    if picking_id:
+       pick=self.browse(cr,uid,picking_id[0])
+       pick.force_assign(cr, uid)
+       partial_datas = {
+            'partner_id':pick.address_id.partner_id.id,
+             'address_id': pick.address_id.id,
+             'delivery_date' : time.strftime('%Y-%m-%d'),
+            }
+       move = pick.move_lines[0]
+       partial_datas['move%s'%(move.id)]= {
+           'product_id': move.product_id.id,
+           'product_qty': '100',
+           'product_uom': move.product_uom.id,
+       } 
+       self.do_partial(cr, uid, [pick.id],partial_datas)
+-
+  I click on Create Invoice button to create the invoice.
+- 
+  !workflow {model: sale.order, action: manual_invoice, ref: sale_order_so9}
+-
+  I verify whether the invoice has been generated for SO
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so9"))
+    assert so.invoice_ids, "Invoices has not been generated for sale_order_so9"
+-
+  I verify that an invoice is created on the basis of ordered quantity
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so9"))
+    for so_lines in so.order_line:
+      qty = so_lines.product_uom_qty
+    ids = self.search(cr, uid, [('origin','=',so.name)])
+    inv_brw = self.browse(cr,uid,ids)[0]
+    for inv_lines in inv_brw.invoice_line:
+      qty1 = inv_lines.quantity
+    assert qty1==qty, "Quantities are not same"
+-    
+  I open the Invoice for the SO.
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so9"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    invoice_ids = so.invoice_ids
+    for invoice in invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
+-
+  Assign analytic journal into bank journal
+- 
+  !record {model: account.journal, id: sale.account_journal_bankjournal0}:
+    analytic_journal_id: account.cose_journal_sale
+-
+  I pay the invoice
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so9"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
+    self.pay_and_reconcile(cr, uid, invoice_id,
+        40000.0, ref('account.cash'), ref('account.period_9'),
+        ref('sale.account_journal_bankjournal0'), ref('account.cash'),
+        ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
+        name='test')
+-
+  I verify the invoice are in paid state or not. 
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so9"))
+    invoice_ids = so.invoice_ids
+    for invoice in invoice_ids:
+        assert invoice.state =='paid', "Invoice for SO is not in done state."
+-
+  I check that Paid has been set to true.
+-
+  !python {model: sale.order}: |
+    sale_id=self.browse(cr, uid, ref("sale_order_so9"))
+    assert sale_id.invoiced == True, "Paid has not been set to true"

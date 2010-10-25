@@ -25,6 +25,7 @@ import project
 import partner
 import invoice
 import account_bank_statement
+import account_cash_statement
 import account_move_line
 import account_analytic_line
 import wizard
@@ -32,5 +33,5 @@ import report
 import product
 import sequence
 import company
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

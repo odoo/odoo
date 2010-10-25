@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-22 15:02+0000\n"
-"Last-Translator: Henri Kovalainen <Unknown>\n"
+"PO-Revision-Date: 2010-09-29 11:46+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-24 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -90,7 +90,7 @@ msgstr "Suoritusajon tulos"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled entries"
-msgstr "Suorittamattomat tapahtumat"
+msgstr "Suorittamattomat merkinnät"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -370,7 +370,7 @@ msgstr "Analyyttinen tili"
 #: field:account.tax,child_depend:0
 #: field:account.tax.template,child_depend:0
 msgid "Tax on Children"
-msgstr "Verotus lapsille"
+msgstr "Vero alemmille"
 
 #. module: account
 #: rml:account.central.journal:0
@@ -409,7 +409,7 @@ msgstr "Salli merkintöjen poisto"
 #: model:process.transition,name:account.process_transition_paymentorderbank0
 #: model:process.transition,name:account.process_transition_paymentorderreconcilation0
 msgid "Payment Reconcilation"
-msgstr "Maksutapahtuman kirjaus"
+msgstr "Maksun suoritusmerkinnät"
 
 #. module: account
 #: model:account.journal,name:account.expenses_journal
@@ -466,14 +466,14 @@ msgstr "Erikoislaskenta"
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement with/without reconciliation from draft statement"
-msgstr "Vahvista ote käsin kirjaten luonnosotteesta tai automaattisesti"
+msgstr "Vahvista tiliote suorituksilla tai ilman luonnoksesta"
 
 #. module: account
 #: wizard_view:account.move.bank.reconcile,init:0
 #: model:ir.actions.wizard,name:account.action_account_bank_reconcile_tree
 #: model:ir.ui.menu,name:account.menu_action_account_bank_reconcile_check_tree
 msgid "Bank reconciliation"
-msgstr "Pankkitapahtumien kirjaus"
+msgstr "Pankkitapahtumien suoritusmerkinnät"
 
 #. module: account
 #: rml:account.invoice:0
@@ -631,8 +631,8 @@ msgstr "Jätä tyhjäksi avataksesi nykyisen tilanteen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
-msgid "Fiscal Position Accounts Mapping"
-msgstr "Talouskannan tilien kartoitus"
+msgid "Accounts Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,contact_id:0
@@ -653,7 +653,7 @@ msgstr "Tilimerkintöjen suoritus"
 #. module: account
 #: wizard_button:account.move.bank.reconcile,init,open:0
 msgid "Open for bank reconciliation"
-msgstr "Avoin pankkisovittelulle"
+msgstr "Avoin pankkisuoritukselle"
 
 #. module: account
 #: field:account.invoice.line,discount:0
@@ -767,7 +767,7 @@ msgstr "Ostojen ominaisuudet"
 #. module: account
 #: model:process.node,note:account.process_node_paymententries0
 msgid "Can be draft or validated"
-msgstr "Voidaan luonnostella tai validoida"
+msgstr "Voi olla luonnos tai voidaan hyväksyä"
 
 #. module: account
 #: wizard_button:account.invoice.pay,init,reconcile:0
@@ -827,11 +827,6 @@ msgid "Move Lines"
 msgstr "Siirron rivit"
 
 #. module: account
-#: model:ir.model,name:account.model_account_config_wizard
-msgid "account.config.wizard"
-msgstr "account.config.wizard"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.report_account_analytic_journal_tree
 #: model:ir.ui.menu,name:account.report_account_analytic_journal_print
 msgid "Account cost and revenue by journal"
@@ -854,7 +849,7 @@ msgstr "6"
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_30
 msgid "Bank Reconciliation"
-msgstr "Pankki sovinto"
+msgstr "Pankin suoritusmerkinnät"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -1034,8 +1029,8 @@ msgstr "Netto:"
 #: field:account.invoice,fiscal_position:0
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
-msgid "Fiscal Position"
-msgstr "Talouskanta"
+msgid "Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -1056,8 +1051,8 @@ msgstr "Alatilit"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
-msgid "Fiscal Position Taxes Mapping"
-msgstr "Talouskannan verojen kartoitus"
+msgid "Taxes Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2_new
@@ -1145,8 +1140,8 @@ msgstr "Uusi analyyttinen tili"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
-msgid "Fiscal Position Templates"
-msgstr "Talouskantojen mallit"
+msgid "Fiscal Mapping Templates"
+msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
@@ -1177,8 +1172,8 @@ msgstr "Summa ilmoitettuna valinnaisessa toisessa valuutassa."
 #. module: account
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
-msgid "Fiscal Position Template"
-msgstr "Talouskannan malli"
+msgid "Fiscal Mapping Template"
+msgstr ""
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -1248,8 +1243,8 @@ msgstr "Yritysvaluutta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Fiscal Position Template Account Mapping"
-msgstr "Talouskannan mallin tilien kartoitukset"
+msgid "Template Account Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,parent_id:0
@@ -1398,8 +1393,8 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disable"
 msgstr ""
-"Jos poistat suorituksia siirroista, sinun tulee myös varmistaa kaikki "
-"siirtoihin liittyvät toiminnot koska niitä ei poisteta"
+"Jos poistat suorituksia tapahtumista, sinun tulee myös varmistaa kaikki "
+"tapahtumiin liittyvät toiminnot koska niitä ei poisteta"
 
 #. module: account
 #: model:process.node,name:account.process_node_electronicfile0
@@ -1453,7 +1448,7 @@ msgstr "Päiväkirja"
 #: field:account.account,child_id:0
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "Lapsitilit"
+msgstr "Alemmat tilit"
 
 #. module: account
 #: field:account.account,check_history:0
@@ -1588,7 +1583,7 @@ msgstr "Ylempi koodi"
 #. module: account
 #: wizard_button:account.move.line.reconcile.select,init,open:0
 msgid "Open for reconciliation"
-msgstr "Avaa sovitukselle"
+msgstr "Avaa suorituksille"
 
 #. module: account
 #: model:account.journal,name:account.bilan_journal
@@ -1787,7 +1782,7 @@ msgstr "Mistä"
 #: model:process.node,note:account.process_node_reconciliation0
 #: model:process.node,note:account.process_node_supplierreconciliation0
 msgid "Reconciliation of entries from invoice(s) and payment(s)"
-msgstr "Kohtien sovittelu lasku(i)lta ja maksu(i)sta"
+msgstr "Maksusuoritusmerkinnät laskuilta ja makuista"
 
 #. module: account
 #: wizard_view:account.central.journal.report,init:0
@@ -1830,9 +1825,9 @@ msgstr "Seuraava"
 #. module: account
 #: help:res.partner,property_account_position:0
 msgid ""
-"The fiscal position will determine taxes and the accounts used for the the "
+"The fiscal mapping will determine taxes and the accounts used for the "
 "partner."
-msgstr "Talouskanta määrittelee kumppaniin sovellettavat verot ja tilit."
+msgstr ""
 
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
@@ -1934,7 +1929,7 @@ msgstr "Virhe: Virheellinen BVR-numero (väärä tarkistussumma)."
 #: model:ir.actions.act_window,name:account.action_invoice_tree5
 #: model:ir.ui.menu,name:account.menu_invoice_draft
 msgid "Draft Customer Invoices"
-msgstr "Luonnos asiakaslaskuista"
+msgstr "Asiakkaiden luonnoslaskut"
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -2054,9 +2049,8 @@ msgid ""
 "'draft' state and instead goes directly to the 'posted state' without any "
 "manual validation."
 msgstr ""
-"Valitse tämä jos et halua uusien tilisiirtojen menevän \"luonnostilaan\" "
-"vaan, että ne menevät suoraan \"postitettu\" -tilaan ilman manuaalista "
-"tarkistamista."
+"Valitse tämä, jos et halua uusien tilisiirtojen menevän luonnostilaan vaan "
+"käsitellä ne ilman manuaalista hyväksymistä."
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
@@ -2080,7 +2074,7 @@ msgstr "Laskunnumero, lasketaan automaattisesti kun laskua luodaan."
 #. module: account
 #: rml:account.invoice:0
 msgid "Draft Invoice"
-msgstr "Laskun luonnos"
+msgstr "Luonnoslasku"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_expense
@@ -2104,7 +2098,7 @@ msgstr "Asiakaslaskutusprosessi"
 
 #. module: account
 #: rml:account.invoice:0
-msgid "Fiscal Position Remark :"
+msgid "Fiscal Mapping Remark :"
 msgstr ""
 
 #. module: account
@@ -2157,7 +2151,7 @@ msgstr "Maksun suoritusmerkinnät"
 #: model:ir.actions.act_window,name:account.action_bank_statement_reconciliation_form
 #: model:ir.ui.menu,name:account.menu_action_account_bank_reconcile_tree
 msgid "Statements reconciliation"
-msgstr "Tiliotteiden sovittelu"
+msgstr "Tiliotteiden maksusuoritukset"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -2176,7 +2170,8 @@ msgid "Analytic Entry"
 msgstr "Analyyttinen merkintä"
 
 #. module: account
-#: view:res.company:0 field:res.company,overdue_msg:0
+#: view:res.company:0
+#: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
 msgstr "Myöhässä olevien maksujen viesti"
 
@@ -2215,7 +2210,7 @@ msgstr "(Jätä tyhjäksi käyttääksesi nykyistä jaksoa)"
 #: model:ir.actions.act_window,name:account.action_invoice_tree8
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree8
 msgid "Draft Supplier Invoices"
-msgstr "Luonnos toimittajan laskuista"
+msgstr "Luonnokset toimittajien laskuista"
 
 #. module: account
 #: wizard_field:account.invoice.refund,init,period:0
@@ -2395,7 +2390,7 @@ msgstr "Kuitti nro"
 #: model:ir.actions.wizard,name:account.wizard_automatic_reconcile
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
 msgid "Automatic reconciliation"
-msgstr "Automaattinen sovitus"
+msgstr "Automaattiset suoritusmerkinnät"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2808,7 +2803,7 @@ msgstr "Nimi"
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
 msgid "Reconciliation transactions"
-msgstr "Sovitus transaktio"
+msgstr "Suoritustapahtumat"
 
 #. module: account
 #: wizard_field:account.aged.trial.balance,init,direction_selection:0
@@ -2917,7 +2912,7 @@ msgstr "Avoin tila"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Skip 'Draft' State for Created Entries"
-msgstr "Ohita \"luonnostila\" luoduille kohdille"
+msgstr "Ohita luonnostila luoduille merkinnöille"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -2953,7 +2948,7 @@ msgstr "1cm 27.7cm 20cm 27.7cm"
 #: model:ir.actions.act_window,name:account.action_invoice_tree12
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree12
 msgid "Draft Supplier Refunds"
-msgstr "Luonnos toimittajan hyvityksistä"
+msgstr "Luonnokset toimittajien hyvityksistä"
 
 #. module: account
 #: model:process.node,name:account.process_node_accountingstatemententries0
@@ -2981,7 +2976,7 @@ msgstr "Verokartoitus"
 #: wizard_view:account.move.line.unreconcile,init:0
 #: wizard_view:account.reconcile.unreconcile,init:0
 msgid "Unreconciliation transactions"
-msgstr "Sovittamattomat tapahtumat"
+msgstr "Suoritusten poiston tapahtumat"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderbank0
@@ -3005,7 +3000,7 @@ msgstr "Merkintärivit"
 #: model:process.node,name:account.process_node_reconciliation0
 #: model:process.node,name:account.process_node_supplierreconciliation0
 msgid "Reconciliation"
-msgstr "Sovitus"
+msgstr "Suoritusmerkinnät"
 
 #. module: account
 #: field:account.move.line,centralisation:0
@@ -3040,7 +3035,7 @@ msgstr "Ulkomaalaisten valuuttojen kurssi(t)"
 #: model:ir.actions.act_window,name:account.action_invoice_tree10
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree10
 msgid "Draft Customer Refunds"
-msgstr "Luonnos asiakashyvityksistä"
+msgstr "Luonnokset asiakkaiden hyvityksistä"
 
 #. module: account
 #: field:account.journal.column,readonly:0
@@ -3122,7 +3117,7 @@ msgstr "Merkinnän nimike"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
 msgid "Reconcilate the entries from payment"
-msgstr "Sovita kohdata maksusta"
+msgstr "Maksusuoritukset merkinnöille maksuita"
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -3695,8 +3690,8 @@ msgstr "Sarja"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "Malli talouskannalle"
+msgid "Template for Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3798,12 +3793,12 @@ msgstr "Kaikki merkinnät"
 #: model:process.node,name:account.process_node_draftinvoices0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
 msgid "Draft Invoices"
-msgstr "Luonnostele Laskut"
+msgstr "Luonnoslaskut"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
-msgid "Fiscal Position Template Tax Mapping"
-msgstr "Talouskannan mallin veron kartoitukset"
+msgid "Template Tax Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
@@ -3871,8 +3866,8 @@ msgid ""
 "If no account is specified, the reconciliation will be made using every "
 "accounts that can be reconcilied"
 msgstr ""
-"Jos tiliä ei ole määritelty, sovittelu tehdään kaikille tileille jotka on "
-"mahdollista sovitella"
+"Jos tiliä ei ole määritetty, maksusuoritukset kirjataan kaikille tileille "
+"joissa se on mahdollista"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_company_setup_form
@@ -4589,7 +4584,7 @@ msgstr "Luo merkinnät malleista"
 #. module: account
 #: field:account.account.template,reconcile:0
 msgid "Allow Reconciliation"
-msgstr "Salli sovittelu"
+msgstr "Salli suoritusmerkinnät"
 
 #. module: account
 #: selection:account.account.balance.report,checktype,state:0
@@ -4618,7 +4613,7 @@ msgstr "Muokkaa Laskua"
 #. module: account
 #: view:res.partner:0
 msgid "Supplier Accounting Properties"
-msgstr "Toimittajan Kirjanpidon Asetukset"
+msgstr "Toimittajan kirjanpidon asetukset"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -4849,7 +4844,7 @@ msgstr "Saatavat tilit"
 #. module: account
 #: wizard_button:account.move.line.unreconcile.select,init,open:0
 msgid "Open for unreconciliation"
-msgstr "Avaa sovittelemattomaksi"
+msgstr "Avaa suoritusten poistolle"
 
 #. module: account
 #: field:account.bank.statement.reconcile,statement_line:0
@@ -4922,7 +4917,7 @@ msgstr "Myyntiverot"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
 msgid "Account Reconciliation"
-msgstr "Tili sovittelu"
+msgstr "Tilien suoritusmerkinnät"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5169,7 +5164,7 @@ msgstr "Tuo laskut"
 #: wizard_view:account.move.line.unreconcile.select,init:0
 #: wizard_view:account.reconcile.unreconcile,init:0
 msgid "Unreconciliation"
-msgstr "Sovittelematon"
+msgstr "Suoritusten poisto"
 
 #. module: account
 #: model:ir.model,name:account.model_fiscalyear_seq
@@ -5393,7 +5388,7 @@ msgstr "Normaali"
 #. module: account
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 msgid "Supplier Invoice Process"
-msgstr "Toimittajan laskutus prosessi"
+msgstr "Toimittajan laskutusprosessi"
 
 #. module: account
 #: rml:account.account.balance:0
@@ -5435,7 +5430,7 @@ msgstr ":"
 #. module: account
 #: field:account.bank.statement.line,reconcile_amount:0
 msgid "Amount reconciled"
-msgstr "Suoritettu määrä"
+msgstr "Suoritukset yhteensä"
 
 #. module: account
 #: selection:account.account,currency_mode:0
@@ -5898,7 +5893,7 @@ msgstr "Toimittajan hyvitys"
 #: model:process.transition,note:account.process_transition_entriesreconcile0
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Reconcile Entries."
-msgstr "Suorita merkinnät."
+msgstr "Suoritusmerkinnät."
 
 #. module: account
 #: field:account.subscription.line,move_id:0
@@ -5987,8 +5982,8 @@ msgstr "Maksuehto"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
-msgid "Fiscal Positions"
-msgstr "Talouskannat"
+msgid "Fiscal Mappings"
+msgstr ""
 
 #. module: account
 #: model:process.process,name:account.process_process_statementprocess0
@@ -6044,6 +6039,335 @@ msgstr ""
 #: wizard_button:account.subscription.generate,init,generate:0
 msgid "Compute Entry Dates"
 msgstr "Laske merkintäpäivät"
+
+#. module: account
+#: view:board.board:0
+msgid "Analytic accounts to close"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "Draft invoices"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.open_board_account
+#: model:ir.ui.menu,name:account.menu_board_account
+msgid "Accounting Dashboard"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.act_my_account
+msgid "Accounts to invoice"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.action_account_analytic_line_to_invoice
+msgid "Costs to invoice"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "Aged receivables"
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Board for accountant"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_aged_income
+msgid "Income Accounts"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "My indicators"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "Account Board"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "Aged income"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,show_columns:0
+msgid "Show Debit/Credit Information"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,account_choice:0
+msgid "All accounts"
+msgstr "Kaikki tilit"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,period_manner:0
+msgid "Entries Selection Based on"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "Notification"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Financial Period"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.report.xml,name:account.account_account_balance
+#: model:ir.actions.report.xml,name:account.account_account_balance_landscape
+msgid "Account balance"
+msgstr "Tili balanssi"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period(s)"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Percentage"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Compare Selected Years In Terms Of"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Fiscal Year(s)(Maximum Three Years)"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,select_account:0
+msgid "Select Reference Account(for  % comparision)"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.wizard,name:account.wizard_account_balance_report
+msgid "Account balance-Compare Years"
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,description:account.module_meta_information
+msgid ""
+"Account Balance Module is an added functionality to the Financial Management "
+"module.\n"
+"\n"
+"    This module gives you the various options for printing balance sheet.\n"
+"\n"
+"    1. You can compare the balance sheet for different years.\n"
+"\n"
+"    2. You can set the cash or percentage comparison between two years.\n"
+"\n"
+"    3. You can set the referential account for the percentage comparison for "
+"particular years.\n"
+"\n"
+"    4. You can select periods as an actual date or periods as creation "
+"date.\n"
+"\n"
+"    5. You have an option to print the desired report in Landscape format.\n"
+"    "
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You have to select 'Landscape' option. Please Check it."
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,landscape:0
+msgid "Show Report in Landscape Form"
+msgstr ""
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Total :"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,format_perc:0
+msgid "Show Comparision in %"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period"
+msgstr "Valitse kausi"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Report Options"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Don't Compare"
+msgstr "Älä vertaa"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,account_choice:0
+msgid "Show Accounts"
+msgstr "Näytä tilit"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "1. You have selected more than 3 years in any case."
+msgstr "1. Olet valinnut enemmän kuin 3 vuotta joka tapauksessa"
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Accounting and financial management-Compare Accounts"
+msgstr ""
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Year :"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You can select maximum 3 years. Please check again."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"3. You have selected 'Percentage' option with more than 2 years, but you "
+"have not selected landscape format."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"You might have done following mistakes. Please correct them and try again."
+msgstr ""
+
+#. module: account
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Creation Date"
+msgstr "Luomispäivämäärä"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"2. You have not selected 'Percentage' option, but you have selected more "
+"than 2 years."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid ""
+"You may have selected the compare options with more than 1 year with "
+"credit/debit columns and % option.This can lead contents to be printed out "
+"of the paper.Please try again."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You have to select at least 1 Fiscal Year. Try again."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Customize Report"
+msgstr ""
+
+#. module: account
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_view_created_invoice_dashboard
+msgid "Invoices Created Within Past 15 Days"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_invoice_created
+msgid "Report of Invoices Created within Last 15 days"
+msgstr ""
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Total Amount"
+msgstr ""
+
+#. module: account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_account_receivable
+msgid "Receivable accounts"
+msgstr ""
+
+#. module: account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,description:report_account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,shortdesc:report_account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
+#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr ""
+
+#. module: account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr ""
+
+#. module: account
+#: field:report.invoice.created,create_date:0
+msgid "Create Date"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr ""
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Untaxed Amount"
+msgstr ""
 
 #, python-format
 #~ msgid "No period found !"
@@ -6132,3 +6456,12 @@ msgstr "Laske merkintäpäivät"
 #, python-format
 #~ msgid "Invalid action !"
 #~ msgstr "Virheellinen toiminto!"
+
+#~ msgid "Account Information"
+#~ msgstr "Tilitiedot"
+
+#~ msgid "Printing date:"
+#~ msgstr "Tulostus päiväys:"
+
+#~ msgid "Currency:"
+#~ msgstr "Valuutta"

@@ -20,22 +20,20 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools import config
-
-
 
 class product_product(osv.osv):
-    _name = 'product.product'
     _inherit = 'product.product'
 
     def _pricelist_calculate(self, cr, uid, ids, name, arg, context=None):
         result = {}
-        pricelist_obj=self.pool.get('product.pricelist')
-        if name=='pricelist_purchase':
-            pricelist_ids=pricelist_obj.search(cr,uid,[('type','=','purchase')])
+        pricelist_obj = self.pool.get('product.pricelist')
+        if context is None:
+            context = {}
+        if name == 'pricelist_purchase':
+            pricelist_ids = pricelist_obj.search(cr, uid, [('type', '=', 'purchase')])
         else:
-            pricelist_ids=pricelist_obj.search(cr,uid,[('type','=','sale')])
-        pricelist_browse=pricelist_obj.browse(cr,uid,pricelist_ids)
+            pricelist_ids = pricelist_obj.search(cr, uid, [('type', '=', 'sale')])
+        pricelist_browse = pricelist_obj.browse(cr, uid, pricelist_ids)
         for product in self.browse(cr, uid, ids, context):
             result[product.id] = ""
             for pricelist in pricelist_browse:
@@ -70,4 +68,5 @@ class product_product(osv.osv):
     }
 
 product_product()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

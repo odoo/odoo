@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(612.0,792.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="BOM Structure" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="57.0" y1="57.0" width="498" height="678"/>
+      <frame id="first" x1="34.0" y1="42.0" width="527" height="758"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -67,7 +67,9 @@
     <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_Centre_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_Right_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_8_Italic" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -82,7 +84,7 @@
       <blockTable colWidths="166.0,208.0,79.0,55.0" style="Table3">
         <tr>
           <td>
-            <para style="terp_tblheader_General">BOM</para>
+            <para style="terp_tblheader_General">BOM Name</para>
           </td>
           <td>
             <para style="terp_tblheader_General">Product Name</para>
@@ -91,23 +93,23 @@
             <para style="terp_tblheader_General_Right">Quantity</para>
           </td>
           <td>
-            <para style="terp_tblheader_General_Centre">Code</para>
+            <para style="terp_tblheader_General_Centre">BOM Ref</para>
           </td>
         </tr>
       </blockTable>
       <blockTable colWidths="166.0,208.0,79.0,55.0" style="Table4">
         <tr>
           <td>
-            <para style="terp_default_9">[[ o.name ]]</para>
+            <para style="terp_default_Bold_9">[[ o.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ o.product_id.name ]]</para>
+            <para style="terp_default_Bold_9"><font> [ [[ (o.product_id.default_code) or removeParentNode('font') ]] ]  </font> <font> [[ o.product_id.name ]] </font> </para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ o.product_qty ]] [[ o.product_uom.name ]]</para>
+            <para style="terp_default_Bold_Right_9">[[ o.product_qty ]] [[ o.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ o.code ]]</para>
+            <para style="terp_default_Bold_Centre_9">[[ o.code ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -116,10 +118,10 @@
         <blockTable colWidths="166.0,208.0,79.0,55.0" style="Table1">
           <tr>
             <td>
-              <para style="P1"><font color="white">[[  '... '*(l['level']) ]]</font>-[[ l['name'] ]]</para>
+              <para style="P1"><font color="white">[[  '... '*2*(l['level']) ]]</font>-[[ l['name'] ]]</para>
             </td>
             <td>
-              <para style="P1">[[ l['pname'] ]]</para>
+              <para style="P1"><font> [ [[ (l['pcode']) or removeParentNode('font') ]] ] </font> <font> [[ l['pname'] ]] </font> </para>
             </td>
             <td>
               <para style="P2">[[ l['pqty'] ]] [[ l['uname'] ]]</para>

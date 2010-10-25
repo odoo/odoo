@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* sale
+# 	* sale
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-18 10:45+0000\n"
-"Last-Translator: Carlo Vettore <Unknown>\n"
+"PO-Revision-Date: 2010-09-29 10:21+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-19 07:50+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -189,7 +189,8 @@ msgid "Shipping Policy"
 msgstr "Politiche di Spedizione"
 
 #. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
 msgid "Cancelled"
 msgstr "Annullato"
 
@@ -242,7 +243,7 @@ msgstr "Contabilità Analitica"
 #. module: sale
 #: rml:sale.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "TVA"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -487,7 +488,7 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,payment_account_id:0
 msgid "Payment Accounts"
-msgstr ""
+msgstr "Conto per Pagamenti"
 
 #. module: sale
 #: constraint:product.template:0
@@ -499,7 +500,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Ref"
-msgstr ""
+msgstr "Rif. Cliente"
 
 #. module: sale
 #: view:sale.order:0
@@ -861,6 +862,17 @@ msgid ""
 "  - The 'Invoice from the packing' choice is used to create an invoice "
 "during the packing process."
 msgstr ""
+"La politica di spedizione è utilizzata per sincronizzare le operazioni di "
+"fatturazione e consegna\n"
+"  - La scelta 'Pagamento prima della consegna' dapprima genererà la fattura "
+"e poi, dopo il pagamento di questa fattura, genererà il DDT.\n"
+"  - 'Spedizione e fatturazione manuale' genererà direttamente il DDT e "
+"attenderà che l'utente clicchi manualmente sul bottone \"Crea fattura\" per "
+"generare la bozza di fattura.\n"
+"  - 'Fattura su ordine a consegna effettuata' genererà la bozza di fattura "
+"basata sull'ordine di vendita dopo che la merce sia uscita.\n"
+"  - 'Fattura da DDT' è utilizzato per creare una fattura durante il processo "
+"di spedizione."
 
 #. module: sale
 #: rml:sale.order:0
@@ -958,7 +970,7 @@ msgstr "Unità di Misura"
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr ""
+msgstr "Numero di Packages (divisione spedizione)"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
@@ -1178,7 +1190,7 @@ msgstr "Unità di Vendita Prodotto"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Manual In Progress"
-msgstr ""
+msgstr "Manuale in Progresso"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
@@ -1307,3 +1319,243 @@ msgstr "I Miei Ordini di Vendita"
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sale Order line"
 msgstr "Riga Ordine di Vendita"
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Dashboard for sales"
+msgstr "Cruscotto per le vendite"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sale Dashboard"
+msgstr "Cruscotto Vendite"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales of the month"
+msgstr "Vendite del Mese"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales manager board"
+msgstr "Dashboard Sales Manager"
+
+#. module: sale
+#: view:board.board:0
+msgid "Cases of the month"
+msgstr "Casi del Mese"
+
+#. module: sale
+#: view:board.board:0
+msgid "My open quotations"
+msgstr "Le Mie Domande Aperte"
+
+#. module: sale
+#: view:board.board:0
+msgid "Cases statistics"
+msgstr "Statistiche Casi"
+
+#. module: sale
+#: view:board.board:0
+msgid "Top ten sales of the month"
+msgstr "Le migliori 10 vendite del mese"
+
+#. module: sale
+#: field:report.sale.order.category,price_average:0
+#: field:report.sale.order.product,price_average:0
+msgid "Average Price"
+msgstr "Prezzo Medio"
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_created
+msgid "Report of Created Sale Order"
+msgstr "Relazione sugli Ordini di Vendita Creati"
+
+#. module: sale
+#: view:report.sale.order.category:0
+msgid "Sales Orders by category"
+msgstr "Ordini di Vendita per Categoria"
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_6
+#: model:ir.report.custom,title:sale.ir_report_custom_6
+msgid "Monthly cumulated sales turnover over one year"
+msgstr "Totale cumulativo Vendite Mensili per un anno"
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_product
+msgid "Sales Orders by Products"
+msgstr "Ordini di Vendita per Prodotto"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu1
+msgid "Monthly Sales Turnover Over One Year"
+msgstr "Ammontare Vendite mensili dopo un anno"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_product_tree
+#: model:ir.model,name:sale.model_report_turnover_per_product
+#: view:report.turnover.per.product:0
+msgid "Turnover Per Product"
+msgstr "Turnover per Prodotto"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_82
+msgid "All Months"
+msgstr "Tutti i Mesi"
+
+#. module: sale
+#: field:report.sale.order.category,price_total:0
+#: field:report.sale.order.product,price_total:0
+msgid "Total Price"
+msgstr "Prezzo Totale"
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_category
+msgid "Sales Orders by Categories"
+msgstr "Ordini di vendita per Categoria"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_sale_list
+#: model:ir.ui.menu,name:sale.menu_report_order_sale_list
+msgid "Sales of the Month"
+msgstr "Vendite del mese"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_product
+msgid "Sales by Product (this month)"
+msgstr "Vendite per Prodotto (questo mese)"
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_4
+#: model:ir.report.custom,title:sale.ir_report_custom_4
+msgid "Monthly sales turnover over one year"
+msgstr "Ammontare complessivo vendite mensili dopo un anno"
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr "Gestione vendite - Segnalazione"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_category_all
+#: view:report.sale.order.category:0
+msgid "Sales by Category of Products"
+msgstr "Vendite per categoria di Prodotto"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu3
+msgid "Monthly Cumulated Sales Turnover Over One Year"
+msgstr "Ammontare cumulativo Vendite mensili dopo un anno"
+
+#. module: sale
+#: field:report.sale.order.category,quantity:0
+#: field:report.sale.order.product,quantity:0
+msgid "# of Products"
+msgstr "Numero Prodotti"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_product_all
+#: view:report.sale.order.product:0
+msgid "Sales by Product"
+msgstr "Vendite per Prodotto"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_81
+msgid "This Month"
+msgstr "Questo Mese"
+
+#. module: sale
+#: field:report.sale.order.category,category_id:0
+msgid "Categories"
+msgstr "Categorie"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_created_sale_order_dashboard
+msgid "Created Sale Orders"
+msgstr "Creazione Ordine di Vendita"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_80
+msgid "Reporting"
+msgstr "Reportistica"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_month_tree
+#: model:ir.model,name:sale.model_report_turnover_per_month
+#: view:report.turnover.per.month:0
+msgid "Turnover Per Month"
+msgstr "Turnover per Mese"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu2
+msgid "Daily Sales Turnover Over One Year"
+msgstr "Ammontare Vendite giornaliere dopo un anno"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_83
+msgid "Graphs"
+msgstr "Grafici"
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "Manual in progress"
+msgstr "Progressione Manuale"
+
+#. module: sale
+#: field:report.turnover.per.month,turnover:0
+#: field:report.turnover.per.product,turnover:0
+msgid "Total Turnover"
+msgstr "Turnover Totale"
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "In progress"
+msgstr "In corso"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_category
+msgid "Sales by Category of Product (this month)"
+msgstr "Vendite per categoria di Prodotto (questo mese)"
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_5
+#: model:ir.report.custom,title:sale.ir_report_custom_5
+msgid "Daily sales turnover over one year"
+msgstr "Ammontare Vendite giornaliere dopo un anno"
+
+#. module: sale
+#: field:report.sale.order.category,name:0
+#: field:report.sale.order.product,name:0
+#: field:report.turnover.per.month,name:0
+msgid "Month"
+msgstr "Mese"
+
+#. module: sale
+#: field:report.sale.order.category,count:0
+#: field:report.sale.order.product,count:0
+msgid "# of Lines"
+msgstr "Numero Righe"
+
+#. module: sale
+#: field:report.sale.order.created,create_date:0
+msgid "Create Date"
+msgstr "Data Creazione"
+
+#. module: sale
+#: view:report.sale.order.created:0
+msgid "Created Sales orders"
+msgstr "Ordini di Vendita Creati"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_so_pipeline
+#: view:sale.order:0
+msgid "Sales by State"
+msgstr "Stao delle Vendite"

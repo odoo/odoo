@@ -20,13 +20,7 @@
 #
 ##############################################################################
 
-import base64
-
 from osv import osv, fields
-from osv.orm import except_orm
-import urlparse
-
-import os
 
 class ir_action_report_xml(osv.osv):
     _name="ir.actions.report.xml"
@@ -35,10 +29,10 @@ class ir_action_report_xml(osv.osv):
     def _model_get(self, cr, uid, ids, name, arg, context):
         res = {}
         model_pool = self.pool.get('ir.model')
-        for data in self.read(cr,uid,ids,['model']):
+        for data in self.read(cr, uid, ids, ['model']):
             model = data.get('model',False)
             if model:
-                model_id =model_pool.search(cr,uid,[('model','=',model)])
+                model_id =model_pool.search(cr, uid, [('model','=',model)])
                 if model_id:
                     res[data.get('id')] = model_id[0]
                 else:
@@ -51,14 +45,14 @@ class ir_action_report_xml(osv.osv):
         model_id= args[0][2]
         if not model_id:
             return []
-        model = self.pool.get('ir.model').read(cr,uid,[model_id])[0]['model']
-        report_id = self.search(cr,uid,[('model','=',model)])
+        model = self.pool.get('ir.model').read(cr, uid, [model_id])[0]['model']
+        report_id = self.search(cr, uid, [('model','=',model)])
         if not report_id:
             return [('id','=','0')]
         return [('id','in',report_id)]
 
     _columns={
-        'model_id' : fields.function(_model_get,fnct_search=_model_search,method=True,string='Model Id'),
+        'model_id' : fields.function(_model_get, fnct_search=_model_search, method=True, string='Model Id'),
     }
 
 ir_action_report_xml()

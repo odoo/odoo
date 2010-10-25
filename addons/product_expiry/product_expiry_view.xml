@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_move_form_expiry">
+            <field name="name">stock.production.lot.form</field>
+            <field name="model">stock.production.lot</field>
+            <field name="inherit_id" ref="stock.view_production_lot_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <separator string="Dates" colspan="4" />
+                    <field name="life_date" />
+                    <field name="use_date" />
+                    <field name="removal_date" />
+                    <field name="alert_date" />
+                    <separator colspan="4" />
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_product_form_expiry">
+            <field name="name">product.normal.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Dates">
+                        <field name="life_time" />
+                        <field name="use_time" />
+                        <field name="removal_time" />
+                        <field name="alert_time" />
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</openerp>
+

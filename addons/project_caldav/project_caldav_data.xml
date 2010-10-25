@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 <openerp>
-	<data noupdate="1">
+	<data noupdate="1">       
 
         <record model="basic.calendar" id="caldav.basic_calendar2">
-			<field name="name">Todo</field>
-		</record>
+	    <field name="name">Tasks</field>
+		<field name="collection_id" ref="document.dir_calendars"></field>
+		<field name="type">vtodo</field>
+	    </record>
 		
         <record model="basic.calendar.lines" id="caldav.calendar_lines_todo">
 			<field name="name">vtodo</field>
@@ -49,12 +51,17 @@
             <field name="fn">field</field>
         </record>
 
+        <!-- Sequence is not impemented right. 
+	    See http://tools.ietf.org/html/rfc5545#section-3.8.7.4
+	    Disabling..
+	
         <record model="basic.calendar.fields" id="map_todo_6">
             <field name="name" ref="caldav.field_todo_seq"/>
             <field name="type_id" ref="caldav.calendar_lines_todo" />
 	        <field name="field_id" search="[('name','=','sequence'),('model_id.model','=','calendar.todo')]" />
             <field name="fn">field</field>
         </record>
+        -->
 
         <record model="basic.calendar.fields" id="map_todo_7">
             <field name="name" ref="caldav.field_todo_url"/>
@@ -72,11 +79,11 @@
 	
 	
 		<record model="basic.calendar.fields" id="map_todo_10">
-	            <field name="name" ref="caldav.field_todo_vtimezone"/>
-	            <field name="type_id" ref="caldav.calendar_lines_todo" />
-		        <field name="field_id" search="[('name','=','vtimezone'),('model_id.model','=','calendar.todo')]" />
-	            <field name="fn">field</field>
-	        </record>
+            <field name="name" ref="caldav.field_todo_vtimezone"/>
+            <field name="type_id" ref="caldav.calendar_lines_todo" />
+	        <field name="field_id" search="[('name','=','vtimezone'),('model_id.model','=','calendar.todo')]" />
+            <field name="fn">field</field>
+	   </record>
 	
         <record model="basic.calendar.fields" id="map_todo_11">
             <field name="name" ref="caldav.field_todo_summary"/>

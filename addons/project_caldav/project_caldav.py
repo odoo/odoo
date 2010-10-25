@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,30 +15,47 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields, osv
-from caldav import caldav
+from caldav import calendar
+from datetime import datetime
+
+from project.project import task as base_project_task
 
 class project_task(osv.osv):
     _name = "project.task"
     _inherit = ["calendar.todo", "project.task"]
     _columns = {
-                'attendee_ids': fields.many2many('calendar.attendee', \
-                    'task_attendee_rel', 'task_id', 'attendee_id', 'Attendees'),
-                }
-    def import_cal(self, cr, uid, data, data_id=None, context={}):
+        # force inherit from project.project_task so that 
+        # calendar.todo.active is masked oute
+        'active': base_project_task._columns['active'],
+        'write_date': fields.datetime('Write Date'),
+        'create_date': fields.datetime('Create Date', readonly=True),
+        'attendee_ids': fields.many2many('calendar.attendee', \
+                                         'task_attendee_rel', 'task_id', 'attendee_id', 'Attendees'),
+        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
+                                  help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
+                                  \n If the task is over, the states is set to \'Done\'.'),
+    }
+    _defaults = {
+        'state': 'draft',
+    }
+
+    def import_cal(self, cr, uid, data, data_id=None, context=None):
         todo_obj = self.pool.get('basic.calendar.todo')
         vals = todo_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
-    
-    def check_import(self, cr, uid, vals, context={}):
+
+    def check_import(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         ids = []
         for val in vals:
             obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
-            if not val.has_key('planned_hours'):
+            if not val.get('planned_hours', False):
                 # 'Computes duration' in days
                 plan = 0.0
                 if val.get('date') and  val.get('date_deadline'):
@@ -52,7 +69,7 @@ class project_task(osv.osv):
                 hours = (val['planned_hours'].seconds / float(3600)) + \
                                         (val['planned_hours'].days * 24)
                 val['planned_hours'] = hours
-            exists, r_id = caldav.uid2openobjectid(cr, val['id'], self._name, val.get('recurrent_id'))
+            exists, r_id = calendar.uid2openobjectid(cr, val['id'], self._name, val.get('recurrent_id'))
             val.pop('id')
             if exists:
                 self.write(cr, uid, [exists], val)
@@ -61,8 +78,10 @@ class project_task(osv.osv):
                 task_id = self.create(cr, uid, val)
                 ids.append(task_id)
         return ids
-        
-    def export_cal(self, cr, uid, ids, context={}):
+
+    def export_cal(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         task_datas = self.read(cr, uid, ids, [], context ={'read': True})
         tasks = []
         for task in task_datas:
@@ -72,9 +91,7 @@ class project_task(osv.osv):
         todo_obj = self.pool.get('basic.calendar.todo')
         ical = todo_obj.export_cal(cr, uid, tasks, context={'model': self._name})
         calendar_val = ical.serialize()
-        calendar_val = calendar_val.replace('"', '').strip()
-        return calendar_val
-
+        return calendar_val.replace('"', '').strip()
 
 project_task()
 

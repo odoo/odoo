@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Bids Phones Details" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
     </pageTemplate>
@@ -88,7 +88,7 @@
           <para style="P8">[[o.lot_est1]]-[[o.lot_est2]]</para>
         </td>
         <td>
-          <para style="P7"><font>[[o.bid_lines[0] and o.bid_lines[0].bid_id.contact_tel or removeParentNode('font')]]</font></para>
+          <para style="P7"><font>[[o.bid_lines and o.bid_lines[0] and o.bid_lines[0].bid_id.contact_tel or removeParentNode('font')]]</font></para>
         </td>
       </tr>
     </blockTable>

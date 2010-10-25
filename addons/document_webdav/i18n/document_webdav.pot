@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* document_webdav_old
+#	* document_webdav
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-30 15:14:08+0000\n"
-"PO-Revision-Date: 2009-05-30 15:14:08+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46:26+0000\n"
+"PO-Revision-Date: 2010-10-18 17:46:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,12 +15,111 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: document_webdav_old
-#: model:ir.module.module,description:document_webdav_old.module_meta_information
-msgid "This is a complete document management system:\n"
-"	* WebDav Interface\n"
-"	* User Authentification\n"
-"	* Document Indexation\n"
-""
+#. module: document_webdav
+#: model:ir.model,name:document_webdav.model_document_webdav_dir_property
+msgid "document.webdav.dir.property"
+msgstr ""
+
+#. module: document_webdav
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: document_webdav
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: document_webdav
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: document_webdav
+#: constraint:document.directory:0
+msgid "Error! You can not create recursive Directories."
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Group By..."
+msgstr ""
+
+#. module: document_webdav
+#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
+msgid "WebDAV server for Document Management"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+#: field:document.webdav.dir.property,namespace:0
+msgid "Namespace"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.directory,dav_prop_ids:0
+msgid "DAV properties"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "These properties will be added to WebDAV requests"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,do_subst:0
+msgid "Substitute"
+msgstr ""
+
+#. module: document_webdav
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "WebDAV properties"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,dir_id:0
+#: model:ir.model,name:document_webdav.model_document_directory
+msgid "Directory"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,value:0
+msgid "Value"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Search Document storage"
+msgstr ""
+
+#. module: document_webdav
+#: model:ir.ui.menu,name:document_webdav.menu_dir_props
+msgid "DAV properties for folders"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.directory:0
+#: view:document.webdav.dir.property:0
+msgid "Properties"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Dir"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,name:0
+msgid "Name"
 msgstr ""
 

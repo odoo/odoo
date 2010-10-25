@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_mrp_production_form" model="ir.ui.view">
+            <field name="name">mrp.production.form</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/field[@name='move_prod_id']" position="after">
+                    <field name="sale_name" groups="base.group_extended"/>
+                    <field name="sale_ref" groups="base.group_extended"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

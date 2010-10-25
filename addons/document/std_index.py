@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-import StringIO
-import odt2txt
-
 from content_index import indexer, cntIndex
 from subprocess import Popen, PIPE
+import StringIO
+import odt2txt
+import sys, zipfile, xml.dom.minidom
 
 def _to_unicode(s):
     try:
@@ -37,18 +37,55 @@ def _to_unicode(s):
             except UnicodeError:
                 return s
 
+def textToString(element) :
+    buffer = u""
+    for node in element.childNodes :
+        if node.nodeType == xml.dom.Node.TEXT_NODE :
+            buffer += node.nodeValue
+        elif node.nodeType == xml.dom.Node.ELEMENT_NODE :
+            buffer += textToString(node)
+    return buffer
+        
 class TxtIndex(indexer):
     def _getMimeTypes(self):
         return ['text/plain','text/html','text/diff','text/xml', 'text/*', 
-        'application/xml']
+            'application/xml']
     
     def _getExtensions(self):
         return ['.txt', '.py']
 
     def _doIndexContent(self,content):
         return content
-        
+
 cntIndex.register(TxtIndex())
+
+class PptxIndex(indexer):
+    def _getMimeTypes(self):
+        return [ 'application/vnd.openxmlformats-officedocument.presentationml.presentation']
+    
+    def _getExtensions(self):
+        return ['.pptx']
+
+    def _doIndexFile(self,fname):
+        def toString () :
+            """ Converts the document to a string. """
+            buffer = u""
+            for val in ["a:t"]:
+                for paragraph in content.getElementsByTagName(val) :
+                    buffer += textToString(paragraph) + "\n"
+            return buffer
+
+        data = []
+        zip = zipfile.ZipFile(fname)
+        files = filter(lambda x: x.startswith('ppt/slides/slide'), zip.namelist())
+        for i in range(1, len(files) + 1):
+            content = xml.dom.minidom.parseString(zip.read('ppt/slides/slide%s.xml' % str(i)))
+            res = toString().encode('ascii','replace')
+            data.append(res)
+
+        return _to_unicode('\n'.join(data))
+
+cntIndex.register(PptxIndex())
 
 class DocIndex(indexer):
     def _getMimeTypes(self):
@@ -58,10 +95,59 @@ class DocIndex(indexer):
         return ['.doc']
 
     def _doIndexFile(self,fname):
-        fp = Popen(['antiword',fname], shell=False, stdout=PIPE).stdout
-        return _to_unicode( fp.read())
+        fp = Popen(['antiword', fname], shell=False, stdout=PIPE).stdout
+        return _to_unicode(fp.read())
 
 cntIndex.register(DocIndex())
+
+class DocxIndex(indexer):
+    def _getMimeTypes(self):
+        return [ 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+
+    def _getExtensions(self):
+        return ['.docx']
+
+    def _doIndexFile(self,fname):
+        zip = zipfile.ZipFile(fname)
+        content = xml.dom.minidom.parseString(zip.read("word/document.xml"))
+        def toString () :
+            """ Converts the document to a string. """
+            buffer = u""
+            for val in ["w:p", "w:h", "text:list"]:
+                for paragraph in content.getElementsByTagName(val) :
+                    buffer += textToString(paragraph) + "\n"
+            return buffer
+
+        res = toString().encode('ascii','replace')
+
+        return _to_unicode(res)
+
+cntIndex.register(DocxIndex())
+
+
+class XlsxIndex(indexer):
+    def _getMimeTypes(self):
+        return [ 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+
+    def _getExtensions(self):
+        return ['.xlsx']
+
+    def _doIndexFile(self,fname):
+        zip = zipfile.ZipFile(fname)
+        content = xml.dom.minidom.parseString(zip.read("xl/sharedStrings.xml"))
+        def toString () :
+            """ Converts the document to a string. """
+            buffer = u""
+            for val in ["t"]:
+                for paragraph in content.getElementsByTagName(val) :
+                    buffer += textToString(paragraph) + "\n"
+            return buffer
+
+        res = toString().encode('ascii','replace')
+
+        return _to_unicode(res)
+
+cntIndex.register(XlsxIndex())
 
 class PdfIndex(indexer):
     def _getMimeTypes(self):
@@ -91,21 +177,33 @@ class ImageNoIndex(indexer):
 
 cntIndex.register(ImageNoIndex())
 
-#class Doc(indexer):
-    #def _getDefMime(self,ext):
+# other opendocument formats:
+# chart-template chart database
+# formula-template formula graphics-template graphics
+# image
+# presentation-template presentation spreadsheet-template spreadsheet
 
-#def content_index(content, filename=None, content_type=None):
-    #fname,ext = os.path.splitext(filename)
-    #result = ''
-    #elif ext in ('.xls','.ods','.odt','.odp'):
-        #s = StringIO.StringIO(content)
-        #o = odt2txt.OpenDocumentTextFile(s)
-        #result = _to_unicode(o.toString())
-        #s.close()
-    #elif ext in ('.txt','.py','.patch','.html','.csv','.xml'):
-        #result = content
-    #else:
-        #result = content
-    #return result
+class OpenDoc(indexer):
+    """ Index OpenDocument files.
+    
+        Q: is it really worth it to index spreadsheets, or do we only get a
+        meaningless list of numbers (cell contents) ?
+        """
+    def _getMimeTypes(self):
+        otypes = [ 'text', 'text-web', 'text-template', 'text-master' ]
+        return map(lambda a: 'application/vnd.oasis.opendocument.'+a, otypes)
+    
+    def _getExtensions(self):
+        return ['.odt', '.ott', ] # '.ods'
+
+    def _doIndexContent(self, content):
+        s = StringIO.StringIO(content)
+        o = odt2txt.OpenDocumentTextFile(s)
+        result = _to_unicode(o.toString())
+        s.close()
+        return result
+
+cntIndex.register(OpenDoc())
+
 
 #eof

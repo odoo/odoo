@@ -19,77 +19,92 @@
 #
 ##############################################################################
 
-from mx import DateTime
 import time
 
+import netsvc
 from osv import fields, osv
 from tools.translate import _
 
-def _employee_get(obj,cr,uid,context={}):
-    ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+def _employee_get(obj, cr, uid, context=None):
+    if context is None:
+        context = {}
+    ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
     if ids:
         return ids[0]
     return False
 
 class hr_expense_expense(osv.osv):
-    def copy(self, cr, uid, id, default=None, context={}):
-        if not default: default = {}
-        default.update( {'invoice_id':False,'date_confirm':False,'date_valid':False,'user_valid':False})
-        return super(hr_expense_expense, self).copy(cr, uid, id, default, context)
 
-    def _amount(self, cr, uid, ids, field_name, arg, context):
-        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id =ANY(%s) GROUP BY s.id ",(ids,))
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
+        if not default: default = {}
+        default.update({'invoice_id': False, 'date_confirm': False, 'date_valid': False, 'user_valid': False})
+        return super(hr_expense_expense, self).copy(cr, uid, id, default, context=context)
+
+    def _amount(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
+        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id IN %s GROUP BY s.id ", (tuple(ids),))
         res = dict(cr.fetchall())
         return res
 
-    def _get_currency(self, cr, uid, context):
-        user = self.pool.get('res.users').browse(cr, uid, [uid])[0]
+    def _get_currency(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        user = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
         if user.company_id:
             return user.company_id.currency_id.id
         else:
-            return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
+            return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)], context=context)[0]
 
     _name = "hr.expense.expense"
     _description = "Expense"
     _columns = {
-        'name': fields.char('Expense Sheet', size=128, required=True),
+        'name': fields.char('Description', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),
         'ref': fields.char('Reference', size=32),
         'date': fields.date('Date'),
-        'journal_id': fields.many2one('account.journal', 'Force Journal'),
-        'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True),
+        'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is invoiced"),
+        'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
-        'date_confirm': fields.date('Date Confirmed'),
-        'date_valid': fields.date('Date Validated'),
+        'date_confirm': fields.date('Confirmation Date', help = "Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."),
+        'date_valid': fields.date('Validation Date', help = "Date of the acceptation of the sheet expense. It's filled when the button Accept is pressed."),
         'user_valid': fields.many2one('res.users', 'Validation User'),
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
         'amount': fields.function(_amount, method=True, string='Total Amount'),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice'),
+        'invoice_id': fields.many2one('account.invoice', "Employee's Invoice"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'department_id':fields.many2one('hr.department','Department'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'state': fields.selection([
             ('draft', 'Draft'),
-            ('confirm', 'Waiting confirmation'),
-            ('accepted', 'Accepted'),
+            ('confirm', 'Waiting Approval'),
+            ('accepted', 'Approved'),
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed'),
-            ('cancelled', 'Cancelled')],
+            ('cancelled', 'Refused')],
             'State', readonly=True, help='When the expense request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Confirmation\'.\
             \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
     }
     _defaults = {
-        'date' : lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
+        'date' : time.strftime('%Y-%m-%d'),
+        'state': 'draft',
         'employee_id' : _employee_get,
-        'user_id' : lambda cr,uid,id,c={}: id,
+        'user_id' : lambda cr, uid, id, c={}: id,
         'currency_id': _get_currency,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+
+    def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
+        if not employee_id:
+            return {'value':{'department_id': False}}
+        dept = self.pool.get('hr.employee').browse(cr, uid, employee_id).department_id
+        return {'value': {'department_id':dept and dept.id or False}}
+
     def expense_confirm(self, cr, uid, ids, *args):
-        #for exp in self.browse(cr, uid, ids):
         self.write(cr, uid, ids, {
             'state':'confirm',
             'date_confirm': time.strftime('%Y-%m-%d')
@@ -115,23 +130,27 @@ class hr_expense_expense(osv.osv):
     def action_invoice_create(self, cr, uid, ids):
         res = False
         invoice_obj = self.pool.get('account.invoice')
+        property_obj = self.pool.get('ir.property')
+        sequence_obj = self.pool.get('ir.sequence')
+        analytic_journal_obj = self.pool.get('account.analytic.journal')
+        account_journal = self.pool.get('account.journal')
         for exp in self.browse(cr, uid, ids):
             lines = []
             for l in exp.line_ids:
                 tax_id = []
                 if l.product_id:
-                    acc = l.product_id.product_tmpl_id.property_account_expense.id
+                    acc = l.product_id.product_tmpl_id.property_account_expense
                     if not acc:
-                        acc = l.product_id.categ_id.property_account_expense_categ.id
+                        acc = l.product_id.categ_id.property_account_expense_categ
                     tax_id = [x.id for x in l.product_id.supplier_taxes_id]
                 else:
-                    acc = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
+                    acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category')
                     if not acc:
                         raise osv.except_osv(_('Error !'), _('Please configure Default Expanse account for Product purchase, `property_account_expense_categ`'))
 
                 lines.append((0, False, {
                     'name': l.name,
-                    'account_id': acc,
+                    'account_id': acc.id,
                     'price_unit': l.unit_amount,
                     'quantity': l.unit_quantity,
                     'uos_id': l.uom_id.id,
@@ -145,7 +164,7 @@ class hr_expense_expense(osv.osv):
             payment_term_id = exp.employee_id.address_id.partner_id.property_payment_term.id
             inv = {
                 'name': exp.name,
-                'reference': self.pool.get('ir.sequence').get(cr, uid, 'hr.expense.invoice'),
+                'reference': sequence_obj.get(cr, uid, 'hr.expense.invoice'),
                 'account_id': acc,
                 'type': 'in_invoice',
                 'partner_id': exp.employee_id.address_id.partner_id.id,
@@ -153,48 +172,61 @@ class hr_expense_expense(osv.osv):
                 'address_contact_id': exp.employee_id.address_id.id,
                 'origin': exp.name,
                 'invoice_line': lines,
-                'price_type': 'tax_included',
                 'currency_id': exp.currency_id.id,
                 'payment_term': payment_term_id,
                 'fiscal_position': exp.employee_id.address_id.partner_id.property_account_position.id
             }
             if payment_term_id:
-                to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [],
-                        payment_term_id, None)
+                to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [], payment_term_id, None)
                 if to_update:
                     inv.update(to_update['value'])
+            journal = False
             if exp.journal_id:
                 inv['journal_id']=exp.journal_id.id
-            inv_id = invoice_obj.create(cr, uid, inv, {'type':'in_invoice'})
-            invoice_obj.button_compute(cr, uid, [inv_id], {'type':'in_invoice'},
-                    set_total=True)
+                journal = exp.journal_id
+            else:
+                journal_id = invoice_obj._get_journal(cr, uid, context={'type': 'in_invoice'})
+                if journal_id:
+                    inv['journal_id'] = journal_id
+                    journal = account_journal.browse(cr, uid, journal_id)
+            if journal and not journal.analytic_journal_id:
+                analytic_journal_ids = analytic_journal_obj.search(cr, uid, [('type','=','purchase')])
+                if analytic_journal_ids:
+                    account_journal.write(cr, uid, [journal.id],{'analytic_journal_id':analytic_journal_ids[0]})
+            inv_id = invoice_obj.create(cr, uid, inv, {'type': 'in_invoice'})
+            invoice_obj.button_compute(cr, uid, [inv_id], {'type': 'in_invoice'}, set_total=True)
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open', cr)
+
             self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
             res = inv_id
         return res
+
 hr_expense_expense()
 
 class product_product(osv.osv):
     _inherit = "product.product"
-
     _columns = {
-        'hr_expense_ok': fields.boolean('Can constitute an Expense', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
+        'hr_expense_ok': fields.boolean('Can Constitute an Expense', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
     }
 
 product_product()
 
-
 class hr_expense_line(osv.osv):
     _name = "hr.expense.line"
     _description = "Expense Line"
-    def _amount(self, cr, uid, ids, field_name, arg, context):
+
+    def _amount(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return {}
-        cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id =ANY(%s) GROUP BY l.id ",(ids,))
+        cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id IN %s GROUP BY l.id ",(tuple(ids),))
         res = dict(cr.fetchall())
         return res
 
     _columns = {
-        'name': fields.char('Short Description', size=128, required=True),
+        'name': fields.char('Expense Note', size=128, required=True),
         'date_value': fields.date('Date', required=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
         'total_amount': fields.function(_amount, method=True, string='Total'),
@@ -206,29 +238,28 @@ class hr_expense_line(osv.osv):
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of expense lines."),
-    }
+        }
     _defaults = {
-        'unit_quantity': lambda *a: 1,
-        'date_value' : lambda *a: time.strftime('%Y-%m-%d'),
+        'unit_quantity': 1,
+        'date_value': time.strftime('%Y-%m-%d'),
     }
     _order = "sequence"
-    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context={}):
-        v={}
+
+    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
+        if context is None:
+            context = {}
+        v = {}
         if product_id:
-            product=self.pool.get('product.product').browse(cr,uid,product_id, context=context)
-            v['name']=product.name
-
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            v['name'] = product.name
             # Compute based on pricetype of employee company
-            pricetype_id = self.pool.get('hr.employee').browse(cr,uid,employee_id).user_id.company_id.property_valuation_price_type.id
-            pricetype=self.pool.get('product.price.type').browse(cr,uid,pricetype_id)
-            amount_unit=product.price_get(pricetype.field, context)[product.id]
-
-            v['unit_amount']=amount_unit
+            context['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
+            amount_unit = product.price_get('standard_price', context)[product.id]
+            v['unit_amount'] = amount_unit
             if not uom_id:
-                v['uom_id']=product.uom_id.id
-        return {'value':v}
+                v['uom_id'] = product.uom_id.id
+        return {'value': v}
 
 hr_expense_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -3,7 +3,14 @@
 <data noupdate="1">
 
     <record id="group_account_payment" model="res.groups">
-        <field name="name">Finance / Payments</field>
+        <field name="name">Accounting / Payments</field>
+    </record>
+
+    <record id="payment_mode_comp_rule" model="ir.rule">
+        <field name="name">Payment Mode company rule</field>
+        <field model="ir.model" name="model_id" ref="model_payment_mode"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
 </data>

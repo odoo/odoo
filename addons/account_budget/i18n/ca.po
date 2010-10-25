@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 09:34+0000\n"
+"PO-Revision-Date: 2010-10-12 15:08+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
@@ -24,7 +24,7 @@ msgstr "Usuari responsable"
 #. module: account_budget
 #: rml:account.budget:0
 msgid "% performance"
-msgstr "% rendiment"
+msgstr "% de rendiment"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
@@ -58,18 +58,13 @@ msgstr "Usuari validat"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+"El nom de l'objecte ha de començar per x_ i no pot contenir cap caràcter "
 "especial!"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Confirmed"
 msgstr "Confirmat"
-
-#. module: account_budget
-#: field:account.budget.post.dotation,period_id:0
-msgid "Period"
-msgstr "Període"
 
 #. module: account_budget
 #: wizard_field:account.budget.report,init,date2:0
@@ -82,7 +77,7 @@ msgstr "Fi del període"
 #. module: account_budget
 #: rml:account.budget:0
 msgid "Printing date:"
-msgstr "Data impressió:"
+msgstr "Data d'impressió:"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -302,7 +297,6 @@ msgstr "Import teòric"
 
 #. module: account_budget
 #: field:account.budget.post,name:0
-#: field:account.budget.post.dotation,name:0
 #: field:crossovered.budget,name:0
 msgid "Name"
 msgstr "Nom"
@@ -335,17 +329,6 @@ msgid "Budget"
 msgstr "Pressupost"
 
 #. module: account_budget
-#: field:account.budget.post.dotation,post_id:0
-msgid "Item"
-msgstr "Element"
-
-#. module: account_budget
-#: field:account.budget.post.dotation,amount:0
-#: wizard_field:account.budget.spread,init,amount:0
-msgid "Amount"
-msgstr "Import"
-
-#. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
 msgid "Paid Date"
 msgstr "Data de pagament"
@@ -361,17 +344,6 @@ msgstr "Pressupostos"
 #: selection:crossovered.budget,state:0
 msgid "Cancelled"
 msgstr "Cancel·lat"
-
-#. module: account_budget
-#: view:account.budget.post.dotation:0
-#: model:ir.model,name:account_budget.model_account_budget_post_dotation
-msgid "Budget Dotation"
-msgstr "Dotació al pressupost"
-
-#. module: account_budget
-#: view:account.budget.post.dotation:0
-msgid "Budget Dotations"
-msgstr "Dotacions al pressupost"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -406,11 +378,6 @@ msgstr "Imprimeix pressupostos"
 #: field:crossovered.budget,code:0
 msgid "Code"
 msgstr "Codi"
-
-#. module: account_budget
-#: field:account.budget.post.dotation,tot_planned:0
-msgid "Total Planned Amount"
-msgstr "Import total previst"
 
 #. module: account_budget
 #: wizard_view:wizard.analytic.account.budget.report,init:0

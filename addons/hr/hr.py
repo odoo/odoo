@@ -19,23 +19,43 @@
 #
 ##############################################################################
 
+import os
+
 from osv import fields, osv
+import tools
 from tools.translate import _
 
 class hr_employee_category(osv.osv):
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
+        res = self.name_get(cr, uid, ids, context)
+        return dict(res)
+
     _name = "hr.employee.category"
     _description = "Employee Category"
-
     _columns = {
-        'name' : fields.char("Category", size=64, required=True),
+        'name': fields.char("Category", size=64, required=True),
+        'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
         'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories')
     }
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_employee_category where id=ANY(%s)',(ids,))
+            cr.execute('select distinct parent_id from hr_employee_category where id IN %s', (tuple(ids), ))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -52,87 +72,159 @@ class hr_employee_marital_status(osv.osv):
     _name = "hr.employee.marital.status"
     _description = "Employee Marital Status"
     _columns = {
-        'name' : fields.char('Marital Status', size=30, required=True),
-        'description' : fields.text('Status Description'),
+        'name': fields.char('Marital Status', size=32, required=True),
+        'description': fields.text('Status Description'),
     }
+
 hr_employee_marital_status()
 
 class hr_job(osv.osv):
-    def _no_of_employee(self, cr, uid, ids, name,args,context=None):
+
+    def _no_of_employee(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for emp in self.browse(cr, uid, ids):
-            res[emp.id] = len(emp.employee_ids or [])
+        for job in self.browse(cr, uid, ids, context):
+            res[job.id] = len(job.employee_ids or [])
+        return res
+
+    def _no_of_recruitement(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for job in self.browse(cr, uid, ids, context):
+            res[job.id] = job.expected_employees - job.no_of_employee
         return res
 
     _name = "hr.job"
     _description = "Job Description"
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees':fields.integer('Expected Employees'),
-        'no_of_employee': fields.function(_no_of_employee, method=True, string='No of Employees', type='integer'),
-        'employee_ids':fields.one2many('hr.employee', 'job_id','Employees'),
+        'expected_employees': fields.integer('Expected Employees', help='Required number of Employees in total for that job.'),
+        'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.'),
+        'no_of_recruitment': fields.function(_no_of_recruitement, method=True, string='Expected in Recruitment', readonly=True),
+        'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),
-        'requirements':fields.text('Requirements'),
-        'department_id':fields.many2one('hr.department','Department'),
+        'requirements': fields.text('Requirements'),
+        'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open','Open'),('old','Old'),('recruit','In Recruitement')], 'State', required=True),
+        'state': fields.selection([('open', 'In Position'),('old', 'Old'),('recruit', 'In Recruitement')], 'State', readonly=True, required=True),
     }
     _defaults = {
-        'expected_employees': lambda *a: 1,
+        'expected_employees': 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
-        'state': lambda *args: 'open'
+        'state': 'open',
     }
+
+    def on_change_expected_employee(self, cr, uid, ids, expected_employee, no_of_employee, context=None):
+        if context is None:
+            context = {}
+        result={}
+        if expected_employee:
+            result['no_of_recruitment'] = expected_employee - no_of_employee
+        return {'value': result}
+
+    def job_old(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'old'})
+        return True
+
+    def job_recruitement(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'recruit'})
+        return True
+
+    def job_open(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'open'})
+        return True
+
 hr_job()
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
-    _inherits = {'resource.resource':"resource_id"}
+    _inherits = {'resource.resource': "resource_id"}
     _columns = {
-        'country_id' : fields.many2one('res.country', 'Nationality'),
-        'birthday' : fields.date("Birthday"),
+        'country_id': fields.many2one('res.country', 'Nationality'),
+        'birthday': fields.date("Date of Birth"),
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
-        'sinid': fields.char('SIN No', size=32),
-        'otherid': fields.char('Other ID', size=32),
-        'gender': fields.selection([('male','Male'),('female','Female')], 'Gender'),
+        'sinid': fields.char('SIN No', size=32, help="Social Insurance Number"),
+        'identification_id': fields.char('Identification No', size=32),
+        'gender': fields.selection([('male', 'Male'),('female', 'Female')], 'Gender'),
         'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
-        'bank_account': fields.char('Bank Account', size=56),
-        'partner_id' : fields.related('company_id', 'partner_id', type='many2one', relation='res.partner', readonly=True),
-        'department_id':fields.many2one('hr.department','Department'),
+        'department_id':fields.many2one('hr.department', 'Department'),
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
-        'work_phone': fields.related('address_id', 'phone', type='char', string='Work Phone'),
+        'partner_id': fields.related('address_home_id', 'partner_id', type='many2one', relation='res.partner', readonly=True, help="Partner that is related to the current employee. Accounting transaction will be written on this partner belongs to employee."),
+        'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account', domain="[('partner_id','=',partner_id)]", help="Employee bank salary account"),
+        'work_phone': fields.related('address_id', 'phone', type='char', size=32, string='Work Phone', readonly=True),
         'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail'),
         'work_location': fields.char('Office Location', size=32),
-
         'notes': fields.text('Notes'),
-        'parent_id': fields.many2one('hr.employee', 'Manager', select=True),
-        'category_id' : fields.many2one('hr.employee.category', 'Category'),
-        'child_ids': fields.one2many('hr.employee', 'parent_id','Subordinates'),
-        'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
-        'coach_id':fields.many2one('res.users','Coach'),
-        'job_id':fields.many2one('hr.job', 'Job'),
-
+        'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True, readonly=True, help="It is linked with manager of Department"),
+        'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel','category_id','emp_id','Category'),
+        'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
+        'coach_id': fields.many2one('hr.employee', 'Coach'),
+        'job_id': fields.many2one('hr.job', 'Job'),
+        'photo': fields.binary('Photo'),
+        'passport_id':fields.char('Passport', size=64)
     }
+
+    def onchange_company(self, cr, uid, ids, company, context=None):
+        company_id = self.pool.get('res.company').browse(cr,uid,company)
+        for address in company_id.partner_id.address:
+            return {'value': {'address_id': address.id}}
+        return {'value':{'address_id':False}}
+
+    def onchange_department(self, cr, uid, ids, department_id, context=None):
+        if not department_id:
+            return {'value':{'parent_id': False}}
+        manager = self.pool.get('hr.department').browse(cr, uid, department_id).manager_id
+        return {'value': {'parent_id':manager and manager.id or False}}
+
+    def onchange_user(self, cr, uid, ids, user_id, context=None):
+        if not user_id:
+            return {'value':{'work_email': False}}
+        mail = self.pool.get('res.users').browse(cr,uid,user_id)
+        return {'value': {'work_email':mail.user_email}}
+
+    def _get_photo(self, cr, uid, context=None):
+        return open(os.path.join(
+            tools.config['addons_path'], 'hr/image', 'photo.png'),
+                    'rb') .read().encode('base64')
+
     _defaults = {
-        'active' : lambda *a: True,
+        'active': 1,
+        'photo': _get_photo,
+        'address_id': lambda self,cr,uid,c: self.pool.get('res.partner.address').browse(cr, uid, uid, c).partner_id.id
     }
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_employee where id =ANY(%s)',(ids,))
+            cr.execute('SELECT DISTINCT parent_id FROM hr_employee WHERE id IN %s AND parent_id!=id',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
         return True
 
+    def _check_department_id(self, cr, uid, ids, context=None):
+        for emp in self.browse(cr, uid, ids, context=context):
+            if emp.department_id.manager_id and emp.id == emp.department_id.manager_id.id:
+                return False
+        return True
+
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id'])
+        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
+        (_check_department_id, 'Error ! You cannot select a department for which the employee is the manager.', ['department_id']),
     ]
 
 hr_employee()
 
+class hr_department(osv.osv):
+    _description = "Department"
+    _inherit = 'hr.department'
+    _columns = {
+        'manager_id': fields.many2one('hr.employee', 'Manager'),
+        'member_ids': fields.one2many('hr.employee', 'department_id', 'Members'),
+    }
+
+hr_department()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

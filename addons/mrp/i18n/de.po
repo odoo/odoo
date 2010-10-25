@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* mrp
+# 	* mrp
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-22 19:10+0000\n"
-"Last-Translator: Ferdinand @ ChriCar <Unknown>\n"
+"PO-Revision-Date: 2010-08-29 10:22+0000\n"
+"Last-Translator: Ferdinand-chricar <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:42+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -396,8 +396,8 @@ msgid ""
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
 "Leer lassen, wenn die Produktion an jenen Orten erfolgt, an denen die "
-"Fertigprodukte gebraucht werden.\r\n"
-"Setze einen Ort, wenn an fixen Orten produziert wird.\r\n"
+"Fertigprodukte gebraucht werden.\n"
+"Setze einen Ort, wenn an fixen Orten produziert wird.\n"
 "Das kann auch ein Partner-Ort sein, wenn Sie Subkontrakte haben."
 
 #. module: mrp
@@ -585,7 +585,7 @@ msgid "Time in hours for doing one cycle."
 msgstr "Zeit in Stunden für einen (Auftrags-) Zyklus"
 
 #. module: mrp
-#: field:mrp.production,date_finnished:0
+#: field:mrp.production,date_finished:0
 msgid "End Date"
 msgstr "Endedatum"
 
@@ -883,7 +883,7 @@ msgstr "Arbeitsplätze"
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "UOM"
-msgstr "UoM"
+msgstr "ME"
 
 #. module: mrp
 #: selection:mrp.procurement,procure_method:0
@@ -921,7 +921,7 @@ msgstr "Anzahl Zyklen"
 #. module: mrp
 #: wizard_field:mrp.workcenter.load,init,measure_unit:0
 msgid "Amount measuring unit"
-msgstr "Menge (UoM)"
+msgstr "Menge (ME)"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -1399,7 +1399,7 @@ msgstr "Produktstruktur"
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product UOM"
-msgstr "Produkt UoM"
+msgstr "Produkt ME"
 
 #. module: mrp
 #: help:mrp.procurement,origin:0
@@ -1437,7 +1437,7 @@ msgstr "Produkt UoS"
 #. module: mrp
 #: field:mrp.procurement,product_uom:0
 msgid "Product UoM"
-msgstr "Produkt UoM"
+msgstr "Produkt ME"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -2011,3 +2011,56 @@ msgstr "Sequenz"
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Materials Components"
 msgstr "Komponenten"
+
+#. module: mrp
+#: field:report.mrp.inout,date:0 field:report.workcenter.load,name:0
+msgid "Week"
+msgstr "Woche"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.next_id_77
+msgid "Reporting"
+msgstr "Berichtswesen"
+
+#. module: mrp
+#: view:report.workcenter.load:0
+msgid "Workcenters load"
+msgstr "Arbeitsplatz Auslastung"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_workcenter_load
+msgid "Workcenter Load"
+msgstr "Arbeitsplatz Auslastung"
+
+#. module: mrp
+#: model:ir.module.module,shortdesc:report_mrp.module_meta_information
+msgid "MRP Management - Reporting"
+msgstr "Reporting Materialbeschaffungsplanung (MRP)"
+
+#. module: mrp
+#: field:report.mrp.inout,value:0
+msgid "Stock value"
+msgstr "Lagerwert Veränderungen"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
+#: model:ir.ui.menu,name:mrp.menu_report_workcenter_load
+msgid "Workcenter Loads"
+msgstr "Arbeitsplatz Auslastung"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
+#: model:ir.ui.menu,name:mrp.menu_report_in_out_picking
+msgid "Weekly Stock Value Variation"
+msgstr "Wöchentliche Lagerbewertung (Veränderung)"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_inout
+#: view:report.mrp.inout:0
+msgid "Stock value variation"
+msgstr "Lagerwert Veränderungen"
+
+#. module: mrp
+#: view:board.board:0
+msgid "Next production orders"
+msgstr "Nächste Produktionsaufträge"

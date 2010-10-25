@@ -1,25 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        
-        <record id="product_consultant" model="product.product">
-            <field name="default_code">DEV</field>
-            <field name="list_price">75.0</field>
-            <field name="standard_price">30.0</field>
-            <field name="uom_id" ref="product.uom_hour"/>
-            <field name="uom_po_id" ref="product.uom_hour"/>
-            <field name="name">Consultancy - Senior Developer</field>
-            <field name="categ_id" ref="product.product_category_10"/>
-            <field name="type">service</field>
-            <field name="supply_method">produce</field>
-            <field name="procure_method">make_to_order</field>
-            <field eval="False" name="purchase_ok"/>
-        </record>
-        
+
         <!-- complete our example employee -->
         <record id="hr.employee1" model="hr.employee">
             <field name="product_id" ref="product_consultant"/>
             <field name="journal_id" ref="analytic_journal"/>
         </record>
+
+        <record id="working_hours_requirements" model="hr.analytic.timesheet">
+            <field name="name">Requirements analysis and specification</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
+            <field eval="0.00" name="unit_amount"/>
+            <field name="product_id" ref="product_consultant"/>
+            <field name="product_uom_id" ref="product.uom_hour"/>
+            <field name="account_id" model="account.analytic.account" search="[('code','=','1')]"></field>
+            <field eval="0.00" name="amount"/>
+            <field name="general_account_id" model="account.account" ref="account.a_expense"/>
+            <field name="journal_id" ref="analytic_journal"/>
+        </record>
+
+        <record id="working_hours_design" model="hr.analytic.timesheet">
+            <field name="name">Design and specification</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
+            <field eval="0.00" name="unit_amount"/>
+            <field name="product_id" ref="product_consultant"/>
+            <field name="product_uom_id" ref="product.uom_hour"/>
+            <field name="account_id" model="account.analytic.account" search="[('code','=','1')]"></field>
+            <field eval="0.00" name="amount"/>
+            <field name="general_account_id" model="account.account" ref="account.a_expense"/>
+            <field name="journal_id" ref="analytic_journal"/>
+        </record>
+
+        <record id="working_hours_coding" model="hr.analytic.timesheet">
+            <field name="name">Coding and module testing</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
+            <field eval="0.00" name="unit_amount"/>
+            <field name="product_id" ref="product_consultant"/>
+            <field name="product_uom_id" ref="product.uom_hour"/>
+            <field name="account_id" model="account.analytic.account" search="[('code','=','1')]"></field>
+            <field eval="0.00" name="amount"/>
+            <field name="general_account_id" model="account.account" ref="account.a_expense"/>
+            <field name="journal_id" ref="analytic_journal"/>
+        </record>
+
+        <record id="working_hours_testing" model="hr.analytic.timesheet">
+            <field name="name">Integration and system testing</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
+            <field eval="0.00" name="unit_amount"/>
+            <field name="product_id" ref="product_consultant"/>
+            <field name="product_uom_id" ref="product.uom_hour"/>
+            <field name="account_id" model="account.analytic.account" search="[('code','=','1')]"></field>
+            <field eval="0.00" name="amount"/>
+            <field name="general_account_id" model="account.account" ref="account.a_expense"/>
+            <field name="journal_id" ref="analytic_journal"/>
+        </record>
+
+        <record id="working_hours_maintenance" model="hr.analytic.timesheet">
+            <field name="name">Delivery and maintenance</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
+            <field eval="0.00" name="unit_amount"/>
+            <field name="product_id" ref="product_consultant"/>
+            <field name="product_uom_id" ref="product.uom_hour"/>
+            <field name="account_id" model="account.analytic.account" search="[('code','=','1')]"></field>
+            <field eval="0.00" name="amount"/>
+            <field name="general_account_id" model="account.account" ref="account.a_expense"/>
+            <field name="journal_id" ref="analytic_journal"/>
+        </record>
+
+
     </data>
 </openerp>

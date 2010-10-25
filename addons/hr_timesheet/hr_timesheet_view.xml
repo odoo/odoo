@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-
     <data>
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
+        <menuitem id="base.menu_project_management_time_tracking" name="Time Tracking"
+                  parent="base.menu_main_pm" sequence="3"/>
+
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Timesheet Line">
-                    <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
+                <tree editable="bottom" string="Timesheet Lines">
                     <field name="date" on_change="on_change_date(date)"/>
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id"/>
+                    <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
+                    <field name="journal_id" invisible="1"/>
                     <field name="name"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" sum="Total time"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" required="1" domain="[('type','=','service')]"/>
-                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-                    <field name="amount" sum="Total cost"/>
-                    <field name="general_account_id"/>
-                    <field name="journal_id"/>
+                    <field domain="[('type','=','normal')]" name="account_id"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time"/>
+                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
+                    <field name="amount" sum="Total cost" invisible="1"/>
+                    <field name="general_account_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -27,18 +30,31 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet Lines">
-                    <field colspan="4" name="name" select="2"/>
+                    <group colspan="4" col="6">
+                    <field name="name"/>
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1" select="1"/>
                     <field name="date" select="1" on_change="on_change_date(date)"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-                    <newline/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" required="1" domain="[('type','=','service')]"/>
-                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" select="1"/>
-                    <field name="amount" select="2"/>
-                    <field name="general_account_id" select="2"/>
-                    <field name="journal_id"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Information">
+                            <group colspan="2" col="2">
+                                <separator string="Product" colspan="2"/>
+                                <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]"/>
+                                <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Accounting" colspan="2"/>
+                                <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id" select="1" groups="base.group_extended"/>
+                                <field name="amount"/>
+                                <field name="general_account_id"/>
+                                <field name="journal_id"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Invoicing" colspan="2"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -50,29 +66,24 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group col='8' colspan='4'>
-	                    <filter icon="terp-hr" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
-	                    <filter icon="terp-hr" domain="[('user_id','=',uid)]" string="My Work" help="My Work"/>
-	                    <separator orientation="vertical"/>
-	                    <field name="user_id" select="1" widget="selection"/>
-	                    <field name="account_id" select="1" widget="selection"/>
-	                    <field name="date" select="1"/>
+                        <filter name="today" icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
+                        <separator orientation="vertical"/>
+                        <field name="user_id"/>
+                        <field name="account_id"/>
+                        <field name="date"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Anlytic account" icon="terp-folder-green" domain="[]" context="{'group_by':'account_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
             </field>
 
-        </record>
-
-      <!-- <menuitem id="menu_act_hr_timesheet_line_today_form" parent="hr.menu_hr_root" name="Working Hours" />-->
-
-        <record id="act_hr_timesheet_line_me_all_form" model="ir.actions.act_window">
-            <field name="name">My Working Hours</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.analytic.timesheet</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="hr_timesheet_line_search"/>
         </record>
 
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
@@ -81,25 +92,25 @@
             <field name="res_model">hr.analytic.timesheet</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_user_id":uid, "search_default_today":1}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="help">Working Hours allows you to log your working hours by project every day.</field>
         </record>
-      <!--  <menuitem
-            action="act_hr_timesheet_line_evry1_all_form"
-            id="menu_act_hr_timesheet_line_evry1_all_form"
-            parent="hr_timesheet.menu_act_hr_timesheet_line_today_form"
-            groups="hr.group_hr_manager"/>-->
+
+    <menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
+    <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
 
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
+                <page string="Categories" position="after">
                     <page string="Timesheets">
                         <field name="product_id" domain="[('type','=','service')]"/>
-                        <field name="journal_id"/>
+                        <field name="journal_id" widget="selection"/>
                     </page>
-                </notebook>
+                </page>
             </field>
         </record>
 

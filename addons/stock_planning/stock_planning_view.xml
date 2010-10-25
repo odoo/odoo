@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem id="menu_stock_period_main"
+                  name="Stock and Sales Periods"
+                  parent="base.menu_base_config" sequence="20"/>
+
+        <!-- Periods tree and form section -->
+
+        <record id="view_stock_period_form" model="ir.ui.view">
+            <field name="name">stock.period.form</field>
+            <field name="model">stock.period</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Stock and Sales Periods">
+                    <field name="name" colspan="2"/>
+                    <newline/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <separator string="State" colspan="4"/>
+                    <group col="4" colspan="4">
+                        <field name="state" select="1" readonly="1"/>
+                        <button name="button_open" string="Open" icon="gtk-ok" states="draft" type="object"/>
+                        <button name="button_close" string="Close" icon="gtk-stop" states="open" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_stock_period_tree" model="ir.ui.view">
+            <field name="name">stock.period.tree</field>
+            <field name="model">stock.period</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Stock and Sales Period" editable="bottom" colors="gray:state == 'close';black:state in ('draft','open')">
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="state" select="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_stock_period_search" model="ir.ui.view">
+            <field name="name">stock.period.search</field>
+            <field name="model">stock.period</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Stock and Sales Period">
+                    <filter string="Current" domain="[('state','in',['draft','open'])]" icon="terp-check" help="Current Periods"/>
+                    <filter string="Closed" domain="[('state','=','close')]" icon="gtk-stop" help="Closed Periods"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_stock_period_form" model="ir.actions.act_window">
+            <field name="name">Stock and Sales Periods</field>
+            <field name="res_model">stock.period</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_stock_period_search"/>
+        </record>
+
+        <menuitem
+            id="menu_stock_period"
+            parent="menu_stock_period_main"
+            action="action_stock_period_form"
+            sequence = "10"/>
+
+        <record id="view_stock_sale_forecast_form" model="ir.ui.view">
+            <field name="name">stock.sale.forecast.form</field>
+            <field name="model">stock.sale.forecast</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Stock and Sales Forecast">
+                    <group colspan = "4" col = "4">
+                        <group colspan = "2" col="2" >
+                            <field name="company_id" select="1"
+                                        groups="base.group_multi_company"
+                                        widget="selection"
+                                        on_change="onchange_company(company_id)"/>
+                            <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
+                            <field name="period_id" />
+                            <field name="product_id" on_change="product_id_change(product_id)" />
+                            <field name="product_uom_categ"  invisible = "True"/>
+                            <field name="product_uos_categ"  invisible = "True"/>
+                            <field name="product_uom"
+                                         domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
+                                         on_change = "onchange_uom(product_uom, product_qty, active_uom, product_id)"/>
+                            <field name="active_uom" invisible = "True" />
+                        </group>
+                        <group colspan = "2" col="2" >
+                            <field name="user_id"/>
+                            <field name="product_amt" on_change="product_amt_change(product_amt, product_uom, product_id)" />
+                            <field name="product_qty"  />
+                            <field name="state"/>
+                            <label string = ""/>
+                            <button name="action_validate" icon="gtk-apply" string="Approve" states="draft" type="object" colspan = "1"/>
+
+                        </group>
+                    </group>
+                    <separator colspan ="4" string="Sales history"/>
+                    <group colspan = "4" col = "5">
+                        <label string = " "/>
+                        <label string = "Per User :"/>
+                        <label string = "Per Department :"/>
+                        <label string = "Per Warehouse :"/>
+                        <label string = ""/>
+                        <label string = "Periods :"/>
+                        <field name="analyzed_user_id" nolabel = "1" domain = "[('company_id','=',company_id)] "/>
+                        <field name="analyzed_dept_id" nolabel = "1" domain = "[('company_id','=',company_id)] " />
+                        <field name="analyzed_warehouse_id" nolabel = "1" domain = "[('company_id','=',company_id)] " />
+                        <group colspan = "1" col = "2">
+                            <field name = "analyze_company"/>
+                        </group>
+                        <field name = "analyzed_period1_id" nolabel = "1"  />
+                        <field name = "analyzed_period1_per_user" nolabel = "1" />
+                        <field name = "analyzed_period1_per_dept" nolabel = "1" />
+                        <field name = "analyzed_period1_per_warehouse" nolabel = "1" />
+                        <field name = "analyzed_period1_per_company" nolabel = "1"/>
+                        <field name = "analyzed_period2_id" nolabel = "1" />
+                        <field name = "analyzed_period2_per_user" nolabel = "1" />
+                        <field name = "analyzed_period2_per_dept" nolabel = "1" />
+                        <field name = "analyzed_period2_per_warehouse" nolabel = "1" />
+                        <field name = "analyzed_period2_per_company" nolabel = "1" />
+                        <field name = "analyzed_period3_id" nolabel = "1"/>
+                        <field name = "analyzed_period3_per_user" nolabel = "1" />
+                        <field name = "analyzed_period3_per_dept" nolabel = "1" />
+                        <field name = "analyzed_period3_per_warehouse" nolabel = "1" />
+                        <field name = "analyzed_period3_per_company" nolabel = "1" />
+                        <field name = "analyzed_period4_id" nolabel = "1" />
+                        <field name = "analyzed_period4_per_user" nolabel = "1" />
+                        <field name = "analyzed_period4_per_dept" nolabel = "1" />
+                        <field name = "analyzed_period4_per_warehouse" nolabel = "1" />
+                        <field name = "analyzed_period4_per_company" nolabel = "1" />
+                        <field name = "analyzed_period5_id" nolabel = "1" />
+                        <field name = "analyzed_period5_per_user" nolabel = "1" />
+                        <field name = "analyzed_period5_per_dept" nolabel = "1" />
+                        <field name = "analyzed_period5_per_warehouse" nolabel = "1" />
+                        <field name = "analyzed_period5_per_company" nolabel = "1" />
+                        <button name="calculate_sales_history" icon="gtk-execute"
+                                string="Calculate Sales History" type="object" colspan = "1" states="draft" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_stock_sale_forecast_tree" model="ir.ui.view">
+             <field name="name">stock.sale.forecast.tree</field>
+            <field name="model">stock.sale.forecast</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Forecasts" colors="gray:state=='validated';black:state=='draft'">
+                    <field name="period_id"/>
+                    <field name="product_id" on_change="product_id_change(product_id)" />
+                    <field name="product_qty"/>
+                    <field name="product_uom" />
+                    <field name="warehouse_id"/>
+                    <field name="company_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+       <record id="view_stock_sale_forecast_graph" model="ir.ui.view">
+             <field name="name">stock.sale.forecast.graph</field>
+            <field name="model">stock.sale.forecast</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Stock and Sales Forecast" type = "bar">
+                    <field name="period_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_id"/>
+                </graph>
+            </field>
+        </record>
+        
+        <!-- Forecast section -->
+        
+        <menuitem id="menu_stock_sale_forecast" name="Sales Forecasts" 
+                parent="base.menu_base_partner" sequence="6" groups="base.group_extended"/>
+
+        <record id="view_stock_sale_forecast_filter" model="ir.ui.view">
+            <field name="name">stock.sale.forecast.list.select</field>
+            <field name="model">stock.sale.forecast</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search  Sales Forecast">
+                    <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" separator="1"/>
+                    <field name="company_id"/>
+                    <field name="warehouse_id" />
+                    <field name="period_id" />
+                    <field name="product_id"/>
+                    <field name="create_uid"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="8">
+                        <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Warehouse " icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
+                       <separator orientation="vertical"/>
+                       <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
+                    </group>
+              </search>
+            </field>
+        </record>
+
+
+        <record id="action_view_stock_sale_forecast_form" model="ir.actions.act_window">
+            <field name="name">Sales Forecast</field>
+            <field name="res_model">stock.sale.forecast</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{"search_default_create_uid":uid}</field>
+            <field name="search_view_id" ref="view_stock_sale_forecast_filter"/>
+        </record>
+
+        <menuitem id="menu_stock_sale_forecast_all"
+                  name="Sales Forecasts"
+                  parent="menu_stock_sale_forecast"
+                  action="action_view_stock_sale_forecast_form"/>
+
+        <!-- Planning section -->
+        
+        <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root" sequence="2"/>
+
+        <record id="view_stock_planning_form" model="ir.ui.view">
+            <field name="name">stock.planning.form</field>
+            <field name="model">stock.planning</field>
+            <field name="type">form</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <form string="Stock Planning">
+                    <group colspan="4" col="7">
+                        <group colspan ="3" col="2">
+                            <separator colspan ="2" string = "General Info"/>
+                            <field name="company_id" select = "1" widget= "selection"
+                                         on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
+                            <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
+                            <field name="period_id" />
+                            <field name="product_id" on_change="product_id_change(product_id)"  />
+                            <field name="product_uom_categ"  invisible = "True"/>
+                            <field name="product_uos_categ"  invisible = "True"/>
+                            <field name="product_uom"
+                                         domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
+                                         on_change = "onchange_uom(product_uom, product_id, active_uom, planned_outgoing, to_procure)"/>
+                            <separator colspan ="2" string = "Forecasts"/>
+                            <field name="warehouse_forecast"/>
+                            <field name="company_forecast"/>
+                            <field name="confirmed_forecasts_only"/>
+                        </group>
+                        <group colspan ="2" col="2">
+                            <separator colspan ="2" string = "Current Period Situation"/>
+                            <field name="stock_start"/>
+                            <field name="already_out"/>
+                            <field name="already_in"/>
+                            <separator colspan ="2" string = "Planning and Situation for Calculated Period"/>
+                            <field name="planned_outgoing"/>
+                            <field name="outgoing"/>
+                            <field name="outgoing_left"/>
+                            <field name="to_procure"/>
+                            <field name="incoming"/>
+                            <field name="incoming_left"/>
+                            <button name="calculate_planning" string="Calculate Planning" type="object" icon="gtk-execute" colspan="2"/>
+                            <field name="stock_only"/>
+                        </group>
+                        <group colspan ="2" col="2">
+                            <separator colspan ="2" string = "Minimum Stock Rule Indicators"/>
+                            <field name="minimum_op"/>
+                            <field name="maximum_op"/>
+                            <separator colspan ="2" string = "Calculated Period Simulation"/>
+                            <field name="outgoing_before"/>
+                            <field name="incoming_before"/>
+                            <field name="stock_simulation"/>
+                            <button name="procure_incomming_left" icon="gtk-convert" string="Procure Incoming Left" type="object" colspan="2"/>
+                            <field name="procure_to_stock"/>
+                            <separator colspan ="2" string = "Internal Supply"/>
+                            <button name="internal_supply" string="Supply from Another Warehouse" icon="gtk-convert"  type="object" colspan="2"/>
+                            <field name="supply_warehouse_id" domain = "[('company_id','=',company_id)] "/>
+                            <field name="stock_supply_location"/>
+                        </group>
+                    </group>
+                    <separator colspan ="4" string = "Requisition history"/>
+                    <field name = "history" colspan = "2" nolabel = "1"/>
+                </form>
+            </field>
+        </record>
+
+       <record id="view_stock_planning_filter" model="ir.ui.view">
+            <field name="name">stock.planning.list.select</field>
+            <field name="model">stock.planning</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Stock Planning">
+                    <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" separator="1"/>
+                    <field name="company_id" widget="selection"/>
+                    <field name="warehouse_id" widget="selection"/>
+                    <field name="period_id" widget="selection"/>
+                    <field name="product_id"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="8">
+                        <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Warehouse " icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
+                       <separator orientation="vertical"/>
+                    </group>
+              </search>
+            </field>
+        </record>
+
+
+        <record id="view_stock_planning_tree" model="ir.ui.view">
+             <field name="name">stock.planning.tree</field>
+            <field name="model">stock.planning</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Master Procurement Schedule" colors ="blue:line_time=='Past';black:line_time=='Future'">
+                    <field name="period_id"/>
+                    <field name="product_id" on_change="product_id_change(product_id)" />
+                    <field name="product_uom"/>
+                    <field name="warehouse_forecast" string="Forecast"/>
+                    <field name="planned_outgoing"/>
+                    <field name="to_procure"/>
+                    <field name="line_time" invisible="1"/>
+                    <field name="stock_simulation" string="Stock"/>   <!-- previously stock_start -->
+                    <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_view_stock_planning_form" model="ir.actions.act_window">
+            <field name="name">Master Procurement Schedule</field>
+            <field name="res_model">stock.planning</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_stock_planning_filter"/>
+        </record>
+
+        <menuitem
+            id="menu_stock_planning"
+            parent="menu_stock_planning_main"
+            action="action_view_stock_planning_form"/>
+
+</data>
+</openerp>

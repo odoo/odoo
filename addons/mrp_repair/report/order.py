@@ -21,8 +21,6 @@
 
 import time
 from report import report_sxw
-from osv import osv
-import pooler
 
 class order(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -30,25 +28,16 @@ class order(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
             'total': self.total,
-            'adr_get' : self._adr_get
         })
-
 
     def total(self, repair):
         total = 0.0
         for operation in repair.operations:
-           total+=operation.price_subtotal
+           total += operation.price_subtotal
         for fee in repair.fees_lines:
-           total+=fee.price_subtotal
+           total += fee.price_subtotal
         total = total + repair.amount_tax
         return total
-
-    def _adr_get(self, partner, type):
-            res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
-            res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
-            addresses = res_partner.address_get(self.cr, self.uid, [partner.id], [type])
-            adr_id = addresses and addresses[type] or False
-            return adr_id and res_partner_address.read(self.cr, self.uid, [adr_id])[0] or False
 
 report_sxw.report_sxw('report.repair.order','mrp.repair','addons/mrp_repair/report/order.rml',parser=order)
 

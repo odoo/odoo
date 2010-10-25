@@ -1,0 +1,317 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record id="action_dummy" model="ir.actions.server">
+            <field name="name">Dummy Action</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="state">dummy</field>
+            <field name="code"></field>
+            <field eval="5" name="sequence"/>
+            <field eval="True" name="condition"/>
+        </record>
+    </data>
+    <data>
+
+<!-- Document directory -->
+        <record id="document_directory_marketingcampaign" model="document.directory">
+            <field eval="0" name="ressource_tree"/>
+            <field eval="[(6,0,[])]" name="group_ids"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;&quot;&quot;Marketing Campaign&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;[]&quot;&quot;&quot;" name="domain"/>
+            <field eval="&quot;&quot;&quot;directory&quot;&quot;&quot;" name="type"/>
+        </record>
+        <record id="document_directory_campaign1" model="document.directory">
+            <field eval="0" name="ressource_tree"/>
+            <field eval="[(6,0,[])]" name="group_ids"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;&quot;&quot;OpenERP OnDemand Free Trial 2010&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;[]&quot;&quot;&quot;" name="domain"/>
+            <field name="parent_id" ref="document_directory_marketingcampaign"/>
+            <field eval="&quot;&quot;&quot;ressource&quot;&quot;&quot;" name="type"/>
+            <field name="ressource_type_id" ref="marketing_campaign.model_marketing_campaign"/>
+        </record>
+
+        <!-- Email tempalte -->
+        <record id="email_template_1" model="email.template">
+            <field name="def_subject">Thanks for showing interest in OpenERP</field>
+            <field name="def_to">info@tinyerp.com</field>
+            <field eval="[(6,0,[])]" name="allowed_groups"/>
+            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
+            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
+            <field name="object_name" ref="crm.model_crm_lead"/>
+            <field eval="0" name="use_sign"/>
+            <field name="def_body_text">Hello,Thanks for generous interest you have shown in the openERP.Regards,OpenERP Team,</field>
+            <field name="template_language">mako</field>
+            <field name="name">For OpenERP OnDemand Free Trial 2010</field>
+            <field name="model_int_name">crm.lead</field>
+        </record>
+        <record id="email_template_2" model="email.template">
+            <field name="def_subject">Propose to subscribe to the OpenERP Discovery Day on May 2010</field>
+            <field name="def_to">info@tinyerp.com</field>
+            <field eval="[(6,0,[])]" name="allowed_groups"/>
+            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
+            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
+            <field name="object_name" ref="crm.model_crm_lead"/>
+            <field eval="0" name="use_sign"/>
+            <field name="def_body_text">Hello,We have very good offer that might suit you.
+            We propose you to subscribe to the OpenERP Discovery Day on May 2010.
+            If any further information required kindly revert back.
+            We really appreciate your co-operation on this.
+            Regards,OpenERP Team,</field>
+            <field name="template_language">mako</field>
+            <field name="name">For OpenERP Discovery Day on May 2010</field>
+            <field name="model_int_name">crm.lead</field>
+        </record>
+
+            <record id="email_template_3" model="email.template">
+            <field name="def_subject">Thanks for subscribing to the OpenERP Discovery Day</field>
+            <field name="def_to">info@tinyerp.com</field>
+            <field eval="[(6,0,[])]" name="allowed_groups"/>
+            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
+            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
+            <field name="object_name" ref="crm.model_crm_lead"/>
+            <field eval="0" name="use_sign"/>
+            <field name="def_body_text">Hello,Thanks for showing intrest and for subscribing to the OpenERP Discovery Day.
+             If any further information required kindly revert back.
+             I really appreciate your co-operation on this.
+             Regards,OpenERP Team,</field>
+            <field name="template_language">mako</field>
+            <field name="name">For OpenERP Discovery Day</field>
+            <field name="model_int_name">crm.lead</field>
+        </record>
+
+             <record id="email_template_4" model="email.template">
+            <field name="def_subject">Thanks for buying the OpenERP book</field>
+            <field name="def_to">info@tinyerp.com</field>
+            <field eval="[(6,0,[])]" name="allowed_groups"/>
+            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
+           <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
+             <field name="object_name" ref="crm.model_crm_lead"/>
+            <field eval="0" name="use_sign"/>
+            <field name="def_body_text">Hello,Thanks for showing intrest and buying the OpenERP book.
+            If any further information required kindly revert back.
+            I really appreciate your co-operation on this.
+            Regards,OpenERP Team,</field>
+            <field name="template_language">mako</field>
+            <field name="name">For OpenERP book</field>
+            <field name="model_int_name">crm.lead</field>
+        </record>
+
+         <record id="email_template_5" model="email.template">
+            <field name="def_subject">Propose a free technical training to Gold partners</field>
+            <field name="def_to">info@tinyerp.com</field>
+            <field eval="[(6,0,[])]" name="allowed_groups"/>
+            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
+            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
+            <field name="object_name" ref="crm.model_crm_lead"/>
+            <field eval="0" name="use_sign"/>
+            <field name="def_body_text">Hello, We have very good offer that might suit you.
+            For our gold partners,We are arranging free technical training on june,2010.
+            If any further information required kindly revert back.
+            I really appreciate your co-operation on this.
+            Regards,OpenERP Team,</field>
+            <field name="template_language">mako</field>
+            <field name="name">For technical training to Gold partners</field>
+            <field name="model_int_name">crm.lead</field>
+        </record>
+
+          <record id="email_template_6" model="email.template">
+            <field name="def_subject">Propose paid training to Silver partners</field>
+            <field name="def_to">info@tinyerp.com</field>
+            <field eval="[(6,0,[])]" name="allowed_groups"/>
+            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
+            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
+            <field name="object_name" ref="crm.model_crm_lead"/>
+            <field eval="0" name="use_sign"/>
+            <field name="def_body_text">Hello, We have very good offer that might suit you.
+            For our silver partners,We are  paid technical training on june,2010.
+            If any further information required kindly revert back.
+            I really appreciate your co-operation on this.
+            Regards,OpenERP Team,</field>
+            <field name="template_language">mako</field>
+            <field name="name">For training to Silver partners</field>
+            <field name="model_int_name">crm.lead</field>
+        </record>
+
+        <record id="email_template_7" model="email.template">
+            <field name="def_subject">Propose gold partnership to silver partners</field>
+            <field name="def_to">info@tinyerp.com</field>
+            <field eval="[(6,0,[])]" name="allowed_groups"/>
+            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
+            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
+            <field name="object_name" ref="crm.model_crm_lead"/>
+            <field eval="0" name="use_sign"/>
+            <field name="def_body_text">Hello, We have very good offer that might suit you.
+            For our silver partners,We are  offering Gold partnership.
+            If any further information required kindly revert back.
+            I really appreciate your co-operation on this.
+            Regards,OpenERP Team,</field>
+            <field name="template_language">mako</field>
+            <field name="name">For gold partnership to silver partners</field>
+            <field name="model_int_name">crm.lead</field>
+        </record>
+
+        <record id="email_template_8" model="email.template">
+            <field name="def_subject">Thanks for subscribing to technical training</field>
+            <field name="def_to">info@tinyerp.com</field>
+            <field eval="[(6,0,[])]" name="allowed_groups"/>
+            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
+            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
+            <field name="object_name" ref="crm.model_crm_lead"/>
+            <field eval="0" name="use_sign"/>
+            <field name="def_body_text">Hello, Thanks for showing intrest and for subscribing to technical training.If any further information required kindly revert back.I really appreciate your co-operation on this.
+            Regards,OpenERP Team,</field>
+            <field name="template_language">mako</field>
+            <field name="name">For subscribing to technical training</field>
+            <field name="model_int_name">crm.lead</field>
+        </record>
+        <!-- Report -->
+
+        <record id="mc_crm_lead_demo_report" model="ir.actions.report.xml">
+            <field name="name">Marketing campaign demo report</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">crm.lead</field>
+            <field name="report_name">crm.lead.demo</field>
+            <field name="report_rml">marketing_campaign_crm_demo/crm_lead_mc_demo_report.rml</field>
+            <field name="report_type">pdf</field>
+        </record>
+
+    <!-- Campaign -->
+        <record id="marketing_campaign_openerpondemandfreetrial0" model="marketing.campaign">
+            <field name="name">OpenERP OnDemand Free Trial 2010</field>
+            <field name="object_id" ref="crm.model_crm_lead"/>
+            <field name="partner_field_id" ref="crm.field_crm_lead_partner_id"/>
+        </record>
+
+            <!-- Activity -->
+
+        <record id="marketing_campaign_activity_0" model="marketing.campaign.activity">
+            <field name="name">Propose a 1 month free trial for an OnDemand offer</field>
+            <field name="server_action_id" ref="action_dummy"/>
+            <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+            <field name="report_directory_id" ref="document_directory_campaign1"/>
+            <field name="type">report</field>
+            <field eval="1" name="start"/>
+            <field name="report_id" ref="mc_crm_lead_demo_report"/>
+        </record>
+        <record id="marketing_campaign_activity_1" model="marketing.campaign.activity">
+            <field name="name">Thanks for showing interest</field>
+            <field name="server_action_id" ref="action_dummy"/>
+            <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+            <field name="email_template_id" ref="email_template_1"/>
+        </record>
+
+        <record id="marketing_campaign_activity_2" model="marketing.campaign.activity">
+            <field name="name">Propose to subscribe to the OpenERP Discovery Day on May 2010</field>
+            <field name="server_action_id" ref="action_dummy"/>
+            <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+             <field name="email_template_id" ref="email_template_2"/>
+        </record>
+
+        <record id="marketing_campaign_activity_3" model="marketing.campaign.activity">
+            <field name="name">Thanks for subscribing to the OpenERP Discovery Day</field>
+            <field name="server_action_id" ref="action_dummy"/>
+            <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+            <field name="email_template_id" ref="email_template_3"/>
+        </record>
+        <record id="marketing_campaign_activity_4" model="marketing.campaign.activity">
+            <field name="name">Propose to buy the OpenERP Book</field>
+           <field name="server_action_id" ref="action_dummy"/>
+            <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+            <field name="report_directory_id" ref="document_directory_campaign1"/>
+            <field name="type">report</field>
+            <field name="report_id" ref="mc_crm_lead_demo_report"/>
+        </record>
+
+        <record id="marketing_campaign_activity_5" model="marketing.campaign.activity">
+            <field name="name">Thanks for buying the OpenERP book</field>
+            <field name="server_action_id" ref="action_dummy"/>
+            <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+            <field name="email_template_id" ref="email_template_4"/>
+        </record>
+        <record id="marketing_campaign_activity_6" model="marketing.campaign.activity">
+            <field name="name">Propose a free technical training to Gold partners</field>
+            <field name="server_action_id" ref="action_dummy"/>
+            <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+            <field name="email_template_id" ref="email_template_5"/>
+        </record>
+        <record id="marketing_campaign_activity_7" model="marketing.campaign.activity">
+            <field name="name">Propose paid training to Silver partners</field>
+            <field name="server_action_id" ref="action_dummy"/>
+            <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+            <field name="email_template_id" ref="email_template_6"/>
+        </record>
+
+        <record id="marketing_campaign_activity_8" model="marketing.campaign.activity">
+            <field name="name">Propose gold partnership to silver partners</field>
+            <field name="server_action_id" ref="action_dummy"/>
+            <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+            <field name="email_template_id" ref="email_template_7"/>
+        </record>
+
+         <record id="marketing_campaign_activity_9" model="marketing.campaign.activity">
+            <field name="name">Thanks for subscribing to technical training</field>
+            <field name="server_action_id" ref="action_dummy"/>
+            <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+        <field name="email_template_id" ref="email_template_8"/>
+        </record>
+
+    <!-- Tranisition -->
+        <record id="marketing_campaign_transition_0" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_0"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_1"/>
+        </record>
+
+        <record id="marketing_campaign_transition_1" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_0"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_2"/>
+        </record>
+        <record id="marketing_campaign_transition_2" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_2"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_3"/>
+        </record>
+        <record id="marketing_campaign_transition_3" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_2"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_4"/>
+        </record>
+        <record id="marketing_campaign_transition_4" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_4"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_5"/>
+        </record>
+        <record id="marketing_campaign_transition_5" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_4"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_6"/>
+        </record>
+        <record id="marketing_campaign_transition_6" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_4"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_7"/>
+        </record>
+        <record id="marketing_campaign_transition_7" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_6"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_9"/>
+        </record>
+        <record id="marketing_campaign_transition_8" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_7"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_8"/>
+        </record>
+        <record id="marketing_campaign_transition_9" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_7"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_9"/>
+        </record>
+        <record id="marketing_campaign_transition_10" model="marketing.campaign.transition">
+            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_9"/>
+            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_1"/>
+        </record>
+
+    <!-- Segment -->
+        <record id="marketing_campaign_segment_bosslistusassociationslist0" model="marketing.campaign.segment">
+            <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="date_run"/>
+            <field name="name">BossList US Associations List-0/90</field>
+            <field name="sync_mode">create_date</field>
+            <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+            <field name="state">draft</field>
+        </record>
+
+    </data>
+</openerp>

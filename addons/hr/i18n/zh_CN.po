@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 08:23+0000\n"
+"PO-Revision-Date: 2010-09-09 07:22+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-21 04:42+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -57,7 +57,7 @@ msgstr "上级"
 #. module: hr
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+msgstr "在动作定义中使用了无效的模快名。"
 
 #. module: hr
 #: view:hr.department:0
@@ -72,7 +72,7 @@ msgstr "员工分类"
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work Email"
-msgstr "工作电子邮件"
+msgstr "工作Email"
 
 #. module: hr
 #: field:hr.timesheet.group,name:0
@@ -136,12 +136,12 @@ msgstr "工作时间分类"
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_tree
 msgid "Employees Structure"
-msgstr "员工组织结构"
+msgstr "员工架构"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Social IDs"
-msgstr "身份ID"
+msgstr "社保ID"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -151,7 +151,7 @@ msgstr "办公电话"
 #. module: hr
 #: field:hr.employee.category,child_ids:0
 msgid "Child Categories"
-msgstr "子类别"
+msgstr "子类"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -179,7 +179,7 @@ msgstr "下属"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 msgid "Reporting"
-msgstr "内部报表"
+msgstr "报表"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -199,7 +199,7 @@ msgstr "填写联系信息"
 #. module: hr
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
+msgstr "无效的视图结构xml文件!"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -209,7 +209,7 @@ msgstr "离婚"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr "上级类别"
+msgstr "上级分类"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
@@ -222,7 +222,7 @@ msgstr "部门"
 #. module: hr
 #: model:process.node,name:hr.process_node_employeecontact0
 msgid "Employee Contact"
-msgstr "员工联系"
+msgstr "员工联系方式"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -232,7 +232,7 @@ msgstr "已婚"
 #. module: hr
 #: field:hr.timesheet,tgroup_id:0
 msgid "Employee's timesheet group"
-msgstr "员工工作时间表组"
+msgstr "员工工作时间表"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -248,7 +248,7 @@ msgstr "创建系统用户"
 #: view:hr.employee.category:0
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr "员工类型"
+msgstr "员工类别"
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -258,7 +258,7 @@ msgstr "二"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
-msgstr "人力资源"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,user_id:0
@@ -310,12 +310,12 @@ msgstr "出生日期"
 #. module: hr
 #: field:hr.employee,active:0
 msgid "Active"
-msgstr "在职"
+msgstr "有效"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "错误！你不能创建递归的员工"
+msgstr "错误:你不能创建递归的员工"
 
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
@@ -356,7 +356,7 @@ msgstr "开始日期"
 #. module: hr
 #: field:res.users,parent_id:0
 msgid "Parent Users"
-msgstr "用用户"
+msgstr "上级用户"
 
 #. module: hr
 #: field:hr.employee,address_id:0
@@ -382,7 +382,7 @@ msgstr "个人信息"
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: hr
 #: view:hr.timesheet:0
@@ -404,7 +404,7 @@ msgstr "工作到"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Other"
-msgstr "其他"
+msgstr "其它"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -434,7 +434,7 @@ msgstr "其它ID"
 #. module: hr
 #: field:hr.timesheet,name:0
 msgid "Name"
-msgstr "姓名"
+msgstr "名称"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -461,7 +461,7 @@ msgstr "子部门"
 #. module: hr
 #: view:hr.employee:0
 msgid "Job Information"
-msgstr "职位信息"
+msgstr "工作信息"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
@@ -472,7 +472,7 @@ msgstr "填写员工联系信息"
 #: field:hr.department,manager_id:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr "上司"
+msgstr "主管"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my

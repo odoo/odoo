@@ -29,21 +29,32 @@ class hr_expense_report(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Date ', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'journal_id': fields.many2one('account.journal', 'Force Journal', readonly=True),
         'product_qty':fields.float('Qty', readonly=True),
+        'invoiced':fields.integer('# of Invoiced Lines', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", readonly=True),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice',readonly=True),
-        'department_id':fields.many2one('hr.department','Department',readonly=True),
+        'date_confirm': fields.date('Confirmation Date', readonly=True),
+        'date_valid': fields.date('Validation Date', readonly=True),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
+        'department_id':fields.many2one('hr.department','Department', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'user_id':fields.many2one('res.users', 'Validation User', readonly=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
+        'delay_valid':fields.float('Delay to Valid', readonly=True),
+        'delay_confirm':fields.float('Delay to Confirm', readonly=True),
+        'analytic_account': fields.many2one('account.analytic.account','Analytic account',readonly=True),
         'price_average':fields.float('Average Price', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
+        'no_of_products':fields.integer('# of Products', readonly=True),
+        'no_of_account':fields.integer('# of Accounts', readonly=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Waiting confirmation'),
@@ -60,30 +71,53 @@ class hr_expense_report(osv.osv):
             create or replace view hr_expense_report as (
                  select
                      min(l.id) as id,
-                     s.date as date,
+                     date_trunc('day',s.date) as date,
                      s.employee_id,
+                     s.journal_id,
+                     s.currency_id,
+                     to_date(to_char(s.date_confirm, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_confirm,
+                     to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_valid,
                      s.invoice_id,
+                     count(s.invoice_id) as invoiced,
+                     s.user_valid as user_id,
                      s.department_id,
-                     to_char(s.date, 'YYYY') as year,
-                     to_char(s.date, 'MM') as month,
+                     to_char(date_trunc('day',s.create_date), 'YYYY') as year,
+                     to_char(date_trunc('day',s.create_date), 'MM') as month,
+                     to_char(date_trunc('day',s.create_date), 'YYYY-MM-DD') as day,
+                     avg(extract('epoch' from age(s.date_valid,s.date)))/(3600*24) as  delay_valid,
+                     avg(extract('epoch' from age(s.date_valid,s.date_confirm)))/(3600*24) as  delay_confirm,
                      l.product_id as product_id,
+                     l.analytic_account as analytic_account,
                      sum(l.unit_quantity * u.factor) as product_qty,
-                     s.user_id as user_id,
                      s.company_id as company_id,
                      sum(l.unit_quantity*l.unit_amount) as price_total,
                      (sum(l.unit_quantity*l.unit_amount)/sum(l.unit_quantity * u.factor))::decimal(16,2) as price_average,
                      count(*) as nbr,
+                     (select unit_quantity from hr_expense_line where id=l.id and product_id is not null) as no_of_products,
+                     (select analytic_account from hr_expense_line where id=l.id and analytic_account is not null) as no_of_account,
                      s.state
-                     from
-                 hr_expense_line l
-                 left join
-                     hr_expense_expense s on (s.id=l.expense_id)
-                     left join product_uom u on (u.id=l.uom_id)
+                 from hr_expense_line l
+                 left join hr_expense_expense s on (s.id=l.expense_id)
+                 left join product_uom u on (u.id=l.uom_id)
                  group by
-                     s.date, l.product_id,s.invoice_id,
+                     date_trunc('day',s.date),
+                     to_char(date_trunc('day',s.create_date), 'YYYY'),
+                     to_char(date_trunc('day',s.create_date), 'MM'),
+                     to_char(date_trunc('day',s.create_date), 'YYYY-MM-DD'),
+                     to_date(to_char(s.date_confirm, 'dd-MM-YYYY'),'dd-MM-YYYY'),
+                     to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY'),
+                     l.product_id,
+                     l.analytic_account,
+                     s.invoice_id,
+                     s.currency_id,
+                     s.user_valid,
                      s.department_id,
-                     l.uom_id, s.user_id, s.state,
-                     s.company_id,s.employee_id
+                     l.uom_id,
+                     l.id,
+                     s.state,
+                     s.journal_id,
+                     s.company_id,
+                     s.employee_id
             )
         """)
 hr_expense_report()

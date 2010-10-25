@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
-import stock
+import stock_location
+import procurement_pull
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

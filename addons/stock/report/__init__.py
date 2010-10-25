@@ -19,15 +19,12 @@
 #
 ##############################################################################
 
-#import lot_overview
 import product_stock
-import lot_location
 import ups
 import picking
-import lot_overview
 import lot_overview_all
 import report_stock
-import report_stock_picking
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import report_stock_move
+import stock_inventory_move_report
+import lot_overview
 

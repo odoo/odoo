@@ -1,0 +1,146 @@
+-
+  I test the 'Payment Advice' in order to check the hr_payroll in OpenERP
+-
+  I Create a bank record
+-
+  !record {model: res.partner.bank, id: res_partner_bank_0}:
+    acc_number: '987654321'
+    partner_id: base.res_partner_desertic_hispafuentes
+    sequence: 0.0
+    name: Fortis
+    state: bank
+    bank: base.res_bank_1
+-
+  I create a new employee “Richard”
+-
+  !record {model: hr.employee, id: hr_employee_richard0}:
+    address_home_id: base.res_partner_address_2
+    address_id: base.res_partner_address_9
+    birthday: '1984-05-01'
+    children: 0.0
+    contract_ids:
+      - advantages_gross: 0.0
+        advantages_net: 0.0
+        date_end: '2011-07-01'
+        date_start: '2010-07-01'
+        name: reference
+        wage: 5000.0
+        wage_type_id: hr_contract.hr_contract_monthly_gross
+        type_id: hr_contract.hr_contract_type_emp
+    country_id: base.in
+    department_id: hr.dep_it
+    employee_account: account.a_recv
+    gender: male
+    marital: hr.hr_employee_marital_status_single
+    name: Richard
+    pg_joining: '2009-12-01'
+    property_bank_account: account.cash
+    bank_account_id: res_partner_bank_0
+    salary_account: account.a_recv
+    vehicle_distance: 0.0
+-
+  I create a new payroll structure for software developer
+-
+  !record {model: hr.payroll.structure, id: hr_payroll_structure_softwaredeveloper0}:
+    code: SD
+    line_ids:
+      - account_id: account.a_expense
+        amount: 0.40000000000000002
+        amount_type: per
+        category_id: hr_payroll.HRA
+        code: HRA
+        company_contrib: 0.0
+        name: House Rant Allowance
+        sequence: 5
+        total: 0.0
+        type: allowance
+      - account_id: account.a_expense
+        amount: 10000.0
+        amount_type: fix
+        category_id: hr_payroll.CA
+        code: CA
+        company_contrib: 0.0
+        name: Convance Allowance
+        sequence: 10
+        total: 0.0
+        type: allowance
+      - account_id: account.a_pay
+        amount: 10000.0
+        amount_type: fix
+        category_id: hr_payroll.PT
+        code: PT
+        company_contrib: 0.0
+        name: Professional Tax
+        sequence: 15
+        total: 0.0
+        type: deduction
+      - account_id: account.a_pay
+        amount: 0.125
+        amount_type: per
+        category_id: hr_payroll.PF
+        code: PF
+        company_contrib: 0.0
+        name: Provident Fund
+        sequence: 20
+        total: 0.0
+        type: deduction
+    name: Software Developer
+-
+  I create a employee payslip record
+-
+  !record {model: hr.payslip, id: hr_payslip_0}:
+    bank_journal_id: account.bank_journal
+    employee_id: hr_payroll.hr_employee_richard0
+    journal_id: account.expenses_journal
+-
+  I click on 'Compute Sheet' button
+-
+  !workflow {model: hr.payslip, action: compute_sheet, ref: hr_payslip_0}
+-
+  just to test
+-
+  !python {model: hr.payslip}: |
+    self.compute_sheet(cr, uid, [ref("hr_payslip_0")], {"lang": "en_US", "tz": False,
+      "active_model": "ir.ui.menu", "department_id": False, "active_ids": [ref("hr_payroll.menu_department_tree")],
+      "section_id": False, "active_id": ref("hr_payroll.menu_department_tree"),
+      })
+-
+  I check that the order is now in "Waiting for Verification" state
+-
+  !python {model: hr.payslip}: |
+    from tools.translate import _
+    payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
+    assert(payslip_brw.state == 'draft'), _('State not changed!')
+-
+  I click on Verify Sheet button.
+-
+  !workflow {model: hr.payslip, action: verify_sheet, ref: hr_payslip_0}
+-
+  I check that the order is in the "Waiting for HR Verification" state
+-
+  !python {model: hr.payslip}: |
+    from tools.translate import _
+    payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
+    assert(payslip_brw.state == 'hr_check'), _('State not changed!')
+-
+  I click on Complete HR Checking button.
+-
+  !workflow {model: hr.payslip, action: final_verify_sheet, ref: hr_payslip_0}
+-
+  I check that the order is in "Confirm Sheet" state.
+-
+  !python {model: hr.payslip}: |
+    from tools.translate import _
+    payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
+    assert(payslip_brw.state == 'confirm'), _('State not changed!')
+-
+  I click on Pay Salary button
+-
+  !workflow {model: hr.payslip, action: process_sheet, ref: hr_payslip_0}
+-
+  I check that the order is in "Paid Salary" state.
+-
+  !python {model: hr.payslip}: |
+    from tools.translate import _
+    payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
+    assert(payslip_brw.state == 'done'), _('State not changed!')

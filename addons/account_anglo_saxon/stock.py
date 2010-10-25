@@ -26,7 +26,7 @@ from osv import fields,osv
 #----------------------------------------------------------
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
-    _description = "Packing List"
+    _description = "Picking List"
 
     def action_invoice_create(self, cr, uid, ids, journal_id=False,
             group=False, type='out_invoice', context=None):

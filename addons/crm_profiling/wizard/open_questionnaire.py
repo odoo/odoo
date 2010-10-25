@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import pooler
@@ -50,11 +50,11 @@ class open_questionnaire(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch': _questionnaire_choice_arch, 'fields': _questionnaire_choice_fields, 'state':[('end', 'Cancel'), ('open', 'Open Questionnaire')]}
+            'result': {'type': 'form', 'arch': _questionnaire_choice_arch, 'fields': _questionnaire_choice_fields, 'state':[('end', 'Cancel','gtk-cancel'), ('open', 'Open Questionnaire','terp-camera_test')]}
         },
         'open': {
             'actions': [build_form],
-            'result': {'type': 'form', 'arch':_QUEST_FORM, 'fields': _QUEST_FIELDS, 'state':[('end', 'Cancel'), ('compute', 'Save Data')]}
+            'result': {'type': 'form', 'arch':_QUEST_FORM, 'fields': _QUEST_FIELDS, 'state':[('end', 'Cancel','gtk-cancel'), ('compute', 'Save Data','terp-stock_format-scientific')]}
         },
         'compute': {
             'actions': [],

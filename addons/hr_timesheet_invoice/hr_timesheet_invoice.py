@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,11 +25,11 @@ from tools.translate import _
 
 class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
-    _description = "Invoice rate"
+    _description = "Invoice Rate"
     _columns = {
-        'name': fields.char('Internal name', size=128, required=True),
-        'customer_name': fields.char('Name', size=128),
-        'factor': fields.float('Discount (%)', required=True),
+        'name': fields.char('Internal name', size=128, required=True, translate=True),
+        'customer_name': fields.char('Name', size=128, help="Label for the customer"),
+        'factor': fields.float('Discount (%)', required=True, help="Discount in percentage"),
     }
     _defaults = {
         'factor': lambda *a: 0.0,
@@ -39,33 +39,45 @@ hr_timesheet_invoice_factor()
 
 
 class account_analytic_account(osv.osv):
-    def _invoiced_calc(self, cr, uid, ids, name, arg, context={}):
+    def _invoiced_calc(self, cr, uid, ids, name, arg, context=None):
+        obj_invoice = self.pool.get('account.invoice')
+        if context is None:
+            context = {}
         res = {}
-        for account in self.browse(cr, uid, ids):
+
+        cr.execute('SELECT account_id as account_id, l.invoice_id '
+                'FROM hr_analytic_timesheet h LEFT JOIN account_analytic_line l '
+                    'ON (h.line_id=l.id) '
+                    'WHERE l.account_id = ANY(%s)', (ids,))
+        account_to_invoice_map = {}
+        for rec in cr.dictfetchall():
+            account_to_invoice_map.setdefault(rec['account_id'], []).append(rec['invoice_id'])
+
+        for account in self.browse(cr, uid, ids, context=context):
             invoiced = {}
-            cr.execute('select distinct(l.invoice_id) from hr_analytic_timesheet h left join account_analytic_line l on (h.line_id=l.id) where account_id=%s', (account.id,))
-            invoice_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
-            for invoice in self.pool.get('account.invoice').browse(cr, uid, invoice_ids, context):
+            invoice_ids = filter(None, list(set(account_to_invoice_map.get(account.id, []))))
+            for invoice in obj_invoice.browse(cr, uid, invoice_ids, context=context):
                 res.setdefault(account.id, 0.0)
                 res[account.id] += invoice.amount_untaxed
         for id in ids:
             res[id] = round(res.get(id, 0.0),2)
-        return res
 
+        return res
 
     _inherit = "account.analytic.account"
     _columns = {
-        'pricelist_id' : fields.many2one('product.pricelist', 'Sale Pricelist'),
+        'pricelist_id' : fields.many2one('product.pricelist', 'Sale Pricelist', 
+            help="The product to invoice is defined on the employee form, the price will be deduced by this pricelist on the product."),
         'amount_max': fields.float('Max. Invoice Price'),
         'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
             help="Total invoiced"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor','Reinvoice Costs',
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Reinvoice Costs',
             help="Fill this field if you plan to automatically generate invoices based " \
             "on the costs in this analytic account: timesheets, expenses, ..." \
             "You can configure an automatic invoice rate on analytic accounts."),
     }
     _defaults = {
-        'pricelist_id': lambda self,cr, uid, ctx: ctx.get('pricelist_id', False),
+        'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
 account_analytic_account()
 
@@ -73,20 +85,24 @@ account_analytic_account()
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _columns = {
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),                
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing'),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', help="It allows to set the discount while making invoice"),
     }
 
     def unlink(self, cursor, user, ids, context=None):
+        if context is None:
+            context = {}
         return super(account_analytic_line,self).unlink(cursor, user, ids,
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        self._check_inv(cr, uid, ids,vals)
+        if context is None:
+            context = {}
+        self._check_inv(cr, uid, ids, vals)
         return super(account_analytic_line,self).write(cr, uid, ids, vals,
                 context=context)
 
-    def _check_inv(self, cr, uid, ids,vals):
+    def _check_inv(self, cr, uid, ids, vals):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
@@ -98,12 +114,14 @@ class account_analytic_line(osv.osv):
         return True
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
+        if context is None:
+            context = {}
         if default is None:
             default = {}
         default = default.copy()
         default.update({'invoice_id': False})
         return super(account_analytic_line, self).copy(cursor, user, obj_id,
-                default, context)
+                default, context=context)
 
 account_analytic_line()
 
@@ -126,12 +144,14 @@ class hr_analytic_timesheet(osv.osv):
         return res
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
+        if context is None:
+            context = {}
         if default is None:
             default = {}
         default = default.copy()
         default.update({'invoice_id': False})
         return super(hr_analytic_timesheet, self).copy(cursor, user, obj_id,
-                default, context)
+                default, context=context)
 
 hr_analytic_timesheet()
 
@@ -143,9 +163,11 @@ class account_invoice(osv.osv):
 
         inv = self.browse(cr, uid, [id])[0]
         if inv.type == 'in_invoice':
+            obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:
                 if il['account_analytic_id']:
-                    to_invoice = self.pool.get('account.analytic.account').read(cr, uid, [il['account_analytic_id']], ['to_invoice'])[0]['to_invoice']
+		    # *-* browse (or refactor to avoid read inside the loop)
+                    to_invoice = obj_analytic_account.read(cr, uid, [il['account_analytic_id']], ['to_invoice'])[0]['to_invoice']
                     if to_invoice:
                         il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]
         return iml

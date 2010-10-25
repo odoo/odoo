@@ -10,9 +10,9 @@
                 <form string="Fiscal Position">
                     <field name="name" select="1"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <separator string="Mapping" colspan="4"/>
                     <newline/>
-                    <field name="note" colspan="4"/>
-                    <field name="tax_ids" colspan="4" widget="one2many_list">
+                    <field name="tax_ids" colspan="2" widget="one2many_list" nolabel="1">
                         <tree string="Tax Mapping" editable="bottom">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
@@ -22,7 +22,7 @@
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
                         </form>
                     </field>
-                    <field name="account_ids" colspan="4" widget="one2many_list">
+                    <field name="account_ids" colspan="2" widget="one2many_list" nolabel="1">
                         <tree string="Account Mapping" editable="bottom">
                             <field name="account_src_id"/>
                             <field name="account_dest_id"/>
@@ -32,6 +32,8 @@
                             <field name="account_dest_id"/>
                         </form>
                     </field>
+                    <separator string="Notes" colspan="4"/>
+                    <field name="note" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -57,11 +59,11 @@
         <menuitem
             action="action_account_fiscal_position_form"
             id="menu_action_account_fiscal_position_form"
-            parent="account.menu_finance_accounting" sequence="20"/>
+            parent="next_id_27" sequence="20"/>
 
         <!--
         Partners Extension
-    -->
+    	-->
 
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.property.form.inherit</field>
@@ -70,37 +72,37 @@
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <notebook>
-                    <page string="Accounting" position="inside">
+                <page string="History" position="before">
+                <page string="Accounting">
                     <group col="2" colspan="2">
                         <separator string="Customer Accounting Properties" colspan="2"/>
-                        <field name="property_account_receivable"/>
+                        <field name="property_account_receivable" groups="base.group_extended" />
                         <field name="property_account_position" widget="selection"/>
                         <field name="property_payment_term" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Supplier Accounting Properties" colspan="2"/>
-                        <field name="property_account_payable"/>
+                        <field name="property_account_payable" groups="base.group_extended"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Customer Credit" colspan="2"/>
-                        <field name="credit" select="2"/>
-                        <field name="credit_limit" select="2"/>
+                        <field name="credit"/>
+                        <field name="credit_limit" groups="base.group_extended"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Supplier Debit" colspan="2"/>
-                        <field name="debit" select="2"/>
+                        <field name="debit"/>
                     </group>
-                    <field colspan="4" context="{'address': address}" name="bank_ids" nolabel="1" select="2">
+                    <field colspan="4" context="{'address': address}" name="bank_ids" nolabel="1">
                         <form string="Bank account">
-                            <field name="state" select="2"/>
+                            <field name="state"/>
                             <newline/>
                             <field name="acc_number" select="1"/>
                             <newline/>
                             <field name="bank"/>
                             <newline/>
                             <field name="sequence"/>
-                            <field colspan="4" name="name" select="2"/>
+                            <field colspan="4" name="name"/>
                             <separator colspan="4" string="Bank account owner"/>
                             <field colspan="4" name="owner_name"/>
                             <field colspan="4" name="street"/>
@@ -113,12 +115,36 @@
                         </form>
                         <tree string="Bank Details">
                             <field name="state"/>
+                            <field name="bank"/>
                             <field name="owner_name"/>
                             <field name="acc_number"/>
                         </tree>
                     </field>
                 </page>
-                </notebook>
+                </page>
+            </field>
+        </record>
+
+        <!--  Partners info tab view-->
+
+        <act_window
+            id="action_analytic_open"
+            name="Analytic Accounts"
+            res_model="account.analytic.account"
+            context="{'search_default_partner_id':[active_id]}"
+            src_model="res.partner"
+            view_type="form"
+            view_mode="tree,form,graph,calendar"
+            groups="base.group_extended"/>
+
+        <record id="view_res_partner_reconcile" model="ir.ui.view">
+            <field name="name">res.partner.form.reconcile</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="credit_limit" position="after">
+                    <field name="last_reconciliation_date" groups="base.group_extended"/>
+                </field>
             </field>
         </record>
 

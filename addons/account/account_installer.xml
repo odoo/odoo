@@ -1,51 +1,130 @@
 <openerp>
-  <data>
-    <record id="view_account_installer" model="ir.ui.view">
-      <field name="name">account.installer.view</field>
-      <field name="model">account.installer</field>
-      <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_installer"/>
-      <field name="arch" type="xml">
-        <data>
-          <form position="attributes">
-            <attribute name="string">Accounting Modules Installation</attribute>
-          </form>
+    <data>
+        <record id="view_account_configuration_installer" model="ir.ui.view">
+            <field name="name">account.installer.form</field>
+            <field name="model">account.installer</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="arch" type="xml">
+            <data>
+                <form position="attributes">
+                    <attribute name="string">Accounting Application Configuration</attribute>
+                </form>
+                <separator string="title" position="attributes">
+                    <attribute name="string">Configure Your Accounting Chart</attribute>
+                </separator>
+                <xpath expr="//label[@string='description']" position="attributes">
+                    <attribute name="string">The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default.</attribute>
+                </xpath>
+                <xpath expr="//button[@string='Install Modules']" position="attributes">
+                    <attribute name="string">Configure</attribute>
+                </xpath>
+                <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                    <attribute name='rowspan'>23</attribute>
+                    <attribute name='string'></attribute>
+                </xpath>
+                <group colspan="8">
+                    <group colspan="4" height="450" width="600">
+                        <field name="charts"/>
+                            <group colspan="4" groups="base.group_extended">
+                                <separator col="4" colspan="4" string="Configure Fiscal Year"/>
+                                <field name="company_id" colspan="4" widget="selection" groups="base.group_multi_company"/>
+                                <field name="date_start" on_change="on_change_start_date(date_start)"/>
+                                <field name="date_stop"/>
+                                <field name="period" colspan="4"/>
+                            </group>
+                            <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
+                                <field name="sale_tax" on_change="on_change_tax(sale_tax)" attrs="{'required':[('charts','=','configurable')]}"/>
+                                <field name="purchase_tax" groups="base.group_extended"/>
+                            </group>
+                            <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
+                                <separator col="4" colspan="4" string="Bank and Cash Accounts"/>
+                                <field colspan="4" mode="tree" height="200" name="bank_accounts_id" nolabel="1" widget="one2many_list">
+                                    <form string="">
+                                        <field name="acc_name"/>
+                                        <field name="account_type"/>
+                                        <field name="currency_id" widget="selection" groups="base.group_extended"/>
+                                    </form>
+                                    <tree editable="bottom" string="Your bank and cash accounts">
+                                        <field name="acc_name"/>
+                                        <field name="account_type"/>
+                                        <field name="currency_id" widget="selection" groups="base.group_extended"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+                    </group>
+                </data>
+            </field>
+        </record>
 
-          <separator string="title" position="attributes">
-            <attribute name="string"
-                       >Configure Your Accounting System</attribute>
-          </separator>
-          <xpath expr="//label[@string='description']"
-                 position="attributes">
-            <attribute name="string">You can enhance OpenERP's basic accounting support with a few additional OpenERP applications</attribute>
-          </xpath>
+        <record id="view_account_modules_installer" model="ir.ui.view">
+            <field name="name">account.installer.modules.form</field>
+            <field name="model">account.installer.modules</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="arch" type="xml">
+                <data>
+                    <form position="attributes">
+                        <attribute name="string">Accounting Application Configuration</attribute>
+                    </form>
+                    <separator string="title" position="attributes">
+                         <attribute name="string">Configure Your Accounting Application</attribute>
 
-          <group colspan="8">
-            <separator string="Accounting" colspan="4"/>
-            <field name="charts"/>
-            <field name="account_analytic_default"/>
-            <field name="account_analytic_plans"/>
-            <field name="account_payment"/>
-            <field name="account_followup"/>
-            <field name="account_asset"/>
-          </group>
-        </data>
-      </field>
-    </record>
+                    </separator>
+                    <xpath expr="//label[@string='description']" position="attributes">
+                        <attribute name="string">Add extra Accounting functionalities to the ones already installed.</attribute>
+                    </xpath>
+                    <xpath expr="//button[@string='Install Modules']" position="attributes">
+                        <attribute name="string">Configure</attribute>
+                    </xpath>
+                    <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                        <attribute name='string'></attribute>
+                    </xpath>
+                    <group colspan="8">
+                        <field name="account_voucher"/>
+                        <field name="account_followup"/>
+                        <field name="account_payment"/>
+                        <field name="account_analytic_plans"/>
+                        <field name="account_anglo_saxon"/>
+<!--                    <field name="account_voucher_payment"/>-->
+                    </group>
+                </data>
+            </field>
+        </record>
 
-    <record id="action_account_installer" model="ir.actions.act_window">
-      <field name="name">Accounting Modules Installation</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">account.installer</field>
-      <field name="view_id" ref="view_account_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
-    </record>
+        <record id="action_account_configuration_installer" model="ir.actions.act_window">
+            <field name="name">Accounting Chart Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.installer</field>
+            <field name="view_id" ref="view_account_configuration_installer"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
-    <record id="account_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_account_installer"/>
-      <field name="sequence">3</field>
-    </record>
-  </data>
+        <record id="action_account_installer" model="ir.actions.act_window">
+            <field name="name">Accounting Application Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.installer.modules</field>
+            <field name="view_id" ref="view_account_modules_installer"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="account_configuration_installer_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_account_configuration_installer"/>
+            <field name="sequence">3</field>
+            <field name="restart">onskip</field>
+        </record>
+
+        <record id="account_installer_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_account_installer"/>
+            <field name="sequence">5</field>
+            <field name="restart">always</field>
+            <field eval="[(6,0,[ref('base.group_extended')])]" name="groups_id"/>
+        </record>
+
+    </data>
 </openerp>

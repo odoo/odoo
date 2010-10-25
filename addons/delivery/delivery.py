@@ -20,14 +20,24 @@
 ##############################################################################
 
 import time
-import netsvc
 from osv import fields,osv
 from tools.translate import _
 
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
-    _description = "Carrier and delivery grids"
+    _description = "Carrier"
 
+    def name_get(self, cr, uid, ids, context={}):
+        if not len(ids):
+            return []
+        order_id = context.get('order_id',False)
+        if not order_id:
+            res = super(delivery_carrier, self).name_get(cr, uid, ids, context=context)
+        else:
+            order = self.pool.get('sale.order').browse(cr, uid, [order_id])[0]
+            currency = order.pricelist_id.currency_id.name or ''
+            res = [(r['id'], r['name']+' ('+(str(r['price']))+' '+currency+')') for r in self.read(cr, uid, ids, ['name', 'price'], context)]
+        return res
     def get_price(self, cr, uid, ids, field_name, arg=None, context={}):
         res={}
         sale_obj=self.pool.get('sale.order')
@@ -94,9 +104,7 @@ class delivery_grid(osv.osv):
     }
     _order = 'sequence'
 
-
     def get_price(self, cr, uid, id, order, dt, context):
-
         total = 0
         weight = 0
         volume = 0
@@ -112,7 +120,6 @@ class delivery_grid(osv.osv):
 
     def get_price_from_picking(self, cr, uid, id, total, weight, volume, context={}):
         grid = self.browse(cr, uid, id, context)
-
         price = 0.0
         ok = False
 
@@ -136,12 +143,12 @@ delivery_grid()
 
 class delivery_grid_line(osv.osv):
     _name = "delivery.grid.line"
-    _description = "Delivery line of grid"
+    _description = "Delivery Grid Line"
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True),
         'type': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable', required=True),
-        'operator': fields.selection([('=','='),('<=','<='),('>=','>=')], 'Operator', required=True),
+        'operator': fields.selection([('==','='),('<=','<='),('>=','>=')], 'Operator', required=True),
         'max_value': fields.float('Maximum Value', required=True),
         'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
         'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),

@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-15 20:48+0000\n"
-"Last-Translator: Andreas Porevopoulos <Unknown>\n"
+"PO-Revision-Date: 2010-08-03 08:31+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -192,7 +192,8 @@ msgid "Shipping Policy"
 msgstr "Πολτική Μεταφορών"
 
 #. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
 msgid "Cancelled"
 msgstr "Ακυρώθηκε"
 
@@ -1333,6 +1334,246 @@ msgstr "Οι εντολές πωλήσεων μου"
 msgid "Sale Order line"
 msgstr "Γραμμή Εντολών Πώλησης"
 
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Dashboard for sales"
+msgstr "Πίνακας πωλήσεων"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sale Dashboard"
+msgstr "Πίνακας Αναφορών Πωλήσεων"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales of the month"
+msgstr "Πωλήσεις του μήνα"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales manager board"
+msgstr "Πίνακας διευθυντή πωλήσεων"
+
+#. module: sale
+#: view:board.board:0
+msgid "Cases of the month"
+msgstr "Θέματα του μήνα"
+
+#. module: sale
+#: view:board.board:0
+msgid "My open quotations"
+msgstr "Οι ανοικτές προσφορές μου"
+
+#. module: sale
+#: view:board.board:0
+msgid "Cases statistics"
+msgstr "Στατιστικά θεμάτων"
+
+#. module: sale
+#: view:board.board:0
+msgid "Top ten sales of the month"
+msgstr "Top ten πωλήσεις του μήνα"
+
+#. module: sale
+#: field:report.sale.order.category,price_average:0
+#: field:report.sale.order.product,price_average:0
+msgid "Average Price"
+msgstr "Μέση Τιμή"
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_created
+msgid "Report of Created Sale Order"
+msgstr "Αναφορά των Δημιουργημένων Εντολών Πώλησης"
+
+#. module: sale
+#: view:report.sale.order.category:0
+msgid "Sales Orders by category"
+msgstr "Εντολές Πώλησεις κατα κατηγορία"
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_6
+#: model:ir.report.custom,title:sale.ir_report_custom_6
+msgid "Monthly cumulated sales turnover over one year"
+msgstr "Μηνιαίος συσσωρευμένος τζίρος ως προς το έτος"
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_product
+msgid "Sales Orders by Products"
+msgstr "Εντολές Πώλησεις κατα Προϊόν"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu1
+msgid "Monthly Sales Turnover Over One Year"
+msgstr "Μηνιαίος τζίρος ως προς το έτος"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_product_tree
+#: model:ir.model,name:sale.model_report_turnover_per_product
+#: view:report.turnover.per.product:0
+msgid "Turnover Per Product"
+msgstr "Τζίρος ανά προϊόν"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_82
+msgid "All Months"
+msgstr "Όλοι οι Μήνες"
+
+#. module: sale
+#: field:report.sale.order.category,price_total:0
+#: field:report.sale.order.product,price_total:0
+msgid "Total Price"
+msgstr "Συνολική Τιμή"
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_category
+msgid "Sales Orders by Categories"
+msgstr "Εντολές Πώλησης κατα Κατηγορίες"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_sale_list
+#: model:ir.ui.menu,name:sale.menu_report_order_sale_list
+msgid "Sales of the Month"
+msgstr "Πωλήσεις του Μήνα"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_product
+msgid "Sales by Product (this month)"
+msgstr "Πωλήσεις κατα Προϊόν (τρέχων μήνας)"
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_4
+#: model:ir.report.custom,title:sale.ir_report_custom_4
+msgid "Monthly sales turnover over one year"
+msgstr "Μηνιαίος τζίρος ως προς το έτος"
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr "Διαχείριση Πωλήσεων - Αναφορές"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_category_all
+#: view:report.sale.order.category:0
+msgid "Sales by Category of Products"
+msgstr "Πωλήσεις κατα Κατηγορία Προϊόντων"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu3
+msgid "Monthly Cumulated Sales Turnover Over One Year"
+msgstr "Μηνιαίος συσσωρευμένος τζίρος ως προς το έτος"
+
+#. module: sale
+#: field:report.sale.order.category,quantity:0
+#: field:report.sale.order.product,quantity:0
+msgid "# of Products"
+msgstr "# Προϊόντων"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_product_all
+#: view:report.sale.order.product:0
+msgid "Sales by Product"
+msgstr "Πωλήσεις κατα Προϊόν"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_81
+msgid "This Month"
+msgstr "Τρέχων Μήνας"
+
+#. module: sale
+#: field:report.sale.order.category,category_id:0
+msgid "Categories"
+msgstr "Κατηγορίες"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_created_sale_order_dashboard
+msgid "Created Sale Orders"
+msgstr "Εντολή Πώλησης Δημιουργήθηκε"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_80
+msgid "Reporting"
+msgstr "Αναφορές"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_month_tree
+#: model:ir.model,name:sale.model_report_turnover_per_month
+#: view:report.turnover.per.month:0
+msgid "Turnover Per Month"
+msgstr "Τζίρος ανά μήνα"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu2
+msgid "Daily Sales Turnover Over One Year"
+msgstr "Ημερήσιος τζίρος ως προς το έτος"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_83
+msgid "Graphs"
+msgstr "Γραφήματα"
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "Manual in progress"
+msgstr "Χειροκίνητη λειτουργία σε εξέλιξη"
+
+#. module: sale
+#: field:report.turnover.per.month,turnover:0
+#: field:report.turnover.per.product,turnover:0
+msgid "Total Turnover"
+msgstr "Συνολικός τζίρος"
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "In progress"
+msgstr "Σε εξέλιξη"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_category
+msgid "Sales by Category of Product (this month)"
+msgstr "Πωλήσεις κατα Κατηγορία Προϊόντων (τρέχων μήνας)"
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_5
+#: model:ir.report.custom,title:sale.ir_report_custom_5
+msgid "Daily sales turnover over one year"
+msgstr "Ημερήσιος τζίρος ως προς το έτος"
+
+#. module: sale
+#: field:report.sale.order.category,name:0
+#: field:report.sale.order.product,name:0
+#: field:report.turnover.per.month,name:0
+msgid "Month"
+msgstr "Μήνας"
+
+#. module: sale
+#: field:report.sale.order.category,count:0
+#: field:report.sale.order.product,count:0
+msgid "# of Lines"
+msgstr "# Γραμμών"
+
+#. module: sale
+#: field:report.sale.order.created,create_date:0
+msgid "Create Date"
+msgstr "Ημερομηνία Δημιουργίας"
+
+#. module: sale
+#: view:report.sale.order.created:0
+msgid "Created Sales orders"
+msgstr "Εντολές Πώλησης Δημιουργήθηκαν"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_so_pipeline
+#: view:sale.order:0
+msgid "Sales by State"
+msgstr "Πωλήσεις κατα Κατάσταση"
+
 #~ msgid "Customer Ref."
 #~ msgstr "Σχετ. Πελάτη"
 
@@ -1356,18 +1597,12 @@ msgstr "Γραμμή Εντολών Πώλησης"
 #~ msgid "Invalid action !"
 #~ msgstr "Άκυρη ενέργεια!"
 
-#~ msgid "Manual in progress"
-#~ msgstr "Χειροκίνητη λειτουργία σε εξέλιξη"
-
 #~ msgid "Number packages"
 #~ msgstr "Αριθμοδότηση συσκευασιών"
 
 #, python-format
 #~ msgid "Could not cancel sale order !"
 #~ msgstr "Αδύνατη η ακύρωση της εντολής πώλησης!"
-
-#~ msgid "In progress"
-#~ msgstr "Σε εξέλιξη"
 
 #~ msgid "Canceled"
 #~ msgstr "Ακυρωμένο"

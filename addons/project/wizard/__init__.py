@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-import close_task
-import task_delegate
-import duplicate_template_wizard
+import project_task_close
+import project_task_delegate
+import project_task_reevaluate
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,13 +15,18 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import time
 
 def som(cr, uid, partner_id, args):
+    """
+    @param cr: the current row, from the database cursor,
+    @param uid: the current user’s ID for security checks
+    """
+
     result = args['som_interval_default']
     max = args['som_interval_max'] or 4
     factor = args['som_interval_decrease']
@@ -32,8 +37,8 @@ def som(cr, uid, partner_id, args):
              '''
              select s.factor from res_partner_event e
              left join res_partner_som s
-             on (e.som=s.id) where partner_id=%s and date>=%s and date<%s''', 
-             (partner_id, 
+             on (e.som=s.id) where partner_id=%s and date>=%s and date<%s''',
+             (partner_id,
               time.strftime('%Y-%m-%d', time.gmtime(date_start)),
               time.strftime('%Y-%m-%d', time.gmtime(next_date))))
 

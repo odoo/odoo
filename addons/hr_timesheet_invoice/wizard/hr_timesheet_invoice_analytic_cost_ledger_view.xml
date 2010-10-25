@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record id="view_hr_timesheet_invoice_cost_ledger" model="ir.ui.view">
+            <field name="name">Cost Ledger</field>
+            <field name="model">hr.timesheet.analytic.cost.ledger</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Select Period">
+			    <group col="4" colspan="6">
+				    <field name="date1"/>
+				    <field name="date2"/>
+				</group>
+				<separator colspan="4"/>
+			    <group col="2" colspan="4">
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+					<button name="print_report" string="Print" colspan="1" type="object" icon="STOCK_PRINT"/>
+				</group>
+			</form>
+            </field>
+        </record>
+
+        <record id="action_hr_timesheet_invoice_cost_ledger" model="ir.actions.act_window">
+            <field name="name">Cost Ledger</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.timesheet.analytic.cost.ledger</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+	</data>
+</openerp>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+<!-- Phonecall to Opportunity view -->
+    
+        <record model="ir.ui.view" id="phonecall2opportunity_view">
+            <field name="name">crm.phonecall2opportunity.form</field>
+            <field name="model">crm.phonecall2opportunity</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Convert To Opportunity ">
+                		<field name="name"/>
+						<field name="partner_id" />
+						<newline/>
+						<field name="planned_revenue"/>
+						<field name="probability"/>
+					<separator string=" " colspan="4"/>
+                    <group colspan="4" col="3" >
+                    	<label string=" " />
+                        <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
+                        <button name="action_apply" type="object" string="_Convert" icon="gtk-convert" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+<!-- Phonecall to Opportunity action -->
+
+        <record model="ir.actions.act_window" id="phonecall2opportunity_act">
+            <field name="name">Convert To Opportunity</field>
+            <field name="res_model">crm.phonecall2opportunity</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="phonecall2opportunity_view"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>   

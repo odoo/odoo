@@ -1,0 +1,108 @@
+-
+  In order to test the hr_holiday module in OpenERP, I will  Allocate leaves for Employee and manage leaves and leaves requests.
+-
+  I create new user "test_holiday_user1" who will make leave request.
+-
+  !record {model: res.users, id: test_holiday_user1}:
+    company_id: base.main_company
+    context_lang: en_US
+    groups_id:
+      - base.group_user
+      - base.group_hr_manager
+      - base.group_hr_user
+    login: test_holiday_user1
+    name: test_holiday_user1
+    password: test_holiday_user1
+-
+  I create a new employee “Mark Johnshon” as Manager to validate employee leave.
+-
+  !record {model: hr.employee, id: hr_employee_employee0}:
+    address_home_id: base.res_partner_address_1
+    company_id: base.main_company
+    gender: male
+    name: Mark Johnson
+    user_id: base.user_root
+-
+  I Create another employee "Phil Graves" as "test_holiday_user1".
+-
+  !record {model: hr.employee, id: hr_employee_philgraves0}:
+    address_home_id: base.res_partner_address_8
+    name: Phil Graves
+    parent_id: 'hr_employee_employee0'
+    user_id: 'test_holiday_user1'
+-
+  I create a new Leave type "Sick Leave".
+-
+  !record {model: hr.holidays.status, id: hr_holidays_status_sick0}:
+    color_name: red
+    name: Sick Leave.
+    limit: 12
+
+-
+  I allocate leave request for employee "Phil Graves".
+-
+  !record {model: hr.holidays, id: hr_holidays_allocateleaveforuser0}:
+    allocation_type: employee
+    employee_id: 'hr_employee_philgraves0'
+    holiday_status_id: hr_holidays_status_sick0
+    name: Sick Leaves for Phil Graves
+    number_of_days_temp: 12.0
+    date_from: '2010-05-20 13:59:00'
+    date_to: '2010-05-22 13:59:00'
+    type: add
+-
+  I confirmed the allocation by clicking on "Confirm" button.
+-
+  !workflow {model: hr.holidays, action: confirm, ref: hr_holidays_allocateleaveforuser0}
+
+-
+  I validate the allocation by clicking on "To Approve" button.
+-
+  !workflow {model: hr.holidays, action: validate,  ref: hr_holidays_allocateleaveforuser0}
+
+-
+  I connect as "test_holiday_user1", and create a new leave request for employee "Phil Graves".
+-
+  !record {model: hr.holidays, id: hr_holidays_iwanttoleaveforgotohospital0}:
+    allocation_type: employee
+    date_from: '2010-05-20 11:48:00'
+    date_to: '2010-05-21 11:48:00'
+    employee_id: 'hr_employee_philgraves0'
+    holiday_status_id: 'hr_holidays_status_sick0'
+    name: Appointment with Doctor
+    notes: My appointment with the doctor is confirmed. so please accept my leave.
+    number_of_days_temp: 2.0
+    type: remove
+    user_id: 'test_holiday_user1'
+-
+  I check that Leave Request is in "Draft" state.
+-
+  !assert {model: hr.holidays, id: hr_holidays_iwanttoleaveforgotohospital0}:
+    - state == 'draft'
+
+-
+  I confirm leave Request by click on "Confirm" button.
+-
+  !workflow {model: hr.holidays, action: confirm, ref: hr_holidays_iwanttoleaveforgotohospital0}
+
+-
+  I connect as "Admin" user and Open Leave request of "Phil Graves" and "validate" it by click on "Approve" button.
+-
+  !workflow {model: hr.holidays, action: validate,  ref: hr_holidays_iwanttoleaveforgotohospital0}
+
+-
+  I check that "Leave Manager" field is automatically filled by the user who validate the leave'.
+-
+  !python {model: hr.holidays}: |
+     ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+     obj = self.browse(cr, uid, ref('hr_holidays_iwanttoleaveforgotohospital0'))
+     assert ids2[0] == obj.manager_id.id
+
+-
+  I check that Leave request state is "Validated".
+-
+  !assert {model: hr.holidays, id: hr_holidays_iwanttoleaveforgotohospital0}:
+    - state == "validate"
+
+-
+  I can also see Summary of Employee's holiday by using 'Employee's Holidays' Report. This report will allows to choose to print holidays with state Confirmed, Validated or both.

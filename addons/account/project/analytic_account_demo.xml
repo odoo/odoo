@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <record id="analytic_root" model="account.analytic.account">
+            <field name="name" model="res.company" use="name" search="[('id', '=', 1)]"/>
+            <field name="code">0</field>
+        </record>
         <record id="analytic_absences" model="account.analytic.account">
             <field name="name">Leaves</field>
             <field name="code">1</field>
+            <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_internal" model="account.analytic.account">
             <field name="name">Internal</field>
             <field name="code">2</field>
+            <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_our_super_product" model="account.analytic.account">
             <field name="name">Our Super Product</field>
             <field name="code">100</field>
             <field name="state">open</field>
+            <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_project_1" model="account.analytic.account">
             <field name="name">Project 1</field>
             <field name="code">101</field>
+            <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_project_2" model="account.analytic.account">
             <field name="name">Project 2</field>
             <field name="code">102</field>
+            <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_journal_trainings" model="account.analytic.account">
             <field name="name">Training</field>
@@ -154,7 +163,7 @@
             <field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
         </record>
         <record id="analytic_tiny_at_work" model="account.analytic.account">
-            <field name="name">Tiny AT Work</field>
+            <field name="name">OpenERP SA AT Work</field>
             <field name="code">15</field>
             <field name="parent_id" ref="analytic_partners"/>
             <field name="partner_id" ref="base.res_partner_tinyatwork"/>
@@ -189,7 +198,7 @@
             <field name="parent_id" ref="analytic_project_1"/>
         </record>
         <record id="analytic_administratif" model="account.analytic.account">
-            <field name="name">Administratif</field>
+            <field name="name">Administrative</field>
             <field name="code">1</field>
             <field name="parent_id" ref="analytic_internal"/>
         </record>

@@ -1,26 +1,35 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "access_stock_incoterms_all","stock.incoterms all","model_stock_incoterms",,1,0,0,0
+"access_stock_incoterms_manager","stock.incoterms manager","model_stock_incoterms","stock.group_stock_manager",1,1,1,1
 "access_stock_warehouse_manager","stock.warehouse.manager","model_stock_warehouse","stock.group_stock_manager",1,1,1,1
 "access_stock_warehouse_user","stock.warehouse.user","model_stock_warehouse","base.group_user",1,0,0,0
-"access_stock_location_manager","stock.location.manager","model_stock_location","stock.group_stock_manager",1,1,1,1
-"access_stock_location_user","stock.location.user","model_stock_location","base.group_user",1,0,0,0
-"access_stock_picking_move_wizard","stock.picking.move.wizard","model_stock_picking_move_wizard","stock.group_stock_user",1,1,1,1
-"access_stock_tracking","stock.tracking","model_stock_tracking","stock.group_stock_user",1,1,1,0
-"access_stock_picking","stock.picking","model_stock_picking","stock.group_stock_user",1,1,1,1
-"access_stock_production_lot","stock.production.lot","model_stock_production_lot","stock.group_stock_user",1,1,1,0
+"access_stock_location_manager","stock.location.manager","model_stock_location","stock.group_stock_manager",1,0,0,0
+"access_stock_location_user","stock.location.user","model_stock_location","base.group_user",1,1,1,1
+"access_stock_journal_user","stock.journal.user","model_stock_journal","base.group_user",1,0,0,0
+"access_stock_journal_manager","stock.journal.manager","model_stock_journal","stock.group_stock_manager",1,1,1,1
+"access_stock_tracking_user","stock.tracking user","model_stock_tracking","stock.group_stock_user",1,1,1,1
+"access_stock_tracking_manager","stock.tracking manager","model_stock_tracking","stock.group_stock_manager",1,0,0,0
+"access_stock_picking_user","stock.picking user","model_stock_picking","stock.group_stock_user",1,1,1,1
+"access_stock_picking_manager","stock.picking manager","model_stock_picking","stock.group_stock_manager",1,0,0,0
+"access_stock_production_lot_manager","stock.production.lot manager","model_stock_production_lot","stock.group_stock_manager",1,0,0,0
+"access_stock_production_lot_user","stock.production.lot user","model_stock_production_lot","stock.group_stock_user",1,1,1,1
 "access_stock_production_lot_revision","stock.production.lot.revision","model_stock_production_lot_revision","stock.group_stock_user",1,1,1,1
-"access_stock_move","stock.move","model_stock_move","stock.group_stock_user",1,1,1,1
-"access_stock_inventory","stock.inventory","model_stock_inventory","stock.group_stock_user",1,1,1,1
-"access_stock_inventory_line","stock.inventory.line","model_stock_inventory_line","stock.group_stock_user",1,1,1,1
+"access_stock_move_manager","stock.move manager","model_stock_move","stock.group_stock_manager",1,0,0,0
+"access_stock_move_user","stock.move user","model_stock_move","stock.group_stock_user",1,1,1,1
+"access_stock_inventory_user","stock.inventory user","model_stock_inventory","stock.group_stock_user",1,1,1,1
+"access_stock_inventory_manager","stock.inventory manager","model_stock_inventory","stock.group_stock_manager",1,0,0,0
+"access_stock_inventory_line_user","stock.inventory.line user","model_stock_inventory_line","stock.group_stock_user",1,1,1,1
+"access_stock_inventory_line_manager","stock.inventory.line manager","model_stock_inventory_line","stock.group_stock_manager",1,0,0,0
 "access_stock_report_prodlots","stock.report.prodlots","model_stock_report_prodlots","stock.group_stock_manager",1,0,0,0
 "access_stock_location_product_manager","stock.location product manager","model_stock_location","product.group_product_manager",1,0,0,0
-"access_stock_lines_date","report.stock.lines.date all","model_report_stock_lines_date",,1,0,0,0
+"access_stock_lines_date_user","report.stock.lines.date user","model_report_stock_lines_date","stock.group_stock_user",1,0,0,0
+"access_stock_lines_date_manager","report.stock.lines.date manager","model_report_stock_lines_date","stock.group_stock_manager",1,1,1,1
 "access_stock_report_tracklots","stock.report.tracklots","model_stock_report_tracklots","stock.group_stock_user",1,1,1,1
-"access_report_products_to_received_planned","report.products.to.received.planned","model_report_products_to_received_planned","stock.group_stock_user",1,0,0,0
-"access_report_delivery_products_planned","report.delivery.products.planned","model_report_delivery_products_planned","stock.group_stock_user",1,0,0,0
-"access_stock_move_track","stock.move.track","model_stock_move_track","stock.group_stock_user",1,0,0,0
-"access_stock_move_consume","stock.move.consume","model_stock_move_consume","stock.group_stock_user",1,0,0,0
-"access_stock_move_scrap","stock.move.scrap","model_stock_move_scrap","stock.group_stock_user",1,0,0,0
-"access_stock_move_split","stock.move.split","model_stock_move_split","stock.group_stock_user",1,0,0,0
-"access_stock_move_split_lines","stock.move.split.lines","model_stock_move_split_lines","stock.group_stock_user",1,0,0,0
-"access_report_stock_picking","report.stock.picking","model_report_stock_picking","stock.group_stock_user",1,0,0,0
+"access_report_stock_move_user","report.stock.move user","model_report_stock_move","stock.group_stock_user",1,0,0,0
+"access_report_stock_move_manager","report.stock.move manager","model_report_stock_move","stock.group_stock_manager",1,1,1,1
+"access_report_stock_inventory_user","report.stock.inventory user","model_report_stock_inventory","stock.group_stock_user",1,1,1,1
+"access_report_stock_inventory_manager","report.stock.inventory manager","model_report_stock_inventory","stock.group_stock_manager",1,1,1,1
+"access_product_product_stock_user","product_product_stock_user","product.model_product_product","stock.group_stock_user",1,1,1,1
+"access_product_template_stock_user","product.template stock user","product.model_product_template","stock.group_stock_user",1,1,1,1
+"access_product_product_stock_manager","product_product_stock_manager","product.model_product_product","stock.group_stock_manager",1,0,0,0
+"access_product_template_stock_manager","product.template stock manager","product.model_product_template","stock.group_stock_manager",1,0,0,0

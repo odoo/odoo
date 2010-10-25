@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        
+        <!--  Produce -->
+        
+		<record id="view_mrp_product_produce_wizard" model="ir.ui.view">
+            <field name="name">MRP Product Produce</field>
+            <field name="model">mrp.product.produce</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Produce">
+                	<separator string="Produce" colspan="4"/>
+				    <field name="mode" colspan="4"/>
+				    <field name="product_qty" colspan="2"/>
+                	<newline/>
+                	<separator string="" colspan="4" />
+                	<label string="" colspan="2" />
+                	<group col="2" colspan="1">
+                		<button icon='gtk-stop' special="cancel"
+                			string="Cancel" />
+                		<button name="do_produce" string="Confirm"
+                			colspan="1" type="object" icon="gtk-ok" />
+                	</group>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_mrp_product_produce" model="ir.actions.act_window">
+            <field name="name">Produce</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.product.produce</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>    
+        
+        
+	</data>
+</openerp>	

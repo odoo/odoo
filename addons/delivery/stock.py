@@ -19,27 +19,29 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields,osv
 from tools.translate import _
-import tools
 
 import decimal_precision as dp
 
 # Overloaded stock_picking to manage carriers :
 class stock_picking(osv.osv):
-    _name = "stock.picking"
-    _description = "Picking list"
     _inherit = 'stock.picking'
 
     def _cal_weight(self, cr, uid, ids, name, args, context=None):
         res = {}
         uom_obj = self.pool.get('product.uom')
         for picking in self.browse(cr, uid, ids, context):
-            total_weight = 0.00
+            total_weight = total_weight_net = 0.00
+
             for move in picking.move_lines:
                 total_weight += move.weight
-            res[picking.id] = total_weight
+                total_weight_net += move.weight_net
+
+            res[picking.id] = {
+                                'weight': total_weight,
+                                'weight_net': total_weight_net,
+                              }
         return res
 
 
@@ -52,11 +54,18 @@ class stock_picking(osv.osv):
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),
-        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'),
+        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
-                 'stock.move': (_get_picking_line, ['product_id','product_uos_qty'], 20),
+                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
                  }),
+        'weight_net': fields.function(_cal_weight, method=True, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+                  store={
+                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
+                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
+                 }),
+        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
+        'number_of_packages': fields.integer('Number of Packages'),
         }
 
     def action_invoice_create(self, cursor, user, ids, journal_id=False,
@@ -130,22 +139,34 @@ class stock_move(osv.osv):
         res = {}
         uom_obj = self.pool.get('product.uom')
         for move in self.browse(cr, uid, ids, context):
-            weight = 0.00
+            weight = weight_net = 0.00
             if move.product_id.weight > 0.00:
                 converted_qty = move.product_qty
-                
+
                 if move.product_uom.id <> move.product_id.uom_id.id:
                     converted_qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
 
                 weight = (converted_qty * move.product_id.weight)
-            res[move.id] = weight
+
+                if move.product_id.weight_net > 0.00:
+                    weight_net = (converted_qty * move.product_id.weight_net)
+
+            res[move.id] =  {
+                            'weight': weight,
+                            'weight_net': weight_net,
+                            }
         return res
-    
+
     _columns = {
-        'weight': fields.function(_cal_move_weight, method=True, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'),
+        'weight': fields.function(_cal_move_weight, method=True, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
                   store={
                  'stock.move': (lambda self, cr, uid, ids, c={}: ids, ['product_id', 'product_qty', 'product_uom'], 20),
                  }),
+        'weight_net': fields.function(_cal_move_weight, method=True, type='float', string='Net weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
+                  store={
+                 'stock.move': (lambda self, cr, uid, ids, c={}: ids, ['product_id', 'product_qty', 'product_uom'], 20),
+                 }),
+                 
         }
 
 stock_move()

@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class res_company(osv.osv):
     _inherit = 'res.company'
@@ -28,9 +29,7 @@ class res_company(osv.osv):
             help='This will set the unit of measure used in projects and tasks.\n' \
 "If you use the timesheet linked to projects (project_timesheet module), don't " \
 "forget to setup the right unit of measure in your employees.",
-
         ),
     }
 res_company()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

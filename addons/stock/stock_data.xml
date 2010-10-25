@@ -12,16 +12,16 @@
         </record>
 
         <!--
-	Request link
-	-->
+    Request link
+    -->
         <record id="req_link_tracking" model="res.request.link">
             <field name="name">Production Lot</field>
             <field name="object">stock.production.lot</field>
         </record>
         
         <!--
-	Resource: stock.location
-	-->
+    Resource: stock.location
+    -->
         <record id="stock_location_locations" model="stock.location">
             <field name="name">Physical Locations</field>
             <field name="usage">view</field>
@@ -36,6 +36,12 @@
             <field name="name">Virtual Locations</field>
             <field name="usage">view</field>
             <field name="icon">terp-mrp</field>
+        </record>
+        <record id="stock_location_scrapped" model="stock.location">
+            <field name="name">Scrapped</field>
+            <field name="location_id" ref="stock_location_locations_virtual"/>
+            <field name="scrap_location">True</field>
+            <field name="usage">inventory</field>
         </record>
         
         <record id="location_inventory" model="stock.location">
@@ -68,11 +74,17 @@
             <field name="usage">view</field>
             <field name="location_id" ref="stock_location_locations"/>
         </record>
+
+        <record id="journal_delivery" model="stock.journal">
+            <field name="name">Delivery Orders</field>
+        </record>
         <record id="stock_location_output" model="stock.location">
             <field name="name">Output</field>
             <field name="location_id" ref="stock_location_company"/>
             <field name="usage">internal</field>
             <field name="chained_location_type">customer</field>
+            <field name="chained_picking_type">out</field>
+            <field name="chained_journal_id" ref="journal_delivery"/>
         </record>
         <record id="stock_location_stock" model="stock.location">
             <field name="name">Stock</field>
@@ -80,8 +92,8 @@
         </record>
         
         <!--
-	Properties
-	-->
+    Properties
+    -->
         <record forcecreate="True" id="property_stock_supplier" model="ir.property">
             <field name="name">property_stock_supplier</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_supplier')]"/>
@@ -108,10 +120,16 @@
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_production')]"/>
             <field eval="'stock.location,'+str(location_production)" name="value"/>
         </record>
-        
+
+
+        <record forcecreate="True" id="decimal_shipping_delay" model="decimal.precision">
+            <field name="name">Shipping Delay</field>
+            <field name="digits" eval="2"/>
+        </record>
+
         <!--
-	Resource: stock.warehouse
-	-->
+    Resource: stock.warehouse
+    -->
         <record id="warehouse0" model="stock.warehouse">
             <field model="res.company" name="name" search="[]" use="name"/>
             <field name="lot_input_id" ref="stock_location_stock"/>

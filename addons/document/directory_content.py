@@ -18,16 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-import base64
 
 from osv import osv, fields
-from osv.orm import except_orm
-import urlparse
 
 import netsvc
-import os
+# import os
 import nodes
-import StringIO
+# import StringIO
 
 class document_directory_content_type(osv.osv):
     _name = 'document.directory.content.type'
@@ -58,7 +55,9 @@ class document_directory_content(osv.osv):
         'suffix': fields.char('Suffix', size=16),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
         'extension': fields.selection(_extension_get, 'Document Type', required=True, size=4),
-        'include_name': fields.boolean('Include Record Name', help="Check this field if you want that the name of the file start by the record name."),
+        'include_name': fields.boolean('Include Record Name', 
+                help="Check this field if you want that the name of the file to contain the record name." \
+                    "\nIf set, the directory will have to be a resource one."),
         'directory_id': fields.many2one('document.directory', 'Directory'),
     }
     _defaults = {
@@ -81,19 +80,26 @@ class document_directory_content(osv.osv):
         tname = ''
         if content.include_name:
             content_name = node.displayname or ''
-            obj = node.context._dirobj.pool.get(model)
+            # obj = node.context._dirobj.pool.get(model)
             if content_name:
                 tname = (content.prefix or '') + content_name + (content.suffix or '') + (content.extension or '')
         else:
             tname = (content.prefix or '') + (content.suffix or '') + (content.extension or '')
         if tname.find('/'):
             tname=tname.replace('/', '_')
+        act_id = False
+        if 'dctx_res_id' in node.dctx:
+            act_id = node.dctx['dctx_res_id']
+        elif hasattr(node, 'res_id'):
+            act_id = node.res_id
+        else:
+            act_id = node.context.context.get('res_id',False)
         if not nodename:
-            n = nodes.node_content(tname, node, node.context,content)
+            n = nodes.node_content(tname, node, node.context,content, act_id=act_id)
             res2.append( n)
         else:
             if nodename == tname:
-                n = nodes.node_content(tname, node, node.context,content)
+                n = nodes.node_content(tname, node, node.context,content, act_id=act_id)
                 n.fill_fields(cr)
                 res2.append(n)
         return res2
@@ -108,6 +114,10 @@ class document_directory_content(osv.osv):
             raise Exception("Invalid content: %s" % node.extension)
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id)
         srv = netsvc.Service._services['report.'+report.report_name]
-        pdf,pdftype = srv.create(cr, uid, [node.context.context['res_id']], {}, {})        
+        ctx = node.context.context.copy()
+        ctx.update(node.dctx)
+        pdf,pdftype = srv.create(cr, uid, [node.act_id,], {}, context=ctx)
         return pdf
 document_directory_content()
+
+#eof

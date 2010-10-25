@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://openerp_plugin/skin/overlay.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://openerp_plugin/locale/overlay.dtd">
+<overlay id="tiny-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+         xmlns:html="http://www.w3.org/1999/xhtml">
+<script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
+<script type="text/javascript" src="chrome://openerp_plugin/content/overlay.js"></script>
+<script type="text/javascript" src="chrome://openerp_plugin/content/exportTools.js"></script>
+
+<menupopup id="taskPopup">
+    <menuitem id="tiny-plugin2" label="&tinyplugin;"
+          oncommand="Config.onMenuItemCommand(event);"
+          image="&menuicon.value;"
+          class="menuitem-iconic"
+          tooltiptext="&pluginconfig.value;"/>
+</menupopup>
+
+<menupopup id="taskPopup">
+    <menuitem id="tiny-plugin1" label="&tinypluginconfig;"
+          oncommand="searchmail();"
+          image="&menuicon.value;"
+          class="menuitem-iconic"
+          tooltiptext="&pluginconfigvalue.value;"/>
+</menupopup>
+
+<popup id="threadPaneContext">
+	<menuitem id="threadPaneContext-saveAsMultiple"
+		insertbefore="threadPaneContext-print"
+		class="menuitem-iconic"
+		image="&menuicon.value;"
+		label="Archive To OpenERP"
+		accesskey="T"
+		oncommand="searchmail();"/>
+</popup>
+
+<toolbarpalette id="MailToolbarPalette">
+	<toolbarbutton id="GA-button"
+		class="toolbarbutton-1"
+		image="&menuicon.value;"
+		label= "Push To OpenERP"
+		oncommand="searchmail();" />
+</toolbarpalette> 
+
+<toolbarpalette id="MailToolbarPalette">
+	<toolbarbutton id="GA-button2"
+		class="toolbarbutton-1"
+		image="&partnericon.value;"
+		label= "Open Partner"
+        oncommand="open_partner();"
+		  />
+</toolbarpalette>
+<toolbarpalette id="MailToolbarPalette">
+	<toolbarbutton id="GA-button3"
+		class="toolbarbutton-1"
+		image="&imagearchive.value;"
+		label= "Open Document"
+		oncommand="open_document();"  />
+</toolbarpalette> 
+
+</overlay>

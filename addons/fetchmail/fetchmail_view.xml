@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    
+        <record model="ir.ui.view" id="view_email_server_tree">
+            <field name="name">email.server.tree</field>
+            <field name="model">email.server</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state in ('draft');black:state in ('wating');gray:state in('done')" string="POP/IMAP Servers">
+                    <field name="name" select="1"/>
+                    <field name="type" select="1"/>
+                    <field name="user" select="1"/>
+                    <field name="is_ssl" select="1"/>
+                    <field name="state" select="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_email_server_form">
+            <field name="name">email.server.form</field>
+            <field name="model">email.server</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="POP/IMAP Server">
+                    <group col="6" colspan="4">
+                        <field name="name" select="1" colspan="4"/>
+                        <field name="type" select="1" on_change="onchange_server_type(type, is_ssl)"/>
+                        <field name="date" select="1"/>
+                        <field name="attach"/>
+                        <field name="active" select="1"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Server &amp; Login">
+                            <group col="2" colspan="2">
+                                <separator string="Server Information" colspan="2"/>
+                                <field name="is_ssl" select="1" on_change="onchange_server_type(type, is_ssl)"/>
+                                <field name="server" />
+                                <field name="port" />
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Login Information" colspan="2"/>
+                                <field name="user" />
+                                <field name="password" password="True" />
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Auto Reply?" colspan="2"/>
+                                <field name="action_id"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Process Parameter" colspan="2"/>
+                                <field name="object_id"/>
+                                <field name="priority"/>
+                            </group>
+                            <separator string="Description" colspan="4"/>
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                    <group col="6" colspan="4">
+                        <field name="state" select="1"/>
+                        <button string="Fetch Emails" type="object" name="button_fetch_mail"/>
+                        <button string="Set to Draft" type="object" name="set_draft"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_email_server_tree">
+            <field name="name">POP Servers</field>
+            <field name="res_model">email.server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_email_server_tree"/>
+            <field name="context">{'type':'pop'}</field>
+            <field name="domain">[('type','=','pop')]</field>
+        </record>
+
+        <menuitem 
+            parent="base.menu_config" 
+            id="menu_action_fetchmail_server_tree" 
+            name="Fetchmail Services"
+        />
+        
+        <menuitem 
+            parent="menu_action_fetchmail_server_tree" 
+            id="menu_action_email_server_tree" 
+            action="action_email_server_tree"
+        />
+        
+        <record model="ir.actions.act_window" id="action_email_server_tree_imap">
+            <field name="name">IMAP Servers</field>
+            <field name="res_model">email.server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_email_server_tree"/>
+            <field name="context">{'type':'imap'}</field>
+            <field name="domain">[('type','=','imap')]</field>
+        </record>
+        
+        <menuitem 
+            parent="menu_action_fetchmail_server_tree" 
+            id="menu_action_email_server_tree_imap" 
+            action="action_email_server_tree_imap"
+        />
+        
+      <record model="ir.ui.view" id="mailgate_message_tree_view">
+                <field name="name">mailgate.message.tree</field>
+                <field name="model">mailgate.message</field>
+                <field name="type">tree</field>
+                <field name="inherit_id" ref="mail_gateway.view_mailgate_message_tree"/>
+                <field name="arch" type="xml">
+                    <field name="user_id" position="after">
+                        <field name="server_id" select="1"/>
+                        <field name="ref_id"/>
+                    </field>
+                </field>
+            </record>
+
+        <act_window 
+            context="{'server_id': active_id}"
+            domain="[('server_id', '=', active_id)]"
+            id="act_server_history" name="Email History"
+            res_model="mailgate.message" src_model="email.server"/>
+            
+        <record model="ir.actions.act_window" id="action_mailgate_message_tree">
+            <field name="name">Received Email History</field>
+            <field name="res_model">mailgate.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="mailgate_message_tree_view"/>
+            <field name="context">{'type':'imap'}</field>
+            <field name="domain">[('type','=','imap')]</field>
+        </record>
+        
+        <menuitem 
+            parent="menu_action_email_server_tree_imap" 
+            id="menu_action_mailgate_message_tree" 
+            action="action_mailgate_message_tree"/>
+            
+        <record model="ir.actions.act_window" id="action_mailgate_message_tree_pop">
+            <field name="name">Received Email History</field>
+            <field name="res_model">mailgate.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="mailgate_message_tree_view"/>
+            <field name="context">{'type':'pop'}</field>
+            <field name="domain">[('type','=','pop')]</field>
+        </record>
+        
+        <menuitem 
+            parent="menu_action_email_server_tree" 
+            id="menu_action_mailgate_message_tree_pop" 
+            action="action_mailgate_message_tree_pop"/>
+
+    </data>
+</openerp>

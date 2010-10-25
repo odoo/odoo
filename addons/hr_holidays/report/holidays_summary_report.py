@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,7 +27,8 @@ from report.interface import report_rml
 from report.interface import toxml
 
 import pooler
-
+import time
+from report import report_sxw
 
 def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
@@ -39,20 +40,20 @@ def strToDate(dt):
         dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
         return dt_date
     else:
-        return 
-    
+        return
 
-def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
+
+def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, eom):
     display={}
     if dept==0:
         count=0
-        p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr,uid,[('employee_id','in',[empid,False]), ('type', '=', 'remove')])
-        ids_date = pooler.get_pool(cr.dbname).get('hr.holidays').read(cr,uid,p_id,['date_from','date_to','holiday_status_id','state'])
-        
+        p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr, uid, [('employee_id','in',[empid,False]), ('type', '=', 'remove')])
+        ids_date = pooler.get_pool(cr.dbname).get('hr.holidays').read(cr, uid, p_id, ['date_from','date_to','holiday_status_id','state'])
+
         for index in range(1,61):
             diff=index-1
             current=som+datetime.timedelta(diff)
-            
+
             for item in ids_date:
                 if current >= strToDate(item['date_from']) and current <= strToDate(item['date_to']):
                     if item['state'] in holiday_type:
@@ -68,42 +69,37 @@ def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
               display[index]=' '
               count=''
 
-    xml = '''
-        <time-element index="%d">
-            <value>%s</value>
-        </time-element>
-        '''
-    time_xml = ([xml % (index, value) for index,value in display.iteritems()])
     data_xml=['<info id="%d" number="%d" val="%s" />' % (row_id,x,display[x]) for x in range(1,len(display)+1) ]
 
     # Computing the xml
     xml = '''
     %s
     <employee row="%d" id="%d" name="%s" sum="%s">
-    %s
     </employee>
-    ''' % (data_xml,row_id,dept, toxml(name),count, '\n'.join(time_xml))
+    ''' % (data_xml,row_id,dept, toxml(name),count)
 
     return xml
 
 class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, data, context):
+        obj_dept = pooler.get_pool(cr.dbname).get('hr.department')
+        obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
         depts=[]
         emp_id={}
 #        done={}
-
-        cr.execute("select name from res_company")
+        rpt_obj = pooler.get_pool(cr.dbname).get('hr.holidays')
+        rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
+        cr.execute("SELECT name FROM res_company")
         res=cr.fetchone()[0]
         date_xml=[]
         date_today=time.strftime('%Y-%m-%d %H:%M:%S')
         date_xml +=['<res name="%s" today="%s" />' % (res,date_today)]
 
-        cr.execute("select id,name,color_name from hr_holidays_status order by id")
+        cr.execute("SELECT id, name, color_name FROM hr_holidays_status ORDER BY id")
         legend=cr.fetchall()
         today=datetime.datetime.today()
 
         first_date=data['form']['date_from']
-
         som = strToDate(first_date)
         eom = som+datetime.timedelta(59)
         day_diff=eom-som
@@ -117,8 +113,8 @@ class report_custom(report_rml):
         else:
             type="Confirmed and Validated"
             holiday_type=('confirm','validate')
-        date_xml.append('<from>%s</from>\n'% (som))
-        date_xml.append('<to>%s</to>\n' %(eom))
+        date_xml.append('<from>%s</from>\n'% (str(rml_obj.formatLang(som.strftime("%Y-%m-%d"),date=True))))
+        date_xml.append('<to>%s</to>\n' %(str(rml_obj.formatLang(eom.strftime("%Y-%m-%d"),date=True))))
         date_xml.append('<type>%s</type>'%(type))
 
 #        date_xml=[]
@@ -210,45 +206,35 @@ class report_custom(report_rml):
         row_id=1
 
         if data['model']=='hr.employee':
+            for id in data['form']['emp']:
+                 items = obj_emp.read(cr, uid, id, ['id','name'])
 
-            for id in data['form']['emp'][0][2]:
-                 items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr,uid,id,['id','name'])
-
-                 emp_xml += emp_create_xml(self,cr,uid,0,holiday_type,row_id,items['id'],items['name'],som, eom)
+                 emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, items['id'], items['name'], som, eom)
                  row_id = row_id +1
-                 
-        elif data['model']=='ir.ui.menu':
-            for id in data['form']['depts'][0][2]:
-                dept = pooler.get_pool(cr.dbname).get('hr.department').browse(cr, uid, id, context.copy())
-                depts.append(dept)
-                dept_ids = tuple(data['form']['depts'][0][2])
-                
-                cr.execute("""select dept_user.user_id \
-                from hr_department_user_rel dept_user \
-                where dept_user.department_id = %s\
-                union\
-                select dept.manager_id from hr_department dept\
-                where dept.id = %s""", (id, id))
 
-                result=cr.fetchall()
-                if result==[]:
+        elif data['model']=='ir.ui.menu':
+            for id in data['form']['depts']:
+                dept = obj_dept.browse(cr, uid, id, context=context)
+                cr.execute("""SELECT id FROM hr_employee \
+                WHERE department_id = %s""", (id,))
+                emp_ids = [x[0] for x in cr.fetchall()]
+                if emp_ids==[]:
                     continue
                 dept_done=0
-                for d in range(0,len(result)):
-                    emp_id[d]=pooler.get_pool(cr.dbname).get('hr.employee').search(cr,uid,[('user_id','=',result[d][0])])
-                    items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr,uid,emp_id[d],['id','name'])
-                    for item in items:
-#                        if item['id'] in done:
-#                            continue
-#                        else:
-                        if dept_done==0:
-                            emp_xml += emp_create_xml(self,cr,uid,1,holiday_type,row_id,dept.id,dept.name,som, eom)
-                            row_id = row_id +1
-                        dept_done=1
-
-#                        done[item['id']] = 1
-                        emp_xml += emp_create_xml(self,cr,uid,0,holiday_type,row_id,item['id'],item['name'],som, eom)
+                for item in obj_emp.read(cr, uid, emp_ids, ['id', 'name']):
+                    if dept_done==0:
+                        emp_xml += emp_create_xml(self, cr, uid, 1, holiday_type, row_id, dept.id, dept.name, som, eom)
                         row_id = row_id +1
+                    dept_done=1
+                    emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, item['id'], item['name'], som, eom)
+                    row_id = row_id +1
+
+        header_xml = '''
+        <header>
+        <date>%s</date>
+        <company>%s</company>
+        </header>
+        '''  % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
 
         # Computing the xml
         xml='''<?xml version="1.0" encoding="UTF-8" ?>
@@ -256,11 +242,13 @@ class report_custom(report_rml):
         %s
         %s
         %s
+        %s
         </report>
-        ''' % (months_xml,date_xml, emp_xml)
-        
+        ''' % (header_xml,months_xml,date_xml, emp_xml)
+
         return xml
 
 report_custom('report.holidays.summary', 'hr.holidays', '', 'addons/hr_holidays/report/holidays_summary.xsl')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

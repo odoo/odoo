@@ -30,37 +30,36 @@
 #
 ##############################################################################
 
-import time
+from datetime import datetime
+
 from osv import fields, osv
 from tools import mod10r
-from mx import DateTime
-
 
 class account_invoice(osv.osv):
     """Inherit account.invoice in order to add bvr
     printing functionnalites. BVR is a Swiss payment vector"""
     _inherit = "account.invoice"
-    
+
     ## @param self The object pointer.
     ## @param cursor a psycopg cursor
     ## @param user res.user.id that is currently loged
-    ## @parma context a standard dict 
+    ## @parma context a standard dict
     ## @return a list of tuple (name,value)
     def _get_reference_type(self, cursor, user, context=None):
-        """Function use by the function field reference_type in order to initalise available 
+        """Function use by the function field reference_type in order to initalise available
         BVR Reference Types"""
         res = super(account_invoice, self)._get_reference_type(cursor, user,
                 context=context)
         res.append(('bvr', 'BVR'))
         return res
-    
+
     ## @param self The object pointer.
     ## @param cursor a psycopg cursor
     ## @param user res.user.id that is currently loged
     ## @parma context a standard dict
-    ## @param name of the files 
-    ## @param args a list of diverse argument 
-    ## @parma context a standard dict 
+    ## @param name of the files
+    ## @param args a list of diverse argument
+    ## @parma context a standard dict
     ## @return a  dict (invoice id,amount to pay)
     def _amount_to_pay(self, cursor, user, ids, name, args, context=None):
         '''Return the amount still to pay regarding all the payment orders'''
@@ -72,8 +71,8 @@ class account_invoice(osv.osv):
             if invoice.move_id:
                 for line in invoice.move_id.line_id:
                     if not line.date_maturity or \
-                            DateTime.strptime(line.date_maturity, '%Y-%m-%d') \
-                            < DateTime.now():
+                            datetime.strptime(line.date_maturity, '%Y-%m-%d') \
+                            < datetime.today():
                         res[invoice.id] += line.amount_to_pay
         return res
 
@@ -81,8 +80,8 @@ class account_invoice(osv.osv):
         ### BVR reference type BVR or FREE
         'reference_type': fields.selection(_get_reference_type,
             'Reference Type', required=True),
-        ### Partner bank link between bank and partner id   
-        'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
+        ### Partner bank link between bank and partner id
+        'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
             help='The partner bank account to pay\nKeep empty to use the default'
             ),
         ### Amount to pay
@@ -91,12 +90,12 @@ class account_invoice(osv.osv):
             help='The amount which should be paid at the current date\n' \
                     'minus the amount which is already in payment order'),
     }
-    
+
     ## @param self The object pointer.
     ## @param cursor a psycopg cursor
     ## @param user res.user.id that is currently loged
     ## @parma ids invoices id
-    ## @return a boolean True if valid False if invalid 
+    ## @return a boolean True if valid False if invalid
     def _check_bvr(self, cr, uid, ids):
         """
         Function to validate a bvr reference like :
@@ -123,14 +122,14 @@ class account_invoice(osv.osv):
     ## @param cursor a psycopg cursor
     ## @param user res.user.id that is currently loged
     ## @parma ids invoices id
-    ## @return a boolean True if valid False if invalid 
+    ## @return a boolean True if valid False if invalid
     def _check_reference_type(self, cursor, user, ids):
-        """Check the customer invoice reference type depending 
+        """Check the customer invoice reference type depending
         on the BVR reference type and the invoice partner bank type"""
         for invoice in self.browse(cursor, user, ids):
             if invoice.type in 'in_invoice':
-                if invoice.partner_bank and \
-                        invoice.partner_bank.state in \
+                if invoice.partner_bank_id and \
+                        invoice.partner_bank_id.state in \
                         ('bvrbank', 'bvrpost') and \
                         invoice.reference_type != 'bvr':
                             return False
@@ -142,7 +141,7 @@ class account_invoice(osv.osv):
         (_check_reference_type, 'Error: BVR reference is required.',
             ['reference_type']),
     ]
-    
+
     ## @param self The object pointer.
     ## @param cr a psycopg cursor
     ## @param uid res.user.id that is currently loged
@@ -152,18 +151,18 @@ class account_invoice(osv.osv):
     ## @parma date_invoice date of the invoice
     ## @parma payment_term inoice payment term
     ## @param partner_bank_id the partner linked invoice bank
-    ## @return the dict of values with the partner_bank value updated       
+    ## @return the dict of values with the partner_bank value updated
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False):
+            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         """ Function that is call when the partner of the invoice is changed
         it will retriev and set the good bank partner bank"""
         res = super(account_invoice, self).onchange_partner_id(
                                                                 cr,
-                                                                 uid, 
-                                                                 ids, 
+                                                                 uid,
+                                                                 ids,
                                                                  type,
-                                                                 partner_id, 
-                                                                 date_invoice, 
+                                                                 partner_id,
+                                                                 date_invoice,
                                                                  payment_term
                                                             )
         bank_id = False
@@ -173,19 +172,19 @@ class account_invoice(osv.osv):
                 bank_id = p.bank_ids[0].id
 
         if type in ('in_invoice', 'in_refund'):
-            res['value']['partner_bank'] = bank_id
+            res['value']['partner_bank_id'] = bank_id
 
         if partner_bank_id != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
             res['value'].update(to_update['value'])
         return res
-        
+
     ## @param self The object pointer.
     ## @param cursor a psycopg cursor
     ## @param user res.user.id that is currently loged
     ## @parma ids invoices id
     ## @param partner_bank_id the partner linked invoice bank
-    ## @return the dict of values with the reference type  value updated 
+    ## @return the dict of values with the reference type  value updated
     def onchange_partner_bank(self, cursor, user, ids, partner_bank_id):
         """update the reference type depending of the partner bank"""
         res = {'value': {}}
@@ -207,6 +206,7 @@ class account_tax_code(osv.osv):
         ### The case code of the taxt code
         'code': fields.char('Case Code', size=512),
     }
+
 account_tax_code()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

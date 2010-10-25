@@ -2,18 +2,24 @@
 <openerp>
     <data>
         <record id="view_confirm_install_module_form" model="ir.ui.view">
-            <field name="name">Association Profile : Install extra modules</field>
+            <field name="name">Association Application Configuration</field>
             <field name="model">profile.association.config.install_modules_wizard</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
               <data>
                 <form position="attributes">
-                  <attribute name="string">Install Extra Modules</attribute>
+                  <attribute name="string">Association Application Configuration</attribute>
                 </form>
+                <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                    <attribute name='string'></attribute>
+                  </xpath>
                 <xpath expr="//label[@string='description']"
                        position="attributes">
-                  <attribute name="string">Install more modules. A few modules are proposed according to the Association Profile you selected. You will be able to install them based on our requirements.</attribute>
+                  <attribute name="string">Here are specific applications related to the Association Profile you selected.</attribute>
+                </xpath>
+                <xpath expr="//button[@string='Install Modules']" position="attributes">
+                    <attribute name="string">Configure</attribute>
                 </xpath>
                 <separator string="title" position="replace"/>
                 <group colspan="8">
@@ -21,17 +27,17 @@
                   <field name="project"/>
                   <field name="project_gtd"/>
                   <field name="wiki"/>
+                  <separator string="Event Management" colspan="4"/>
+                  <field name="event_project"/>
                   <separator string="Resources Management" colspan="4"/>
                   <field name="hr_expense"/>
-                  <separator string="Relationship Management" colspan="4"/>
-                  <field name="crm_configuration"/>
                 </group>
               </data>
             </field>
         </record>
 
         <record id="action_config_install_module" model="ir.actions.act_window">
-            <field name="name">Association Profile : Install Extra Modules</field>
+            <field name="name">Association Application Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">profile.association.config.install_modules_wizard</field>
             <field name="view_id" ref="view_confirm_install_module_form"/>
@@ -42,8 +48,14 @@
 
       <record model="ir.actions.todo"
             id="config_install_module">
-        <field name="action_id" ref="action_config_install_module"/>
-        <field name="sequence">3</field>
+            <field name="action_id" ref="action_config_install_module"/>
+            <field name="sequence">3</field>
+            <field name="restart">always</field>
       </record>
+
+        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9" groups="base.group_extended"/>
+        <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.menu_association" />
+        <menuitem name="Configuration" id="base.menu_event_config" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
+        <menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
     </data>
 </openerp>

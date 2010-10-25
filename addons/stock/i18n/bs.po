@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-02-12 14:37+0000\n"
+"PO-Revision-Date: 2010-09-20 11:44+0000\n"
 "Last-Translator: adnan <adnankraljic@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:39+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -360,6 +360,18 @@ msgstr "Stavke kretanja"
 #: wizard_field:stock.fill_inventory,init,recursive:0
 msgid "Include all children for the location"
 msgstr "Uključi sve podlokacije za datu lokaciju"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Bad Lot Assignation !"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You are moving %.2f products but only %.2f available in this lot."
+msgstr ""
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -2001,7 +2013,7 @@ msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
 msgstr ""
-"Koristiće se ova lokacija zaliha, umjesto podrazumjevane, kao \r\n"
+"Koristiće se ova lokacija zaliha, umjesto podrazumjevane, kao \n"
 "odredišna lokacija za robu koju šaljete ovom partneru"
 
 #. module: stock
@@ -2139,8 +2151,8 @@ msgid ""
 "instead of the default one, as the source location for stock moves generated "
 "by production orders"
 msgstr ""
-"Za ovaj proizvod (šablon) biće korištena ova lokacija zaliha, \r\n"
-"umjesto podrazumjevane, kao izvorna lokacija za premještanja zaliha \r\n"
+"Za ovaj proizvod (šablon) biće korištena ova lokacija zaliha, \n"
+"umjesto podrazumjevane, kao izvorna lokacija za premještanja zaliha \n"
 "kada ga inicira nalog za proizvodnju"
 
 #. module: stock
@@ -2226,7 +2238,7 @@ msgid ""
 "by procurements"
 msgstr ""
 "Za ovaj proizvod (šablon) biće korištena ova lokacija zaliha, umjesto "
-"podrazumjevane, kao izvorna lokacija za premještanja zaliha \r\n"
+"podrazumjevane, kao izvorna lokacija za premještanja zaliha \n"
 "kada ga inicira nabavka"
 
 #. module: stock
