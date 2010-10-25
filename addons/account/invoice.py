@@ -354,12 +354,26 @@ class account_invoice(osv.osv):
             res['arch'] = etree.tostring(doc)
         return res
 
+    def get_log_context(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        mob_obj = self.pool.get('ir.model.data')
+        res = mob_obj.get_object_reference(cr, uid, 'account', 'invoice_form') or False
+        view_id = res and res[1] or False
+        context.update({'view_id': view_id})
+        return context
+
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         try:
             res = super(account_invoice, self).create(cr, uid, vals, context)
             for inv_id, name in self.name_get(cr, uid, [res], context=context):
+                ctx = context.copy()
+                if vals.get('type', 'in_invoice') in ('out_invoice', 'out_refund'):
+                    ctx = self.get_log_context(cr, uid, context=ctx)
                 message = _("Invoice '%s' is waiting for validation.") % name
-                self.log(cr, uid, inv_id, message)
+                self.log(cr, uid, inv_id, message, context=ctx)
             return res
         except Exception, e:
             if '"journal_id" viol' in e.args[0]:
@@ -961,7 +975,9 @@ class account_invoice(osv.osv):
             'analytic_account_id':x.get('account_analytic_id',False),
         }
 
-    def action_number(self, cr, uid, ids, *args):
+    def action_number(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         #TODO: not correct fix but required a frech values before reading it.
         self.write(cr, uid, ids, {})
 
@@ -995,9 +1011,11 @@ class account_invoice(osv.osv):
                         (ref, move_id))
 
             for inv_id, name in self.name_get(cr, uid, [id]):
+                ctx = context.copy()
+                if obj_inv.type in ('out_invoice', 'out_refund'):
+                    ctx = self.get_log_context(cr, uid, context=ctx)
                 message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
-                self.log(cr, uid, inv_id, message)
-
+                self.log(cr, uid, inv_id, message, context=ctx)
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
