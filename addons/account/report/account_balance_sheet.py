@@ -26,6 +26,7 @@ import rml_parse
 from report import report_sxw
 from account.report import account_profit_loss
 from common_report_header import common_report_header
+from tools.translate import _
 
 class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
     def __init__(self, cr, uid, name, context=None):
@@ -61,12 +62,12 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         self.context = context
 
     def sum_dr(self):
-        if self.res_bl['type'] == 'Net Profit':
+        if self.res_bl['type'] == _('Net Profit'):
             self.result_sum_dr += self.res_bl['balance']*-1
         return self.result_sum_dr
 
     def sum_cr(self):
-        if self.res_bl['type'] == 'Net Loss':
+        if self.res_bl['type'] == _('Net Loss'):
             self.result_sum_cr += self.res_bl['balance']
         return self.result_sum_cr
 
@@ -105,13 +106,13 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
         if not self.res_bl:
-            self.res_bl['type'] = 'Net Profit'
+            self.res_bl['type'] = _('Net Profit')
             self.res_bl['balance'] = 0.0
 
-        if self.res_bl['type'] == 'Net Profit':
-            self.res_bl['type'] = 'Net Profit'
+        if self.res_bl['type'] == _('Net Profit'):
+            self.res_bl['type'] = _('Net Profit')
         else:
-            self.res_bl['type'] = 'Net Loss'
+            self.res_bl['type'] = _('Net Loss')
         pl_dict  = {
             'code': self.res_bl['type'],
             'name': self.res_bl['type'],
