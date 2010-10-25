@@ -2025,7 +2025,6 @@ class account_model(osv.osv):
 
     _defaults = {
         'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s: To Specify Year \n%(month)s: To Specify Month \n%(date)s: Current Date\n\ne.g. My model on %(date)s'),
-         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.model', context=c),
     }
     def generate(self, cr, uid, ids, datas={}, context=None):
         move_ids = []
