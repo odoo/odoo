@@ -27,33 +27,33 @@ class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
     _description = "Sale OrderLine Make_invoice"
     def make_invoices(self, cr, uid, ids, context):
-        """ 
+        """
              To make invoices.
-            
+
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
-        """        
+             @param ids: the ID or list of IDs
+             @param context: A standard dictionary
+
+             @return: A dictionary which of fields with values.
+
+        """
 
         res = False
         invoices = {}
 
     #TODO: merge with sale.py/make_invoice
         def make_invoice(order, lines):
-            """ 
+            """
                  To make invoices.
-                
-                 @param order: 
-                 @param lines: 
-                
-                 @return:  
-            
-            """            
+
+                 @param order:
+                 @param lines:
+
+                 @return:
+
+            """
             a = order.partner_id.property_account_receivable.id
             if order.partner_id and order.partner_id.property_payment_term.id:
                 pay_term = order.partner_id.property_payment_term.id
@@ -90,12 +90,12 @@ class sale_order_line_make_invoice(osv.osv_memory):
                     invoices[line.order_id.id].append((line, lid))
                 sales_order_line_obj.write(cr, uid, [line.id],
                         {'invoiced': True})
-            for result in invoices.values():
-                order = result[0][0].order_id
-                il = map(lambda x: x[1], result)
-                res = make_invoice(order, il)
-                cr.execute('INSERT INTO sale_order_invoice_rel \
-                        (order_id,invoice_id) values (%s,%s)', (order.id, res))
+        for result in invoices.values():
+            order = result[0][0].order_id
+            il = map(lambda x: x[1], result)
+            res = make_invoice(order, il)
+            cr.execute('INSERT INTO sale_order_invoice_rel \
+                    (order_id,invoice_id) values (%s,%s)', (order.id, res))
 
             flag = True
             data_sale = sales_order_obj.browse(cr, uid, line.order_id.id)
@@ -109,7 +109,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
 
         if not invoices:
             raise osv.except_osv(_('Warning'), _('Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either "draft" or "cancel"!\n2.The Sale Order Line is Invoiced!'))
-        
+
         return {}
 
 sale_order_line_make_invoice()
