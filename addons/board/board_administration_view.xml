@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <!-- User Connection -->
         <record model="ir.ui.view" id="view_user_connection_tree">
             <field name="name">user.connection.tree</field>
@@ -28,6 +29,100 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+        <!--     Log report search view  -->
+        <record id="view_res_log_report_filter" model="ir.ui.view">
+            <field name="name">res.log.report.select</field>
+            <field name="model">res.log.report</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Log Analysis">
+                    <group col="20" colspan="8">
+                        <filter string="Last 30 Days" icon="terp-go-month" name="thismonth"
+                            domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                        <filter icon="terp-go-week" string="7 Days" separator="1" name="thisweek"
+                            domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+                   </group>
+                   <newline/>
+                   <group  expand="0" string="Extended Filters..." groups="base.group_extended">
+                      <field name="creation_date"/>
+                   </group>
+                   <newline/>
+                   <group  expand="1" string="Group By...">
+                        <filter string="Model" icon="terp-go-home" context="{'group_by':'res_model'}" />
+                            <separator orientation="vertical"/>
+                        <filter string="Day" icon="terp-go-today"
+                            domain="[]" context="{'group_by':'day'}"/>
+                        <filter string="Month" icon="terp-go-month"
+                            domain="[]" context="{'group_by':'month'}" />
+                        <filter string="Year" icon="terp-go-year"
+                            domain="[]" context="{'group_by':'name'}" />
+                  </group>
+               </search>
+            </field>
+        </record>
+
+        <!--     Log report Tree view  -->
+        <record id="view_res_log_report_tree" model="ir.ui.view">
+            <field name="name">res.log.report.tree</field>
+            <field name="model">res.log.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            <tree string="Log Analysis">
+                <field name="name" />
+                <field name="month" />
+                <field name="day" />
+                <field name="res_model" />
+                <field name="nbr" />
+                <field name="creation_date" />
+             </tree>
+            </field>
+       </record>
+
+        <!-- Monthly Activity per Document -->
+        <record id="board_res_log_report_graph" model="ir.ui.view">
+            <field name="name">board.res.log.report.graph</field>
+            <field name="model">res.log.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Monthly Activity per Document" type="bar">
+                	<field name="res_model"/>
+                	<field name="nbr" operator="+"/>
+                </graph>
+            </field>
+        </record>
+        <record id="board_monthly_res_log_report_action" model="ir.actions.act_window">
+            <field name="name">Monthly Activity per Document</field>
+            <field name="res_model">res.log.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="domain">[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
+            <field name="context">{'search_default_thismonth':1,'group_by':['res_model'],'group_by_no_leaf':1}</field>
+            <field name="view_id" ref="board_res_log_report_graph"></field>
+        </record>
+
+        <!-- Weekly Global Activity -->
+        <record id="board_weekly_res_log_report_graph" model="ir.ui.view">
+            <field name="name">board.weekly.res.log.report.graph</field>
+            <field name="model">res.log.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Weekly Global Activity" type="bar">
+                	<field name="day"/>
+                	<field name="nbr" operator="+"/>
+                </graph>
+            </field>
+        </record>
+        <record id="board_weekly_res_log_report_action" model="ir.actions.act_window">
+            <field name="name">Weekly Global Activity</field>
+            <field name="res_model">res.log.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="domain">[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]</field>
+            <field name="context">{'search_default_thisweek':1,'group_by':['day'],'group_by_no_leaf':1}</field>
+            <field name="view_id" ref="board_weekly_res_log_report_graph"></field>
+        </record>
+
         <record id="board_administration_form" model="ir.ui.view">
             <field name="name">board.administration.form</field>
             <field name="model">board.board</field>
@@ -39,10 +134,15 @@
                             <action name="%(action_latest_activities_tree)d" string="Latest Activities" sequence="1"/>
                             <action width="510" name="%(action_user_connection_tree)d" string="Latest Connections" />
                         </child1>
+                        <child2>
+                            <action  name="%(board_monthly_res_log_report_action)d" string="Monthly Activity per Document"/>
+                            <action  name="%(board_weekly_res_log_report_action)d" string="Weekly Global Activity" />
+                        </child2>
                     </hpaned>
                 </form>
             </field>
         </record>
+
         <record id="open_board_administration_form" model="ir.actions.act_window">
              <field name="name">Administration Dashboard</field>
             <field name="res_model">board.board</field>
@@ -50,111 +150,12 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_administration_form"/>
         </record>
+
         <menuitem id="base.menu_reporting" name="Reporting" parent="base.menu_administration" sequence="11"
             groups="base.group_extended"/>
-       <menuitem id="board.admin_menu_dasboard" name="Dashboard" sequence="0" parent="base.menu_reporting"/>
-       <menuitem id="menu_board_admin" action="open_board_administration_form" icon="terp-graph" parent="board.admin_menu_dasboard" />
+        <menuitem id="board.admin_menu_dasboard" name="Dashboard" sequence="0" parent="base.menu_reporting"/>
+        <menuitem id="menu_board_admin" action="open_board_administration_form" icon="terp-graph" parent="board.admin_menu_dasboard" />
 
-       <!-- Monthly Activity per Document -->
-		<record id="board_res_log_graph" model="ir.ui.view">
-            <field name="name">board.res.log.graph</field>
-            <field name="model">res.log</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Monthly Activity per Document" type="bar">
-                	<field name="res_model"/>
-                	<field name="count"/>
-                </graph>
-            </field>
-        </record>
-		<record id="board_res_log_tree" model="ir.ui.view">
-            <field name="name">board.res.log.tree</field>
-            <field name="model">res.log</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Monthly Activity per Document">
-                	<field name="res_model"/>
-                	<field name="create_date"/>
-                </tree>
-            </field>
-        </record>
-        <record id="board_res_log_action" model="ir.actions.act_window">
-            <field name="name">Monthly Activity per Document</field>
-            <field name="res_model">res.log</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="board_res_log_graph"></field>
-        </record>
-        <record id="board_open_res_log_tree" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="board_res_log_tree"/>
-            <field name="act_window_id" ref="board_res_log_action"/>
-	    </record>
-	    <record id="board_open_res_log_graph" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="board_res_log_graph"/>
-            <field name="act_window_id" ref="board_res_log_action"/>
-	    </record>
-
-		<!-- Weekly Global Activity -->
-	    <record id="board_weekly_res_log_graph" model="ir.ui.view">
-            <field name="name">board.weekly.res.log.graph</field>
-            <field name="model">res.log</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Weekly Global Activity" type="bar">
-                	<field name="create_date"/>
-                	<field name="count"/>
-                </graph>
-            </field>
-        </record>
-		<record id="board_weekly_res_log_tree" model="ir.ui.view">
-            <field name="name">board.weekly.res.log.tree</field>
-            <field name="model">res.log</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Weekly Global Activity">
-                	<field name="res_model"/>
-                	<field name="create_date"/>
-                </tree>
-            </field>
-        </record>
-        <record id="board_weekly_res_log_action" model="ir.actions.act_window">
-            <field name="name">Weekly Global Activity</field>
-            <field name="res_model">res.log</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="board_weekly_res_log_graph"></field>
-        </record>
-        <record id="board_open_weekly_res_log_tree" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="board_weekly_res_log_tree"/>
-            <field name="act_window_id" ref="board_weekly_res_log_action"/>
-	    </record>
-	    <record id="board_open_weekly_res_log_graph" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="board_weekly_res_log_graph"/>
-            <field name="act_window_id" ref="board_weekly_res_log_action"/>
-	    </record>
-
-        <record id="board_admin_graphs_form" model="ir.ui.view">
-            <field name="name">board.admin.graphs.form</field>
-            <field name="model">board.board</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="board_administration_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child1" position="after">
-                		<child2>
-                            <action  name="%(board_res_log_action)d" string="Monthly Activity per Document"/>
-                            <action  name="%(board_weekly_res_log_action)d" string="Weekly Global Activity"/>
-            			</child2>
-            	</xpath>
-            </field>
-        </record>
     </data>
 </openerp>
 

@@ -464,14 +464,6 @@ class account_invoice(osv.osv):
             result['value'].update(to_update['value'])
         return result
 
-    def onchange_currency_id(self, cr, uid, ids, curr_id, company_id):
-        if curr_id and company_id:
-            currency = self.pool.get('res.currency').browse(cr, uid, curr_id)
-            if currency.company_id.id != company_id:
-                raise osv.except_osv(_('Configuration Error !'),
-                        _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
-        return {}
-
     def onchange_journal_id(self, cr, uid, ids, journal_id=False):
         result = {}
         if journal_id:
@@ -838,7 +830,7 @@ class account_invoice(osv.osv):
                         total_fixed += line.value_amount
                     if line.value == 'procent':
                         total_percent += line.value_amount
-                total_fixed = (total_fixed * 100) / inv.amount_total
+                total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
                     raise osv.except_osv(_('Error !'), _("Cannot create the invoice !\nThe payment term defined gives a computed amount greater than the total invoiced amount."))
 

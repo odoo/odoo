@@ -17,7 +17,7 @@
                             <action colspan="4" name="%(procurement.procurement_exceptions)d" string="Procurements in Exception"/>
                         </child1>
                         <child2>
-                            <action colspan="4" name="%(mrp.action_report_workcenter_load_tree)d" string="Work Center Future load"/>
+                            <action colspan="4" name="%(mrp.action_report_workcenter_load_tree)d" string="Work Center Future Load"/>
 
                             <action colspan="4" name="%(mrp.action_report_in_out_picking_tree)d" string="Stock Value Variation"/>
                         </child2>
@@ -42,5 +42,10 @@
             id="menu_board_manufacturing"
             parent="menus_dash_mrp"
             sequence="1" groups="mrp.group_mrp_manager,mrp.group_mrp_user"/>
+
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="8"
+            action="open_board_manufacturing"/>
+
+
     </data>
 </openerp>

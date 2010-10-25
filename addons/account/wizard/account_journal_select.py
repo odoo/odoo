@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 
 class account_journal_select(osv.osv_memory):
     """
@@ -45,8 +45,6 @@ class account_journal_select(osv.osv_memory):
             result['context'] = str({'journal_id': journal_id, 'period_id': period_id})
         return result
 
-
 account_journal_select()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

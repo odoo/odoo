@@ -457,7 +457,9 @@ class account_account(osv.osv):
             if not ids:
                 ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit)
             if not ids and len(name.split()) >= 2:
-                ids = self.search(cr, user, [('code', operator, name.split()[0]), ('name', operator, name.split()[1])]+ args, limit=limit)
+                #Separating code and name of account for searching
+                operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A. 
+                ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit)
         else:
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
@@ -1105,7 +1107,7 @@ class account_move(osv.osv):
             help='All manually created new journal entry are usually in the state \'Unposted\', but you can set the option to skip that state on the related journal. In that case, they will be behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' state.'),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
-        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
+        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}),
         'narration':fields.text('Narration'),

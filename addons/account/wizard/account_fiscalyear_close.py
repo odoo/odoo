@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 from tools.translate import _
-import tools
 
 class account_fiscalyear_close(osv.osv_memory):
     """
@@ -57,7 +57,6 @@ class account_fiscalyear_close(osv.osv_memory):
         obj_acc_move_line = self.pool.get('account.move.line')
         obj_acc_account = self.pool.get('account.account')
         obj_acc_journal_period = self.pool.get('account.journal.period')
-        obj_rec = self.pool.get('account.move.reconcile')
 
         data =  self.read(cr, uid, ids, context=context)
 
@@ -80,9 +79,9 @@ class account_fiscalyear_close(osv.osv_memory):
         if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
             raise osv.except_osv(_('UserError'),
                     _('The journal must have default credit and debit account'))
-        if not new_journal.centralisation:
+        if (not new_journal.centralisation) or new_journal.entry_posted:
             raise osv.except_osv(_('UserError'),
-                    _('The journal must have centralised counterpart'))
+                    _('The journal must have centralised counterpart without the Skipping draft state option checked!'))
 
         move_ids = obj_acc_move_line.search(cr, uid, [
             ('journal_id', '=', new_journal.id), ('period_id.fiscalyear_id', '=', new_fyear.id)])

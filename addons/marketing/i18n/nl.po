@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-20 07:04+0000\n"
-"PO-Revision-Date: 2010-10-08 07:32+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-10-20 07:22+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-09 12:13+0000\n"
+"X-Launchpad-Export-Date: 2010-10-21 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing
@@ -40,9 +40,9 @@ msgid "title"
 msgstr "titel"
 
 #. module: marketing
-#: field:marketing.installer,email_template:0
-msgid "Automated E-Mails"
-msgstr "Automatische e-mails"
+#: model:ir.module.module,shortdesc:marketing.module_meta_information
+msgid "Marketing"
+msgstr "Marketing"
 
 #. module: marketing
 #: field:marketing.installer,config_logo:0
@@ -59,15 +59,6 @@ msgstr ""
 "automatiseren."
 
 #. module: marketing
-#: help:marketing.installer,marketing_campaign_mailchimp:0
-msgid ""
-"This modules integrate mailchimp.com's service with OpenERP to automate mass "
-"mailings."
-msgstr ""
-"Deze module integreert mailchimp.com's service met OpenERP om bulk mailings "
-"te automatiseren."
-
-#. module: marketing
 #: model:ir.module.module,description:marketing.module_meta_information
 msgid "Menu for Marketing"
 msgstr "Menu voor marketing"
@@ -82,11 +73,9 @@ msgstr ""
 "processen."
 
 #. module: marketing
-#: help:marketing.installer,crm_profiling:0
-msgid ""
-"Helps you to perform segmentation within partners and design questionaires."
-msgstr ""
-"Helpt u om binnen relaties te segmenteren en vragenlijsten te ontwerpen."
+#: model:ir.model,name:marketing.model_marketing_installer
+msgid "marketing.installer"
+msgstr "marketing.installer"
 
 #. module: marketing
 #: constraint:ir.actions.act_window:0
@@ -94,9 +83,9 @@ msgid "Invalid model name in the action definition."
 msgstr "Ongeldige modelnaam in de definitie van de actie."
 
 #. module: marketing
-#: model:ir.module.module,shortdesc:marketing.module_meta_information
-msgid "Marketing"
-msgstr "Marketing"
+#: model:ir.actions.act_window,name:marketing.action_marketing_installer
+msgid "Marketing Applications Configuration"
+msgstr "Marketing applicatie configuratie"
 
 #. module: marketing
 #: field:marketing.installer,crm_profiling:0
@@ -109,16 +98,31 @@ msgid "Marketing Campaigns"
 msgstr "Marketing Campagnes"
 
 #. module: marketing
-#: model:ir.model,name:marketing.model_marketing_installer
-msgid "marketing.installer"
-msgstr "marketing.installer"
+#: help:marketing.installer,crm_profiling:0
+msgid ""
+"Helps you to perform segmentation of partners and design segmentation "
+"questionnaires"
+msgstr ""
+"Helpt bij het segmenteren van relaties en het ontwerpen van segmentatie "
+"vragenlijsten"
 
-#. module: marketing
-#: field:marketing.installer,marketing_campaign_mailchimp:0
-msgid "Mailchimp Integration"
-msgstr "Mailchimp Integratie"
+#~ msgid "Automated E-Mails"
+#~ msgstr "Automatische e-mails"
 
-#. module: marketing
-#: model:ir.actions.act_window,name:marketing.action_marketing_installer
-msgid "Marketing Modules Installation"
-msgstr "Marketing modules installatie"
+#~ msgid ""
+#~ "This modules integrate mailchimp.com's service with OpenERP to automate mass "
+#~ "mailings."
+#~ msgstr ""
+#~ "Deze module integreert mailchimp.com's service met OpenERP om bulk mailings "
+#~ "te automatiseren."
+
+#~ msgid ""
+#~ "Helps you to perform segmentation within partners and design questionaires."
+#~ msgstr ""
+#~ "Helpt u om binnen relaties te segmenteren en vragenlijsten te ontwerpen."
+
+#~ msgid "Mailchimp Integration"
+#~ msgstr "Mailchimp Integratie"
+
+#~ msgid "Marketing Modules Installation"
+#~ msgstr "Marketing modules installatie"

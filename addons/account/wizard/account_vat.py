@@ -26,12 +26,13 @@ class account_vat_declaration(osv.osv_memory):
     _description = 'Account Vat Declaration'
     _inherit = "account.common.account.report"
     _columns = {
+        'chart_account_id': fields.many2one('account.account', 'Chart of account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),    
 	    'based_on': fields.selection([('invoices','Invoices'),
                                       ('payments','Payments'),],
                                       'Based On', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'periods': fields.many2many('account.period', 'vat_period_rel', 'vat_id', 'period_id', 'Periods', help="All periods if empty"),
-        'fiscalyear': fields.many2many('account.fiscalyear','vat_fiscal_rel','fiscal_id','Fiscal Year',required=True),
+        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal year', help='Keep empty for all open fiscal year'),
         }
 
     def _get_company(self, cr, uid, context={}):

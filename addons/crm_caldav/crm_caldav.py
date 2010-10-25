@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 from base_calendar import base_calendar
-from crm import crm
 from caldav import calendar
 from datetime import datetime
 import re

@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from mx import DateTime
 from osv import fields, osv, orm
 from tools import config
 from tools.translate import _
