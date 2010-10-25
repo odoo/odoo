@@ -49,13 +49,21 @@ STATE_PRIOR = {
 class membership_line(osv.osv):
     '''Member line'''
 
+    def _get_partners(self, cr, uid, ids, context=None):
+        list_membership_line = []
+        member_line_obj = self.pool.get('membership.membership_line')
+        for partner in self.pool.get('res.partner').browse(cr, uid, ids, context=context):
+            if partner.member_lines:
+                list_membership_line += member_line_obj.search(cr, uid, [('id', 'in', [ l.id for l in partner.member_lines])], context=context)
+        return list_membership_line
+
     def _get_membership_lines(self, cr, uid, ids, context=None):
-            list_membership_line = []
-            member_line_obj = self.pool.get('membership.membership_line')
-            for invoice in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
-                if invoice.invoice_line:
-                    list_membership_line += member_line_obj.search(cr, uid, [('account_invoice_line', 'in', [ l.id for l in invoice.invoice_line])], context=context)
-            return list_membership_line
+        list_membership_line = []
+        member_line_obj = self.pool.get('membership.membership_line')
+        for invoice in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
+            if invoice.invoice_line:
+                list_membership_line += member_line_obj.search(cr, uid, [('account_invoice_line', 'in', [ l.id for l in invoice.invoice_line])], context=context)
+        return list_membership_line
 
     def _check_membership_date(self, cr, uid, ids, context=None):
         """Check if membership product is not in the past
@@ -146,6 +154,7 @@ class membership_line(osv.osv):
                         string='Membership State', type='selection',
                         selection=STATE, store = {
                         'account.invoice': (_get_membership_lines, ['state'], 10),
+                        'res.partner': (_get_partners, ['membership_state'], 12),
                         }, help="""It indicates the membership state.
     -Non Member: A member who has not applied for any membership.
     -Cancelled Member: A member who has cancelled his membership.
