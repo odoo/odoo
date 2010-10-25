@@ -2969,26 +2969,6 @@ class orm(orm_template):
             for key, v in r.items():
                 if v is None:
                     r[key] = False
-                if key in self._columns:
-                    column = self._columns[key]
-                elif key in self._inherit_fields:
-                    column = self._inherit_fields[key][2]
-                else:
-                    continue
-# TODO: removed this, it's too slow
-#                if v and column._type == 'reference':
-#                    model_name, ref_id = v.split(',', 1)
-#                    model = self.pool.get(model_name)
-#                    if not model:
-#                        reset = True
-#                    else:
-#                        cr.execute('SELECT count(1) FROM "%s" WHERE id=%%s' % (model._table,), (ref_id,))
-#                        reset = not cr.fetchone()[0]
-#                    if reset:
-#                        if column._classic_write:
-#                            query = 'UPDATE "%s" SET "%s"=NULL WHERE id=%%s' % (self._table, key)
-#                            cr.execute(query, (r['id'],))
-#                        r[key] = False
 
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
