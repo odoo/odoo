@@ -1286,7 +1286,6 @@ class orm_template(object):
                     'fields': xfields
                 }
                 attrs = {'views': views}
-                view = False
                 fields = views.get('field', False) and views['field'].get('fields', False)
             if node.get('name'):
                 attrs = {}
@@ -2212,7 +2211,6 @@ class orm(orm_template):
 
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
-        sum = {}
         flist = ''
         group_by = groupby
         if groupby:
@@ -2233,10 +2231,10 @@ class orm(orm_template):
                 or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
         for f in fields_pre:
             if f not in ['id', 'sequence']:
-                operator = fget[f].get('group_operator', 'sum')
+                group_operator = fget[f].get('group_operator', 'sum')
                 if flist:
                     flist += ','
-                flist += operator+'('+f+') as '+f
+                flist += group_operator+'('+f+') as '+f
 
         gb = groupby and (' GROUP BY '+groupby) or ''
 
@@ -2971,26 +2969,6 @@ class orm(orm_template):
             for key, v in r.items():
                 if v is None:
                     r[key] = False
-                if key in self._columns:
-                    column = self._columns[key]
-                elif key in self._inherit_fields:
-                    column = self._inherit_fields[key][2]
-                else:
-                    continue
-# TODO: removed this, it's too slow
-#                if v and column._type == 'reference':
-#                    model_name, ref_id = v.split(',', 1)
-#                    model = self.pool.get(model_name)
-#                    if not model:
-#                        reset = True
-#                    else:
-#                        cr.execute('SELECT count(1) FROM "%s" WHERE id=%%s' % (model._table,), (ref_id,))
-#                        reset = not cr.fetchone()[0]
-#                    if reset:
-#                        if column._classic_write:
-#                            query = 'UPDATE "%s" SET "%s"=NULL WHERE id=%%s' % (self._table, key)
-#                            cr.execute(query, (r['id'],))
-#                        r[key] = False
 
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
@@ -3213,17 +3191,21 @@ class orm(orm_template):
             return
         if not (context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access):
             return
-        def key(oid):
-            return "%s,%s" % (self._name, oid)
-        santa = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
-        for i in range(0, len(ids), cr.IN_MAX):
-            sub_ids = tools.flatten(((oid, context[self.CONCURRENCY_CHECK_FIELD][key(oid)])
-                                     for oid in ids[i:i+cr.IN_MAX]
-                                     if key(oid) in context[self.CONCURRENCY_CHECK_FIELD]))
-            if not sub_ids: continue
-            cr.execute("SELECT 1 FROM %s WHERE %s" % (self._table, " OR ".join([santa]*(len(sub_ids)/2))), sub_ids)
-            if cr.fetchone():
-                raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
+        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
+        for sub_ids in cr.split_for_in_conditions(ids):
+            ids_to_check = []
+            for id in sub_ids:
+                id_ref = "%s,%s" % (self._name, id)
+                update_date = context[self.CONCURRENCY_CHECK_FIELD].pop(id_ref, None)
+                if update_date:
+                    ids_to_check.extend([id, update_date])
+            if not ids_to_check:
+                continue
+            cr.execute("SELECT id FROM %s WHERE %s" % (self._table, " OR ".join([check_clause]*(len(ids_to_check)/2))), tuple(ids_to_check))
+            res = cr.fetchone()
+            if res:
+                # mention the first one only to keep the error message readable
+                raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """Verifies that the operation given by ``operation`` is allowed for the user
