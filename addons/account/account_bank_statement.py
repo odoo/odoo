@@ -43,8 +43,7 @@ class account_bank_statement(osv.osv):
             seq = 0
             for line in statement.line_ids:
                 seq += 1
-                if not line.sequence:
-                    account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': seq}, context=context)
+                account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': seq}, context=context)
         return res
 
     def button_import_invoice(self, cr, uid, ids, context=None):
@@ -319,7 +318,7 @@ class account_bank_statement(osv.osv):
         return move_id
 
     def get_next_st_line_number(self, cr, uid, st_number, st_line, context=None):
-        return st_number + ' - ' + str(st_line.sequence)
+        return st_number + '/' + str(st_line.sequence)
 
     def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
         st = self.browse(cr, uid, st_id, context)
@@ -426,7 +425,7 @@ account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
 
-    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context=None):
+    def onchange_type(self, cr, uid, line_id, partner_id, type, context=None):
         res_users_obj = self.pool.get('res.users')
         res_currency_obj = self.pool.get('res.currency')
         res = {'value': {}}
@@ -436,39 +435,21 @@ class account_bank_statement_line(osv.osv):
         if not partner_id:
             return res
         account_id = False
-        line = self.browse(cursor, user, line_id)
+        line = self.browse(cr, uid, line_id)
         if not line or (line and not line[0].account_id):
-            part = obj_partner.browse(cursor, user, partner_id, context=context)
+            part = obj_partner.browse(cr, uid, partner_id, context=context)
             if type == 'supplier':
                 account_id = part.property_account_payable.id
             else:
                 account_id = part.property_account_receivable.id
             res['value']['account_id'] = account_id
-
-        if account_id and (not line or (line and not line[0].amount)) and not context.get('amount', False):
-            company_currency_id = res_users_obj.browse(cursor, user, user,
-                    context=context).company_id.currency_id.id
-            if not currency_id:
-                currency_id = company_currency_id
-
-            cursor.execute('SELECT sum(debit-credit) \
-                FROM account_move_line \
-                WHERE (reconcile_id is null) \
-                    AND partner_id = %s \
-                    AND account_id=%s', (partner_id, account_id))
-            pgres = cursor.fetchone()
-            balance = pgres and pgres[0] or 0.0
-
-            balance = res_currency_obj.compute(cursor, user, company_currency_id,
-                currency_id, balance, context=context)
-            res['value']['amount'] = balance
         return res
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Communication', size=64, required=True),
         'date': fields.date('Date', required=True),
         'amount': fields.float('Amount'),
         'type': fields.selection([
