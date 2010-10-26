@@ -66,7 +66,8 @@ class account_tax_chart(osv.osv_memory):
             result['context'] = str({'state': data['target_move']})
 
         if data['period_id']:
-            result['name'] += ':' + self.pool.get('account.period').read(cr, uid, [data['period_id']], context=context)[0]['code']
+            period_code = period_obj.read(cr, uid, [data['period_id']], context=context)[0]['code']
+            result['name'] += period_code and (':' + period_code) or ''
         return result
 
     _defaults = {

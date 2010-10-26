@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
+from osv import osv
 
 class account_move_line_select(osv.osv_memory):
     """

@@ -44,7 +44,7 @@ class report_membership(osv.osv):
     _rec_name = 'year'
     _columns = {
         'year': fields.char('Year', size=4, readonly=True, select=1),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
+        'month': fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
                                   ('07', 'July'), ('08', 'August'),\
