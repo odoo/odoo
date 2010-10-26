@@ -56,7 +56,7 @@ class base_module_import(osv.osv_memory):
         fname = fdata.namelist()[0]
         module_name = os.path.split(fname)[0]
 
-        ad = tools.config['addons_path']
+        ad = tools.config['addons_path'].split(",")[-1]
 
         fname = os.path.join(ad, module_name+'.zip')
         try:
