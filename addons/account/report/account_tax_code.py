@@ -21,8 +21,7 @@
 ##############################################################################
 
 import time
-import pooler
-import copy
+
 from report import report_sxw
 import re
 
