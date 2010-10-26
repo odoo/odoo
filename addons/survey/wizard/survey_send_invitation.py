@@ -32,6 +32,7 @@ from osv import osv
 import tools
 from tools.translate import _
 import netsvc
+import addons
 
 
 class survey_send_invitation(osv.osv_memory):
@@ -79,7 +80,7 @@ class survey_send_invitation(osv.osv_memory):
         if not report_name or not res_ids:
             return (False, Exception('Report name and Resources ids are required !!!'))
         try:
-            ret_file_name = tools.config['addons_path'] + '/survey/report/' + file_name + '.pdf'
+            ret_file_name = addons.get_module_resource('survey', 'report') + file_name + '.pdf'
             service = netsvc.LocalService(report_name);
             (result, format) = service.create(cr, uid, res_ids, {}, {})
             fp = open(ret_file_name, 'wb+');
@@ -122,7 +123,7 @@ class survey_send_invitation(osv.osv_memory):
                 new_user.append(use.id)
         for id in survey_ref.browse(cr, uid, survey_ids):
             report = self.create_report(cr, uid, [id.id], 'report.survey.form', id.title)
-            file = open(tools.config['addons_path'] + '/survey/report/' + id.title +".pdf")
+            file = open(addons.get_module_resource('survey', 'report') + id.title +".pdf")
             file_data = ""
             while 1:
                 line = file.readline()
@@ -131,7 +132,7 @@ class survey_send_invitation(osv.osv_memory):
                     break
             attachments.append((id.title +".pdf",file_data))
             file.close()
-            os.remove(tools.config['addons_path'] + '/survey/report/' + id.title + ".pdf")
+            os.remove(addons.get_module_resource('survey', 'report') + id.title +".pdf")
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids):
             for addr in partner.address:

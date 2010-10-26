@@ -30,6 +30,7 @@ from osv import osv
 from osv import fields
 from tools import to_xml
 from tools.translate import _
+import addons
 
 class survey_question_wiz(osv.osv_memory):
     _name = 'survey.question.wiz'
@@ -385,7 +386,7 @@ class survey_question_wiz(osv.osv_memory):
                         context.update({'response_id':response_id})
                         report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title,context)
                         attachments = []
-                        file = open(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
+                        file = open(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         file_data = ""
                         while 1:
                             line = file.readline()
@@ -395,7 +396,7 @@ class survey_question_wiz(osv.osv_memory):
 
                         attachments.append((survey_data.title + ".pdf",file_data))
                         file.close()
-                        os.remove(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
+                        os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         user_email = False
                         resp_email = False
 
@@ -440,10 +441,9 @@ class survey_question_wiz(osv.osv_memory):
         if not report_name or not res_ids:
             return (False, Exception('Report name and Resources ids are required !!!'))
         try:
-            ret_file_name = tools.config['addons_path'] + '/survey/report/' + file_name + '.pdf'
             service = netsvc.LocalService(report_name);
             (result, format) = service.create(cr, uid, res_ids, {}, context)
-            fp = open(ret_file_name, 'wb+');
+            fp = open(addons.get_module_resource('survey', 'report') + file_name + '.pdf', 'wb+');
             fp.write(result);
             fp.close();
 
