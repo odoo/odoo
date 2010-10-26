@@ -126,10 +126,6 @@ if tools.config['db_name']:
             tools.convert_yaml_import(cr, 'base', file(tools.config["test_file"]), {}, 'test', True)
             cr.rollback()
 
-        if tools.config['load_language']:
-            for lang in tools.config['load_language'].split(','):
-                tools.load_language(cr, lang)
-
         pool.get('ir.cron')._poolJobs(db.dbname)
 
         cr.close()
