@@ -1263,6 +1263,21 @@
         </record>
 
 
+        <record id="XPF" model="res.currency">
+            <field name="name">XPF</field>
+            <field name="code">XPF</field>
+            <field name="symbol">XPF</field>
+            <field name="rounding">1.00</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateXPF" model="res.currency.rate">
+            <field name="rate">119.331742</field>
+            <field name="currency_id" ref="XPF"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
+
+
         <record id="PAB" model="res.currency">
             <field name="name">PAB</field>
             <field name="code">PAB</field>
