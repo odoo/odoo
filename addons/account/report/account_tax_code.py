@@ -21,9 +21,7 @@
 ##############################################################################
 
 import time
-import pooler
 import rml_parse
-import copy
 from report import report_sxw
 import re
 

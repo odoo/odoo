@@ -458,7 +458,7 @@ class account_account(osv.osv):
                 ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit)
             if not ids and len(name.split()) >= 2:
                 #Separating code and name of account for searching
-                operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A. 
+                operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
                 ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit)
         else:
             ids = self.search(cr, user, args, context=context, limit=limit)
@@ -2542,7 +2542,22 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts', required=True),
         'code_digits':fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'seq_journal':fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
+        "sale_tax": fields.many2one("account.tax.template", "Sale Tax"),
+        "purchase_tax": fields.many2one("account.tax.template", "Purchase Tax"),
     }
+    def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
+        res = {}
+        res['value'] = {}
+        res['value']["sale_tax"] = False
+        res['value']["purchase_tax"] = False
+        if chart_template_id:
+            ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id)], order="sequence")
+            if len(ids) > 0:
+                id=ids[0]
+                res['value']["sale_tax"] = id
+                res['value']["purchase_tax"] = id
+        return res
 
     def _get_chart(self, cr, uid, context={}):
         ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
@@ -2604,6 +2619,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tax_code_template_ref[tax_code_template.id] = new_tax_code
 
         #create all the tax
+        tax_template_to_tax = {}
         for tax in obj_multi.chart_template_id.tax_template_ids:
             #create it
             vals_tax = {
@@ -2632,6 +2648,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'type_tax_use': tax.type_tax_use
             }
             new_tax = obj_acc_tax.create(cr, uid, vals_tax)
+            tax_template_to_tax[tax.id] = new_tax
             #as the accounts have not been created yet, we have to wait before filling these fields
             todo_dict[new_tax] = {
                 'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
@@ -2855,6 +2872,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         'position_id': new_fp,
                     }
                     obj_ac_fp.create(cr, uid, vals_acc)
+
+        ir_values = self.pool.get('ir.values')
+        ir_values.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id
+                      , models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
+        ir_values.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id
+                      , models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.purchase_tax.id]])
 
 wizard_multi_charts_accounts()
 
