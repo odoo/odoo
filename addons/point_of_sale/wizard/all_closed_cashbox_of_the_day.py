@@ -19,11 +19,7 @@
 #
 ##############################################################################
 
-import time
-
-import netsvc
-from osv import osv, fields
-from tools.translate import _
+from osv import osv
 
 class all_closed_cashbox_of_the_day(osv.osv_memory):
     _name = 'all.closed.cashbox.of.the.day'

@@ -478,7 +478,7 @@ class pos_order(osv.osv):
         """
         if not len(ids):
             return False
-        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+        self.write(cr, uid, ids, {'state': 'draft'})
         wf_service = netsvc.LocalService("workflow")
         for i in ids:
             wf_service.trg_create(uid, 'pos.order', i, cr)
