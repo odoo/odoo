@@ -385,7 +385,6 @@ def _create_dta(obj, cr, uid, data, context=None):
         raise osv.except_osv(_('Error'),
                 _('No IBAN for the company bank account.'))
 
-    dta_line_obj = pool.get('account.dta.line')
     res_partner_bank_obj = pool.get('res.partner.bank')
 
     seq = 1

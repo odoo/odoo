@@ -72,12 +72,10 @@ def _reconstruct_invoice_ref(cursor, user, reference, context=None):
 def _import(self, cursor, user, data, context=None):
 
     statement_line_obj = self.pool.get('account.bank.statement.line')
-#    statement_reconcile_obj = pool.get('account.bank.statement.reconcile')
+    statement_obj = self.pool.get('account.bank.statement')
     voucher_obj = self.pool.get('account.voucher')
     voucher_line_obj = self.pool.get('account.voucher.line')
     move_line_obj = self.pool.get('account.move.line')
-    property_obj = self.pool.get('ir.property')
-    model_fields_obj = self.pool.get('ir.model.fields')
     attachment_obj = self.pool.get('ir.attachment')
     file = data['form']['file']
     statement_id = data['id']
@@ -204,13 +202,13 @@ def _import(self, cursor, user, data, context=None):
         values['voucher_id'] = voucher_id
         voucher_line_dict =  False
         if result['value']['line_ids']:
-             for line_dict in result['value']['line_ids']:
-                 move_line = move_line_obj.browse(cursor, user, line_dict['move_line_id'], context)
-                 if move_id == move_line.move_id.id:
-                     voucher_line_dict = line_dict
+            for line_dict in result['value']['line_ids']:
+                move_line = move_line_obj.browse(cursor, user, line_dict['move_line_id'], context)
+                if move_id == move_line.move_id.id:
+                    voucher_line_dict = line_dict
         if voucher_line_dict:
-             voucher_line_dict.update({'voucher_id':voucher_id})
-             voucher_line_obj.create(cursor, user, voucher_line_dict, context=context)                
+            voucher_line_dict.update({'voucher_id':voucher_id})
+            voucher_line_obj.create(cursor, user, voucher_line_dict, context=context)                
              
         if not account_id:
             if record['amount'] >= 0:
