@@ -27,7 +27,7 @@ class sale_make_invoice(osv.osv_memory):
     _description = "Sale Make Invoice"
     _columns = {
         'grouped': fields.boolean('Group the invoices', help='Check the box to group the invoices for the same customers'),
-        'invoice_date':fields.date('Invoice Date'),
+        'invoice_date': fields.date('Invoice Date'),
     }
     _defaults = {
         'grouped': False
@@ -66,7 +66,7 @@ class sale_make_invoice(osv.osv_memory):
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
-            'context': "{'type':'out_refund'}",
+            'context': "{'type': 'out_refund'}",
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']                
         }

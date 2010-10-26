@@ -458,7 +458,7 @@ class account_account(osv.osv):
                 ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit)
             if not ids and len(name.split()) >= 2:
                 #Separating code and name of account for searching
-                operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A. 
+                operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
                 ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit)
         else:
             ids = self.search(cr, user, args, context=context, limit=limit)
@@ -2581,7 +2581,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr, uid, ids[0])
-        
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
         obj_journal = self.pool.get('account.journal')
@@ -2652,7 +2651,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tax_template_to_tax[tax.id] = new_tax
             #as the accounts have not been created yet, we have to wait before filling these fields
             todo_dict[new_tax] = {
-                                  
                 'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
                 'account_paid_id': tax.account_paid_id and tax.account_paid_id.id or False,
             }
@@ -2874,14 +2872,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         'position_id': new_fp,
                     }
                     obj_ac_fp.create(cr, uid, vals_acc)
-        
+
         ir_values = self.pool.get('ir.values')
         if obj_multi.sale_tax:
-            ir_values.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id
-                          , models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
+            ir_values.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
+                            models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
         if obj_multi.purchase_tax:
-            ir_values.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id
-                          , models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.purchase_tax.id]])
+            ir_values.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id,
+                            models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.purchase_tax.id]])
 
 wizard_multi_charts_accounts()
 

@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from osv import fields, osv
 
 class account_chart(osv.osv_memory):
