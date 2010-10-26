@@ -19,30 +19,31 @@
 #
 ##############################################################################
 
-from osv import osv, fields
 import time
+
+from osv import osv, fields
 from tools.translate import _
 
 
-def get_journal(self, cr, uid, context):
+def get_journal(self, cr, uid, context=None):
     """
-             Make the selection list of Cash Journal  .
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary
-             @return :Return the list of journal
+         Make the selection list of Cash Journal  .
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param context: A standard dictionary
+         @return :Return the list of journal
     """
 
-    obj = self.pool.get('account.journal')
+    journal_obj = self.pool.get('account.journal')
     statement_obj = self.pool.get('account.bank.statement')
-    cr.execute("SELECT DISTINCT journal_id from pos_journal_users where user_id=%s order by journal_id", (uid,))
+    cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users WHERE user_id = %s ORDER BY journal_id", (uid, ))
     j_ids = map(lambda x1: x1[0], cr.fetchall())
-    ids = obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)])
-    obj_ids= statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', ids)])
-    res_obj = obj.read(cr, uid, ids, ['journal_id'], context)
-    res_obj = [(r1['id'])for r1 in res_obj]
-    res = statement_obj.read(cr, uid, obj_ids, ['journal_id'], context)
+    ids = journal_obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)], context=context)
+    obj_ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', ids)], context=context)
+    res_obj = journal_obj.read(cr, uid, ids, ['journal_id'], context=context)
+    res_obj = [(r1['id']) for r1 in res_obj]
+    res = statement_obj.read(cr, uid, obj_ids, ['journal_id'], context=context)
     res = [(r['journal_id']) for r in res]
     res.insert(0, ('', ''))
     return res
@@ -51,10 +52,7 @@ class pos_box_entries(osv.osv_memory):
     _name = 'pos.box.entries'
     _description = 'Pos Box Entries'
 
-
-
     def _get_income_product(self, cr, uid, context):
-
         """
              Make the selection list of purchasing  products.
              @param self: The object pointer.
