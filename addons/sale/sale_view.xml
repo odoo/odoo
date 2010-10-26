@@ -449,12 +449,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Uninvoiced Lines">
-                    <filter icon="terp-check" string="To Do"
+                    <filter icon="terp-gtk-go-back-rtl" string="To Do"
                         domain="[('state','=','confirmed')]"
                         name="sale order"
                         help="Confirmed sale order lines, not yet delivered"
                         />
-                    <filter icon="terp-check" string="Done"
+                    <filter icon="terp-dialog-close" string="Done"
                         domain="[('state','=','done')]"
                         name="sale_order_done"
                         help="Sale order lines done"
