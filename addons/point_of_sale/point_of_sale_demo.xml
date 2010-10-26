@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+    	<record id="account.cash_journal" model="account.journal">
+            <field eval="[(6, 0, [ref('base.user_root')])]" name="journal_users"/>
+        </record>
+
     	 <record id="account_invoice_invoicefrompospos0" model="account.invoice">
 			<field name="origin">POS/019</field>
 			<field name="reference">POS/019</field>

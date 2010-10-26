@@ -573,6 +573,7 @@ class account_voucher(osv.osv):
         move_line_pool = self.pool.get('account.move.line')
         currency_pool = self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
+        seq_obj = self.pool.get('ir.sequence')
         for inv in self.browse(cr, uid, ids):
             if not inv.line_ids:
                 raise osv.except_osv(_('No Lines !'), _('Please create some lines'))
@@ -581,7 +582,7 @@ class account_voucher(osv.osv):
             if inv.number:
                 name = inv.number
             elif inv.journal_id.sequence_id:
-                name = self.pool.get('ir.sequence').get_id(cr, uid, inv.journal_id.sequence_id.id)
+                name = seq_obj.get_id(cr, uid, inv.journal_id.sequence_id.id)
             else:
                 raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal !'))
             if not inv.reference:
@@ -687,7 +688,7 @@ class account_voucher(osv.osv):
                     rec_ids = [master_line, line.move_line_id.id]
                     rec_list_ids.append(rec_ids)
 
-            if not self.pool.get('res.currency').is_zero(cr, uid, inv.currency_id, line_total):
+            if not currency_pool.is_zero(cr, uid, inv.currency_id, line_total):
                 diff = line_total
                 move_line = {
                     'name': name,
@@ -854,17 +855,19 @@ class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
 
     def button_cancel(self, cr, uid, ids, context=None):
+        voucher_obj = self.pool.get('account.voucher')
         for st in self.browse(cr, uid, ids, context):
             voucher_ids = []
             for line in st.line_ids:
                 if line.voucher_id:
                     voucher_ids.append(line.voucher_id.id)
-            self.pool.get('account.voucher').cancel_voucher(cr, uid, voucher_ids, context)
+            voucher_obj.cancel_voucher(cr, uid, voucher_ids, context)
         return super(account_bank_statement, self).button_cancel(cr, uid, ids, context=context)
 
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, next_number, context=None):
         voucher_obj = self.pool.get('account.voucher')
         wf_service = netsvc.LocalService("workflow")
+        move_line_obj = self.pool.get('account.move.line')
         bank_st_line_obj = self.pool.get('account.bank.statement.line')
         st_line = bank_st_line_obj.browse(cr, uid, st_line_id, context=context)
         if st_line.voucher_id:
@@ -878,7 +881,7 @@ class account_bank_statement(osv.osv):
                 'move_ids': [(4, v.move_id.id, False)]
             })
 
-            return self.pool.get('account.move.line').write(cr, uid, [x.id for x in v.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
+            return move_line_obj.write(cr, uid, [x.id for x in v.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
         return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line.id, company_currency_id, next_number, context=context)
 
 account_bank_statement()
@@ -912,14 +915,15 @@ class account_bank_statement_line(osv.osv):
     }
 
     def unlink(self, cr, uid, ids, context=None):
+        voucher_obj = self.pool.get('account.voucher')
         statement_line = self.browse(cr, uid, ids, context)
         unlink_ids = []
         for st_line in statement_line:
             if st_line.voucher_id:
                 unlink_ids.append(st_line.voucher_id.id)
-        self.pool.get('account.voucher').unlink(cr, uid, unlink_ids, context=context)
+        voucher_obj.unlink(cr, uid, unlink_ids, context=context)
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 
 account_bank_statement_line()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:=======
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
