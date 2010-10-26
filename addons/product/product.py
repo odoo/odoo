@@ -283,12 +283,8 @@ class product_template(osv.osv):
         return res and res[1] or False
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
-        if uom_id and uom_po_id:
-            uom_obj=self.pool.get('product.uom')
-            uom=uom_obj.browse(cursor,user,[uom_id])[0]
-            uom_po=uom_obj.browse(cursor,user,[uom_po_id])[0]
-            if uom.category_id.id != uom_po.category_id.id:
-                return {'value': {'uom_po_id': uom_id}}
+        if uom_id:
+            return {'value': {'uom_po_id': uom_id}}
         return False
 
     _defaults = {
@@ -496,7 +492,7 @@ class product_product(osv.osv):
         if not context:
             context={}
         if name:
-            ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
             if not len(ids):
                 ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
             if not len(ids):
@@ -736,3 +732,21 @@ class pricelist_partnerinfo(osv.osv):
 pricelist_partnerinfo()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+class res_users(osv.osv):
+    _inherit = 'res.users'
+    def _get_group(self, cr, uid, context):
+        result = super(res_users, self)._get_group(cr, uid, context)
+        dataobj = self.pool.get('ir.model.data')
+        try:
+            dummy,group_id = dataobj.get_object_reference(cr, 1, 'product', 'group_product_manager')
+            result.append(group_id)
+        except ValueError:
+            # If these groups does not exists anymore
+            pass
+        return result
+
+    _defaults = {
+        'groups_id': _get_group,
+    }
+
+res_users()

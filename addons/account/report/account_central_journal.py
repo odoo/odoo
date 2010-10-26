@@ -72,15 +72,15 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         if self.target_move == 'posted':
             move_state = ['posted']
 
-        self.cr.execute('SELECT a.currency_id ,a.code, a.name, c.code AS currency_code, l.currency_id, l.amount_currency, SUM(debit) AS debit, SUM(credit) AS credit  \
+        self.cr.execute('SELECT a.currency_id, a.code, a.name, c.symbol AS currency_code, l.currency_id, l.amount_currency, SUM(debit) AS debit, SUM(credit) AS credit  \
                         from account_move_line l  \
                         LEFT JOIN account_move am ON (l.move_id=am.id) \
                         LEFT JOIN account_account a ON (l.account_id=a.id) \
-                        LEFT JOIN res_currency c on (l.currency_id=c.id) WHERE am.state IN %s AND l.period_id=%s AND l.journal_id=%s '+self.query_get_clause+' GROUP BY a.id, a.code, a.name,l.amount_currency,c.code, a.currency_id,l.currency_id', (tuple(move_state), period_id, journal_id))
+                        LEFT JOIN res_currency c on (l.currency_id=c.id) WHERE am.state IN %s AND l.period_id=%s AND l.journal_id=%s '+self.query_get_clause+' GROUP BY a.id, a.code, a.name,l.amount_currency,c.symbol, a.currency_id,l.currency_id', (tuple(move_state), period_id, journal_id))
         return self.cr.dictfetchall()
 
     def _set_get_account_currency_code(self, account_id):
-        self.cr.execute("SELECT c.code as code "\
+        self.cr.execute("SELECT c.symbol as code "\
                 "FROM res_currency c,account_account as ac "\
                 "WHERE ac.id = %s AND ac.currency_id = c.id"%(account_id))
         result = self.cr.fetchone()

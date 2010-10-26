@@ -164,8 +164,8 @@ class res_currency(osv.osv):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
-        return [(x['id'], tools.ustr(x['name']) + ' (' + tools.ustr(x['code']) + ')')   for x in reads]
+        reads = self.read(cr, uid, ids, ['name','symbol'], context, load='_classic_write')
+        return [(x['id'], tools.ustr(x['name']) + ' (' + tools.ustr(x['symbol']) + ')')   for x in reads]
 
 res_currency()
 

@@ -20,29 +20,54 @@
 ##############################################################################
 
 import time
-import copy
 
 import rml_parse
+from common_report_header import common_report_header
 from report import report_sxw
 
-class tax_report(rml_parse.rml_parse):
+class tax_report(rml_parse.rml_parse, common_report_header):
     _name = 'report.account.vat.declaration'
-    def __init__(self, cr, uid, name, context={}):
+
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
+        res = {}
+        self.period_ids = []
+        period_obj = self.pool.get('account.period')
+        res['periods'] = ''
+        res['fiscalyear'] = data['form']['fiscalyear_id']
+
+        if data['form']['period_from'] and data['form']['period_to']:
+            self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, data['form']['period_from'], data['form']['period_to'])
+            periods_l = period_obj.read(self.cr, self.uid, self.period_ids, ['name'])
+            for period in periods_l:
+                if res['periods'] == '':
+                    res['periods'] = period['name']
+                else:
+                    res['periods'] += ", "+ period['name']
+        return super(tax_report, self).set_context(objects, data, new_ids, report_type=report_type)
+
+    def __init__(self, cr, uid, name, context=None):
         super(tax_report, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
-            'get_period': self._get_period,
             'get_codes': self._get_codes,
             'get_general': self._get_general,
-            'get_company': self._get_company,
             'get_currency': self._get_currency,
             'get_lines': self._get_lines,
+            'get_fiscalyear': self._get_fiscalyear,
+            'get_account': self._get_account,
+            'get_start_period': self.get_start_period,
+            'get_end_period': self.get_end_period,
+            'get_basedon': self._get_basedon,
         })
 
 
-    def _get_lines(self, based_on, period_list, company_id=False, parent=False, level=0, context={}):
-        res = self._get_codes(based_on, company_id, parent, level, period_list, context=context)
+    def _get_basedon(self, form):
+        return form['form']['based_on']
 
+    def _get_lines(self, based_on, company_id=False, parent=False, level=0, context=None):
+        period_list = self.period_ids
+        res = self._get_codes(based_on, company_id, parent, level, period_list, context=context)
         if period_list:
             res = self._add_codes(based_on, res, period_list, context=context)
         else:
@@ -79,13 +104,9 @@ class tax_report(rml_parse.rml_parse):
                 ind_general+=1
             i+=1
         return top_result
-        #return array_result
 
-    def _get_period(self, period_id, context={}):
-        return self.pool.get('account.period').browse(self.cr, self.uid, period_id, context=context).name
-
-    def _get_general(self, tax_code_id, period_list,company_id, based_on, context={}):
-        res=[]
+    def _get_general(self, tax_code_id, period_list, company_id, based_on, context=None):
+        res = []
         obj_account = self.pool.get('account.account')
         periods_ids = tuple(period_list)
         if based_on == 'payments':
@@ -138,7 +159,7 @@ class tax_report(rml_parse.rml_parse):
             i+=1
         return res
 
-    def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=[], context={}):
+    def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=[], context=None):
         obj_tc = self.pool.get('account.tax.code')
         ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], context=context)
 
@@ -149,7 +170,7 @@ class tax_report(rml_parse.rml_parse):
             res += self._get_codes(based_on, company_id, code.id, level+1, context=context)
         return res
 
-    def _add_codes(self, based_on, account_list=[], period_list=[], context={}):
+    def _add_codes(self, based_on, account_list=[], period_list=[], context=None):
         res = []
         obj_tc = self.pool.get('account.tax.code')
         for account in account_list:
@@ -164,16 +185,10 @@ class tax_report(rml_parse.rml_parse):
             res.append((account[0], code))
         return res
 
+    def _get_currency(self, form, context=None):
+        return self.pool.get('res.company').browse(self.cr, self.uid, form['company_id'], context=context).currency_id.name
 
-    def _get_company(self, form, context={}):
-        obj_company = self.pool.get('res.company')
-        return obj_company.browse(self.cr, self.uid, form['company_id'], context=context).name
-
-    def _get_currency(self, form, context={}):
-        obj_company = self.pool.get('res.company')
-        return obj_company.browse(self.cr, self.uid, form['company_id'], context=context).currency_id.name
-
-    def sort_result(self, accounts, context={}):
+    def sort_result(self, accounts, context=None):
         # On boucle sur notre rapport
         result_accounts = []
         ind=0

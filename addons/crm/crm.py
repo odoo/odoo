@@ -322,11 +322,7 @@ class crm_case(object):
                                   'active': True})
         self._action(cr, uid, cases, 'cancel')
         for case in cases:
-            message = "The " + self._description + " '" + case.name + "' has been Cancelled."
-            #TODO: Need to differentiate lead and opportunity
-#            if hasattr(case, 'type'):
-#                #TO CHECK: hasattr gives warning for other crm objects that don't have field 'type'
-#                message = "The " + (case.type or 'Case').title() + " '" + case.name + "' has been Cancelled."
+            message = _("The case '%s' has been cancelled.") % (case.name,)
             self.log(cr, uid, case.id, message)
         return True
 
@@ -538,7 +534,7 @@ class crm_case_section(osv.osv):
         'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16,2 )), 
-        'stage_ids':fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
+        'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
     }
 
     _defaults = {
@@ -626,6 +622,14 @@ class crm_case_categ(osv.osv):
 
     }
 crm_case_categ()
+
+
+class crm_case_stage(osv.osv):
+    _inherit = "crm.case.stage"
+    _columns = {
+        'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', 'Sections'),
+    }
+crm_case_stage()
 
 
 class crm_case_resource_type(osv.osv):

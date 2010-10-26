@@ -1,116 +1,55 @@
 <?xml version="1.0" ?>
 <openerp>
     <data noupdate="1">
-<!-- 
-This Demo data file includes Users, Human Resources, Projects and it' members list, Phases and Resources,Tasks allocation and  also run scheduling of phase and tasks.
+<!--
+This Demo data file Human Resources, Phases and Resources,Tasks allocation and  also run scheduling of phase and tasks.
 -->
-        <!-- Users -->
-        
-        <record id="res_users_analyst" model="res.users">
-            <field name="name">Phoung</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
-            <field name="login">phu</field>
-            <field name="password">phu</field>
-        </record>
-        <record id="res_users_project_manager" model="res.users">
-            <field name="name">Anthony</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
-            <field name="login">al</field>
-            <field name="password">al</field>
-        </record>
-        <record id="res_users_technical_leader" model="res.users">
-            <field name="name">Qwintin</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
-            <field name="login">qdp</field>
-            <field name="password">qdp</field>
-        </record>
-        <record id="res_users_developer" model="res.users">
-            <field name="name">Francois</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
-            <field name="login">fpi</field>
-            <field name="password">fpi</field>
-        </record>
-        <record id="res_users_designer" model="res.users">
-            <field name="name">Julien</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
-            <field name="login">jth</field>
-            <field name="password">jth</field>
-        </record>
-        <record id="res_users_tester" model="res.users">
-            <field name="name">Alien</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
-            <field name="login">apr</field>
-            <field name="password">apr</field>
-        </record>
-        <record id="res_users_finacial_manager" model="res.users">
-            <field name="name">Fabian</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_finance')])]" name="groups_id"/>
-            <field name="login">fbs</field>
-            <field name="password">fbs</field>
-        </record>
-
         <!-- Human Resources -->
         <record id="resource_analyst" model="resource.resource">
-            <field name="user_id" ref="res_users_analyst"/>
+            <field name="user_id" ref="project.res_users_analyst"/>
             <field name="name">Analyst</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
 
         <record id="resource_project_manager" model="resource.resource">
-            <field name="user_id" ref="res_users_project_manager"/>
+            <field name="user_id" ref="project.res_users_project_manager"/>
             <field name="name">Project Manager</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
 
          <record id="resource_technical_leader" model="resource.resource">
-            <field name="user_id" ref="res_users_technical_leader"/>
+            <field name="user_id" ref="project.res_users_technical_leader"/>
             <field name="name">Technical Leader</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
 
         <record id="resource_developer" model="resource.resource">
-            <field name="user_id" ref="res_users_developer"/>
+            <field name="user_id" ref="project.res_users_developer"/>
             <field name="name">Developer</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
 
         <record id="resource_designer" model="resource.resource">
-            <field name="user_id" ref="res_users_designer"/>
+            <field name="user_id" ref="project.res_users_designer"/>
             <field name="name">Designer</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
 
         <record id="resource_tester" model="resource.resource">
-            <field name="user_id" ref="res_users_tester"/>
+            <field name="user_id" ref="project.res_users_tester"/>
             <field name="name">Tester</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
 
         <record id="resource_finacial_manager" model="resource.resource">
-            <field name="user_id" ref="res_users_finacial_manager"/>
+            <field name="user_id" ref="project.res_users_finacial_manager"/>
             <field name="name">Project Finacial Manager</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
-        
-        
 
-        <!-- Projects -->
-        <record id="project_integrate_openerp" model="project.project">
-            <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
-            <field name="state">open</field>
-            <field name="type">normal</field>
-            <field name="description">Integrate an Sale and Warehouse Management.</field>
-            <field eval="[(6, 0, [
-                    ref('res_users_analyst'), 
-                    ref('res_users_project_manager'), 
-                    ref('res_users_technical_leader'), 
-                    ref('res_users_developer'), 
-                    ref('res_users_designer'), 
-                    ref('res_users_tester'), 
-                    ref('res_users_finacial_manager')])]" name="members"/>
-            <field name="user_id" ref="res_users_project_manager"/>
-            <field name="name">Integrate an Sale and Warehouse Management.</field>
-        </record>
+
+
+        
 
         <!-- Project Phases -->
         <record id="project_phase_1" model="project.phase">
@@ -119,8 +58,8 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="1" name="sequence"/>
             <field name="duration">30</field>
-            <field name="responsible_id" ref="res_users_analyst"/>
-            <field name="project_id" ref="project_integrate_openerp"/>
+            <field name="responsible_id" ref="project.res_users_analyst"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
         <record id="project_phase_2" model="project.phase">
@@ -129,8 +68,8 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="2" name="sequence"/>
             <field name="duration">20</field>
-            <field name="responsible_id" ref="res_users_project_manager"/>
-            <field name="project_id" ref="project_integrate_openerp"/>
+            <field name="responsible_id" ref="project.res_users_project_manager"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
         <record id="project_phase_3" model="project.phase">
@@ -139,8 +78,8 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="3" name="sequence"/>
             <field name="duration">20</field>
-            <field name="responsible_id" ref="res_users_project_manager"/>
-            <field name="project_id" ref="project_integrate_openerp"/>
+            <field name="responsible_id" ref="project.res_users_project_manager"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
         <record id="project_phase_4" model="project.phase">
@@ -149,8 +88,8 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="4" name="sequence"/>
             <field name="duration">90</field>
-            <field name="responsible_id" ref="res_users_technical_leader"/>
-            <field name="project_id" ref="project_integrate_openerp"/>
+            <field name="responsible_id" ref="project.res_users_technical_leader"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
         <record id="project_phase_5" model="project.phase">
@@ -159,8 +98,8 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="5" name="sequence"/>
             <field name="duration">30</field>
-            <field name="responsible_id" ref="res_users_project_manager"/>
-            <field name="project_id" ref="project_integrate_openerp"/>
+            <field name="responsible_id" ref="project.res_users_project_manager"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
         <record id="project_phase_6" model="project.phase">
@@ -169,8 +108,8 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="5" name="sequence"/>
             <field name="duration">10</field>
-            <field name="responsible_id" ref="res_users_analyst"/>
-            <field name="project_id" ref="project_integrate_openerp"/>
+            <field name="responsible_id" ref="project.res_users_analyst"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
         <!--  Project Resource Allocation -->
@@ -213,7 +152,7 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
             <field name="resource_id" ref="resource_project_manager"/>
             <field name="phase_id" ref="project_phase_5"/>
         </record>
-        
+
         <record id="resource_allocation_9" model="project.resource.allocation">
             <field name="resource_id" ref="resource_analyst"/>
             <field name="phase_id" ref="project_phase_6"/>
@@ -221,173 +160,82 @@ This Demo data file includes Users, Human Resources, Projects and it' members li
 
         <!-- Tasks -->
 
-        <record id="project_task_1" model="project.task">
-            <field eval="100.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_analyst"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Prepare Requirements Document</field>
+        <record id="project.project_task_1" model="project.task">
             <field name="phase_id" ref="project_phase_1"/>
         </record>
 
-        <record id="project_task_2" model="project.task">
-            <field eval="80.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_analyst"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Make SRS</field>
+        <record id="project.project_task_2" model="project.task">
             <field name="phase_id" ref="project_phase_1"/>
         </record>
 
-        <record id="project_task_3" model="project.task">
-            <field eval="40.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_project_manager"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Design Use Cases</field>
+        <record id="project.project_task_3" model="project.task">
             <field name="phase_id" ref="project_phase_2"/>
         </record>
 
-        <record id="project_task_4" model="project.task">
-            <field eval="25.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_project_manager"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Budget Planning</field>
+        <record id="project.project_task_4" model="project.task">
             <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_5" model="project.task">
-            <field eval="25.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_project_manager"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Quality Planning</field>
+        <record id="project.project_task_5" model="project.task">
             <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_6" model="project.task">
-            <field eval="20.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_project_manager"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Risk Management Planning</field>
+        <record id="project.project_task_6" model="project.task">
             <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_7" model="project.task">
-            <field eval="30.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_project_manager"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Create Project Schedules</field>
+        <record id="project.project_task_7" model="project.task">
             <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_8" model="project.task">
-            <field eval="10.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_project_manager"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Dataflow Design</field>
+        <record id="project.project_task_8" model="project.task">
             <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_9" model="project.task">
-            <field eval="50.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_project_manager"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">User Interface Design</field>
+        <record id="project.project_task_9" model="project.task">
             <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_10" model="project.task">
-            <field eval="40.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_developer"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Develop Module in Sale Management</field>
+        <record id="project.project_task_10" model="project.task">
             <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_11" model="project.task">
-            <field eval="90.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_developer"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Develop module in Warehouse</field>
+        <record id="project.project_task_11" model="project.task">
             <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_12" model="project.task">
-            <field eval="20.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_developer"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Integrate Modules</field>
+        <record id="project.project_task_12" model="project.task">
             <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_13" model="project.task">
-            <field eval="50.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_tester"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Unit Testing</field>
+        <record id="project.project_task_13" model="project.task">
             <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_14" model="project.task">
-            <field eval="30.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_tester"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Regression Test</field>
+        <record id="project.project_task_14" model="project.task">
             <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_15" model="project.task">
-            <field eval="15.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_developer"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Documentation</field>
+        <record id="project.project_task_15" model="project.task">
             <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_16" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="40.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_tester"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Performance Tuning</field>
+        <record id="project.project_task_16" model="project.task">
             <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_17" model="project.task">
-            <field eval="5.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_analyst"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Deploy and Review on Customer System</field>
+        <record id="project.project_task_17" model="project.task">
             <field name="phase_id" ref="project_phase_6"/>
         </record>
 
-        <record id="project_task_18" model="project.task">
-            <field eval="10.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_analyst"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_integrate_openerp"/>
-            <field name="name">Training and Presentation</field>
+        <record id="project.project_task_18" model="project.task">
             <field name="phase_id" ref="project_phase_6"/>
         </record>
 
         <!-- run scheduling of phase -->
-        <function model="project.project" name="schedule_phases" eval="(ref('project_integrate_openerp'),)"/>
+        <function model="project.project" name="schedule_phases" eval="(ref('project.project_integrate_openerp'),)"/>
         <!-- run scheduling of tasks -->
-        <function model="project.project" name="schedule_tasks" eval="(ref('project_integrate_openerp'),)"/>
+        <function model="project.project" name="schedule_tasks" eval="(ref('project.project_integrate_openerp'),)"/>
 
     </data>
 </openerp>

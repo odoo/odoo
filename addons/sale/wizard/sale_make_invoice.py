@@ -27,7 +27,7 @@ class sale_make_invoice(osv.osv_memory):
     _description = "Sale Make Invoice"
     _columns = {
         'grouped': fields.boolean('Group the invoices', help='Check the box to group the invoices for the same customers'),
-        'invoice_date':fields.date('Invoice Date'),
+        'invoice_date': fields.date('Invoice Date'),
     }
     _defaults = {
         'grouped': False
@@ -45,17 +45,17 @@ class sale_make_invoice(osv.osv_memory):
     def make_invoices(self, cr, uid, ids, context={}):
         order_obj = self.pool.get('sale.order')
         newinv = []
-        data = self.read(cr,uid,ids)[0]
-        order_obj.action_invoice_create(cr, uid, context.get(('active_ids'),[]), data['grouped'],date_inv = data['invoice_date'])
+        data = self.read(cr, uid, ids)[0]
+        order_obj.action_invoice_create(cr, uid, context.get(('active_ids'), []), data['grouped'], date_inv = data['invoice_date'])
         wf_service = netsvc.LocalService("workflow")
-        for id in context.get(('active_ids'),[]):
+        for id in context.get(('active_ids'), []):
             wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
             
-        for o in order_obj.browse(cr, uid, context.get(('active_ids'),[]), context):
+        for o in order_obj.browse(cr, uid, context.get(('active_ids'), []), context):
             for i in o.invoice_ids:
                 newinv.append(i.id)
          
-        mod_obj =self.pool.get('ir.model.data')
+        mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         
         id = mod_obj.read(cr, uid, result, ['res_id'])   
@@ -66,7 +66,7 @@ class sale_make_invoice(osv.osv_memory):
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
-            'context': "{'type':'out_refund'}",
+            'context': "{'type': 'out_refund'}",
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']                
         }

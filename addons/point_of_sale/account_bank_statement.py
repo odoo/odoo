@@ -28,13 +28,13 @@ class account_journal(osv.osv):
     _inherit = 'account.journal'
     _columns = {
         'auto_cash': fields.boolean('Automatic Opening', help="This field authorize the automatic creation of the cashbox"),
-        'special_journal':fields.boolean('Special Journal', help="Will put all the orders in waiting status till being accepted"),
+        'special_journal': fields.boolean('Special Journal', help="Will put all the orders in waiting status till being accepted"),
         'check_dtls': fields.boolean('Check Details', help="This field authorize Validation of Cashbox without checking ending details"),
         'journal_users': fields.many2many('res.users','pos_journal_users','journal_id','user_id','Users'),
     }
     _defaults = {
-        'check_dtls': lambda *a:False,
-        'auto_cash': lambda *a:True,
+        'check_dtls': False,
+        'auto_cash': True,
     }
 account_journal()
 
@@ -42,7 +42,9 @@ class account_cash_statement(osv.osv):
     
     _inherit = 'account.bank.statement'
 
-    def _equal_balance(self, cr, uid, cash_id, context={}):
+    def _equal_balance(self, cr, uid, cash_id, context=None):
+        if context is None:
+            context = {}
         statement = self.browse(cr, uid, cash_id, context=context)
         if not statement.journal_id.check_dtls:
             return True
@@ -52,15 +54,46 @@ class account_cash_statement(osv.osv):
         else:
             return True            
     
-    def _user_allow(self, cr, uid, ids, statement, context={}):
+    def _user_allow(self, cr, uid, statement_id, context=None):
+        if context is None:
+            context = {}
         res = False
         uids = []
+        statement = self.browse(cr, uid, statement_id, context=context)
         for user in statement.journal_id.journal_users:
             uids.append(user.id)
         
         if uid in uids:
             res = True
       
+        return res
+    
+    def _get_cash_open_box_lines(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        res = super(account_cash_statement,self)._get_cash_open_box_lines(cr, uid, context)
+        curr = [0.01, 0.02, 0.05, 0.10, 0.20, 0.50]
+        for rs in curr:
+            dct = {
+                'pieces': rs,
+                'number': 0
+            }
+            res.append(dct)
+        res.sort()
+        return res
+    
+    def _get_default_cash_close_box_lines(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        res = super(account_cash_statement,self)._get_default_cash_close_box_lines(cr, uid, context)
+        curr = [0.01, 0.02, 0.05, 0.10, 0.20, 0.50]
+        for rs in curr:
+            dct = {
+                'pieces': rs,
+                'number': 0
+            }
+            res.append(dct)
+        res.sort()
         return res
     
 account_cash_statement()

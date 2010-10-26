@@ -306,7 +306,7 @@ class calendar_attendee(osv.osv):
         res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
         return [(r['object'], r['name']) for r in res]
 
-    def _lang_get(self, cr, uid, context={}):
+    def _lang_get(self, cr, uid, context=None):
         """
         Get language for language selection field.
         @param cr: the current row, from the database cursor,
@@ -477,7 +477,7 @@ property or property parameter."),
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
 
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
@@ -555,7 +555,7 @@ property or property parameter."),
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
 
         for vals in self.browse(cr, uid, ids, context=context):
@@ -575,7 +575,7 @@ property or property parameter."),
         @param ids: List of calendar attendee’s IDs
         @param *args: Get Tupple value
         @param context: A standard dictionary for contextual values """
-        if not context:
+        if context is None:
             context = {}
         return self.write(cr, uid, ids, {'state': 'declined'}, context)
 
@@ -587,7 +587,7 @@ property or property parameter."),
         @param vals: Get Values
         @param context: A standard dictionary for contextual values """
 
-        if not context:
+        if context is None:
             context = {}
         if not vals.get("email") and vals.get("cn"):
             cnval = vals.get("cn").split(':')
@@ -641,7 +641,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
         alarm_obj = self.pool.get('calendar.alarm')
         res_alarm_obj = self.pool.get('res.alarm')
@@ -713,7 +713,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param model: Model name for which alarm is to be cleared.
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
         alarm_obj = self.pool.get('calendar.alarm')
         ir_obj = self.pool.get('ir.model')
@@ -781,7 +781,7 @@ class calendar_alarm(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: new record id for calendar_alarm.
         """
-        if not context:
+        if context is None:
             context = {}
         event_date = vals.get('event_date', False)
         if event_date:
@@ -808,7 +808,7 @@ class calendar_alarm(osv.osv):
         @param context: A standard dictionary for contextual values
         """
         return True # XXX FIXME REMOVE THIS AFTER FIXING get_recurrent_dates!!
-        if not context:
+        if context is None:
             context = {}
         current_datetime = datetime.now()
         request_obj = self.pool.get('res.request')
@@ -912,10 +912,10 @@ class calendar_event(osv.osv):
     _description = "Calendar Event"
     __attribute__ = {}
 
-    def _tz_get(self, cr, uid, context={}):
+    def _tz_get(self, cr, uid, context=None):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
-    def onchange_allday(self, cr, uid, ids, allday, context={}):
+    def onchange_allday(self, cr, uid, ids, allday, context=None):
         """Sets duration as 24 Hours if event is selcted for all day
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -943,8 +943,9 @@ class calendar_event(osv.osv):
         @param end_date: Ending Datee
         @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
+
         value = {}
         if not start_date:
             return value
@@ -953,10 +954,8 @@ class calendar_event(osv.osv):
             value['duration'] = duration
 
         if allday: # For all day event
-            value = {
-                 'duration': 24
-                 }
-            duration = 0.0
+            value = {'duration': 24}
+            duration = 24.0
 
         start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         if end_date and not duration:
@@ -967,6 +966,14 @@ class calendar_event(osv.osv):
         elif not end_date:
             end = start + timedelta(hours=duration)
             value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
+        elif end_date and duration and not allday:
+            # we have both, keep them synchronized:
+            # set duration based on end_date (arbitrary decision: this avoid 
+            # getting dates like 06:31:48 instead of 06:32:00)
+            end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+            diff = end - start
+            duration = float(diff.days)* 24 + (float(diff.seconds) / 3600)
+            value['duration'] = round(duration, 2)
 
         return {'value': value}
 
@@ -975,7 +982,7 @@ class calendar_event(osv.osv):
         This function deletes event which are linked with the event with recurrent_uid
                 (Removes the events which refers to the same UID value)
         """
-        if not context:
+        if context is None:
             context = {}
         for event_id in ids:
             cr.execute("select id from %s where recurrent_uid=%%s" % (self._table), (event_id,))
@@ -992,7 +999,7 @@ class calendar_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: dictionary of rrule value.
         """
-        if not context:
+        if context is None:
             context = {}
         cr.execute("UPDATE %s set freq='None',interval=0,count=0,end_date=Null,\
                     mo=False,tu=False,we=False,th=False,fr=False,sa=False,su=False,\
@@ -1017,7 +1024,8 @@ class calendar_event(osv.osv):
         elif int(val.get('interval')) > 1: #If interval is other than 1 rule is custom
             rrule_type = 'custom'
 
-        qry = "UPDATE %(table)s set rrule_type=\'%(rule_type)s\' "
+        qry = "UPDATE \"%s\" set rrule_type=%%s " % self._table
+        qry_args = [ rrule_type, ]
 
         if rrule_type == 'custom':
             new_val = val.copy()
@@ -1055,17 +1063,12 @@ class calendar_event(osv.osv):
                     new_val.pop('bymonth')
 
             for k, v in new_val.items():
-                temp = ", %s='%s'" % (k, v)
-                qry += temp
+                qry += ", %s=%%s" % k
+                qry_args.append(v)
 
-        whr = " where id=%(id)s"
-        qry = qry + whr
-        val.update({
-            'table': self._table,
-            'rule_type': rrule_type,
-            'id': id,
-        })
-        cr.execute(qry % val)
+        qry = qry + " where id=%s"
+        qry_args.append(id)
+        cr.execute(qry, qry_args)
         return True
 
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
@@ -1207,7 +1210,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: Dictionary value which open Crm Meeting form.
         """
-        if not context:
+        if context is None:
             context = {}
 
         data_obj = self.pool.get('ir.model.data')
@@ -1289,8 +1292,8 @@ true, it will allow you to hide the event alarm information without removing it.
 
             count = 0
             for data in cr.dictfetchall():
-                start_date = base_start_date and datetime.strptime(base_start_date[:10], "%Y-%m-%d") or False
-                until_date = base_until_date and datetime.strptime(base_until_date[:10], "%Y-%m-%d") or False
+                start_date = base_start_date and datetime.strptime(base_start_date[:10]+ ' 00:00:00' , "%Y-%m-%d %H:%M:%S") or False
+                until_date = base_until_date and datetime.strptime(base_until_date[:10]+ ' 23:59:59', "%Y-%m-%d %H:%M:%S") or False
                 if count > limit:
                     break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
@@ -1423,8 +1426,9 @@ true, it will allow you to hide the event alarm information without removing it.
         args_without_date = []
         start_date = False
         until_date = False
+
         for arg in args:
-            if arg[0] not in ('date', unicode('date')):
+            if arg[0] not in ('date', unicode('date'), 'date_deadline', unicode('date_deadline')):
                 args_without_date.append(arg)
             else:
                 if arg[1] in ('>', '>='):
@@ -1452,7 +1456,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
         if isinstance(ids, (str, int, long)):
             select = [ids]
@@ -1479,17 +1483,28 @@ true, it will allow you to hide the event alarm information without removing it.
             if not real_event_id in new_ids:
                 new_ids.append(real_event_id)
 
+        if vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
+            vals['vtimezone'] = vals['vtimezone'][40:]
+
+        updated_vals = self.onchange_dates(cr, uid, new_ids,
+            vals.get('date', False),
+            vals.get('duration', False),
+            vals.get('date_deadline', False),
+            vals.get('allday', False),
+            context=context)
+        vals.update(updated_vals.get('value', {}))
+
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
-        if (vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'))\
-                or (vals.has_key('date') or vals.has_key('duration') or vals.has_key('date_deadline')):
+
+        if ('alarm_id' in vals or 'base_calendar_alarm_id' in vals)\
+                or ('date' in vals or 'duration' in vals or 'date_deadline' in vals):
             # change alarm details
             alarm_obj = self.pool.get('res.alarm')
-            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', \
-                                            context=context)
+            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', context=context)
         return res
 
-    def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
+    def browse(self, cr, uid, ids, context=None, list_class=None, fields_process=None):
         """
         Overrides orm browse method.
         @param self: the object pointer
@@ -1522,7 +1537,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @return: List of Dictionary of form [{‘name_of_the_field’: value, ...}, ...]
         """
         # FIXME This whole id mangling has to go!
-        if not context:
+        if context is None:
             context = {}
 
         if isinstance(ids, (str, int, long)):
@@ -1533,6 +1548,9 @@ true, it will allow you to hide the event alarm information without removing it.
         result = []
         if fields and 'date' not in fields:
             fields.append('date')
+        if fields and 'duration' not in fields:
+            fields.append('duration')
+
 
         for base_calendar_id, real_id in select:
             #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
@@ -1557,7 +1575,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: Duplicate record id.
         """
-        if not context:
+        if context is None:
             context = {}
         res = super(calendar_event, self).copy(cr, uid, base_calendar_id2real_id(id), default, context)
         alarm_obj = self.pool.get('res.alarm')
@@ -1606,8 +1624,12 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: new created record id.
         """
-        if not context:
+        if context is None:
             context = {}
+
+        if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
+            vals['vtimezone'] = vals['vtimezone'][40:]
+
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
@@ -1682,7 +1704,7 @@ class calendar_todo(osv.osv):
         @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
         @param context: A standard dictionary for contextual values
         """
-
+        
         assert name == 'date'
         return self.write(cr, uid, id, { 'date_start': value }, context=context)
 
@@ -1767,7 +1789,7 @@ class ir_values(osv.osv):
         @param uid: the current user’s ID for security checks,
         @param model: Get The Model
         """
-        if not context:
+        if context is None:
             context = {}
         new_model = []
         for data in models:
@@ -1795,7 +1817,7 @@ class ir_model(osv.osv):
         @param context: A standard dictionary for contextual values
         """
         new_ids = isinstance(ids, (str, int, long)) and [ids] or ids
-        if not context:
+        if context is None:
             context = {}
         data = super(ir_model, self).read(cr, uid, new_ids, fields=fields, \
                         context=context, load=load)

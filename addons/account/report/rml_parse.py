@@ -19,14 +19,11 @@
 #
 ##############################################################################
 
-from report import report_sxw
-import xml.dom.minidom
 import time
-import osv
 import re
-import pooler
 import sys
 
+from report import report_sxw
 
 class rml_parse(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -148,3 +145,4 @@ class rml_parse(report_sxw.rml_parse):
         else:
             return Stringer
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

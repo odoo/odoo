@@ -98,6 +98,8 @@
                         <separator string="" colspan="4"/>
                         <group col="13" colspan="4">
                             <field name="state"/>
+                            <button name="cancel" states="draft" string="Cancel Repair" icon="gtk-stop"/>
+                            <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action" icon="gtk-stop"/>
                             <button name="repair_confirm" states="draft" string="Confirm Repair" icon="terp-camera_test"/>
                             <button name="repair_ready" states="confirmed" string="Start Repair" icon="terp-gtk-jump-to-ltr"/>
                             <button name="action_repair_start" states="ready" string="Start Repair" icon="terp-gtk-jump-to-ltr"/>
@@ -107,8 +109,6 @@
                             <button name="action_invoice_create" states="2binvoiced" string="Make Invoice" icon="terp-dolar"/>
                             <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action" icon="gtk-stop"/>
                             <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                            <button name="cancel" states="draft" string="Cancel Repair" icon="gtk-stop"/>
-                            <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action" icon="gtk-stop"/>
                         </group>
                     </page>
                     <page string="Invoicing">
@@ -211,6 +211,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
+            <field name="help">Repair orders allows you to organize your reparations on the products. On a repair order, you can detail the components you remove, add or replace and record the time you spent on the different operations. The repair order uses the warranty date on the production lot in order to know if you have to invoice the reparation to the customer or not.</field>
         </record>    
 
         <menuitem action="action_repair_order_tree" id="menu_repair_order" parent="mrp.menu_mrp_manufacturing" groups="mrp.group_mrp_user" name="Repair Orders" sequence="50"/>

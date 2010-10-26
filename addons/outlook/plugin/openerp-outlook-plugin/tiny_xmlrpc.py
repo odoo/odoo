@@ -27,7 +27,9 @@ import pythoncom
 import time
 from manager import ustr
 import email
-
+from win32com.mapi import mapi, mapiutil, mapitags
+import pythoncom
+import win32com
 waittime = 10
 wait_count = 0
 wait_limit = 12
@@ -41,7 +43,7 @@ def execute(connector, method, *args):
         if e.args[0] == 111:
             if wait_count > wait_limit:
                 print "Server is taking too long to start, it has exceeded the maximum limit of %d seconds."%(wait_limit)
-                clean()
+                # clean() Commented...
                 sys.exit(1)
             print 'Please wait %d sec to start server....'%(waittime)
             wait_count += 1
@@ -58,7 +60,8 @@ class XMLRpcConn(object):
     _public_methods_ = ['GetDBList', 'login', 'GetAllObjects', 'GetObjList', 'InsertObj', 'DeleteObject', 'GetCSList', \
                         'ArchiveToOpenERP', 'IsCRMInstalled', 'GetPartners', 'GetObjectItems', \
                         'CreateCase', 'MakeAttachment', 'CreateContact', 'CreatePartner', 'getitem', 'setitem', \
-                        'SearchPartnerDetail', 'WritePartnerValues', 'GetAllState', 'GetAllCountry' ]
+                        'SearchPartnerDetail', 'WritePartnerValues', 'GetAllState', 'GetAllCountry', 'SearchPartner', 'SearchEmailResources', \
+                        'GetCountry', 'GetStates', 'FindCountryForState']
     _reg_clsctx_ = pythoncom.CLSCTX_INPROC_SERVER
     _reg_clsid_ = "{C6399AFD-763A-400F-8191-7F9D0503CAE2}"
     _reg_progid_ = "Python.OpenERP.XMLRpcConn"
@@ -135,24 +138,42 @@ class XMLRpcConn(object):
         import win32ui, win32con
         conn = xmlrpclib.ServerProxy(self._uri + '/xmlrpc/object')
         import eml
+        flag = False
         new_msg = files = ext_msg =""
-        eml_path=eml.generateEML(mail)
-        att_name = ustr(eml_path.split('\\')[-1])
-        flag=False
-        attachments=mail.Attachments
-
+        message_id = referances  = None
         try:
-            fp = open(eml_path, 'rb')
-            msg =fp.read()
-            fp.close()
-            new_mail =  email.message_from_string(str(msg))
+            outlook = win32com.client.Dispatch("Outlook.Application")
+            session = win32com.client.Dispatch("MAPI.session")
+            session.Logon('Outlook')
+            objMessage = session.GetMessage(mail.EntryID, mail.Parent.StoreID)
+            objFields = objMessage.Fields
+            strheader = objFields.Item(mapitags.PR_TRANSPORT_MESSAGE_HEADERS)
+            strheader = ustr(strheader).encode('iso-8859-1')
+            headers = {}
+            strheader = strheader.replace("\n ", " ").splitlines()
+            for line in strheader:
+                split_here = line.find(":")
+                headers[line[:split_here]] = line[split_here:]
+            temp1 = headers.get('Message-ID')
+            temp2 = headers.get('Message-Id')
+            referances = headers.get('References')
+            if temp1 == None:    message_id = temp2
+            if temp2 == None:    message_id = temp1
+            startCut = message_id.find("<")
+            endCut = message_id.find(">")
+            message_id = message_id[startCut:endCut+1]
+            if not referances == None:
+                startCut = referances.find("<")
+                endCut = referances.find(">")
+                referances = referances[startCut:endCut+1]
         except Exception,e:
-            win32ui.MessageBox(str(e),"Reading Error Mail")
-
+            win32ui.MessageBox(str(e),"Archive To OpenERP")
+            return
+        new_mail=eml.generateEML(mail)
+        attachments=mail.Attachments
         for rec in recs: #[('res.partner', 3, 'Agrolait')]
             model = rec[0]
             res_id = rec[1]
-
             #Check if mailgate installed
             object_id = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=','mailgate.message')])
             if not object_id:
@@ -164,13 +185,12 @@ class XMLRpcConn(object):
 
             #Reading the Object ir.model Name
 
-            ext_ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'mailgate.message','search',[('message_id','=',mail.EntryID),('model','=',model),('res_id','=',res_id)])
+            ext_ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'mailgate.message','search',[('message_id','=',message_id),('model','=',model),('res_id','=',res_id)])
             if ext_ids:
                 name = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,model,'read',res_id,['name'])['name']
-                ext_msg += """This mail is already archived to {1} '{2}'.
-""".format(object_name,name)
+                ext_msg += """This mail is already archived to {0} '{1}'.\n""".format(object_name,name)
+                flag = True
                 continue
-
             msg = {
                 'subject':mail.Subject,
                 'date':str(mail.ReceivedTime),
@@ -178,22 +198,20 @@ class XMLRpcConn(object):
                 'cc':mail.CC,
                 'from':mail.SenderEmailAddress,
                 'to':mail.To,
-                'message-id':str(new_mail.get('Message-Id')),
-                'references':str(new_mail.get('References')),
+                'message-id':message_id,
+                'references':ustr(referances),
             }
             result = {}
             if attachments:
                 result = self.MakeAttachment([rec], mail)
-
             attachment_ids = result.get(model, {}).get(res_id, [])
             ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','history',model, res_id, msg, attachment_ids)
-
             new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
             flag = True
 
         if flag:
-            t = ext_msg
-            t += """Mail archived Successfully with attachments.\n"""+new_msg
+            t = """Mail archived Successfully with attachments.\n"""+ext_msg
+            t += "\n"+new_msg
             win32ui.MessageBox(t,"Archived to OpenERP",win32con.MB_ICONINFORMATION)
         return flag
 
@@ -250,27 +268,50 @@ class XMLRpcConn(object):
         return res
 
     def CreateCase(self, section, mail, partner_ids, with_attachments=True):
-        res={}
         import win32ui
         import eml
-        section=str(section)
-        partner_ids=eval(str(partner_ids))
-        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        flag = False
+        id = -1
         try:
-            eml_path=eml.generateEML(mail)
-            fp = open(eml_path, 'rb')
-            msg =fp.read()
-            fp.close()
-            new_mail =  email.message_from_string(str(msg))
+            conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+            email=eml.generateEML(mail)
+            message_id = referances  = None
+            outlook = win32com.client.Dispatch("Outlook.Application")
+            session = win32com.client.Dispatch("MAPI.session")
+            session.Logon('Outlook')
+            objMessage = session.GetMessage(mail.EntryID, mail.Parent.StoreID)
+            objFields = objMessage.Fields
+            strheader = objFields.Item(mapitags.PR_TRANSPORT_MESSAGE_HEADERS)
+            strheader = ustr(strheader).encode('iso-8859-1')
+            headers = {}
+            strheader = strheader.replace("\n ", " ").splitlines()
+            for line in strheader:
+                split_here = line.find(":")
+                headers[line[:split_here]] = line[split_here:]
+            temp1 = headers.get('Message-ID')
+            temp2 = headers.get('Message-Id')
+            if temp1 == None:    message_id = temp2
+            if temp2 == None:    message_id = temp1
+            startCut = message_id.find("<")
+            endCut = message_id.find(">")
+            message_id = message_id[startCut:endCut+1]
+            email.replace_header('Message-Id',message_id)
+            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(email))
+            if id > 0:
+                flag = True
+                return flag
+            else:
+                flag = False
+                return flag
         except Exception,e:
-            win32ui.MessageBox(str(e),"Mail Reading Error")
-        execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(new_mail))
+            win32ui.MessageBox("Create Case\n"+str(e),"Mail Reading Error")
+            return flag
 
     def MakeAttachment(self, recs, mail):
         attachments = mail.Attachments
         result = {}
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-        att_folder_path = os.path.abspath(os.path.dirname(__file__)+"\\dialogs\\resources\\mails\\attachments\\")
+        att_folder_path = os.path.abspath(os.path.dirname("%temp%\\"))
         if not os.path.exists(att_folder_path):
             os.makedirs(att_folder_path)
         for rec in recs: #[('res.partner', 3, 'Agrolait')]
@@ -303,12 +344,19 @@ class XMLRpcConn(object):
         return result
 
     def CreateContact(self, res=None):
-        import win32ui
         res=eval(str(res))
         partner = res['partner_id']
+        state = res['state_id']
+        country = res['country_id']
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         partner_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner', 'search', [('name','=',ustr(partner))])
         res.update({'partner_id' : partner_id[0]})
+        if not state == "":
+            country_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country', 'search', [('name','=',ustr(country))])
+            res.update({'country_id' : country_id[0]})
+        if not country == "":
+            state_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country.state', 'search', [('name','=',ustr(state))])
+            res.update({'state_id' : state_id[0]})
         id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner.address','create',res)
         return id
 
@@ -340,10 +388,14 @@ class XMLRpcConn(object):
         new_dict = dict(new_vals)
         email=new_dict['email']
         partner = new_dict['partner']
+        country_val = new_dict['country']
+        state_val = new_dict['state']
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         partner_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner', 'search', [('name','=',ustr(partner))])
+        country_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country', 'search', [('name','=',ustr(country_val))])
+        state_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country.state', 'search', [('name','=',ustr(state_val))])
         address_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'search', [('email','=',ustr(email))])
-        if not address_id:
+        if not partner_id or not address_id or not country_id or not state_id:
             return flag
         address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address','read',address_id[0],['id','partner_id','state_id','country_id'])
         vals_res_address={
@@ -356,6 +408,8 @@ class XMLRpcConn(object):
                            'mobile' : new_dict['mobile'],
                            'fax' : new_dict['fax'],
                            'zip' : new_dict['zip'],
+                           'country_id' : country_id[0],
+                           'state_id' : state_id[0]
                          }
         temp = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'write', address_id, vals_res_address)
         if temp:
@@ -385,3 +439,69 @@ class XMLRpcConn(object):
             obj = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country','read', [country_id], ['id','name'])[0]
             country_list.append((obj['id'], ustr(obj['name'])))
         return country_list
+
+    def SearchPartner(self, partner = ""):
+        import win32ui
+        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        partner_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner', 'search', [('name','=',ustr(partner))])
+        if not partner_id:
+        	return None
+        return partner_id[0]
+
+    def SearchEmailResources(self, message_id):
+        import win32ui
+        import eml
+
+        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        sub = ""
+        res_vals = []
+        mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message', 'search', [('message_id','=',message_id)])
+        if not mail_id:
+            return None
+        address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message','read',mail_id[0],['model','res_id'])
+        for key, vals in address.items():
+            res_vals.append([key,vals])
+        return res_vals
+
+
+    def GetCountry(self, country_search=''):
+        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        ids=[]
+        obj_list=[]
+        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country','search',[('name','ilike',ustr(country_search))])
+        if ids:
+            ids.sort()
+            for id in ids:
+                object = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country','read',[id],['id','name'])[0]
+                obj_list.append((object['id'], ustr(object['name'])))
+            obj_list.sort(lambda x, y: cmp(x[1],y[1]))
+        return obj_list
+
+    def GetStates(self, state_search='', country=None):
+        import win32ui
+        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        ids = []
+        c_id = []
+        obj_list = []
+        if country == None:
+            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',[('name','ilike',ustr(state_search))])
+        if not country == None:
+            c_id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country','search',[('name','=',ustr(country))])
+            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',[('name','ilike',ustr(state_search)),('country_id','=',c_id[0])])
+        if ids:
+            ids.sort()
+            for id in ids:
+                object = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','read',[id],['id','name'])[0]
+                obj_list.append((object['id'], ustr(object['name'])))
+            obj_list.sort(lambda x, y: cmp(x[1],y[1]))
+        return obj_list
+    def FindCountryForState(self, state_search=''):
+        import win32ui
+        res_vals = []
+        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',[('name','=',ustr(state_search))])
+        if not ids:
+            return None
+        object = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','read',ids)[0]
+        country = object['country_id'][1]
+        return country

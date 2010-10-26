@@ -2,8 +2,9 @@
 <openerp>
     <data>
 
-        <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"/>
-        <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0" groups="base.group_hr_manager,base.group_hr_user"/>
+        <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"
+            groups="base.group_hr_manager,base.group_hr_user"/>
+        <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0" groups="base.group_hr_manager"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="1"/>
         <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" groups="base.group_hr_manager" name="Employees" sequence="1" />
@@ -26,7 +27,7 @@
                         <field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/>
                         <field name="active" groups="base.group_extended"/>
                         <newline/>
-                        <field name="department_id" widget="selection" on_change="onchange_department(department_id)"/>
+                        <field name="department_id" widget="selection" />
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
@@ -324,8 +325,9 @@
                     <field name="name" />
                     <field name="department_id" />
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="expected_employees"/>
+                    <field name="expected_employees" on_change="on_change_expected_employee(expected_employees,no_of_employee)"/>
                     <field name="no_of_employee"/>
+                    <field name="no_of_recruitment"/>
                     </group>
                     <newline/>
                     <notebook colspan="4">
@@ -360,6 +362,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
+                    <field name="no_of_recruitment"/>
                     <field name="state"/>
                 </tree>
             </field>

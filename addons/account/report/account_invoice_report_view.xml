@@ -98,19 +98,8 @@
                    <field name="categ_id" />
                 </group>
                 <newline/>
-                <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                    <field name="product_id"/>
-                    <separator orientation="vertical"/>
-                    <field name="journal_id" widget="selection"/>
-                    <field name="account_id"/>
-                    <separator orientation="vertical"/>
-                    <field name="date_due"/>
-                    <separator orientation="vertical" groups="base.group_multi_company"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                </group>
-                <newline/>
                 <group expand="1" string="Group By...">
-                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id','residual_visible':True}"/>
+                    <filter string="Partner" name="partner" icon="terp-partner" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Salesman" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True,'residual_invisible':True}"/>
@@ -130,6 +119,17 @@
                     <filter string="Month" name="month" icon="terp-go-month" context="{'group_by':'month'}" help="Group by month of Invoice Date"/>
                     <filter string="Year" name="year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of Invoice Date"/>
                 </group>
+                <newline/>
+                <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                    <field name="product_id"/>
+                    <separator orientation="vertical"/>
+                    <field name="journal_id" widget="selection"/>
+                    <field name="account_id"/>
+                    <separator orientation="vertical"/>
+                    <field name="date_due"/>
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </group>
             </search>
         </field>
     </record>
@@ -139,7 +139,7 @@
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_current':1,'search_default_customer':1, 'search_default_date': time.strftime('%Y-01-01'), 'group_by':[], 'group_by_no_leaf':1,}</field>
+        <field name="context">{'search_default_current':1, 'search_default_partner':1, 'search_default_customer':1, 'search_default_date': time.strftime('%Y-01-01'), 'group_by':[], 'group_by_no_leaf':1,}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
         <field name="help">A tool search lets you know statistics on invoices that match your needs.</field>
 

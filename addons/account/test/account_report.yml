@@ -1,9 +1,22 @@
 -
+  In order to test the PDF reports defined on an invoice, we will create a Invoice Record
+-
+  !record {model: account.invoice, id: test_invoice_1}:
+	currency_id: base.EUR
+    company_id: base.main_company
+    address_invoice_id: base.res_partner_address_tang
+    partner_id: base.res_partner_asus
+    state: draft
+    type: out_invoice
+    account_id: account.a_recv
+    name: Test invoice 1
+    address_contact_id: base.res_partner_address_tang
+-
   In order to test the PDF reports defined on an invoice, we will print an Invoice Report
 -
   !python {model: account.invoice}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('account.test_invoice_1')], {}, {})
+    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('test_invoice_1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
 
@@ -56,7 +69,7 @@
 -
   !python {model: account.invoice}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('account.test_invoice_1')], {}, {})
+    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('test_invoice_1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
 
@@ -65,21 +78,23 @@
 -
   !python {model: res.partner}: |
     import netsvc, tools, os, time
-    import datetime
-    from mx.DateTime import *
-	import warnings
-	warnings.filterwarnings('ignore',".*struct integer overflow masking is deprecated*")
-    start = datetime.date.fromtimestamp(time.mktime(time.strptime(time.strftime('%Y-%m-%d'), "%Y-%m-%d")))
-    start = DateTime(int(start.year), int(start.month), int(start.day))
+    from datetime import datetime
+    from dateutil.relativedelta import relativedelta
+    import warnings
+    import md5
+    import hashlib
+    warnings.filterwarnings('ignore',".*struct integer overflow masking is deprecated*")
+    start = datetime.fromtimestamp(time.mktime(time.strptime(time.strftime('%Y-%m-%d'), "%Y-%m-%d")))
+    start = datetime(int(start.year), int(start.month), int(start.day))
     res = {}
     for i in range(5)[::-1]:
-        stop = start - RelativeDateTime(days=30)
+        stop = start - relativedelta(days=30)
         res[str(i)] = {
             'name': (i!=0 and (str((5-(i+1)) * 30) + '-' + str((5-i) * 30)) or ('+'+str(4 * 30))),
             'stop': start.strftime('%Y-%m-%d'),
             'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
         }
-        start = stop - RelativeDateTime(days=1)
+        start = stop - relativedelta(days=1)
     obj_move = self.pool.get('account.move.line')
     ctx = {}
     fy_id = ref('account.data_fiscalyear')

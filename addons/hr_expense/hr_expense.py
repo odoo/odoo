@@ -99,10 +99,10 @@ class hr_expense_expense(osv.osv):
     }
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
-        if not employee_id:
-            return {'value':{'department_id': False}}
-        dept = self.pool.get('hr.employee').browse(cr, uid, employee_id).department_id
-        return {'value': {'department_id':dept and dept.id or False}}
+        department_id = False
+        if employee_id:
+            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id).department_id.id or False
+        return {'value':{'department_id':department_id}}   
 
     def expense_confirm(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
@@ -226,7 +226,7 @@ class hr_expense_line(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Short Description', size=128, required=True),
+        'name': fields.char('Expense Note', size=128, required=True),
         'date_value': fields.date('Date', required=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
         'total_amount': fields.function(_amount, method=True, string='Total'),
@@ -248,17 +248,17 @@ class hr_expense_line(osv.osv):
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
         if context is None:
             context = {}
-        v = {}
+        res = {}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            v['name'] = product.name
+            res['name'] = product.name
             # Compute based on pricetype of employee company
             context['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
             amount_unit = product.price_get('standard_price', context)[product.id]
-            v['unit_amount'] = amount_unit
+            res['unit_amount'] = amount_unit
             if not uom_id:
-                v['uom_id'] = product.uom_id.id
-        return {'value': v}
+                res['uom_id'] = product.uom_id.id
+        return {'value': res}
 
 hr_expense_line()
 

@@ -45,6 +45,50 @@ function config_change_load()
 
 	}
 }
+
+function config_change_load_web()
+{
+	//var s = getServer();
+    weburl = getWebServerURL();
+    webport = getwebPort();
+    var urlport = weburl+':'+webport;
+	var a =urlport.split(':');
+	if (String(a)=="" || String(a)=="undefined"){
+		document.getElementById('txtcweburl').value = "localhost"
+		document.getElementById('txtcwebport').value = "8069"
+	}
+	else
+	{
+		len = a[1];
+		var url = "";
+		for (i=0;i<len.length;i++)
+		{	if (len[i] == "/")
+			{
+				continue
+			}
+			url += len[i]
+		}
+		if (String(url) == "" || String(url) == "undefined"){
+			document.getElementById('txtcweburl').value = "localhost"
+		}
+		else
+		{
+			document.getElementById('txtcweburl').value = url
+		}
+
+		if (String(a[2]) == "" || String(a[2]) == "undefined"){
+			document.getElementById('txtcwebport').value = "8069"
+			setwebPort("8069");
+		}
+		else
+		{
+			document.getElementById('txtcwebport').value = a[2]
+			setwebPort(a[2]);
+		}
+
+	}
+}
+
 function config_ok()
 {
 	if (document.getElementById('txtcurl').value == '')
@@ -62,10 +106,35 @@ function config_ok()
 	window.close("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
     window.open("chrome://openerp_plugin/content/config.xul", "", "chrome");
 }
+
+function config_ok_web()
+{
+	if (document.getElementById('txtcweburl').value == '')
+	{
+        alert("You Must Enter Server Name!")
+		return false;
+      
+	}
+	if (document.getElementById('txtcwebport').value == '')
+	{
+		alert("You Must Enter Port!")
+		return false;
+	}
+	setWebServerURL("http://"+document.getElementById('txtcweburl').value +":" + document.getElementById('txtcwebport').value);
+	window.close("chrome://openerp_plugin/content/config_change_web.xul", "", "chrome");
+    window.open("chrome://openerp_plugin/content/config.xul", "", "chrome");
+}
+
 function openConfigChange()
 {
     window.close("chrome://openerp_plugin/content/config.xul", "", "chrome");
     window.open("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
+}
+
+function openConfigChangeweb()
+{
+    window.close("chrome://openerp_plugin/content/config.xul", "", "chrome");
+    window.open("chrome://openerp_plugin/content/config_change_web.xul", "", "chrome");
 }
 
 function appendDbList()

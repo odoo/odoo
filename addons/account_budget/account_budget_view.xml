@@ -12,6 +12,18 @@
         <!--
     Budgets
     -->
+        <record id="view_budget_post_search" model="ir.ui.view">
+            <field name="name">account.budget.post.search</field>
+            <field name="model">account.budget.post</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Budgetary Position">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
 
         <record id="view_budget_post_tree" model="ir.ui.view">
             <field name="name">account.budget.post.tree</field>
@@ -25,36 +37,13 @@
                 </tree>
             </field>
         </record>
-        <record id="view_budget_post_dotation_form" model="ir.ui.view">
-            <field name="name">account.budget.post.dotation.form</field>
-            <field name="model">account.budget.post.dotation</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Budget Dotation">
-                    <field name="period_id"/>
-                    <field name="amount"/>
-                    <field name="tot_planned" />
-                </form>
-            </field>
-        </record>
-        <record id="view_budget_post_dotation_tree" model="ir.ui.view">
-            <field name="name">account.budget.post.dotation.tree</field>
-            <field name="model">account.budget.post.dotation</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Budget Dotations">
-                    <field name="period_id"/>
-                    <field name="amount"/>
-                    <field name="tot_planned" />
-                </tree>
-            </field>
-        </record>
 
         <record id="open_budget_post_form" model="ir.actions.act_window">
             <field name="name">Budgetary Positions</field>
             <field name="res_model">account.budget.post</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_budget_post_tree"/>
+            <field name="search_view_id" ref="view_budget_post_search"/>
         </record>
         <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance" sequence="5"/>
         <menuitem id="next_id_pos" name="Budgets" parent="account.menu_finance_configuration" sequence="20"/>
@@ -142,6 +131,7 @@
                                     <field name="date_to"/>
                                     <field name="paid_date" select="1"/>
                                     <field name="planned_amount" select="1"/>
+                                    <field name="analytic_account_id"/>
                                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                 </form>
                             </field>
@@ -196,7 +186,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="act_crossovered_budget_view">
-            <field name="name">Budget</field>
+            <field name="name">Budgets</field>
             <field name="res_model">crossovered.budget</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

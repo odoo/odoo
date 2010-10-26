@@ -20,8 +20,6 @@
 ##############################################################################
 
 import time
-import re
-import copy
 
 from tools.translate import _
 from report import report_sxw

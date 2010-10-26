@@ -24,8 +24,8 @@ from lxml import etree
 import decimal_precision as dp
 
 import netsvc
-from osv import fields, osv, orm
 import pooler
+from osv import fields, osv, orm
 from tools.translate import _
 
 class account_invoice(osv.osv):
@@ -57,17 +57,13 @@ class account_invoice(osv.osv):
                                             ('company_id', '=', company_id),
                                             ('refund_journal', '=', refund_journal.get(type_inv, False))],
                                                 limit=1)
-        if res:
-            return res[0]
-        else:
-            return False
+        return res and res[0] or False
 
     def _get_currency(self, cr, uid, context=None):
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0]
         if user.company_id:
             return user.company_id.currency_id.id
-        else:
-            return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
+        return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=', 1.0)])[0]
 
     def _get_journal_analytic(self, cr, uid, type_inv, context=None):
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
@@ -134,7 +130,6 @@ class account_invoice(osv.osv):
                 result = inv.amount_total - amount
             # Use is_zero function to avoid rounding trouble => should be fixed into ORM
             res[inv.id] = not self.pool.get('res.currency').is_zero(cr, uid, inv.company_id.currency_id, result) and result or 0.0
-
         return res
 
     # Give Journal Items related to the payment reconciled to this invoice
@@ -351,7 +346,7 @@ class account_invoice(osv.osv):
         if view_type == 'tree':
             doc = etree.XML(res['arch'])
             nodes = doc.xpath("//field[@name='partner_id']")
-            partner_string = 'Customer'
+            partner_string = _('Customer')
             if context.get('type', 'out_invoice') in ('in_invoice', 'in_refund'):
                 partner_string = _('Supplier')
             for node in nodes:
@@ -359,12 +354,26 @@ class account_invoice(osv.osv):
             res['arch'] = etree.tostring(doc)
         return res
 
+    def get_log_context(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        mob_obj = self.pool.get('ir.model.data')
+        res = mob_obj.get_object_reference(cr, uid, 'account', 'invoice_form') or False
+        view_id = res and res[1] or False
+        context.update({'view_id': view_id})
+        return context
+
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         try:
             res = super(account_invoice, self).create(cr, uid, vals, context)
             for inv_id, name in self.name_get(cr, uid, [res], context=context):
-                message = _('Invoice ') + " '" + name + "' "+ _("is waiting for validation.")
-                self.log(cr, uid, inv_id, message)
+                ctx = context.copy()
+                if vals.get('type', 'in_invoice') in ('out_invoice', 'out_refund'):
+                    ctx = self.get_log_context(cr, uid, context=ctx)
+                message = _("Invoice '%s' is waiting for validation.") % name
+                self.log(cr, uid, inv_id, message, context=ctx)
             return res
         except Exception, e:
             if '"journal_id" viol' in e.args[0]:
@@ -375,6 +384,9 @@ class account_invoice(osv.osv):
 
     def confirm_paid(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
+        for inv_id, name in self.name_get(cr, uid, ids, context=context):
+            message = _("Invoice '%s' is paid.") % name
+            self.log(cr, uid, inv_id, message)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -461,14 +473,6 @@ class account_invoice(osv.osv):
             result['value'].update(to_update['value'])
         return result
 
-    def onchange_currency_id(self, cr, uid, ids, curr_id, company_id):
-        if curr_id and company_id:
-            currency = self.pool.get('res.currency').browse(cr, uid, curr_id)
-            if currency.company_id.id != company_id:
-                raise osv.except_osv(_('Configuration Error !'),
-                        _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
-        return {}
-
     def onchange_journal_id(self, cr, uid, ids, journal_id=False):
         result = {}
         if journal_id:
@@ -496,7 +500,6 @@ class account_invoice(osv.osv):
             res = {'value':{'date_due': pterm_list[-1]}}
         else:
              raise osv.except_osv(_('Data Insufficient !'), _('The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !'))
-
         return res
 
     def onchange_invoice_line(self, cr, uid, ids, lines):
@@ -509,6 +512,8 @@ class account_invoice(osv.osv):
         val = {}
         dom = {}
         obj_journal = self.pool.get('account.journal')
+        account_obj = self.pool.get('account.account')
+        inv_line_obj = self.pool.get('account.invoice.line')
         if company_id and part_id and type:
             acc_id = False
             partner_obj = self.pool.get('res.partner').browse(cr,uid,part_id)
@@ -533,7 +538,6 @@ class account_invoice(osv.osv):
                     else:
                         acc_id = pay_res_id
                     val= {'account_id': acc_id}
-            account_obj = self.pool.get('account.account')
             if ids:
                 if company_id:
                     inv_obj = self.browse(cr,uid,ids)
@@ -544,7 +548,7 @@ class account_invoice(osv.osv):
                                 if not result_id:
                                     raise osv.except_osv(_('Configuration Error !'),
                                         _('Can not find account chart for this company in invoice line account, Please Create account.'))
-                                self.pool.get('account.invoice.line').write(cr, uid, [line.id], {'account_id': result_id[0]})
+                                inv_line_obj.write(cr, uid, [line.id], {'account_id': result_id[0]})
             else:
                 if invoice_line:
                     for inv_line in invoice_line:
@@ -585,7 +589,7 @@ class account_invoice(osv.osv):
             else:
                 val['currency_id'] = company.currency_id.id
 
-        return {'value': val, 'domain': dom }
+        return {'value': val, 'domain': dom}
 
     # go from canceled state to draft state
     def action_cancel_draft(self, cr, uid, ids, *args):
@@ -674,7 +678,7 @@ class account_invoice(osv.osv):
         return (ref or '').replace('/','')
 
     def _get_analytic_lines(self, cr, uid, id):
-        inv = self.browse(cr, uid, [id])[0]
+        inv = self.browse(cr, uid, id)
         cur_obj = self.pool.get('res.currency')
 
         company_currency = inv.company_id.currency_id.id
@@ -690,6 +694,8 @@ class account_invoice(osv.osv):
                     ref = inv.reference
                 else:
                     ref = self._convert_ref(cr, uid, inv.number)
+                if not inv.journal_id.analytic_journal_id:
+                    raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (inv.journal_id.name,))
                 il['analytic_lines'] = [(0,0, {
                     'name': il['name'],
                     'date': inv['date_invoice'],
@@ -699,7 +705,7 @@ class account_invoice(osv.osv):
                     'product_id': il['product_id'],
                     'product_uom_id': il['uos_id'],
                     'general_account_id': il['account_id'],
-                    'journal_id': self._get_journal_analytic(cr, uid, inv.type),
+                    'journal_id': inv.journal_id.analytic_journal_id.id,
                     'ref': ref,
                 })]
         return iml
@@ -795,7 +801,6 @@ class account_invoice(osv.osv):
             line = []
             for key, val in line2.items():
                 line.append((0,0,val))
-
         return line
 
     def action_move_create(self, cr, uid, ids, *args):
@@ -833,7 +838,7 @@ class account_invoice(osv.osv):
                         total_fixed += line.value_amount
                     if line.value == 'procent':
                         total_percent += line.value_amount
-                total_fixed = (total_fixed * 100) / inv.amount_total
+                total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
                     raise osv.except_osv(_('Error !'), _("Cannot create the invoice !\nThe payment term defined gives a computed amount greater than the total invoiced amount."))
 
@@ -970,7 +975,9 @@ class account_invoice(osv.osv):
             'analytic_account_id':x.get('account_analytic_id',False),
         }
 
-    def action_number(self, cr, uid, ids, *args):
+    def action_number(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         #TODO: not correct fix but required a frech values before reading it.
         self.write(cr, uid, ids, {})
 
@@ -984,7 +991,10 @@ class account_invoice(osv.osv):
             self.write(cr, uid, ids, {'internal_number':number})
 
             if invtype in ('in_invoice', 'in_refund'):
-                ref = reference
+                if not reference:
+                    ref = self._convert_ref(cr, uid, number)
+                else:
+                    ref = reference
             else:
                 ref = self._convert_ref(cr, uid, number)
 
@@ -1001,9 +1011,11 @@ class account_invoice(osv.osv):
                         (ref, move_id))
 
             for inv_id, name in self.name_get(cr, uid, [id]):
+                ctx = context.copy()
+                if obj_inv.type in ('out_invoice', 'out_refund'):
+                    ctx = self.get_log_context(cr, uid, context=ctx)
                 message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
-                self.log(cr, uid, inv_id, message)
-
+                self.log(cr, uid, inv_id, message, context=ctx)
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
@@ -1218,12 +1230,13 @@ class account_invoice(osv.osv):
 
         inv_id, name = self.name_get(cr, uid, [invoice.id], context=context)[0]
         if (not round(total,self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))) or writeoff_acc_id:
-            self.log(cr, uid, inv_id, _('Invoice ') + " '" + name + "' "+ _("is totally paid."))
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
             code = invoice.currency_id.code
-            amt = str(pay_amount) + code + ' on ' + str(invoice.amount_total) + code + ' (' + str(total) + code + ' remaining)'
-            self.log(cr, uid, inv_id, _('Invoice ') + " '" + name + "' "+ _("is paid partially: ") + amt)
+            # TODO: use currency's formatting function
+            msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)") % \
+                    (name, pay_amount, code, invoice.amount_total, code, total, code)
+            self.log(cr, uid, inv_id,  msg)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
         # Update the stored value (fields.function), so we write to trigger recompute
@@ -1289,14 +1302,6 @@ class account_invoice_line(osv.osv):
         'price_unit': _price_unit_default,
     }
 
-    def product_id_change_unit_price_inv(self, cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=None):
-        tax_obj = self.pool.get('account.tax')
-        if price_unit:
-            taxes = tax_obj.browse(cr, uid, tax_id)
-            for tax in tax_obj.compute_inv(cr, uid, taxes, price_unit, qty, address_invoice_id, product, partner_id):
-                price_unit = price_unit - tax['amount']
-        return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
-
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
         if context is None:
             context = {}
@@ -1361,7 +1366,7 @@ class account_invoice_line(osv.osv):
                 else:
                     app_acc_in = in_acc_cate
                     app_acc_exp = ex_acc_cate
-            if app_acc_in.company_id.id != company_id and app_acc_exp.company_id.id != company_id:
+            if app_acc_in and app_acc_in.company_id.id != company_id and app_acc_exp and app_acc_exp.company_id.id != company_id:
                 in_res_id = account_obj.search(cr, uid, [('name','=',app_acc_in.name),('company_id','=',company_id)])
                 exp_res_id = account_obj.search(cr, uid, [('name','=',app_acc_exp.name),('company_id','=',company_id)])
                 if not in_res_id and not exp_res_id:
@@ -1396,8 +1401,7 @@ class account_invoice_line(osv.osv):
             taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
             tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
         if type in ('in_invoice', 'in_refund'):
-            to_update = self.product_id_change_unit_price_inv(cr, uid, tax_id, price_unit or res.standard_price, qty, address_invoice_id, product, partner_id, context=context)
-            result.update(to_update)
+            result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
 
@@ -1500,8 +1504,8 @@ class account_invoice_line(osv.osv):
         taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
         res = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
-        r = {'value':{'invoice_line_tax_id': res}}
-        return r
+        return {'value':{'invoice_line_tax_id': res}}
+
 account_invoice_line()
 
 class account_invoice_tax(osv.osv):
@@ -1533,7 +1537,6 @@ class account_invoice_tax(osv.osv):
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'manual': fields.boolean('Manual'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of invoice tax."),
-
         'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="The account basis of the tax declaration."),
         'base_amount': fields.float('Base Code Amount', digits_compute=dp.get_precision('Account')),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
@@ -1571,9 +1574,9 @@ class account_invoice_tax(osv.osv):
 
     _order = 'sequence'
     _defaults = {
-        'manual': lambda *a: 1,
-        'base_amount': lambda *a: 0.0,
-        'tax_amount': lambda *a: 0.0,
+        'manual': 1,
+        'base_amount': 0.0,
+        'tax_amount': 0.0,
     }
     def compute(self, cr, uid, invoice_id, context={}):
         tax_grouped = {}

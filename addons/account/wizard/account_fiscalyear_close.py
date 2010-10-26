@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 from tools.translate import _
-import tools
 
 class account_fiscalyear_close(osv.osv_memory):
     """
@@ -30,14 +30,14 @@ class account_fiscalyear_close(osv.osv_memory):
     _description = "Fiscalyear Close"
     _columns = {
        'fy_id': fields.many2one('account.fiscalyear', \
-                                 'Fiscal Year to close', required=True),
+                                 'Fiscal Year to close', required=True, help="Select a Fiscal year to close"),
        'fy2_id': fields.many2one('account.fiscalyear', \
                                  'New Fiscal Year', required=True),
        'journal_id': fields.many2one('account.journal', \
                                  'Opening Entries Journal', required=True, help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts and with a centralized counterpart.'),
        'period_id': fields.many2one('account.period', \
                                  'Opening Entries Period', required=True),
-       'report_name': fields.char('Name of new entries',size=64, required=True),
+       'report_name': fields.char('Name of new entries',size=64, required=True, help="Give name of the new entries"),
     }
     _defaults = {
         'report_name':'End of Fiscal Year Entry',
@@ -57,7 +57,6 @@ class account_fiscalyear_close(osv.osv_memory):
         obj_acc_move_line = self.pool.get('account.move.line')
         obj_acc_account = self.pool.get('account.account')
         obj_acc_journal_period = self.pool.get('account.journal.period')
-        obj_rec = self.pool.get('account.move.reconcile')
 
         data =  self.read(cr, uid, ids, context=context)
 
@@ -80,9 +79,9 @@ class account_fiscalyear_close(osv.osv_memory):
         if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
             raise osv.except_osv(_('UserError'),
                     _('The journal must have default credit and debit account'))
-        if not new_journal.centralisation:
+        if (not new_journal.centralisation) or new_journal.entry_posted:
             raise osv.except_osv(_('UserError'),
-                    _('The journal must have centralised counterpart'))
+                    _('The journal must have centralised counterpart without the Skipping draft state option checked!'))
 
         move_ids = obj_acc_move_line.search(cr, uid, [
             ('journal_id', '=', new_journal.id), ('period_id.fiscalyear_id', '=', new_fyear.id)])

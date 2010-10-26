@@ -22,7 +22,6 @@
 import netsvc
 from osv import osv,fields
 from tools.translate import _
-from mx import DateTime
 import time
 
 class all_closed_cashbox_of_the_day(osv.osv_memory):

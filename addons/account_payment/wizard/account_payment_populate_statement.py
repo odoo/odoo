@@ -29,7 +29,7 @@ class account_payment_populate_statement(osv.osv_memory):
     _description = "Account Payment Populate Statement"
     _columns = {
         'lines': fields.many2many('payment.line', 'payment_line_rel_', 'payment_id', 'line_id', 'Payment Lines')
-               }
+    }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         line_obj = self.pool.get('payment.line')
@@ -56,6 +56,7 @@ class account_payment_populate_statement(osv.osv_memory):
         currency_obj = self.pool.get('res.currency')
         voucher_obj = self.pool.get('account.voucher')
         voucher_line_obj = self.pool.get('account.voucher.line')
+        move_line_obj = self.pool.get('account.move.line')
 
         if context is None:
             context = {}
@@ -75,34 +76,28 @@ class account_payment_populate_statement(osv.osv_memory):
             context.update({'move_line_ids': [line.move_line_id.id]})
             result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment', context=context)
 
-            if line.partner_id:
-#                line['partner_id'] = mv.partner_id.id
-                if amount < 0:
-                    account = line.partner_id.property_account_payable.id
-                else:
-                    account = line.partner_id.property_account_receivable.id
-
             if line.move_line_id:
-                voucher_res = { 'type': 'payment',
-                'name': line.name,
-                'partner_id': line.partner_id.id,
-                'journal_id': statement.journal_id.id,
-                'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
-                'company_id': statement.company_id.id,
-                'currency_id': statement.currency.id,
-                'date': line.date or time.strftime('%Y-%m-%d'),
-                'amount': abs(amount),
-                'period_id': statement.period_id.id
+                voucher_res = {
+                        'type': 'payment',
+                        'name': line.name,
+                        'partner_id': line.partner_id.id,
+                        'journal_id': statement.journal_id.id,
+                        'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
+                        'company_id': statement.company_id.id,
+                        'currency_id': statement.currency.id,
+                        'date': line.date or time.strftime('%Y-%m-%d'),
+                        'amount': abs(amount),
+                        'period_id': statement.period_id.id
                 }
                 voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
                 voucher_line_dict =  False
                 if result['value']['line_ids']:
                     for line_dict in result['value']['line_ids']:
-                        move_line = self.pool.get('account.move.line').browse(cr, uid, line_dict['move_line_id'], context)
+                        move_line = move_line_obj.browse(cr, uid, line_dict['move_line_id'], context)
                         if line.move_line_id.move_id.id == move_line.move_id.id:
                             voucher_line_dict = line_dict
                 if voucher_line_dict:
-                    voucher_line_dict.update({'voucher_id':voucher_id})
+                    voucher_line_dict.update({'voucher_id': voucher_id})
                     voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
 
                 st_line_id = statement_line_obj.create(cr, uid, {

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,7 +29,7 @@ from tools.translate import _
 class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Directory'
-    _order = 'name desc'
+    _order = 'name'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
@@ -44,13 +44,12 @@ class document_directory(osv.osv):
         'child_ids': fields.one2many('document.directory', 'parent_id', 'Children'),
         'file_ids': fields.one2many('ir.attachment', 'parent_id', 'Files'),
         'content_ids': fields.one2many('document.directory.content', 'directory_id', 'Virtual Files'),
-        'type': fields.selection([ 
+        'type': fields.selection([
             ('directory','Static Directory'),
             ('ressource','Folders per resource'),
             ],
             'Type', required=True, select=1,
-            help="Defines directory's behaviour."),
-        
+            help="Each directory can either have the type Static or be linked to another resource. A static directory, as with Operating Systems, is the classic directory that can contain a set of files. The directories linked to systems resources automatically possess sub-directories for each of resource types defined in the parent directory."),
         'ressource_type_id': fields.many2one('ir.model', 'Resource model',
             help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
@@ -95,13 +94,13 @@ class document_directory(osv.osv):
                 return objid.browse(cr, uid, mid, context=context).res_id
         except Exception:
                 return None
-        
+
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'document.directory', context=c),
         'user_id': lambda self,cr,uid,ctx: uid,
         'domain': lambda self,cr,uid,ctx: '[]',
         'type': lambda *args: 'directory',
-        'ressource_id': lambda *a: 0,        
+        'ressource_id': lambda *a: 0,
         'storage_id': _get_def_storage,
         'resource_find_all': True,
     }
@@ -126,6 +125,10 @@ class document_directory(osv.osv):
     def get_full_path(self, cr, uid, dir_id, context=None):
         """ Return the full path to this directory, in a list, root first
         """
+        if isinstance(dir_id, (tuple, list)):
+            assert len(dir_id) == 1
+            dir_id = dir_id[0]
+
         def _parent(dir_id, path):
             parent=self.browse(cr, uid, dir_id)
             if parent.parent_id and not parent.ressource_parent_type_id:
@@ -151,7 +154,7 @@ class document_directory(osv.osv):
     _constraints = [
         (_check_recursion, 'Error! You can not create recursive Directories.', ['parent_id'])
     ]
-    
+
     def __init__(self, *args, **kwargs):
         super(document_directory, self).__init__(*args, **kwargs)
 
@@ -172,15 +175,48 @@ class document_directory(osv.osv):
         """
         if not context:
                 context = {}
-            
+
         return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
+
+    def get_node_class(self, cr, uid, ids, dbro=None, dynamic=False, context=None):
+        """Retrieve the class of nodes for this directory
+           
+           This function can be overriden by inherited classes ;)
+           @param dbro The browse object, if caller already has it
+        """
+        if dbro is None:
+            dbro = self.browse(cr, uid, ids, context=context)
+
+        if dynamic:
+            assert dbro.type == 'directory'
+            return nodes.node_res_obj
+        elif dbro.type == 'directory':
+            return nodes.node_dir
+        elif dbro.type == 'ressource':
+            return nodes.node_res_dir
+        else:
+            raise ValueError("dir node for %s type", dbro.type)
+
+    def _prepare_context(self, cr, uid, nctx, context):
+        """ Fill nctx with properties for this database
+        @param nctx instance of nodes.node_context, to be filled
+        @param context ORM context (dict) for us
+        
+        Note that this function is called *without* a list of ids, 
+        it should behave the same for the whole database (based on the
+        ORM instance of document.directory).
+        
+        Some databases may override this and attach properties to the
+        node_context. See WebDAV, CalDAV.
+        """
+        return
 
     def get_dir_permissions(self, cr, uid, ids ):
         """Check what permission user 'uid' has on directory 'id'
         """
         assert len(ids) == 1
         id = ids[0]
-        
+
         cr.execute( "SELECT count(dg.item_id) AS needs, count(ug.uid) AS has " \
                 " FROM document_directory_group_rel dg " \
                 "   LEFT OUTER JOIN res_groups_users_rel ug " \
@@ -197,7 +233,7 @@ class document_directory(osv.osv):
             Return a tuple (node_dir, remaining_path)
         """
         return (nodes.node_database(context=ncontext), uri)
-        
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default ={}
@@ -216,6 +252,7 @@ class document_directory(osv.osv):
                     name=directory.name
                 if not parent_id:
                     parent_id=directory.parent_id and directory.parent_id.id or False
+                # TODO fix algo
                 if not ressource_parent_type_id:
                     ressource_parent_type_id=directory.ressource_parent_type_id and directory.ressource_parent_type_id.id or False
                 if not ressource_id:
@@ -236,8 +273,11 @@ class document_directory(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr, uid, vals):
             raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
-        if vals.get('name',False) and (vals.get('name').find('/')+1 or vals.get('name').find('@')+1 or vals.get('name').find('$')+1 or vals.get('name').find('#')+1) :
-            raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
+        newname = vals.get('name',False)
+        if newname:
+            for illeg in ('/', '@', '$', '#'):
+                if illeg in newname:
+                    raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
     # TODO def unlink(...
@@ -256,7 +296,7 @@ class document_directory_dctx(osv.osv):
     _name = 'document.directory.dctx'
     _description = 'Directory Dynamic Context'
     _columns = {
-        'dir_id': fields.many2one('document.directory', 'Directory', required=True),
+        'dir_id': fields.many2one('document.directory', 'Directory', required=True, ondelete="cascade"),
         'field': fields.char('Field', size=20, required=True, select=1, help="The name of the field. Note that the prefix \"dctx_\" will be prepended to what is typed here."),
         'expr': fields.char('Expression', size=64, required=True, help="A python expression used to evaluate the field.\n" + \
                 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"),

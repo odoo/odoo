@@ -11,6 +11,7 @@
         <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
         <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
         <field name="context">{'object_id':'crm.phonecall'}</field>
+        <field name="help">Create specific phone call categories to better sort the type of calls tracked in the system.</field>
     </record>
 
     <menuitem action="crm_phonecall_categ_action" name="Categories"
@@ -31,6 +32,7 @@
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="categ_id" string="Type"/>
+                <field name="create_date" invisible="1"/>
                 <button string="Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="draft,open,pending"
@@ -271,7 +273,7 @@
                </field>
                <field name="section_id"
                    select="1" widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+"
+                   <filter icon="terp-personal+" groups="base.group_extended"
                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
                </field>

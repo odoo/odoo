@@ -16,7 +16,7 @@
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"/>
                         <separator orientation="vertical"/>
                         <filter string="This Month" icon="terp-go-month" name="This Month"
-                           domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_from','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                                domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                         <field name="employee_id">
                             <filter icon="terp-personal"
@@ -137,7 +137,7 @@
                         <field name="notes" nolabel="1" colspan="4" />
                         <newline/>
                         <field name="state" colspan="2"/>
-                        <group colspan="2">
+                        <group colspan="2" col="6">
                             <button string="Cancel" name="cancel" states="validate,refuse" type="workflow" icon="gtk-cancel" groups="base.group_hr_manager"/>
                             <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes" groups="base.group_hr_user,base.group_hr_manager"/>
                             <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_manager"/>

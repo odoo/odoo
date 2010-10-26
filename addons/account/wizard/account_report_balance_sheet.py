@@ -35,7 +35,7 @@ class account_bs_report(osv.osv_memory):
     _columns = {
         'display_type': fields.boolean("Landscape Mode"),
         'reserve_account_id': fields.many2one('account.account', 'Reserve & Profit/Loss Account',required = True,
-                                      help='This Account is used for trasfering Profit/Loss(If It is Profit : Amount will be added, Loss : Amount will be duducted.), Which is calculated from Profilt & Loss Report', domain = [('type','=','payable')]),
+                                      help='This Account is used for trasfering Profit/Loss(If It is Profit: Amount will be added, Loss : Amount will be duducted.), Which is calculated from Profilt & Loss Report', domain = [('type','=','payable')]),
     }
 
     _defaults={
@@ -44,7 +44,6 @@ class account_bs_report(osv.osv_memory):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        mod_obj = self.pool.get('ir.model.data')
         res = super(account_bs_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         doc = etree.XML(res['arch'])
         nodes = doc.xpath("//field[@name='journal_ids']")

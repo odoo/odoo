@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- User Connection -->
+        <record model="ir.ui.view" id="view_user_connection_tree">
+            <field name="name">user.connection.tree</field>
+            <field name="model">res.users</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Latest Connections">
+                    <field name="name"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_user_connection_tree">
+            <field name="name">Latest Connections</field>
+            <field name="res_model">res.users</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_user_connection_tree"></field>
+        </record>
+
+        <!-- Latest Activities -->
+        <record model="ir.actions.act_window" id="action_latest_activities_tree">
+            <field name="name">Latest Activities</field>
+            <field name="res_model">res.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="board_administration_form" model="ir.ui.view">
+            <field name="name">board.administration.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Administration Dashboard">
+                    <hpaned position="100">
+                        <child1>
+                            <action name="%(action_latest_activities_tree)d" string="Latest Activities" sequence="1"/>
+                            <action width="510" name="%(action_user_connection_tree)d" string="Latest Connections" />
+                        </child1>
+                        <child2>
+                        </child2>
+                    </hpaned>
+                </form>
+            </field>
+        </record>
+        <record id="open_board_administration_form" model="ir.actions.act_window">
+             <field name="name">Administration Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="board_administration_form"/>
+        </record>
+       <menuitem id="board.admin_menu_dasboard" name="Dashboard" sequence="0" parent="base.menu_reporting"/>
+       <menuitem id="menu_board_admin" action="open_board_administration_form" icon="terp-graph" parent="board.admin_menu_dasboard" />
+
+    </data>
+</openerp>
+
+
+
+
+
+
+
+
+
+
+
+

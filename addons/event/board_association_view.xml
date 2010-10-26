@@ -8,7 +8,7 @@
             <field name="model">report.event.registration</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Event on Registration"  type="bar" >
+                <graph string="Events Filling Status" type="bar" >
                     <field name="event_id"/>
                     <field name="draft_state" operator="+"/>
                     <field name="confirm_state" operator="+"/>
@@ -18,9 +18,10 @@
         </record>
 
         <record  model="ir.actions.act_window" id="act_event_reg">
-            <field name="name">Events On Registrations</field>
+            <field name="name">Events Filling Status</field>
             <field name="res_model">report.event.registration</field>
             <field name="view_type">form</field>
+            <field name="domain">[('state','not in',('cancel','done'))]</field>
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_report_event_reg_graph"/>
         </record>
@@ -47,20 +48,19 @@
                         <child1>
                             <action string="Next Events"
                                 name="%(act_event_view)d"
+                                domain="[('state','not in',('cancel','done'))]"
                                 colspan="4"/>
                             <action
-                                string="Unpaid Invoices"
-                                name="%(account.action_invoice_tree)d"
+                                string="Unconfirmed Registrations"
+                                name="%(event.act_event_list_register_event)d"
                                 colspan="4"
-                                domain="[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','out_invoice')]"/>
+                                domain="[('state','=','draft')]"/>
                         </child1>
                         <child2>
-                            <action string="Register Events"
+                            <action string="Events Filling Status"
                                 name="%(act_event_reg)d"
                                 colspan="4"/>
-
                         </child2>
-
                     </hpaned>
                 </form>
             </field>
@@ -80,7 +80,6 @@
             sequence="1"
             id="menu_board_associations_manager"
             icon="terp-graph"/>
-         <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17" action="open_board_associations_manager"/>
 
     </data>
 </openerp>
