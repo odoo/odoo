@@ -263,7 +263,7 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group col='10' colspan='4'>
-                        <filter icon="terp-document-new" string="Current" domain="[('state','in', ('draft', 'open'))]"/>
+                        <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]"/>
                         <separator orientation="vertical"/>
                         <field name="title" select="1"/>
                         <field name="type" select="1" widget="selection"/>
