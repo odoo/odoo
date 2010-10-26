@@ -4,11 +4,11 @@
 -
    !record {model: crm.lead, id: crm_opportunity_abcfuelcounits0}:
     email_from: info@balmerinc.be
-    name: 'ABC FUEL CO 829264 - 10002 units '
+    name: 'ABC FUEL CO 829264 - 10002 units'
     partner_address_id: base.res_partner_address_1
     partner_id: base.res_partner_9
     probability: 1.0
-    stage_id: crm.stage_oppor1
+    stage_id: crm.stage_lead1
     categ_id: crm.categ_oppor2
     section_id: crm.section_sales_department
     
@@ -32,20 +32,18 @@
     
 -  |
    I can see that Meeting's calendar view is shown.
-   then I click on the date on which I want schedule meeting.
+   then I click on the date on which I want to schedule meeting.
    I fill proper data for that meeting and save it
 -
-   !record {model: crm.meeting, id: crm_meeting_abcfuelcounits0}:
-    alarm_id: base_calendar.alarm3
+  !record {model: crm.meeting, id: crm_meeting_abcfuelcounits0}:
     date: '2010-04-16 00:00:00'
     date_deadline: '2010-04-16 08:00:00'
     duration: 8.0
     email_from: info@balmerinc.be
-    name: 'ABC FUEL CO 829264 - 10002 units '
+    name: 'ABC FUEL CO 829264 - 10002 units'
     opportunity_id: 'crm_opportunity_abcfuelcounits0'
     partner_address_id: base.res_partner_address_1
     partner_id: base.res_partner_9
-    rrule_type: weekly
     section_id: crm.section_sales_department
     state: open
 - |
@@ -54,7 +52,7 @@
 - 
   !record {model: crm.opportunity2phonecall, id: crm_opportunity2phonecall_abcfuelcounits0}:
     date: '2010-04-17 11:15:00'
-    name: 'ABC FUEL CO 829264 - 10002 units '
+    name: 'ABC FUEL CO 829264 - 10002 units'
     section_id: crm.section_sales_department
     user_id: base.user_demo
 - |    
@@ -66,8 +64,9 @@
   I  check that phonecall record is created for that opportunity.       
 -   
   !python {model: crm.phonecall}: |
-    ids = self.search(cr, uid, [('name', '=', 'ABC FUEL CO 829264 - 10002 units')])
-    assert len(ids) 
+    phone_obj = self.pool.get('crm.phonecall')
+    ids = phone_obj.search(cr, uid, [('name', '=', 'ABC FUEL CO 829264 - 10002 units')])
+    assert len(ids)
 - |    
   I can see phonecall record after click on "Schedule call" wizard.     
 -

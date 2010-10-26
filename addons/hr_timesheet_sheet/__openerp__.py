@@ -43,19 +43,26 @@ The validation can be configured in the company:
 * Period size (day, week, month, year)
 * Maximal difference between timesheet and attendances
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['hr_timesheet', 'hr_timesheet_invoice', 'process'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
-        'security/hr_timesheet_data.xml',
+        'security/hr_timesheet_sheet_security.xml',
         'hr_timesheet_sheet_view.xml',
         'hr_timesheet_workflow.xml',
         'process/hr_timesheet_sheet_process.xml',
+        'board_hr_timesheet_view.xml',
+        'report/hr_timesheet_report_view.xml',
         'report/timesheet_report_view.xml',
+        'wizard/hr_timesheet_current_view.xml',
+        'hr_timesheet_sheet_data.xml'
     ],
-    'demo_xml': ['hr_timesheet_sheet_demo.xml'],
+    'demo_xml': ['hr_timesheet_sheet_demo.xml',
+
+                 ],
+    'test':['test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'active': False,
     'certificate': '0073297700829',

@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,25 +15,30 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name":"Account CODA - import bank statements from coda file",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Account CODA",
-    "description":"""Module provides functionality to import
+    "name"      : "Account CODA - import bank statements from coda file",
+    "version"   : "1.0",
+    "author"    : "OpenERP SA",
+    "category"  : "Account CODA",
+    "description": """
+    Module provides functionality to import
     bank statements from coda files.
     """,
-    "depends":["base", "account"],
-    "demo_xml":["coda_demo.xml"],
-    "init_xml":[],
-    "update_xml" : ["security/ir.model.access.csv","coda_wizard.xml","coda_view.xml"],
-    "active":False,
-    "installable":True,
+    "depends"   : ["account_voucher"],
+    "demo_xml"  : [],
+    "init_xml"  : [],
+    "update_xml": ["security/ir.model.access.csv",
+                    "security/account_security.xml",
+                    "wizard/account_coda_import.xml",
+                    "account_coda_view.xml"],
+    "active"    : False,
+    "installable" : True,
 
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

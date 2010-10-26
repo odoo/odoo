@@ -1,0 +1,150 @@
+-
+  In order to test the flow of stock planning module. I will create forecast periods,
+  stock forecast and then with master procurement schedule.
+-
+  I create weekly stock periods for the month of July.
+-
+  I create stock period for the first week of July.
+- 
+  !record {model: stock.period, id: stock_period_01}:
+    date_start: '2010-07-01 00:00:00'
+    date_stop: '2010-07-06 23:59:00'
+    name: 2010, week 27
+-
+  I create stock period for the second week of July.
+- 
+  !record {model: stock.period, id: stock_period_02}:
+    date_start: '2010-07-07 00:00:00'
+    date_stop: '2010-07-12 23:59:00'
+    name: 2010, week 28
+-
+  I create stock period for the third week of July.
+- 
+  !record {model: stock.period, id: stock_period_03}:
+    date_start: '2010-07-15 00:00:00'
+    date_stop: '2010-07-20 23:59:00'
+    name: 2010, week 29
+-
+  I create stock period for the fourth week of July.
+- 
+  !record {model: stock.period, id: stock_period_04}:
+    date_start: '2010-07-22 00:00:00'
+    date_stop: '2010-07-27 23:59:00'
+    name: 2010, week 30
+-
+  I create stock period for the fifth week of July.
+- 
+  !record {model: stock.period, id: stock_period_05}:
+    date_start: '2010-07-29 00:00:00'
+    date_stop: '2010-07-31 23:59:00'
+    name: 2010, week 31
+-
+  Now I create the forecast for this period for all PCs.
+-
+  !record {model: stock.sale.forecast.createlines, id: stock_sale_forecast_createlines_0}:
+    company_id: base.main_company
+    period_id: stock_period_03
+    product_categ_id: product.product_category_pc
+    warehouse_id: stock.warehouse0
+- 
+  Performing an osv_memory action create_forecast on module stock.sale.forecast.createlines
+-
+  !python {model: stock.sale.forecast.createlines}: |
+    self.create_forecast(cr, uid, [ref("stock_sale_forecast_createlines_0")], {"lang":
+      'en_US', "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_sale_forecast_createlines")],
+      "tz": False, "active_id": ref("stock_planning.menu_stock_sale_forecast_createlines"),
+      })
+-
+  I create a sale order for PC1-Basic PC and PC3-Medium PC.
+- 
+  !record {model: sale.order, id: sale_order_so0}:
+    date_order: '2010-07-20'
+    invoice_quantity: order
+    name: SO006
+    order_line:
+      - name: '[PC1] Basic PC'
+        price_unit: 450.0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 13.0
+        state: draft
+        delay: 2.0
+        product_id: product.product_product_pc1
+        product_uos_qty: 13.0
+        th_weight: 0.0
+        type: make_to_stock
+      - name: '[PC3] Medium PC'
+        price_unit: 900.0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 5.0
+        state: draft
+        delay: 3.0
+        product_id: product.product_product_pc3
+        product_uos_qty: 5.0
+        th_weight: 0.0
+        type: make_to_stock
+    order_policy: manual
+    partner_id: base.res_partner_desertic_hispafuentes
+    partner_invoice_id: base.res_partner_address_3000
+    partner_order_id: base.res_partner_address_3000
+    partner_shipping_id: base.res_partner_address_3000
+    picking_policy: direct
+    pricelist_id: product.list0
+    shop_id: sale.shop
+-
+  Now I want to calculate sales history for both the products PC1-Basic PC and PC3-Medium PC and forecast the quantity.
+-
+  !python {model: stock.sale.forecast}: |
+    forecast_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc1'))])
+    write_dict = {'product_qty': 30.0,
+    'analyzed_dept_id': ref("hr.dep_sales"),
+    'analyzed_period1_id': ref("stock_period_03"),
+    'analyzed_user_id': ref("base.user_root"),
+    'analyzed_warehouse_id': ref("stock.warehouse0")}
+    self.write(cr, uid, forecast_ids, write_dict)
+    self.calculate_sales_history(cr, uid, forecast_ids, {"lang": "en_US", "tz":
+      False, "search_default_create_uid": 1, "active_model": "ir.ui.menu", "department_id":
+      False, "active_ids": [ref("stock_planning.menu_stock_sale_forecast_all")], "active_id":
+      ref("stock_planning.menu_stock_sale_forecast_all"), })
+- 
+  I create Master procurement schedule for the third week of July.
+- 
+  !record {model: stock.planning.createlines, id: stock_planning_createlines_0}:
+    company_id: base.main_company
+    period_id: stock_period_03
+    product_categ_id: product.product_category_pc
+    warehouse_id: stock.warehouse0
+- 
+  Performing an osv_memory action create_planning on module stock.planning.createlines
+- 
+  !python {model: stock.planning.createlines}: |
+    self.create_planning(cr, uid, [ref("stock_planning_createlines_0")], {"lang":
+      "en_US", "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_planning_createlines")],
+      "active_id": ref("stock_planning.menu_stock_planning_createlines"), "department_id":
+      False, })
+-
+  I calculate the planning in master procurement schedule.
+-
+  !python {model: stock.planning}: |
+    planning_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc1')),('period_id','=',ref('stock_period_03'))])
+    self.write(cr, uid, planning_ids, {'to_procure': 30.0,'planned_outgoing': 40.0})
+    self.calculate_planning(cr, uid, planning_ids, {"lang": "en_US", "tz": False,
+      "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_planning")],
+      "active_id": ref("stock_planning.menu_stock_planning"), "department_id": False,
+      })
+-
+  I create a procurement order for the incoming products left.
+-
+  !python {model: stock.planning}: |
+    planning_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc1')),('period_id','=',ref('stock_period_03'))])
+    plann = self.browse(cr, uid, planning_ids)
+    assert plann[0].incoming_left, 'Incoming Left must be greater than 0 !'
+    self.procure_incomming_left(cr, uid, planning_ids, {"lang": 'en_US', "tz":
+      False, "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_planning")],
+      "active_id": ref("stock_planning.menu_stock_planning"), "department_id": False,
+      })
+-
+  I check whether the procurement orders are created or not.
+-
+  !python {model: procurement.order}: |
+    proc_ids = self.search(cr, uid, [('origin','=','MPS(admin) 2010, week 29'),('product_id','=',ref("product.product_product_pc1"))])
+    assert proc_ids,'No Procurements!'

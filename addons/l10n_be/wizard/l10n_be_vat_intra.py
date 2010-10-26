@@ -31,6 +31,11 @@ class partner_vat_intra(osv.osv_memory):
     _name = "partner.vat.intra"
     _description = 'Partner VAT Intra'
 
+    def _get_xml_data(self, cr, uid, context=None):
+        if context.get('file_save', False):
+            return base64.encodestring(context['file_save'].encode('utf8'))
+        return ''
+
     def _get_europe_country(self, cursor, user, context=None):
         return self.pool.get('res.country').search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
 
@@ -46,6 +51,7 @@ class partner_vat_intra(osv.osv_memory):
     '''
     ),
         'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help = 'Select here the period(s) you want to include in your intracom declaration'),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)]),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
         'mand_id' : fields.char('MandataireId', size=14, required=True,  help="This identifies the representative of the sending company. This is a string of 14 characters"),
         'msg': fields.text('File created', size=14, readonly=True),
@@ -56,7 +62,9 @@ class partner_vat_intra(osv.osv_memory):
 
     _defaults = {
         'country_ids': _get_europe_country,
-                }
+        'file_save': _get_xml_data,
+        'name': 'vat_Intra.xml',
+    }
 
     def create_xml(self, cursor, user, ids, context=None):
         obj_user = self.pool.get('res.users')
@@ -64,14 +72,18 @@ class partner_vat_intra(osv.osv_memory):
         obj_sequence = self.pool.get('ir.sequence')
         obj_partner = self.pool.get('res.partner')
         obj_partner_add = self.pool.get('res.partner.address')
-        obj_country = self.pool.get('res.country')
+        mod_obj = self.pool.get('ir.model.data')
         street = zip_city = country = p_list = data_clientinfo = ''
         error_message = list_partner = []
         seq = amount_sum = 0
 
         if context is None:
             context = {}
-        data_cmpny = obj_user.browse(cursor, user, user).company_id
+        data_tax = self.browse(cursor, user, ids[0], context=context)
+        if data_tax.tax_code_id:
+            data_cmpny = data_tax.tax_code_id.company_id
+        else:
+            data_cmpny = obj_user.browse(cursor, user, user).company_id
         data  = self.read(cursor, user, ids)[0]
         company_vat = data_cmpny.partner_id.vat
         if not company_vat:
@@ -98,13 +110,14 @@ class partner_vat_intra(osv.osv_memory):
             if ads.country_id:
                 country = ads.country_id.code
 
+        comp_name = data_cmpny.name
         sender_date = time.strftime('%Y-%m-%d')
         data_file = '<?xml version="1.0"?>\n<VatIntra xmlns="http://www.minfin.fgov.be/VatIntra" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="' + str(company_vat) + '"'
-        data_file +=' ControlRef="' + cref + '" MandataireId="' + data['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
+        data_file += ' ControlRef="' + cref + '" MandataireId="' + data['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
         data_file += ' VersionTech="1.3">'
-        data_file +='\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>'
-        data_file +='\n\t\t\t<Country>' + str(country) +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
-        data_comp ='\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat[2:])+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>\n\t\t\t<Country>'+ str(country) +'</Country>\n\t\t</CompanyInfo>'
+        data_file += '\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+ comp_name +'</Name>\n\t\t\t<Street>'+ street +'</Street>\n\t\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>'
+        data_file += '\n\t\t\t<Country>' + country +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
+        data_comp = '\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat[2:])+'</VATNum>\n\t\t\t<Name>'+ comp_name +'</Name>\n\t\t\t<Street>'+ street +'</Street>\n\t\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>\n\t\t\t<Country>'+ country +'</Country>\n\t\t</CompanyInfo>'
         data_period = '\n\t\t<Period>'+ data['period_code'] +'</Period>' #trimester
         p_id_list = obj_partner.search(cursor, user, [('vat','!=',False)])
         if not p_id_list:
@@ -131,15 +144,21 @@ class partner_vat_intra(osv.osv_memory):
             data_clientinfo +='\n\t\t<ClientList SequenceNum="'+str(seq)+'">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>'+row['vat'][2:] +'</VATNum>\n\t\t\t\t<Country>'+row['vat'][:2] +'</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>'+str(amt) +'</Amount>\n\t\t\t<Code>'+str(intra_code) +'</Code>\n\t\t</ClientList>'
         amount_sum = int(amount_sum)
         data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" AmountSum="'+ str(amount_sum) +'" >'
-        data_file += str(data_decl) + str(data_comp) + str(data_period) + str(data_clientinfo) + '\n\t</DeclarantList>\n</VatIntra>'
-        data = {
-             'msg': 'XML Flie has been Created. Save the File with '".xml"' extension.',
-             'file_save': base64.encodestring(data_file),
-             'name': 'vat_Intra.xml',
-             'country_ids': [[6, 0, obj_country.search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])]],
-             }
-        self.write(cursor, user, ids, {'file_save':data['file_save'], 'msg':data['msg'], 'name':data['name'], 'no_vat':p_list, 'country_ids':data['country_ids']}, context=context)
-        return True
+        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n\t</DeclarantList>\n</VatIntra>'
+        model_data_ids = mod_obj.search(cursor, user,[('model','=','ir.ui.view'),('name','=','view_vat_intra_save')], context=context)
+        resource_id = mod_obj.read(cursor, user, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context['file_save'] = data_file
+        return {
+            'name': _('Save'),
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'partner.vat.intra',
+            'views': [(resource_id,'form')],
+            'view_id': 'view_vat_intra_save',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
 
 partner_vat_intra()
 

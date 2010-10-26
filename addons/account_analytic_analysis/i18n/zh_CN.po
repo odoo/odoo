@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-04-10 04:39+0000\n"
-"Last-Translator: digitalsatori <Unknown>\n"
+"PO-Revision-Date: 2010-09-08 09:05+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:11+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -36,7 +36,7 @@ msgstr "最近开票日期"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr "计算公式为:最高发票价格 -  发票金额"
+msgstr "计算公式为:最高发票价格 -  已开票金额"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -52,17 +52,17 @@ msgstr "所有辅助核算项目"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_open
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_open
 msgid "My Current Accounts"
-msgstr "我的当前科目"
+msgstr "我的当前辅助核算项目"
 
 #. module: account_analytic_analysis
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "描述视图结构的XML文件无效"
+msgstr "无效XML视图结构!"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "Date of the last invoice created for this analytic account."
-msgstr "这辅助核算项目的最近开票日期"
+msgstr "这辅助核算项的最近开票日期"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -83,13 +83,13 @@ msgstr "计算公式：理论收入 - 总费用"
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_new
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_new
 msgid "New Analytic Account"
-msgstr "新的分析科目"
+msgstr "新的辅助核算项目"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -105,29 +105,29 @@ msgstr "实际利润(%)"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_open
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all_open
 msgid "Current Analytic Accounts"
-msgstr "当前分析科目"
+msgstr "当前辅助核算项目"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr "这科目的最近的工作完成日期"
+msgstr "这项目的最近的工作完成日期"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
-msgstr "如果是成本发票,最近工作或成本的时间已开出的发票"
+msgstr "如果发票来自费用, 这是最近工作日期或已开票的费用"
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
 msgid "Invoicing"
-msgstr "计价折扣"
+msgstr "开发票"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr "最近的成本/工作 日期"
+msgstr "费用或工作的最近日期"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -139,7 +139,7 @@ msgstr "总成本"
 msgid ""
 "Number of hours you spent on the analytic account (from timesheet). It "
 "computes on all journal of type 'general'."
-msgstr "你的小时数在辅助核算项目(根据时间表).它计算所有普通分类帐."
+msgstr "在辅助核算项目你花费的小时数(根据时间表). 它在所有类型为普通的记录集合里计算."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
@@ -170,7 +170,7 @@ msgstr "我未决的项目"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_my
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_my
 msgid "My Uninvoiced Entries"
-msgstr "我未开票项目"
+msgstr "我未开票的凭证"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -189,9 +189,7 @@ msgid ""
 "Modify account analytic view to show\n"
 "important data for project manager of services companies.\n"
 "Add menu to show relevant information for each manager."
-msgstr ""
-"修改核算到显示服务公司的项目管理主要时间\n"
-"添加菜单显示每个管理的有关信息"
+msgstr "修改辅助核算项目到显示视图, 服务公司项目经理的重要数据添加菜单显示每个管理者的相关信息"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
@@ -206,12 +204,12 @@ msgstr "总小时"
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_account
 msgid "Analytic Accounts"
-msgstr "核算项目"
+msgstr "辅助核算项目"
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
 msgid "report_account_analytic"
-msgstr "核算项目报表"
+msgstr "辅助核算项目报表"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
@@ -226,7 +224,7 @@ msgstr "财务项目管理"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr "最近的发票成本日期"
+msgstr "最近的已发票日期"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
@@ -269,7 +267,7 @@ msgstr "计算公式为:(实际利润/总成本×100)"
 msgid ""
 "Number of hours (from journal of type 'general') that can be invoiced if you "
 "invoice based on analytic account."
-msgstr "如果你的发票基于这辅助核算项目"
+msgstr "如果你的发票基于这辅助核算项, 小时数(从记录集合类型是\"普通\")可以开发票"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -286,7 +284,7 @@ msgstr "剩余的收入"
 msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
-msgstr "如果是辅助核算项目的发票,剩余金额你能给客户开基于总成本的发票"
+msgstr "如果是辅助核算项目的发票, 剩余金额你能给客户开基于总成本的发票"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -326,11 +324,11 @@ msgstr "已废弃项目"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "All Uninvoiced Entries"
-msgstr "所有未开发票凭证"
+msgstr "所有未开发票"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
-msgstr "这科目的成本合计,它包括实际成本(发票)和间接成本,如花费的时间表"
+msgstr "这项的成本合计,它包括实际成本(发票)和间接成本,如花费的时间表"

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-16 13:33+0000\n"
-"Last-Translator: Silvana Herrera <sherrera@thymbra.com>\n"
+"PO-Revision-Date: 2010-09-21 22:36+0000\n"
+"Last-Translator: Margarita Manterola <ubuntu@marga.com.ar>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:01+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -31,12 +31,12 @@ msgstr "Ctd. producto"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Set to draft"
-msgstr "Cambiar a borrador"
+msgstr "Establecer como borrador"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
 msgid "transaction for the pos"
-msgstr "transaction for the pos"
+msgstr "transaction para el pdv"
 
 #. module: point_of_sale
 #: wizard_view:pos.discount,init:0
@@ -47,7 +47,7 @@ msgstr "Descuento :"
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_nb:0
 msgid "Piece number"
-msgstr "Número referencia"
+msgstr "Número de pieza"
 
 #. module: point_of_sale
 #: constraint:ir.actions.act_window:0
@@ -57,7 +57,7 @@ msgstr "Nombre de modelo no válido en la definición de acción."
 #. module: point_of_sale
 #: field:pos.order,name:0
 msgid "Order Description"
-msgstr "Ref. venta"
+msgstr "Descripción de la orden"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_scan_product
@@ -77,7 +77,7 @@ msgstr "Añadir producto :"
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Net Total"
-msgstr "Precio neto"
+msgstr "Total neto"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_tree2
@@ -92,7 +92,7 @@ msgstr "Ventas (resumen)"
 #. module: point_of_sale
 #: help:pos.order,user_id:0
 msgid "This is the logged in user (not necessarily the salesman)."
-msgstr ""
+msgstr "Este es el usuario del sistema (no necesariamente el vendedor)."
 
 #. module: point_of_sale
 #: wizard_view:pos.sale.get,init:0
@@ -142,17 +142,17 @@ msgstr "Ref. empresa"
 #. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "Tel : + 32 (0) 2 231 04 35"
-msgstr ""
+msgstr "Tel : + 32 (0) 2 231 04 35"
 
 #. module: point_of_sale
 #: field:pos.order.line,name:0
 msgid "Line Description"
-msgstr "Descipción línea"
+msgstr "Descripción línea"
 
 #. module: point_of_sale
 #: field:pos.order,shop_id:0
 msgid "Shop"
-msgstr "Tienda"
+msgstr "Negocio"
 
 #. module: point_of_sale
 #: wizard_button:pos.refund_order,init,refund_n_quit:0
@@ -168,7 +168,7 @@ msgstr "Notas"
 #. module: point_of_sale
 #: field:stock.picking,pos_order:0
 msgid "Pos order"
-msgstr "Pos order"
+msgstr "Orden pdv"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -192,7 +192,7 @@ msgstr "Línea de venta"
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "No. Of Articles"
-msgstr "No. de Articulo"
+msgstr "No. de Artículo"
 
 #. module: point_of_sale
 #: field:pos.config.journal,code:0
@@ -210,13 +210,13 @@ msgstr "Fecha validación"
 #: view:pos.order:0
 #: field:pos.order,pickings:0
 msgid "Picking"
-msgstr "Albarán"
+msgstr "Remito"
 
 #. module: point_of_sale
 #: rml:pos.details:0
 #: rml:pos.lines:0
 msgid "VAT"
-msgstr "VAT"
+msgstr "IVA"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_refund
@@ -226,12 +226,12 @@ msgstr "Devoluciones"
 #. module: point_of_sale
 #: field:pos.order,last_out_picking:0
 msgid "Last Output Picking"
-msgstr "Última salida de Recogida"
+msgstr "Última salida de remito"
 
 #. module: point_of_sale
 #: wizard_view:pos.config.journal,init:0
 msgid "Select default journals"
-msgstr "Seleccione los diarios por defecto"
+msgstr "Seleccione los diarios por omisión"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -242,12 +242,12 @@ msgstr "Ctd."
 #. module: point_of_sale
 #: field:pos.order,user_id:0
 msgid "Logged in User"
-msgstr ""
+msgstr "Usuario conectado"
 
 #. module: point_of_sale
 #: rml:pos.details:0
 msgid "VAT(%)"
-msgstr "VAT(%)"
+msgstr "IVA(%)"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -304,7 +304,7 @@ msgstr "Confirmar"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "POS Orders"
-msgstr "POS Orders"
+msgstr "Órdenes del PDV"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
@@ -350,7 +350,7 @@ msgstr "Líneas de venta"
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Desc. (%)"
 
 #. module: point_of_sale
 #: model:ir.module.module,shortdesc:point_of_sale.module_meta_information
@@ -375,7 +375,7 @@ msgstr "Reporte"
 #. module: point_of_sale
 #: view:report.transaction.pos:0
 msgid "POS "
-msgstr "POS "
+msgstr "PDV "
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config_journal
@@ -385,22 +385,22 @@ msgstr "Configuración Terminal Punto de Venta"
 #. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "Total :"
-msgstr ""
+msgstr "Total :"
 
 #. module: point_of_sale
 #: wizard_field:pos.config.journal,init,default_journal:0
 msgid "Default journal"
-msgstr "Diario por defecto"
+msgstr "Diario por omisión"
 
 #. module: point_of_sale
 #: field:pos.order,account_receivable:0
 msgid "Default Receivable"
-msgstr "A cobrar por defecto"
+msgstr "A cobrar por omisión"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_sale_get
 msgid "Get From Order"
-msgstr "Importar pedido venta"
+msgstr "Importar orden de venta"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config
@@ -422,17 +422,17 @@ msgstr "¡XML inválido para la definición de la vista!"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line_day
 msgid "POS Lines of the day"
-msgstr "POS Lines of the day"
+msgstr "Líneas del día del PDV"
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
 msgid "Number of Print"
-msgstr "Numero de impresion"
+msgstr "Numero de impresión"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_default_journal
 msgid "Default journals"
-msgstr "Diarios por defecto"
+msgstr "Diarios por omisión"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -447,7 +447,7 @@ msgstr "Descuento (%)"
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr ""
+msgstr "Comentario posición fiscal :"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_add_product
@@ -462,7 +462,7 @@ msgstr "Ctd. total"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line
 msgid "POS Lines"
-msgstr "POS Lines"
+msgstr "Líneas PDV"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -472,7 +472,7 @@ msgstr "Sales Order POS"
 #. module: point_of_sale
 #: wizard_button:pos.config.journal,init,set_default_journal:0
 msgid "Define default journals"
-msgstr "Definir diarios por defecto"
+msgstr "Definir diarios por omisión"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree2
@@ -498,12 +498,12 @@ msgstr "Facturado"
 #. module: point_of_sale
 #: wizard_field:pos.config.journal,init,default_journal_rebate:0
 msgid "Default rebate journal"
-msgstr "Diario del cambio por defecto"
+msgstr "Diario del cambio por omisión"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.wizard_default_journal
 msgid "Wizard default journals"
-msgstr "Asistente diarios por defecto"
+msgstr "Asistente diarios por omisión"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -529,17 +529,17 @@ msgstr "Pagado"
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "VAT :"
-msgstr "IVA"
+msgstr "IVA :"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "POS Order lines"
-msgstr "Líneas de venta TPV"
+msgstr "Líneas de venta PDV"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "E-mail :"
-msgstr "Correo electrónico"
+msgstr "Correo electrónico :"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -611,7 +611,7 @@ msgstr ":"
 #: rml:pos.details:0
 #: rml:pos.details_summary:0
 msgid "Period:"
-msgstr "Periodo:"
+msgstr "Período:"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_trans_pos_tree
@@ -650,7 +650,7 @@ msgstr "Cantidad"
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Refund"
-msgstr "Devolución"
+msgstr "Reembolso"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -681,12 +681,12 @@ msgstr "Porcentaje descuento"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_receipt
 msgid "Receipt"
-msgstr "Tiquet"
+msgstr "Recibo"
 
 #. module: point_of_sale
 #: wizard_view:pos.refund_order,init:0
 msgid "Refund order :"
-msgstr "Orden Devolución"
+msgstr "Orden Devolución :"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,no_trans:0
@@ -762,7 +762,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
 msgid "Pos Payment"
-msgstr "Pos Payment"
+msgstr "Pago PdV"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -830,12 +830,12 @@ msgstr "Factura cancelada"
 #. module: point_of_sale
 #: view:report.transaction.pos:0
 msgid "POS"
-msgstr "POS"
+msgstr "PDV"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
 msgid "Pos Lines"
-msgstr "Pos Lines"
+msgstr "Líneas del PdV"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -845,12 +845,12 @@ msgstr "Tel. :"
 #. module: point_of_sale
 #: field:pos.payment,payment_nb:0
 msgid "Piece Number"
-msgstr "Piece Number"
+msgstr "Número de pieza"
 
 #. module: point_of_sale
 #: wizard_field:pos.config.journal,init,default_journal_gift:0
 msgid "Default gift journal"
-msgstr "Diario de los vales por defecto"
+msgstr "Diario de los vales por omisión"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_payment
@@ -905,7 +905,7 @@ msgstr "Descripción"
 #. module: point_of_sale
 #: field:pos.order,account_move:0
 msgid "Account Entry"
-msgstr "Account Entry"
+msgstr "Entrada de Cuenta"
 
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_id:0
@@ -929,7 +929,7 @@ msgstr "Acciones"
 #. module: point_of_sale
 #: help:pos.order,salesman_id:0
 msgid "This is the salesman actually making the order."
-msgstr ""
+msgstr "Éste es el vendedor efectivo para la realización de la orden."
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -957,7 +957,7 @@ msgstr "Fecha de Impresión"
 #. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "OPERATION N° :"
-msgstr ""
+msgstr "Operación N° :"
 
 #. module: point_of_sale
 #: rml:pos.lines:0

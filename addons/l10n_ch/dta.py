@@ -31,25 +31,25 @@
 ##############################################################################
 
 import time
-from osv import osv,fields
+from osv import osv, fields
 
 class account_dta(osv.osv):
-    """class that implements bank DTA File format, 
+    """class that implements bank DTA File format,
     used to transfert bulk batch payment instruction to a bank"""
     _name = "account.dta"
     _description = "DTA History"
     _columns = {
-        ### name of the file 
+        ### name of the file
         'name': fields.binary('DTA file', readonly=True),
         ### list of dta line linked to the dta order
-        'dta_line_ids': fields.one2many('account.dta.line','dta_id','DTA lines', readonly=True), 
+        'dta_line_ids': fields.one2many('account.dta.line','dta_id','DTA lines', readonly=True),
         ## textual notes
-        'note': fields.text('Creation log', readonly=True, 
+        'note': fields.text('Creation log', readonly=True,
             help="Displays the problem during dta generation"),
         ### bank how will execute DTA order
         'bank': fields.many2one('res.partner.bank','Bank', readonly=True,select=True,
             help="Bank how will execute DTA order"),
-        ### date of DTA order generation 
+        ### date of DTA order generation
         'date': fields.date('Creation Date', readonly=True,select=True,
             help="Date of DTA order generation"),
         ### user how generate the DTA order
@@ -58,12 +58,12 @@ class account_dta(osv.osv):
 account_dta()
 
 class account_dta_line(osv.osv):
-    """Class that represent a DTA order line, 
-    each lin corressponds to a payment instruction"""
+    """Class that represent a DTA order line,
+    each line corressponds to a payment instruction"""
     _name = "account.dta.line"
     _description = "DTA line"
     _columns = {
-        ### name of the line 
+        ### name of the line
         'name' : fields.many2one('account.invoice','Invoice', required=True, size=256),
         ### partner how will receive payments
         'partner_id' : fields.many2one('res.partner','Partner',
@@ -74,13 +74,13 @@ class account_dta_line(osv.osv):
         'invoice_date' : fields.date('Invoice date'),
         ### cash discount date
         'cashdisc_date' : fields.date('Cash Discount date'),
-        ### amount effectively paied on this line 
-        'amount_to_pay' : fields.float('Amount to pay', 
+        ### amount effectively paied on this line
+        'amount_to_pay' : fields.float('Amount to pay',
             help="Amount effectively paid"),
         ### amount that was on the supplier invoice
         'amount_invoice': fields.float('Invoiced Amount',
             help="Amount to pay base on the supplier invoice"),
-        ### Cash discount amount 
+        ### Cash discount amount
         'amount_cashdisc': fields.float('Cash Discount Amount'),
         ### Linke to the main dta order
         'dta_id': fields.many2one('account.dta','Associated DTA', required=True, ondelete='cascade'),
@@ -90,7 +90,7 @@ class account_dta_line(osv.osv):
     _defaults = {
         'state' : lambda *a :'draft',
     }
-account_dta_line()
 
+account_dta_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

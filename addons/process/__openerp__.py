@@ -33,11 +33,14 @@
      for e.g product/process/product_process_xml
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'process_view.xml'],
+    'update_xml': [
+       'security/ir.model.access.csv',
+       'process_view.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,

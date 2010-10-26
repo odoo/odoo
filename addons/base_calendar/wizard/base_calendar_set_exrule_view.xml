@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-		<record id="view_base_calendar_set_exrule" model="ir.ui.view">
+        <record id="view_base_calendar_set_exrule" model="ir.ui.view">
             <field name="name">base.calendar.set.exrule.form</field>
             <field name="model">base.calendar.set.exrule</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Set Exrule">
-	  			<separator string="Select data for ExRule" colspan="8"/>
+                    <separator string="Select range to Exclude" colspan="8"/>
                     <group col="8" colspan="6">
-                        <field name="freq" />
                         <field name="interval" />
+                        <field name="freq" />
                         <field name="count" />
                         <field name="end_date" />
                     </group>
@@ -49,16 +49,18 @@
                                 attrs="{'required' : [('freq','=','yearly')]}"/>
                         </group>
                     </group>
-             	<group colspan="4" col="6">
-	        	 <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
-	             <button  icon="gtk-ok" string="ok" name="compute_exrule_string" type="object"/>
-	      </group>
-         </form>
+                    <group colspan="4" col="6">
+                        <separator string="" colspan="8"/>
+                        <label string="" colspan="2"/>
+                        <button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
+                        <button  icon="gtk-ok" string="_Ok" name="compute_exrule_string" type="object"/>
+                    </group>
+                </form>
          </field>
 	</record>
 
         <record id="action_base_calendar_set_exrule" model="ir.actions.act_window">
-            <field name="name">Set Exrule</field>
+            <field name="name">Set Exclude range</field>
             <field name="res_model">base.calendar.set.exrule</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>

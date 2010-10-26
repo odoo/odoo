@@ -35,50 +35,47 @@ class hr_timesheet_invoice_create(osv.osv_memory):
     _name = 'hr.timesheet.invoice.create'
     _description = 'Create invoice from timesheet'
     _columns = {
-        'accounts': fields.many2many('account.analytic.account', 'invoice_id', 'account_id', 'Analytic Accounts', required=True),
         'date': fields.boolean('Date', help='The real date of each work will be displayed on the invoice'),
         'time': fields.boolean('Time spent', help='The time of each work done will be displayed on the invoice'),
-        'name': fields.boolean('Name of entry', help='The detail of each work done will be displayed on the invoice'),
+        'name': fields.boolean('Description', help='The detail of each work done will be displayed on the invoice'),
         'price': fields.boolean('Cost', help='The cost of each work done will be displayed on the invoice. You probably don\'t want to check this'),
         'product': fields.many2one('product.product', 'Product', help='Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost.'),
-                }
-
-    def _get_accounts(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if not len(context['active_ids']):
-            return {}
-        #Checking whether the analytic line is invoiced or not
-        analytic_line_obj = self.pool.get('account.analytic.line').browse(cr, uid, context['active_ids'], context)
-        for obj_acc in analytic_line_obj:
-            if obj_acc.invoice_id and obj_acc.invoice_id.state !='cancel':
-                raise osv.except_osv(_('Warning'),_('The analytic entry "%s" is already invoiced!')%(obj_acc.name,))
-
-        cr.execute("SELECT distinct(account_id) from account_analytic_line where id =ANY(%s)",(context['active_ids'],))
-        account_ids = cr.fetchall()
-        return [x[0] for x in account_ids]
+    }
 
     _defaults = {
-         'accounts': _get_accounts
-                 }
+         'date': lambda *args: 1,
+         'name': lambda *args: 1
+    }
 
     def do_create(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         analytic_account_obj = self.pool.get('account.analytic.account')
         res_partner_obj = self.pool.get('res.partner')
         account_payment_term_obj = self.pool.get('account.payment.term')
+        invoice_obj = self.pool.get('account.invoice')
+        product_obj = self.pool.get('product.product')
+        invoice_factor_obj = self.pool.get('hr_timesheet_invoice.factor')
+        pro_price_obj = self.pool.get('product.pricelist')
+        fiscal_pos_obj = self.pool.get('account.fiscal.position')
+        product_uom_obj = self.pool.get('product.uom')
+        invoice_line_obj = self.pool.get('account.invoice.line')
         invoices = []
-
+        if context is None:
+            context = {}
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
+        res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
+        data = self.read(cr, uid, ids, [], context=context)[0]
 
-        data = self.read(cr, uid, ids, [], context)[0]
-        account_ids = data['accounts']
-        for account in analytic_account_obj.browse(cr, uid, account_ids, context):
+        account_ids = {}
+        for line in self.pool.get('account.analytic.line').browse(cr, uid, context['active_ids'], context=context):
+            account_ids[line.account_id.id] = True
+
+        account_ids = account_ids.keys() #data['accounts']
+        for account in analytic_account_obj.browse(cr, uid, account_ids, context=context):
             partner = account.partner_id
             if (not partner) or not (account.pricelist_id):
                 raise osv.except_osv(_('Analytic Account incomplete'),
-                        _('Please fill in the Associate Partner and Sale Pricelist fields in the Analytic Account:\n%s') % (account.name,))
+                        _('Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n%s') % (account.name,))
 
             if not partner.address:
                 raise osv.except_osv(_('Partner incomplete'),
@@ -107,23 +104,23 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                 'date_due': date_due,
                 'fiscal_position': account.partner_id.property_account_position.id
             }
-            last_invoice = self.pool.get('account.invoice').create(cr, uid, curr_invoice)
+            last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context)
             invoices.append(last_invoice)
 
-            context2=context.copy()
+            context2 = context.copy()
             context2['lang'] = partner.lang
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
-                        "AND id =ANY(%s) AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id,to_invoice", (account.id,context['active_ids'],))
+                        "AND id IN %s AND to_invoice IS NOT NULL " \
+                    "GROUP BY product_id,to_invoice", (account.id, tuple(context['active_ids']),))
 
-            for product_id,factor_id,qty in cr.fetchall():
-                product = pool.get('product.product').browse(cr, uid, product_id, context2)
+            for product_id, factor_id, qty in cr.fetchall():
+                product = product_obj.browse(cr, uid, product_id, context2)
                 if not product:
                     raise osv.except_osv(_('Error'), _('At least one line has no product !'))
                 factor_name = ''
-                factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
+                factor = invoice_factor_obj.browse(cr, uid, factor_id, context2)
 
                 if not data['product']:
                     if factor.customer_name:
@@ -131,16 +128,16 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     else:
                         factor_name = product.name
                 else:
-                    factor_name = pool.get('product.product').name_get(cr, uid, [data['product']], context=context)[0][1]
+                    factor_name = product_obj.name_get(cr, uid, [data['product']], context=context)[0][1]
 
                 if account.pricelist_id:
                     pl = account.pricelist_id.id
-                    price = pool.get('product.pricelist').price_get(cr,uid,[pl], data['product'] or product_id, qty or 1.0, account.partner_id.id)[pl]
+                    price = pro_price_obj.price_get(cr,uid,[pl], data['product'] or product_id, qty or 1.0, account.partner_id.id)[pl]
                 else:
                     price = 0.0
 
                 taxes = product.taxes_id
-                tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+                tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
                 curr_line = {
                     'price_unit': price,
@@ -159,7 +156,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                 #
                 # Compute for lines
                 #
-                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id = ANY (%s) AND product_id=%s and to_invoice=%s", (account.id, data['ids'], product_id, factor_id))
+                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s ORDER BY account_analytic_line.date", (account.id, tuple(context['active_ids']), product_id, factor_id))
 
                 line_ids = cr.dictfetchall()
                 note = []
@@ -170,42 +167,28 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                         details.append(line['date'])
                     if data['time']:
                         if line['product_uom_id']:
-                            details.append("%s %s" % (line['unit_amount'], pool.get('product.uom').browse(cr, uid, [line['product_uom_id']])[0].name))
+                            details.append("%s %s" % (line['unit_amount'], product_uom_obj.browse(cr, uid, [line['product_uom_id']],context2)[0].name))
                         else:
                             details.append("%s" % (line['unit_amount'], ))
                     if data['name']:
                         details.append(line['name'])
-                    #if data['price']:
-                    #   details.append(abs(line['amount']))
                     note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
 
                 curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
-                pool.get('account.invoice.line').create(cr, uid, curr_line)
-                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id =ANY(%s)" ,(last_invoice, account.id,data['ids']))
+                invoice_line_obj.create(cr, uid, curr_line, context=context)
+                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s" ,(last_invoice, account.id, tuple(context['active_ids'])))
 
-        self.pool.get('account.invoice').button_reset_taxes(cr, uid, [last_invoice], context)
+            invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
 
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
 
-        mod_id = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')])[0]
-        res_id = mod_obj.read(cr, uid, mod_id, ['res_id'])['res_id']
-        act_win = act_obj.read(cr, uid, res_id, [])
+        mod_ids = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')], context=context)[0]
+        res_id = mod_obj.read(cr, uid, mod_ids, ['res_id'], context=context)['res_id']
+        act_win = act_obj.read(cr, uid, res_id, [], context=context)
         act_win['domain'] = [('id','in',invoices),('type','=','out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win
-
-#        return {
-#            'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
-#            'name': _('Invoices'),
-#            'view_type': 'form',
-#            'view_mode': 'tree,form',
-#            'res_model': 'account.invoice',
-#            'view_id': False,
-#            'context': "{'type':'out_invoice'}",
-#            'type': 'ir.actions.act_window',
-#            'search_view_id': res['res_id']
-#        }
 
 
 hr_timesheet_invoice_create()

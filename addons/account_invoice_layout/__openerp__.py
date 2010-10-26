@@ -35,9 +35,9 @@
     Moreover, there is one option which allows you to print all the selected invoices with a given special message at the bottom of it. This feature can be very useful for printing your invoices with end-of-year wishes, special punctual conditions...
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'account'],
+    'depends': ['account'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
@@ -45,7 +45,8 @@
         'account_invoice_layout_report.xml',
         'wizard/account_invoice_special_message.xml',
     ],
-    'demo_xml': [],
+    'demo_xml': ['account_invoice_layout_demo.xml'],
+    'test':['test/account_invoice_layout_report.yml'],
     'installable': True,
     'active': False,
     'certificate': '0057235078173',

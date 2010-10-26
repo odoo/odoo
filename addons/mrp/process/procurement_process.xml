@@ -1,17 +1,7 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-    
-    	<record id="process_node_procureproducts0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
-            <field name="model_id" ref="procurement.model_procurement_order"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;The way to procurement depends on the product type.&quot;&quot;&quot;" name="note"/>
-            <field eval="&quot;&quot;&quot;Procure Products&quot;&quot;&quot;" name="name"/>
-            <field name="process_id" ref="procurement.process_process_procurementprocess0"/>
-            <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
-            <field eval="0" name="flow_start"/>
-        </record>
+
 
         <record id="process_node_productionorder0" model="process.node">
             <field name="menu_id" ref="mrp.menu_mrp_production_action"/>
@@ -24,19 +14,9 @@
             <field eval="1" name="flow_start"/>
         </record>
 
-        <record id="process_node_procureproducts0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
-            <field name="model_id" ref="mrp.model_procurement_order"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;The way to procurement depends on the product type.&quot;&quot;&quot;" name="note"/>
-            <field eval="&quot;&quot;&quot;Procure Products&quot;&quot;&quot;" name="name"/>
-            <field name="process_id" ref="procurement.process_process_procurementprocess0"/>
-            <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
-            <field eval="0" name="flow_start"/>
-        </record>
-        
+
         <record id="process_node_minimumstockrule0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
+            <field name="menu_id" ref="procurement.menu_stock_order_points"/>
             <field name="model_id" ref="procurement.model_stock_warehouse_orderpoint"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Linked to the 'Minimum stock rule' supplying method.&quot;&quot;&quot;" name="note"/>
@@ -46,7 +26,7 @@
         </record>
 
         <record id="process_node_stockproduct0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
             <field name="model_id" ref="mrp.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Product type is Stockable or Consumable.&quot;&quot;&quot;" name="note"/>
@@ -56,9 +36,9 @@
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-        
+
         <record id="process_node_stockproduct1" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
             <field name="model_id" ref="mrp.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;For stockable products and consumables&quot;&quot;&quot;" name="note"/>
@@ -70,31 +50,31 @@
         </record>
 
         <record id="process_node_serviceproduct0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
             <field name="model_id" ref="mrp.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Product type is service&quot;&quot;&quot;" name="note"/>
             <field eval="&quot;&quot;&quot;Service&quot;&quot;&quot;" name="name"/>
-            <field name="subflow_id" ref="process_process_serviceproductprocess0"/>
+            <field name="subflow_id" ref="procurement.process_process_serviceproductprocess0"/>
             <field name="process_id" ref="procurement.process_process_procurementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-        
+
         <record id="process_node_serviceproduct1" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
             <field name="model_id" ref="mrp.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;For Services.&quot;&quot;&quot;" name="note"/>
             <field eval="&quot;&quot;&quot;Service&quot;&quot;&quot;" name="name"/>
-            <field name="process_id" ref="mrp.process_process_serviceproductprocess0"/>
+            <field name="process_id" ref="procurement.process_process_serviceproductprocess0"/>
             <field name="subflow_id" ref="procurement.process_process_procurementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
 
         <record id="process_node_purchaseprocure0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
             <field name="model_id" ref="mrp.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurement Orders&quot;&quot;&quot;" name="name"/>
@@ -105,7 +85,7 @@
         </record>
 
         <record id="process_node_productminimumstockrule0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
+            <field name="menu_id" ref="procurement.menu_stock_order_points"/>
             <field name="model_id" ref="procurement.model_stock_warehouse_orderpoint"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Minimum Stock&quot;&quot;&quot;" name="name"/>
@@ -137,18 +117,25 @@
         <!--
             Process Transition
         -->
-
+    	<record id="process_node_procureproducts0" model="process.node">
+            <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
+            <field name="model_id" ref="mrp.model_procurement_order"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;The way to procurement depends on the product type.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Procure Products&quot;&quot;&quot;" name="name"/>
+            <field name="process_id" ref="procurement.process_process_procurementprocess0"/>
+            <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
         <record id="process_transition_servicemto0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Make to Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If the service has a 'Produce' supply method, this creates a task in the project management module of OpenERP.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="mrp.process_node_serviceonorder0"/>
+            <field model="process.node" name="target_node_id" ref="procurement.process_node_serviceonorder0"/>
             <field model="process.node" name="source_node_id" ref="process_node_serviceproduct1"/>
         </record>
 
         <record id="process_transition_servicemts0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Make to Stock&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;This is used in case of a service without any impact in the system, a training session for instance.&quot;&quot;&quot;" name="note"/>
@@ -157,7 +144,6 @@
         </record>
 
         <record id="process_transition_stockmts0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Make to Stock&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The system waits for the products to be available in the stock. These products are typically procured manually or through a minimum stock rule.&quot;&quot;&quot;" name="note"/>
@@ -166,7 +152,6 @@
         </record>
 
         <record id="process_transition_stockproduct0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Make to Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The system creates an order (production or purchased) depending on the sold quantity and the products parameters.&quot;&quot;&quot;" name="note"/>
@@ -175,7 +160,6 @@
         </record>
 
         <record id="process_transition_productionprocureproducts0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement of raw material&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;In order to supply raw material (to be purchased or produced), the production order creates as much procurement orders as components listed in the BOM, through a run of the schedulers (MRP).&quot;&quot;&quot;" name="note"/>
@@ -184,7 +168,6 @@
         </record>
 
         <record id="process_transition_minimumstockprocure0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;'Minimum stock rule' material&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The 'Minimum stock rule' allows the system to create procurement orders automatically as soon as the minimum stock is reached.&quot;&quot;&quot;" name="note"/>
@@ -193,7 +176,6 @@
         </record>
 
         <record id="process_transition_procurestockableproduct0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement of stockable Products&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Depending on the chosen method to supply the stockable products, the procurement order creates a RFQ, a production order, ... &quot;&quot;&quot;" name="note"/>
@@ -202,7 +184,6 @@
         </record>
 
         <record id="process_transition_procureserviceproduct0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement of services&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Depending on the chosen method to 'supply' the service, the procurement order creates a RFQ for a subcontracting purchase order or waits until the service is done (= the delivery of the products).&quot;&quot;&quot;" name="note"/>
@@ -211,7 +192,6 @@
         </record>
 
         <record id="process_transition_purchaseprocure0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Automatic RFQ&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The system launches automatically a RFQ to the preferred supplier.&quot;&quot;&quot;" name="note"/>
@@ -220,7 +200,6 @@
         </record>
 
          <record id="process_transition_producttostockrules0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement rule&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The Minimum Stock Rule is an automatic procurement rule based on a mini and maxi quantity. It's available in the Inventory management menu and configured by product.&quot;&quot;&quot;" name="note"/>
@@ -229,7 +208,6 @@
         </record>
 
         <record id="process_transition_billofmaterialrouting0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Material Routing&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The Bill of Material is linked to a routing, i.e. the succession of work centers.&quot;&quot;&quot;" name="note"/>
@@ -238,7 +216,6 @@
         </record>
 
         <record id="process_transition_bom0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Manufacturing decomposition&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The Bill of Material is the product's decomposition. The components (that are products themselves) can also have their own Bill of Material (multi-level).&quot;&quot;&quot;" name="note"/>

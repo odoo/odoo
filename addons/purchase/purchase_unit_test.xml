@@ -35,12 +35,6 @@
 
         <workflow model="purchase.order" ref="test_purchase_1" action="purchase_confirm" />
 
-        <assert model="purchase.order" id="test_purchase_1" string="Test purchase is now confirmed">
-            <test expr="state">confirmed</test>
-        </assert>
-
-        <workflow model="purchase.order" ref="test_purchase_1" action="purchase_approve" uid="base.user_root" />
-
         <assert model="purchase.order" id="test_purchase_1" string="Test purchase is now in progress">
             <test expr="state">approved</test>
         </assert>
@@ -51,10 +45,6 @@
         </assert>
 
         <assert model="purchase.order" id="test_purchase_1" string="Test purchase's invoice has the same amount and is currently a draft">
-            <!--
-            <test expr="invoice_id.amount_untaxed == amount_untaxed" />
-            <test expr="invoice_id.amount_total == amount_total" />
-            -->
             <test expr="invoice_id.state">draft</test>
         </assert>
 

@@ -19,6 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import osv, fields
 from tools.translate import _
 
@@ -26,23 +27,22 @@ class account_change_currency(osv.osv_memory):
     _name = 'account.change.currency'
     _description = 'Change Currency'
     _columns = {
-       'currency_id': fields.many2one('res.currency', 'New Currency', required=True),
-              }
+       'currency_id': fields.many2one('res.currency', 'Change to', required=True, help="Select a currency to apply on the invoice"),
+    }
 
     def view_init(self, cr , uid , fields_list, context=None):
         obj_inv = self.pool.get('account.invoice')
         if context is None:
             context = {}
-        state = obj_inv.browse(cr, uid, context['active_id']).state
-        if obj_inv.browse(cr, uid, context['active_id']).state != 'draft':
-            raise osv.except_osv(_('Error'), _('You can not change currency for Open Invoice !'))
-        pass
+        if context.get('active_id',False):
+            if obj_inv.browse(cr, uid, context['active_id']).state != 'draft':
+                raise osv.except_osv(_('Error'), _('You can only change currency for Draft Invoice !'))
+            pass
 
     def change_currency(self, cr, uid, ids, context=None):
         obj_inv = self.pool.get('account.invoice')
         obj_inv_line = self.pool.get('account.invoice.line')
         obj_currency = self.pool.get('res.currency')
-        invoice_ids = []
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
@@ -56,16 +56,22 @@ class account_change_currency(osv.osv_memory):
             new_price = 0
             if invoice.company_id.currency_id.id == invoice.currency_id.id:
                 new_price = line.price_unit * rate
+                if new_price <= 0:
+                    raise osv.except_osv(_('Error'), _('New currency is not confirured properly !'))
 
             if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id == new_currency:
                 old_rate = invoice.currency_id.rate
+                if old_rate <= 0:
+                    raise osv.except_osv(_('Error'), _('Currnt currency is not confirured properly !'))
                 new_price = line.price_unit / old_rate
 
             if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id != new_currency:
                 old_rate = invoice.currency_id.rate
+                if old_rate <= 0:
+                    raise osv.except_osv(_('Error'), _('Current currency is not confirured properly !'))
                 new_price = (line.price_unit / old_rate ) * rate
-            obj_inv_line.write(cr, uid, [line.id], {'price_unit' : new_price})
-        obj_inv.write(cr, uid, [invoice.id], {'currency_id' : new_currency}, context=context)
+            obj_inv_line.write(cr, uid, [line.id], {'price_unit': new_price})
+        obj_inv.write(cr, uid, [invoice.id], {'currency_id': new_currency}, context=context)
         return {}
 
 account_change_currency()

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,20 +15,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from report import report_sxw
-import xml.dom.minidom
-import os, time
-import osv
-import re
-import tools
-import pooler
-import re
-import sys
 
+from datetime import datetime
+import re
 
 class rml_parse(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -36,44 +30,43 @@ class rml_parse(report_sxw.rml_parse):
         self.localcontext.update({
             'comma_me': self.comma_me,
             'format_date': self._get_and_change_date_format_for_swiss,
-            'strip_name' : self._strip_name,
-            'explode_name' : self._explode_name,
+            'strip_name': self._strip_name,
+            'explode_name': self._explode_name,
         })
 
-    def comma_me(self,amount):
-        #print "#" + str(amount) + "#"
+    def comma_me(self, amount):
         if not amount:
             amount = 0.0
-        if  type(amount) is float :
+        if  type(amount) is float:
             amount = str('%.2f'%amount)
-        else :
+        else:
             amount = str(amount)
         if (amount == '0'):
-             return ' '
+            return ' '
         orig = amount
         new = re.sub("^(-?\d+)(\d{3})", "\g<1>'\g<2>", amount)
         if orig == new:
             return new
         else:
             return self.comma_me(new)
-        
+
     def _ellipsis(self, string, maxlen=100, ellipsis = '...'):
         ellipsis = ellipsis or ''
         try:
             return string[:maxlen - len(ellipsis) ] + (ellipsis, '')[len(string) < maxlen]
-        except Exception, e:
+        except:
             return False
-        
+
     def _strip_name(self, name, maxlen=50):
         return self._ellipsis(name, maxlen, '...')
 
-    def _get_and_change_date_format_for_swiss (self,date_to_format):
-        date_formatted=''
+    def _get_and_change_date_format_for_swiss (self, date_to_format):
+        date_formatted = ''
         if date_to_format:
-            date_formatted = strptime (date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
+            date_formatted = datetime.strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
 
-    def _explode_name(self,chaine,length):
+    def _explode_name(self, chaine, length):
         # We will test if the size is less then account
         full_string = ''
         if (len(str(chaine)) <= length):
@@ -93,23 +86,21 @@ class rml_parse(report_sxw.rml_parse):
 
         return full_string
 
-    def makeAscii(self,str):
+    def makeAscii(self, str):
         try:
             Stringer = str.encode("utf-8")
         except UnicodeDecodeError:
             try:
                 Stringer = str.encode("utf-16")
             except UnicodeDecodeError:
-                print "UTF_16 Error"
                 Stringer = str
             else:
                 return Stringer
         else:
             return Stringer
         return Stringer
-    
-    def explode_this(self,chaine,length):
-        #chaine = self.repair_string(chaine)
+
+    def explode_this(self, chaine, length):
         chaine = rstrip(chaine)
         ast = list(chaine)
         i = length
@@ -118,20 +109,18 @@ class rml_parse(report_sxw.rml_parse):
             i = i + length
         chaine = str("".join(ast))
         return chaine
-    
-    def repair_string(self,chaine):
+
+    def repair_string(self, chaine):
         ast = list(chaine)
         UnicodeAst = []
         _previouslyfound = False
         i = 0
-        #print str(ast)
         while i < len(ast):
             elem = ast[i]
             try:
                 Stringer = elem.encode("utf-8")
             except UnicodeDecodeError:
                 to_reencode = elem + ast[i+1]
-                print str(to_reencode)
                 Good_char = to_reencode.decode('utf-8')
                 UnicodeAst.append(Good_char)
                 i += i +2
@@ -140,22 +129,18 @@ class rml_parse(report_sxw.rml_parse):
                 i += i + 1
         return "".join(UnicodeAst)
 
-    def ReencodeAscii(self,str):
-        print sys.stdin.encoding
+    def ReencodeAscii(self, str):
         try:
             Stringer = str.decode("ascii")
         except UnicodeEncodeError:
-            print "REENCODING ERROR"
             return str.encode("ascii")
         except UnicodeDecodeError:
-            print "DECODING ERROR"
             return str.encode("ascii")
         else:
-            print Stringer
             return Stringer
 
     def _add_header(self, node, header=1):
-        if header==2:
+        if header == 2:
             rml_head =  self.rml_header2
         else:
             rml_head =  self.rml_header

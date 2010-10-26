@@ -37,9 +37,6 @@ class report_graph(report.interface.report_int):
             module_record = module_obj.browse(cr, uid, module_id, context=context)
             if module_record.name not in nodes:
                 # Add new field ir.module.module object in server side. field name = module_type/
-#                if module_record.module_type:
-#                    nodes.append((module_record.name, module_record.module_type))
-#                else:
                 nodes.append((module_record.name, "unknown"))
             if module_record.dependencies_id:
                 for depen in module_record.dependencies_id:

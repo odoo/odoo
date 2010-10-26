@@ -20,18 +20,30 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
-from tools.misc import UpdateableStr, UpdateableDict
 from tools.translate import _
-import netsvc
-import pooler
-import time
-import wizard
 
 class stock_inventory_merge(osv.osv_memory):
     _name = "stock.inventory.merge"
     _description = "Merge Inventory"
-
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
+                        context=None, toolbar=False, submenu=False):
+        """ 
+         Changes the view dynamically
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param context: A standard dictionary 
+         @return: New arch of view.
+        """
+        if not context:
+            context={}
+        res = super(stock_inventory_merge, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        if context.get('active_model','') == 'stock.inventory' and len(context['active_ids']) < 2:
+            raise osv.except_osv(_('Warning'),
+            _('Please select multiple physical inventories to merge in the list view.'))
+        return res    
+        
     def do_merge(self, cr, uid, ids, context):
         """ To merge selected Inventories.
         @param self: The object pointer.
@@ -43,13 +55,7 @@ class stock_inventory_merge(osv.osv_memory):
         """ 
         invent_obj = self.pool.get('stock.inventory')
         invent_line_obj = self.pool.get('stock.inventory.line')
-
         invent_lines = {}
-
-        if len(context['active_ids']) < 2:
-            raise osv.except_osv(_('Warning'),
-            _('Please select at least two inventories.'))
-
         for inventory in invent_obj.browse(cr, uid, context['active_ids'], context=context):
             if inventory.state == "done":
                 raise osv.except_osv(_('Warning'),
@@ -69,11 +75,11 @@ class stock_inventory_merge(osv.osv_memory):
 
         for key, quantity in invent_lines.items():
             invent_line_obj.create(cr, uid, {
-                'inventory_id': new_invent,
-                'location_id': key[0],
-                'product_id': key[1],
-                'product_uom': key[2],
-                'product_qty': quantity,
+                    'inventory_id': new_invent,
+                    'location_id': key[0],
+                    'product_id': key[1],
+                    'product_uom': key[2],
+                    'product_qty': quantity,
                 })
 
         return {}

@@ -28,12 +28,12 @@
 Module to generate invoices based on costs (human resources, expenses, ...).
 You can define price lists in analytic account, make some theoretical revenue
 reports, eso.""",
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['account', 'hr_timesheet'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
+        'hr_timesheet_invoice_data.xml',
         'hr_timesheet_invoice_view.xml',
         'hr_timesheet_invoice_wizard.xml',
         'hr_timesheet_invoice_report.xml',
@@ -43,8 +43,14 @@ reports, eso.""",
         'wizard/hr_timesheet_analytic_profit_view.xml',
         'wizard/hr_timesheet_invoice_create_view.xml',
         'wizard/hr_timesheet_invoice_create_final_view.xml',
+        'board_hr_timesheet_invoice.xml',
     ],
-    'demo_xml': ['hr_timesheet_invoice_demo.xml'],
+    'demo': [
+        'hr_timesheet_invoice_demo.xml',
+    ],
+    'test': ['test/test_hr_timesheet_invoice.yml',
+             'test/hr_timesheet_invoice_report.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate': '0056091842381',

@@ -24,7 +24,6 @@
                         <field name="ca_invoiced"/>
                         <field name="ca_theorical"/>
                         <newline/>
-                        <!-- <field name="old"/> -->
                         <field name="hours_quantity"/>
                         <field name="hours_qtt_invoiced"/>
                         <field name="remaining_hours"/>
@@ -38,13 +37,12 @@
                         <separator colspan="4" string="Key dates"/>
 
                         <field name="last_invoice_date"/>
-
                         <field name="last_worked_invoiced_date"/>
                         <field name="last_worked_date"/>
                         <separator colspan="4" string="To be invoiced"/>
+                        
                         <field name="hours_qtt_non_invoiced"/>
                         <field name="ca_to_invoice"/>
-
                     </page>
                     <page string="Stats by month">
                         <field colspan="4" name="month_ids" nolabel="1">
@@ -81,20 +79,18 @@
                 </field>
             </field>
         </record>
+        
         <record id="view_account_analytic_account_tree_c2c_3" model="ir.ui.view"> 
             <field name="name">account.analytic.account.tree</field> 
             <field name="model">account.analytic.account</field> 
             <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
-
             <field name="type">tree</field> 
             <field name="arch" type="xml"> 
                 <field name="date" position="before"> 
                     <field name="last_invoice_date"/>
                     <field name="ca_to_invoice"/>
                 </field>
-
             </field>
-
         </record>
 
         <record id="view_account_analytic_simplified" model="ir.ui.view">
@@ -110,7 +106,6 @@
                     <field name="remaining_hours"/>
                     <field name="ca_to_invoice"/>
                     <field name="last_invoice_date"/>
-
                 </tree>
             </field>
         </record>

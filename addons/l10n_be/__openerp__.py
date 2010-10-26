@@ -22,7 +22,7 @@
     'version': '1.1',
     'category': 'Localisation/Account Charts',
     'description': """
-    This is the base module to manage the accounting chart for Belgium in Open ERP.
+    This is the base module to manage the accounting chart for Belgium in OpenERP.
 
     After Installing this module,The Configuration wizard for accounting is launched.
     * We have the account templates which can be helpful to generate Charts of Accounts.
@@ -39,10 +39,9 @@
                            Path to access : Financial Management/Reporting/Legal Statements/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': [
                 'account',
-                'account_report',
                 'base_vat',
                 'base_iban',
                 'account_chart',
@@ -59,7 +58,7 @@
                 'fiscal_templates.xml',
                 'security/ir.model.access.csv'
                    ],
-    'demo_xml': ['account.report.report.csv'],
+    'demo_xml': [],
     'installable': True,
     'certificate': '0031977724637',
 }

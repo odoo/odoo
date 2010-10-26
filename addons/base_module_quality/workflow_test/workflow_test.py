@@ -74,9 +74,14 @@ class quality_test(base_module_quality.abstract_quality_check):
         wkf_ids = map(lambda x:x['id'], wkfs)
         if not wkf_ids:
             result_dict[module_name] = [module_name, 'No workflow defined on module']
-        #Activity of workflow checking...
-        activity_ids = wkf_activity_obj.search(cr, uid, [('wkf_id', 'in', wkf_ids)])
-        activities = wkf_activity_obj.browse(cr, uid, activity_ids)
+            activity_ids = []
+            activities = []
+        else:
+            #Activity of workflow checking...
+            activity_ids = wkf_activity_obj.search(cr, uid, [('wkf_id', 'in', wkf_ids)])
+            activities = wkf_activity_obj.browse(cr, uid, activity_ids)
+        self.log.debug("quality test: wkf_ids = %r", wkf_ids)
+        self.log.debug("quality test: activity_ids = %r", activity_ids)
         for activity in activities:
             if activity.flow_start:
                 activity_chk[activity.wkf_id.osv]['start'] = 'ok'

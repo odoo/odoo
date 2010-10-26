@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 08:28+0000\n"
+"PO-Revision-Date: 2010-09-09 07:22+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:15+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -24,17 +24,12 @@ msgstr "新的假期申请"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_all_holiday
 msgid "All Holidays Requests"
-msgstr "所有假期请求"
+msgstr "所有假期申请"
 
 #. module: hr_holidays
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,remaining_leaves:0
-msgid "Remaining Leaves"
-msgstr "剩余准假"
+msgstr "在动作定义中使用了无效的模快名。"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
@@ -63,7 +58,6 @@ msgstr "休息日摘要"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: view:hr.holidays.per.user:0
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
 msgstr "员工假期"
@@ -74,8 +68,6 @@ msgid "Set to Draft"
 msgstr "设为草稿"
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
-#: field:hr.holidays.per.user,holiday_ids:0
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidays0
 msgid "Holidays"
@@ -106,7 +98,7 @@ msgstr "员工申请"
 #: selection:hr.holidays,state:0
 #: model:process.transition.action,name:hr_holidays.process_transition_action_validate0
 msgid "Validate"
-msgstr "批准"
+msgstr "确认"
 
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_refusedrequest0
@@ -116,12 +108,12 @@ msgstr "拒绝申请"
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_approved0
 msgid "Approved"
-msgstr "批准"
+msgstr "已核准"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.employee,init,holiday_type:0
 msgid "Both"
-msgstr "两个"
+msgstr "双方"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -141,14 +133,12 @@ msgstr "我的假期申请"
 
 #. module: hr_holidays
 #: field:hr.holidays,notes:0
-#: field:hr.holidays.per.user,notes:0
 msgid "Notes"
 msgstr "备注"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status:0
 #: field:hr.holidays.log,holiday_status:0
-#: field:hr.holidays.per.user,holiday_status:0
 msgid "Holiday's Status"
 msgstr "假期状态"
 
@@ -165,7 +155,7 @@ msgstr "假期管理"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Analyze from"
-msgstr "来自分析"
+msgstr "从分析"
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -190,12 +180,7 @@ msgstr "假期状态"
 #. module: hr_holidays
 #: field:hr.holidays,date_to:0
 msgid "Vacation end day"
-msgstr "批准结束日期"
-
-#. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "Holidays Allowed"
-msgstr "假期允许"
+msgstr "假期结束日期"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_legaldeclaration0
@@ -205,7 +190,7 @@ msgstr "法定的新员工"
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Magenta"
-msgstr "紫红色"
+msgstr "洋红色"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_per_user
@@ -221,7 +206,7 @@ msgstr "设定假期状态"
 #: selection:hr.holidays.summary,init,holiday_type:0
 #: selection:hr.holidays.summary.employee,init,holiday_type:0
 msgid "Confirmed"
-msgstr "确认"
+msgstr "已确认"
 
 #. module: hr_holidays
 #: wizard_field:hr.holidays.summary,init,date_from:0
@@ -249,12 +234,11 @@ msgstr "员工_ID"
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_holidaysdefinition0
 msgid "Encoding of annual available holidays."
-msgstr "可得到的年度假期编号"
+msgstr "每年可得到的假期编码"
 
 #. module: hr_holidays
 #: field:hr.holidays,employee_id:0
 #: field:hr.holidays.log,employee_id:0
-#: field:hr.holidays.per.user,employee_id:0
 msgid "Employee"
 msgstr "员工"
 
@@ -290,7 +274,6 @@ msgstr "我的假期申请草稿"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: view:hr.holidays.per.user:0
 msgid "Number of Days"
 msgstr "天数"
 
@@ -310,22 +293,22 @@ msgstr "报表选项"
 #. module: hr_holidays
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
+msgstr "无效的视图结构xml文件!"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_approved0
 msgid "His manager approves the request"
-msgstr "管理者批准这申请"
+msgstr "经理批准这申请"
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_holidaysdefrequest0
 msgid "If holidays available, employee can take it and fill it."
-msgstr "如果有假期可用"
+msgstr "如果有假期, 员工能提取它"
 
 #. module: hr_holidays
 #: wizard_view:hr.holidays.summary.employee,notify:0
 msgid "You have to select at least 1 Employee. Try again."
-msgstr "你必须至少选择1部门再试一次"
+msgstr "你必须至少选择一名员工, 再试一次"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_validate
@@ -343,7 +326,6 @@ msgid "Number of Days in this Holiday Request"
 msgstr "申请的假期天数"
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
 #: model:ir.actions.act_window,name:hr_holidays.action_holidays_per_user
 #: model:ir.ui.menu,name:hr_holidays.menu_open_holidays_per_user
 msgid "Holidays Per Employee"
@@ -352,7 +334,7 @@ msgstr "每个员工的假期"
 #. module: hr_holidays
 #: field:hr.holidays.status,limit:0
 msgid "Allow to override Limit"
-msgstr "允许覆盖的限制"
+msgstr "允许重叠的限制"
 
 #. module: hr_holidays
 #: field:hr.holidays.log,holiday_user_id:0
@@ -377,12 +359,12 @@ msgstr "打印员工假期摘要"
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_calendar0
 msgid "Calendar"
-msgstr "日历"
+msgstr "日程表"
 
 #. module: hr_holidays
 #: field:hr.holidays,date_from:0
 msgid "Vacation start day"
-msgstr "批准结束日期"
+msgstr "批准发生日期"
 
 #. module: hr_holidays
 #: model:ir.module.module,description:hr_holidays.module_meta_information
@@ -422,22 +404,15 @@ msgid ""
 msgstr ""
 "人力资源:假期跟踪和工作流\n"
 "\n"
-"这模块允许你管理假期和假期请求每个员工能为每个可用假期的状态定义一个数字\n"
+"这模块允许你管理假期和假期申请. 每个员工能为每个可用假期的状态定义一个数字\n"
 "\n"
-"备注:\n"
-"同步内部日程(使用业务关系管理模块)它可以:接受自动创建一个假期申请,你要在事务节连接到假期状态.你能设置信息和偏好的颜色\n"
-"                人力资源 / 设置 / 假期状态\n"
-"    - 员工能请求负数的假期 (如假期为-2日), 它被转换为询问系统要求更多的休息日. 它将增加有效总假期 (如果申请批准).\n"
-"    - 有两种方法打印员工的假期:\n"
-"        * 允许按部门分员工，通过在菜单点击\n"
-"                人力资源 / 假期申请 / 打印假期摘要\n"
-"        * 允许你为指定的员工选择假期\n"
-"                人力资源 / 员工 / 所有员工\n"
-"            然后选择你想打印的内容后点击打印图标\n"
-"                '打印员工假期摘要'\n"
-"    - 这向导允许你选择打印确认或有效的假期'. \n"
-"                Administration / Users / Users\n"
-"            例如, 你可能是 'admin'.\n"
+"    备注:\n"
+"        - 同步内部日程(使用业务关系管理模块)它可以: 在接受假期申请时自动创建一个事务, 你要能把假期哦状态链接到划分的事务.\n"
+"          在人力资源/ 设置/ 假期状态, 你能设置信息和偏好的颜色.\n"
+"        - 员工能请求负数的假期 (如假期为-2日), 它被系统转换为要求更多的休息日. 它将延长假期 (如果申请批准).\n"
+"        - 有两种方法打印员工的假期:\n"
+"            * 第一种允许按部门的员工, 通过在菜单点击: 人力资源 / 假期申请 / 打印假期摘要\n"
+"            * 第二种允许你选择指定的员工的假期报表菜单点击为: 人力资源 / 员工.先选员工,  然后点击打印图标'打印员工假期摘要'\n"
 
 #. module: hr_holidays
 #: wizard_view:hr.holidays.summary,notify:0
@@ -453,7 +428,7 @@ msgstr "员工填写假期申请"
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_setholiday0
 msgid "Holiday is set in the calendar."
-msgstr "在日历设定假期"
+msgstr "在日程表设定假期"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -469,12 +444,12 @@ msgstr "我可用的假期"
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Black"
-msgstr "黑"
+msgstr "黑色"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_refuse
 msgid "My Refused Holidays Requests"
-msgstr "我拒接的假期申请"
+msgstr "我被拒绝的假期申请"
 
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_setholiday0
@@ -485,11 +460,6 @@ msgstr "设定假期"
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_draft
 msgid "My Draft Holidays Requests"
 msgstr "我的假期申请草稿"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,max_leaves:0
-msgid "Maximum Leaves Allowed"
-msgstr "最大准假允许"
 
 #. module: hr_holidays
 #: field:hr.holidays,state:0
@@ -504,7 +474,7 @@ msgstr "象牙白"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday
 msgid "My Holidays Request"
-msgstr "物品的假期申请"
+msgstr "我的假期申请"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -517,11 +487,6 @@ msgid "Both Validated and Confirmed"
 msgstr "批准和确认"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,leaves_taken:0
-msgid "Leaves Already Taken"
-msgstr "准假已得到"
-
-#. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "holidays."
 msgstr "假期"
@@ -530,11 +495,6 @@ msgstr "假期"
 #: selection:hr.holidays,state:0
 msgid "draft"
 msgstr "草稿"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,user_id:0
-msgid "User"
-msgstr "用户"
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_employeedeclaration0
@@ -562,7 +522,6 @@ msgid "Holiday manager"
 msgstr "假期管理"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,active:0
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "有效"
@@ -575,7 +534,7 @@ msgstr "我的假期申请草稿"
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_approvedrequest0
 msgid "Approved Request"
-msgstr "批准请求"
+msgstr "申请批准"
 
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidaysrequest0
@@ -590,12 +549,7 @@ msgstr "假期申请等待批准"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "General"
-msgstr "普通"
-
-#. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "General Information"
-msgstr "一般信息"
+msgstr "通用"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -614,12 +568,12 @@ msgstr "假期申请定义"
 #: selection:hr.holidays.summary,init,holiday_type:0
 #: selection:hr.holidays.summary.employee,init,holiday_type:0
 msgid "Validated"
-msgstr "批准"
+msgstr "确认"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_refuse
 msgid "My Holidays Request Refused"
-msgstr "我拒绝的假期申请"
+msgstr "我被拒绝的假期申请"
 
 #. module: hr_holidays
 #: constraint:ir.model:0
@@ -653,7 +607,7 @@ msgstr "说明"
 #: selection:hr.holidays,state:0
 #: model:process.node,name:hr_holidays.process_node_refused0
 msgid "Refused"
-msgstr "已拒绝"
+msgstr "被拒绝"
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_approvedrequest0
@@ -674,7 +628,7 @@ msgstr "选择假期类型"
 #. module: hr_holidays
 #: field:hr.holidays,case_id:0
 msgid "Case"
-msgstr "成本"
+msgstr "事务"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_user_id:0
@@ -684,17 +638,17 @@ msgstr "每个用户的假期"
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_holidays0
 msgid "Encode number of available holidays"
-msgstr "可得到的假期编号"
+msgstr "可得假期的编号"
 
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_legaldeclaration0
 msgid "Secretariat Social"
-msgstr "社保"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Violet"
-msgstr "紫色"
+msgstr "紫罗兰色"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -714,7 +668,7 @@ msgstr "假期处理"
 #. module: hr_holidays
 #: wizard_view:hr.holidays.summary,notify:0
 msgid "You have to select at least 1 Department. Try again."
-msgstr "你必须至少选择1部门再试一次"
+msgstr "你必须至少选择一个部门, 再试一次"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_validate
@@ -739,7 +693,7 @@ msgstr "浅粉红色"
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_refused0
 msgid "His manager refuses the request"
-msgstr "管理者拒绝这申请"
+msgstr "经理拒绝这申请"
 
 #~ msgid "Action"
 #~ msgstr "行动"

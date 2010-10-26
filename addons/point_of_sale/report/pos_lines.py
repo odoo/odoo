@@ -1,19 +1,18 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -27,12 +26,12 @@ from report import report_sxw
 class pos_lines(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(pos_lines, self).__init__(cr, uid, name, context)
+        super(pos_lines, self).__init__(cr, uid, name, context=context)
         self.total = 0.0
         self.localcontext.update({
-                'time': time,
-                'total_quantity': self.__total_quantity__,
-                'taxes':self.__taxes__,
+            'time': time,
+            'total_quantity': self.__total_quantity__,
+            'taxes':self.__taxes__,
 
         })
 
@@ -53,7 +52,7 @@ class pos_lines(report_sxw.rml_parse):
         return res
 
 
-report_sxw.report_sxw('report.pos.lines', 'pos.order', 'addons/point_of_sale/report/pos_lines.rml', parser=pos_lines)
+report_sxw.report_sxw('report.pos.lines', 'pos.order', 'addons/point_of_sale/report/pos_lines.rml', parser=pos_lines,header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

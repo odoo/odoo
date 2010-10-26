@@ -50,15 +50,17 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
 
     if not startdate:
         startdate = datetime.now()
-    rset1 = rrule.rrulestr(rrulestring, dtstart=startdate, forceset=True)
+    if not exdate:
+        exdate = []
+    rset1 = rrule.rrulestr(str(rrulestring), dtstart=startdate, forceset=True)
 
     for date in exdate:
         datetime_obj = todate(date)
         rset1._exdate.append(datetime_obj)
     if exrule:
         rset1.exrule(rrule.rrulestr(str(exrule), dtstart=startdate))
-    re_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), rset1._iter())
-    return re_dates
+
+    return list(rset1._iter())
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
     """
@@ -304,7 +306,7 @@ class calendar_attendee(osv.osv):
         res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
         return [(r['object'], r['name']) for r in res]
 
-    def _lang_get(self, cr, uid, context={}):
+    def _lang_get(self, cr, uid, context=None):
         """
         Get language for language selection field.
         @param cr: the current row, from the database cursor,
@@ -315,7 +317,7 @@ class calendar_attendee(osv.osv):
         obj = self.pool.get('res.lang')
         ids = obj.search(cr, uid, [])
         res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
-        res = [((r['code']).replace('_', '-'), r['name']) for r in res]
+        res = [((r['code']).replace('_', '-').lower(), r['name']) for r in res]
         return res
 
     _columns = {
@@ -375,8 +377,14 @@ property or property parameter."),
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
      }
     _defaults = {
-        'state': lambda *x: 'needs-action',
+        'state': 'needs-action',
+        'role': 'req-participant',
+        'rsvp':  True,
+        'cutype': 'individual',
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        raise osv.except_osv(_('Warning!'), _('Can not Duplicate'))
 
     def get_ics_file(self, cr, uid, event_obj, context=None):
         """
@@ -390,11 +398,15 @@ property or property parameter."),
         """
         res = None
         def ics_datetime(idate, short=False):
-            if short:
-                return date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
+            if idate:
+                if short:
+                    return date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
+                else:
+                    return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
             else:
-                return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
+                return False
         try:
+            # FIXME: why isn't this in CalDAV?
             import vobject
         except ImportError:
             return res
@@ -410,10 +422,18 @@ property or property parameter."),
             event.add('location').value = event_obj.location
         if event_obj.rrule:
             event.add('rrule').value = event_obj.rrule
-        if event_obj.user_id:
+        if event_obj.organizer:
             event_org = event.add('organizer')
-            event_org.params['CN'] = [event_obj.user_id.name]
-            event_org.value = 'MAILTO:' + (event_obj.user_id.user_email or event_obj.user_id.name)
+            event_org.params['CN'] = [event_obj.organizer]
+            event_org.value = 'MAILTO:' + (event_obj.organizer)
+        elif event_obj.user_id or event_obj.organizer_id:
+            event_org = event.add('organizer')
+            organizer = event_obj.organizer_id
+            if not organizer:
+                organizer = event_obj.user_id
+            event_org.params['CN'] = [organizer.name]
+            event_org.value = 'MAILTO:' + (organizer.user_email or organizer.name)
+
         if event_obj.alarm_id:
             # computes alarm data
             valarm = event.add('valarm')
@@ -446,18 +466,18 @@ property or property parameter."),
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
         res = cal.serialize()
         return res
-    
+
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
         """
-        Send mail for event invitation to event attendees. 
+        Send mail for event invitation to event attendees.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of attendee’s IDs.
-        @param email_from: Email address for user sending the mail 
+        @param email_from: Email address for user sending the mail
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
 
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
@@ -465,35 +485,37 @@ property or property parameter."),
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
             res_obj = att.ref
-            sub = '[%s Invitation][%d] %s' % (company, att.id, res_obj.name)
-            att_infos = []
-            other_invitaion_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
-            for att2 in self.browse(cr, uid, other_invitaion_ids):
-                att_infos.append(((att2.user_id and att2.user_id.name) or \
-                             (att2.partner_id and att2.partner_id.name) or \
-                                att2.email) + ' - Status: ' + att2.state.title())
-            body_vals = {'name': res_obj.name,
-                        'start_date': res_obj.date,
-                        'end_date': res_obj.date_deadline or False,
-                        'description': res_obj.description or '-',
-                        'location': res_obj.location or '-',
-                        'attendees': '<br>'.join(att_infos),
-                        'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
-                        'sign': sign,
-                        'company': company
-            }
-            body = html_invitation % body_vals
-            if mail_to and email_from:
-                attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                tools.email_send(
-                    email_from, 
-                    mail_to, 
-                    sub, 
-                    body, 
-                    attach=attach and [('invitation.ics', attach)] or None, 
-                    subtype='html', 
-                    reply_to=email_from
-                )
+            if res_obj:
+                att_infos = []
+                sub = res_obj.name
+                other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
+
+                for att2 in self.browse(cr, uid, other_invitation_ids):
+                    att_infos.append(((att2.user_id and att2.user_id.name) or \
+                                 (att2.partner_id and att2.partner_id.name) or \
+                                    att2.email) + ' - Status: ' + att2.state.title())
+                body_vals = {'name': res_obj.name,
+                            'start_date': res_obj.date,
+                            'end_date': res_obj.date_deadline or False,
+                            'description': res_obj.description or '-',
+                            'location': res_obj.location or '-',
+                            'attendees': '<br>'.join(att_infos),
+                            'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
+                            'sign': sign,
+                            'company': company
+                }
+                body = html_invitation % body_vals
+                if mail_to and email_from:
+                    attach = self.get_ics_file(cr, uid, res_obj, context=context)
+                    tools.email_send(
+                        email_from,
+                        mail_to,
+                        sub,
+                        body,
+                        attach=attach and [('invitation.ics', attach)] or None,
+                        subtype='html',
+                        reply_to=email_from
+                    )
             return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
@@ -519,32 +541,28 @@ property or property parameter."),
         @param uid: the current user’s ID for security checks,
         @param ids: List of calendar attendee’s IDs
         @param *args: Get Tupple value
-        @param context: A standard dictionary for contextual values 
+        @param context: A standard dictionary for contextual values
         """
-
-        self.write(cr, uid, ids, {'state': 'tentative'}, context)
+        return self.write(cr, uid, ids, {'state': 'tentative'}, context)
 
     def do_accept(self, cr, uid, ids, context=None, *args):
         """
-        Update state of invitation as Accepted and 
+        Update state of invitation as Accepted and
         if the invited user is other then event user it will make a copy of this event for invited user
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of calendar attendee’s IDs.
-        @param context: A standard dictionary for contextual values 
+        @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
 
         for vals in self.browse(cr, uid, ids, context=context):
-            user = vals.user_id
-            if user:
+            if vals.ref and vals.ref.user_id:
                 mod_obj = self.pool.get(vals.ref._name)
-                if vals.ref:
-                    if vals.ref.user_id.id != user.id:
-                        defaults = {'user_id': user.id}
-                        new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
+                defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id}
+                new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
 
         return True
@@ -557,8 +575,9 @@ property or property parameter."),
         @param ids: List of calendar attendee’s IDs
         @param *args: Get Tupple value
         @param context: A standard dictionary for contextual values """
-
-        self.write(cr, uid, ids, {'state': 'declined'}, context)
+        if context is None:
+            context = {}
+        return self.write(cr, uid, ids, {'state': 'declined'}, context)
 
     def create(self, cr, uid, vals, context=None):
         """ Overrides orm create method.
@@ -568,16 +587,15 @@ property or property parameter."),
         @param vals: Get Values
         @param context: A standard dictionary for contextual values """
 
-        if not context:
+        if context is None:
             context = {}
         if not vals.get("email") and vals.get("cn"):
             cnval = vals.get("cn").split(':')
             email = filter(lambda x:x.__contains__('@'), cnval)
-            vals['email'] = email[0]
+            vals['email'] = email and email[0] or ''
             vals['cn'] = vals.get("cn")
         res = super(calendar_attendee, self).create(cr, uid, vals, context)
         return res
-
 calendar_attendee()
 
 class res_alarm(osv.osv):
@@ -605,11 +623,11 @@ are both optional, but if one occurs, so MUST the other"""),
 true, it will allow you to hide the event alarm information without removing it.")
     }
     _defaults = {
-        'trigger_interval': lambda *x: 'minutes',
-        'trigger_duration': lambda *x: 5,
-        'trigger_occurs': lambda *x: 'before',
-        'trigger_related': lambda *x: 'start',
-        'active': lambda *x: 1,
+        'trigger_interval': 'minutes',
+        'trigger_duration': 5,
+        'trigger_occurs': 'before',
+        'trigger_related': 'start',
+        'active': 1,
     }
 
     def do_alarm_create(self, cr, uid, ids, model, date, context=None):
@@ -623,9 +641,10 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
         alarm_obj = self.pool.get('calendar.alarm')
+        res_alarm_obj = self.pool.get('res.alarm')
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
 
@@ -633,9 +652,32 @@ true, it will allow you to hide the event alarm information without removing it.
         for data in model_obj.browse(cr, uid, ids, context):
 
             basic_alarm = data.alarm_id
-            if not context.get('alarm_id', False):
-                self.do_alarm_unlink(cr, uid, [data.id], model)
-                return True
+            cal_alarm = data.base_calendar_alarm_id
+            if (not basic_alarm and cal_alarm) or (basic_alarm and cal_alarm):
+                new_res_alarm = None
+                # Find for existing res.alarm
+                duration = cal_alarm.trigger_duration
+                interval = cal_alarm.trigger_interval
+                occurs = cal_alarm.trigger_occurs
+                related = cal_alarm.trigger_related
+                domain = [('trigger_duration', '=', duration), ('trigger_interval', '=', interval), ('trigger_occurs', '=', occurs), ('trigger_related', '=', related)]
+                alarm_ids = res_alarm_obj.search(cr, uid, domain, context=context)
+                if not alarm_ids:
+                    val = {
+                            'trigger_duration': duration,
+                            'trigger_interval': interval,
+                            'trigger_occurs': occurs,
+                            'trigger_related': related,
+                            'name': str(duration) + ' ' + str(interval) + ' '  + str(occurs)
+                           }
+                    new_res_alarm = res_alarm_obj.create(cr, uid, val, context=context)
+                else:
+                    new_res_alarm = alarm_ids[0]
+                cr.execute('UPDATE %s ' % model_obj._table + \
+                            ' SET base_calendar_alarm_id=%s, alarm_id=%s ' \
+                            ' WHERE id=%s', 
+                            (cal_alarm.id, new_res_alarm, data.id))
+
             self.do_alarm_unlink(cr, uid, [data.id], model)
             if basic_alarm:
                 vals = {
@@ -656,10 +698,10 @@ true, it will allow you to hide the event alarm information without removing it.
                     'user_id': uid
                  }
                 alarm_id = alarm_obj.create(cr, uid, vals)
-                cr.execute('Update %s set base_calendar_alarm_id=%s, alarm_id=%s \
-                                        where id=%s' % (model_obj._table, \
-                                        alarm_id, basic_alarm.id, data.id))
-        cr.commit()
+                cr.execute('UPDATE %s ' % model_obj._table + \
+                            ' SET base_calendar_alarm_id=%s, alarm_id=%s '
+                            ' WHERE id=%s', \
+                            ( alarm_id, basic_alarm.id, data.id) )
         return True
 
     def do_alarm_unlink(self, cr, uid, ids, model, context=None):
@@ -671,7 +713,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param model: Model name for which alarm is to be cleared.
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
         alarm_obj = self.pool.get('calendar.alarm')
         ir_obj = self.pool.get('ir.model')
@@ -682,8 +724,7 @@ true, it will allow you to hide the event alarm information without removing it.
             if alarm_ids:
                 alarm_obj.unlink(cr, uid, alarm_ids)
                 cr.execute('Update %s set base_calendar_alarm_id=NULL, alarm_id=NULL\
-                            where id=%s' % (model_obj._table, datas.id))
-        cr.commit()
+                            where id=%%s' % model_obj._table,(datas.id,))
         return True
 
 res_alarm()
@@ -695,40 +736,40 @@ class calendar_alarm(osv.osv):
     __attribute__ = {}
 
     _columns = {
-        'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'), 
+        'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'),
         'name': fields.char('Summary', size=124, help="""Contains the text to be \
                      used as the message subject for email \
-                     or contains the text to be used for display"""), 
+                     or contains the text to be used for display"""),
         'action': fields.selection([('audio', 'Audio'), ('display', 'Display'), \
                 ('procedure', 'Procedure'), ('email', 'Email') ], 'Action', \
-                required=True, help="Defines the action to be invoked when an alarm is triggered"), 
+                required=True, help="Defines the action to be invoked when an alarm is triggered"),
         'description': fields.text('Description', help='Provides a more complete \
                             description of the calendar component, than that \
-                            provided by the "SUMMARY" property'), 
+                            provided by the "SUMMARY" property'),
         'attendee_ids': fields.many2many('calendar.attendee', 'alarm_attendee_rel', \
-                                      'alarm_id', 'attendee_id', 'Attendees', readonly=True), 
+                                      'alarm_id', 'attendee_id', 'Attendees', readonly=True),
         'attach': fields.binary('Attachment', help="""* Points to a sound resource,\
                      which is rendered when the alarm is triggered for audio,
                     * File which is intended to be sent as message attachments for email,
                     * Points to a procedure resource, which is invoked when\
-                      the alarm is triggered for procedure."""), 
-        'res_id': fields.integer('Resource ID'), 
-        'model_id': fields.many2one('ir.model', 'Model'), 
-        'user_id': fields.many2one('res.users', 'Owner'), 
-        'event_date': fields.datetime('Event Date'), 
-        'event_end_date': fields.datetime('Event End Date'), 
-        'trigger_date': fields.datetime('Trigger Date', readonly="True"), 
+                      the alarm is triggered for procedure."""),
+        'res_id': fields.integer('Resource ID'),
+        'model_id': fields.many2one('ir.model', 'Model'),
+        'user_id': fields.many2one('res.users', 'Owner'),
+        'event_date': fields.datetime('Event Date'),
+        'event_end_date': fields.datetime('Event End Date'),
+        'trigger_date': fields.datetime('Trigger Date', readonly="True"),
         'state':fields.selection([
-                    ('draft', 'Draft'), 
-                    ('run', 'Run'), 
-                    ('stop', 'Stop'), 
-                    ('done', 'Done'), 
-                ], 'State', select=True, readonly=True), 
+                    ('draft', 'Draft'),
+                    ('run', 'Run'),
+                    ('stop', 'Stop'),
+                    ('done', 'Done'),
+                ], 'State', select=True, readonly=True),
      }
 
     _defaults = {
-        'action': lambda *x: 'email',
-        'state': lambda *x: 'run',
+        'action': 'email',
+        'state': 'run',
      }
 
     def create(self, cr, uid, vals, context=None):
@@ -740,7 +781,7 @@ class calendar_alarm(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: new record id for calendar_alarm.
         """
-        if not context:
+        if context is None:
             context = {}
         event_date = vals.get('event_date', False)
         if event_date:
@@ -766,61 +807,101 @@ class calendar_alarm(osv.osv):
         @param use_new_cursor: False or the dbname
         @param context: A standard dictionary for contextual values
         """
-
-        if not context:
+        return True # XXX FIXME REMOVE THIS AFTER FIXING get_recurrent_dates!!
+        if context is None:
             context = {}
-        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        cr.execute("select alarm.id as id \
-                    from calendar_alarm alarm \
-                    where alarm.state = %s and alarm.trigger_date <= %s", ('run', current_datetime))
-        res = cr.dictfetchall()
-        alarm_ids = map(lambda x: x['id'], res)
-        #attendee_obj = self.pool.get('calendar.attendee')
+        current_datetime = datetime.now()
         request_obj = self.pool.get('res.request')
+        alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
+
         mail_to = []
-        for alarm in self.browse(cr, uid, alarm_ids):
-            if alarm.action == 'display':
-                value = {
-                   'name': alarm.name,
-                   'act_from': alarm.user_id.id,
-                   'act_to': alarm.user_id.id,
-                   'body': alarm.description,
-                   'trigger_date': alarm.trigger_date,
-                   'ref_doc1': '%s,%s' % (alarm.model_id.model, alarm.res_id)
-                }
-                request_id = request_obj.create(cr, uid, value)
-                request_ids = [request_id]
-                for attendee in alarm.attendee_ids:
-                    if attendee.user_id:
-                        value['act_to'] = attendee.user_id.id
-                        request_id = request_obj.create(cr, uid, value)
-                        request_ids.append(request_id)
-                request_obj.request_send(cr, uid, request_ids)
 
-            if alarm.action == 'email':
-                sub = '[Openobject Remainder] %s' % (alarm.name)
-                body = """
-                Name: %s
-                Date: %s
-                Description: %s
+        for alarm in self.browse(cr, uid, alarm_ids, context=context):
+            next_trigger_date = None
+            update_vals = {}
+            model_obj = self.pool.get(alarm.model_id.model)
+            res_obj = model_obj.browse(cr, uid, alarm.res_id, context=context)
+            re_dates = []
 
-                From:
-                      %s
-                      %s
+            if res_obj.rrule:
+                event_date = datetime.strptime(res_obj.date, '%Y-%m-%d %H:%M:%S')
+                recurrent_dates = get_recurrent_dates(res_obj.rrule, res_obj.exdate, event_date, res_obj.exrule)
 
-                """  % (alarm.name, alarm.trigger_date, alarm.description, \
-                    alarm.user_id.name, alarm.user_id.signature)
-                mail_to = [alarm.user_id.address_id.email]
-                for att in alarm.attendee_ids:
-                    mail_to.append(att.user_id.address_id.email)
-                if mail_to:
-                    tools.email_send(
-                        tools.config.get('email_from', False),
-                        mail_to,
-                        sub,
-                        body
-                    )
-            self.write(cr, uid, [alarm.id], {'state':'done'})
+                trigger_interval = alarm.trigger_interval
+                if trigger_interval == 'days':
+                    delta = timedelta(days=alarm.trigger_duration)
+                if trigger_interval == 'hours':
+                    delta = timedelta(hours=alarm.trigger_duration)
+                if trigger_interval == 'minutes':
+                    delta = timedelta(minutes=alarm.trigger_duration)
+                delta = alarm.trigger_occurs == 'after' and delta or -delta
+
+                for rdate in recurrent_dates:
+                    if rdate + delta > current_datetime:
+                        break
+                    if rdate + delta <= current_datetime:
+                        re_dates.append(rdate.strftime("%Y-%m-%d %H:%M:%S"))
+                rest_dates = recurrent_dates[len(re_dates):]
+                next_trigger_date = rest_dates and rest_dates[0] or None
+
+            else:
+                re_dates = [alarm.trigger_date]
+
+            for r_date in re_dates:
+                ref = alarm.model_id.model + ',' + str(alarm.res_id)
+
+                # search for alreay sent requests
+                if request_obj.search(cr, uid, [('trigger_date', '=', r_date), ('ref_doc1', '=', ref)], context=context):
+                    continue
+
+                if alarm.action == 'display':
+                    value = {
+                       'name': alarm.name,
+                       'act_from': alarm.user_id.id,
+                       'act_to': alarm.user_id.id,
+                       'body': alarm.description,
+                       'trigger_date': r_date,
+                       'ref_doc1': ref
+                    }
+                    request_id = request_obj.create(cr, uid, value)
+                    request_ids = [request_id]
+                    for attendee in res_obj.attendee_ids:
+                        if attendee.user_id:
+                            value['act_to'] = attendee.user_id.id
+                            request_id = request_obj.create(cr, uid, value)
+                            request_ids.append(request_id)
+                    request_obj.request_send(cr, uid, request_ids)
+
+                if alarm.action == 'email':
+                    sub = '[Openobject Reminder] %s' % (alarm.name)
+                    body = """
+Event: %s
+Event Date: %s
+Description: %s
+
+From:
+      %s
+
+----
+%s
+
+"""  % (alarm.name, alarm.trigger_date, alarm.description, \
+                        alarm.user_id.name, alarm.user_id.signature)
+                    mail_to = [alarm.user_id.address_id.email]
+                    for att in alarm.attendee_ids:
+                        mail_to.append(att.user_id.address_id.email)
+                    if mail_to:
+                        tools.email_send(
+                            tools.config.get('email_from', False),
+                            mail_to,
+                            sub,
+                            body
+                        )
+            if next_trigger_date:
+                update_vals.update({'trigger_date': next_trigger_date})
+            else:
+                update_vals.update({'state': 'done'})
+            self.write(cr, uid, [alarm.id], update_vals)
         return True
 
 calendar_alarm()
@@ -831,10 +912,10 @@ class calendar_event(osv.osv):
     _description = "Calendar Event"
     __attribute__ = {}
 
-    def _tz_get(self, cr, uid, context={}):
+    def _tz_get(self, cr, uid, context=None):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
-    def onchange_allday(self, cr, uid, ids, allday, context={}):
+    def onchange_allday(self, cr, uid, ids, allday, context=None):
         """Sets duration as 24 Hours if event is selcted for all day
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -847,10 +928,10 @@ class calendar_event(osv.osv):
             return {}
         event = self.browse(cr, uid, ids, context=context)[0]
         value = {
-                 'duration': 24 
+                 'duration': 24
                  }
         return {'value': value}
-    
+
     def onchange_dates(self, cr, uid, ids, start_date, duration=False, end_date=False, allday=False, context=None):
         """Returns duration and/or end date based on values passed
         @param self: The object pointer
@@ -862,20 +943,19 @@ class calendar_event(osv.osv):
         @param end_date: Ending Datee
         @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
+
         value = {}
         if not start_date:
             return value
         if not end_date and not duration:
-            duration = 8.00
+            duration = 1.00
             value['duration'] = duration
 
         if allday: # For all day event
-            value = {
-                 'duration': 24
-                 }
-            return {'value': value}
+            value = {'duration': 24}
+            duration = 24.0
 
         start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         if end_date and not duration:
@@ -886,8 +966,29 @@ class calendar_event(osv.osv):
         elif not end_date:
             end = start + timedelta(hours=duration)
             value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
+        elif end_date and duration and not allday:
+            # we have both, keep them synchronized:
+            # set duration based on end_date (arbitrary decision: this avoid 
+            # getting dates like 06:31:48 instead of 06:32:00)
+            end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+            diff = end - start
+            duration = float(diff.days)* 24 + (float(diff.seconds) / 3600)
+            value['duration'] = round(duration, 2)
 
         return {'value': value}
+
+    def unlink_events(self, cr, uid, ids, context=None):
+        """
+        This function deletes event which are linked with the event with recurrent_uid
+                (Removes the events which refers to the same UID value)
+        """
+        if context is None:
+            context = {}
+        for event_id in ids:
+            cr.execute("select id from %s where recurrent_uid=%%s" % (self._table), (event_id,))
+            r_ids = map(lambda x: x[0], cr.fetchall())
+            self.unlink(cr, uid, r_ids, context=context)
+        return True
 
     def _set_rrulestring(self, cr, uid, id, name, value, arg, context=None):
         """
@@ -898,14 +999,14 @@ class calendar_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: dictionary of rrule value.
         """
-        if not context:
+        if context is None:
             context = {}
         cr.execute("UPDATE %s set freq='None',interval=0,count=0,end_date=Null,\
                     mo=False,tu=False,we=False,th=False,fr=False,sa=False,su=False,\
-                    day=0,select1='date',month_list=Null ,byday=Null where id=%s" % (self._table, id))
+                    day=0,select1='date',month_list=Null ,byday=Null where id=%%s" % (self._table), (id,))
 
         if not value:
-            cr.execute("UPDATE %s set rrule_type='none' where id=%s" % (self._table, id))
+            cr.execute("UPDATE %s set rrule_type='none' where id=%%s" % self._table,(id,))
             return True
         val = {}
         for part in value.split(';'):
@@ -923,7 +1024,8 @@ class calendar_event(osv.osv):
         elif int(val.get('interval')) > 1: #If interval is other than 1 rule is custom
             rrule_type = 'custom'
 
-        qry = "UPDATE %(table)s set rrule_type=\'%(rule_type)s\' "
+        qry = "UPDATE \"%s\" set rrule_type=%%s " % self._table
+        qry_args = [ rrule_type, ]
 
         if rrule_type == 'custom':
             new_val = val.copy()
@@ -961,17 +1063,12 @@ class calendar_event(osv.osv):
                     new_val.pop('bymonth')
 
             for k, v in new_val.items():
-                temp = ", %s='%s'" % (k, v)
-                qry += temp
+                qry += ", %s=%%s" % k
+                qry_args.append(v)
 
-        whr = " where id=%(id)s"
-        qry = qry + whr
-        val.update({
-            'table': self._table,
-            'rule_type': rrule_type,
-            'id': id,
-        })
-        cr.execute(qry % val)
+        qry = qry + " where id=%s"
+        qry_args.append(id)
+        cr.execute(qry, qry_args)
         return True
 
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
@@ -989,6 +1086,7 @@ class calendar_event(osv.osv):
             if datas.get('rrule_type'):
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
+                    cr.execute("UPDATE %s set exrule=Null where id=%%s" % self._table,( event,))
                 elif datas.get('rrule_type') == 'custom':
                     if datas.get('interval', 0) < 0:
                         raise osv.except_osv('Warning!', 'Interval can not be Negative')
@@ -1000,27 +1098,34 @@ class calendar_event(osv.osv):
                 else:
                     result[event] = self.compute_rule_string(cr, uid, {'freq': datas.get('rrule_type').upper(), 'interval': 1}, context=context)
 
+        for id, myrule in result.items():
+            #Remove the events generated from recurrent event
+            if not myrule:
+                self.unlink_events(cr, uid, [id], context=context)
         return result
 
     _columns = {
         'id': fields.integer('ID'),
         'sequence': fields.integer('Sequence'),
-        'name': fields.char('Description', size=64, required=False),
-        'date': fields.datetime('Date'),
-        'date_deadline': fields.datetime('Deadline'),
+        'name': fields.char('Description', size=64, required=False, states={'done': [('readonly', True)]}),
+        'date': fields.datetime('Date', states={'done': [('readonly', True)]}),
+        'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}),
         'create_date': fields.datetime('Created', readonly=True),
-        'duration': fields.float('Duration'),
-        'description': fields.text('Your action'),
+        'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
+        'description': fields.text('Description', states={'done': [('readonly', True)]}),
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
-             ('confidential', 'Confidential')], 'Mark as'), 
-        'location': fields.char('Location', size=264, help="Location of Event"), 
+             ('confidential', 'Confidential')], 'Mark as', states={'done': [('readonly', True)]}),
+        'location': fields.char('Location', size=264, help="Location of Event", states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], \
-                                                'Show as'),
+                                                'Show as', states={'done': [('readonly', True)]}),
         'base_calendar_url': fields.char('Caldav URL', size=264),
+        'state': fields.selection([('tentative', 'Tentative'),
+                        ('confirmed', 'Confirmed'),
+                        ('cancelled', 'Cancelled')], 'State', readonly=True),
         'exdate': fields.text('Exception Date/Times', help="This property \
-defines the list of date/time exceptions for arecurring calendar component."),
-        'exrule': fields.char('Exception Rule', size=352, help="defines a \
-rule or repeating pattern for an exception to a recurrence set"),
+defines the list of date/time exceptions for a recurring calendar component."),
+        'exrule': fields.char('Exception Rule', size=352, help="Defines a \
+rule or repeating pattern of time to exclude from the recurring rule."),
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, \
                                     string='Recurrent Rule', store=True, \
                                     fnct_inv=_set_rrulestring, help='Defines a\
@@ -1029,24 +1134,28 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU'),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
-                            ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'),
-        'alarm_id': fields.many2one('res.alarm', 'Alarm'),
+                            ('yearly', 'Yearly'), ('custom', 'Custom')], 
+                            'Recurrency', states={'done': [('readonly', True)]},
+                            help="Let the event automatically repeat at that interval"),
+        'alarm_id': fields.many2one('res.alarm', 'Alarm', states={'done': [('readonly', True)]},
+                        help="Set an alarm at this time, before the event occurs" ),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
         'recurrent_uid': fields.integer('Recurrent ID'),
         'recurrent_id': fields.datetime('Recurrent ID date'),
-        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, \
-                         string='Timezone', store=True),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+        'vtimezone': fields.selection(_tz_get, size=64, string='Timezone'),
+        'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
+        'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with Organizer Attribure of VEvent.
+        'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
         'freq': fields.selection([('None', 'No Repeat'), \
-                                ('secondly', 'Secondly'), \
-                                ('minutely', 'Minutely'), \
-                                ('hourly', 'Hourly'), \
-                                ('daily', 'Daily'), \
-                                ('weekly', 'Weekly'), \
-                                ('monthly', 'Monthly'), \
-                                ('yearly', 'Yearly')], 'Frequency'),
-        'interval': fields.integer('Interval'),
-        'count': fields.integer('Count'),
+                                ('hourly', 'Hours'), \
+                                ('daily', 'Days'), \
+                                ('weekly', 'Weeks'), \
+                                ('monthly', 'Months'), \
+                                ('yearly', 'Years'), \
+                                ('secondly', 'Seconds'), \
+                                ('minutely', 'Minutes') ], 'Frequency'),
+        'interval': fields.integer('Interval', help="Repeat every x"),
+        'count': fields.integer('Count', help="Repeat max that times"),
         'mo': fields.boolean('Mon'),
         'tu': fields.boolean('Tue'),
         'we': fields.boolean('Wed'),
@@ -1063,23 +1172,33 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                    ('SU', 'Sunday')], 'Weekday'),
         'byday': fields.selection([('1', 'First'), ('2', 'Second'), \
                                    ('3', 'Third'), ('4', 'Fourth'), \
-                                   ('5', 'Fifth'), ('-1', 'Last')], 'By day'), 
-        'month_list': fields.selection(months.items(), 'Month'), 
-        'end_date': fields.date('Repeat Until'), 
+                                   ('5', 'Fifth'), ('-1', 'Last')], 'By day'),
+        'month_list': fields.selection(months.items(), 'Month'),
+        'end_date': fields.date('Repeat Until'),
         'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', \
-                                 'event_id', 'attendee_id', 'Attendees'), 
-        'allday': fields.boolean('All Day'), 
+                                 'event_id', 'attendee_id', 'Attendees'),
+        'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
         'active': fields.boolean('Active', help="If the active field is set to \
 true, it will allow you to hide the event alarm information without removing it.")
     }
+    def default_organizer(self, cr, uid, context=None):
+        user_pool = self.pool.get('res.users')
+        user = user_pool.browse(cr, uid, uid, context=context)
+        res = user.name
+        if user.user_email:
+            res += " <%s>" %(user.user_email)
+        return res
 
     _defaults = {
-         'class': lambda *a: 'public',
-         'show_as': lambda *a: 'busy',
-         'freq': lambda *x: 'None',
-         'select1': lambda *x: 'date',
-         'interval': lambda *x: 1,
-         'active': lambda *x: 1,
+            'state': 'tentative',
+            'class': 'public',
+            'show_as': 'busy',
+            'freq': 'None',
+            'select1': 'date',
+            'interval': 1,
+            'active': 1,
+            'user_id': lambda self, cr, uid, ctx: uid,
+            'organizer': default_organizer,
     }
 
     def open_event(self, cr, uid, ids, context=None):
@@ -1091,7 +1210,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: Dictionary value which open Crm Meeting form.
         """
-        if not context:
+        if context is None:
             context = {}
 
         data_obj = self.pool.get('ir.model.data')
@@ -1109,56 +1228,28 @@ true, it will allow you to hide the event alarm information without removing it.
             id4 = data_obj.browse(cr, uid, id4, context=context).res_id
         for id in ids:
             value = {
-                    'name': _('Event'), 
-                    'view_type': 'form', 
-                    'view_mode': 'form,tree', 
-                    'res_model': 'calendar.event', 
-                    'view_id': False, 
-                    'views': [(id2, 'form'), (id3, 'tree'), (id4, 'calendar')], 
-                    'type': 'ir.actions.act_window', 
-                    'res_id': base_calendar_id2real_id(id), 
+                    'name': _('Event'),
+                    'view_type': 'form',
+                    'view_mode': 'form,tree',
+                    'res_model': 'calendar.event',
+                    'view_id': False,
+                    'views': [(id2, 'form'), (id3, 'tree'), (id4, 'calendar')],
+                    'type': 'ir.actions.act_window',
+                    'res_id': base_calendar_id2real_id(id),
                     'nodestroy': True
                     }
 
         return value
 
-    def modify_this(self, cr, uid, event_id, defaults, real_date, context=None, *args):
-        """Modifies only one event record out of virtual recurrent events 
-        and creates new event as a specific instance of a Recurring Event",
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param event_id: Id of Recurring Event 
-        @param real_date: Date of event recurrence that is being modified
-        @param context: A standard dictionary for contextual values
-        @param *args: Get Tupple Value
-        """
-
-        event_id = base_calendar_id2real_id(event_id)
-        datas = self.read(cr, uid, event_id, context=context)
-        defaults.update({
-                        'recurrent_uid': base_calendar_id2real_id(datas['id']),
-                        'recurrent_id': defaults.get('date') or real_date,
-                        'rrule_type': 'none',
-                        'rrule': ''
-                        })
-        exdate = datas['exdate'] and datas['exdate'].split(',') or []
-        if real_date and defaults.get('date'):
-            exdate.append(real_date)
-        self.write(cr, uid, event_id, {'exdate': ','.join(exdate)}, context=context)
-        new_id = self.copy(cr, uid, event_id, default=defaults, context=context)
-        return new_id
-
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
         """
-        Modifies the recurring event 
+        Modifies the recurring event
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param event_ids: List of crm meeting’s IDs.
         @param context: A standard dictionary for contextual values
         @return: True
         """
-
         for event_id in event_ids:
             event_id = base_calendar_id2real_id(event_id)
 
@@ -1172,13 +1263,13 @@ true, it will allow you to hide the event alarm information without removing it.
             if defaults.get('location'):
                 qry += ", location = '%(location)s'"
             qry += "WHERE id = %s" % (event_id)
-            cr.execute(qry %(defaults))
+            cr.execute(qry, defaults)
 
         return True
 
     def get_recurrent_ids(self, cr, uid, select, base_start_date, base_until_date, limit=100):
         """Gives virtual event ids for recurring events based on value of Recurrence Rule
-        This method gives ids of dates that comes between start date and end date of calendar views  
+        This method gives ids of dates that comes between start date and end date of calendar views
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -1193,11 +1284,11 @@ true, it will allow you to hide the event alarm information without removing it.
         else:
             ids = select
         result = []
+        recur_dict = []
         if ids and (base_start_date or base_until_date):
-            cr.execute("select m.id, m.rrule, m.date, m.date_deadline, \
-                            m.exdate, m.exrule from " + self._table + \
-                            " m where m.id in ("\
-                            + ','.join(map(lambda x: str(x), ids))+")")
+            cr.execute("select m.id, m.rrule, m.date, m.date_deadline, m.duration, \
+                            m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
+                            " m where m.id = ANY(%s)", (ids,) )
 
             count = 0
             for data in cr.dictfetchall():
@@ -1207,8 +1298,6 @@ true, it will allow you to hide the event alarm information without removing it.
                     break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
 #                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
-#                if start_date and start_date <= event_date:
-#                        start_date = event_date
                 start_date = event_date
                 if not data['rrule']:
                     if start_date and (event_date < start_date):
@@ -1216,8 +1305,16 @@ true, it will allow you to hide the event alarm information without removing it.
                     if until_date and (event_date > until_date):
                         continue
                     idval = real_id2base_calendar_id(data['id'], data['date'])
-                    result.append(idval)
-                    count += 1
+                    if not data['recurrent_id']:
+                        result.append(idval)
+                        count += 1
+                    else:
+                        ex_id = real_id2base_calendar_id(data['recurrent_uid'], data['recurrent_id'])
+                        ls = base_calendar_id2real_id(ex_id, with_date=data and data.get('duration', 0) or 0)
+                        if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
+                            if ls[1] == data['recurrent_id']:
+                                result.append(idval)
+                        recur_dict.append(ex_id)
                 else:
                     exdate = data['exdate'] and data['exdate'].split(',') or []
                     rrule_str = data['rrule']
@@ -1243,17 +1340,16 @@ true, it will allow you to hide the event alarm information without removing it.
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date, data['exrule'])
-                    for rdate in rdates:
-                        r_date = datetime.strptime(rdate, "%Y-%m-%d %H:%M:%S")
+                    for r_date in rdates:
                         if start_date and r_date < start_date:
                             continue
                         if until_date and r_date > until_date:
                             continue
-                        idval = real_id2base_calendar_id(data['id'], rdate)
+                        idval = real_id2base_calendar_id(data['id'], r_date.strftime("%Y-%m-%d %H:%M:%S"))
                         result.append(idval)
                         count += 1
         if result:
-            ids = result
+            ids = list(set(result)-set(recur_dict))
         if isinstance(select, (str, int, long)):
             return ids and ids[0] or False
         return ids
@@ -1305,7 +1401,7 @@ true, it will allow you to hide the event alarm information without removing it.
             yearstring = bymonth + bystring
 
         if datas.get('end_date'):
-            datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + '235959Z'
+            datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + 'T235959Z'
         enddate = (datas.get('count') and (';COUNT=' + str(datas.get('count'))) or '') +\
                              ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
 
@@ -1313,7 +1409,6 @@ true, it will allow you to hide the event alarm information without removing it.
                             + enddate + monthstring + yearstring
 
         return rrule_string
-
 
     def search(self, cr, uid, args, offset=0, limit=100, order=None,
             context=None, count=False):
@@ -1345,9 +1440,9 @@ true, it will allow you to hide the event alarm information without removing it.
                     until_date = arg[2]
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
                                  offset, limit, order, context, count)
-        return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
 
-
+        res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
+        return res
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         """
@@ -1360,37 +1455,55 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
             select = ids
         new_ids = []
+        res = False
         for event_id in select:
+            real_event_id = base_calendar_id2real_id(event_id)
             if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
                 if data.get('rrule'):
-                    real_date = data.get('date')
+                    data.update({
+                        'recurrent_uid': real_event_id,
+                        'recurrent_id': data.get('date'),
+                        'rrule_type': 'none',
+                        'rrule': ''
+                        })
                     data.update(vals)
-                    new_id = self.modify_this(cr, uid, event_id, data, \
-                                                real_date, context)
+                    new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
-            event_id = base_calendar_id2real_id(event_id)
-            if not event_id in new_ids:
-                new_ids.append(event_id)
+            if not real_event_id in new_ids:
+                new_ids.append(real_event_id)
 
-        res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
-        if vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'):
+        if vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
+            vals['vtimezone'] = vals['vtimezone'][40:]
+
+        updated_vals = self.onchange_dates(cr, uid, new_ids,
+            vals.get('date', False),
+            vals.get('duration', False),
+            vals.get('date_deadline', False),
+            vals.get('allday', False),
+            context=context)
+        vals.update(updated_vals.get('value', {}))
+
+        if new_ids:
+            res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
+
+        if ('alarm_id' in vals or 'base_calendar_alarm_id' in vals)\
+                or ('date' in vals or 'duration' in vals or 'date_deadline' in vals):
+            # change alarm details
             alarm_obj = self.pool.get('res.alarm')
-            context.update({'alarm_id': vals.get('alarm_id')})
-            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', \
-                                            context=context)
+            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', context=context)
         return res
 
-    def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
+    def browse(self, cr, uid, ids, context=None, list_class=None, fields_process=None):
         """
         Overrides orm browse method.
         @param self: the object pointer
@@ -1422,7 +1535,8 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: List of Dictionary of form [{‘name_of_the_field’: value, ...}, ...]
         """
-        if not context:
+        # FIXME This whole id mangling has to go!
+        if context is None:
             context = {}
 
         if isinstance(ids, (str, int, long)):
@@ -1433,9 +1547,14 @@ true, it will allow you to hide the event alarm information without removing it.
         result = []
         if fields and 'date' not in fields:
             fields.append('date')
+        if fields and 'duration' not in fields:
+            fields.append('duration')
+
+
         for base_calendar_id, real_id in select:
+            #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
             res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
-            ls = base_calendar_id2real_id(base_calendar_id, with_date=res.get('duration', 0))
+            ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
                 res['date_deadline'] = ls[2]
@@ -1455,11 +1574,11 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: Duplicate record id.
         """
-        if not context:
+        if context is None:
             context = {}
         res = super(calendar_event, self).copy(cr, uid, base_calendar_id2real_id(id), default, context)
         alarm_obj = self.pool.get('res.alarm')
-        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date')
+        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
 
         return res
 
@@ -1473,27 +1592,25 @@ true, it will allow you to hide the event alarm information without removing it.
         @return: True
         """
         res = False
-        for id in ids:
-            ls = base_calendar_id2real_id(id)
-            if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
-                date_new = ls[1]
-                for record in self.read(cr, uid, [base_calendar_id2real_id(id)], \
-                                            ['date', 'rrule', 'exdate']):
-                    if record['rrule']:
-                        exdate = (record['exdate'] and (record['exdate'] + ',') or '') + ''.join((re.compile('\d')).findall(date_new)) + 'Z'
-                        if record['date'] == date_new:
-                            res = self.write(cr, uid, [base_calendar_id2real_id(id)], {'exdate': exdate})
-                    else:
-                        ids = map(lambda x: base_calendar_id2real_id(x), ids)
-                        res = super(calendar_event, self).unlink(cr, uid, \
-                                                base_calendar_id2real_id(ids))
-                        alarm_obj = self.pool.get('res.alarm')
-                        alarm_obj.do_alarm_unlink(cr, uid, ids, self._name)
+        for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
+            event_id = event_datas['id']
+            if isinstance(event_id, (int, long)):
+                res = super(calendar_event, self).unlink(cr, uid, event_id, context=context)
+                self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
+                self.unlink_events(cr, uid, [event_id], context=context)
             else:
-                ids = map(lambda x: base_calendar_id2real_id(x), ids)
-                res = super(calendar_event, self).unlink(cr, uid, ids)
-                alarm_obj = self.pool.get('res.alarm')
-                alarm_obj.do_alarm_unlink(cr, uid, ids, self._name)
+                str_event, date_new = event_id.split('-')
+                event_id = int(str_event)
+                if event_datas['rrule']:
+                    # Remove one of the recurrent event
+                    date_new = time.strftime("%Y%m%dT%H%M%S", \
+                                 time.strptime(date_new, "%Y%m%d%H%M%S"))
+                    exdate = (event_datas['exdate'] and (event_datas['exdate'] + ',')  or '') + date_new
+                    res = self.write(cr, uid, [event_id], {'exdate': exdate})
+                else:
+                    res = super(calendar_event, self).unlink(cr, uid, [event_id], context=context)
+                    self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
+                    self.unlink_events(cr, uid, [event_id], context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -1506,12 +1623,49 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: new created record id.
         """
-        if not context:
+        if context is None:
             context = {}
+
+        if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
+            vals['vtimezone'] = vals['vtimezone'][40:]
+
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
-        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date')
+        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
         return res
+
+    def do_tentative(self, cr, uid, ids, context=None, *args):
+        """ Makes event invitation as Tentative
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Event IDs
+        @param *args: Get Tupple value
+        @param context: A standard dictionary for contextual values
+        """
+        return self.write(cr, uid, ids, {'state': 'tentative'}, context)
+
+    def do_cancel(self, cr, uid, ids, context=None, *args):
+        """ Makes event invitation as Tentative
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Event IDs
+        @param *args: Get Tupple value
+        @param context: A standard dictionary for contextual values
+        """
+        return self.write(cr, uid, ids, {'state': 'cancelled'}, context)
+
+    def do_confirm(self, cr, uid, ids, context=None, *args):
+        """ Makes event invitation as Tentative
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Event IDs
+        @param *args: Get Tupple value
+        @param context: A standard dictionary for contextual values
+        """
+        return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
 
 calendar_event()
 
@@ -1549,11 +1703,9 @@ class calendar_todo(osv.osv):
         @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
         @param context: A standard dictionary for contextual values
         """
-
-        event = self.browse(cr, uid, id, context=context)
-        cr.execute("UPDATE %s set date_start='%s' where id=%s" \
-                            % (self._table, value, id))
-        return True
+        
+        assert name == 'date'
+        return self.write(cr, uid, id, { 'date_start': value }, context=context)
 
     _columns = {
         'date': fields.function(_get_date, method=True, fnct_inv=_set_date, \
@@ -1636,7 +1788,7 @@ class ir_values(osv.osv):
         @param uid: the current user’s ID for security checks,
         @param model: Get The Model
         """
-        if not context:
+        if context is None:
             context = {}
         new_model = []
         for data in models:
@@ -1653,9 +1805,9 @@ class ir_model(osv.osv):
 
     _inherit = 'ir.model'
 
-    def read(self, cr, uid, ids, fields=None, context=None, 
+    def read(self, cr, uid, ids, fields=None, context=None,
             load='_classic_read'):
-        """ 
+        """
         Overrides orm read method.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -1664,7 +1816,7 @@ class ir_model(osv.osv):
         @param context: A standard dictionary for contextual values
         """
         new_ids = isinstance(ids, (str, int, long)) and [ids] or ids
-        if not context:
+        if context is None:
             context = {}
         data = super(ir_model, self).read(cr, uid, new_ids, fields=fields, \
                         context=context, load=load)
@@ -1702,7 +1854,7 @@ class res_users(osv.osv):
     _inherit = 'res.users'
 
     def _get_user_avail(self, cr, uid, ids, context=None):
-        """ 
+        """
         Get User Availability
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -1719,7 +1871,6 @@ class res_users(osv.osv):
                     ('state', '=', 'accepted'), ('user_id', 'in', ids)
                     ])
 
-       # result = cr.dictfetchall()
         for attendee_data in attendee_obj.read(cr, uid, attendee_ids, ['user_id']):
             user_id = attendee_data['user_id']
             status = 'busy'
@@ -1733,7 +1884,7 @@ class res_users(osv.osv):
         return res
 
     def _get_user_avail_fun(self, cr, uid, ids, name, args, context=None):
-        """ 
+        """
         Get User Availability Function
         @param self: The object pointer
         @param cr: the current row, from the database cursor,

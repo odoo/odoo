@@ -27,31 +27,31 @@ class project_account_analytic_line(osv.osv_memory):
      _columns = {
          'from_date': fields.date('From'),
          'to_date': fields.date('To'),
-                }
+     }
 
      def action_open_window(self, cr, uid, ids, context={}):
           mod_obj =self.pool.get('ir.model.data')
           domain = []
-          for data in self.read(cr, uid, ids, context=context):
-              from_date = data['from_date']
-              to_date = data['to_date']
-              if from_date and to_date:
-                    domain = [('date','>=',from_date), ('date','<=',to_date)]
-              elif from_date:
-                    domain = [('date','>=',from_date)]
-              elif to_date:
-                    domain = [('date','<=',to_date)]
-              result = mod_obj._get_id(cr, uid, 'account', 'view_account_analytic_line_filter')
-              id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
-              return {
-                    'name': _('Analytic Entries by line'),
-                    'view_type': 'form',
-                    "view_mode": 'tree,form',
-                    'res_model': 'account.analytic.line',
-                    'type': 'ir.actions.act_window',
-                    'domain': domain,
-                    'search_view_id': id['res_id'],
-                    }
+          data = self.read(cr, uid, ids, [])[0]
+          from_date = data['from_date']
+          to_date = data['to_date']
+          if from_date and to_date:
+                domain = [('date','>=',from_date), ('date','<=',to_date)]
+          elif from_date:
+                domain = [('date','>=',from_date)]
+          elif to_date:
+                domain = [('date','<=',to_date)]
+          result = mod_obj._get_id(cr, uid, 'account', 'view_account_analytic_line_filter')
+          id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
+          return {
+                'name': _('Analytic Entries by line'),
+                'view_type': 'form',
+                "view_mode": 'tree,form',
+                'res_model': 'account.analytic.line',
+                'type': 'ir.actions.act_window',
+                'domain': domain,
+                'search_view_id': id['res_id'],
+                }
 
 project_account_analytic_line()
 

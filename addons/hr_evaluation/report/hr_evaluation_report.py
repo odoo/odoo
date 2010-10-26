@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import tools
 from osv import fields,osv
 
@@ -28,9 +29,12 @@ class hr_evaluation_report(osv.osv):
     _rec_name = 'date'
     _columns = {
         'create_date': fields.date('Create Date', readonly=True),
+        'delay_date':fields.float('Delay to Start', digits=(16,2),readonly=True),
+        'overpass_delay':fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
+        'progress_bar' : fields.float("Progress"),
         'day': fields.char('Day', size=128, readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
-        'request_id': fields.many2one('survey.request','Request_id', readonly=True),
+        'request_id': fields.many2one('survey.request', 'Request_id', readonly=True),
         'closed': fields.date("closed", readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
@@ -72,12 +76,15 @@ class hr_evaluation_report(osv.osv):
                      to_char(s.create_date, 'YYYY') as year,
                      to_char(s.create_date, 'MM') as month,
                      count(l.*) as nbr,
-                     s.state
+                     s.state,
+                     s.progress as progress_bar,
+                     avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(3600*24) as  delay_date,
+                     avg(extract('epoch' from age(s.date,CURRENT_DATE)))/(3600*24) as overpass_delay
                      from
                  hr_evaluation_interview l
-                 left join
+                LEFT JOIN
                      hr_evaluation_evaluation s on (s.id=l.evaluation_id)
-                 group by
+                 GROUP BY
                      s.create_date,
                      date_trunc('day',s.create_date),
                      to_char(s.create_date, 'YYYY-MM-DD'),
@@ -89,8 +96,12 @@ class hr_evaluation_report(osv.osv):
                      s.date_close,
                      l.request_id,
                      s.rating,
+                     s.progress,
                      s.plan_id
             )
         """)
+
 hr_evaluation_report()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* mrp
+# 	* mrp
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-29 00:43+0000\n"
-"Last-Translator: digitalsatori <Unknown>\n"
+"PO-Revision-Date: 2010-08-03 08:29+0000\n"
+"Last-Translator: sagas <sagas@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 03:58+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -32,7 +32,7 @@ msgid ""
 "Triggers an automatic procurement for all products that have a virtual stock "
 "under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
-msgstr "触发所有虚拟库存为小于0产品自动的产品需求.你或者不应该使用这个选项.建议你使用产品按单生产的设置"
+msgstr "对所有虚拟库存为小于0产品自动备货.你或许不应该使用这个选项.建议你使用产品按单生产(MTO)的设置"
 
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
@@ -42,7 +42,7 @@ msgstr "MRP(产品需求计划)"
 #. module: mrp
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+msgstr "在动作定义中使用了无效的模快名。"
 
 #. module: mrp
 #: field:mrp.bom.revision,indice:0
@@ -53,13 +53,13 @@ msgstr "版本"
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
 msgid "Compute Stock Minimum Rules Only"
-msgstr "仅计算最少库存规则"
+msgstr "仅运算最少库存规则"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action5
 msgid "Exceptions Procurements"
-msgstr "异常需求单"
+msgstr "异常备货单"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -561,7 +561,7 @@ msgid "Time in hours for doing one cycle."
 msgstr "一个周期的工作小时数"
 
 #. module: mrp
-#: field:mrp.production,date_finnished:0
+#: field:mrp.production,date_finished:0
 msgid "End Date"
 msgstr "结束日期"
 
@@ -1943,6 +1943,59 @@ msgstr "序列"
 msgid "Bill of Materials Components"
 msgstr "物料清单组成"
 
+#. module: mrp
+#: field:report.mrp.inout,date:0 field:report.workcenter.load,name:0
+msgid "Week"
+msgstr "周"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.next_id_77
+msgid "Reporting"
+msgstr "内部报表"
+
+#. module: mrp
+#: view:report.workcenter.load:0
+msgid "Workcenters load"
+msgstr "工作中心负荷"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_workcenter_load
+msgid "Workcenter Load"
+msgstr "工作中心负荷"
+
+#. module: mrp
+#: model:ir.module.module,shortdesc:report_mrp.module_meta_information
+msgid "MRP Management - Reporting"
+msgstr "MRP管理 - 报表"
+
+#. module: mrp
+#: field:report.mrp.inout,value:0
+msgid "Stock value"
+msgstr "库存值"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
+#: model:ir.ui.menu,name:mrp.menu_report_workcenter_load
+msgid "Workcenter Loads"
+msgstr "工作中心负荷"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
+#: model:ir.ui.menu,name:mrp.menu_report_in_out_picking
+msgid "Weekly Stock Value Variation"
+msgstr "每周库存值变动"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_inout
+#: view:report.mrp.inout:0
+msgid "Stock value variation"
+msgstr "库存值变化"
+
+#. module: mrp
+#: view:board.board:0
+msgid "Next production orders"
+msgstr ""
+
 #~ msgid ""
 #~ "\n"
 #~ "    This is the base module to manage the manufacturing process in Open "
@@ -2000,3 +2053,8 @@ msgstr "物料清单组成"
 #~ "    *打印生产单\n"
 #~ "    *库存预测\n"
 #~ "    "
+
+#~ msgid ""
+#~ "A module that adds new reports based on MRP cases.\n"
+#~ "    Workcenter loads, Weekly Stock value variation"
+#~ msgstr "这模块增加新的报表基于MRP业务个案,工作中心负荷,每周的库存变化"

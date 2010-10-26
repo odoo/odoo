@@ -1,310 +1,60 @@
 -
-  In order to test the sale module in the Open-ERP, I need to configure details regarding product & customer.
+  In order to test the 'Make Invoices' wizard of sale module in the Open-ERP, 
+  I create two Sale order,group them and create invoice.
 -
-  I am going to sell my Mobile products to the customer with name Cleartrail
-- 
-  I create View Account Type.
-- 
-  !record {model: account.account.type, id: account_account_type_view0}:
-    close_method: none
-    code: View
-    name: View
-    sign: 1
-- 
-  I create Income Account Type.
-- 
-  !record {model: account.account.type, id: account_account_type_income0}:
-    close_method: unreconciled
-    code: Income
-    name: Income
-    sign: 1
-- 
-  I create Expense Account Type.
-- 
-  !record {model: account.account.type, id: account_account_type_expense0}:
-    close_method: unreconciled
-    code: Expense
-    name: Expense
-    sign: 1
-- 
-  I create Cash Account Type.
-- 
-  !record {model: account.account.type, id: account_account_type_cash0}:
-    close_method: balance
-    code: Cash
-    name: Cash
-    sign: 1
-- 
-  I create Minimal Chart Account.
-- 
-  !record {model: account.account, id: account_account_minimalchart0}:
-    code: '0'
-    company_id: base.main_company
-    currency_mode: current
-    name: Minimal Chart
-    parent_left: 1
-    parent_right: 12
-    type: view
-    user_type: account_account_type_view0
-- 
-  I create Payable Account.
-- 
-  !record {model: account.account, id: account_account_payable1}:
-    code: AP
-    company_id: base.main_company
-    currency_mode: current
-    name: Payable
-    parent_id: account_account_minimalchart0
-    parent_left: 2
-    parent_right: 3
-    reconcile: true
-    type: payable
-    user_type: account_account_type_expense0
-- 
-  I create Receivable Account.
-- 
-  !record {model: account.account, id: account_account_receivable0}:
-    code: AR
-    company_id: base.main_company
-    currency_mode: current
-    name: Receivable
-    parent_id: account_account_minimalchart0
-    parent_left: 4
-    parent_right: 5
-    reconcile: true
-    type: receivable
-    user_type: account_account_type_income0
-- 
-  I create Cash Account.
-- 
-  !record {model: account.account, id: account_account_cash0}:
-    code: C
-    company_id: base.main_company
-    currency_mode: current
-    name: Cash
-    parent_id: account_account_minimalchart0
-    parent_left: 6
-    parent_right: 7
-    type: other
-    user_type: account_account_type_cash0
-- 
-  I create Purchases Account.
-- 
-  !record {model: account.account, id: account_account_purchases0}:
-    code: P
-    company_id: base.main_company
-    currency_mode: current
-    name: Purchases
-    parent_id: account_account_minimalchart0
-    parent_left: 8
-    parent_right: 9
-    type: other
-    user_type: account_account_type_expense0
-- 
-  I create Sales Account.
-- 
-  !record {model: account.account, id: account_account_sales0}:
-    code: S
-    company_id: base.main_company
-    currency_mode: current
-    name: Sales
-    parent_id: account_account_minimalchart0
-    parent_left: 10
-    parent_right: 11
-    type: other
-    user_type: account_account_type_income0
-- 
-  I create Purchase Journal.
-- 
-  !record {model: account.journal, id: account_journal_purchasejournal0}:
-    code: PUJ
-    company_id: base.main_company
-    default_credit_account_id: account_account_purchases0
-    default_debit_account_id: account_account_purchases0
-    name: Purchase Journal
-    sequence_id: account.sequence_purchase_journal
-    type: purchase
-    view_id: account.account_journal_view
-- 
-  I create Sale Journal.
-- 
-  !record {model: account.journal, id: account_journal_salejournal0}:
-    code: SAJ
-    company_id: base.main_company
-    default_credit_account_id: account_account_sales0
-    default_debit_account_id: account_account_sales0
-    name: Sale Journal
-    sequence_id: account.sequence_sale_journal
-    type: sale
-    view_id: account.account_journal_view
-- 
-  I create Bank Journal.
-- 
-  !record {model: account.journal, id: account_journal_bankjournal0}:
-    code: BNK
-    company_id: base.main_company
-    default_credit_account_id: account_account_cash0
-    default_debit_account_id: account_account_cash0
-    name: Bank Journal
-    sequence_id: account.sequence_journal
-    type: cash
-    view_id: account.account_journal_bank_view
-- 
-  I create ir.property for account payable.
-- 
-  !record {model: ir.property, id: ir_property_propertyaccountexpensecateg0}:
-    company_id: base.main_company
-    fields_id: account.field_res_partner_property_account_payable
-    name: property_account_expense_categ
-    value_reference: account.account,5
-- 
-  I create ir.property for account receivable.
-- 
-  !record {model: ir.property, id: ir_property_propertyaccountincomecateg0}:
-    company_id: base.main_company
-    fields_id: account.field_res_partner_property_account_receivable
-    name: property_account_income_categ
-    value_reference: account.account,6
-- 
-  I create Partner category Customers.
-- 
-  !record {model: res.partner.category, id: res_partner_category_customers0}:
-    name: Customers
+  I create a Sale Order for Slider Mobile for qty 100 having order_policy manual.
 -
-  I create Cleartrail Customer.
-- 
-  !record {model: res.partner, id: res_partner_cleartrail0}:
-    category_id:
-      - res_partner_category_customers0
-    name: Cleartrail
-- 
-  I create contact address for Cleartrail.
-- 
-  !record {model: res.partner.address, id: res_partner_address_1}:
-    partner_id: res_partner_cleartrail0
-    street: onam plaza, 14 B palasia A B Road
-    type: contact
-- 
-  I create invoice address for Cleartrail.
-- 
-  !record {model: res.partner.address, id: res_partner_address_2}:
-    partner_id: res_partner_cleartrail0
-    street: sarda house 24 B palasia, A B Road
-    type: invoice
-- 
-  I create delivery address for Cleartrail.
-- 
-  !record {model: res.partner.address, id: res_partner_address_3}:
-    partner_id: res_partner_cleartrail0
-    street: sangam house 15 B palasia, A B Road
-    type: delivery
+  !record {model: sale.order, id: sale_order_so3}:
+    date_order: '2010-08-02'
+    invoice_quantity: order
+    name: Test_SO003
+    order_line:
+      - name: Slider Mobile
+        price_unit: 200.0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 100.0
+        state: draft
+        delay: 7.0
+        product_id: sale.product_product_slidermobile0
+        product_uos_qty: 100.0
+        type: make_to_order
+    order_policy: manual
+    partner_id: sale.res_partner_cleartrail0
+    partner_invoice_id: sale.res_partner_address_2
+    partner_order_id: sale.res_partner_address_1
+    partner_shipping_id: sale.res_partner_address_3
+    picking_policy: direct
+    pricelist_id: product.list0
+    shop_id: sale.shop
 -
-  Customer Cleartrail has specific instrument requirement regarding the stockable products.
+  I confirm the Sale Order.
 - 
-  I define product category Mobile Products Sellable.
-- 
-  !record {model: product.category, id: product_category_allproductssellable0}:
-    name: Mobile Products Sellable
-- 
-  I define product category Mobile Services. 
-- 
-  !record {model: product.category, id: product_category_services0}:
-    name: Mobile Services
-- 
-  I define LG Viewty Smart product template.
-- 
-  !record {model: product.template, id: product_template_lgviewtysmart0}:
-    categ_id: product_category_allproductssellable0
-    cost_method: standard
-    list_price: 170.0
-    mes_type: fixed
-    name: LG Viewty Smart
-    procure_method: make_to_order
-    standard_price: 160.0
-    supply_method: produce
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
--    
-  I define LG Viewty Smart product.
-- 
-  !record {model: product.product, id: product_product_lgviewtysmart0}:
-    categ_id: product_category_allproductssellable0
-    cost_method: standard
-    list_price: 170.0
-    mes_type: fixed
-    name: LG Viewty Smart
-    pricelist_purchase: 'Default Purchase Pricelist (0.00) : 160.00\n'
-    pricelist_sale: 'Public Pricelist (0.00) : 170.00\n'
-    procure_method: make_to_order
-    property_account_expense: sale.account_account_payable1
-    property_account_income: sale.account_account_receivable0
-    seller_delay: '1'
-    standard_price: 160.0
-    supply_method: produce
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so3}
 -
-  I define New Chocolate Slider Mobile template.
-- 
-  !record {model: product.template, id: product_template_newchocolateslidermobile0}:
-    categ_id: product_category_allproductssellable0
-    cost_method: standard
-    list_price: 200.0
-    mes_type: fixed
-    name: New Chocolate Slider Mobile
-    procure_method: make_to_order
-    standard_price: 189.0
-    supply_method: buy
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
-- 
-  I define New Chocolate Slider Mobile.
-- 
-  !record {model: product.product, id: product_product_newchocolateslidermobile0}:
-    categ_id: product_category_allproductssellable0
-    cost_method: standard
-    list_price: 200.0
-    mes_type: fixed
-    name: New Chocolate Slider Mobile
-    pricelist_purchase: 'Default Purchase Pricelist (0.00) : 189.00\n'
-    pricelist_sale: 'Public Pricelist (0.00) : 200.00\n'
-    procure_method: make_to_order
-    property_account_expense: sale.account_account_payable1
-    property_account_income: sale.account_account_receivable0
-    seller_delay: '1'
-    standard_price: 189.0
-    supply_method: buy
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
-- 
-  I create a Sale Order for LG Viewty Smart for qty 500 having order_policy manual.
+  I create a Sale Order for products Slider Mobile and LG Viewty Smart for qty 100 having order_policy manual.
 -
   !record {model: sale.order, id: sale_order_so4}:
-    date_order: '2010-05-12'
+    date_order: '2010-08-02'
     invoice_quantity: order
     name: Test_SO004
     order_line:
-      - name: New Chocolate Slider Mobile
+      - name: Slider Mobile
         price_unit: 200.0
         product_uom: product.product_uom_unit
-        product_uom_qty: 500.0
+        product_uom_qty: 100.0
         state: draft
         delay: 7.0
-        product_id: sale.product_product_newchocolateslidermobile0
-        product_uos_qty: 500.0
+        product_id: sale.product_product_slidermobile0
+        product_uos_qty: 100.0
         type: make_to_order
       - name: LG Viewty Smart
         price_unit: 170.0
         product_uom: product.product_uom_unit
-        product_uom_qty: 500.0
+        product_uom_qty: 100.0
         state: draft
         delay: 7.0
         product_id: sale.product_product_lgviewtysmart0
-        product_uos_qty: 500.0
+        product_uos_qty: 100.0
         th_weight: 0.0
         type: make_to_order      
     order_policy: manual
@@ -320,22 +70,138 @@
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so4}
 -
-  I create an invoice on sale order.
-- 
-  !record {model: sale.make.invoice, id: sale_make_invoice_1}:
-    {}
-- 
-  Invoice is created for specific sale order.
-- 
-  !python {model: sale.make.invoice}: |
-    self.make_invoices(cr, uid, [ref("sale_make_invoice_1")], {"lang": 'en_US', "search_default_user_id":
-      1, "tz": False, "active_model": 'sale.order', "active_ids": [ref("sale_order_so4")], "active_id":
-      ref("sale_order_so4"), })
+  Then I cancel the sale order line
 -
-  I verify that invoice regarding sale order has been created.
+  I click on the "Cancel" button of sale order line and verify that it gives a warning message.
 -
+  !python {model: sale.order.line}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
+    sol = so.order_line[1] 
+    try:
+        self.button_cancel(cr, uid, [sol.id], {"lang": "en_US", "tz": False, "active_model":
+          "ir.ui.menu", "active_ids": [ref("sale.menu_invoicing_sales_order_lines")],
+          "search_default_uninvoiced": 1, "active_id": ref("sale.menu_invoicing_sales_order_lines"),
+          })  
+    except:
+        pass
+-   
+  I verify that picking has been generated for the sale order.
+- 
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so4"))
-    assert so.invoice_ids, "Invoices has not been generated for sale_order_so0"
-
-    
+    assert so.picking_ids,"Picking has not been generated for sale_order_so4"
+-
+  Then I cancel its related stock move from Outgoing Products
+-
+  !python {model: stock.move}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
+    pick_obj = self.pool.get('stock.picking')
+    pick_id = pick_obj.search(cr, uid, [('origin', '=', so.name),('type','=','out')])
+    pick_brw = pick_obj.browse(cr,uid,pick_id)[0]
+    move_obj = self.pool.get('stock.move')
+    move_id = move_obj.search(cr, uid, [('picking_id', '=', pick_brw.name),('name','=','LG Viewty Smart')])
+    self.action_cancel(cr,uid,move_id)
+-    
+  Then I cancel its related stock move from Delivery Order
+- 
+  !python {model: stock.move}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
+    pick_obj = self.pool.get('stock.picking')
+    pick_id = pick_obj.search(cr, uid, [('origin', '=', so.name)])
+    pick_brw = pick_obj.browse(cr,uid,pick_id)[0]
+    move_obj = self.pool.get('stock.move')
+    move_id = move_obj.search(cr, uid, [('picking_id', '=', pick_brw.name),('name','=','LG Viewty Smart')])
+    self.action_cancel(cr,uid,move_id)
+-
+  Then I cancel the sale order line for LG Viewty Smart
+-
+  !python {model: sale.order.line}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
+    sol = so.order_line[1] 
+    self.button_cancel(cr, uid, [sol.id], {"lang": "en_US", "tz": False, "active_model":
+      "ir.ui.menu", "active_ids": [ref("sale.menu_invoicing_sales_order_lines")],
+      "search_default_uninvoiced": 1, "active_id": ref("sale.menu_invoicing_sales_order_lines"),
+      })
+-
+  I verify that the state of sale order line is cancel  
+-
+  !python {model: sale.order.line}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
+    chk = self.search(cr, uid, [('order_id', '=', so.name),('state','=','cancel')])
+    assert chk,"Sale order line has not been cancelled"
+-
+  Then I click on the "Make Invoices" button
+-
+  !record {model: sale.make.invoice, id: sale_make_invoice_1}:
+    grouped: 1
+    invoice_date: '2010-08-02'
+-
+  Then I click on the "Create Invoices" button of wizard
+-
+  !python {model: sale.make.invoice}: |
+    self.make_invoices(cr, uid, [ref("sale_make_invoice_1")], {"lang": 'en_US', "search_default_user_id":
+      1, "tz": False, "active_model": 'sale.order', "active_ids": [ref("sale_order_so4"),ref("sale_order_so3")], "active_id":
+      ref("sale_order_so4")})
+-
+  I verify that an invoice has been created
+-
+  !python {model: account.invoice}: |
+    inv = self.search(cr, uid, [('origin','=','Test_SO004|Test_SO003|')])
+    assert inv, "Invoices has not been generated"
+-
+  I verify that an account invoice line with origin 'Test_SO004' is created 
+- 
+  !python {model: account.invoice.line}: |
+    sale_order_obj = self.pool.get('sale.order')
+    acc_inv_obj = self.pool.get('account.invoice')
+    inv = acc_inv_obj.search(cr, uid, [('origin','=','Test_SO004|Test_SO003|')])
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
+    inv_line = self.search(cr, uid, [('origin','=',so.name),('name','=','Slider Mobile'),('invoice_id','=',inv)])
+    assert inv_line, "Account invoice line has not been created"
+-
+  I verify that an account invoice line with origin 'Test_SO003' is created 
+-
+  !python {model: account.invoice.line}: |
+    sale_order_obj = self.pool.get('sale.order')
+    acc_inv_obj = self.pool.get('account.invoice')
+    inv = acc_inv_obj.search(cr, uid, [('origin','=','Test_SO004|Test_SO003|')])
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    inv_line = self.search(cr, uid, [('origin','=',so.name),('name','=','Slider Mobile'),('invoice_id','=',inv)])
+    assert inv_line, "Account invoice line has not been created"
+-
+  I open the Invoice for the SO.
+-
+  !python {model: account.invoice}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    inv = self.search(cr, uid, [('origin','=','Test_SO004|Test_SO003|')])
+    for id in inv:
+        wf_service.trg_validate(uid, 'account.invoice',id,'invoice_open', cr)
+-
+  I assign an analytic journal to the bank journal
+- 
+  !record {model: account.journal, id: sale.account_journal_bankjournal0}:
+    analytic_journal_id: account.cose_journal_sale
+-
+  I pay the invoice
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
+    self.pay_and_reconcile(cr, uid, invoice_id,
+        40000.0, ref('account.cash'), ref('account.period_5'),
+        ref('sale.account_journal_bankjournal0'), ref('account.cash'),
+        ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
+        name='tst')
+-
+  I verify the invoice is in Paid state 
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.search(cr, uid, [('origin','=','Test_SO004|Test_SO003|'),('state','=','paid')])
+    assert invoice_id, "Invoice for SO is not in done state."

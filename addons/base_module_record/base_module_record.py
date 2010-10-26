@@ -22,12 +22,10 @@
 from xml.dom import minidom
 from osv.osv import osv_pool
 from osv import fields,osv
-import netsvc
 import pooler
 import string
 import tools
 
-#objects_proxy = netsvc.ExportService.getService('object').__class__
 class recording_objects_proxy(osv_pool):
     def execute(self, *args, **argv):
         if args[3] == 'create':
@@ -43,7 +41,7 @@ class recording_objects_proxy(osv_pool):
         res = super(recording_objects_proxy, self).execute(*args, **argv)
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
-        
+
         if mod and mod.recording:
             if args[3] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink'):
                 if _old_args is not None:
@@ -69,7 +67,7 @@ class recording_objects_proxy(osv_pool):
         return res
 
 recording_objects_proxy()
-      
+
 class xElement(minidom.Element):
     """dom.Element with compact print
     The Element in minidom has a problem: if printed, adds whitespace
@@ -88,48 +86,9 @@ def doc_createXElement(xdoc, tagName):
         return e
 
 import yaml
-            
-class record(yaml.YAMLObject):
-    yaml_tag = u'!record'
-    def __init__(self, model, id=None, attrs={}):
-        self.model = model
-        self.id = id
-        self.attrs=attrs
-    def __repr__(self):
-        return '!record {model: %s, id: %s}:' % (str(self.model,), str(self.id,))
+from tools import yaml_tag # This import is not unused! Do not remove!
+# Please do not override yaml_tag here: modify it in server bin/tools/yaml_tag.py
 
-class workflow(yaml.YAMLObject):
-    yaml_tag = u'!workflow'
-    def __init__(self, model, action, ref=None):
-        self.model = model
-        self.ref = ref
-        self.action=action
-    def __repr__(self):
-        return '!workflow {model: %s, action: %s, ref: %s}' % (str(self.model,), str(self.action,), str(self.ref,))
-        
-class ref(yaml.YAMLObject):
-    yaml_tag = u'!ref'
-    def __init__(self, expr="False"):
-        self.expr = expr
-    def __repr__(self):
-        return 'ref(%s)' % (str(self.expr,))
-
-class eval(yaml.YAMLObject):
-    yaml_tag = u'!eval'
-    def __init__(self, expr="False"):
-        self.expr = expr
-    def __repr__(self):
-        return 'eval(%s)' % (str(self.expr,))
-
-class function(yaml.YAMLObject):
-    yaml_tag = u'!python'
-    def __init__(self, model, action=None,attrs={}):
-        self.model = model
-        self.action = action
-        self.attrs=attrs
-    def __repr__(self):
-        return '!python {model: %s}: |' % (str(self.model), )
-    
 class base_module_record(osv.osv):
     _name = "ir.module.record"
     _columns = {
@@ -219,9 +178,9 @@ class base_module_record(osv.osv):
                 for valitem in (val or []):
                     if valitem[0] in (0,1):
                         if key in model_pool._columns:
-                            fname = model_pool._columns[key]._fields_id
+                            model_pool._columns[key]._fields_id
                         else:
-                            fname = model_pool._inherit_fields[key][2]._fields_id
+                            model_pool._inherit_fields[key][2]._fields_id
                         if valitem[0] == 0:
                             newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
                             valitem[1]=newid
@@ -541,29 +500,28 @@ class base_module_record(osv.osv):
                 else:
                     continue
                 if self.mode == "workflow":
-                    record= self._generate_object_yaml(cr, uid, rec[1],rec[0])
-                    yaml_file+="!comment Performing a workflow action %s on module %s"%(record['action'], record['model']) + '''\n'''
-                    object=yaml.load(unicode('''\n !workflow %s \n'''%record,'iso-8859-1'))
-                    attrs=attrs.replace("''", '"')
+                    record = self._generate_object_yaml(cr, uid, rec[1],rec[0])
+                    yaml_file += "!comment Performing a workflow action %s on module %s"%(record['action'], record['model']) + '''\n'''
+                    object = yaml.load(unicode('''\n !workflow %s \n'''%record,'iso-8859-1'))
                     yaml_file += str(object) + '''\n\n'''
                 elif self.mode == 'osv_memory_action':
-                    osv_action= self._generate_function_yaml(cr, uid, rec[1])
-                    yaml_file+="!comment Performing an osv_memory action %s on module %s"%(osv_action['action'], osv_action['model']) + '''\n'''
-                    osv_action=yaml.load(unicode('''\n !python %s \n'''%osv_action,'iso-8859-1'))
+                    osv_action = self._generate_function_yaml(cr, uid, rec[1])
+                    yaml_file += "!comment Performing an osv_memory action %s on module %s"%(osv_action['action'], osv_action['model']) + '''\n'''
+                    osv_action = yaml.load(unicode('''\n !python %s \n'''%osv_action,'iso-8859-1'))
                     yaml_file += str(osv_action) + '''\n'''
-                    attrs=yaml.dump(osv_action.attrs, default_flow_style=False)
-                    attrs=attrs.replace("''", '"')
-                    attrs=attrs.replace("'", '')
+                    attrs = yaml.dump(osv_action.attrs, default_flow_style=False)
+                    attrs = attrs.replace("''", '"')
+                    attrs = attrs.replace("'", '')
                     yaml_file += attrs + '''\n\n'''
                 else:
-                    record= self._generate_object_yaml(cr, uid, rec[1], rec[3])
+                    record = self._generate_object_yaml(cr, uid, rec[1], rec[3])
                     if self.mode == "create" or self.mode == "copy":
-                        yaml_file+="!comment Creating a %s record"%(record['model']) + '''\n'''
+                        yaml_file += "!comment Creating a %s record"%(record['model']) + '''\n'''
                     else:
-                        yaml_file+="!comment Modifying a %s record"%(record['model']) + '''\n'''
-                    object= yaml.load(unicode('''\n !record %s \n'''%record,'iso-8859-1'))
+                        yaml_file += "!comment Modifying a %s record"%(record['model']) + '''\n'''
+                    object = yaml.load(unicode('''\n !record %s \n'''%record,'iso-8859-1'))
                     yaml_file += str(object) + '''\n'''
-                    attrs=yaml.dump(object.attrs, default_flow_style=False)
+                    attrs = yaml.dump(object.attrs, default_flow_style=False)
                     yaml_file += attrs + '''\n\n'''
                     
         yaml_result=''''''

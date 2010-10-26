@@ -35,13 +35,17 @@ def get_journal(self, cr, uid, context):
     """
 
     obj = self.pool.get('account.journal')
-    user = self.pool.get('res.users').browse(cr, uid, uid)
-    ids = obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', user.company_id.id)])
-    res = obj.read(cr, uid, ids, ['id', 'name'], context)
-    res = [(r['id'], r['name']) for r in res]
+    statement_obj = self.pool.get('account.bank.statement')
+    cr.execute("SELECT DISTINCT journal_id from pos_journal_users where user_id=%s order by journal_id", (uid,))
+    j_ids = map(lambda x1: x1[0], cr.fetchall())
+    ids = obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)])
+    obj_ids= statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', ids)])
+    res_obj = obj.read(cr, uid, ids, ['journal_id'], context)
+    res_obj = [(r1['id'])for r1 in res_obj]
+    res = statement_obj.read(cr, uid, obj_ids, ['journal_id'], context)
+    res = [(r['journal_id']) for r in res]
     res.insert(0, ('', ''))
     return res
-
 
 class pos_box_entries(osv.osv_memory):
     _name = 'pos.box.entries'
@@ -62,23 +66,23 @@ class pos_box_entries(osv.osv_memory):
         obj = self.pool.get('product.product')
         ids = obj.search(cr, uid, [('income_pdt', '=', True)])
         res = obj.read(cr, uid, ids, ['id', 'name'], context)
-        res = [(r['id'], r['name']) for r in res]
+        res = [(r['id'],r['name']) for r in res]
         res.insert(0, ('', ''))
 
         return res
 
 
     _columns = {
-                'name': fields.char('Name', size=32, required=True),
-                'journal_id': fields.selection(get_journal, "Journal", required=True),
-                'product_id': fields.selection(_get_income_product, "Operation", required=True),
-                'amount': fields.float('Amount', digits=(16, 2)),
-                'ref': fields.char('Ref', size=32),
+        'name': fields.char('Description', size=32, required=True),
+        'journal_id': fields.selection(get_journal, "Register", required=True),
+        'product_id': fields.selection(_get_income_product, "Operation", required=True),
+        'amount': fields.float('Amount', digits=(16, 2)),
+        'ref': fields.char('Ref', size=32),
     }
     _defaults = {
-                 'journal_id': lambda *a: 1,
-                 'product_id': lambda *a: 1,
-                }
+         'journal_id': lambda *a: 1,
+         'product_id': lambda *a: 1,
+    }
 
     def get_in(self, cr, uid, ids, context):
         """
@@ -103,15 +107,16 @@ class pos_box_entries(osv.osv_memory):
 
             acc_id = product_obj.browse(cr, uid, data['product_id']).property_account_income
             if not acc_id:
-                raise osv.except_osv(_('Error !'), _('please check that account is set to %s')%(product_obj.browse(cr, uid, data['product_id']).name))
+                raise osv.except_osv(_('Error !'), _('Please check that income account is set to %s')%(product_obj.browse(cr, uid, data['product_id']).name))
             if statement_id:
                 statement_id = statement_id[0]
             if not statement_id:
-                statement_id = statement_obj.create(cr, uid, {'date': time.strftime('%Y-%m-%d 00:00:00'),
-                                                            'journal_id': data['journal_id'],
-                                                            'company_id': curr_company,
-                                                            'user_id': uid,
-                                                           })
+                statement_id = statement_obj.create(cr, uid, {
+                                    'date': time.strftime('%Y-%m-%d 00:00:00'),
+                                    'journal_id': data['journal_id'],
+                                    'company_id': curr_company,
+                                    'user_id': uid,
+                                })
 
             args['statement_id'] = statement_id
             args['journal_id'] = data['journal_id']
@@ -124,7 +129,7 @@ class pos_box_entries(osv.osv_memory):
             if address_u:
                 partner_id = address_u.partner_id and address_u.partner_id.id or None
                 args['partner_id'] = partner_id
-            statement_line_id = bank_statement.create(cr, uid, args)
+            bank_statement.create(cr, uid, args)
 
             return {}
 

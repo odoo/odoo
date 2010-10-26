@@ -4,8 +4,9 @@
 
     <menuitem
         id="menu_process"
-        name="Enterprise Processes"
-        parent="base.menu_custom"/>
+        name="Enterprise Process"
+        parent="base.menu_custom"
+        groups="base.group_extended"/>
 
     <!-- Views for Process -->
     <record model="ir.ui.view" id="view_process_form">
@@ -14,10 +15,10 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process">
-                <group colspan="4" string="Details">
-                    <field name="name" select="1"/>
+                <group colspan="4" col="6">
+                    <field name="name"/>
+                    <field name="model_id"/>
                     <field name="active"/>
-                    <field name="model_id" select="1"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Nodes">
@@ -29,84 +30,58 @@
                                 <field name="flow_start"/>
                             </tree>
                             <form string="Process Node">
-                                <group colspan="4" string="Details">
-                                    <field name="name" select="1"/>
+                                <group colspan="4" col="4">
+                                    <field name="name"/>
                                     <field name="flow_start"/>
-                                    <field name="process_id" readonly="1" required="0"/> <!-- used by transition_out -->
-                                    <newline/>
-                                    <field name="model_id" select="1"/>
-                                    <field name="menu_id"/>
-                                    <newline/>
                                     <field name="kind" select="1"/>
-                                    <field name="help_url" widget="url"/>
-                                    <field name="model_states"/>
-                                    <field name="subflow_id" domain="[('name', '!=', parent.name)]" attrs="{'readonly':[('kind','=','state')]}"/>
+                                    <field name="subflow_id" attrs="{'invisible':[('kind','!=','subflow')]}"/>
+
                                 </group>
                                 <notebook colspan="4">
-                                    <page string="Outgoing Transitions">
-                                        <field name="transition_out" colspan="4" nolabel="1">
-                                            <tree string="Transitions">
-                                                <field name="name"/>
-                                                <field name="target_node_id"/>
-                                            </tree>
-                                            <form string="Transition">
-                                                <group colspan="4" string="Details">
-                                                    <field name="name"/>
-                                                    <newline/>
-                                                    <field name="target_node_id" domain="[('process_id', '=', parent.process_id)]"/>
-                                                </group>
-                                                <notebook colspan="4">
-                                                    <page string="Buttons">
-                                                        <field name="action_ids" colspan="4" nolabel="1">
-                                                            <tree string="Actions">
-                                                                <field name="name"/>
-                                                                <field name="state"/>
-                                                                <field name="action"/>
-                                                            </tree>
-                                                            <form string="Actions">
-                                                                <field name="name" colspan="4"/>
-                                                                <newline/>
-                                                                <field name="state"/>
-                                                                <field name="action"/>
-                                                            </form>
-                                                        </field>
-                                                    </page>
-                                                    <page string="Roles Required">
-                                                        <field name="role_ids" colspan="4" nolabel="1"/>
-                                                    </page>
-                                                    <page string="Roles from Workflow">
-                                                        <field name="transition_ids" colspan="4" nolabel="1"/>
-                                                    </page>
-                                                    <page string="Extra Information">
-                                                        <field name="note" colspan="4" nolabel="1"/>
-                                                    </page>
-                                                </notebook>
-                                            </form>
-                                        </field>
-                                    </page>
-                                    <page string="Conditions">
-                                        <field name="condition_ids" nolabel="1" colspan="4">
-                                            <tree string="Conditions">
-                                                <field name="name"/>
-                                                <field name="model_id"/>
-                                                <field name="model_states"/>
-                                            </tree>
-                                            <form string="Condition">
-                                                <field name="name"/>
-                                                <field name="model_id"/>
-                                                <newline/>
-                                                <field name="model_states" colspan="4"/>
-                                            </form>
-                                        </field>
-                                    </page>
-                                    <page string="Extra Information">
-                                        <field name="note" nolabel="1" colspan="4"/>
-                                    </page>
-                                </notebook>
+	                                <page string="Properties">
+		                                <group colspan="4" col="6">
+		                                    <field name="model_id" select="1"/>
+		                                    <field name="menu_id"/>
+		                                    <field name="help_url" widget="url"/>
+		                                </group>
+		                                <separator string="Conditions" colspan="4"/>
+		                                <field name="model_states"/>
+		                                <field name="condition_ids" nolabel="1" colspan="4">
+			                                <tree string="Other Conditions" editable="top">
+			                                    <field name="name"/>
+			                                    <field name="model_id"/>
+			                                    <field name="model_states"/>
+			                                </tree>
+		                                </field>
+		                            </page>
+                	                <page string="Transitions">
+		                                <group colspan="4" col="4">
+		                                    <group colspan="2" col="2">
+		                                        <field name="transition_in" nolabel="1" height="400">
+		                                            <tree string="Incoming Transitions">
+		                                                <field name="name"/>
+		                                                <field name="source_node_id"/>
+		                                            </tree>
+		                                        </field>
+		                                   </group>
+		                                   <group colspan="2" col="2">
+                		                        <field name="transition_out" nolabel="1" height="400">
+		                                            <tree string="Outgoing Transitions">
+		                                                <field name="name"/>
+		                                                <field name="target_node_id"/>
+		                                            </tree>
+		                                        </field>
+		                                   </group>
+		                                </group>
+		                            </page>
+                	                <page string="Notes">
+	                                   <field name="note" nolabel="1" colspan="4"/>
+	                                </page>
+	                            </notebook>
                             </form>
                         </field>
                     </page>
-                    <page string="Extra Information">
+                    <page string="Notes">
                         <field name="note" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
@@ -127,11 +102,30 @@
         </field>
     </record>
 
+    <record id="view_process_filter" model="ir.ui.view">
+            <field name="name">process.process.filter</field>
+            <field name="model">process.process</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Process">
+                    <group col="10" colspan="4">
+                        <field name="name"/>
+                        <field name="model_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="4">
+                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
     <record model="ir.actions.act_window" id="action_process_form">
-        <field name="name">Process</field>
+        <field name="name">Processes</field>
         <field name="res_model">process.process</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_process_filter" />
     </record>
     <menuitem
         id="menu_process_form"
@@ -160,81 +154,76 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Node">
-                <group colspan="4" string="Details">
-                    <field name="name" select="1"/>
-                    <field name="flow_start"/>
+                <group colspan="4" col="6">
+                    <field name="name"/>
                     <field name="process_id"/>
-                    <newline/>
-                    <field name="model_id" select="1"/>
-                    <field name="menu_id"/>
-                    <newline/>
+                    <field name="flow_start"/>
                     <field name="kind" select="1"/>
-                    <field name="help_url" widget="url"/>
-                    <field name="model_states"/>
-                    <field name="subflow_id" attrs="{'readonly':[('kind','=','state')]}"/>
+                    <field name="subflow_id" attrs="{'invisible':[('kind','!=','subflow')]}"/>
+
                 </group>
                 <notebook colspan="4">
-                    <page string="Outgoing Transitions">
-                        <field name="transition_out" colspan="4" nolabel="1">
-                            <tree string="Transitions">
-                                <field name="name"/>
-                                <field name="target_node_id"/>
-                            </tree>
-                            <form string="Transition">
-                                <group colspan="4" string="Details">
-                                    <field name="name"/>
-                                    <newline/>
-                                    <field name="target_node_id" domain="[('process_id', '=', parent.process_id)]"/>
-                                </group>
-                                <notebook colspan="4">
-                                    <page string="Buttons">
-                                        <field name="action_ids" colspan="4" nolabel="1">
-                                            <tree string="Actions">
-                                                <field name="name"/>
-                                                <field name="state"/>
-                                                <field name="action"/>
-                                            </tree>
-                                            <form string="Actions">
-                                                <field name="name" colspan="4"/>
-                                                <newline/>
-                                                <field name="state"/>
-                                                <field name="action"/>
-                                            </form>
-                                        </field>
-                                    </page>
-                                    <page string="Roles Required">
-                                        <field name="role_ids" colspan="4" nolabel="1"/>
-                                    </page>
-                                    <page string="Roles from Workflow">
-                                        <field name="transition_ids" colspan="4" nolabel="1"/>
-                                    </page>
-                                    <page string="Extra Information">
-                                        <field name="note" colspan="4" nolabel="1"/>
-                                    </page>
-                                </notebook>
-                            </form>
-                        </field>
-                    </page>
-                    <page string="Conditions">
-                        <field name="condition_ids" nolabel="1" colspan="4">
-                            <tree string="Conditions">
-                                <field name="name"/>
-                                <field name="model_id"/>
-                                <field name="model_states"/>
-                            </tree>
-                            <form string="Condition">
-                                <field name="name"/>
-                                <field name="model_id"/>
-                                <newline/>
-                                <field name="model_states" colspan="4"/>
-                            </form>
-                        </field>
-                    </page>
-                    <page string="Extra Information">
-                        <field name="note" nolabel="1" colspan="4"/>
-                    </page>
-                </notebook>
+	                <page string="Properties">
+		                <group colspan="4" col="6">
+		                    <field name="model_id" select="1"/>
+		                    <field name="menu_id"/>
+		                    <field name="help_url" widget="url"/>
+		                </group>
+		                <separator string="Conditions" colspan="4"/>
+		                <field name="model_states"/>
+		                <field name="condition_ids" nolabel="1" colspan="4">
+			                <tree string="Other Conditions" editable="top">
+			                    <field name="name"/>
+			                    <field name="model_id"/>
+			                    <field name="model_states"/>
+			                </tree>
+		                </field>
+		            </page>
+	                <page string="Transitions">
+		                <group colspan="4" col="4">
+		                    <group colspan="2" col="2">
+		                        <field name="transition_in" nolabel="1" height="400">
+		                            <tree string="Incoming Transitions">
+		                                <field name="name"/>
+		                                <field name="source_node_id"/>
+		                            </tree>
+		                        </field>
+		                    </group>
+		                    <group colspan="2" col="2">
+		                        <field name="transition_out" nolabel="1" height="400">
+		                            <tree string="Outgoing Transitions">
+		                                <field name="name"/>
+		                                <field name="target_node_id"/>
+		                            </tree>
+		                        </field>
+		                    </group>
+		                </group>
+		            </page>
+	                <page string="Notes">
+	                   <field name="note" nolabel="1" colspan="4"/>
+	                </page>
+	            </notebook>
             </form>
+        </field>
+    </record>
+
+    <record id="view_process_node_filter" model="ir.ui.view">
+        <field name="name">process.node.filter</field>
+        <field name="model">process.node</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search ProcessNode">
+                <group col="10" colspan="4">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="kind" />
+                </group>
+                <newline/>
+                <group expand="0" string="Group By..." colspan="4" col="4">
+                    <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
+                    <filter string="Kind Of Node" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'kind'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -243,6 +232,7 @@
         <field name="res_model">process.node</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_process_node_filter" />
     </record>
 
     <menuitem
@@ -271,9 +261,8 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Transition">
-                <group string="Details">
+                <group col="6" colspan="4">
                     <field name="name" select="1"/>
-                    <newline/>
                     <field name="source_node_id" select="1"/>
                     <field name="target_node_id" select="1"/>
                 </group>
@@ -293,11 +282,11 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Roles Required">
-                        <field name="role_ids" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Roles from Workflow">
+                    <page string="Workflow Transitions">
                         <field name="transition_ids" colspan="4" nolabel="1"/>
+                    </page>
+                    <page string="Associated Groups">
+                        <field name="group_ids" colspan="4" nolabel="1"/>
                     </page>
                     <page string="Notes">
                         <field name="note" nolabel="1" colspan="4"/>
@@ -307,11 +296,34 @@
         </field>
     </record>
 
+    <record id="view_process_transition_filter" model="ir.ui.view">
+        <field name="name">process.transition.filter</field>
+        <field name="model">process.transition</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Process Transition">
+                <group col="10" colspan="4">
+                    <field name="name"/>
+                    <field name="source_node_id"/>
+                    <field name="target_node_id" />
+                </group>
+<!--
+                <newline/>
+                <group expand="0" string="Group By..." colspan="4" col="4">
+                    <filter string="Source Node" icon="terp-personal" domain="[]" context="{'group_by':'source_node_id'}"/>
+                    <filter string="Target Node" icon="terp-personal" domain="[]" context="{'group_by':'target_node_id'}"/>
+                </group>
+-->
+            </search>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_process_transition_form">
         <field name="name">Process Transitions</field>
         <field name="res_model">process.transition</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_process_transition_filter" />
     </record>
     <menuitem
         id="menu_process_transition_form"

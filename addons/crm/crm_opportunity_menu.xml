@@ -1,36 +1,39 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">
+<data>
 
-	 <act_window
+     <act_window
             id="act_crm_opportunity_crm_phonecall_new"
             name="Phone calls"
+            groups="base.group_extended"
             res_model="crm.phonecall"
             src_model="crm.lead"
-            view_mode="calendar,tree,form"
+            view_mode="tree,calendar,form"
             context="{'default_duration': 1.0 ,'default_opportunity_id': active_id}"
-            domain="[('user_id','=',uid),('opportunity_id', '=', active_id)]"
+            domain="[('opportunity_id', '=', active_id)]"
             view_type="form"/>
 
-	<act_window
+    <act_window
             id="act_crm_opportunity_crm_meeting_new"
             name="Meetings"
             res_model="crm.meeting"
             src_model="crm.lead"
             view_mode="tree,form,calendar,"
             context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
-            domain="[('user_id','=',uid), ('opportunity_id', '=', active_id)]"
+            domain="[('opportunity_id', '=', active_id)]"
             view_type="form"/>
 
      <record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
           <field name="name">Opportunities</field>
           <field name="res_model">crm.lead</field>
-          <field name="view_mode">tree,form,graph</field>
-          <field name="domain">['|',('type','=','opportunity'),('state','=','draft')]</field>
-          <field name="context">{'search_default_user_id':uid,'search_default_current':1}</field>
+          <field name="view_mode">tree,form,graph,calendar</field>
+          <field name="domain">[('type','=','opportunity')]</field>
+          <field name="context">{'search_default_user_id':uid,'search_default_current':1, 'search_default_section_id':section_id,'default_type': 'opportunity'}</field>
           <field name="view_id" ref="crm_case_tree_view_oppor"/>
-          <field name="context">{'search_default_current':1, 'default_type': 'opportunity'}</field>
           <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+          <field name="help">Opportunities allows you to manage and keep track of your sales pipeline by creating specific customer or prospect related sales documents in order to follow up potential sales. Information such as the expected revenue, opportunity stage, expected closing date, communication history and so on can be maintained in them. Opportunities can be connected with the email gateway: new emails create opportunities, each of them automatically gets the history of the conversation with the customer.
+
+You and your team(s) will be able to plan meetings and phone calls from opportunities, convert them into quotations, manage related documents, track all customer related activities, and much more.</field>
      </record>
 
      <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor11">
@@ -55,11 +58,11 @@
      </record>
 
      <menuitem id="base.menu_sales" name="Sales"
-     	parent="base.menu_base_partner" sequence="1" />
+         parent="base.menu_base_partner" sequence="1" />
 
      <menuitem name="Opportunities" id="menu_crm_case_opp"
-     	parent="base.menu_sales" action="crm_case_category_act_oppor11"
-     	sequence="2" />
+         parent="base.menu_sales" action="crm_case_category_act_oppor11"
+         sequence="2" />
 
 </data>
 </openerp>

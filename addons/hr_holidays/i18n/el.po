@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-19 13:38+0000\n"
-"Last-Translator: Andreas Porevopoulos <Unknown>\n"
+"PO-Revision-Date: 2010-08-03 06:47+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:15+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -33,11 +33,6 @@ msgstr "Όλες οι Αίτήσεις Αδείας"
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
 msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,remaining_leaves:0
-msgid "Remaining Leaves"
-msgstr "Άδειες που απομένουν"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
@@ -66,7 +61,6 @@ msgstr "Ρεπό Συνοπτικά"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: view:hr.holidays.per.user:0
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
 msgstr "Άδειες Υπαλλήλων"
@@ -77,8 +71,6 @@ msgid "Set to Draft"
 msgstr "Ορισμός ως Πρόχειρο"
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
-#: field:hr.holidays.per.user,holiday_ids:0
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidays0
 msgid "Holidays"
@@ -144,14 +136,12 @@ msgstr "Οι Αιτήσεις Αδείας μου"
 
 #. module: hr_holidays
 #: field:hr.holidays,notes:0
-#: field:hr.holidays.per.user,notes:0
 msgid "Notes"
 msgstr "Σημειώσεις"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status:0
 #: field:hr.holidays.log,holiday_status:0
-#: field:hr.holidays.per.user,holiday_status:0
 msgid "Holiday's Status"
 msgstr "Κατάσταση Αδειών"
 
@@ -194,11 +184,6 @@ msgstr "Τύποι Αδειών"
 #: field:hr.holidays,date_to:0
 msgid "Vacation end day"
 msgstr "Τέλος άδειας"
-
-#. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "Holidays Allowed"
-msgstr "Επιτρεπτές άδειες"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_legaldeclaration0
@@ -257,7 +242,6 @@ msgstr "Κωδικοποίηση διαθέσιμων ετησίων αδειώ�
 #. module: hr_holidays
 #: field:hr.holidays,employee_id:0
 #: field:hr.holidays.log,employee_id:0
-#: field:hr.holidays.per.user,employee_id:0
 msgid "Employee"
 msgstr "Υπάλληλος"
 
@@ -293,7 +277,6 @@ msgstr "Οι Αιτήσεις μου"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: view:hr.holidays.per.user:0
 msgid "Number of Days"
 msgstr "Ημέρες"
 
@@ -347,7 +330,6 @@ msgid "Number of Days in this Holiday Request"
 msgstr "Αριθμός Ημερών στην Αίτηση"
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
 #: model:ir.actions.act_window,name:hr_holidays.action_holidays_per_user
 #: model:ir.ui.menu,name:hr_holidays.menu_open_holidays_per_user
 msgid "Holidays Per Employee"
@@ -424,6 +406,41 @@ msgid ""
 "                Administration / Users / Users\n"
 "            for example, you maybe will do it for the user 'admin'.\n"
 msgstr ""
+"Ανθρώπινο Δυναμικό: Εντοπισμός διακοπών και ροή εργασίας\n"
+"\n"
+"    Η μονάδα αυτή σας επιτρέπει να διαχειρίζεστε τα αιτήματα για ρεπό και "
+"τις αργίες. Για κάθε εργαζόμενο, μπορείτε επίσης να καθορίσετε έναν αριθμό "
+"διαθέσιμων ρεπό ανά κατάσταση διακοπών.\n"
+"\n"
+"    Σημειώστε ότι:\n"
+"    - Ένας συγχρονισμό με μια εσωτερική αντζέντα (χρήση της μονάδας CRM) "
+"είναι δυνατός: για να δημιουργηθεί αυτόματα μια περίπτωση, όταν ένα αίτημα "
+"διακοπών γίνεται αποδεκτό, θα πρέπει να συνδέσετε την κατάσταση διακοπών σε "
+"ένα τμήμα υπόθεσης. Μπορείτε να ρυθμίσετε αυτές τις πληροφορίες και το χρώμα "
+"προτίμησής σας στο\n"
+"                ΑΔ / Διαμόρφωση / Κατάσταση Διακοπών\n"
+"    - Ένας εργαζόμενος μπορεί να κάνει ένα αρνητικό αίτημα διακοπών (αίτηση "
+"διακοπών για -2 ημέρες για παράδειγμα), αυτό θεωρείται από το σύστημα ως "
+"ζήτηση για περισσότερες ημέρες αργιών. Θα αυξήσει τη συνολική διαθέσιμη "
+"κατάσταση διακοπών  (αν γίνει αποδεκτή η αίτηση).\n"
+"    - Υπάρχουν δύο τρόποι για να εκτυπώσετε τις διακοπές του εργαζομένου:\n"
+"        * Η πρώτη θα επιτρέψει να επιλεγούν εργαζόμενοι ανά τμήμα και "
+"χρησιμοποιείται κάνοντας κλικ στο στοιχείο του μενού που βρίσκεται στο\n"
+"                ΑΔ / Αίτηση Διακοπών / Εκτύπωση περίληψης διακοπών\n"
+"        * Ο δεύτερος θα σας επιτρέψει να επιλέξετε την έκθεση διακοπών για "
+"συγκεκριμένα άτομα. Πηγαίνετε στον κατάλογο\n"
+"                ΑΔ / Εργαζόμενοι / Εργαζόμενοι\n"
+"            στη συνέχεια, επιλέξτε αυτούς που θέλετε να επιλέξετε, κάντε "
+"κλικ στο εικονίδιο εκτύπωσης και επιλέξτε την επιλογή\n"
+"                «Συνοπτική Εκτύπωση των διακοπών των εργαζομένων»\n"
+"    Ο οδηγός σας επιτρέπει να επιλέξετε αν θέλετε να εκτυπώσετε είτε τις "
+"επιβεβαίομένες & Επικυρωμένες διακοπές ή μόνο τις Επικυρωμένες. Αυτές οι "
+"καταστάσεις πρέπει να καθοριστούν από ένα χρήστη από την ομάδα «ΑΔ» και με "
+"το ρόλο «διακοπές. Μπορείτε να ορίσετε τα χαρακτηριστικά αυτά στην καρτέλα "
+"ασφάλειας από τα δεδομένα ενός χρήστη στη\n"
+"                Διαχείριση / Χρήστες / Χρήστες\n"
+"            Για παράδειγμα, μπορείτε ίσως να το κάνετε για τον χρήστη "
+"'admin'.\n"
 
 #. module: hr_holidays
 #: wizard_view:hr.holidays.summary,notify:0
@@ -473,11 +490,6 @@ msgid "My Draft Holidays Requests"
 msgstr "Αίτήσεις Αδείας μου (πρόχειρες)"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,max_leaves:0
-msgid "Maximum Leaves Allowed"
-msgstr "Ανώτατο όριο αδειών"
-
-#. module: hr_holidays
 #: field:hr.holidays,state:0
 msgid "Status"
 msgstr "Κατάσταση"
@@ -503,11 +515,6 @@ msgid "Both Validated and Confirmed"
 msgstr "Επιβεβαιωμένη και Επικυρωμένη"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,leaves_taken:0
-msgid "Leaves Already Taken"
-msgstr "Άδειες ήδη χρησιμοποιημένες"
-
-#. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "holidays."
 msgstr "holidays."
@@ -516,11 +523,6 @@ msgstr "holidays."
 #: selection:hr.holidays,state:0
 msgid "draft"
 msgstr "πρόχειρη"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,user_id:0
-msgid "User"
-msgstr "Χρήστης"
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_employeedeclaration0
@@ -548,7 +550,6 @@ msgid "Holiday manager"
 msgstr "Διαχειριστής Αδειών"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,active:0
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "Ενεργό"
@@ -577,11 +578,6 @@ msgstr "Αιτήσεις Αδείας προς Επικύρωση"
 #: view:hr.holidays:0
 msgid "General"
 msgstr "Γενική"
-
-#. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "General Information"
-msgstr "Γενικές Πληροφορίες"
 
 #. module: hr_holidays
 #: view:hr.holidays:0

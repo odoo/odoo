@@ -5,7 +5,7 @@
     	<menuitem
         id="menu_finance_belgian_statement"
         name="Belgium Statements"
-        parent="account.menu_finance_legal_statement"/>
+        parent="account.menu_finance_legal_statement" groups="account.group_account_manager"/>
 
     	<record id="view_vat_declaration" model="ir.ui.view">
             <field name="name">Vat Declaraion</field>
@@ -13,29 +13,46 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Periodical VAT Declaration" >
-					<group height="400" width="330">
+					<group>
+					   <group colspan="4">
+ 							<separator string="Declare Periodical VAT" colspan="4"/><newline/>
+    						<field name="period_id" widget="selection"/>
+							<field name="tax_code_id" string="Company" widget="selection" groups="base.group_multi_company"/>
+							<newline/>
+						</group>
 						<group>
- 							<separator string="Declare Periodical VAT" colspan="2" /><newline/>
-							<field name="period_id" /><newline/>
-							<field name="ask_resitution" colspan="2" align="1"/><newline/>
-							<field name="ask_payment" colspan="2"/><newline/>
-							<field name="client_nihil" colspan="2" string="Is Last Declaration"/><newline/><label/>
-	            			<button icon="gtk-execute"  name="create_xml" string="Create XML" type="object" default_focus="1" />
+							<field name="ask_resitution" colspan="1"/>
+							<field name="ask_payment" colspan="1"/>
+							<field name="client_nihil" string="Is Last Declaration" colspan="1" /><label/>
 	            		</group>
-						<newline/>
-						<group attrs="{'readonly':[('name','=',False)]}">
-							<separator colspan="2" string="Note: "/><newline/>
-							<label string="Save the File with '.xml' extension." colspan="2" align="0.0"/><newline/>
-								<field name="name"/><newline/>
-				    			<field name="file_save" readonly="True"/>
-				    			<newline/>
-			    			<label/>
-              			</group>
-              		<newline/>
-              		<button special="cancel" string="Close" icon="gtk-cancel"/>
+	            		<newline/>
+					<group>
+					<separator colspan="4"/>
+					<newline/>
+					<button special="cancel" string="Close" icon="gtk-cancel"/>
+					<button icon="gtk-execute"  name="create_xml" string="Create XML" type="object" default_focus="1" />
               		</group>
+          		</group>
+			</form>
+        </field>
+	</record>
+
+		<record id="view_vat_save" model="ir.ui.view">
+            <field name="name">Save XML</field>
+            <field name="model">l1on_be.vat.declaration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<form string="Save xml">
+					<group colspan="3">
+						<label string="Save the File with '.xml' extension." colspan="2" align="0.0"/><newline/>
+							<field name="name"/><newline/>
+			    			<field name="file_save" readonly="True"/>
+              		<newline/>
+		      		<separator colspan="4"/><label/>
+          				<button special="cancel" string="Ok" icon="gtk-ok"/>
+      				</group>
 				</form>
-            </field>
+			</field>
 		</record>
 
 		<record id="action_vat_declaration" model="ir.actions.act_window">
@@ -52,7 +69,8 @@
 	        name="Periodical VAT Declaration"
 	        parent="menu_finance_belgian_statement"
 	        action="action_vat_declaration"
-	        id="l10_be_vat_declaration"/>
+	        id="l10_be_vat_declaration"
+            groups="account.group_account_manager"/>
 
     </data>
 </openerp>

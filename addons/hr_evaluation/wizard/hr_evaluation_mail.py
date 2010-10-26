@@ -25,16 +25,18 @@ class hr_evaluation_reminder(osv.osv_memory):
     _name = "hr.evaluation.reminder"
     _description = "Sends Reminders to employess to fill the evaluations"
     _columns = {
-        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Evaluations', required=True)
+        'evaluation_id': fields.many2one('hr.evaluation.interview', 'Interview', required=True)
     }
 
-    def send_mail(self, cr, uid, ids, context={}):
-        hr_evaluation_obj = self.pool.get('hr_evaluation.evaluation')
+    def send_mail(self, cr, uid, ids, context=None):
+        hr_evaluation_interview_obj = self.pool.get('hr.evaluation.interview')
+        if context is None:
+            context = {}
         evaluation_data = self.read(cr, uid, ids, context=context)[0]
-        for waiting_id in hr_evaluation_obj.browse(cr, uid, evaluation_data['evaluation_id'], context=context).survey_request_ids:
-            if waiting_id.state == "waiting_answer" and waiting_id.user_to_review_id.work_email :
-                msg = " Hello %s, \n\n Kindly post your response for %s survey. \n\n Thanks,"  %(waiting_id.user_to_review_id.name, waiting_id.survey_id.title)
-                tools.email_send(tools.config['email_from'], [waiting_id.user_to_review_id.work_email],\
+        current_interview = hr_evaluation_interview_obj.browse(cr, uid, evaluation_data.get('evaluation_id'))
+        if current_interview.state == "waiting_answer" and current_interview.user_to_review_id.work_email :
+            msg = " Hello %s, \n\n Kindly post your response for '%s' survey interview. \n\n Thanks,"  %(current_interview.user_to_review_id.name, current_interview.survey_id.title)
+            tools.email_send(tools.config['email_from'], [current_interview.user_to_review_id.work_email],\
                                           'Reminder to fill up Survey', msg)
         return {'type': 'ir.actions.act_window_close'}
 

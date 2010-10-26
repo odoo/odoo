@@ -21,7 +21,7 @@
 
 {
     "name": "Lunch Module",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "Description": """
     The lunch module is for keeping record of the order placed and payment of the orders.
     The products are defined under categories and the payment records are maintained user wise
@@ -39,20 +39,18 @@
     """,
     "init_xml": [],
     "update_xml": [
+        'security/lunch_security.xml',
         'security/ir.model.access.csv',
         'wizard/lunch_order_cancel_view.xml',
         'wizard/lunch_order_confirm_view.xml',
         'wizard/lunch_cashbox_clean_view.xml',
         'lunch_view.xml',
         'lunch_report.xml',
-        #'process/lunch_process.xml'
+        'report/report_lunch_order_view.xml',
     ],
-    "demo_xml": ['lunch_demo.xml',
-                 ],
-    "test": ['test/test_lunch.yml'
-             ],             
+    "demo_xml": ['lunch_demo.xml'],
+    "test": ['test/test_lunch.yml', 'test/lunch_report.yml'],
     "installable": True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

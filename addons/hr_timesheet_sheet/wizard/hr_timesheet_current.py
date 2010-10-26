@@ -29,18 +29,20 @@ class hr_timesheet_current_open(osv.osv_memory):
 
     def open_timesheet(self, cr, uid, ids, context=None):
         ts = self.pool.get('hr_timesheet_sheet.sheet')
+        if context is None:
+            context = {}
         view_type = 'form,tree'
 
-        user_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)])
+        user_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
         if not len(user_ids):
             raise osv.except_osv(_('Error !'), _('No employee defined for your user !'))
-        ids = ts.search(cr, uid, [('user_id','=',uid),('state','=','draft'),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))])
+        ids = ts.search(cr, uid, [('user_id','=',uid),('state','=','draft'),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))], context=context)
 
         if len(ids) > 1:
             view_type = 'tree,form'
             domain = "[('id','in',["+','.join(map(str, ids))+"]),('user_id', '=', uid)]"
         elif len(ids)==1:
-            ts.write(cr, uid, ids, {'date_current': time.strftime('%Y-%m-%d')})
+            ts.write(cr, uid, ids, {'date_current': time.strftime('%Y-%m-%d')}, context=context)
             domain = "[('user_id', '=', uid)]"
         else:
             domain = "[('user_id', '=', uid)]"

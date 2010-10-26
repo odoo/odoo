@@ -30,14 +30,15 @@
     Different users may give different answers of question and according to that survey is done. 
     Partners are also sent mails with user name and password for the invitation of the survey
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['base'],
     'update_xml': ['survey_report.xml',
                    'survey_data.xml',
                    'wizard/survey_selection.xml',
                    'wizard/survey_answer.xml',
-                   'survey_view.xml',
+                   'security/survey_security.xml',
                    'security/ir.model.access.csv',
+                   'survey_view.xml',
                    'wizard/survey_print_statistics.xml',
                    'wizard/survey_print_answer.xml',
                    'wizard/survey_browse_answer.xml',
@@ -46,6 +47,7 @@
     'demo_xml': ['survey_demo.xml'],
     'test': [
         'test/survey00.yml',
+        'test/survey_report.yml',
     ],
     'installable': True,
     'active': False,

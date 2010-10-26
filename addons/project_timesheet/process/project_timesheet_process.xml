@@ -7,7 +7,6 @@
         -->
 
         <record id="process_node_timesheettask0" model="process.node">
-         <!--   <field name="menu_id" ref="hr_timesheet.menu_act_hr_timesheet_line_evry1_all_form"/>-->
             <field name="model_id" ref="hr_timesheet.model_hr_analytic_timesheet"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Timesheet task&quot;&quot;&quot;" name="name"/>
@@ -28,7 +27,7 @@
         </record>
 
         <record id="process_node_triggerinvoice0" model="process.node">
-            <field name="menu_id" ref="account.menu_finance_invoice"/>
+            <field name="menu_id" ref="account.menu_finance_receivables"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Trigger Invoice&quot;&quot;&quot;" name="name"/>
@@ -39,13 +38,11 @@
             <field eval="0" name="flow_start"/>
         </record>
 
-
          <!--
             Process Transition
         -->
 
         <record id="process_transition_filltimesheet0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Fill Timesheet&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Task summary is comes into the timesheet line&quot;&quot;&quot;" name="note"/>
@@ -54,7 +51,6 @@
         </record>
 
         <record id="process_transition_taskencoding0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Task encoding&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Encode how much time u spent on your task&quot;&quot;&quot;" name="note"/>
@@ -63,15 +59,12 @@
         </record>
 
         <record id="process_transition_taskinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Task invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;After task is completed, Create its invoice.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_triggerinvoice0"/>
             <field model="process.node" name="source_node_id" ref="project.process_node_donetask0"/>
         </record>
-
-
 
     </data>
 </openerp>

@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-04-22 09:05+0000\n"
-"Last-Translator: Jan Verlaan (Veritos) <Unknown>\n"
+"PO-Revision-Date: 2010-08-03 06:04+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-23 03:45+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -30,11 +30,6 @@ msgstr "Alle verlofaanvragen"
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
 msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,remaining_leaves:0
-msgid "Remaining Leaves"
-msgstr "Resterend verlof"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
@@ -63,7 +58,6 @@ msgstr "Samenvatting vrije dagen"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: view:hr.holidays.per.user:0
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
 msgstr "Verlof werknemer"
@@ -74,8 +68,6 @@ msgid "Set to Draft"
 msgstr "Zet op concept"
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
-#: field:hr.holidays.per.user,holiday_ids:0
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidays0
 msgid "Holidays"
@@ -141,14 +133,12 @@ msgstr "Mijn verlofaanvragen"
 
 #. module: hr_holidays
 #: field:hr.holidays,notes:0
-#: field:hr.holidays.per.user,notes:0
 msgid "Notes"
 msgstr "Opmerkingen"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status:0
 #: field:hr.holidays.log,holiday_status:0
-#: field:hr.holidays.per.user,holiday_status:0
 msgid "Holiday's Status"
 msgstr "Verlofstatus"
 
@@ -191,11 +181,6 @@ msgstr "Verlofstati"
 #: field:hr.holidays,date_to:0
 msgid "Vacation end day"
 msgstr "Einddatum verlof"
-
-#. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "Holidays Allowed"
-msgstr "Verlof toegestaan"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_legaldeclaration0
@@ -254,7 +239,6 @@ msgstr "Vastleggen van jaarlijks beschikbare verlofdagen"
 #. module: hr_holidays
 #: field:hr.holidays,employee_id:0
 #: field:hr.holidays.log,employee_id:0
-#: field:hr.holidays.per.user,employee_id:0
 msgid "Employee"
 msgstr "Werknemer"
 
@@ -290,7 +274,6 @@ msgstr "Mijn verlofaanvragen"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: view:hr.holidays.per.user:0
 msgid "Number of Days"
 msgstr "Aantal dagen"
 
@@ -346,7 +329,6 @@ msgid "Number of Days in this Holiday Request"
 msgstr "Aantal dagen in deze verlofaanvraag"
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
 #: model:ir.actions.act_window,name:hr_holidays.action_holidays_per_user
 #: model:ir.ui.menu,name:hr_holidays.menu_open_holidays_per_user
 msgid "Holidays Per Employee"
@@ -502,11 +484,6 @@ msgid "My Draft Holidays Requests"
 msgstr "Mijn concept verlofaanvragen"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,max_leaves:0
-msgid "Maximum Leaves Allowed"
-msgstr "Maximaal toegestane verlofdagen"
-
-#. module: hr_holidays
 #: field:hr.holidays,state:0
 msgid "Status"
 msgstr "Status"
@@ -532,11 +509,6 @@ msgid "Both Validated and Confirmed"
 msgstr "Zowel gevalideerd als bevestigd"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,leaves_taken:0
-msgid "Leaves Already Taken"
-msgstr "Eerder opgenomen verlof"
-
-#. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "holidays."
 msgstr "verlof."
@@ -545,11 +517,6 @@ msgstr "verlof."
 #: selection:hr.holidays,state:0
 msgid "draft"
 msgstr "concept"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,user_id:0
-msgid "User"
-msgstr "Gebruiker"
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_employeedeclaration0
@@ -577,7 +544,6 @@ msgid "Holiday manager"
 msgstr "Verlofbeheerder"
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,active:0
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "Actief"
@@ -606,11 +572,6 @@ msgstr "Verlofaanvragen wachtend op bevestiging"
 #: view:hr.holidays:0
 msgid "General"
 msgstr "Algemeen"
-
-#. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "General Information"
-msgstr "Algemene informatie"
 
 #. module: hr_holidays
 #: view:hr.holidays:0

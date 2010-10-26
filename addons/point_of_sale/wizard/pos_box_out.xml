@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>        
+    <data>
         <!--  Box Entries -->
-        
+
 		<record id="view_pos_box_out" model="ir.ui.view">
             <field name="name">Box Out</field>
             <field name="model">pos.box.out</field>
@@ -14,13 +14,14 @@
 				    	<field name="journal_id"/>
 				    	<field name="product_id"/>
 				    	<field name="amount"/>
-				    	<field name="ref"/>
-				    	<group colspan="4" col="2">
-				 		<button icon='gtk-cancel' special="cancel"
-                			string="Close" />
-                		<button name="get_out" string="Make Entries in the CashBox"
-                			colspan="1" type="object" icon="gtk-ok" />
-                			</group>
+				    	<separator colspan="4"/>
+				    	<group colspan="4" col="4">
+				    	    <group col="2" colspan="2"/>
+					 		<button icon="gtk-stop" special="cancel"
+	                			string="Cancel" />
+	                		<button name="get_out" string="Take Money"
+	                			colspan="1" type="object" icon="terp-dolar" />
+                	    </group>
                 </form>
             </field>
         </record>
@@ -31,8 +32,8 @@
             <field name="res_model">pos.box.out</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="target">new</field>            
+            <field name="target">new</field>
         </record>
-        
+
 	</data>
-</openerp>	        
+</openerp>

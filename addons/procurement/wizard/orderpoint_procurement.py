@@ -30,36 +30,36 @@ from osv import fields,osv
 class procurement_compute(osv.osv_memory):
     _name = 'procurement.orderpoint.compute'
     _description = 'Automatic Order Point'
-    
+
     _columns = {
-           'automatic': fields.boolean('Automatic Orderpoint', help='If the stock of a product is under 0, it will act like an orderpoint'),     
+           'automatic': fields.boolean('Automatic Orderpoint', help='If the stock of a product is under 0, it will act like an orderpoint'),
     }
 
     _defaults = {
-            'automatic' : lambda *a: False,
+            'automatic': False,
     }
-    
+
     def _procure_calculation_orderpoint(self, cr, uid, ids, context):
-        """ 
+        """
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected 
-        @param context: A standard dictionary 
-        """        
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
+        """
         proc_obj = self.pool.get('procurement.order')
         for proc in self.browse(cr, uid, ids):
             proc_obj._procure_orderpoint_confirm(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname, context=context)
-        
+
         return {}
-    
+
     def procure_calculation(self, cr, uid, ids, context):
-        """ 
+        """
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected 
-        @param context: A standard dictionary 
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
         """
         threaded_calculation = threading.Thread(target=self._procure_calculation_orderpoint, args=(cr, uid, ids, context))
         threaded_calculation.start()

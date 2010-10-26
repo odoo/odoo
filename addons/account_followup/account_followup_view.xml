@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_followup_followup_line_tree" model="ir.ui.view">
+            <field name="name">account_followup.followup.line.tree</field>
+            <field name="model">account_followup.followup.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Follow-Up Lines">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="delay"/>
+                    <field name="start"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_followup_followup_line_form" model="ir.ui.view">
+            <field name="name">account_followup.followup.line.form</field>
+            <field name="model">account_followup.followup.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Follow-Up Lines">
+                    <field name="sequence"/>
+                    <field name="name" />
+                    <field name="delay" />
+                    <field name="start" />
+                    <newline/>
+                    <field colspan="4" name="description" />
+                    <separator string="Legend" colspan="4"/>
+                    <label string="%%(partner_name)s: Partner Name" colspan="2"/>
+                    <label string="%%(date)s: Current Date" colspan="2"/>
+                    <label string="%%(user_signature)s: User Name" colspan="2"/>
+                    <label string="%%(company_name)s: User's Company Name" colspan="2"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_followup_followup_form" model="ir.ui.view">
+            <field name="name">account_followup.followup.form</field>
+            <field name="model">account_followup.followup</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Follow-Up">
+                    <field name="name" />
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <separator colspan="4" string="Description"/>
+                    <field colspan="4" name="description" nolabel="1" />
+                    <separator colspan="4" string="Followup Lines"/>
+                    <field colspan="4" name="followup_line" nolabel="1"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_followup_followup_tree" model="ir.ui.view">
+            <field name="name">account_followup.followup.tree</field>
+            <field name="model">account_followup.followup</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Follow-Up">
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_followup_filter" model="ir.ui.view">
+            <field name="name">account.followup.select</field>
+            <field name="model">account_followup.followup</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Followup">
+                   <group col="10" colspan="4">
+                        <field name="name"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+        <record id="action_account_followup_definition_form" model="ir.actions.act_window">
+            <field name="name">Follow-Ups</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account_followup.followup</field>
+            <field name="search_view_id" ref="view_account_followup_filter"/>
+            <field name="view_type">form</field>
+        </record>
+        <menuitem action="action_account_followup_definition_form" id="account_followup_menu"
+            parent="account.menu_configuration_misc"/>
+
+        <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Followup Report"/>
+
+        <record id="account_move_line_partner_tree" model="ir.ui.view">
+            <field name="name">account.move.line.partner.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="type">tree</field>
+            <field eval="32" name="priority"/>
+            <field name="arch" type="xml">
+                <tree colors="red:state in ('draft');black:state in ('validate')" editable="bottom" string="Partner entries">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="account_id"/>
+                    <field name="followup_line_id"/>
+                    <field name="followup_date"/>
+                    <field name="debit" sum="Total debit"/>
+                    <field name="credit" sum="Total credit"/>
+                    <field name="state"/>
+                    <field name="date_maturity"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_move_line_form" model="ir.ui.view">
+            <field name="name">account.move.line.form.followup</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <field name="date_created" position="after">
+                    <field name="followup_line_id"/>
+                    <field name="followup_date"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_move_line_tree" model="ir.ui.view">
+            <field name="name">account.move.line.tree.followup</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <field name="followup_date"/>
+                    <field name="followup_line_id"/>
+                </field>
+            </field>
+        </record>
+
+        <act_window
+            domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]"
+            id="act_account_partner_account_move_all"
+            name="Receivable Items"
+            res_model="account.move.line"
+            src_model=""
+            view="account_move_line_partner_tree"/>
+
+      <!--<menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/> -->
+
+        <act_window
+            domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]"
+            id="act_account_partner_account_move_payable_all"
+            name="Payable Items"
+            res_model="account.move.line"
+            src_model=""
+            view="account_move_line_partner_tree"/>
+
+      <!-- <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/> -->
+
+        <record model="ir.ui.view" id="view_company_inherit_followup_form">
+            <field name="name">res.company.followup.form.inherit</field>
+            <field name="inherit_id" ref="account.view_company_inherit_form"/>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="overdue_msg" nolabel="1" colspan ="4" position="after">
+                    <field name="follow_up_msg" nolabel="1" colspan ="4"/>
+                    <separator string="Follow-up Message" colspan="4"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

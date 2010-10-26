@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 import netsvc
 
@@ -29,43 +30,33 @@ class messages(osv.osv):
     logger = netsvc.Logger()
 
     _columns = {
-        'from_id':fields.many2one('res.users', 'From', ondelete="CASCADE"),
-        'to_id':fields.many2one('res.users', 'To', ondelete="CASCADE"),
-        'project_id':fields.many2one('project.project', 'Project',
+        'create_date': fields.datetime('Creation Date', readonly=True),
+        'from_id': fields.many2one('res.users', 'From', required=True, ondelete="CASCADE"),
+        'to_id': fields.many2one('res.users', 'To', ondelete="CASCADE", help="Keep this empty to broadcast the message."),
+        'project_id': fields.many2one('project.project', 'Project',
                                      required=True, ondelete="CASCADE"),
-        'message':fields.text('Message', required=True),
+        'message': fields.text('Message', required=True),
     }
-
+    
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        # return messages by current user, for current user or for all users
+        # return all messages if current user is administrator  
+        if uid != 1:
+            args.extend(['|',('from_id', 'in', [uid,]),('to_id', 'in', [uid, False])])
+        return super(messages, self).search(cr, uid, args, offset, limit,
+                order, context=context, count=count)
+        
     _defaults = {
-        'from_id':lambda self, cr, uid, context: uid,
-        'to_id':None,
+        'from_id': lambda self, cr, uid, context: uid,
     }
-
-    def broadcast(self, cr, uid, project_id, message, context=None):
-        """ Send a message to all the users of a project.
-        The sender of the message is the current user.
-
-        The method returns the new message's id.
-
-        Arguments:
-        - `project_id`: the id of the project to broadcast to
-        - `message`: the message to broadcast
-        """
-        return self.create(cr, uid, {
-            'to_id':None,
-            'project_id':project_id,
-            'message':message
-        }, context=context)
 
 messages()
 
 class project_with_message(osv.osv):
     _inherit = 'project.project'
-
+    
     _columns = {
-        'message_ids':fields.one2many(
-            'project.messages', 'project_id', 'Messages',
-            domain="[('to_id','in',[uid,False])]"),
+        'message_ids':fields.one2many('project.messages', 'project_id', 'Messages'),
     }
 project_with_message()
 

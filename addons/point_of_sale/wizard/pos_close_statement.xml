@@ -9,12 +9,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Close Statements">
-				     	<label string="Are you sure you want to close the statements ?" colspan="2"/>
-				     	<newline/>
-                		<button icon='gtk-cancel' special="cancel"
-                			string="No" />
-                		<button name="close_statement" string="Yes"
-                			colspan="1" type="object" icon="gtk-ok"/>
+				    <label string="Are you sure you want to close the statements ?"/>
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <group col="2" colspan="2"/>
+                        <button icon='gtk-stop' special="cancel"
+                            string="No" />
+                        <button name="close_statement" string="Yes"
+                             type="object" icon="gtk-ok"/>
+                   </group>
                 </form>
             </field>
         </record>

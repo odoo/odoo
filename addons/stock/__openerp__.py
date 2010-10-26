@@ -19,11 +19,10 @@
 #
 ##############################################################################
 
-
 {
     "name" : "Inventory Management",
     "version" : "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "description" : """OpenERP Inventory Management module can manage multi-warehouses, multi and structured stock locations.
 Thanks to the double entry management, the inventory controlling is powerful and flexible:
 * Moves history and planning,
@@ -34,6 +33,11 @@ Thanks to the double entry management, the inventory controlling is powerful and
 * Bar code supported
 * Rapid detection of mistakes through double entry system
 * Traceability (upstream/downstream, production lots, serial number, ...)
+* Dashboard for warehouse that includes:
+    * Products to receive in delay (date < = today)
+    * Procurement in exception
+    * Graph : Number of Receive products vs planned (bar graph on week par day)
+    * Graph : Number of Delivery products vs planned (bar graph on week par day)
     """,
     "website" : "http://www.openerp.com",
     "depends" : ["product", "account"],
@@ -41,21 +45,22 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "init_xml" : [],
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [
+        "security/stock_security.xml",  
+        "security/ir.model.access.csv",                  
         "stock_data.xml",
         "wizard/stock_move_view.xml",
         "wizard/stock_partial_picking_view.xml",
         "wizard/stock_partial_move_view.xml",
-        "wizard/stock_inventory_set_stock_zero_view.xml",
         "wizard/stock_fill_inventory_view.xml",
         "wizard/stock_invoice_onshipping_view.xml",
         "wizard/stock_inventory_merge_view.xml",
         "wizard/stock_location_product_view.xml",
+        "wizard/stock_splitinto_view.xml",
         "wizard/stock_inventory_line_split_view.xml",
         "wizard/stock_change_standard_price_view.xml",
-        "wizard/stock_traceability_view.xml",
+        'wizard/stock_return_picking_view.xml',
         "stock_workflow.xml",
         "stock_incoterms.xml",
-        "stock_wizard.xml",
         "stock_view.xml",
         "stock_report.xml",
         "stock_sequence.xml",
@@ -64,13 +69,12 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "partner_view.xml",
         "report/report_stock_move_view.xml",
         "report/report_stock_view.xml",
-        "report/report_stock_picking_view.xml",
-        "security/stock_security.xml",
-        "security/ir.model.access.csv",
+        "board_warehouse_view.xml"
     ],
-    'test': ['test/stock_test.yml'],
+    'test': ['test/stock_test.yml',
+             'test/stock_report.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate': '0055421559965',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

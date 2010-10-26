@@ -21,13 +21,13 @@
 import logging
 import os
 import tempfile
+from subprocess import Popen, PIPE
 
 class NhException(Exception):
     pass
 
-from subprocess import Popen, PIPE
 
-class indexer():
+class indexer(object):
     """ An indexer knows how to parse the content of some file.
     
         Typically, one indexer should be instantiated per file
@@ -43,7 +43,7 @@ class indexer():
     def _getExtensions(self):
         return []
     
-    def _getDefMime(self,ext):
+    def _getDefMime(self, ext):
         """ Return a mimetype for this document type, ideally the
             closest to the extension ext. """
         mts = self._getMimeTypes();
@@ -51,7 +51,7 @@ class indexer():
             return mts[0]
         return None
 
-    def indexContent(self,content,filename=None, realfile = None):
+    def indexContent(self, content, filename=None, realfile = None):
         """ Use either content or the real file, to index.
             Some parsers will work better with the actual
             content, others parse a file easier. Try the
@@ -98,7 +98,9 @@ class indexer():
 
     def _doIndexFile(self,fpath):
         raise NhException("Content not handled here")
-        
+
+    def __repr__(self):
+        return "<indexer %s.%s>" %(self.__module__, self.__class__.__name__)
         
 
 def mime_match(mime, mdict):
@@ -111,7 +113,7 @@ def mime_match(mime, mdict):
     
     return (None, None)
 
-class contentIndex():
+class contentIndex(object):
     __logger = logging.getLogger('addons.document.content_index')
     def __init__(self):
         self.mimes = {}
@@ -128,11 +130,11 @@ class contentIndex():
             f = True
             
         if f:
-            self.__logger.debug('Register content indexer: %s', obj)
+            self.__logger.debug('Register content indexer: %r', obj)
         if not f:
             raise Exception("Your indexer should at least suport a mimetype or extension")
     
-    def doIndex(self,content, filename=None, content_type=None, realfname = None, debug=False):
+    def doIndex(self, content, filename=None, content_type=None, realfname = None, debug=False):
         fobj = None
         fname = None
         mime = None
@@ -153,7 +155,10 @@ class contentIndex():
                 if realfname :
                     fname = realfname
                 else:
-                    bname,ext = os.path.splitext(filename)
+                    try:
+                        bname,ext = os.path.splitext(filename or 'test.tmp')
+                    except Exception:
+                        bname, ext = filename, 'tmp'
                     fd, fname = tempfile.mkstemp(suffix=ext)
                     os.write(fd, content)
                     os.close(fd)

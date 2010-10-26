@@ -10,9 +10,10 @@
 		      <field name="type">form</field>
 		      <field name="arch" type="xml">
 		        <form string="Receipt :">
+            <separator string="Print the receipt of the sale" colspan="4"/>
 		          <button icon='gtk-cancel' special="cancel"
-		                  string="Close" />
-		          <button name="print_report" string="Print Report"
+		                  string="Cancel" />
+		          <button name="print_report" string="Print Receipt"
 		                  colspan="1" type="object" icon="gtk-print" />
 		        </form>
 		      </field>

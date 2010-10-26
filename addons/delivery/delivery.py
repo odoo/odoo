@@ -20,7 +20,6 @@
 ##############################################################################
 
 import time
-import netsvc
 from osv import fields,osv
 from tools.translate import _
 
@@ -149,7 +148,7 @@ class delivery_grid_line(osv.osv):
         'name': fields.char('Name', size=32, required=True),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True),
         'type': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable', required=True),
-        'operator': fields.selection([('=','='),('<=','<='),('>=','>=')], 'Operator', required=True),
+        'operator': fields.selection([('==','='),('<=','<='),('>=','>=')], 'Operator', required=True),
         'max_value': fields.float('Maximum Value', required=True),
         'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
         'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),

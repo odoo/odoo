@@ -49,14 +49,14 @@ def textToString(element) :
 class TxtIndex(indexer):
     def _getMimeTypes(self):
         return ['text/plain','text/html','text/diff','text/xml', 'text/*', 
-        'application/xml']
+            'application/xml']
     
     def _getExtensions(self):
         return ['.txt', '.py']
 
     def _doIndexContent(self,content):
         return content
-        
+
 cntIndex.register(TxtIndex())
 
 class PptxIndex(indexer):
@@ -95,8 +95,8 @@ class DocIndex(indexer):
         return ['.doc']
 
     def _doIndexFile(self,fname):
-        #fp = Popen(['antiword', fname], shell=False, stdout=PIPE).stdout
-        return _to_unicode( 'None')
+        fp = Popen(['antiword', fname], shell=False, stdout=PIPE).stdout
+        return _to_unicode(fp.read())
 
 cntIndex.register(DocIndex())
 
@@ -177,21 +177,33 @@ class ImageNoIndex(indexer):
 
 cntIndex.register(ImageNoIndex())
 
-#class Doc(indexer):
-    #def _getDefMime(self,ext):
+# other opendocument formats:
+# chart-template chart database
+# formula-template formula graphics-template graphics
+# image
+# presentation-template presentation spreadsheet-template spreadsheet
 
-#def content_index(content, filename=None, content_type=None):
-    #fname,ext = os.path.splitext(filename)
-    #result = ''
-    #elif ext in ('.xls','.ods','.odt','.odp'):
-        #s = StringIO.StringIO(content)
-        #o = odt2txt.OpenDocumentTextFile(s)
-        #result = _to_unicode(o.toString())
-        #s.close()
-    #elif ext in ('.txt','.py','.patch','.html','.csv','.xml'):
-        #result = content
-    #else:
-        #result = content
-    #return result
+class OpenDoc(indexer):
+    """ Index OpenDocument files.
+    
+        Q: is it really worth it to index spreadsheets, or do we only get a
+        meaningless list of numbers (cell contents) ?
+        """
+    def _getMimeTypes(self):
+        otypes = [ 'text', 'text-web', 'text-template', 'text-master' ]
+        return map(lambda a: 'application/vnd.oasis.opendocument.'+a, otypes)
+    
+    def _getExtensions(self):
+        return ['.odt', '.ott', ] # '.ods'
+
+    def _doIndexContent(self, content):
+        s = StringIO.StringIO(content)
+        o = odt2txt.OpenDocumentTextFile(s)
+        result = _to_unicode(o.toString())
+        s.close()
+        return result
+
+cntIndex.register(OpenDoc())
+
 
 #eof

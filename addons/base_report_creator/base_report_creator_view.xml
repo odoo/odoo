@@ -23,7 +23,6 @@
             <tree string="Report Creator">
                 <field name="name"/>
                 <field name="type"/>
-                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -42,12 +41,21 @@
                 <notebook colspan="4">
                 <page string="General Configuration">
                     <field name="model_ids" colspan="4"
-                        context="{'model_ids':model_ids}" />
-                    <separator string="State"  colspan="4"/>
-                    <field name="state"/>
-                    <button string="Create Menu"
-                        name="%(action_report_menu_create)d" type="action"
-                        colspan="2" icon="gtk-justify-fill" />
+                        context="{'model_ids':model_ids}" nolabel="1" />
+                    <separator string=""  colspan="4"/>
+                    <group colspan="4" col="4">
+                        <group colspan="2">
+                            <field name="menu_id"/>
+                        </group>
+                        <group colspan="2">
+                            <button string="Create Menu"
+                                name="%(action_report_menu_create)d" type="action"
+                                icon="gtk-justify-fill" attrs="{'invisible':[('menu_id','!=',False)]}"/>
+                            <button string="Open Report"
+                                name="open_report" type="object"
+                                icon="gtk-open" />
+                        </group>
+                    </group>
                 </page><page string="View parameters">
                     <separator string="Used View" colspan="4"/>
                     <field name="view_type1"/>
@@ -112,6 +120,17 @@
         </field>
     </record>
 
+    <record id="view_report_filter" model="ir.ui.view">
+        <field name="name">Report Name</field>
+        <field name="model">base_report_creator.report</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+        <search string="Report">
+            <field name="name"></field>            
+        </search>
+        </field>
+    </record>
+
  <!-- Action for Report creator form -->
 
     <record model="ir.actions.act_window" id="base_report_creator_action">
@@ -119,44 +138,14 @@
         <field name="res_model">base_report_creator.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_report_filter"/>
     </record>
 
     <menuitem
         name="Custom Reports" id="base.menu_custom_reports"
-        groups="base.group_extended"
         action="base_report_creator_action" parent="base.reporting_menu" sequence="1"/>
 
-    <menuitem
-        parent="base.next_id_50"
-        id="menu_base_report_creator_action_config"
-        action="base_report_creator_action"/>
-
-    <record model="ir.ui.view" id="base_report_creator_tree_simple">
-        <field name="name">base_report_creator.report.simple.tree</field>
-        <field name="model">base_report_creator.report</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Reports">
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-
-    <record model="ir.actions.act_window" id="base_report_creator_action_tree">
-        <field name="res_model">base_report_creator.report</field>
-        <field name="view_type">tree</field>
-    </record>
-
-    <menuitem
-        name="Custom Reports" parent="base.menu_custom_reports"
-        id="menu_base_report_creator_action"
-        action="base_report_creator_action_tree"/>
-
-    <act_window id="action_report_open"
-            key2="client_action_multi" name="Open Report"
-            res_model="report.open" src_model="base_report_creator.report"
-            view_mode="form" target="new" view_type="form" />
-
+    
 
     </data>
 </openerp>

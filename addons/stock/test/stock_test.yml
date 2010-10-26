@@ -53,7 +53,7 @@
   I create Receivable Account .
 - 
   !record {model: account.account, id: account_account_receivable0}:
-    code: '40000'
+    code: '40000-stock-test'
     company_id: base.main_company
     currency_mode: current
     name: Receivable
@@ -65,7 +65,7 @@
   I create Payable Account.
 - 
   !record {model: account.account, id: account_account_payable0}:
-    code: '440000'
+    code: '440000-stock-test'
     company_id: base.main_company
     currency_mode: current
     name: Payable
@@ -111,7 +111,7 @@
   I create Product Sale Account.
 - 
   !record {model: account.account, id: account_account_productsale0}:
-    code: '001'
+    code: '001-stock-test'
     company_id: base.main_company
     currency_mode: current
     name: Product Sale
@@ -123,7 +123,7 @@
   I create Product Purchase Account.
 - 
   !record {model: account.account, id: account_account_productpurchase0}:
-    code: '0002'
+    code: '0002-stock-test'
     company_id: base.main_company
     currency_mode: current
     name: Product Purchase
@@ -170,7 +170,7 @@
     country_id: base.in
     partner_id: stock.res_partner_diasorinltd0
     street: Ash House, Ash Road
-    title: Ms.
+    title: base.res_partner_title_miss
     
                
 -     
@@ -192,7 +192,7 @@
     seller_ids:
       - delay: 1
         name: stock.res_partner_shawtrust0
-        qty: 5.0
+        min_qty: 5.0
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
@@ -213,7 +213,7 @@
     seller_ids:
       - delay: 1
         name: res_partner_shawtrust0
-        qty: 5.0
+        min_qty: 5.0
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
@@ -267,11 +267,10 @@
 - 
   !record {model: stock.move.split, id: stock_move_split_0}:
     line_ids:
-      - name: '00001'
+      - name: '00001-stock-test'
         quantity: 5      
     product_id: stock.product_product_hpcdwriters0
-    
-    
+     
 - 
   I Split into production line.
 - 
@@ -289,17 +288,17 @@
 - 
   !record {model: stock.picking, id: stock_picking_0}:
     name: test_picking
-    address_id: res_partner_address_0
+    address_id: base.res_partner_address_4
     company_id: base.main_company
     date: '2010-05-11 15:18:52'
     invoice_state: none
     move_lines:
       - company_id: base.main_company
-        date_planned: '2010-05-11 15:18:57'
+        date: '2010-05-11 15:18:57'
         location_dest_id: stock.stock_location_customers
         location_id: stock.stock_location_stock
         name: HP CD writers
-        product_id: stock.product_product_hpcdwriters0
+        product_id: product.product_product_pc1
         product_qty: 3.0
         product_uom: product.product_uom_unit
         date: '2010-05-11 15:18:57'
@@ -326,7 +325,6 @@
       "ir.ui.menu", "tz": False, "search_default_confirmed": 1, "contact_display":
       "partner", "active_ids": [ref("stock.menu_action_picking_tree6")], "active_id":
       ref("stock.menu_action_picking_tree6"), })
-    
     
 -
   I confirm the picking.

@@ -21,8 +21,6 @@
 
 from osv import osv
 from tools.translate import _
-import time
-
 
 class pos_open_statement(osv.osv_memory):
     _name = 'pos.open.statement'
@@ -37,59 +35,57 @@ class pos_open_statement(osv.osv_memory):
              @param context: A standard dictionary
              @return : Blank Directory
         """
+        data = {}
+        mod_obj = self.pool.get('ir.model.data')
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         statement_obj = self.pool.get('account.bank.statement')
-        singer_obj = self.pool.get('singer.statement')
+        sequence_obj = self.pool.get('ir.sequence')
         journal_obj = self.pool.get('account.journal')
-        journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True)])
-        journal_ids = journal_obj.browse(cr, uid, journal_lst)
-        for journal in journal_ids:
+        cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users "
+                    "WHERE user_id=%s ORDER BY journal_id"% (uid,))
+        j_ids = map(lambda x1: x1[0], cr.fetchall())
+        journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)])
+
+        for journal in journal_obj.browse(cr, uid, journal_ids):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
             if len(ids):
-                raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s". \n Please close the cashbox related to. ' % (journal.name)))
-            sql = """ Select id from account_bank_statement
-                                    where journal_id=%d
-                                    and company_id =%d
-                                    order by id desc limit 1""" % (journal.id, company_id)
-            cr.execute(sql)
-            st_id = cr.fetchone()
+                raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s".\nPlease close its related Register.' %(journal.name)))
+            
             number = ''
-            sequence_obj = self.pool.get('ir.sequence')
-            if journal.statement_sequence_id:
-                number = sequence_obj.get_id(cr, uid, journal.id)
+            if journal.sequence_id:
+                number = sequence_obj.get_id(cr, uid, journal.sequence_id.id)
             else:
-                number = sequence_obj.get(cr, uid,
-                                'account.bank.statement')
+                number = sequence_obj.get(cr, uid, 'account.cash.statement')
 
-    #        statement_id=statement_obj.create(cr,uid,{'journal_id':journal.id,
-    #                                                  'company_id':company_id,
-    #                                                  'user_id':uid,
-    #                                                  'state':'open',
-    #                                                  'name':number
-    #                                                  })
-            period = statement_obj._get_period(cr, uid, context) or None
-            cr.execute("INSERT INTO account_bank_statement(journal_id,company_id,user_id,state,name, period_id,date) VALUES(%d,%d,%d,'open','%s',%d,'%s')"%(journal.id, company_id, uid, number, period, time.strftime('%Y-%m-%d %H:%M:%S')))
-            cr.commit()
-            cr.execute("select id from account_bank_statement where journal_id=%d and company_id=%d and user_id=%d and state='open' and name='%s'"%(journal.id, company_id, uid, number))
-            statement_id = cr.fetchone()[0]
-            if st_id:
-                statemt_id = statement_obj.browse(cr, uid, st_id[0])
-                if statemt_id and statemt_id.ending_details_ids:
-                    statement_obj.write(cr, uid, [statement_id], {
-                        'balance_start': statemt_id.balance_end,
-                        'state': 'open',
-                    })
-                    if statemt_id.ending_details_ids:
-                        for i in statemt_id.ending_details_ids:
-                            c = singer_obj.create(cr, uid, {
-                                'pieces': i.pieces,
-                                'number': i.number,
-                                'starting_id': statement_id,
-                            })
-            cr.commit()
-        return {}
+            data.update({'journal_id': journal.id,
+                         'company_id': company_id,
+                         'user_id': uid,
+                         'state': 'draft',
+                         'name': number })
+            statement_id = statement_obj.create(cr, uid, data)
+            statement_obj.button_open(cr, uid, [statement_id], context)
 
+        data_obj = self.pool.get('ir.model.data')
+        id2 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
+        id3 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_form2')
+        result = data_obj._get_id(cr, uid, 'point_of_sale', 'view_pos_open_cash_statement_filter')
+        search_id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+
+        return {
+            'domain': "[('state','=','open'),('user_id','=',"+ str(uid) +")]",
+            'name': 'Open Statement',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'search_view_id': search_id['res_id'],
+            'res_model': 'account.bank.statement',
+            'views': [(id2, 'tree'),(id3, 'form')],
+            'context': {'search_default_open': 1},
+            'type': 'ir.actions.act_window'
+        }
 pos_open_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

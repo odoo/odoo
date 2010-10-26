@@ -20,8 +20,7 @@
 ##############################################################################
 
 import os
-
-from tools import config
+import addons
 from tools.translate import _
 from base_module_quality import base_module_quality
 
@@ -36,7 +35,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         return None
 
     def run_test(self, cr, uid, module_path):
-        config_file_path = config['addons_path']+'/base_module_quality/pylint_test/pylint_test_config.txt'
+        config_file_path = addons.get_module_resource('base_module_quality','pylint_test', 'pylint_test_config.txt')
         list_files = os.listdir(module_path)
         for i in list_files:
             path = os.path.join(module_path, i)
@@ -55,30 +54,20 @@ class quality_test(base_module_quality.abstract_quality_check):
                     flag = True
                 file_path = os.path.join(module_path, file_py)
                 try:
-                    import pylint
                     res = os.popen('pylint --rcfile=' + config_file_path + ' ' + file_path).read()
-                except:
+                except Exception:
                     self.error = True
-                    import netsvc
-                    netsvc.Logger().notifyChannel('Pylint:', netsvc.LOG_WARNING, "Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)")
+                    self.log.exception("Cannot run pylint test for %s", file_path)
                     self.result += _("Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)")+"\n"
                     return None
                 count += 1
-#                leftchar = -1
-#                while res[leftchar:leftchar+1] != ' ' and leftchar-1 <= 0:
-#                    leftchar -= 1
-#                rightchar = -10
-#                while res[rightchar:rightchar+1] != '/' and rightchar+1 <= 0:
-#                    rightchar += 1
                 try:
-#                    score += float(res[leftchar+1:rightchar])
                     scr = res.split("Your code has been rated at")[1].split("</div>")[0].split("/")[0]
                     score += float(scr)
-                    #self.result += file + ": " + res[leftchar+1:rightchar] + "/10\n"
                     dict_py[file_py] = [file_py, scr]
-                except:
+                except Exception:
+                    self.log.warning("Cannot parse pylint result", exc_info=True)
                     score += 0
-                    #self.result += file + ": "+_("Unable to parse the result. Check the details.")+"\n"
                     dict_py[file_py] = [file_py, _("Unable to parse the result. Check the details.")]
                 replace_string = ''
                 replace_string += res

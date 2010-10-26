@@ -5,7 +5,7 @@
     <!-- Cron -->
 
         <record model="ir.cron" id="ir_cron_marketing_campaign_every_hour">
-            <field name="name">Check Workitem</field>
+            <field name="name">Marketing Campaign: Campaign workitems processing</field>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
@@ -14,9 +14,9 @@
             <field name="function" eval="'process_all'"/>
             <field name="args" eval="'()'"/>
         </record>
-        
+
         <record model="ir.cron" id="ir_cron_marketing_campaign_every_day">
-            <field name="name">Check Segment</field>
+            <field name="name">Marketing Campaign: Segment Sync</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field><!-- it s every day -->
             <field name="numbercall">-1</field>
@@ -25,6 +25,6 @@
             <field name="function" eval="'process_segment'"/>
             <field name="args" eval="'()'"/>
         </record>
-                
+
     </data>
 </openerp>

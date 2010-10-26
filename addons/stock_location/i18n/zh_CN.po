@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 10:30+0000\n"
+"PO-Revision-Date: 2010-08-03 01:02+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:19+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_location
@@ -24,7 +24,7 @@ msgstr "转换要的天数"
 #. module: stock_location
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
+msgstr "无效的视图结构xml文件!"
 
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
@@ -35,18 +35,18 @@ msgstr "库存库位路径"
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "自动没步骤增加"
+msgstr "自动，不加入步骤"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
 msgid ""
 "These rules set the right path of the product in the whole location tree."
-msgstr "这些规则确定了库位树正确的产品路径"
+msgstr "这些规则确定了产品在整个库位树的正确路径"
 
 #. module: stock_location
 #: field:stock.location.path,location_from_id:0
@@ -77,7 +77,7 @@ msgstr "手动操作"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "stock.location.path"
-msgstr "库存.库位.路径"
+msgstr ""
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -89,7 +89,8 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
-"这些规则确定了库位树正确的产品路径.‘自动调拨’将创建库存调拨后当前将自动验证.‘手动操作’这库存调拨要工人验证.‘自动没增加步骤’库位是取代原来的"
+"这些规则确定了产品在库位树中的正确移动路径.\n"
+"‘自动调拨’ 将创建库存调拨后自动确认. ‘手动操作’ 库存调拨需要人工确认. ‘自动不加入步骤’ 库位是取代调拨源库位."
 
 #. module: stock_location
 #: field:stock.location.path,name:0

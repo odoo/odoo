@@ -1,27 +1,27 @@
-- |
-  In order to test hr_expenses for OpenERP, I create expense for employee and manage employee's expenses.
-- |
-  Creating  unit of measure category "Working Time".
+-
+  In order to test hr_expenses for OpenERP, I create expenses for employee and manage employee's expenses.
+-
+  I create an unit of measure category "Working Time".
 -
   !record {model: product.uom.categ, id: product_uom_categ_workingtime0}:
     name: Working Time.
 
-- |
-  Given that I have employee "Marc John" and his address.
+-
+  I create a new employee.
 -
   !record {model: hr.employee, id: hr.employee1}:
     address_home_id: base.res_partner_address_1
     address_id: base.main_address
-- |
-  I create  product unit of measure "Hour".
+-
+  I create product unit of measure "Hour".
 -
   !record {model: product.uom, id: product_uom_hour0}:
     category_id: 'product_uom_categ_workingtime0'
     factor: 8.0
     name: Hour
     rounding: 0.01
-- |
-  Creating a product  "travel" and select uom "Hour" and category "Working Time".
+-
+   I Create a product "travel".
 -
   !record {model: product.product, id: product_product_travel0}:
     categ_id: product.product_category_services
@@ -41,8 +41,8 @@
     weight: 0.0
     weight_net: 0.0
 
-- |
-  Now I create Expense "September Expenses" for  Marc John.And select product "travel".
+-
+  I create an expense.
 -
   !record {model: hr.expense.expense, id: hr_expense_expense_september0}:
     company_id: base.main_company
@@ -58,50 +58,39 @@
         uom_id: product.product_uom_unit
         unit_amount: 700.0
     user_id: base.user_root
-- |
-  I check that expenses on "draft" state.
+-
+  I check that expense is in "Draft" state.
 -
   !assert {model: hr.expense.expense, id: hr_expense_expense_september0}:
     - state == 'draft'
-- |
+-
   I confirm this expenses by click on "Confirm" button.
 -
   !workflow {model: hr.expense.expense, action: confirm, ref: hr_expense_expense_september0}
 
-- |
+-
   I check that state is "Waiting Confirmation".
 -
   !assert {model: hr.expense.expense, id: hr_expense_expense_september0}:
     - state == 'confirm'
-- |
+-
   I accept this expense by click on "Accept" button.
 -
   !workflow {model: hr.expense.expense, action: validate, ref: hr_expense_expense_september0}
 
-- |
-  I invoiced this expenses by click on "Invoice" button.
+-
+  I invoiced this expense by click on "Invoice" button.
 -
   !workflow {model: hr.expense.expense, action: invoice, ref: hr_expense_expense_september0}
 
-- |
+-
   I check that state is "Invoiced"
 -
   !assert {model: hr.expense.expense, id: hr_expense_expense_september0}:
     - state == 'invoiced'
-- |
-  Now I check that Invoice is created for that expenses.
+-
+  I check that Invoice is created for the expense.
 -
   !python {model: hr.expense.expense}: |
     exp = self.browse(cr, uid, [ref('hr_expense_expense_september0')])[0]
-    invoice_obj = self.pool.get('account.invoice')
-    invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', exp.employee_id.address_id.partner_id.id)])
-    invoice_id = invoice_obj.browse(cr, uid, invoice_ids)[0]
-
-    for invoice in invoice_id.invoice_line:
-      product = invoice.product_id.id
-
-    for line  in exp.line_ids:
-      product_exp = line.product_id.id
-    assert product == product_exp
-    assert exp.id == invoice_id.id
-
+    assert exp.invoice_id, "Invoice should be created"

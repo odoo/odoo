@@ -142,6 +142,9 @@
             <field name="signal">subflow.done</field>
         </record>
         
+        <record id="procurement.trans_confirm_confirm_wait" model="workflow.transition">
+            <field name="condition">not test_cancel() and not get_phantom_bom_id()</field>
+        </record>
         
     </data>
 </openerp>

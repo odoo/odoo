@@ -1,0 +1,321 @@
+-
+  In order to test the Sale module in OpenERP,
+  I create a Sale Order for Slider Mobile for 500 quantity having Shipping Policy 'Shipping & Manual Invoice'
+-
+  !record {model: sale.order, id: sale_order_so0}:
+    date_order: '2010-07-17'
+    invoice_quantity: order
+    name: Test_SO002
+    order_line:
+      - name: Slider Mobile
+        price_unit: 200
+        product_uom: product.product_uom_unit
+        product_uom_qty: 500.0
+        state: draft
+        delay: 7.0
+        product_id: sale.product_product_slidermobile0
+        product_uos_qty: 500.0
+        type: make_to_order
+    order_policy: manual
+    partner_id: sale.res_partner_cleartrail0
+    partner_invoice_id: sale.res_partner_address_2
+    partner_order_id: sale.res_partner_address_1
+    partner_shipping_id: sale.res_partner_address_3
+    picking_policy: direct
+    pricelist_id: product.list0
+    shop_id: sale.shop
+- 
+  I confirm the Sale Order.
+- 
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
+-
+  I click on Create Invoice button to create the invoice.
+- 
+  !workflow {model: sale.order, action: manual_invoice, ref: sale_order_so0}
+
+-
+  I verify whether the invoice has been generated for SO
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so0"))
+    assert so.invoice_ids, "Invoices has not been generated for sale_order_so0" 
+-
+  I open the Invoice for the SO.
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    invoice_ids = so.invoice_ids
+    for invoice in invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
+-
+  I verify that an invoice state has transit from draft to open state
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
+    assert invoice_id, "Invoice is not in the open state"
+-
+  I verify that its Journal Entries has been created
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
+    inv_brw = self.browse(cr, uid, invoice_id)[0]
+    assert inv_brw.move_id, "Journal Entries has not been created"
+-
+  Assign analytic journal into bank journal
+- 
+  !record {model: account.journal, id: sale.account_journal_bankjournal0}:
+    analytic_journal_id: account.cose_journal_sale
+-
+  I pay the invoice
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
+    self.pay_and_reconcile(cr, uid, invoice_id,
+        100000.0, ref('account.cash'), ref('account.period_8'),
+        ref('sale.account_journal_bankjournal0'), ref('account.cash'),
+        ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
+        name='test')
+-
+  I verify the invoice is in done state. 
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','paid')])
+    assert invoice_id, "Invoice for SO is not in done state."
+-
+  I verify that Paid has been set to true.
+-
+  !python {model: sale.order}: |
+    sale_id=self.browse(cr, uid, ref("sale_order_so0"))
+    assert(sale_id.invoiced == True), "Paid has not been set to true"
+-   
+  I verify that the picking has been generated for the sale order
+- 
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so0"))
+    assert so.picking_ids,"Picking has not been generated for sale_order_so0"
+-
+  I verify that delivery order has been generated for sale order
+-
+  !python {model: stock.picking }: |
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   picking_id = self.search(cr, uid, [('origin','=',so.name)])
+   assert (picking_id),"Delivery order has not been generated"
+-
+  I verify that a procurement has been generated for so
+-
+  !python {model: procurement.order}: |
+    from tools.translate import _
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
+    assert proc_ids, _('No Procurements!')
+-
+  Then I click on the "Run Procurement" button
+-
+  !python {model: procurement.order}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
+    for proc in proc_ids:
+      wf_service.trg_validate(uid, 'procurement.order',proc,'button_check', cr)
+-
+  I verify that a procurement state is "running"
+-
+  !python {model: procurement.order}: |
+    from tools.translate import _
+    modules = self.pool.get('ir.module.module')
+    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
+    mod_brw = modules.browse(cr,uid,mod_pur)[0]
+    if (mod_brw.state == 'installed'):
+        sale_order_obj = self.pool.get('sale.order')
+        so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+        proc_ids = self.search(cr, uid, [('origin','=',so.name),('state','=','running')])
+        assert proc_ids, _('Procurement is not in the running state!')
+-
+  I verify that a purchase order has been generated
+-
+  !python {model: sale.order}: |
+    from tools.translate import _
+    modules = self.pool.get('ir.module.module')
+    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
+    mod_brw = modules.browse(cr,uid,mod_pur)[0]
+    if(mod_brw.state == 'installed'):
+        so = self.browse(cr, uid, ref("sale_order_so0"))
+        pur_obj=self.pool.get('purchase.order')
+        pur_id=pur_obj.search(cr, uid, [('origin','=',so.name)])
+        assert pur_id, _('Purchase order has not been generated')
+    
+-
+  I click on the "Confirm" button to confirm the purchase order
+-
+  !python {model: sale.order}: |
+    from tools.translate import _
+    modules = self.pool.get('ir.module.module')
+    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
+    mod_brw = modules.browse(cr,uid,mod_pur)[0]
+    if(mod_brw.state == 'installed'):
+        pur_obj=self.pool.get('purchase.order')
+        so = self.browse(cr, uid, ref("sale_order_so0"))
+        import netsvc
+        wf_service = netsvc.LocalService("workflow")
+        pur_ids = pur_obj.search(cr, uid, [('origin','=',so.name)])
+        for pur in pur_ids:
+          wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_confirm', cr)
+- 
+  I click on the "Approved by supplier" button to approve the purchase order
+-
+  !python {model: sale.order}: |
+    from tools.translate import _
+    modules = self.pool.get('ir.module.module')
+    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
+    mod_brw = modules.browse(cr,uid,mod_pur)[0]
+    if (mod_brw.state == 'installed'):
+        pur_obj = self.pool.get('purchase.order')
+        so = self.browse(cr, uid, ref("sale_order_so0"))
+        import netsvc
+        wf_service = netsvc.LocalService("workflow")
+        pur_ids = pur_obj.search(cr, uid, [('origin','=',so.name)])
+        for pur in pur_ids:
+          wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_approve', cr)
+-
+  I verify that a picking related to purchase order has been generated. 
+-
+  !python {model: sale.order}: |
+    modules = self.pool.get('ir.module.module')
+    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
+    mod_brw = modules.browse(cr,uid,mod_pur)[0]
+    if (mod_brw.state == 'installed'):
+        pur_obj = self.pool.get('purchase.order')
+        so = self.browse(cr, uid, ref("sale_order_so0"))
+        pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
+        po = pur_obj.browse(cr, uid, pur_id)[0]
+        assert(po.picking_ids),"Picking for purchase order has not been generated"
+-  
+  Then I click on the "Products Received" button of Incoming Shipments
+-
+  !record {model: stock.partial.picking, id: stock_partial_picking_0}:
+    date: '2010-07-17 17:52:09'
+-
+  I click on the "Validate" button
+-
+  !python {model: stock.picking}: |
+    modules = self.pool.get('ir.module.module')
+    sale_order_obj = self.pool.get('sale.order')
+    pur_obj = self.pool.get('purchase.order')
+    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
+    mod_brw = modules.browse(cr,uid,mod_pur)[0]
+    if (mod_brw.state == 'installed'):
+        so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+        pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
+        po = pur_obj.browse(cr, uid, pur_id)[0]
+        pick_ser_id = self.search(cr, uid, [('purchase_id', '=', po.id )])
+        import netsvc
+        wf_service = netsvc.LocalService("workflow")
+        for pick in pick_ser_id:
+          wf_service.trg_validate(uid, 'stock.picking',pick,'button_done', cr)
+-
+  I verify that picking for purchase order has been done.
+-
+  !python {model: sale.order}: |
+    from tools.translate import _
+    modules = self.pool.get('ir.module.module')
+    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
+    mod_brw = modules.browse(cr,uid,mod_pur)[0]
+    if(mod_brw.state == 'installed'):
+        pur_obj = self.pool.get('purchase.order')
+        so = self.browse(cr, uid, ref("sale_order_so0"))
+        pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
+        po = pur_obj.browse(cr, uid, pur_id)[0]
+        picking_obj = self.pool.get('stock.picking')
+        ids = picking_obj.search(cr, uid, [('purchase_id', '=', po.id ),('state', '=', 'done')])
+        assert ids, _('Picking is not in the done state!')
+-
+  Then I done the picking
+- 
+  !python {model: stock.picking }: |
+   import time
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
+   if picking_id:
+      pick=self.browse(cr,uid,picking_id[0])
+      pick.force_assign(cr, uid)
+      partial_datas = {
+           'partner_id':pick.address_id.partner_id.id,
+            'address_id': pick.address_id.id,
+            'delivery_date' : time.strftime('%Y-%m-%d'),
+           }
+      move = pick.move_lines[0]
+      partial_datas['move%s'%(move.id)]= {
+          'product_id': move.product_id.id,
+          'product_qty': move.product_qty,
+          'product_uom': move.product_uom.id,
+      } 
+      self.do_partial(cr, uid, [pick.id],partial_datas)
+-
+  I verify that picking for sale order is in done state.
+-
+  !python {model: stock.picking }: |
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
+   pick = self.browse(cr,uid,picking_id[0])
+   assert (pick.state) =='done', "Picking for SO is not in done state." 
+-
+  Then I done the delivery order
+-
+  !python {model: stock.picking }: |
+   import time
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   picking_id = self.search(cr, uid, [('origin','=',so.name)])
+   if picking_id:
+      pick=self.browse(cr,uid,picking_id[0])
+      pick.force_assign(cr, uid)
+      partial_datas = {
+           'partner_id':pick.address_id.partner_id.id,
+            'address_id': pick.address_id.id,
+            'delivery_date' : time.strftime('%Y-%m-%d'),
+           }
+      move = pick.move_lines[0]
+      partial_datas['move%s'%(move.id)]= {
+          'product_id': move.product_id.id,
+          'product_qty': move.product_qty,
+          'product_uom': move.product_uom.id,
+      } 
+      self.do_partial(cr, uid, [pick.id],partial_datas)  
+-
+  I verify that delivery state is done
+-
+  !python {model: stock.picking }: |
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   picking_id = self.search(cr, uid, [('origin','=',so.name)])
+   pick = self.browse(cr,uid,picking_id[0])
+   assert (pick.state) =='done', "Picking for SO is not in done state."
+-
+  I verify that a "Picked" has been set to true 
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so0"))
+    assert (so.shipped == True), "Picked has not been set to True"
+-
+  I verify that a sale order is in done state
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so0"))
+    assert (so.state == 'done'), "Sale order is not in the done state."

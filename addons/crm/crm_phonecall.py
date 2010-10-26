@@ -24,26 +24,25 @@ from osv import fields, osv
 from tools.translate import _
 import crm
 import time
+from datetime import datetime, timedelta
 
-class crm_phonecall(osv.osv, crm_case):
+class crm_phonecall(crm_case, osv.osv):
     """ Phonecall Cases """
 
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
-
+    _inherit = ['mailgate.thread']
     _columns = {
         # From crm.case
-        'name': fields.char('Name', size=64),
+        'id': fields.integer('ID'),
+        'name': fields.char('Call Summary', size=64),
         'active': fields.boolean('Active', required=False), 
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1), 
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'), 
+                        select=True, help='Sales team to which Case belongs to.'), 
         'user_id': fields.many2one('res.users', 'Responsible'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
@@ -54,7 +53,7 @@ class crm_phonecall(osv.osv, crm_case):
                                     ('draft', 'Draft'), 
                                     ('open', 'Todo'), 
                                     ('cancel', 'Cancelled'), 
-                                    ('done', 'Closed'), 
+                                    ('done', 'Done'), 
                                     ('pending', 'Pending'),
                                 ], 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
@@ -62,14 +61,11 @@ class crm_phonecall(osv.osv, crm_case):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."), 
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', \
-                            domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.phonecall')]"), 
         'date_open': fields.datetime('Opened', readonly=True),
         # phonecall fields
-        'duration': fields.float('Duration'), 
+        'duration': fields.float('Duration', help="Duration in Minutes"), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                        domain="[('section_id','=',section_id),\
+                        domain="['|',('section_id','=',section_id),('section_id','=',False),\
                         ('object_id.model', '=', 'crm.phonecall')]"), 
         'partner_phone': fields.char('Phone', size=32), 
         'partner_contact': fields.related('partner_address_id', 'name', \
@@ -84,12 +80,13 @@ class crm_phonecall(osv.osv, crm_case):
         'date_closed': fields.datetime('Closed', readonly=True), 
         'date': fields.datetime('Date'), 
         'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'), 
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
-        'state': lambda *a: 'draft', 
+        'state': lambda *a: 'open', 
         'user_id': lambda self,cr,uid,ctx: uid,
         'active': lambda *a: 1, 
     }
@@ -113,9 +110,28 @@ class crm_phonecall(osv.osv, crm_case):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_phonecall, self).case_close(cr, uid, ids, args)
-        self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for phone in self.browse(cr, uid, ids):
+            phone_id= phone.id
+            data = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
+            if phone.duration <=0:
+                duration = datetime.now() - datetime.strptime(phone.date, '%Y-%m-%d %H:%M:%S')
+                data.update({'duration': duration.seconds/float(60)})
+            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], args)
+            self.write(cr, uid, ids, data)
         return res
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Resets case as draft
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_phonecall, self).case_reset(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'duration': 0.0})
+        return res
+
 
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date

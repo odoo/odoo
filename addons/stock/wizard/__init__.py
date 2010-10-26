@@ -21,16 +21,18 @@
 
 import stock_traceability
 import stock_move
+import stock_splitinto
 import stock_partial_picking
 import stock_partial_move
 import stock_replacement
 import stock_ups
 import stock_inventory_merge
-import stock_inventory_set_stock_zero
 import stock_fill_inventory
 import stock_inventory_line_split
 import stock_invoice_onshipping
 import stock_location_product
 import stock_change_standard_price
+import stock_return_picking
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

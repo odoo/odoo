@@ -1,0 +1,23 @@
+-
+ In order to test the PDF reports defined on Employee, we will print Timesheet of a User
+-
+  !python {model: hr.employee}: |
+    import netsvc, tools, os, time
+    month = time.gmtime()[1]
+    year = time.gmtime()[0]
+    data_dict = {'model': 'ir.ui.menu', 'form': {'month': month, 'year' : year, 'employee_id' : ref('hr.employee1') }}
+    (data, format) = netsvc.LocalService('report.hr.analytical.timesheet').create(cr, uid, [], data_dict, {})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet-user_report.'+format), 'wb+').write(data)
+
+-
+ In order to test the PDF reports defined on Employee, we will print Timesheet of Users
+-
+  !python {model: hr.employee}: |
+    import netsvc, tools, os, time
+    month = time.gmtime()[1]
+    year = time.gmtime()[0]
+    data_dict = {'model': 'ir.ui.menu', 'form': {'month': month, 'year' : year, 'employee_ids' : [ref('hr.employee1')] }}
+    (data, format) = netsvc.LocalService('report.hr.analytical.timesheet_users').create(cr, uid, [], data_dict, {})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet-users_report.'+format), 'wb+').write(data)

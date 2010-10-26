@@ -21,26 +21,32 @@
 
 {
     "name" : "Human Resources Evaluation",
-    "version" : "0.1",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
-    "depends" : ["hr",'hr_recruitment','survey'],
+    "version": "0.1",
+    "author": "OpenERP SA",
+    "category": "Generic Modules/Human Resources",
+    "website": "http://www.openerp.com",
+    "depends": ["hr",'hr_recruitment','survey'],
     "description": """
-                      Ability to create employees evaluation.
-                      An evaluation can be created by employee for subordinates,
-                      juniors as well as his manager.The evaluation is done under a plan
-                      in which various surveys can be created and it can be defined which
-                      level of employee hierarchy fills what and final review and evaluation
-                      is done by the manager.Every evaluation filled by the employees can be viewed
-                      in the form of   """,
-    "init_xml" : [],
-    "demo_xml" : ["hr_evaluation_demo.xml"],
-    "update_xml" : [
-                    "security/ir.model.access.csv",
-                    "wizard/hr_evaluation_mail_view.xml",
-                    "hr_evaluation_view.xml",
-                    "report/hr_evaluation_report_view.xml"],
+          Ability to create employees evaluation.
+          An evaluation can be created by employee for subordinates,
+          juniors as well as his manager.The evaluation is done under a plan
+          in which various surveys can be created and it can be defined which
+          level of employee hierarchy fills what and final review and evaluation
+          is done by the manager.Every evaluation filled by the employees can be viewed
+          in the form of.Implements a dashboard for My Current Evaluations
+         """,
+    "init_xml": [],
+    "demo_xml": ["hr_evaluation_demo.xml",
+                 ],
+    "update_xml": [
+        "security/ir.model.access.csv",
+        "security/hr_evaluation_security.xml",
+        "wizard/hr_evaluation_mail_view.xml",
+        "hr_evaluation_view.xml",
+        "report/hr_evaluation_report_view.xml",
+        "board_hr_evaluation_view.xml"
+        ],
+    "test": ["test/test_hr_evaluation.yml"],
     "active": False,
     "installable": True
 }

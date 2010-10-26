@@ -20,15 +20,14 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Add the Timesheet support for Issue Management in Project Management',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-        This module adds the Timesheet support for the Issues/Bugs Management in Project
-    """,
-    'author': 'Tiny',
+                    This module adds the Timesheet support for the Issues/Bugs Management in Project
+                """,
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
         'project_issue',
@@ -38,10 +37,12 @@
     ],
     'update_xml': [
         'project_issue_sheet_view.xml',
-     ],
+        'security/ir.model.access.csv',
+    ],
     'demo_xml': [
     ],
     'installable': True,
     'active': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

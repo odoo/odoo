@@ -52,9 +52,9 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
                     WHERE (aal.account_id=%s) AND (aal.date>=%s) \
                         AND (aal.date<=%s) AND (aal.general_account_id=aa.id) \
                         AND aa.active \
-                        AND (aal.journal_id =ANY(%s) ) \
+                        AND (aal.journal_id IN %s ) \
                     GROUP BY aa.code, aa.name, aa.id ORDER BY aa.code",
-                    (account_id, date1, date2,journal_ids))
+                    (account_id, date1, date2, tuple(journal_ids)))
         res = self.cr.dictfetchall()
         return res
 
@@ -79,9 +79,9 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
                         account_analytic_journal AS aaj \
                     WHERE (aal.general_account_id=%s) AND (aal.account_id=%s) \
                         AND (aal.date>=%s) AND (aal.date<=%s) \
-                        AND (aal.journal_id=aaj.id) AND (aaj.id =ANY(%s)) \
+                        AND (aal.journal_id=aaj.id) AND (aaj.id IN %s) \
                         ORDER BY aal.date, aaj.code, aal.code",
-                    (general_account_id, account_id, date1, date2,journal_ids,))
+                    (general_account_id, account_id, date1, date2,tuple(journal_ids)))
         res = self.cr.dictfetchall()
         return res
 
@@ -96,30 +96,30 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
                     WHERE account_id = %s AND date >= %s AND date <= %s \
-                        AND journal_id =ANY(%s)",
-                        (account_id, date1, date2,journal_ids,))
+                        AND journal_id IN %s",
+                        (account_id, date1, date2, tuple(journal_ids),))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_quantity(self, accounts, date1, date2, journals):
         ids = map(lambda x: x.id, accounts)
-        if not len(ids):
+        if not ids:
             return 0.0
         if not journals:
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
-                    WHERE account_id =ANY(%s) AND date>=%s AND date<=%s",
-                    (ids, date1, date2,))
+                    WHERE account_id IN %s AND date>=%s AND date<=%s",
+                    (tuple(ids), date1, date2,))
         else:
             journal_ids = journals
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
-                    WHERE account_id =ANY(%s) AND date >= %s AND date <= %s \
-                        AND journal_id =ANY(%s)",(ids, date1, date2, journal_ids))
+                    WHERE account_id IN %s AND date >= %s AND date <= %s \
+                        AND journal_id IN %s",(tuple(ids), date1, date2, tuple(journal_ids)))
         return self.cr.fetchone()[0] or 0.0
 
 report_sxw.report_sxw('report.account.analytic.account.quantity_cost_ledger',
         'account.analytic.account',
         'addons/account/project/report/quantity_cost_ledger.rml',
-        parser=account_analytic_quantity_cost_ledger, header=False)
+        parser=account_analytic_quantity_cost_ledger, header="internal")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

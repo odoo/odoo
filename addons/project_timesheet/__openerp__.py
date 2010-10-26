@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Project Timesheet',
     'version': '1.0',
@@ -29,12 +28,15 @@
         the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways.
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'project', 'hr_timesheet_sheet'],
+    'depends': ['project', 'hr_timesheet_sheet', 'hr_timesheet_invoice'],
     'init_xml': [],
-    'update_xml': ["process/project_timesheet_process.xml", "report/task_report_view.xml"],
-    'demo_xml': [],
+    'update_xml': ["security/ir.model.access.csv","process/project_timesheet_process.xml", "report/task_report_view.xml", "project_timesheet_view.xml"],
+    'demo_xml': ["project_timesheet_demo.xml"],
+    'test': [
+        'test/worktask_entry_to_timesheetline_entry.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0075123647453',

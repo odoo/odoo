@@ -25,14 +25,17 @@ class marketing_installer(osv.osv_memory):
     _name = 'marketing.installer'
     _inherit = 'res.config.installer'
     _columns = {
-        # Generic modules
+        'email_template':fields.boolean('Automated E-Mails',
+            help="Helps you to design templates of emails and integrate them in your different processes."),
         'marketing_campaign':fields.boolean('Marketing Campaigns',
             help="Helps you to manage marketing campaigns and automate actions and communication steps."),
-        'marketing_campaign_mailchimp':fields.boolean('Mailchimp Integration',
-            help="This modules integrate mailchimp.com's service with OpenERP to automate mass mailings."),
         'crm_profiling':fields.boolean('Profiling Tools',
-            help="Helps you to perform segmentation within partners and design questionaires.")
+            help="Helps you to perform segmentation of partners and design segmentation questionnaires")
     }
+    _defaults = {
+        'marketing_campaign': lambda *a: 1,
+    }
+
 marketing_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

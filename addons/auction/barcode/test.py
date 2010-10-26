@@ -34,8 +34,6 @@ def run():
     story.append(Extended93("L@@K! Code 93 :-)")) #, xdim=0.005 * inch))
     story.append(Paragraph('Code 128', styleN))
     c=Code128("AB-12345678") #, xdim=0.005 * inch)
-    #print 'WIDTH =', (c.width / inch), 'XDIM =', (c.xdim / inch)
-    #print 'LQ =', (c.lquiet / inch), 'RQ =', (c.rquiet / inch)
     story.append(c)
     story.append(Paragraph('USPS FIM', styleN))
     story.append(FIM("A"))

@@ -1,48 +1,40 @@
 -
- In order to test the POS in module,  To gives business owners a convenient way of checking out customers and of recording sales.
+  In order to test the POS in module, To give business owners a convenient way of checking out customers and of recording sales.
 
 -
- I  configure all details for the customer,Salesman  and  Product ,Account.
+  I  configure all details for the Customer, Salesman and Product, Account.
 - 
-   I create View Account Type.
+  I create View Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_view0}:
     close_method: none
     code: View
     name: View
     sign: 1
-    
-    
 - 
-   I create Income Account Type.
+  I create Income Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_income0}:
     close_method: unreconciled
     code: Income
     name: Income
     sign: 1
-    
-    
 - 
-   I create Expense Account Type.
+  I create Expense Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_expense0}:
     close_method: unreconciled
     code: Expense
     name: Expense
     sign: 1
-    
-    
 - 
-   I create Cash Account Type.
+  I create Cash Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_cash0}:
     close_method: balance
     code: Cash
     name: Cash
     sign: 1
-    
-    
 - 
   I create Minimal Chart Account.
 - 
@@ -69,8 +61,6 @@
     reconcile: true
     type: payable
     user_type: account_account_type_expense0
-    
-    
 - 
    I create Receivable Account.
 - 
@@ -85,8 +75,6 @@
     reconcile: true
     type: receivable
     user_type: account_account_type_income0
-    
-    
 - 
   I create Cash Account.
 - 
@@ -100,8 +88,6 @@
     parent_right: 7
     type: other
     user_type: account_account_type_cash0
-    
-    
 - 
   I create Purchases Account.
 - 
@@ -116,10 +102,10 @@
     type: other
     user_type: account_account_type_expense0
 - 
-   I create Sales Account.
+  I create Sales Account.
 - 
   !record {model: account.account, id: account_account_sales0}:
-    code: S
+    code: Sale
     company_id: base.main_company
     currency_mode: current
     name: Sales
@@ -128,7 +114,6 @@
     parent_right: 11
     type: other
     user_type: account_account_type_income0
-
 - 
   I create Purchase Journal.
 - 
@@ -141,10 +126,8 @@
     sequence_id: account.sequence_purchase_journal
     type: purchase
     view_id: account.account_journal_view
-    
-    
 - 
-   I create Sale Journal.
+  I create Sale Journal.
 - 
   !record {model: account.journal, id: account_journal_salejournal0}:
     code: SAJ
@@ -155,10 +138,8 @@
     sequence_id: account.sequence_sale_journal
     type: sale
     view_id: account.account_journal_view
-    
-    
 - 
-   I create Bank Journal.
+  I create Bank Journal.
 - 
   !record {model: account.journal, id: account_journal_bankjournal0}:
     code: BNK
@@ -169,8 +150,6 @@
     sequence_id: account.sequence_journal
     type: cash
     view_id: account.account_journal_bank_view
-    
-    
 - 
   I create property for account payable.
 - 
@@ -179,10 +158,8 @@
     fields_id: account.field_res_partner_property_account_payable
     name: property_account_expense_categ
     value_reference: account.account,5
-    
-    
 - 
-   I create property for account receivable.
+  I create property for account receivable.
 - 
   !record {model: ir.property, id: ir_property_propertyaccountincomecateg0}:
     company_id: base.main_company
@@ -201,25 +178,19 @@
     category_id:
       - res_partner_category_customers0
     name: Cleartrail
-    
-    
 - 
- I create partner address.
+  I create partner address.
 - 
   !record {model: res.partner.address, id: res_partner_address_1}:
     partner_id: res_partner_cleartrail0
     street: onam plaza, 14 B palasia A B Road
     type: contact
-    
-    
 - 
   I create partner  invoice address.
 - 
   !record {model: res.partner.address, id: res_partner_address_2}:
     partner_id: res_partner_cleartrail0
     type: invoice
-    
-    
 - 
   I create partner delivery address.
 - 
@@ -242,7 +213,6 @@
     property_account_payable: account_account_payable1
     property_account_receivable: account_account_receivable0   
     supplier: true        
-    
 -
   I create partner address .
 - 
@@ -250,7 +220,7 @@
     country_id: base.in
     partner_id: res_partner_microlinktechnologies0
     street: Ash House, Ash Road
-    title: Ms.
+    title: base.res_partner_title_miss
 - 
   I create product category .
 - 
@@ -271,7 +241,6 @@
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
-    
 -    
   I create product  LG Viewty Smart.
 - 
@@ -281,8 +250,6 @@
     list_price: 170.0
     mes_type: fixed
     name: LG Viewty Smart
-    pricelist_purchase: 'Default Purchase Pricelist (0.00) : 160.00\n'
-    pricelist_sale: 'Public Pricelist (0.00) : 170.00\n'
     procure_method: make_to_order
     property_account_expense: account_account_payable1
     property_account_income: account_account_receivable0
@@ -297,7 +264,6 @@
 -
   !record {model: product.category, id: product_category_computer0}:
     name: Computer
-
 - 
   I create product  HP Pavilion Desktop PCs
 - 
@@ -311,18 +277,16 @@
     seller_ids:
       - delay: 1
         name: res_partner_microlinktechnologies0
-        qty: 5.0
+        min_qty: 5.0
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
     property_account_expense: account_account_payable1
     property_account_income: account_account_receivable0
- 
 -  
   I create New Order by adding the details of Salesman and  "Product" as LG Viewty Smart Quantity as 10.
 -
-
   !record {model: pos.order, id: pos_order_pos0}:
     company_id: base.main_company
     date_order: '2010-05-13 15:02:48'
@@ -354,13 +318,11 @@
     self.apply_discount(cr, uid, [ref("pos_discount_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz": False, "active_id":
       ref("pos_order_pos0"), })
-    
 - 
   I open the register.
 - 
   !record {model: pos.open.statement, id: pos_open_statement_0}:
     {}
-    
 - 
   I open the statement.
 - 
@@ -368,17 +330,17 @@
     self.open_statement(cr, uid, [ref("pos_open_statement_0")], {"lang": "en_US", "active_model":
       "ir.ui.menu", "active_ids": [ref("point_of_sale.menu_open_statement")], "tz":
       False, "active_id": ref("point_of_sale.menu_open_statement"), })
-     
 -
   I click on the "Make Payment" wizard.  
 - 
   !record {model: pos.make.payment, id: pos_make_payment_0}:
     amount: 1615.0
-    journal: 5
-    payment_date: 2010-05-13
+    journal: 7
+    payment_date: "2010-05-13"
     payment_name: Payment
     product_id: product_product_hppaviliondesktoppcs0
-    
+    pricelist_id: product.list0
+    partner_id: base.res_partner_agrolait
 - 
   I make the payment.
 - 
@@ -392,7 +354,6 @@
   !python {model: pos.order}: |
    order=self.browse(cr,uid,ref("pos_order_pos0"))
    assert(order.statement_ids!=[]), "Statement lines not created"    
-                                            
 -
   When I click on Return picking button , I get three option.
 -
@@ -413,8 +374,6 @@
     self.create_returns(cr, uid, [ref("pos_return_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("point_of_sale.pos_order_pos0")], "tz":
       False, "active_id": ref("point_of_sale.pos_order_pos0"), })
-    
-    
 - 
   Then it allows me to define the quantity of products, which will return to the stock.
 -
@@ -427,20 +386,23 @@
   I click on close button.
 - 
   !python {model: pos.add.product}: |
+    return_obj = self.pool.get('pos.return')
+    context['active_ids'] = [ref("pos_order_pos0")] 
+    return_obj.view_init(cr, uid, [],context=context)
     self.close_action(cr, uid, [ref("pos_add_product_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz": False, "active_id": ref("pos_order_pos0"),
       })
-       
 -    
   I create payment.
 - 
   !record {model: pos.make.payment, id: pos_make_payment_1}:
     amount: 680.0
-    journal: 5
-    payment_date: 2010-05-13
+    journal: 7
+    payment_date: "2010-05-13"
     payment_name: Payment
     product_id: product_product_hppaviliondesktoppcs0
-
+    pricelist_id: product.list0
+    partner_id: base.res_partner_agrolait
 - 
   For payment, I click on  Make Payment. 
 - 
@@ -448,7 +410,6 @@
     self.check(cr, uid, [ref("pos_make_payment_1")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz":
       False, "active_id": ref("pos_order_pos0"), })    
-
 - 
   To check the Return without Refund . I click button "Return without Refund ".
 - 
@@ -473,4 +434,9 @@
     self.action_confirm(cr, uid, [ref("pos_confirm_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz": False, "active_id": ref("pos_order_pos0"),
       })
-    
+- 
+  I check order state is done.
+- 
+  !python {model: pos.order}: |
+    order=self.browse(cr,uid,ref("pos_order_pos0"))    
+    assert(order.state=='done'), "Order is not done"    

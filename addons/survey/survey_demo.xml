@@ -17,7 +17,7 @@
 
         <!--  Partner Feedback Demo data -->
         <record model="survey" id="survey_partner_feedback">
-            <field name="title">Open ERP Partner Feedback</field>
+            <field name="title">OpenERP Partner Feedback</field>
             <field name="responsible_id" ref="base.user_root"/>
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type2"/>
@@ -25,6 +25,7 @@
             <field name="tot_comp_survey">1</field>
             <field name="tot_start_survey">1</field>
             <field name="response_user">5</field>
+            <field name="date_open">2010-03-03 14:25:03</field>
            </record>
 
         <record id="survey_page_who_are_you" model="survey.page">
@@ -388,7 +389,7 @@
         </record>
         <record id="survey_answer_converted_in_customers" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
-            <field name="answer">How are the leads that you find thanks to Tiny be converted in customers?</field>
+            <field name="answer">How are the leads that you find thanks to OpenERP SA be converted in customers?</field>
             <field name="question_id" ref="survey_question_Leads" />
             <field name="sequence" eval="2"/>
         </record>
@@ -425,7 +426,7 @@
 
         <record id="survey_question_partners_about" model="survey.question">
             <field name="in_visible_answer_type">1</field>
-            <field name="question">How is Tiny's communication with partners about...</field>
+            <field name="question">How is OpenERP SA's communication with partners about...</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">matrix_of_choices_only_one_ans</field>
             <field name="in_visible_single_text">1</field>
@@ -482,7 +483,7 @@
 
         <record id="survey_question_partners_on_which_subjects" model="survey.question">
             <field name="in_visible_answer_type">1</field>
-            <field name="question">In your opinion, how could Tiny better communicate with partners and on which subjects?</field>
+            <field name="question">In your opinion, how could OpenERP SA better communicate with partners and on which subjects?</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">comment</field>
             <field name="in_visible_rating_weight">1</field>
@@ -500,6 +501,7 @@
             <field name="tot_comp_survey">1</field>
             <field name="tot_start_survey">1</field>
             <field name="response_user">5</field>
+            <field name="date_open">2010-03-03 14:25:03</field>
            </record>
 
         <record id="survey_page_odoo_who_are_you" model="survey.page">
@@ -1306,20 +1308,6 @@
             <field eval="2" name="sequence"/>
         </record>
     </data>
-<!--    <data>-->
-<!--        <record id="survey_page_2" model="survey.page">-->
-<!--            <field eval="&quot;&quot;&quot;Ergonomy and ease of use - 2&quot;&quot;&quot;" name="title"/>-->
-<!--            <field name="survey_id" ref="survey_0"/>-->
-<!--            <field eval="3" name="sequence"/>-->
-<!--        </record>-->
-<!--    </data>-->
-<!--    <data>-->
-<!--        <record id="survey_page_3" model="survey.page">-->
-<!--            <field eval="&quot;&quot;&quot;Ergonomy and ease of use - 3&quot;&quot;&quot;" name="title"/>-->
-<!--            <field name="survey_id" ref="survey_0"/>-->
-<!--            <field eval="4" name="sequence"/>-->
-<!--        </record>-->
-<!--    </data>-->
     <data>
         <record id="survey_page_4" model="survey.page">
             <field eval="&quot;&quot;&quot;Ergonomy of the clients&quot;&quot;&quot;" name="title"/>
@@ -2830,9 +2818,9 @@
             <field eval="8" name="sequence"/>
         </record>
     </data>
-    
+
     <!--  Survey Response -->
-    
+
     <data noupdate="1">
         <record id="survey_history_0" model="survey.history">
             <field name="date">2010-03-03 14:25:03</field>
@@ -2902,7 +2890,7 @@
             <field name="date_create">2010-03-03 14:25:03.706175</field>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
-            <field name="single_text">Tiny ERP</field>
+            <field name="single_text">OpenERP SA</field>
             <field name="question_id" ref="survey.survey_question_company_name"/>
         </record>
     </data>
@@ -2983,7 +2971,7 @@
             <field name="date_create">2010-03-03 14:29:36.33203</field>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
-            <field name="single_text">Tiny ERP</field>
+            <field name="single_text">OpenERP SA</field>
             <field name="question_id" ref="survey.survey_question_odoo_company_name"/>
         </record>
     </data>

@@ -26,7 +26,7 @@
     'category': 'Generic Modules/Accounting',
     'description': """Financial and accounting reporting
     Balance Sheet Report""",
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [
@@ -36,7 +36,8 @@
         'account_data.xml',
         'wizard/account_reporting_balance_report_view.xml',
     ],
-    'demo_xml': [],
+    'demo_xml': ['account_reporting_demo.xml'],
+    'test': ['test/account_reporting_report.yml'],
     'installable': True,
     'active': False,
     'certificate': '0072305016797',

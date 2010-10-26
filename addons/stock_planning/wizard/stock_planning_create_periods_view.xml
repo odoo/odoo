@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Creating periods section -->
+
+        <record id="view_stock_period_createlines_form" model="ir.ui.view">
+            <field name="name">stock.period.createlines.form</field>
+            <field name="model">stock.period.createlines</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Stock and Sales Periods">
+                    <separator colspan="4" string="Create periods for Stock and Sales Planning"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <separator colspan="4" string=""/>
+                    <group col="4" colspan="4">
+                        <button string="Cancel" special="cancel" icon="gtk-cancel"/>
+                        <button name="create_stock_periods" icon="gtk-dnd" string="Create Daily Periods" type="object"/>
+                        <button name="create_stock_periods" icon="gtk-dnd"  string="Create Weekly Periods" type="object" context="{'interval': 6, 'name': 'Weekly'}"/>
+                        <button name="create_stock_periods" icon="gtk-dnd" string="Create Monthly Periods" type="object" context="{'interval': 1, 'name': 'Monthly'}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_period_createlines_form" model="ir.actions.act_window">
+            <field name="name">Stock and Sales Planning Periods</field>
+            <field name="res_model">stock.period.createlines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_stock_period_createlines_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_stock_period_creatlines"
+                  name="Create Stock and Sales Periods"
+                  parent="menu_stock_period_main"
+                  action="action_stock_period_createlines_form"
+                  sequence = "5"/>
+    </data>
+</openerp>

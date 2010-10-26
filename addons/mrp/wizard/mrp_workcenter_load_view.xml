@@ -15,10 +15,10 @@
 				    <field name="measure_unit"/>
 				    <newline/>
 				    <group col="2" colspan="4">
-                		<button icon='gtk-cancel' special="cancel"
+                		<button icon='gtk-stop' special="cancel"
                 			string="Cancel" />
                 		<button name="print_report" string="Print"
-                			colspan="1" type="object" icon="gtk-ok" />
+                			colspan="1" type="object" icon="gtk-print" />
                 	</group>
 				</form>
 			</field>
@@ -28,8 +28,8 @@
             res_model="mrp.workcenter.load"
             src_model="mrp.workcenter"
 		    view_mode="form"
-		    target="new"        
-            key2="client_action_multi"    
+		    target="new"   
+            key2="client_print_multi"    
 		    id="action_mrp_workcenter_load_wizard"/>
 	</data>
 </openerp>

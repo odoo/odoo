@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 from tools.translate import _
+import base64
 
 class showdiff(osv.osv_memory):
     """ Disp[ay Difference for History """
@@ -33,30 +34,32 @@ class showdiff(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         """
         history = self.pool.get('wiki.wiki.history')
-        ids = context.get('active_ids')
+        ids = context.get('active_ids', [])
+
         diff = ""
         if len(ids) == 2:
             if ids[0] > ids[1]:
-                diff = history.getDiff(cr, uid, ids[1], ids[0])
+                diff = base64.encodestring(history.getDiff(cr, uid, ids[1], ids[0]))
             else:
-                diff = history.getDiff(cr, uid, ids[0], ids[1])
+                diff = base64.encodestring(history.getDiff(cr, uid, ids[0], ids[1]))
 
         elif len(ids) == 1:
             old = history.browse(cr, uid, ids[0])
             nids = history.search(cr, uid, [('wiki_id', '=', old.wiki_id.id)])
             nids.sort()
-            diff = history.getDiff(cr, uid, ids[0], nids[-1])
+            diff = base64.encodestring(history.getDiff(cr, uid, ids[0], nids[-1]))
         else:
             raise osv.except_osv(_('Warning'), _('You need to select minimum 1 or maximum 2 history revision!'))
+
 
         return diff
 
     _columns = {
-        'diff': fields.text('Diff'),
+        'file_path':fields.binary('Diff', readonly=True),
     }
 
     _defaults = {
-        'diff': get_diff
+        'file_path': get_diff
     }
 
 showdiff()

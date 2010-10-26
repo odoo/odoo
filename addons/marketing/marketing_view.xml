@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
 
-        <menuitem name="Marketing" icon="terp-crm" id="marketing_menu" sequence="10"/>
+        <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17" groups="marketing.group_marketing_user"/>
 
         <record id="view_marketing_installer" model="ir.ui.view">
             <field name="name">marketing.installer.view</field>
@@ -12,14 +12,14 @@
             <field name="arch" type="xml">
                 <data>
                   <form position="attributes">
-                    <attribute name="string">Marketing Modules Installation</attribute>
+                    <attribute name="string">Marketing Application Configuration</attribute>
                   </form>
                   <separator string="title" position="attributes">
-                    <attribute name="string">Select Marketing Modules to Install</attribute>
+                    <attribute name="string">Configure Your Marketing Application</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']"
                          position="attributes">
-                    <attribute name="string">OpenERP provides tools to automate your leads process, design marketing campaigns and profile efficiently your customers.</attribute>
+                    <attribute name="string">OpenERP provides Addons to better manage your sales and marketing processes. Select the ones you would be interested in.</attribute>
                   </xpath>
                  <xpath expr='//separator[@string="vsep"]' position='attributes'>
                        <attribute name='rowspan'>13</attribute>
@@ -30,15 +30,15 @@
                   </xpath>
                   <group colspan="8">
                         <field name="marketing_campaign" />
+                        <field name="email_template" />
                         <field name="crm_profiling" />
-                        <field name="marketing_campaign_mailchimp" />
                   </group>
                 </data>
             </field>
         </record>
 
         <record id="action_marketing_installer" model="ir.actions.act_window">
-            <field name="name">Marketing Modules Installation</field>
+            <field name="name">Marketing Applications Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">marketing.installer</field>
             <field name="view_id" ref="view_marketing_installer"/>
@@ -50,6 +50,7 @@
         <record id="marketing_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_marketing_installer"/>
             <field name="sequence">3</field>
+            <field name="restart">always</field>
         </record>
 
     </data>

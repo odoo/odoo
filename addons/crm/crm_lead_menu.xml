@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">
+<data>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_all">
         <field name="name">Leads</field>
@@ -8,9 +8,9 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
-        <field name="context">{"search_default_user_id":uid,'search_default_current':1}</field>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
-        <field name="context">{'search_default_current':1, 'default_type': 'lead'}</field>
+        <field name="context">{'search_default_current':1, 'default_type': 'lead', 'search_default_section_id': section_id}</field>
+        <field name="help">'Leads' allows you to manage and keep track of all first potential interests of a partner in one of your products or services. A lead is a first, unqualified, contact with a prospect or customer. After being qualified, a lead can be converted into a business opportunity with the creation of the related partner for further detailed tracking of any linked activities. You can use leads when you import a database of prospects or to integrate your website's contact form with OpenERP.</field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all">
@@ -29,7 +29,6 @@
 
     <menuitem id="base.menu_sales" name="Sales"
         parent="base.menu_base_partner" sequence="1" />
-        
 
     <menuitem parent="base.menu_sales" name="Leads"
         groups="base.group_extended"

@@ -7,12 +7,12 @@
             <field name="model">project.issue.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Project Issue">
+                <tree string="Issues Analysis">
                     <field name="name" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="project_id" invisible="1"/>
-                    <field name="stage_id" invisible="1"/>
-                    <field name="type_id" string="Version" invisible="1"/>
+                    <field name="type_id" invisible="1"/>
+                    <field name="version_id" string="Version" invisible="1"/>
                     <field name="priority" invisible="1"/>
                     <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                     <field name="section_id" invisible="1"/>
@@ -25,11 +25,12 @@
                     <field name="date_closed" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="day" invisible="1"/>
-                    <field name="nbr" string="#Project Issue" sum='#Number of Project Issue'/>
+                    <field name="nbr" string="#Project Issues" sum='#Number of Project Issues'/>
                     <field name="delay_open" avg='Avg Opening Delay'/>
                     <field name="delay_close" avg='Avg Closing Delay'/>
                     <field name="working_hours_open" sum='Open Working Hours'/>
                     <field name="working_hours_close" sum='Close Working hours'/>
+                    <field name="email" sum='# Emails'/>
                   </tree>
             </field>
         </record>
@@ -51,130 +52,132 @@
             <field name="model">project.issue.report</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-				<search string="Search">
+                <search string="Search">
                   <group col="16" colspan="8">
-                   		<filter string="365 Days" icon="terp-go-year"
-                   			domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+                           <filter string="Year" icon="terp-go-year" help="Current Year"
+                        domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
+                        />
 
-                       <filter string="30 Days" icon="terp-go-month" name="This Month"
-                    	   domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                       <filter string="Month" icon="terp-go-month" name="This Month"
+                        domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                        />
+                       <filter icon="terp-go-week" string="Month-1" separator="1" help="Previous Month"
+                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                        />
 
-                       <filter icon="terp-go-week" string="7 Days" separator="1"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
-
-                   		<separator orientation="vertical" />
+                           <separator orientation="vertical" />
                         <filter  icon="terp-camera_test"
-                    		string="Current"
-                    		domain="[('state','in',('draft','open'))]"/>
+                            string="Current"
+                            domain="[('state','in',('draft','open'))]"/>
                        <filter icon="terp-gtk-media-pause"
-                    		string="Pending"
-                    		domain="[('state','=','pending')]"/>
+                            string="Pending"
+                            domain="[('state','=','pending')]"/>
                        <filter icon="terp-dialog-close"
-                    		string="Done"
-                    		domain="[('state','=','done')]"/>
+                            string="Done"
+                            domain="[('state','=','done')]"/>
 
-                   		<separator orientation="vertical" />
-                   		<field name="section_id"
-                   			default="context.get('section_id', False)"
-                   			widget="selection"
-                   			context="{'invisible_section': False}">
+                           <separator orientation="vertical" />
+                           <field name="section_id"
+                               string="Sale Team    "
+                               default="context.get('section_id', False)"
+                               widget="selection"
+                               context="{'invisible_section': False}">
 
-                   			<filter icon="terp-crm"
-                   				context="{'invisible_section': False}"
-                   				domain="[('section_id.user_id','=',uid)]"
-                   				help="My section" />
+                               <filter icon="terp-crm"
+                                   context="{'invisible_section': False}"
+                                   domain="[('section_id.user_id','=',uid)]"
+                                   help="My Sale Team" />
 
-                   		</field>
-                  			<field name="project_id"/>
-                      	<field name="user_id"  select="1" widget="selection"/>
+                           </field>
+                              <field name="project_id"/>
+                          <field name="user_id"  select="1" widget="selection"/>
+                   </group>
+                   <newline/>
+                   <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                       <field name="partner_id"/>
+                       <field name="assigned_to" widget="selection"/>
+                       <separator orientation="vertical"/>
+                       <field name="priority" />
+                       <separator orientation="vertical"/>
+                       <field name="version_id" widget="selection" />
+                       <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                       <field name="type_id" widget="selection"/>
+                       <separator orientation="vertical"/>
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                       <newline/>
+                       <field name="creation_date"/>
+                       <field name="opening_date"/>
+                       <field name="date_closed" string="Date Closed"/>
                    </group>
                    <newline/>
                    <group  expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="Project"  name="project" icon="terp-folder-blue" context="{'group_by':'project_id'}" />
-                        <filter string="Task"  icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'task_id'}"/>
-                        <separator orientation="vertical" />
-                        <filter name="User" string="Responsible" icon="terp-personal" 
+                           <filter name="User" string="Responsible" icon="terp-personal"
                         domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Assigned to" name="Responsible" icon="terp-personal"
                         domain="[]" context="{'group_by':'assigned_to'}" />
-                       <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}" />
+                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
-                        <filter string="Section" icon="terp-sale"
-                        	domain="[]"
-                        	context="{'group_by':'section_id'}" />
+                        <filter string="Sale Team" icon="terp-personal+"
+                            domain="[]"
+                            context="{'group_by':'section_id'}" />
+                        <separator orientation="vertical" />
+                        <filter string="Project"  name="project" icon="terp-folder-violet" context="{'group_by':'project_id'}" />
+                        <filter string="Task"  icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'task_id'}"/>
+                        <separator orientation="vertical" />
                         <filter string="Category" icon="terp-stock_symbol-selection"
-                        	domain="[]" context="{'group_by':'categ_id'}" />
+                            domain="[]" context="{'group_by':'categ_id'}" />
+                        <filter string="Version"  icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'version_id'}"/>
                         <separator orientation="vertical" />
-                        <filter string="Version"  icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <separator orientation="vertical" />
+                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize"
-                        	domain="[]" context="{'group_by':'state'}" />
+                            domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical"/>
                         <filter string="Company" icon="terp-go-home"
-                        	domain="[]"
-                        	context="{'group_by':'company_id'}" />
-
+                            domain="[]"
+                            context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
-                        <filter string="Day" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'day'}"/>
+                        <filter string="Day" icon="terp-go-today"
+                            domain="[]" context="{'group_by':'day'}" help="Creation Date"/>
 
                         <filter string="Month" icon="terp-go-month"
-                        	domain="[]" context="{'group_by':'month'}" />
+                            domain="[]" context="{'group_by':'month'}" help="Creation Date"/>
 
                         <filter string="Year" icon="terp-go-year"
-                        	domain="[]" context="{'group_by':'name'}" />
+                            domain="[]" context="{'group_by':'name'}" help="Creation Date"/>
 
                   </group>
-                   <newline/>
-                   <group  expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
-                    		<field name="partner_id"  />
-                    		<field name="assigned_to" widget="selection"/>
-                    		<separator orientation="vertical"/>
-                    		<field name="priority" />
-                    		<separator orientation="vertical"/>
-                    		<field name="type_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                    		<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                    		<field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
-                    		<separator orientation="vertical"/>
-                   		<field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    		<newline/>
-                            <field name="creation_date"/>
-                            <field name="opening_date"/>
-                            <field name="date_closed" string="Date Closed"/>
-                        </group>
                </search>
             </field>
         </record>
 
         <record id="action_project_issue_report" model="ir.actions.act_window">
-            <field name="name">Project Issue</field>
+            <field name="name">Issues Analysis</field>
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
-  			<field name="view_mode">graph,tree</field>
-  			<field name="context">{'search_default_This Month':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
+              <field name="view_mode">graph,tree</field>
+              <field name="context">{'search_default_This Month':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_project_issue_report_tree"/>
             <field name="search_view_id" ref="view_project_issue_report_filter"/>
+            <field name="help">This report on the project issues allows you to analyse the quality of your support or after-sales services. You can track the issues per age. You can analyse the time required to open or close an issue, the number of email to exchange and the time spent on average by issues.</field>
         </record>
 
 
-       	<record model="ir.actions.act_window.view" id="action_project_issue_report_tree">
-	        <field name="sequence" eval="1"/>
-	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="view_project_issue_report_tree"/>
-	        <field name="act_window_id" ref="action_project_issue_report"/>
-	    </record>
+           <record model="ir.actions.act_window.view" id="action_project_issue_report_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_project_issue_report_tree"/>
+            <field name="act_window_id" ref="action_project_issue_report"/>
+        </record>
         <record model="ir.actions.act_window.view" id="action_project_issue_report_graph">
-	        <field name="sequence" eval="2"/>
-	        <field name="view_mode">graph</field>
-	        <field name="view_id" ref="view_project_issue_report_graph"/>
-	        <field name="act_window_id" ref="action_project_issue_report"/>
-	    </record>
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_project_issue_report_graph"/>
+            <field name="act_window_id" ref="action_project_issue_report"/>
+        </record>
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
         <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
-        <menuitem action="action_project_issue_report" id="menu_project_issue_report_tree" parent="base.menu_project_report"/>
+        <menuitem action="action_project_issue_report" id="menu_project_issue_report_tree" parent="base.menu_project_report" groups="project.group_project_manager"/>
 
 
   </data>

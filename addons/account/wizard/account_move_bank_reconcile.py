@@ -18,10 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import tools
+
 from osv import fields, osv
 from tools.translate import _
-
 
 class account_move_bank_reconcile(osv.osv_memory):
     """
@@ -31,7 +30,7 @@ class account_move_bank_reconcile(osv.osv_memory):
     _description = "Move bank reconcile"
     _columns = {
        'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-              }
+    }
 
     def action_open_window(self, cr, uid, ids, context={}):
         """
@@ -40,7 +39,7 @@ class account_move_bank_reconcile(osv.osv_memory):
        @param ids: account move bank reconcile’s ID or list of IDs
        @return: dictionary of  Open  account move line   on given journal_id.
         """
-        data = self.read(cr, uid, ids,context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         cr.execute('select default_credit_account_id \
                         from account_journal where id=%s', (data['journal_id'],))
         account_id = cr.fetchone()[0]

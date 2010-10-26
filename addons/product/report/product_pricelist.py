@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,7 +23,7 @@ import time
 from report import report_sxw
 from osv import osv
 import pooler
-
+from tools.translate import _
 class product_pricelist(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(product_pricelist, self).__init__(cr, uid, name, context=context)
@@ -33,6 +33,7 @@ class product_pricelist(report_sxw.rml_parse):
             'time': time,
             'get_pricelist': self._get_pricelist,
             'get_currency': self._get_currency,
+            'get_currency_symbol': self._get_currency_symbol,
             'get_categories': self._get_categories,
             'get_price': self._get_price,
             'get_titles': self._get_titles,
@@ -44,9 +45,9 @@ class product_pricelist(report_sxw.rml_parse):
         qtys = 1
 
         for i in range(1,6):
-            if form['qty'+str(i)] > 0 and form['qty'+str(i)] not in vals.values():
-                vals['qty'+str(qtys)] = form['qty'+str(i)]
-                qtys += 1
+            if form['qty'+str(i)]!=0:
+                vals['qty'+str(qtys)] = str(form['qty'+str(i)]) + ' units'
+            qtys += 1
         lst.append(vals)
         return lst
 
@@ -55,19 +56,25 @@ class product_pricelist(report_sxw.rml_parse):
             q = 'qty%d'%i
             if form[q] >0 and form[q] not in self.quantity:
                 self.quantity.append(form[q])
-#            else:
-#                self.quantity.append(0)
+            else:
+                self.quantity.append(0)
         return True
 
     def _get_pricelist(self, pricelist_id):
         pool = pooler.get_pool(self.cr.dbname)
-        pricelist = pool.get('product.pricelist').read(self.cr,self.uid,[pricelist_id],['name'])[0]
+        pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['name'])[0]
         return pricelist['name']
 
     def _get_currency(self, pricelist_id):
         pool = pooler.get_pool(self.cr.dbname)
-        pricelist = pool.get('product.pricelist').read(self.cr,self.uid,[pricelist_id],['currency_id'])[0]
+        pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'])[0]
         return pricelist['currency_id'][1]
+
+    def _get_currency_symbol(self, pricelist_id):
+        pool = pooler.get_pool(self.cr.dbname)
+        pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'])[0]
+        symbol = pool.get('res.currency').read(self.cr, self.uid, [pricelist['currency_id'][0]], ['symbol'])[0]
+        return symbol['symbol'] or ''
 
     def _get_categories(self, products,form):
         cat_ids=[]
@@ -80,35 +87,39 @@ class product_pricelist(report_sxw.rml_parse):
             pro_ids.append(product.id)
             if product.categ_id.id not in cat_ids:
                 cat_ids.append(product.categ_id.id)
-        cats = pool.get('product.category').read(self.cr,self.uid,cat_ids,['name'])
+
+        cats = pool.get('product.category').name_get(self.cr, self.uid, cat_ids)
+        if not cats:
+            return res
         for cat in cats:
-            product_ids=pool.get('product.product').search(self.cr,self.uid,[('id','in',pro_ids),('categ_id','=',cat['id'])])
+            product_ids=pool.get('product.product').search(self.cr, self.uid, [('id','in',pro_ids),('categ_id','=',cat[0])])
             products = []
-            for product in pool.get('product.product').read(self.cr,self.uid,product_ids,['name','code']):
-                val={
-                         'id':product['id'],
-                         'name':product['name'],
-                         'code':product['code']
-                         }
+            for product in pool.get('product.product').read(self.cr, self.uid, product_ids, ['name','code']):
+                val = {
+                     'id':product['id'],
+                     'name':product['name'],
+                     'code':product['code']
+                }
                 i = 1
                 for qty in self.quantity:
                     if qty == 0:
-                        val['qty'+str(i)] = ""
+                        val['qty'+str(i)] = 0.0
                     else:
-                        val['qty'+str(i)]=self._get_price(self.pricelist,product['id'],qty)
-                        i += 1
+                        val['qty'+str(i)]=self._get_price(self.pricelist, product['id'], qty)
+                    i += 1
                 products.append(val)
-            res.append({'name':cat['name'],'products':products})
+            res.append({'name':cat[1],'products': products})
         return res
 
     def _get_price(self,pricelist_id, product_id,qty):
+        sale_price_digits = self.get_digits(dp='Sale Price')
         pool = pooler.get_pool(self.cr.dbname)
-        price_dict = pool.get('product.pricelist').price_get(self.cr,self.uid,[pricelist_id],product_id,qty)
+        price_dict = pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id,qty)
         if price_dict[pricelist_id]:
-            price = self.formatLang(price_dict[pricelist_id])
+            price = self.formatLang(price_dict[pricelist_id], digits=sale_price_digits)
         else:
-            res = pool.get('product.product').read(self.cr, self.uid,[product_id])
-            price =  self.formatLang(res[0]['list_price'])
+            res = pool.get('product.product').read(self.cr, self.uid, [product_id])
+            price =  self.formatLang(res[0]['list_price'], digits=sale_price_digits)
         return price
 
 report_sxw.report_sxw('report.product.pricelist','product.product','addons/product/report/product_pricelist.rml',parser=product_pricelist)

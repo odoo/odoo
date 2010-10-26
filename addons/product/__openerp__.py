@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,13 +23,13 @@
 {
     "name" : "Products & Pricelists",
     "version" : "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category" : "Generic Modules/Inventory Control",
     "depends" : ["base", "process", "decimal_precision"],
     "init_xml" : [],
     "demo_xml" : ["product_demo.xml"],
     "description": """
-    This is the base module for managing products and pricelists in Open ERP.
+    This is the base module for managing products and pricelists in OpenERP.
 
     Products support variants, different pricing methods, suppliers
     information, make to stock/order, different unit of measures,
@@ -55,9 +55,9 @@
         'product_view.xml',
         'pricelist_view.xml',
         'partner_view.xml',
-        'company_view.xml',
         'process/product_process.xml'
     ],
+    'test':['test/product_report.yml'],
     'installable': True,
     'active': False,
     'certificate': '0068861431437',

@@ -86,7 +86,7 @@ class base_setup_company(osv.osv_memory):
         'street2':fields.char('Street 2', size=128),
         'zip':fields.char('Zip Code', size=24),
         'city':fields.char('City', size=128),
-        'state_id':fields.selection(_get_all_states, 'State'),
+        'state_id':fields.selection(_get_all_states, 'Fed. State'),
         'country_id':fields.selection(_get_all_countries, 'Country'),
         'email':fields.char('E-mail', size=64),
         'phone':fields.char('Phone', size=64),
@@ -104,8 +104,8 @@ Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07''')
 We suggest you to put bank information here:
 IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
         'logo':fields.binary('Logo'),
-        'account_no':fields.char('Account No', size=64),
-        'website': fields.char('Web', size=64),
+        'account_no':fields.char('Bank Account No', size=64),
+        'website': fields.char('Company Website', size=64, help="Example: http://openerp.com"),
     }
 
     def execute(self, cr, uid, ids, context=None):
@@ -154,21 +154,19 @@ base_setup_company()
 
 class res_currency(osv.osv):
     _inherit = 'res.currency'
-    
+
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
 #        We can use the following line,if we want to restrict this name_get for company setup only
 #        But, its better to show currencies as name(Code).
-#        if not (context.get('active_model','') == 'ir.actions.todo'):
-#            return super(res_currency,self).name_get(cr, uid, ids, context=context)
         if not len(ids):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
-        return [(x['id'], tools.ustr(x['name']) + ' (' + tools.ustr(x['code']) + ')')   for x in reads]
-        
+        reads = self.read(cr, uid, ids, ['name','symbol'], context, load='_classic_write')
+        return [(x['id'], tools.ustr(x['name']) + ' (' + tools.ustr(x['symbol']) + ')')   for x in reads]
+
 res_currency()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

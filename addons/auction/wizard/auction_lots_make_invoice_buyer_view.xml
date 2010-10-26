@@ -6,18 +6,20 @@
             <field name="model">auction.lots.make.invoice.buyer</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Paid">
+                <form string="Buyer Invoice">
                 	<group colspan="4" >
+                	     <separator string="Create Invoices For Buyer" colspan="4"/>
                 		 <field name="amount"/>
                 		 <field name="objects"/>
                 		 <field name="number"/>
                 		 <label string="(Keep empty for automatic number)" colspan="2"/>
                 		 <field name="buyer_id"/>
                     </group>
-                       	<separator string="" colspan="4" />
+                    <separator string="" colspan="4" />
                     <group colspan="4" col="6">
-                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button icon="gtk-ok" string="Create invoices" name="makeInvoices" type="object"/>
+                        <label string=" " colspan="2"/>
+                    	<button icon="gtk-close" special="cancel" string="Close"/>
+                    	<button icon="terp-gtk-go-back-rtl" string="Create invoices" name="makeInvoices" type="object"/>
                    </group>
                </form>
             </field>
@@ -29,8 +31,7 @@
 		    view_mode="form"
 		    target="new"        
             key2="client_action_multi"    
-		    id="action_auction_lots_make_invoice_buyer"/>    
-		      		        
-        
+		    id="action_auction_lots_make_invoice_buyer"/>   
+		     
     </data>
 </openerp>

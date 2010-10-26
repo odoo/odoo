@@ -19,12 +19,10 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from osv import fields,osv,orm
+from osv import fields, osv
 from tools.translate import _
 import crm
 import time
-import mx.DateTime
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -36,8 +34,6 @@ AVAILABLE_STATES = [
 
 class crm_opportunity(osv.osv):
     """ Opportunity Cases """
-    _name = "crm.lead"
-    _description = "Opportunity"
     _order = "priority,date_action,id desc"
     _inherit = 'crm.lead'
     _columns = {
@@ -46,14 +42,15 @@ class crm_opportunity(osv.osv):
                                  domain="[('partner_id','=',partner_id)]"), 
 
         # Opportunity fields
-        'probability': fields.float('Probability (%)'),
+        'probability': fields.float('Probability (%)',group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing'),
-        'date_action': fields.date('Next Action'),
-         }
+        'date_action': fields.date('Next Action Date'),
+        'title_action': fields.char('Next Action', size=64),
+     }
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting probability and close date
         @param self: The object pointer
@@ -63,7 +60,42 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        self.write(cr, uid, ids, {'probability' : 100.0, 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 100)]})
+        if not stage_id:
+            raise osv.except_osv(_('Warning !'), _('There is no stage for won opportunities defined for this Sale Team.'))
+        value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+
+        self.write(cr, uid, ids, value)
+        for (id, name) in self.name_get(cr, uid, ids):
+            opp = self.browse(cr, uid, id)
+            if opp.type == 'opportunity':
+                message = _("The opportunity '%s' has been won.") % name
+                self.log(cr, uid, id, message)
+        return res
+
+    def case_mark_lost(self, cr, uid, ids, *args):
+        """Mark the case as lost: state = done and probability = 0%
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
+        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 0)]})
+        value = {}
+        if stage_id:
+            value = self.onchange_stage_id(cr, uid, ids, stage_id, context={}).get('value', {})
+            value['stage_id'] = stage_id
+        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+        res = self.write(cr, uid, ids, value)
+        for (id, name) in self.name_get(cr, uid, ids):
+            opp = self.browse(cr, uid, id)
+            if opp.type == 'opportunity':
+                message = _("The opportunity '%s' has been marked as lost.") % name
+                self.log(cr, uid, id, message)
         return res
 
     def case_cancel(self, cr, uid, ids, *args):
@@ -77,9 +109,22 @@ class crm_opportunity(osv.osv):
         res = super(crm_opportunity, self).case_cancel(cr, uid, ids, args)
         self.write(cr, uid, ids, {'probability' : 0.0})
         return res
-    
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Overrides reset as draft in order to set the stage field as empty
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_reset(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'stage_id': False})
+        return res
+   
+ 
     def case_open(self, cr, uid, ids, *args):
-        """Overrides cancel for crm_case for setting Open Date
+        """Overrides open for crm_case for setting Open Date
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -108,7 +153,7 @@ class crm_opportunity(osv.osv):
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': crm.AVAILABLE_PRIORITIES[2][0],
     }
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
@@ -142,9 +187,10 @@ class crm_opportunity(osv.osv):
             context = {
                 'default_opportunity_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
+                'default_user_id': uid, 
                 'default_section_id': opp.section_id and opp.section_id.id or False,
                 'default_email_from': opp.email_from,
-                'default_state': 'open',
+                'default_state': 'open',  
                 'default_name': opp.name
             }
             value = {

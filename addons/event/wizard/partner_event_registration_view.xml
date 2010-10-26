@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- Partner event registration -->
+
+        <record id="view_partner_event_registration" model="ir.ui.view">
+            <field name="name">Partner event registration</field>
+            <field name="model">partner.event.registration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+              <form string="Event Registration">
+                    <separator string="Event For Registration" colspan="4"/>
+                    <group colspan="4" col="4">
+                        <field name="event_id"  on_change="onchange_event_id(event_id, context)"/>
+                        <field name="nb_register"/>
+                    </group>
+                    <separator string="Event Details" colspan="4"/>
+                     <group colspan="4" col="4">
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="event_type"/>
+                        <field name="unit_price"/>
+                    </group>
+
+
+                    <separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                        <label string="" colspan="2"/>
+                        <button special="cancel" string="_Close" icon="gtk-close"/>
+                        <button name="open_registration" string="_Subcribe" type="object" icon="gtk-go-back"/>
+                    </group>
+             </form>
+            </field>
+        </record>
+
+       <act_window name="Event Registration"
+            res_model="partner.event.registration"
+            src_model="res.partner"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_partner_event_registration"
+            />
+    </data>
+</openerp>

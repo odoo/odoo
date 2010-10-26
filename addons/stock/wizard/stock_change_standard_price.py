@@ -21,16 +21,20 @@
 
 from osv import fields, osv
 from tools.translate import _
+import decimal_precision as dp
 
 class change_standard_price(osv.osv_memory):
     _name = "stock.change.standard.price"
     _description = "Change Standard Price"
     _columns = {
-            'new_price': fields.float('Price', required=True),
-            'stock_account_input':fields.many2one('account.account', 'Stock Input Account'),
-            'stock_account_output':fields.many2one('account.account', 'Stock Output Account'),
-            'stock_journal':fields.many2one('account.journal', 'Stock journal', required=True),
-            'enable_stock_in_out_acc':fields.boolean('Enable Related Account',),
+        'new_price': fields.float('Price', required=True, digits_compute=dp.get_precision('Account'),
+                                  help="If cost price is increased, stock variation account will be debited "
+                                        "and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+                                        "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."),
+        'stock_account_input':fields.many2one('account.account', 'Stock Input Account'),
+        'stock_account_output':fields.many2one('account.account', 'Stock Output Account'),
+        'stock_journal':fields.many2one('account.journal', 'Stock journal', required=True),
+        'enable_stock_in_out_acc':fields.boolean('Enable Related Account',),
     }
 
     def default_get(self, cr, uid, fields, context):
@@ -95,7 +99,7 @@ class change_standard_price(osv.osv_memory):
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context')
         prod_obj = self.pool.get('product.product')
-        res = self.browse(cr, uid, ids)        
+        res = self.browse(cr, uid, ids)
         datas = {
             'new_price' : res[0].new_price,
             'stock_output_account' : res[0].stock_account_output.id,

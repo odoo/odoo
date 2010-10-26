@@ -22,17 +22,8 @@
   !python {model: crm.helpdesk}: |
     self.case_open(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')])  
 - |
-  I can see that "Send Reminder" button is visible, which is used to send reminder to partner from
-  responsible person  or send reminder to responsible person from partner.
--  
-   #this is not work for yaml.
--   
-#  !python {model: crm.helpdesk}: |
-#     self.remind_user(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')], context={}, attach=False, destination=True)  
-- |
   After a proper communication for the request via email I make sure that the request is fulfilled and
   I close this HelpDesk Request by clicking on "Close" button.
 - 
   !python {model: crm.helpdesk}: |
-    self.case_close(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')])    
--
+    self.case_close(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')])

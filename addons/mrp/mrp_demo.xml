@@ -3,8 +3,8 @@
     <data noupdate="1">
 
         <!--
-	Resource: mrp.workcenter
-	-->
+    Resource: mrp.workcenter
+    -->
 
         <record id="mrp_workcenter_0" model="mrp.workcenter">
             <field name="name">Assembly workshop</field>
@@ -14,10 +14,15 @@
             <field name="name">Repairs workshop</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
-
+      <!--
+    Resource: res.company
+    -->
+		<record id="stock.res_company_tinyshop0" model="res.company">
+			<field eval="1.0" name="manufacturing_lead"/>
+		</record>
         <!--
-	Resource: mrp.property.group
-	-->
+    Resource: mrp.property.group
+    -->
 
         <record id="mrp_property_group_ram" model="mrp.property.group">
             <field name="name">RAM</field>
@@ -54,8 +59,8 @@
         </record>
 
         <!--
-	Resource: mrp.property
-	-->
+    Resource: mrp.property
+    -->
 
         <record id="mrp_property_0" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_ram"/>
@@ -119,8 +124,8 @@
         </record>
 
         <!--
-	Resource: mrp.routing
-	-->
+    Resource: mrp.routing
+    -->
 
         <record id="mrp_routing_0" model="mrp.routing">
             <field name="workcenter_lines">[1]</field>
@@ -136,8 +141,8 @@
         </record>
 
         <!--
-	Resource: mrp.routing.workcenter
-	-->
+    Resource: mrp.routing.workcenter
+    -->
 
         <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_0"/>
@@ -160,8 +165,8 @@
         </record>
 
         <!--
-	Resource: mrp.bom
-	-->
+    Resource: mrp.bom
+    -->
 
         <record id="mrp_bom_0" model="mrp.bom">
             <field name="name">Regular processor config</field>
@@ -171,7 +176,6 @@
             <field name="routing_id" ref="mrp_routing_2"/>
             <field name="type">normal</field>
             <field model="product.product" name="product_id" ref="product.product_product_cpu_gen"/>
-            <field name="multi_level_bom">True</field>
         </record>
 
         <record id="mrp_bom_1" model="mrp.bom">
@@ -181,7 +185,6 @@
             <field name="product_qty">1.0</field>
             <field name="routing_id" ref="mrp_routing_0"/>
             <field model="product.product" name="product_id" ref="product.product_product_pc2" />
-            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_2" model="mrp.bom">
             <field name="name">Assembly Medium PC</field>
@@ -189,7 +192,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_pc3"/>
-            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_3" model="mrp.bom">
             <field name="name">Assembly Customizable PC</field>
@@ -197,7 +199,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_pc4"/>
-            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_4" model="mrp.bom">
             <field name="name">HDD on demand</field>
@@ -206,7 +207,6 @@
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
-            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_5" model="mrp.bom">
             <field name="name">RAM on demand</field>
@@ -215,7 +215,6 @@
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_21"/>
-            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_6" model="mrp.bom">
             <field name="name">HDD on demand</field>
@@ -224,7 +223,6 @@
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
-            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_7" model="mrp.bom">
             <field name="name">HDD on demand</field>
@@ -233,16 +231,6 @@
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
-            <field name="multi_level_bom">True</field>
-        </record>
-        <record id="mrp_bom_8" model="mrp.bom">
-            <field name="name">HDD Seagate</field>
-            <field name="sequence">26</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
-            <field model="product.product" name="product_id" ref="product.product_product_hdd1"/>
-            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_9" model="mrp.bom">
             <field name="name">Assembly Basic PC</field>
@@ -252,7 +240,6 @@
             <field name="routing_id" ref="mrp_routing_0"/>
             <field name="type">normal</field>
             <field model="product.product" name="product_id" ref="product.product_product_pc1"/>
-            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_10" model="mrp.bom">
             <field name="name">Complete PC with peripherals</field>
@@ -260,7 +247,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_23"/>
-            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_11" model="mrp.bom">
             <field name="name">RAM on demand</field>
@@ -269,7 +255,6 @@
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_23"/>
-            <field name="multi_level_bom">True</field>
         </record>
 
         <record id="mrp_bom_13" model="mrp.bom">
@@ -278,7 +263,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_cpu3"/>
-            <field name="multi_level_bom">True</field>
         </record>
 
         <record id="mrp_bom_kit" model="mrp.bom">
@@ -567,6 +551,169 @@
             <field name="bom_id" ref="mrp_bom_kit2"/>
             <field model="product.product" name="product_id" ref="product.product_product_24"/>
         </record>
+
+        <!--
+    Resource: mrp.bom new EVV
+    -->
+    <record id="mrp_bom_defaultbomforshelfofcm0" model="mrp.bom">
+        <field name="name">Default BOM for Shelf of 100cm</field>
+        <field name="code">SHE100</field>
+            <field name="sequence">129</field>
+        <field name="product_id" ref="product.product_product_shelfofcm0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">1.0</field>
+    </record>
+
+    <record id="mrp_bom_assemblysection0" model="mrp.bom">
+        <field name="name">Assembly Section</field>
+            <field name="sequence">123</field>
+        <field name="product_id" ref="product.product_product_assemblysection0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">4.0</field>
+        <field model="mrp.bom" name="bom_id" search="[('name', '=', u'Default BOM for Shelf of 100cm')]"/>
+    </record>
+    
+    <record id="mrp_bom_sidepanel0" model="mrp.bom">
+        <field name="name">Side Panel</field>
+            <field name="sequence">125</field>
+        <field name="product_id" ref="product.product_product_sidepanel0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">2.0</field>
+        <field model="mrp.bom" name="bom_id" search="[('name', '=', u'Default BOM for Shelf of 100cm')]"/>
+    </record>
+
+    <record id="mrp_bom_metalcleats0" model="mrp.bom">
+        <field name="name">Metal Cleats</field>
+            <field name="sequence">127</field>
+        <field name="product_id" ref="product.product_product_metalcleats0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">12.0</field>
+        <field model="mrp.bom" name="bom_id" search="[('name', '=', u'Default BOM for Shelf of 100cm')]"/>
+    </record>
+
+    <record id="mrp_bom_rearpanelarm0" model="mrp.bom">
+           <field name="sequence">131</field>
+       <field name="product_id" ref="product.product_product_rearpanelarm0"/>
+       <field name="product_uom" ref="product.product_uom_unit"/>
+       <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
+           <field name="product_qty">1.0</field>
+       <field name="name">Rear panel SHE100</field>
+    </record>
+
+    <record id="mrp_bom_shelf0" model="mrp.bom">
+           <field name="sequence">133</field>
+       <field name="product_id" ref="product.product_product_shelf0"/>
+       <field name="product_uom" ref="product.product_uom_unit"/>
+       <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
+           <field name="product_qty">3.0</field>
+       <field name="name">Shelf 100</field>
+    </record>
+
+    <record id="mrp_bom_woodlintelm0" model="mrp.bom">
+           <field name="sequence">135</field>
+       <field name="product_id" ref="product.product_product_woodlintelm0"/>
+       <field name="product_uom" ref="product.product_uom_meter"/>
+       <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
+           <field name="product_qty">1.0</field>
+       <field model="mrp.bom" name="bom_id" search="[('name', '=', u'Assembly Section')]"/>
+       <field name="name">Wood Lintel 4m</field>
+    </record>
+
+    <record id="mrp_bom_defaultbomforshelfofcm1" model="mrp.bom">
+        <field name="name">Default BOM for Shelf of 200cm</field>
+        <field name="code">SHE200</field>
+            <field name="sequence">137</field>
+        <field name="product_id" ref="product.product_product_shelfofcm0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">1.0</field>
+    </record>
+
+    <record id="mrp_bom_defaultbomforkitshelfofcm0" model="mrp.bom">
+        <field name="name">Default BOM for KIT Shelf of 100cm</field>
+        <field name="code">SHE100KIT</field>
+            <field name="sequence">139</field>
+        <field name="product_id" ref="product.product_product_kitshelfofcm0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">1.0</field>
+        <field name="type">phantom</field>
+    </record>
+
+    <record id="mrp_bom_assemblysection2" model="mrp.bom">
+        <field name="name">Assembly Section</field>
+            <field name="sequence">143</field>
+        <field name="product_id" ref="product.product_product_assemblysection0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">4.0</field>
+        <field name="bom_id" ref="mrp_bom_defaultbomforkitshelfofcm0"/>
+    </record>
+
+    <record id="mrp_bom_sidepanel2" model="mrp.bom">
+        <field name="name">Side Panel</field>
+            <field name="sequence">145</field>
+        <field name="product_id" ref="product.product_product_sidepanel0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">2.0</field>
+        <field name="bom_id" ref="mrp_bom_defaultbomforkitshelfofcm0"/>
+    </record>
+
+    <record id="mrp_bom_rearpanelarm2" model="mrp.bom">
+           <field name="sequence">147</field>
+       <field name="product_id" ref="product.product_product_rearpanelarm0"/>
+       <field name="product_uom" ref="product.product_uom_unit"/>
+       <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm1"/>
+           <field name="product_qty">1.0</field>
+       <field name="name">Rear panel SHE200</field>
+    </record>
+
+    <record id="mrp_bom_assemblysection3" model="mrp.bom">
+        <field name="name">Assembly Section</field>
+            <field name="sequence">149</field>
+        <field name="product_id" ref="product.product_product_assemblysection0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">4.0</field>
+        <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm1"/>
+    </record>
+
+    <record id="mrp_bom_sidepanel3" model="mrp.bom">
+        <field name="name">Side Panel</field>
+            <field name="sequence">151</field>
+        <field name="product_id" ref="product.product_product_sidepanel0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">2.0</field>
+        <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm1"/>
+    </record>
+
+    <record id="mrp_bom_shelf2" model="mrp.bom">
+           <field name="sequence">153</field>
+       <field name="product_id" ref="product.product_product_shelf1"/>
+       <field name="product_uom" ref="product.product_uom_unit"/>
+       <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm1"/>
+           <field name="product_qty">3.0</field>
+       <field name="name">Shelf 200</field>
+    </record>
+
+    <record id="mrp_bom_metalcleats3" model="mrp.bom">
+        <field name="name">Metal Cleats</field>
+            <field name="sequence">155</field>
+        <field name="product_id" ref="product.product_product_metalcleats0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">12.0</field>
+        <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm1"/>
+    </record>
+    
+    <record id="mrp_production_order1" model="mrp.production">
+        <field name="product_id" ref="product.product_product_pc1"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="location_src_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="bom_id" ref="mrp.mrp_bom_9"/>
+        <field name="routing_id" ref="mrp.mrp_routing_0"/>
+    </record>
+    
+    <workflow action="button_confirm" model="mrp.production" ref="mrp_production_order1"/>
+    
+    <!-- Run Scheduler -->
+    <function model="procurement.order" name="run_scheduler"/>
 
     </data>
 </openerp>

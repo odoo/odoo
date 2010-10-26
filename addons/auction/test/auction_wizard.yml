@@ -81,70 +81,15 @@
       "tz": False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
       "active_id": ref("auction_lots_painting0")})
 -
-  I check that the buyer field gets bind with the value.
+  I check that the buyer field gets bound with the value.
 -
  !python {model: auction.lots}: |
     from tools.translate import _
     auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
     assert(auc_id.ach_uid), _('Buyer not assigned!')
+
 -
-  I mark that a seller has been paid by using the "Mark as paid for seller" wizard.
--
-  !record {model: auction.payer.sel, id: auction_payer_sel_0}:
-    {}
--
-  I click on the "Pay" button.
-- 
-  !python {model: auction.payer.sel}: |
-    self.payer_sel(cr, uid, [ref("auction_payer_sel_0")], {"lang": "en_US", "tz":
-      False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")], "active_id": ref("auction_lots_painting0")})
--
-  I check that the Seller paid field is set to True.
--
- !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
-    assert(auc_id.paid_vnd == True), _('Seller paid is not marked!') 
--
-  I use the "Mark as taken away" wizard to indicate that an object is taken away.
-- 
-  !record {model: auction.lots.able, id: auction_lots_able_0}:
-    {}
-- 
-  Then I click on the "Able Taken away" wizard.
-- 
-  !python {model: auction.lots.able}: |
-    self.confirm_able(cr, uid, [ref("auction_lots_able_0")], {"lang":"en_US", "tz":
-      False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
-      "active_id": ref("auction_lots_painting0")})
--
-  I check that Taken away field is set to True.
--
- !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
-    assert(auc_id.ach_emp == True), _('Taken away is not marked!') 
--
-  I use the "Unmark as taken away" wizard to unmark the Taken Away field.
--
-  !record {model: auction.lots.enable, id: auction_lots_enable_0}:
-    confirm_en: 0.0
-- 
-  Then I click on the "Enable Taken away" button.
-- 
-  !python {model: auction.lots.enable}: |
-    self.confirm_enable(cr, uid, [ref("auction_lots_enable_0")], {"lang": "en_US",
-      "tz": False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
-      "active_id": ref("auction_lots_painting0"),})
--
-  I check that Taken away field is set to False.
--
- !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
-    assert(auc_id.ach_emp == False), _('Taken away is marked!') 
--
-  I create statement lines for an object's payment by using the "Pay objects of the buyer" wizard
+  I create statement lines for the payment of an object using the "Pay objects of the buyer" wizard
 -
   I create a bank statement.
 -
@@ -168,7 +113,7 @@
     statement_id3: account_bank_statement_st0
     total: 4000.0
 -
-  Then I click "Pay" button.
+  I click "Pay" button.
 -
   !python {model: auction.pay.buy}: |
     self.pay_and_reconcile(cr, uid, [ref("auction_pay_buy_0")], {"lang": "en_US", "tz":
@@ -190,14 +135,14 @@
     number: 2010/002
     objects: 1
 -
-  Then I click on the "Create Invoices" button.
+  I click on the "Create Invoices" button.
 -
   !python {model: auction.lots.make.invoice}: |
     self.makeInvoices(cr, uid, [ref("auction_lots_make_invoice_0")], {"lang": "en_US",
       "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
       "tz": False, "active_id": ref("auction_lots_painting0"),})
 -
-  I check that a "Seller Invoice" field gets bind with the value.
+  I check that a "Seller Invoice" field gets bound with the value.
 -
   !python {model: auction.lots}: |
     from tools.translate import _
@@ -212,14 +157,14 @@
     number: 2010/003
     objects: 1
 -
-  Then I click on the "Create Invoices" button.
+  I click on the "Create Invoices" button.
 -
   !python {model: auction.lots.make.invoice.buyer}: |
     self.makeInvoices(cr, uid, [ref("auction_lots_make_invoice_buyer_0")], {"lang":
       "en_US", "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
       "tz": False, "active_id": ref("auction_lots_painting0"), })
 -
-  I check that a "Buyer Invoice" field gets bind with the value.
+  I check that a "Buyer Invoice" field gets bound with the value.
 -
   !python {model: auction.lots}: |
     from tools.translate import _
@@ -231,7 +176,7 @@
   !record {model: auction.lots.auction.move, id: auction_lots_auction_move_0}:
     auction_id: auction.auction_date_2
 - 
-  Then I click on the "Move to Auction date" button.
+  I click on the "Move to Auction date" button.
 - 
   !python {model: auction.lots.auction.move}: |
     self.auction_move_set(cr, uid, [ref("auction_lots_auction_move_0")], {"lang":

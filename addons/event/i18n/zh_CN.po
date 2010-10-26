@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 08:22+0000\n"
+"PO-Revision-Date: 2010-08-02 14:36+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:00+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event
@@ -30,7 +30,7 @@ msgstr "最小记录"
 #. module: event
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+msgstr "在动作定义中使用了无效的模快名。"
 
 #. module: event
 #: field:event.event,mail_registr:0
@@ -45,12 +45,12 @@ msgstr "Bon Jovi音乐会"
 #. module: event
 #: field:event.event,mail_confirm:0
 msgid "Confirmation Email"
-msgstr "确认邮件"
+msgstr "确认Email"
 
 #. module: event
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive sections."
-msgstr "错误！你不能创建递归的项"
+msgstr "错误! 你不能创建递归的部分"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -60,7 +60,7 @@ msgstr "事件记录"
 #. module: event
 #: model:ir.actions.wizard,name:event.event_reg_invoice
 msgid "Make Invoice"
-msgstr "创建发票"
+msgstr "生成发票"
 
 #. module: event
 #: field:report.event.type.registration,draft_state:0
@@ -131,10 +131,13 @@ msgid ""
 "                Events / Reporting\n"
 msgstr ""
 "组织和事件管理\n"
-"这模块允许你\n"
-"* 管理你的事务\n"
-"* 使用电子邮件自动确认和发送致谢到登记的每个事务\n"
+"  这模块允许你\n"
+"    * 管理你的事务和它的记录\n"
+"    * 使用电子邮件自动确认和发送确认登记的每个事务\n"
 "....\n"
+"  注意:\n"
+"    - 你能在事件/ 设置/ 事件类型, 中定义新类型的事件\n"
+"    - 你能在事件/ 报表, 中访问到与定义的报表\n"
 
 #. module: event
 #: view:event.registration:0
@@ -163,7 +166,7 @@ msgstr "事件"
 #. module: event
 #: selection:event.event,state:0
 msgid "Confirmed"
-msgstr "确认"
+msgstr "已确认"
 
 #. module: event
 #: wizard_view:event.confirm_registration,split:0
@@ -195,12 +198,12 @@ msgstr "标志"
 #. module: event
 #: field:event.event,section_id:0
 msgid "Case section"
-msgstr "业务个案项"
+msgstr "划分的业务个案"
 
 #. module: event
 #: field:event.registration,tobe_invoiced:0
 msgid "To be Invoiced"
-msgstr "开发票"
+msgstr "待开票"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -210,7 +213,7 @@ msgstr "所有事件"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_report_event
 msgid "Reporting"
-msgstr "内部报表"
+msgstr "报表"
 
 #. module: event
 #: view:event.registration:0
@@ -225,7 +228,7 @@ msgstr "事件分类"
 #. module: event
 #: wizard_view:event.confirm_registration,split:0
 msgid "The event limit is reached. What do you want to do?"
-msgstr "这事件到达限制.你想要怎么做?"
+msgstr "事件到达限制. 你想要怎么做?"
 
 #. module: event
 #: field:report.event.type.registration,confirm_state:0
@@ -252,12 +255,12 @@ msgstr "设置"
 #. module: event
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
+msgstr "无效的视图结构xml文件!"
 
 #. module: event
 #: wizard_button:event.confirm_registration,split,confirm:0
 msgid "Confirm Anyway"
-msgstr "无论如何确认"
+msgstr "总是确认"
 
 #. module: event
 #: constraint:product.template:0
@@ -267,7 +270,7 @@ msgstr "错误:销售单位必须和计量单位在不同的分类."
 #. module: event
 #: view:event.event:0
 msgid "Parent Category"
-msgstr "业务伙伴分类"
+msgstr "上级分类"
 
 #. module: event
 #: view:event.registration:0
@@ -287,7 +290,7 @@ msgstr "取消事件"
 #. module: event
 #: wizard_field:event.reg_make_invoice,init,inv_rej_reason:0
 msgid "Error Messages"
-msgstr "错误信息"
+msgstr "错误消息"
 
 #. module: event
 #: view:event.event:0
@@ -297,7 +300,7 @@ msgstr "邮递"
 #. module: event
 #: model:product.template,name:event.event_product_0_product_template
 msgid "Ticket for Concert"
-msgstr "音乐会门票"
+msgstr "演唱会票"
 
 #. module: event
 #: field:event.event,register_prospect:0
@@ -309,7 +312,7 @@ msgstr "不确认记录"
 #. module: event
 #: field:event.registration,partner_invoice_id:0
 msgid "Partner Invoiced"
-msgstr "业务伙伴发票"
+msgstr "已开票业务伙伴"
 
 #. module: event
 #: view:event.registration:0
@@ -319,7 +322,7 @@ msgstr "沟通日志"
 #. module: event
 #: selection:event.event,state:0
 msgid "Canceled"
-msgstr "取消"
+msgstr "已取消"
 
 #. module: event
 #: view:event.event:0
@@ -341,7 +344,7 @@ msgstr "记录的事件"
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "错误:默认的计量单位和这货物的计量单位必须是同一类型."
+msgstr "错误:默认的计量单位和采购的计量单位必须是同一类型."
 
 #. module: event
 #: wizard_field:event.reg_make_invoice,init,inv_created:0
@@ -372,12 +375,12 @@ msgstr "记录的事件类型"
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: event
 #: field:event.registration,event_id:0
 msgid "Event Related"
-msgstr "有关事件"
+msgstr "关联的事件"
 
 #. module: event
 #: model:crm.case.section,name:event.case_section_event
@@ -412,7 +415,7 @@ msgstr "所有记录"
 #: help:event.event,mail_auto_registr:0
 msgid ""
 "Check this box if you want to use the automatic mailing for new registration"
-msgstr "如果你使用自动邮递一个新记录"
+msgstr "勾选此项, 如果你使用自动邮递一个新记录"
 
 #. module: event
 #: view:event.event:0
@@ -439,7 +442,7 @@ msgstr "事件类型"
 #. module: event
 #: field:event.registration,contact_id:0
 msgid "Partner Contact"
-msgstr "业务伙伴联系人"
+msgstr "业务伙伴联系方式"
 
 #. module: event
 #: view:event.event:0
@@ -450,7 +453,7 @@ msgstr "自动确认邮件"
 #: view:event.event:0
 #: view:event.registration:0
 msgid "General"
-msgstr "一般"
+msgstr "通用"
 
 #. module: event
 #: view:event.registration:0
@@ -507,7 +510,7 @@ msgstr "单价"
 #. module: event
 #: model:crm.case.section,name:event.event_2_crm_case_section
 msgid "Conference on ERP Buisness"
-msgstr "ERP Buisness会议"
+msgstr "商业会议"
 
 #. module: event
 #: field:event.registration,badge_partner:0
@@ -534,7 +537,7 @@ msgstr "类型"
 #. module: event
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
-msgstr "有人赞同确认事件将发送这邮件"
+msgstr "有人赞同事件将发送这邮件"
 
 #. module: event
 #: model:product.template,name:event.event_product_2_product_template
@@ -556,7 +559,7 @@ msgstr "名称"
 msgid ""
 "Check this box if you want ot use the automatic confirmation emailing or the "
 "reminder"
-msgstr "如果你使用自动邮件确认或提醒"
+msgstr "勾选此项, 如果你使用自动邮件确认或提醒"
 
 #. module: event
 #: help:event.event,mail_confirm:0
@@ -564,7 +567,7 @@ msgid ""
 "This email will be sent when the event gets confimed or when someone "
 "subscribes to a confirmed event. This is also the email sent to remind "
 "someone about the event."
-msgstr "当有人确认这事件或赞同这确认时这邮件将被发送以提醒有关人等"
+msgstr "当有人确认这事件或赞同这确认事件时, 这邮件将发送以提醒有关人员"
 
 #. module: event
 #: field:event.event,product_id:0
@@ -603,7 +606,7 @@ msgstr "事件草稿"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_main
 msgid "Events Organisation"
-msgstr "事件系统"
+msgstr "事件组织"
 
 #. module: event
 #: view:event.registration:0

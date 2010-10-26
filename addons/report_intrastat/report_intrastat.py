@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 from tools.sql import drop_view_if_exists
+from decimal_precision import decimal_precision as dp
 
 
 class res_country(osv.osv):
@@ -69,7 +70,7 @@ class report_intrastat(osv.osv):
         'code': fields.char('Country code', size=2, readonly=True),
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
         'weight': fields.float('Weight', readonly=True),
-        'value': fields.float('Value', readonly=True),
+        'value': fields.float('Value', readonly=True, digits_compute=dp.get_precision('Account')),
         'type': fields.selection([('import', 'Import'), ('export', 'Export')], 'Type'),
         'currency_id': fields.many2one('res.currency', "Currency", readonly=True),
     }
@@ -88,26 +89,12 @@ class report_intrastat(osv.osv):
                             else 0
                         end) as value,
                     sum(
-                        case when uom.category_id != puom.category_id then pt.weight_net * inv_line.quantity
-                        else
-                            case when uom.factor_inv_data > 0
-                                then
-                                    pt.weight_net * inv_line.quantity * uom.factor_inv_data
-                                else
-                                    pt.weight_net * inv_line.quantity / uom.factor
-                            end
-                        end
+                        case when uom.category_id != puom.category_id then (pt.weight_net * inv_line.quantity)
+                        else (pt.weight_net * inv_line.quantity * uom.factor) end
                     ) as weight,
                     sum(
                         case when uom.category_id != puom.category_id then inv_line.quantity
-                        else
-                            case when uom.factor_inv_data > 0
-                                then
-                                    inv_line.quantity * uom.factor_inv_data
-                                else
-                                    inv_line.quantity / uom.factor
-                            end
-                        end
+                        else (inv_line.quantity * uom.factor) end
                     ) as supply_units,
 
                     inv.currency_id as currency_id,
@@ -121,7 +108,7 @@ class report_intrastat(osv.osv):
                     left join account_invoice_line inv_line on inv_line.invoice_id=inv.id
                     left join (product_template pt
                         left join product_product pp on (pp.product_tmpl_id = pt.id))
-                    on (inv_line.product_id = pt.id)
+                    on (inv_line.product_id = pp.id)
                     left join product_uom uom on uom.id=inv_line.uos_id
                     left join product_uom puom on puom.id = pt.uom_id
                     left join report_intrastat_code intrastat on pt.intrastat_id = intrastat.id

@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-	<!-- CRM Meetings Categories Form View -->
+    <!-- CRM Meetings Categories Form View -->
 
     <record id="crm_meeting_categ_action" model="ir.actions.act_window">
         <field name="name">Meeting Categories</field>
@@ -11,12 +11,14 @@
         <field name="view_id"  ref="crm.crm_case_categ_tree-view"/>
         <field name="domain">[('object_id.model', '=', 'crm.meeting')]</field>
         <field name="context">{'object_id':'crm.meeting'}</field>
+        <field name="help">Create different meeting categories to better organize and classify your meetings.</field>
     </record>
 
-     <menuitem action="crm_meeting_categ_action" name="Categories"
-        id="menu_crm_case_meeting-act" parent="menu_crm_config_meeting" />
+     <menuitem action="crm_meeting_categ_action"
+        groups="base.group_extended"
+        id="menu_crm_case_meeting-act" parent="base.menu_calendar_configuration" sequence="1"/>
 
-	<!-- CRM Meetings Form View -->
+    <!-- CRM Meetings Form View -->
 
     <record model="ir.ui.view" id="crm_case_form_view_meet">
         <field name="name">CRM - Meetings Form</field>
@@ -26,18 +28,17 @@
             <form string="Meetings">
                 <group col="6" colspan="4">
                     <field name="name" select="1" string="Summary"
-                    	required="1" colspan="2" />
+                           required="1" />
                     <field name="categ_id" widget="selection"
-                        string="Meeting Type"
-                        groups="base.group_extended"
+                        string="Meeting Type" groups="base.group_extended"
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
-                    <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
+                    <field name="allday" on_change="onchange_allday(allday)" />
+                    <newline/>
                     <field name="date" string="Start Date" required="1"
                         on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="duration" widget="float_time"
                         on_change="onchange_dates(date,duration,False,allday)" />
-                    <field name="date_deadline" string="End Date"
-                        required="1"
+                    <field name="date_deadline" string="End Date" required="1"
                         on_change="onchange_dates(date,False,date_deadline)" />
                     <field name="location" />
                     <field name="alarm_id" string="Reminder"
@@ -50,17 +51,18 @@
                                attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
                                name="open_meeting" icon="gtk-edit"
                                type="object" />
-                           <button string="ExRule"
-       		name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
-       		context="{'model' : 'crm.meeting'}"
-       		attrs="{'invisible':[('rrule_type','in', ('none', False))]}"/>
+                           <button string="Exclude range" groups="base.group_extended"
+                                help="Add Exception Rule"
+                                name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
+                                context="{'model' : 'crm.meeting'}"
+                                attrs="{'invisible':[('rrule_type','in', ('none', False))]}"/>
                     </group>
                 </group>
                 <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
-                    <separator string="Data for Custom Rule" colspan="8"/>
+                    <separator string="Custom Recurrency Rule" colspan="8"/>
                     <group col="8" colspan="4">
-                        <field name="freq" />
                         <field name="interval" />
+                        <field name="freq" />
                         <field name="count" />
                         <field name="end_date" />
                     </group>
@@ -106,6 +108,7 @@
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Assignment"/>
                             <field name="user_id" />
+                            <field name="organizer" groups="base.group_extended"/>
                             <field name="section_id" widget="selection"
                                 groups="base.group_extended"/>
                         </group><group col="2" colspan="2">
@@ -128,33 +131,52 @@
                     <separator string="Description" colspan="4" />
                     <field name="description" nolabel="1" colspan="4" />
                     <separator colspan="4"/>
-                    <group col="8" colspan="4">
+                    <group col="8" colspan="4" groups="base.group_extended">
                         <field name="state" />
+                        <button name="case_cancel" string="Cancel"
+                            states="draft,open" type="object"
+                            icon="gtk-cancel" />
                         <button name="case_close" string="Done"
                             states="open" type="object"
                             icon="gtk-jump-to" />
-						<button name="case_reset" string="Reset to Unconfirmed"
+                        <button name="case_reset" string="Reset to Unconfirmed"
                             states="open,done,cancel" type="object"
                             icon="gtk-convert" />
                         <button name="case_open" string="Confirm"
                             states="draft" type="object"
                             icon="gtk-go-forward" />
-                        <button name="case_cancel" string="Cancel"
-                            states="draft,open" type="object"
-                            icon="gtk-cancel" />
                     </group>
                     </page>
                     <page string="Invitation Detail">
                         <button string="Invite People"
                             name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
                             icon="terp-partner" type="action"
+                            attrs="{'readonly': [('state', '=', 'done')]}"
                             context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
                         <field name="attendee_ids" colspan="4"
                             nolabel="1" widget="one2many" mode="tree,form">
                             <tree string="Invitation details" editable="top">
-                                <field name="email" />
+                                <field name="sent_by_uid" string="From"/>
+                                <field name="user_id" string="To"/>
+                                <field name="email" string="Mail TO"/>
                                 <field name="role" select="1" />
                                 <field name="state" />
+                                <button name="do_tentative"
+                                    states="needs-action,declined,accepted"
+                                    string="Uncertain" type="object"
+                                    icon="terp-crm" />
+                                <button name="do_accept" string="Accept"
+                                    states="needs-action,tentative,declined"
+                                    type="object" icon="gtk-apply" />
+                                <button name="do_decline" string="Decline"
+                                    states="needs-action,tentative,accepted"
+                                    type="object" icon="gtk-cancel" />
+                                <button
+                                    name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                                    string="Delegate" type="action"
+                                    icon="gtk-sort-descending"
+                                    states="needs-action,tentative,declined,accepted"
+                                    context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                             </tree>
                             <form string="Invitation details">
                                 <notebook colspan="4">
@@ -204,7 +226,7 @@
         </field>
     </record>
 
-	<!-- CRM Meeting Tree View  -->
+    <!-- CRM Meeting Tree View  -->
 
     <record model="ir.ui.view" id="crm_case_tree_view_meet">
         <field name="name">CRM - Meetings Tree</field>
@@ -214,15 +236,32 @@
             <tree string="Meetings"
                 colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="name" string="Subject" />
-                <field name="partner_id" string="Partner" />
-                <field name="date" string="Meeting Date" />
+                <field name="date" string="Start Date" />
                 <field name="duration" />
-                <field name="state"/>
+                <field name="partner_id" string="Partner" />
+                <field name="location" />
+                <field name="categ_id" string="Meeting Type"/>
+                <field name="class" string="Privacy"/>
+                <field name="state" groups="base.group_extended"/>
+                <field name="user_id" invisible="1"/>
+                <field name="show_as" invisible="1" string="Show time as"/>
+                <button name="case_cancel" string="Cancel"
+                   states="draft,open" type="object"
+                   icon="gtk-cancel" />
+                <button name="case_reset" string="Reset to Unconfirmed"
+                   states="open,done,cancel" type="object"
+                   icon="gtk-convert" />
+                <button name="case_open" string="Confirm"
+                   states="draft" type="object"
+                   icon="gtk-go-forward" />
+                <button name="case_close" string="Done"
+                            states="open" type="object"
+                            icon="gtk-jump-to" />
             </tree>
         </field>
     </record>
 
-	<!-- CRM Meeting Calendar -->
+    <!-- CRM Meeting Calendar -->
 
     <record model="ir.ui.view" id="crm_case_calendar_view_meet">
         <field name="name">CRM - Meetings Calendar</field>
@@ -230,7 +269,7 @@
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Meetings" date_start="date" color="user_id" date_delay="duration">
+            <calendar string="Meetings" date_start="date" color="user_id" date_stop="date_deadline">
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="section_id" widget="selection"/>
@@ -238,7 +277,7 @@
         </field>
     </record>
 
-	<!-- CRM Meeting Gantt  -->
+    <!-- CRM Meeting Gantt  -->
 
     <record id="crm_case_gantt_view_meet" model="ir.ui.view">
         <field name="name">CRM - Meetings Gantt</field>
@@ -254,7 +293,7 @@
         </field>
     </record>
 
-	<!-- CRM Meeting Search View  -->
+    <!-- CRM Meeting Search View  -->
 
     <record id="view_crm_case_meetings_filter" model="ir.ui.view">
         <field name="name">CRM - Meetings Search</field>
@@ -265,38 +304,52 @@
                        <group col="12" colspan="4">
                            <filter icon="terp-check" name="current" string="Current"
                                 domain="[('state','in',('draft', 'open'))]"
+				groups="base.group_extended"
                                 help="Current Meetings"/>
                            <separator orientation="vertical"/>
                            <field name="name" select="1" string="Subject"/>
+                           <field name="categ_id" select="1"
+                               string="Meeting Type" widget="selection"
+                               domain="[('object_id.model', '=', 'crm.meeting')]" />
+                           <separator orientation="vertical"/>
                            <field name="partner_id" select="1" />
                            <field name="section_id" select="1" widget="selection">
-                               <filter icon="terp-personal+"
-                                   domain="[('section_id','=',context.get('section_id',False))]"
-                                   help="My Sale Team" />
+                               <filter icon="terp-personal+" groups="base.group_extended"
+                                   domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                                   help="My Sales Team(s)" />
                            </field>
-                           <field name="user_id" select="1" widget="selection"/>
+                           <field name="user_id" select="1"/>
                        </group>
+                        <newline/>
+                        <group expand="0" string="Extended Options...">
+                           <field name="class" select="1" string="Privacy"/>
+                           <field name="show_as" string="Show time as" select="1"/>
+                        </group>
                        <newline/>
-					   	<group expand="0" string="Group By...">
-							<filter string="Date" icon="terp-go-month"
-						        domain="[]" context="{'group_by':'date'}" />
-						    <filter string="Privacy" icon="terp-locked"
-						        domain="[]" context="{'group_by':'class'}" />
-						    <separator orientation="vertical" />
-						    <filter string="Responsible" icon="terp-personal" domain="[]"
-						        context="{'group_by':'user_id'}" />
-						    <filter string="Partner" icon="terp-personal" domain="[]"
-						        context="{'group_by':'partner_id'}" />
-						    <separator orientation="vertical" />
-						    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
-						        context="{'group_by':'state'}" />
-						    <separator orientation="vertical" />
-						</group>
+                       <group expand="0" string="Group By...">
+                            <filter string="Responsible" icon="terp-personal" domain="[]"
+                                context="{'group_by':'user_id'}" />
+                            <filter string="Partner" icon="terp-partner" domain="[]"
+                                context="{'group_by':'partner_id'}" />
+                            <separator orientation="vertical" />
+                            <filter string="Type" help="Meeting Type"
+                            	icon="terp-stock_symbol-selection" domain="[]"
+                            	context="{'group_by':'categ_id'}" />
+                            <filter string="Privacy" icon="terp-locked"
+                                domain="[]" context="{'group_by':'class'}" />
+                            <filter string="Show time as" icon="terp-project"
+                                domain="[]" context="{'group_by':'show_as'}" />
+                            <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
+                                context="{'group_by':'state'}" />
+                            <separator orientation="vertical" />
+                            <filter string="Date" icon="terp-go-month" help="Meeting date"
+                                domain="[]" context="{'group_by':'date'}" />
+                        </group>
                 </search>
             </field>
         </record>
 
-		<!-- Calendar Attendee Form View -->
+        <!-- Calendar Attendee Form View -->
 
         <record id="attendee_form_view_inherit" model="ir.ui.view">
                 <field name="name">calendar.attendee.form.inherit</field>
@@ -310,19 +363,6 @@
                 </field>
         </record>
 
-		<!-- Calendar Attendee Tree View -->
-
-        <record id="attendee_tree_view_inherit" model="ir.ui.view">
-                <field name="name">calendar.attendee.tree.inherit</field>
-                <field name="model">calendar.attendee</field>
-                <field name="type">tree</field>
-                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_tree_view"/>
-                <field name="arch" type="xml">
-                    <field name="role" position="after">
-                        <field name="categ_id" string="Event Type"/>
-                    </field>
-                </field>
-        </record>
 
     </data>
 </openerp>

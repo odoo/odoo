@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-		<record model="crm.case.section" id="section_sales_department">
-			<field name="name">Sales Department</field>
-			<field name="code">Sales</field>
-		</record>
-        
-        
-        <record id="ir_cron_crm_action" model="ir.cron">
-            <field name="name">Check cases rules</field>
-            <field name="interval_number">4</field>
-            <field name="interval_type">hours</field>
-            <field name="numbercall">-1</field>
-            <field eval="False" name="doall"/>
-            <field eval="'crm.case'" name="model"/>
-            <field eval="'_check'" name="function"/>
-            <field eval="'()'" name="args"/>
-        </record>      
-                
+        <record model="crm.case.section" id="section_sales_department">
+            <field name="name">Sales Department</field>
+            <field name="code">Sales</field>
+        </record>
     </data>
 </openerp>

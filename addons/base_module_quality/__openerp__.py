@@ -23,9 +23,9 @@
 {
     'name': 'Base module quality - To check the quality of other modules' ,
     'version': '1.0',
-    'category': 'Tiny Specific Modules/Base module quality',
+    'category': 'OpenERP SA Specific Modules/Base module quality',
     'description': """
-This module's aim is to check the quality of other modules.
+The aim of this module is to check the quality of other modules.
 
 It defines a wizard on the list of modules in OpenERP, which allows you to
 evaluate them on different criteria such as: the respect of OpenERP coding
@@ -37,7 +37,7 @@ For further info, coders may take a look into base_module_quality\README.txt
 WARNING: This module can not work as a ZIP file, you must unzip it before
 using it, otherwise it may crash.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],

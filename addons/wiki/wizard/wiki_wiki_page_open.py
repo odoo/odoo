@@ -45,7 +45,7 @@ class wiki_wiki_page_open(osv.osv_memory):
                 'res_model': 'wiki.wiki',
                 'view_id': False,
                 'type': 'ir.actions.act_window',
-                }
+            }
         if group.method == 'page':
             value['res_id'] = group.home.id
         elif group.method == 'list':

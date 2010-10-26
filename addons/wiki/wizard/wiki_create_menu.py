@@ -23,14 +23,12 @@ from osv import fields, osv
 
 class wiki_create_menu(osv.osv_memory):
     """ Create Menu """
-
     _name = "wiki.create.menu"
     _description = "Wizard Create Menu"
 
     _columns = {
         'menu_name': fields.char('Menu Name', size=256, select=True, required=True),
         'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
-        'page': fields.many2one('wiki.wiki', 'Group Home Page'),
     }
 
     def wiki_menu_create(self, cr, uid, ids, context):
@@ -41,24 +39,51 @@ class wiki_create_menu(osv.osv_memory):
         @param ids: List of create menu’s IDs
 
         """
-        mod_obj = self.pool.get('ir.model.data')
-        action_id = mod_obj._get_id(cr, uid, 'wiki', 'action_view_wiki_wiki_page_open')
+        obj_wiki_group = self.pool.get('wiki.groups')
+        obj_view = self.pool.get('ir.ui.view')
+        obj_menu = self.pool.get('ir.ui.menu')
+        obj_action = self.pool.get('ir.actions.act_window')
+        group_id = context.get('active_id', False)
+        if not group_id:
+            return {}
 
-        for menu in self.browse(cr, uid, ids):
-            menu_id = self.pool.get('ir.ui.menu').create(cr, uid, {
-                            'name': menu.menu_name,
-                            'parent_id':menu.menu_parent_id.id,
-                            'icon': 'STOCK_DIALOG_QUESTION',
-                            'action': 'ir.actions.act_window,'+ str(action_id)
-                            }, context)
-            home = menu.page.id
-            group_id = menu.id
-            res = {
-                    'home': home,
-                    }
-            self.pool.get('wiki.groups').write(cr, uid, ids, res)
-            self.pool.get('wiki.groups.link').create(cr, uid,
-                                {'group_id': group_id, 'action_id': menu_id})
+        datas = self.browse(cr, uid, ids, context=context)
+        data = False
+        if datas:
+            data = datas[0]
+        if not data:
+            return {}
+        value = {            
+            'name': 'Wiki Page',
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'wiki.wiki',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+        }
+        group = obj_wiki_group.browse(cr, uid, group_id, context=context)
+        value['domain'] = "[('group_id','=',%d)]" % (group.id)
+        if group.method == 'page':
+            value['res_id'] = group.home.id
+        elif group.method == 'list':
+            value['view_type'] = 'form'
+            value['view_mode'] = 'tree,form'
+        elif group.method == 'tree':
+            view_id = obj_view.search(cr, uid, [('name', '=', 'wiki.wiki.tree.childs')])
+            value['view_id'] = view_id
+            value['domain'] = [('group_id', '=', group.id), ('parent_id', '=', False)]
+            value['view_type'] = 'tree'
+
+        action_id = obj_action.create(cr, uid, value)
+            
+        menu_id = obj_menu.create(cr, uid, {
+                        'name': data.menu_name,
+                        'parent_id':data.menu_parent_id.id,
+                        'icon': 'STOCK_DIALOG_QUESTION',
+                        'action': 'ir.actions.act_window,'+ str(action_id),
+                        }, context)
+        obj_wiki_group.write(cr, uid, [group_id], {'menu_id':menu_id})        
         return {}
 
 

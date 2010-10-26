@@ -28,7 +28,7 @@
 This module allows you to create a new module without any development.
 It records all operations on objects during the recording session and
 produce a .ZIP module. So you can create your own module directly from
-the Open ERP client.
+the OpenERP client.
 
 This version works for creating and updating existing records. It recomputes
 dependencies and links for all types of widgets (many2one, many2many, ...).
@@ -39,9 +39,9 @@ for custom configurations and demo/testing data.
 
 How to use it:
 Run Administration/Customization/Module Creation/Export Customizations As a Module wizard.
-Select datetime critearia of recording and objects to be recorded and Record module.
+Select datetime criteria of recording and objects to be recorded and Record module.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],

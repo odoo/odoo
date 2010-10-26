@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """Allows to synchronise calendars with others applications.""",
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['document', 'crm'],
     'init_xml': ['document_data.xml'],

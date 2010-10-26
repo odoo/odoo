@@ -6,7 +6,7 @@
             <field name="osv">mrp.repair</field>
             <field name="on_create">True</field>
         </record>
-        
+
         <!-- Activity -->
         <record id="act_draft" model="workflow.activity">
             <field name="wkf_id" ref="wkf_repair"/>
@@ -32,7 +32,7 @@
         <record id="act_repair_ready" model="workflow.activity">
             <field name="wkf_id" ref="wkf_repair"/>
             <field name="name">Ready Repair</field>
-            <field name="kind">function</field>            
+            <field name="kind">function</field>
             <field name="action">action_repair_ready()</field>
         </record>
         <record id="act_cancel3" model="workflow.activity">
@@ -50,19 +50,12 @@
             <field name="action">wkf_repair_done()</field>
             <field name="join_mode">XOR</field>
         </record>
-       <!-- <record id="act_invoice" model="workflow.activity">
-            <field name="wkf_id" ref="wkf_repair"/>
-            <field name="name">invoice</field>
-            <field name="kind">subflow</field>
-            <field name="subflow_id" search="[('name','=','account.invoice.basic')]"/>
-            <field name="action">action_invoice_create()</field>
-        </record> -->
         <record id="act_repair_start" model="workflow.activity">
             <field name="wkf_id" ref="wkf_repair"/>
             <field name="name">Start Repair</field>
-            <field name="kind">function</field>            
+            <field name="kind">function</field>
             <field name="action">action_repair_start()</field>
-        </record>  
+        </record>
         <record id="act_invoice_end" model="workflow.activity">
             <field name="wkf_id" ref="wkf_repair"/>
             <field name="name">invoice_end</field>
@@ -75,21 +68,6 @@
             <field name="kind">function</field>
             <field name="action">action_repair_end()</field>
         </record>
-
-        <!-- <record id="act_invoice_cancel" model="workflow.activity">
-            <field name="wkf_id" ref="wkf_repair"/>
-            <field name="name">invoice_cancel</field>
-            <field name="flow_stop">True</field>
-            <field name="kind">stopall</field>
-            <field name="action">action_cancel()</field>
-        </record>
-        <record id="act_invoice_except" model="workflow.activity">
-            <field name="wkf_id" ref="wkf_repair"/>
-            <field name="name">invoice_except</field>
-            <field name="kind">function</field>
-            <field name="action">action_invoice_cancel()</field>
-        </record>       -->    
-        
         <record id="act_cancel" model="workflow.activity">
             <field name="wkf_id" ref="wkf_repair"/>
             <field name="name">cancel</field>
@@ -106,25 +84,25 @@
         </record>
 
 
-        <!-- Transistion -->        
-        
-        
+        <!-- Transistion -->
+
+
         <record id="trans_draft_confirm" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_confirm"/>
             <field name="signal">repair_confirm</field>
         </record>
-        
+
         <record id="trans_draft_cancel" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">cancel</field>
         </record>
-        
+
         <record id="trans_confirm_wait_invoice" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_wait_invoice"/>
-            <field name="condition">invoice_method=='b4repair'</field>                        
+            <field name="condition">invoice_method=='b4repair'</field>
         </record>
 
         <record id="trans_confirm_wait_ship" model="workflow.transition">
@@ -133,17 +111,11 @@
             <field name="condition">(invoice_method=='after_repair' or invoice_method=='none')</field>
         </record>
 
-        <!-- <record id="trans_confirm_wait_invoice_shipping" model="workflow.transition">
-            <field name="act_from" ref="act_wait_invoice"/>
-            <field name="act_to" ref="act_invoice_end"/>
-            <field name="condition">(invoice_method=='none')</field>
-        </record> -->
-
         <record id="trans_wait_invoice_invoice" model="workflow.transition">
             <field name="act_from" ref="act_wait_invoice"/>
             <field name="act_to" ref="act_invoice_end"/>
             <field name="signal">action_invoice_create</field>
-        </record> 
+        </record>
 
         <record id="trans_invoice_start_repair" model="workflow.transition">
             <field name="act_from" ref="act_invoice_end"/>
@@ -177,8 +149,8 @@
 
        <record id="trans_repair_repair_end" model="workflow.transition">
             <field name="act_from" ref="act_repair_start"/>
-            <field name="act_to" ref="act_repair_end"/>  
-            <field name="signal">action_repair_end</field>           
+            <field name="act_to" ref="act_repair_end"/>
+            <field name="signal">action_repair_end</field>
         </record>
 
         <record id="trans_reapir_end_done" model="workflow.transition">

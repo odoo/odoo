@@ -4,17 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-31 12:42+0000\n"
+"PO-Revision-Date: 2010-08-07 08:22+0000\n"
 "Last-Translator: Albert Cervera i Areny - http://www.NaN-tic.com <albert@nan-"
 "tic.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 03:58+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -74,6 +74,7 @@ msgstr "Compra confirmada"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Excepció de factura"
 
@@ -132,6 +133,7 @@ msgstr "Aprova compra"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Aprovada"
 
@@ -289,6 +291,7 @@ msgstr "Línia de la comanda"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Confirmada"
 
@@ -315,6 +318,7 @@ msgstr "Petició pressupost"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "En espera"
 
@@ -336,8 +340,7 @@ msgstr "Línies de la comanda"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirm Purchase order from Request for quotation without origin"
-msgstr ""
-"Confirma comanda de compra des de sol·licitud de pressupost sense origen"
+msgstr "Confirma comanda de compra des de petició de pressupost sense origen"
 
 #. module: purchase
 #: rml:purchase.quotation:0
@@ -397,6 +400,7 @@ msgstr "Referència comanda"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Realitzada"
 
@@ -447,6 +451,7 @@ msgstr "Aprova comanda de compra després de confirmació"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Excepció d'enviament"
 
@@ -483,12 +488,12 @@ msgstr ""
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "Request for Quotation :"
-msgstr "Sol·licitud de presupost :"
+msgstr "Petició de presupost :"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
 msgid "Confirm Purchase order from Request for quotation"
-msgstr "Confirma comanda de compra des de sol·licitud de pressupost"
+msgstr "Confirma comanda de compra des de petició de pressupost"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -562,7 +567,7 @@ msgstr "Comanda de compra"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 msgid "Request for quotation is proposed by the system."
-msgstr "La sol·licitud de pressupost és proposta pel sistema."
+msgstr "La petició de pressupost és proposat pel sistema."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -577,7 +582,7 @@ msgstr "Crea factura des de albarà"
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Data de la creació d'aquest document."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -587,7 +592,7 @@ msgstr "Albarans & Factures"
 #. module: purchase
 #: field:purchase.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: purchase
 #: help:purchase.order,origin:0
@@ -654,7 +659,7 @@ msgstr "Quan la comanda de compra és aprovada, crea el seu albarà."
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "History"
-msgstr ""
+msgstr "Historial"
 
 #. module: purchase
 #: field:purchase.order,state:0
@@ -685,7 +690,7 @@ msgstr "Posició fiscal"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr ""
+msgstr "Petició de pressupost Nº"
 
 #. module: purchase
 #: field:purchase.order,invoice_id:0
@@ -745,7 +750,7 @@ msgstr "Rebuda"
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: selection:purchase.order,state:0
 msgid "Request for Quotation"
-msgstr "Comanda de compra"
+msgstr "Petició de pressupost"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
@@ -838,7 +843,7 @@ msgstr "La vostra referència"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "Confirmació d'ordre de compra Nº"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -859,7 +864,7 @@ msgstr "Control de compra"
 #: model:ir.actions.act_window,name:purchase.purchase_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_order_draft
 msgid "Request For Quotations"
-msgstr "Demana pressuposts"
+msgstr "Peticions de pressupostos"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
@@ -906,4 +911,40 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
+msgstr "Moviments d'estoc"
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Waiting Schedule"
+msgstr ""
+
+#. module: purchase
+#: field:report.purchase.order.category,price_total:0
+#: field:report.purchase.order.product,price_total:0
+msgid "Total Price"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Quotation"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Manual in progress"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "In progress"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr ""

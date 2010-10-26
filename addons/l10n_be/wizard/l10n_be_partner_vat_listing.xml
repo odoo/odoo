@@ -15,7 +15,7 @@
 			<form string="Partner VAT Listing">
 			    <label string="This wizard will create an XML file for Vat details and total invoiced amounts per partner." colspan="4"/>
 				    <newline/>
-				    <field name="fyear" default_focus="1"/>
+				    <field name="fyear" default_focus="1" widget="selection"/>
 				    <newline/>
 				    <field name="mand_id"/>
 				    <newline/>
@@ -66,7 +66,7 @@
 					<newline/>
 					<field name="file_save" />
 					<separator colspan="4"/>
-					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+					<button special="cancel" string="Close" icon="gtk-cancel"/>
                 </form>
             </field>
         </record>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,21 +15,76 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import time
 import datetime
+import pooler
 from report import report_sxw
 
 class payment_order(report_sxw.rml_parse):
+
     def __init__(self, cr, uid, name, context):
         super(payment_order, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
             'time': time,
+            'get_invoice_name': self._get_invoice_name,
+            'get_company_currency': self._get_company_currency,
+            'get_company_currency_symbol': self._get_company_currency_symbol,
+            'get_amount_total_in_currency': self._get_amount_total_in_currency,
+            'get_amount_total': self._get_amount_total,
+            'get_account_name': self._get_account_name,
 
         })
-report_sxw.report_sxw('report.payment.order', 'payment.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order,header=False)
+    def _get_invoice_name(self, invoice_id):
+        if invoice_id:
+            pool = pooler.get_pool(self.cr.dbname)
+            value_name = pool.get('account.invoice').name_get(self.cr, self.uid, [invoice_id])
+            if value_name:
+                return value_name[0][1]
+        return False
+
+    def _get_amount_total_in_currency(self, payment):
+        total = 0.0
+        if payment.line_ids:
+            currency_cmp = payment.line_ids[0].currency.id
+        else:
+            return False
+        for line in payment.line_ids:
+            if currency_cmp == line.currency.id:
+                total += line.amount_currency
+            else:
+                return False
+        return total
+
+    def _get_amount_total(self, payment):
+        total = 0.0
+        if not payment.line_ids:
+            return False
+        for line in payment.line_ids:
+            total += line.amount
+        return total
+
+    def _get_company_currency(self):
+        pool = pooler.get_pool(self.cr.dbname)
+        user = pool.get('res.users').browse(self.cr, self.uid, self.uid)
+        return user.company_id and user.company_id.currency_id and user.company_id.currency_id.symbol or False
+
+    def _get_company_currency_symbol(self):
+        pool = pooler.get_pool(self.cr.dbname)
+        user = pool.get('res.users').browse(self.cr, self.uid, self.uid)
+        return user.company_id and user.company_id.currency_id and user.company_id.currency_id.symbol or False
+
+    def _get_account_name(self,bank_id):
+        if bank_id:
+            pool = pooler.get_pool(self.cr.dbname)
+            value_name = pool.get('res.partner.bank').name_get(self.cr, self.uid, [bank_id])
+            if value_name:
+                return value_name[0][1]
+        return False
+
+report_sxw.report_sxw('report.payment.order', 'payment.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order, header="external")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

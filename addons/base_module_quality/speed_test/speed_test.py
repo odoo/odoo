@@ -32,10 +32,10 @@ class CounterCursor(object):
     def reset(self):
         self.count = 0
 
-    def execute(self, query, params=None):
+    def execute(self, query, *args, **kwargs):
         if query.lower().startswith('select '):
             self.count += 1
-        return self.cr.execute(query, params)
+        return self.cr.execute(query, *args, **kwargs)
 
     def __getattr__(self, attr):
         return getattr(self.cr, attr)
@@ -61,9 +61,8 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
         # remove osv_memory class becaz it does not have demo data
         if obj_list:
-            cr.execute("select w.res_model from ir_actions_todo as t left join ir_act_window as w on t.action_id=w.id where w.res_model =ANY(%s)",(obj_list,))
+            cr.execute("select w.res_model from ir_actions_todo as t left join ir_act_window as w on t.action_id=w.id where w.res_model IN %s",(tuple(obj_list),))
             res = cr.fetchall()
-            print res
             for remove_obj in res:
                 if remove_obj and (remove_obj[0] in obj_list):
                     obj_list.remove(remove_obj[0])
@@ -75,10 +74,15 @@ This test checks the speed of the module. Note that at least 5 demo data is need
             return None
         obj_counter = 0
         score = 0.0
-        obj_ids = self.get_ids(cr, uid, obj_list)
+        try:
+            obj_ids = self.get_ids(cr, uid, obj_list)
+        except Exception,e:
+            self.log.warning("Cannot get ids:", exc_info=True)
+            obj_ids= {}
+            self.result_details += e.message
         result_dict = {}
         result_dict2 = {}
-        self.result_details += _("<html>O(1) means that the number of SQL requests to read the object does not depand on the number of objects we are reading. This feature is hardly wished.\n</html>")
+        self.result_details += _("<html>O(1) means that the number of SQL requests to read the object does not depand on the number of objects we are reading. This feature is mostly wished.\n</html>")
         ccr = CounterCursor(cr)
         for obj, ids in obj_ids.items():
             code_base_complexity = 0
@@ -107,6 +111,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
                     code_size_complexity = ccr.count
 
                 except Exception, e:
+                    self.log.warning('Error in read method', exc_info=True)
                     list2 = [obj, _("Error in Read method")]
                     speed_list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, _("Error in Read method:" + str(e))]
                 else:
@@ -130,7 +135,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
             result_dict2[obj] = list2
         self.score = obj_counter and score / obj_counter or 0.0
         if self.score*100 < self.min_score:
-            self.message = 'Score is below than minimal score(%s%%)' % self.min_score
+            self.message = _('Score is below than minimal score(%s%%)') % self.min_score
         self.result_details += self.get_result_details(result_dict)
         self.result += self.get_result(result_dict2)
         return None

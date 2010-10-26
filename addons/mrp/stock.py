@@ -19,13 +19,9 @@
 #
 ##############################################################################
 
-from mx import DateTime
 from osv import fields
 from osv import osv
-from tools.translate import _
-import ir
 import netsvc
-import time
 
 
 class StockMove(osv.osv):
@@ -33,14 +29,8 @@ class StockMove(osv.osv):
     
     _columns = {
         'production_id': fields.many2one('mrp.production', 'Production', select=True),
-        'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
     
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = default or {}
-        default['procurements'] = []
-        return super(StockMove, self).copy(cr, uid, id, default, context)
-
     def _action_explode(self, cr, uid, move, context={}):
         """ Explodes pickings.
         @param move: Stock moves
@@ -85,7 +75,7 @@ class StockMove(osv.osv):
                     proc_id = procurement_obj.create(cr, uid, {
                         'name': (move.picking_id.origin or ''),
                         'origin': (move.picking_id.origin or ''),
-                        'date_planned': move.date_planned,
+                        'date_planned': move.date,
                         'product_id': line['product_id'],
                         'product_qty': line['product_qty'],
                         'product_uom': line['product_uom'],
@@ -94,14 +84,12 @@ class StockMove(osv.osv):
                         'location_id': move.location_id.id,
                         'procure_method': prodobj.procure_method,
                         'move_id': mid,
-                        'company_id': line['company_id'],
                     })
                     wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 move_obj.write(cr, uid, [move.id], {
                     'location_id': move.location_dest_id.id,
                     'auto_validate': True,
                     'picking_id': False,
-                    'location_id': dest,
                     'state': 'waiting'
                 })
                 for m in procurement_obj.search(cr, uid, [('move_id','=',move.id)], context):
@@ -140,6 +128,7 @@ class StockMove(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for move in self.browse(cr, uid, ids):
             new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, context=context)
+            self.write(cr, uid, [move.id], {'prodlot_id': False, 'tracking_id': False})
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
                 wf_service.trg_validate(uid, 'mrp.production', prod_id, 'button_produce', cr)
@@ -153,17 +142,6 @@ StockMove()
 
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
-
-    def test_finnished(self, cursor, user, ids):
-        wf_service = netsvc.LocalService("workflow")
-        res = super(StockPicking, self).test_finnished(cursor, user, ids)
-        for picking in self.browse(cursor, user, ids):
-            for move in picking.move_lines:
-                if move.state == 'done' and move.procurements:
-                    for procurement in move.procurements:
-                        wf_service.trg_validate(user, 'procurement.order',
-                                procurement.id, 'button_check', cursor)
-        return res
 
     #
     # Explode picking by replacing phantom BoMs

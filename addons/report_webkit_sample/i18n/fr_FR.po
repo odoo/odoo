@@ -1,0 +1,241 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#   * report_webkit_sample
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-10-05 06:33:26+0000\n"
+"PO-Revision-Date: 2010-10-05 06:33:26+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: report_webkit_sample
+#: wizard_view:ir.report_actions,exist:0
+msgid "Report Action already exist for this report."
+msgstr "Report Action already exist for this report."
+
+#. module: report_webkit_sample
+#: wizard_field:ir.report_actions,add,print_button:0
+msgid "Add print button"
+msgstr "Add print button"
+
+#. module: report_webkit_sample
+#: model:ir.actions.report.xml,name:report_webkit_sample.report_webkit_html
+msgid "WebKit invoice"
+msgstr "facture WebKit"
+
+#. module: report_webkit_sample
+#: model:ir.actions.wizard,name:report_webkit_sample.wizard_oo_report_actions
+#: wizard_view:ir.report_actions,add:0
+#: wizard_view:ir.report_actions,exist:0
+msgid "Add Print Buttons"
+msgstr "Ajouter des boutons d'impression"
+
+#. module: report_webkit_sample
+#: code:addons/report_webkit_sample/wizard/report_actions.py:0
+#, python-format
+msgid "Client Actions Connections"
+msgstr "Actions Client Connections"
+
+#. module: report_webkit_sample
+#: model:ir.module.module,description:report_webkit_sample.module_meta_information
+msgid "Report system base on WebKit engine (wkhtmltopd lib) that allows to do HTML2PDF reporting.\n"
+"The module structure and some is inspired of the report_openoffice module\n"
+"The module allows:\n"
+"    -HTML report definition\n"
+"    -Multi header support \n"
+"    -Multi logo\n"
+"    -Multi company support\n"
+"    -HTML and CSS-3 support (In the limit of the actual WebKIT version)\n"
+"    -JavaScript support \n"
+"    -Raw HTML debugger\n"
+"    -Book printing capabilities\n"
+"    -Margins definition \n"
+"    -Paper size definition\n"
+"and munch more\n"
+"\n"
+"Many header are defined per company\n"
+"Many logo are defined per company\n"
+"CSS style, header and footer body are defined in the company\n"
+"\n"
+"The mapper library can be found here\n"
+"http://code.google.com/p/wkhtmltopdf/\n"
+"The libraries are included for Linux, Mac OS X i386 and Windows 32.\n"
+"\n"
+"A sample invoice report is defined in the report. \n"
+"You have to create the print button by calling a wizard. For more details :\n"
+"    http://files.me.com/nbessi/06n92k.mov \n"
+"\n"
+"TODO :\n"
+"JavaScript support activation deactivation\n"
+"Collated and book format support\n"
+"Zip return for separated PDF\n"
+"Web client WYSIWYG\n"
+"                    "
+msgstr "Report system base on WebKit engine (wkhtmltopd lib) that allows to do HTML2PDF reporting.\n"
+"The module structure and some is inspired of the report_openoffice module\n"
+"The module allows:\n"
+"    -HTML report definition\n"
+"    -Multi header support \n"
+"    -Multi logo\n"
+"    -Multi company support\n"
+"    -HTML and CSS-3 support (In the limit of the actual WebKIT version)\n"
+"    -JavaScript support \n"
+"    -Raw HTML debugger\n"
+"    -Book printing capabilities\n"
+"    -Margins definition \n"
+"    -Paper size definition\n"
+"and munch more\n"
+"\n"
+"Many header are defined per company\n"
+"Many logo are defined per company\n"
+"CSS style, header and footer body are defined in the company\n"
+"\n"
+"The mapper library can be found here\n"
+"http://code.google.com/p/wkhtmltopdf/\n"
+"The libraries are included for Linux, Mac OS X i386 and Windows 32.\n"
+"\n"
+"A sample invoice report is defined in the report. \n"
+"You have to create the print button by calling a wizard. For more details :\n"
+"    http://files.me.com/nbessi/06n92k.mov \n"
+"\n"
+"TODO :\n"
+"JavaScript support activation deactivation\n"
+"Collated and book format support\n"
+"Zip return for separated PDF\n"
+"Web client WYSIWYG\n"
+"                    "
+
+#. module: report_webkit_sample
+#: help:ir.report_actions,add,print_button:0
+msgid "Add action to menu context in print button."
+msgstr "Ajouter à l'action du menu contextuel dans le bouton d'impression."
+
+#. module: report_webkit_sample
+#: wizard_button:ir.report_actions,add,end:0
+msgid "_Cancel"
+msgstr "_Cancel"
+
+#. module: report_webkit_sample
+#: model:ir.module.module,shortdesc:report_webkit_sample.module_meta_information
+msgid "webkit report"
+msgstr "rapport webkit"
+
+#. module: report_webkit_sample
+#: wizard_field:ir.report_actions,add,open_action:0
+msgid "Open added action"
+msgstr "Ouvrir ajouté action"
+
+#. module: report_webkit_sample
+#: wizard_button:ir.report_actions,add,process:0
+msgid "_Ok"
+msgstr "_Ok"
+
+#. module: report_webkit_sample
+#: wizard_button:ir.report_actions,exist,end:0
+msgid "_Close"
+msgstr "_Close"
+
+
+
+#. module: report_webkit_sample
+#: webkit:report.webkitaccount.invoice:0
+msgid "Invoice Date"
+msgstr "Date de la facture"
+
+#. module: report_webkit_sample
+#: webkit:report.webkitaccount.invoice:0
+msgid "QTY"
+msgstr "QTÉ"
+
+#. module: report_webkit_sample
+#: webkit:report.webkitaccount.invoice:0
+msgid "Unit Price"
+msgstr "Prix unitaire"
+
+#. module: report_webkit_sample
+#: field:report.webkitaccount.invoice:0
+msgid "Unit of Measure"
+msgstr "Unité de mesure"
+
+#. module: report_webkit_sample
+#: view:account.invoice:0
+#: field:account.invoice.line,invoice_line_tax_id:0
+#: model:ir.actions.act_window,name:account.action_tax_form
+#: model:ir.ui.menu,name:account.menu_action_tax_form
+#: model:ir.ui.menu,name:account.next_id_27
+msgid "Taxes"
+msgstr "Impôts"
+
+#. module: report_webkit_sample
+#: webkit:report.webkitaccount.invoice:0
+msgid "Price"
+msgstr "Prix"
+
+#. module: report_webkit_sample
+#: webkit:report.webkitaccount.invoice:0
+msgid "Tax Lines"
+msgstr "Lignes de taxe"
+
+#. module: report_webkit_sample
+#: webkit:report.webkitaccount.invoice:0
+msgid "Amount"
+msgstr "Montant"
+
+#. module: report_webkit_sample
+#: webkit:report.webkitaccount.invoice,:0
+msgid "Partner Ref."
+msgstr "Réf. partenaire"
+
+#. module: report_webkit_sample
+#: webkit:report.webkitaccount.invoice:0
+msgid "Invoice Ref"
+msgstr "Réf. Facture"
+
+#. module: report_webkit_sample
+#: field:account.invoice,amount_tax:0
+msgid "Total"
+msgstr "Total"
+
+
+#. module: report_webkit_sample
+#: field:account.invoice,name:0
+#: field:account.invoice.line,name:0
+msgid "Description"
+msgstr "Description"
+
+#. module: report_webkit_sample
+#: view:account.invoice.line:0
+#: webkit:account.invoice.tax,invoice_id:0
+msgid "Invoice Line"
+msgstr "Ligne de facture"
+
+#. module: report_webkit_sample
+#: field:account.analytic.line,product_id:0
+#: field:account.invoice.line,product_id:0
+#: field:account.move.line,product_id:0
+msgid "Product"
+msgstr "Produit"
+
+#. module: report_webkit_sample
+#: field:account.invoice,name:0
+msgid "Document"
+msgstr "Ref. document"
+
+#. module: report_webkit_sample
+#: webkit:account.invoice.line,discount:0
+msgid "Disc.(%)"
+msgstr "Disc.(%)"
+
+#. module: report_webkit_sample
+#: model:account.account.type,name:account.account_type_tax
+#: field:account.invoice,amount_tax:0
+#: field:account.move.line,account_tax_id:0
+msgid "Tax"
+msgstr "Taxe"

@@ -3,8 +3,8 @@
     <data>
            <!-- Fund Raising Configuration Menu -->
         <menuitem id="menu_config_fundrising" name="Fund Raising"
-        groups="base.group_extended"
-        parent="base.menu_base_config" sequence="7" />
+            groups="base.group_extended"
+            parent="base.menu_base_config" sequence="8" />
 
         <!-- Fund Raising Categories Form View -->
 
@@ -15,9 +15,10 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
             <field name="context">{'object_id':'crm.fundraising'}</field>
+            <field name="help">Manage and define the fund raising categories you want to be maintained in the system.</field>
         </record>
 
-       <menuitem action="crm_fund_categ_action" name="Categories"
+        <menuitem action="crm_fund_categ_action" name="Categories"
             id="menu_crm_case_fundraising-act" groups="base.group_extended"
             parent="menu_config_fundrising" />
 
@@ -30,30 +31,13 @@
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
             <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
             <field name="context">{'object_id':'crm.fundraising'}</field>
+            <field name="help">Create and manage fund raising activity categories you want to be maintained in the system.</field>
         </record>
 
          <menuitem action="crm_fundraising_stage_act"
             groups="base.group_extended" name="Stages"
             id="menu_crm_fundraising_stage_act"
             parent="menu_config_fundrising" />
-
-
-        <!-- Fund Resource Type Form View -->
-
-        <record id="crm_fundraising_resource_act" model="ir.actions.act_window">
-            <field name="name">Fundraising Resource Type</field>
-            <field name="res_model">crm.case.resource.type</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
-            <field name="context">{'object_id':'crm.fundraising'}</field>
-        </record>
-
-       <menuitem action="crm_fundraising_resource_act"
-            groups="base.group_extended" name="Resource Type"
-            id="menu_crm_fundraising_resource_act"
-            parent="menu_config_fundrising" />
-
 
         <!-- Fund Raising Tree View -->
 
@@ -63,7 +47,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Funds Tree"
-                    colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                    colors="blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="name" string="Fund Description" />
                     <field name="categ_id" />
                     <field name="type_id" string="Payment Mode" />
@@ -72,21 +56,21 @@
                     <field name="user_id" />
                     <field name="state" />
                     <field name="partner_id" invisible="1"/>
-                    <button name="case_close" string="Done"
-                        states="open,draft,pending" type="object"
-                        icon="gtk-close" />
-                    <button name="case_open" string="Open"
-                        states="draft,pending" type="object"
-                        icon="gtk-go-forward" />
                     <button name="case_cancel" string="Cancel"
                         states="draft,open,pending" type="object"
                         icon="gtk-cancel" />
+                    <button name="case_open" string="Open"
+                        states="draft,pending" type="object"
+                        icon="gtk-go-forward" />
                     <button name="case_pending" string="Pending"
                         states="draft,open" type="object" icon="gtk-media-pause" />
                     <button name="case_escalate" string="Escalate"
                         states="open,draft,pending" type="object"
                         groups="base.group_extended"
                         icon="gtk-go-up" />
+                    <button name="case_close" string="Done"
+                        states="open,draft,pending" type="object"
+                        icon="gtk-close" />
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object" icon="gtk-convert" />
                 </tree>
@@ -107,7 +91,7 @@
                         <field name="user_id" string="Responsible"/>
                         <field name="date"/>
                         <field name="categ_id" select="1" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
-                        <field name="type_id" string="Payment Mode" select="1" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
+                        <field name="type_id" string="Payment Mode" select="1" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Funds">
@@ -133,15 +117,12 @@
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state"/>
-                                <button name="case_close" string="Done"
-                                    states="open,draft,pending" type="object"
-                                    icon="gtk-close" />
-                                <button name="case_open" string="Open"
-                                    states="draft,pending" type="object"
-                                    icon="gtk-go-forward" />
                                 <button name="case_cancel" string="Cancel"
                                     states="draft,open,pending" type="object"
                                     icon="gtk-cancel" />
+                                <button name="case_open" string="Open"
+                                    states="draft,pending" type="object"
+                                    icon="gtk-go-forward" />
                                 <button name="case_pending" string="Pending"
                                     states="draft,open" type="object"
                                     icon="gtk-media-pause" />
@@ -149,19 +130,73 @@
                                     states="open,draft,pending" type="object"
                                     groups="base.group_extended"
                                     icon="gtk-go-up" />
+                                <button name="case_close" string="Done"
+                                    states="open,draft,pending" type="object"
+                                    icon="gtk-close" />
                                 <button name="case_reset"
                                     string="Reset to Draft" states="done,cancel"
                                     type="object" icon="gtk-convert" />
                             </group>
                         </page>
                         <page string="History" groups="base.group_extended">
+                            <group colspan="4">
+                                <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
+                            </group>
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                                <tree string="History">
+                                    <field name="display_text" string="History Information"/>
+                                    <field name="history" invisible="1"/>
+                                    <button
+                                        string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
+                                        name="%(crm.action_crm_send_mail)d"
+                                        context="{'mail':'reply', 'model': 'crm.fundraising', 'include_original' : True}"
+                                        icon="terp-mail-replied" type="action" />
+                                </tree>
+                                <form string="History">
+                                    <group col="4" colspan="4">
+                                        <field name="email_from"/>
+                                        <field name="date"/>
+                                        <field name="email_to" widget="char" size="512"/>
+                                        <field name="email_cc" widget="char" size="512"/>
+                                        <field name="name" colspan="4" widget="char" size="512"/>
+                                        <field name="history" invisible="1"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Details">
+                                            <group attrs="{'invisible': [('history', '!=', True)]}">
+                                                <field name="description" colspan="4" nolabel="1" height="250"/>
+                                                <button colspan="4"
+                                                    string="Reply"
+                                                    name="%(crm.action_crm_send_mail)d"
+                                                    context="{'mail':'reply', 'model': 'crm.fundraising', 'include_original' : True}"
+                                                    icon="terp-mail-replied" type="action" />
+                                            </group>
+                                            <group attrs="{'invisible': [('history', '=', True)]}">
+                                                <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                            </group>
+                                        </page>
+                                        <page string="Attachments">
+                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
+                             <button string="Add Internal Note"
+                                name="%(crm.action_crm_add_note)d"
+                                context="{'model': 'crm.lead' }"
+                                icon="terp-document-new" type="action" />
+                            <button string="Send New Email"
+                                name="%(crm.action_crm_send_mail)d"
+                                context="{'mail':'new', 'model': 'crm.fundraising'}"
+                                icon="terp-mail-message-new" type="action" />
+                        </page>
+                        <page string="Extra Info" groups="base.group_extended">
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Misc"/>
                                 <field name="active"/>
                                 <field name="id" select="1"/>
                                 <field name="priority" string="Priority"/>
                                 <field name="canal_id"/>
-                                <field name="som"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Dates"/>
@@ -175,56 +210,6 @@
                                 <field colspan="4" name="ref"/>
                                 <field colspan="4" name="ref2"/>
                             </group>
-                            <field name="log_ids" nolabel="1" colspan="4">
-                                <tree string="Logs">
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </tree>
-                                <form string="Logs">
-                                    <separator string="Action Information" colspan="4"/>
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </form>
-                            </field>
-                        </page>
-                        <page string="Emails" groups="base.group_extended">
-                            <group colspan="4">
-                                <field colspan="4" name="email_cc" string="CC"/>
-                            </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
-                                <form string="Communication history">
-                                    <group col="6" colspan="4">
-                                        <field name="date"/>
-                                        <field name="email_to"/>
-                                        <field name="email_from"/>
-                                    </group>
-                                    <notebook colspan="4">
-                                        <page string="Details">
-                                            <field name="description" colspan="4" nolabel="1"/>
-                                        </page>
-                                        <page string="Attachments">
-                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-                                        </page>
-                                    </notebook>
-                                    <button colspan="4"
-                                    string="Reply to Last Email"
-                                    name="%(crm.action_crm_send_mail)d"
-                                    context="{'mail':'reply', 'model': 'crm.fundraising'}"
-                                    icon="gtk-undo" type="action" />
-                                </form>
-                                <tree string="Communication history">
-                                    <field name="date"/>
-                                    <field name="email_from" />
-                                    <field name="email_to"/>
-                                    <field name="description"/>
-                                </tree>
-                            </field>
-                            <button colspan="4" string="Send New Email"
-                                name="%(crm.action_crm_send_mail)d"
-                                context="{'mail':'new', 'model': 'crm.fundraising'}"
-                                icon="gtk-go-forward" type="action" />
                         </page>
                     </notebook>
                 </form>
@@ -290,23 +275,29 @@
                                     help="Unassigned" />
                             </field>
                             <field name="section_id" select="1" widget="selection" string="Sales Team">
-                                <filter icon="terp-personal+"
-                                    domain="[('section_id','=',context.get('section_id',False))]"
-                                    help="My section" />
+                                <filter icon="terp-personal+" groups="base.group_extended"
+                                    domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                                    help="My Sales Team(s)" />
                             </field>
                         </group>
                         <newline/>
                         <group expand="0" string="Group By...">
-                            <filter string="Partner" icon="terp-personal"
+                            <filter string="Partner" icon="terp-partner"
                                 domain="[]"
                                 context="{'group_by':'partner_id'}" />
                             <filter string="Responsible" icon="terp-personal"
                                 domain="[]"
                                 context="{'group_by':'user_id'}" />
                             <separator orientation="vertical" />
-                            <filter string="Type" icon="terp-stock_symbol-selection"
-                                domain="[]"
+                            <filter string="Category" help="Fund Category"
+                                icon="terp-stock_symbol-selection" domain="[]"
+                                context="{'group_by':'categ_id'}" />
+                            <filter string="Payment Mode" help="Payment Mode"
+                                icon="terp-dolar" domain="[]"
                                 context="{'group_by':'type_id'}" />
+                            <separator orientation="vertical" />
+                            <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
+                                context="{'group_by':'state'}" />
                         </group>
                     </search>
                 </field>

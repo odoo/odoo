@@ -19,44 +19,52 @@
 #
 ##############################################################################
 
+import account_report_common
+import account_report_common_partner
+import account_report_common_journal
+import account_report_common_account
+
 import account_automatic_reconcile
 import account_move_line_reconcile_select
 import account_move_line_unreconcile_select
+import account_reconcile_partner_process
 import account_reconcile
 import account_unreconcile
 import account_invoice_refund
-import account_pay_invoice
 import account_move_journal
 import account_journal_select
 import account_move_bank_reconcile
 import account_subscription_generate
-import account_aged_trial_balance
-import account_general_ledger_report
-import account_third_party_ledger
-import account_partner_balance_report
-import account_balance_report
+import account_report_aged_partner_balance
+import account_report_partner_ledger
+import account_report_partner_balance
 import account_period_close
 import account_fiscalyear_close
 import account_fiscalyear_close_state
 import account_vat
 import account_open_closed_fiscalyear
 
-import account_compare_account_balance_report
 import account_invoice_state
 import account_chart
-import account_move_line_select
+import account_tax_chart
+#TODO: remove this file no moe used
+# also remove related view fiel
 
 import account_validate_account_move
 import account_use_model
 
 import account_state_open
 
-import account_statement_from_invoice
-import account_print_journal
-import account_central_journal
-import account_general_journal
+import account_report_print_journal
+import account_report_central_journal
+import account_report_general_journal
+import account_report_general_ledger
+import account_report_account_balance
+
 import account_change_currency
 
+import account_report_balance_sheet
+import account_report_profit_loss
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 

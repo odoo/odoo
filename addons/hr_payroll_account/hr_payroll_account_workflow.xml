@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="act_account_check" model="workflow.activity">
+            <field name="wkf_id" ref="hr_payroll.wkf"/>
+            <field name="name">account_check</field>
+            <field name="action">account_check_sheet()</field>
+            <field name="kind">function</field>
+        </record>
+        
+        <record id="hr_payroll.t4" model="workflow.transition">
+            <field name="act_from" ref="hr_payroll.act_confirm"/>
+            <field name="act_to" ref="act_account_check"/>
+            <field name="condition">True</field>
+            <field name="signal">account_verify_sheet</field>
+        </record>
+        
+        <record id="t3" model="workflow.transition">
+            <field name="act_from" ref="act_account_check"/>
+            <field name="act_to" ref="hr_payroll.act_done"/>
+            <field name="condition">True</field>
+            <field name="signal">final_verify_sheet</field>
+        </record>
+        
+        <record id="hr_payroll.t9" model="workflow.transition">
+            <field name="act_from" ref="act_account_check"/>
+            <field name="act_to" ref="hr_payroll.act_cancel"/>
+            <field name="signal">cancel_sheet</field>
+        </record>
+    </data>
+</openerp>

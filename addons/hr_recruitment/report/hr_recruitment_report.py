@@ -23,10 +23,10 @@ from osv import fields,osv
 from hr_recruitment import hr_recruitment
 
 AVAILABLE_STATES = [
-    ('draft','Draft'),
+    ('draft','New'),
     ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
+    ('cancel', 'Refused'),
+    ('done', 'Hired'),
     ('pending','Pending')
 ]
 
@@ -36,49 +36,10 @@ class hr_recruitment_report(osv.osv):
     _auto = False
     _rec_name = 'date'
 
-    def _get_data(self, cr, uid, ids, field_name, arg, context={}):
-
-        """ @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of case and section Data’s IDs
-            @param context: A standard dictionary for contextual values """
-
-        res = {}
-        state_perc = 0.0
-        avg_ans = 0.0
-
-        for case in self.browse(cr, uid, ids, context):
-            if field_name != 'avg_answers':
-                state = field_name[5:]
-                cr.execute("select count(*) from crm_opportunity where \
-                    section_id =%s and state='%s'"%(case.section_id.id, state))
-                state_cases = cr.fetchone()[0]
-                perc_state = (state_cases / float(case.nbr)) * 100
-
-                res[case.id] = perc_state
-            else:
-                model_name = self._name.split('report.')
-                if len(model_name) < 2:
-                    res[case.id] = 0.0
-                else:
-                    model_name = model_name[1]
-
-                    cr.execute("select count(*) from crm_case_log l, ir_model m \
-                         where l.model_id=m.id and m.model = '%s'" , model_name)
-                    logs = cr.fetchone()[0]
-
-                    avg_ans = logs / case.nbr
-                    res[case.id] = avg_ans
-
-        return res
-
     _columns = {
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
-        'perc_done': fields.function(_get_data, string='%Done', method=True, type="float"),
-        'perc_cancel': fields.function(_get_data, string='%Cancel', method=True, type="float"),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -88,22 +49,23 @@ class hr_recruitment_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
         'date': fields.date('Date', readonly=True),
         'date_closed': fields.date('Closed', readonly=True),
         'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
-        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
+        'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
         'salary_prop' : fields.float("Salary Proposed"),
+        'salary_prop_avg' : fields.float("Avg Salary Proposed", group_operator="avg"),
         'salary_exp' : fields.float("Salary Expected"),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact Name',readonly=True),
-        'available' : fields.float("Availability")
+        'available' : fields.float("Availability"),
+        'delay_open': fields.float('Avg. Delay to Open', digits=(16,2), readonly=True, group_operator="avg",
+                                       help="Number of Days to close the project issue"),
+        'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
+                                       help="Number of Days to close the project issue"),
 
     }
     _order = 'date desc'
@@ -130,7 +92,10 @@ class hr_recruitment_report(osv.osv):
                      s.priority,
                      s.stage_id,
                      sum(salary_proposed) as salary_prop,
+                     (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,
+                     extract('epoch' from (s.date_open-s.create_date))/(3600*24) as  delay_open,
+                     extract('epoch' from (s.date_closed-s.create_date))/(3600*24) as  delay_close,
                      count(*) as nbr
                  from hr_applicant s
                  group by
@@ -139,6 +104,9 @@ class hr_recruitment_report(osv.osv):
                      to_char(s.create_date, 'YYYY-MM-DD') ,
                      date_trunc('day',s.create_date),
                      date_trunc('day',s.date_closed),
+                     s.date_open,
+                     s.create_date,
+                     s.date_closed,
                      s.state,
                      s.partner_id,
                      s.partner_address_id,

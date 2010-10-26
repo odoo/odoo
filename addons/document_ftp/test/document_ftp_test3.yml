@@ -1,0 +1,92 @@
+-
+    In order to check international character functionality
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_plain_ftp(timeout=1.0)
+-
+    I create in the server a folder called 'Δοκιμαστικός Φάκελλος'
+-
+    !record {model: document.directory, id: dir_itests }:
+        name: 'Δοκιμαστικός Φάκελλος'
+        parent_id: document.dir_root
+-
+    And then I create another folder, under it, through FTP
+-
+    !python {model: ir.attachment}: |
+        cr.commit()
+        from document_ftp import test_easyftp as te
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος')
+        ftp.mkd("Φάκελλος από κάτω")
+-
+    I check that this folder exists at the server
+-
+    !assert {model: document.directory, id: , search: "[('name','=','Φάκελλος από κάτω')]" }:
+      - parent_id != False
+-
+    I login with FTP and check that 'Δοκιμαστικός Φάκελλος' is there
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/Φάκελλος από κάτω')
+-
+    I create a file named 'Δοκιμή' into that folder
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/Φάκελλος από κάτω')
+        fdata = StringIO('κείμενο με utf-8')
+        ftp.storbinary('STOR Δοκιμή.txt', fdata)
+-
+    I remove the 'Δοκιμή.txt' file
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/Φάκελλος από κάτω')
+        ftp.delete('Δοκιμή.txt')
+-
+    I rename 'Φάκελλος από κάτω' into 'άλλος'
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος')
+        ftp.rename("Φάκελλος από κάτω", "άλλος")
+-
+    I place a file 'file Φ3' in 'άλλος'
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/άλλος')
+        fdata = StringIO('κι άλλο κείμενο')
+        ftp.storbinary('STOR file Φ3.txt', fdata)
+-
+    I rename the file into file+range(1..200) (large filename)
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/άλλος')
+        vuvuzela = 'b'+''.join('z' * 200)+'!'
+        ftp.rename("file Φ3.txt", vuvuzela)
+-
+    I delete the file with the large name
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/άλλος')
+        vuvuzela = 'b'+''.join('z' * 200)+'!'
+        ftp.delete(vuvuzela)
+
+-
+    I delete the testing folders
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
+        ftp.rmd('Δοκιμαστικός Φάκελλος/άλλος')
+        ftp.rmd('Δοκιμαστικός Φάκελλος')

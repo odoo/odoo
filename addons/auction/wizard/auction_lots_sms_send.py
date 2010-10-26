@@ -21,11 +21,7 @@
 
 from osv import fields, osv
 from tools.translate import _
-import netsvc
-import pooler
-import time
 import tools
-import wizard
 
 class auction_lots_sms_send(osv.osv_memory):
 
@@ -36,7 +32,7 @@ class auction_lots_sms_send(osv.osv_memory):
                'user':fields.char('Login', size=64, required=True),
                'password':fields.char('Password', size=64, required=True),
                'text':fields.text('SMS Message', required=True)
-               }
+    }
     
     def sms_send(self, cr, uid, ids, context):
         """
@@ -52,7 +48,7 @@ class auction_lots_sms_send(osv.osv_memory):
         lot_obj = self.pool.get('auction.lots')
         partner_obj = self.pool.get('res.partner')
         partner_address_obj = self.pool.get('res.partner.address')
-        for datas in self.read(cr, uid, ids):
+        for data in self.read(cr, uid, ids):
             lots = lot_obj.read(cr, uid, context['active_ids'], ['obj_num','obj_price','ach_uid'])
             res = partner_obj.read(cr, uid, [l['ach_uid'][0] for l in lots if l['ach_uid']], ['gsm'], context)
             
@@ -65,12 +61,6 @@ class auction_lots_sms_send(osv.osv_memory):
                     tools.smssend(data['user'], data['password'], data['app_id'], unicode(data['text'], 'utf-8').encode('latin1'), to)
                     nbr += 1
             return {'sms_sent': nbr}
-        
-            if to:
-                tools.smssend(data['user'], data['password'], data['app_id'], unicode(data['text'], 'utf-8').encode('latin1'), to)
-                nbr += 1
-            return {'sms_sent': nbr}
-#      
 auction_lots_sms_send()
 
 

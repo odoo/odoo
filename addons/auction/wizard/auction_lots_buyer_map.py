@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
+from osv import osv,fields
+from tools.translate import _ 
 import netsvc
 import sql_db
-from osv import osv,fields 
 
 class wiz_auc_lots_buyer_map(osv.osv_memory):
     _name = 'auction.lots.buyer_map'
     _description = 'Map Buyer'
-    
     _columns = {
         'ach_login': fields.char('Buyer Username', size=64, required=True),
         'ach_uid': fields.many2one('res.partner','Buyer', required=True),
@@ -42,19 +42,17 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
-        ids = context and context.get('active_ids',False) or False
-        assert ids, _('Active IDs not Found')
         res = super(wiz_auc_lots_buyer_map,self).default_get(cr, uid, fields, context)
-        cr.execute('select id from auction_lots where (ach_uid is null and ach_login is not null)  ')
-        v_ids = [x[0] for x in cr.fetchall()]
-        for rec in self.pool.get('auction.lots').browse(cr, uid, v_ids, context):
+        auction_lots_obj = self.pool.get('auction.lots')
+        lots_ids = auction_lots_obj.search(cr, uid, [('ach_uid', '=', ''), ('ach_login', '!=', '')])
+        for rec in auction_lots_obj.browse(cr, uid, lots_ids, context):
             if (not rec.ach_uid or not rec.ach_login):
-                res.update(self._start(cr, uid, ids, context))
-                return res
-        res.update(self._start(cr, uid, ids, context))
+                res.update(self._start(cr, uid, context.get('active_ids', []), context))
+            return res
+        res.update(self._start(cr, uid, context.get('active_ids', []), context))
         return res
     
-    def _start(self, cr, uid, ids, context):
+    def _start(self, cr, uid, ids, context=None):
         """ 
          Returns login if already there in the selected record.
          @param self: The object pointer.
@@ -64,6 +62,8 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param context: A standard dictionary 
          @return: login field from current record. 
         """
+        if not context:
+            context={}
         lots_obj = self.pool.get('auction.lots')
         for rec in lots_obj.browse(cr, uid, ids, context):
             if (len(ids)==1) and (not rec.ach_uid and not rec.ach_login):
@@ -72,7 +72,7 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
                 return {'ach_login': rec.ach_login}
         return {}
     
-    def buyer_map_set(self, cr, uid, ids, context):
+    def buyer_map_set(self, cr, uid, ids, context=None):
         """ 
          To map the buyer and login name.
          @param self: The object pointer.
@@ -80,17 +80,16 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param uid: ID of the user currently logged in
          @param ids: List of ids 
          @param context: A standard dictionary 
-         @return: 
         """
-        rec_ids = context and context.get('active_ids',False) or False
+        if not context:
+            context={}
+        rec_ids = context and context.get('active_ids',[]) or []
         assert rec_ids, _('Active IDs not Found')
-        datas = self.read(cr, uid, ids[0],['ach_login','ach_uid'])
         lots_obj = self.pool.get('auction.lots')
-        recs = lots_obj.browse(cr, uid, rec_ids, context)
-        for rec in recs:
-            if rec.ach_login==datas['ach_login']:
-                lots_obj.write(cr, uid, [rec.id], {'ach_uid': datas['ach_uid']}, context=context)
-                cr.commit()
+        for current in self.browse(cr, uid, ids):
+            for lots in lots_obj.browse(cr, uid, rec_ids, context):
+                if lots.ach_login == current.ach_login:
+                    lots_obj.write(cr, uid, [lots.id], {'ach_uid': current.ach_uid.id}, context=context)
         return {}
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
@@ -103,8 +102,12 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param context: A standard dictionary 
          @return: New arch of view.
         """
-        record_ids = context and context.get('active_ids', False) or False
+        if not context:
+            context={}
+        record_ids = context and context.get('active_ids', []) or []
         res = super(wiz_auc_lots_buyer_map, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        if context.get('active_model','') != 'auction.lots':
+            return res
         lots_obj = self.pool.get('auction.lots')
         if record_ids:
             try:
@@ -112,9 +115,10 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
                     if lots.ach_uid:
                         res['arch'] = """
                                 <form title="Mapping Result">
-                                    <group col="2" colspan="2">
+                                    <group col="2" colspan="4">
                                         <label string="All objects are assigned to buyers !"/>
                                         <newline/>
+                                        <separator string="" colspan="4"/>
                                         <button icon='gtk-cancel' special="cancel"
                                             string="Done" />
                                     </group>

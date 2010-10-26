@@ -25,14 +25,14 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
-    This module gives the administrator the right
+    This module gives the administrator the rights
     to track every user operation on all the objects
     of the system.
 
     Administrator can subscribe rules for read,write and
     delete on objects and can check logs.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],

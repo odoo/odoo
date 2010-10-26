@@ -36,16 +36,24 @@ class job2phonecall(osv.osv_memory):
 
     def _date_user(self, cr, uid, context=None):
         case_obj = self.pool.get('hr.applicant')
-        case = case_obj.browse(cr, uid, context['active_id'])
+        if context is None:
+            context = {}
+        case = case_obj.browse(cr, uid, context['active_id'], context=context)
         return case.user_id and case.user_id.id or False
 
     def _date_category(self, cr, uid, context=None):
-        categ_id = self.pool.get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])
+        case_obj = self.pool.get('hr.applicant')
+        if context is None:
+            context = {}
+        case = case_obj.browse(cr, uid, context['active_id'], context=context)
+        categ_id = self.pool.get('crm.case.categ').search(cr, uid, [('name','=','Outbound')], context=context)
         return categ_id and categ_id[0] or case.categ_id and case.categ_id.id or False
 
     def _get_note(self, cr, uid, context=None):
         case_obj = self.pool.get('hr.applicant')
-        case = case_obj.browse(cr, uid, context['active_id'])
+        if context is None:
+            context = {}
+        case = case_obj.browse(cr, uid, context['active_id'], context=context)
         return case.description or ''
 
     _defaults = {
@@ -59,11 +67,11 @@ class job2phonecall(osv.osv_memory):
         job_case_obj = self.pool.get('hr.applicant')
         data_obj = self.pool.get('ir.model.data')
         phonecall_case_obj = self.pool.get('crm.phonecall')
-
+        if context is None:
+            context = {}
         form = self.read(cr, uid, ids, [], context=context)[0]
-#        form = data['form']
         result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
+        res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         # Select the view
 
         id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
@@ -73,7 +81,7 @@ class job2phonecall(osv.osv_memory):
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
-        for job in job_case_obj.browse(cr, uid, context['active_ids']):
+        for job in job_case_obj.browse(cr, uid, context['active_ids'], context=context):
             #TODO : Take other info from job
             new_phonecall_id = phonecall_case_obj.create(cr, uid, {
                         'name' : job.name,
@@ -81,7 +89,6 @@ class job2phonecall(osv.osv_memory):
                         'categ_id' : form['category_id'],
                         'description' : form['note'],
                         'date' : form['deadline'],
-#                        'section_id' : form['section_id'],
                         'description':job.description,
                         'partner_id':job.partner_id.id,
                         'partner_address_id':job.partner_address_id.id,
@@ -90,12 +97,10 @@ class job2phonecall(osv.osv_memory):
                         'description':job.description,
                         'date':job.date,
                     }, context=context)
-            new_phonecall = phonecall_case_obj.browse(cr, uid, new_phonecall_id)
+            new_phonecall = phonecall_case_obj.browse(cr, uid, new_phonecall_id, context=context)
             vals = {}
-#            if not job.case_id:
-#                vals.update({'phonecall_id' : new_phonecall.id})
-            job_case_obj.write(cr, uid, [job.id], vals)
-            job_case_obj.case_cancel(cr, uid, [job.id])
+            job_case_obj.write(cr, uid, [job.id], vals, context=context)
+#            job_case_obj.case_cancel(cr, uid, [job.id])
             phonecall_case_obj.case_open(cr, uid, [new_phonecall_id])
 
         return {
@@ -111,4 +116,4 @@ class job2phonecall(osv.osv_memory):
 
 job2phonecall()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:>>>>>>> MERGE-SOURCE
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

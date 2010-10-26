@@ -22,41 +22,43 @@
 {
     "name" : "Accounting Voucher Entries",
     "version" : "1.0",
-    "author" : 'Tiny & Axelor',
-    "description": """
-    Indian Accounting module includes all the basic requirenments of
-    Basic Accounting, plus new things which are available :
-    * Indian Account Chart
-    * New Invoice - (Local, Retail)
-    * Invoice Report
-    * Tax structure
-    * Journals
-    * VAT Declaration report
-    * Accounting Periods
+    "author" : 'OpenERP SA',
+    "description": """Account Voucher module includes all the basic requirements of
+    Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc...
+    * Voucher Entry
+    * Voucher Receipt
+    * Cheque Register
     """,
     "category" : "Generic Modules/Accounting",
     "website" : "http://tinyerp.com",
-    "depends" : [
-        "base", 
-        "account"
-    ],
-    "init_xml" : [
-    ],
+    "depends" : ["account"],
+    "init_xml" : [],
 
-    "demo_xml" : [
-    ],
+    "demo_xml" : [],
 
     "update_xml" : [
         "security/ir.model.access.csv",
-        "voucher_sequence.xml",
-        "voucher_workflow.xml",
-        "voucher_report.xml",
-        "voucher_view.xml",
-        "voucher_wizard.xml",
-        "wizard/account_voucher_open_view.xml",
-        
+        "account_voucher_sequence.xml",
+        "account_voucher_workflow.xml",
+        "account_voucher_report.xml",
+        "wizard/account_voucher_unreconcile_view.xml",
+        "wizard/account_statement_from_invoice_view.xml",
+        "account_voucher_view.xml",
+        "voucher_payment_receipt_view.xml",
+        "voucher_sales_purchase_view.xml",
+        "account_voucher_wizard.xml",
+        "account_voucher_pay_invoice.xml",
+        "security/account_voucher_security.xml"
+    ],
+    "test" : [
+#         "test/account_voucher.yml",
+          "test/sales_receipt.yml",
+          "test/sales_payment.yml",
+          "test/account_voucher_report.yml"
     ],
     'certificate': '0037580727101',
     "active": False,
     "installable": True,
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

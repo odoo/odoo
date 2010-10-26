@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,32 +15,27 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import netsvc
-import pooler, tools
-
+import pooler
+import tools
 from osv import fields, osv
 
 class Env(dict):
-    
+
     def __init__(self, obj, user):
         self.__obj = obj
         self.__usr = user
-        
+
     def __getitem__(self, name):
-        
         if name in ('__obj', '__user'):
-            return super(ExprContext, self).__getitem__(name)
-        
+            return super(Env, self).__getitem__(name)
         if name == 'user':
             return self.__user
-        
         if name == 'object':
             return self.__obj
-        
         return self.__obj[name]
 
 class process_process(osv.osv):
@@ -85,7 +80,7 @@ class process_process(osv.osv):
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
 
         pool = pooler.get_pool(cr.dbname)
-        
+
         process = pool.get('process.process').browse(cr, uid, [id], context)[0]
 
         name = process.name
@@ -135,11 +130,11 @@ class process_process(osv.osv):
 
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
-            
+
             if node.model_id and node.model_id.model == res_model:
                 try:
                     data['active'] = eval(node.model_states, expr_context)
-                except Exception, e:
+                except Exception:
                     pass
 
             if not data['active']:
@@ -169,23 +164,19 @@ class process_process(osv.osv):
                     button['state'] = b.state
                     button['action'] = b.action
                     buttons.append(button)
-                data['roles'] = roles = []
+                data['groups'] = groups = []
                 for r in tr.transition_ids:
-                    if r.role_id:
-                        role = {}
-                        role['name'] = r.role_id.name
-                        roles.append(role)
-                for r in tr.role_ids:
-                    role = {}
-                    role['name'] = r.name
-                    roles.append(role)
+                    if r.group_id:
+                        groups.append({'name': r.group_id.name})
+                for r in tr.group_ids:
+                    groups.append({'name': r.name})
                 transitions[tr.id] = data
 
         # now populate resource information
         def update_relatives(nid, ref_id, ref_model):
             relatives = []
 
-            for tid, tr in transitions.items():
+            for dummy, tr in transitions.items():
                 if tr['source'] == nid:
                     relatives.append(tr['target'])
                 if tr['target'] == nid:
@@ -233,7 +224,7 @@ class process_process(osv.osv):
 
         # calculate graph layout
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
-        g.process(start)        
+        g.process(start)
         g.scale(*scale) #g.scale(100, 100, 180, 120)
         graph = g.result_get()
 
@@ -349,7 +340,7 @@ class process_transition(osv.osv):
         'target_node_id': fields.many2one('process.node', 'Target Node', required=True, ondelete='cascade'),
         'action_ids': fields.one2many('process.transition.action', 'transition_id', 'Buttons'),
         'transition_ids': fields.many2many('workflow.transition', 'process_transition_ids', 'ptr_id', 'wtr_id', 'Workflow Transitions'),
-        'role_ids': fields.many2many('res.roles', 'process_transition_roles_rel', 'tid', 'rid', 'Roles'),
+        'group_ids': fields.many2many('res.groups', 'process_transition_group_rel', 'tid', 'rid', string='Required Groups'),
         'note': fields.text('Description', translate=True),
     }
 process_transition()

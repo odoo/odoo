@@ -27,20 +27,16 @@ for fname in args:
             fp = open(fname,'rb')
             content = fp.read()
             fp.close()
-            res = cntIndex.doIndex(content,fname,None,None,True)
+            res = cntIndex.doIndex(content, fname, None, None, True)
         else:
             res = cntIndex.doIndex(None, fname, None, fname,True)
 
-        if res:
-            print "Result: ", res[0]
-            print res[1]
-        else:
-            print "No result"
+        if options.verbose:
+            for line in res[:5]:
+                print line
     except Exception,e:
-        import traceback,sys
+        import traceback
         tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
-        print "Traceback:",tb_s
-        print "Exception: ",e
         
 
 #eof

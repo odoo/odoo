@@ -46,18 +46,16 @@ class account_analytic_profit(osv.osv_memory):
 
     def print_report(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.analytic.line')
-        product_obj = self.pool.get('product.product')
-        price_obj = self.pool.get('product.pricelist')
-        data = {}
-        data['form'] = self.read(cr, uid , ids, [], context=context)[0]
         if context is None:
             context = {}
+        data = {}
+        data['form'] = self.read(cr, uid , ids, [], context=context)[0]
         ids_chk = line_obj.search(cr, uid, [
                 ('date', '>=', data['form']['date_from']),
                 ('date', '<=', data['form']['date_to']),
                 ('journal_id', 'in', data['form']['journal_ids']),
                 ('user_id', 'in', data['form']['employee_ids']),
-                ])
+                ], context=context)
         if not ids_chk:
             raise osv.except_osv(_('Data Insufficient!'), _('No Records Found for Report!'))
 
@@ -67,14 +65,12 @@ class account_analytic_profit(osv.osv_memory):
              'ids': [],
              'model': 'account.analytic.line',
              'form': data['form']
-                 }
+             }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.analytic.profit',
             'datas': datas,
-            'nodestroy': True
-
-            }
+             }
 
 account_analytic_profit()
 

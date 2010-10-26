@@ -53,7 +53,6 @@ class module(osv.osv):
         res = {}
         for rel in relations:
             # if we have to display the string along with field name then uncomment the first line n comment the second line
-            # res.setdefault(rel[0], set()).add(rel[1]+'('+rel[4]+')')
             res.setdefault(rel[0], set()).add(rel[1])
             res.setdefault(rel[3], set())
         val = []
@@ -102,8 +101,6 @@ class module(osv.osv):
         object_ids = self._get_module_objects(cr, uid, module_name, context=context)
         if not object_ids:
             return {'module_file': False}
-#            raise orm.except_orm(_('Warning'),
-#                 _('No object available on this module or Module is not installed'))
         context.update({'level': 1})
         dots = self.get_graphical_representation(cr, uid, object_ids, context=context)
         # todo: use os.realpath
@@ -123,56 +120,6 @@ class module(osv.osv):
 
 module()
 
-#class report_graph_instance(object):
-#    def __init__(self, cr, uid, ids, data):
-#        print "data", data
-#        self.done = False
-#
-#        graph = pydot.Dot(fontsize=16, label="")
-#
-#        ps_string = graph.create_ps(prog='dot')
-#        if os.name == 'nt':
-#            prog = 'ps2pdf.bat'
-#        else:
-#            prog = 'ps2pdf'
-#
-#        args = (prog, '-', '-')
-#        try:
-#            input, output = tools.exec_command_pipe(*args)
-#        except:
-#            return
-#
-#        input.write(ps_string)
-#        input.close()
-#
-#        self.result = output.read()
-#        output.close()
-#        self.done = True
-#
-#    def is_done(self):
-#        return self.done
-#
-#    def get(self):
-#        if self.done:
-#            return self.result
-#        else:
-#            return False
-#
-#class report_graph(report.interface.report_int):
-#    def init__(self, name, table):
-#        super(report_graph, self).__init__(name)
-#
-#    def result(self):
-#        if self.obj.is_done():
-#            return (True, self.obj.get(), 'pdf')
-#        else:
-#            return (False, False, False)
-#
-#    def create(self, cr, uid, ids, data, context=None):
-#        self.obj = report_graph_instance(cr, uid, ids, data)
-#        return (self.obj.get(), 'pdf')
-#
-#report_graph('report.ir.model.graph')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

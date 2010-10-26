@@ -32,7 +32,7 @@ When installed, this module will automatically create a new task
 for each procurement order line, when the corresponding product
 meets the following characteristics:
   * Type = Service
-  * Procurement method (Order fulfilment) = MTO (make to order)
+  * Procurement method (Order fulfillment) = MTO (make to order)
   * Supply/Procurement method = Produce
 
 The new task is created outside of any existing project, but
@@ -45,13 +45,11 @@ This module is useful to be able to invoice services based on tasks
 automatically created via sale orders.
 
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
     'init_xml': [],
-    'update_xml': ['project_mrp_workflow.xml', 
-                   #'process/project_mrp_process.xml',
-                   ],
+    'update_xml': ['project_mrp_workflow.xml', 'process/project_mrp_process.xml', 'project_mrp_view.xml'],
     'demo_xml': [],
     'test': ['test/project_task_procurement.yml'],
     'installable': True,

@@ -6,29 +6,32 @@
         <field name="model">account.entries.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Entries Analysis">
+            <tree colors="blue:move_state in ('draft');black:move_state in ('posted')" string="Entries Analysis">
                 <field name="date" invisible="1"/>
                 <field name="date_created" invisible="1"/>
                 <field name="date_maturity" invisible="1"/>
                 <field name="ref" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="state_2" invisible="1"/>
-                <field name="year"  invisible="1"/>
-                <field name="day"  invisible="1"/>
+                <field name="nbr" sum="# of Entries "/>
+                <field name="quantity" sum="# of Products Qty " invisible="not context.get('quantity_visible', False)"/>
+                <field name="amount_currency" invisible="not context.get('amount_currency_visible', False)"/>
+                <field name="currency_id" invisible="not context.get('currency_id_visible', False)"/>
+                <field name="debit"/>
+                <field name="credit"/>
+                <field name="balance"/>
+                <field name="move_state" invisible="1"/>
+                <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
+                <field name="year"  invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
+                <field name="product_uom_id" invisible="1"/>
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="account_id" invisible="1"/>
-                <field name="analytic_account_id" invisible="1"/>
+                <field name="fiscalyear_id" invisible="1"/>
                 <field name="period_id" invisible="1"/>
-                <field name="period_id2" invisible="1"/>
+                <field name="user_type" invisible="1"/>
                 <field name="type" invisible="1"/>
-                <field name="nbr" sum="# of Entries "/>
-                <field name="nbl" sum="# of Lines "/>
-                <field name="amount" sum="# of Amount "/>
-                <field name="quantity" sum="# of Products Qty "/>
            </tree>
         </field>
     </record>
@@ -38,9 +41,24 @@
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Entries Analysis" type="bar">
-                 <field name="partner_id"/>
-                 <field name="amount"/>
+                <field name="partner_id"/>
+                <field name="debit" operator="+"/>
+                <field name="credit" operator="+"/>
+                <field name="balance" operator="+"/>
              </graph>
+         </field>
+    </record>
+    <record id="view_company_analysis_tree" model="ir.ui.view">
+         <field name="name">account.company.analysis.tree</field>
+         <field name="model">account.entries.report</field>
+         <field name="type">tree</field>
+         <field name="arch" type="xml">
+             <tree string="Company Analysis" >
+                <field name="user_type"/>
+                <field name="debit" />
+                <field name="credit" />
+                <field name="balance" />
+             </tree>
          </field>
     </record>
     <record id="view_account_entries_report_search" model="ir.ui.view">
@@ -49,65 +67,56 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Entries Analysis">
-            	<group colspan="10" col="12">
-	            	<filter icon="terp-go-year" string="  365 Days  "
-	            			domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-		                    help="Entries of last 365 days"/>
-	                <filter icon="terp-go-month" string="   30 Days   "
-	                		name="This Month"
-	                		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                		help="Entries of last 30 days"/>
-	                <filter icon="terp-go-week"
-	                        string="    7 Days    "
-	                        separator="1"
-	                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-	                        help="Entries during last 7 days"/>
-	                <separator orientation="vertical"/>
-                    <filter string="Draft"
-                    		icon="terp-document-new"
-                    		domain="[('state','=','draft')]"
-                    		help = "Draft entries"/>
-                    <filter string="Posted"
-                            icon="terp-camera_test"
-                            domain="[('state','=','posted')]"
-                            help = "Posted entries"/>
+                <group colspan="10" col="12">
+                    <filter icon="terp-go-year" string="This F.Year"
+                            name="thisyear"
+                            domain="[('period_id','in','current_year')]"
+                            help="Journal Entries with period in current year"/>
+                    <filter icon="terp-go-month" string="This Period"
+                            name="period"
+                            domain="[('period_id','in','current_period')]"
+                            help="Journal Entries with period in current period"/>
                     <separator orientation="vertical"/>
-                    <field name="product_id" />
-                    <field name="partner_id" />
+                    <filter string="Unposted" icon="terp-document-new" domain="[('move_state','=','draft')]" help = "entries"/>
+                    <filter string="Posted" icon="terp-camera_test" domain="[('move_state','=','posted')]" help = "Posted entries"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Unreconciled" icon="terp-dolar_ok!" domain="[('reconcile_id','=',False)]" help = "Unreconciled entries"/>
+                    <filter string="Reconciled" icon="terp-dolar" domain="[('reconcile_id','!=',False)]" help = "Reconciled entries"/>
+                    <separator orientation="vertical"/>
                     <field name="account_id"/>
-                    <field name="analytic_account_id"/>
-					</group>
+                    <field name="journal_id" widget="selection"/>
+                    <field name="period_id"/>
+                </group>
                 <newline/>
-                <group expand="0" string="Group By...">
-                    <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
-                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <filter string="Journal" name="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
+                <group expand="1" string="Group By...">
+                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':['product_id','product_uom_id'], 'quantity_visible':1}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Currency" name="group_currency" icon="terp-dolar" context="{'group_by':'currency_id', 'currency_id_visible':1, 'amount_currency_visible':1}"/>
+                    <filter string="Journal" name="group_journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
+                    <filter string="Account" name="group_account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Acc.Type" icon="terp-folder-blue" context="{'group_by':'user_type'}" name="usertype"/>
+                    <filter string="Int.Type" icon="terp-folder-yellow" context="{'group_by':'type'}"/>
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Account" name="Account" icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Analytic Account" name="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}"/>
-                    <filter string="State of Move Line" icon="terp-stock_effects-object-colorize" context="{'group_by':'state_2'}"/>
-                    <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}"/>
-                    <filter string="Period of Move Line" icon="terp-go-month" context="{'group_by':'period_id2'}"/>
-                    <newline/>
-                    <filter string="Day" icon="terp-go-month" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                    <filter string="Date" icon="terp-go-today" context="{'group_by':'date'}"/>
+                    <filter string="Period" icon="terp-go-month" name="group_period" context="{'group_by':'period_id'}"/>
+                    <filter string="Fiscal Year" icon="terp-go-year" context="{'group_by':'fiscalyear_id'}"/>
                  </group>
                  <newline/>
-                 <group expand="0" string="Extended options..." groups="base.group_extended">
-                	<field name="state_2"/>
-                	<field name="period_id" widget="selection"/>
-                	<field name="period_id2" widget="selection"/>
-                	<field name="type"/>
-                    <field name="journal_id" widget="selection"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                    <field name="fiscalyear_id"/>
+                    <separator orientation="vertical"/>
+                    <field name="product_id"/>
+                    <field name="partner_id"/>
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <newline/>
                     <field name="date_created"/>
-                	<field name="date"/>
+                    <field name="date"/>
                     <field name="date_maturity"/>
                  </group>
             </search>
@@ -118,9 +127,14 @@
         <field name="res_model">account.entries.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_This Month':1,'search_default_Journal':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_account_entries_report_search"/>
+        <field name="view_id" ref="view_account_entries_report_tree"/>
+        <field name="context">{'group_by':[], 'search_default_usertype':1, 'search_default_thisyear':1, 'group_by_no_leaf':1}</field>
+        <field name="help">A tool search lets you know statistics on your different financial accounts that match your needs.</field>
     </record>
-    <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all" parent="account.menu_finance_statistic_report_statement" sequence="2"/>
+    <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all"
+        parent="account.menu_finance_statistic_report_statement"
+        groups="group_account_manager"
+        sequence="2"/>
 </data>
 </openerp>

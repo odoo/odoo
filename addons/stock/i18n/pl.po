@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-05-21 08:22+0000\n"
-"Last-Translator: Grzegorz Grzelak (Cirrus.pl) <Unknown>\n"
+"PO-Revision-Date: 2010-09-29 10:07+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-05-22 04:00+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -24,7 +24,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_location_id:0
 msgid "Chained Location If Fixed"
-msgstr "Następna strefa, jeśli stała"
+msgstr "Połączona lokalizacja, jeśli ustalona"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -86,7 +86,7 @@ msgstr "JM"
 #. module: stock
 #: model:ir.actions.wizard,name:stock.return_picking
 msgid "Return packing"
-msgstr "Lista przesunięć zwrotnych"
+msgstr "Zwrot"
 
 #. module: stock
 #: field:product.category,property_stock_journal:0
@@ -103,7 +103,7 @@ msgstr "Wypełnij inwentaryzację dla podanej strefy mag."
 #: view:stock.picking:0
 #: field:stock.picking.move.wizard,picking_id:0
 msgid "Packing list"
-msgstr "Lista przesunięć"
+msgstr "Pobranie"
 
 #. module: stock
 #: rml:lot.stock.overview:0
@@ -120,7 +120,7 @@ msgstr "Otrzymane produkty"
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 msgid "Incoming Products"
-msgstr "Przyjmowanie produktów"
+msgstr "Przyjęcia zewnętrzne"
 
 #. module: stock
 #: field:stock.picking,name:0
@@ -206,7 +206,7 @@ msgstr "Wykonaj paczkę (przesunięcie)"
 #. module: stock
 #: wizard_view:stock.partial_picking,end2:0
 msgid "Packing result"
-msgstr "Rezultat listy przesunięć"
+msgstr "Rezultat pobrania"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -360,6 +360,18 @@ msgstr "Pozycje przesunięcia"
 #: wizard_field:stock.fill_inventory,init,recursive:0
 msgid "Include all childs for the location"
 msgstr "Włącz podrzędne dla tej strefy"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Bad Lot Assignation !"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You are moving %.2f products but only %.2f available in this lot."
+msgstr ""
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -592,7 +604,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_picking_form
 #: model:ir.ui.menu,name:stock.menu_action_picking_form
 msgid "New Reception Packing"
-msgstr "Nowy odbiór listy przesunięć"
+msgstr "Nowe przyjęcia zewnętrzne"
 
 #. module: stock
 #: wizard_field:stock.move.track,init,quantity:0
@@ -708,7 +720,7 @@ msgstr "terp-stock"
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "Packing List:"
-msgstr "Lista przesunięć:"
+msgstr "Pobranie:"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -728,7 +740,7 @@ msgstr "Od"
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "weight"
-msgstr ""
+msgstr "waga"
 
 #. module: stock
 #: rml:stock.picking.list:0
@@ -748,7 +760,7 @@ msgstr "Wersja partii produkcyjnej"
 #. module: stock
 #: view:stock.picking:0
 msgid "Packing Done"
-msgstr "Listę przesunięć wykonano"
+msgstr "Pobranie wykonane"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -762,7 +774,7 @@ msgstr "Oczekiwanie"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree7
 #: model:ir.ui.menu,name:stock.menu_picking_waiting
 msgid "Available Packing"
-msgstr "Dostępne listy przesunięć"
+msgstr "Dostępne pobrania"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -815,7 +827,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_all
 #: wizard_field:stock.picking.make,init,pickings:0
 msgid "Packing"
-msgstr "Listy przesunięć"
+msgstr "Pobrania"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -837,7 +849,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_picking_tree9
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree9
 msgid "New Internal Packing"
-msgstr "Nowa lista przesunięć wewnętrznych"
+msgstr "Nowe przesunięcie wewnętrzne"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -854,7 +866,7 @@ msgstr "Brak"
 #: model:ir.actions.wizard,name:stock.action2
 #: model:ir.actions.wizard,name:stock.action_lot4
 msgid "Downstream traceability"
-msgstr ""
+msgstr "Śledzenie wstecz"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
@@ -988,7 +1000,7 @@ msgstr ""
 #. module: stock
 #: wizard_view:stock.partial_picking,end2:0
 msgid "The packing has been successfully made !"
-msgstr "Lista przesunięć zostało poprawnie wykonana !"
+msgstr "Pobranie wykonano poprawnie !"
 
 #. module: stock
 #: field:stock.move,address_id:0
@@ -1158,13 +1170,13 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Input Packing List"
-msgstr "Lista przesunięć wchodzących"
+msgstr "Przyjęcie zewnętrzne"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
 #: field:stock.move,picking_id:0
 msgid "Packing List"
-msgstr "Lista przesunięć"
+msgstr "Pobranie"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1205,7 +1217,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not from Packing"
-msgstr "Nie z listy przesunięć"
+msgstr "Nie z pobrania"
 
 #. module: stock
 #: view:stock.location:0
@@ -1299,7 +1311,7 @@ msgstr "Metoda dostawy"
 #. module: stock
 #: model:ir.actions.wizard,name:stock.partial_picking
 msgid "Partial packing"
-msgstr "Częściowa lista przesunięć"
+msgstr "Pobranie częściowe"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1330,7 +1342,7 @@ msgstr "Cel przesunięcia"
 #: model:ir.actions.act_window,name:stock.action_inventory_form_new
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form_new
 msgid "New Periodical Inventory"
-msgstr "Nowa inentaryzacja okresowa"
+msgstr "Nowa inwentaryzacja okresowa"
 
 #. module: stock
 #: field:stock.production.lot,revisions:0
@@ -1346,7 +1358,7 @@ msgstr "FIFO"
 #: model:ir.actions.act_window,name:stock.action_picking_tree2_delivery
 #: model:ir.ui.menu,name:stock.menu_picking_waiting_delivery
 msgid "Delivery Orders to Process"
-msgstr "Zamówienia dostawy do przetworzenia"
+msgstr "Wydania zewnętrzne do obsługi"
 
 #. module: stock
 #: field:stock.move,priority:0
@@ -1370,7 +1382,7 @@ msgstr "Strefa magazynowa"
 #. module: stock
 #: field:stock.picking,invoice_state:0
 msgid "Invoice Status"
-msgstr "Stan faktury"
+msgstr "Fakturowanie"
 
 #. module: stock
 #: rml:lot.location:0
@@ -1493,7 +1505,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_picking_tree3_delivery
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree3_delivery
 msgid "Future Delivery Orders"
-msgstr "Przyszłe zamówienia dostawy"
+msgstr "Przyszłe wydania zewnętrzne"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1572,7 +1584,7 @@ msgstr "Ilość (JS)"
 #: model:ir.actions.act_window,name:stock.action_picking_tree5
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree5
 msgid "Packing to Process"
-msgstr "Listy przesunięć do obróbki"
+msgstr "Pobrania do wykonania"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1588,12 +1600,12 @@ msgstr "Ustaw jako dostępne"
 #: model:ir.actions.wizard,name:stock.make_picking
 #: wizard_view:stock.picking.make,init:0
 msgid "Make packing"
-msgstr "Wykonaj listę przesunięć"
+msgstr "Wykonaj pobranie"
 
 #. module: stock
 #: field:stock.picking,backorder_id:0
 msgid "Back Order"
-msgstr "Zamówienie zaległe"
+msgstr "Pobranie częściowe"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1770,7 +1782,7 @@ msgstr "Zwrot"
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Packing"
-msgstr "Auto-przesunięcie"
+msgstr "Auto-pobranie"
 
 #. module: stock
 #: field:stock.move,product_uos:0
@@ -1990,7 +2002,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_picking_tree_delivery
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree_delivery
 msgid "Delivery Orders"
-msgstr "Zamówienia dostawy"
+msgstr "Wydania zewnętrzne"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2172,7 +2184,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree3
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree8
 msgid "Confirmed Packing Waiting Availability"
-msgstr "Potwierdzone listy przesunięć oczekujące na dostępność"
+msgstr "Potwierdzone pobrania oczekujące na dostępność"
 
 #. module: stock
 #: field:stock.location,posy:0
@@ -2197,7 +2209,7 @@ msgstr "Czy chcesz ustawić zapasy na 0 ?"
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "Direct Delivery"
-msgstr "Dostawa bezpośrednia"
+msgstr "Dostawa częściowa"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2257,7 +2269,7 @@ msgstr "Data zamówienia"
 #. module: stock
 #: selection:stock.invoice_onshipping,init,type:0
 msgid "Supplier Invoice"
-msgstr "Faktura dostawcy"
+msgstr "Faktura od dostawcy"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -2345,14 +2357,14 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,type:0
 msgid "Delivery"
-msgstr "Dostawa"
+msgstr "Wydanie zewnętrzne"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action5
 #: model:ir.actions.wizard,name:stock.action4
 #: model:ir.actions.wizard,name:stock.action_lot2
 msgid "Upstream traceability"
-msgstr ""
+msgstr "Śledzenie wprzód"
 
 #. module: stock
 #: field:product.category,property_stock_account_input_categ:0
@@ -2412,8 +2424,92 @@ msgstr "Stan przesunięcia"
 msgid "Physical Locations"
 msgstr "Strefy fizyczne"
 
+#, python-format
+#~ msgid "You cannot delete any record!"
+#~ msgstr "Nie możesz usunąć żadnego rekordu!"
+
+#, python-format
+#~ msgid "Error, no partner !"
+#~ msgstr "Błąd, brak partnera !"
+
+#, python-format
+#~ msgid "Invoice is not created"
+#~ msgstr "Faktura nie została utworzona"
+
+#, python-format
+#~ msgid "Provide the quantities of the returned products."
+#~ msgstr "Podaj ilości zwróconych produktów"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Błąd"
+
+#, python-format
+#~ msgid "Invoice is already created."
+#~ msgstr "Faktura już została utworzona."
+
+#, python-format
+#~ msgid "Products: "
+#~ msgstr "Produkty: "
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Błąd!"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Ostrzeżenie"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Błąd !"
+
+#, python-format
+#~ msgid "to be invoiced"
+#~ msgstr "do zafakturowania"
+
 #~ msgid "Stock Management"
 #~ msgstr "Zapasy"
+
+#, python-format
+#~ msgid "No product in this location."
+#~ msgstr "Brak produktów w tej strefie"
+
+#, python-format
+#~ msgid "Invoice state"
+#~ msgstr "Stan faktury"
+
+#, python-format
+#~ msgid "Delivered Qty"
+#~ msgstr "Ilość dostarczona"
+
+#, python-format
+#~ msgid "Please select at least two inventories."
+#~ msgstr "Wybierz co najmniej dwie inwentaryzacje"
+
+#, python-format
+#~ msgid "You can not remove a lot line !"
+#~ msgstr "Nie możesz usuwać pozycji partii !"
+
+#, python-format
+#~ msgid "Received Qty"
+#~ msgstr "Otrzymana ilość"
+
+#, python-format
+#~ msgid "No production sequence defined"
+#~ msgstr "Nie zdefiniowano numeracji produkcji"
+
+#, python-format
+#~ msgid "Message !"
+#~ msgstr "Wiadomość !"
+
+#, python-format
+#~ msgid "Please select one and only one inventory !"
+#~ msgstr "Wybierz tylko jedną inwentaryzację !"
+
+#, python-format
+#~ msgid "Produced Qty"
+#~ msgstr "Ilość wyprodukowana"
 
 #~ msgid ""
 #~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
@@ -2443,3 +2539,28 @@ msgstr "Strefy fizyczne"
 #~ "* Śledzenie partii (Od dostawcy/Od nabywcy, partie produkcyjne, numery "
 #~ "seryjne, ...)\n"
 #~ "    "
+
+#, python-format
+#~ msgid "You can only delete draft moves."
+#~ msgstr "Możesz usuwać tylko projekty przesunięć"
+
+#, python-format
+#~ msgid "Merging is only allowed on draft inventories."
+#~ msgstr "Łączenie jest dozwolone tylko na projektach inwentaryzacji"
+
+#, python-format
+#~ msgid "Unplanned Qty"
+#~ msgstr "Ilość nieplanowana"
+
+#, python-format
+#~ msgid ""
+#~ "Please put a partner on the picking list if you want to generate invoice."
+#~ msgstr "Podaj partnera do listy pobrań, jeśli chcesz wygenerować fakturę."
+
+#, python-format
+#~ msgid "Invoice cannot be created from Packing."
+#~ msgstr "Nie można utworzyć faktury z listy przesunięć"
+
+#, python-format
+#~ msgid "Return lines"
+#~ msgstr "Pozycje zwrotu"

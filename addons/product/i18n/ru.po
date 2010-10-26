@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-04-13 05:28+0000\n"
-"Last-Translator: grisha <Unknown>\n"
+"PO-Revision-Date: 2010-09-29 11:26+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:10+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -251,7 +251,7 @@ msgstr ""
 #. module: product
 #: model:process.transition,note:product.process_transition_supplierofproduct0
 msgid "You can see the list of suppliers for that product."
-msgstr ""
+msgstr "Вы можете просмотреть список поставщиков этого изделия"
 
 #. module: product
 #: help:product.packaging,rows:0
@@ -276,7 +276,7 @@ msgstr "В другом каталоге"
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
 msgid "Products"
-msgstr "Продукция"
+msgstr "ТМЦ"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -428,7 +428,7 @@ msgstr "Средняя цена"
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Create new Product"
-msgstr "Создать новый продукт"
+msgstr "Создать ТМЦ"
 
 #. module: product
 #: help:product.pricelist.item,name:0
@@ -510,7 +510,7 @@ msgstr "Ед. изм."
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "PCE"
-msgstr ""
+msgstr "шт."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -642,7 +642,9 @@ msgstr ""
 #. module: product
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Ошибка. UOS и UOM должны принадлежать к разным категориям."
+msgstr ""
+"Ошибка. Единицы продажи и единицы измерения должны принадлежать к разным "
+"категориям."
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -693,7 +695,7 @@ msgstr "Снабжение"
 #: model:ir.actions.act_window,name:product.product_category_action
 #: model:ir.ui.menu,name:product.menu_product_category_action
 msgid "Products by Category"
-msgstr "Продукция по категориям"
+msgstr "ТМЦ по категориям"
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd1_product_template
@@ -716,7 +718,7 @@ msgstr "Жёсткий диск Seagate 7200.8 160GB"
 #. module: product
 #: view:product.product:0
 msgid "Product Variant"
-msgstr "Вариант продукции"
+msgstr "Вариант ТМЦ"
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -891,7 +893,7 @@ msgstr "Доступные запасы"
 #. module: product
 #: view:product.category:0
 msgid "Product Categories"
-msgstr "Категории продукции"
+msgstr "Категории ТМЦ"
 
 #. module: product
 #: help:product.uom,category_id:0
@@ -1146,7 +1148,7 @@ msgstr ""
 #: model:ir.model,name:product.model_product_category
 #: field:product.pricelist.item,categ_id:0
 msgid "Product Category"
-msgstr "Категория продукции"
+msgstr "Категория ТМЦ"
 
 #. module: product
 #: field:product.price.type,field:0
@@ -1214,7 +1216,7 @@ msgstr ""
 #: field:product.product,product_tmpl_id:0
 #: view:product.template:0
 msgid "Product Template"
-msgstr "Шаблон продукта"
+msgstr "Шаблон ТМЦ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_ul
@@ -1255,7 +1257,7 @@ msgstr "Информация партнера"
 #: view:product.template:0
 #: field:product.template,type:0
 msgid "Product Type"
-msgstr "Тип продукции"
+msgstr "Тип ТМЦ"
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1266,7 +1268,7 @@ msgstr "Вмешательство на месте"
 #. module: product
 #: model:product.category,name:product.cat0
 msgid "All products"
-msgstr "Все продукты"
+msgstr "Все ТМЦ"
 
 #. module: product
 #: wizard_button:product.price_list,init,end:0
@@ -1420,7 +1422,7 @@ msgstr "Тип цены"
 #: field:product.supplierinfo,product_id:0
 #: model:res.request.link,name:product.req_link_product
 msgid "Product"
-msgstr "Продукция"
+msgstr "Товарно-материальные ценности"
 
 #. module: product
 #: field:product.template,volume:0
@@ -1531,7 +1533,7 @@ msgstr "Дата окончания"
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model:ir.ui.menu,name:product.menu_product_category_action_form
 msgid "Products Categories"
-msgstr "Категории продукции"
+msgstr "Категории ТМЦ"
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1607,7 +1609,7 @@ msgstr "Конец жизненного цикла"
 #. module: product
 #: model:ir.module.module,shortdesc:product.module_meta_information
 msgid "Products & Pricelists"
-msgstr "Изделия и каталоги"
+msgstr "ТМЦ и каталоги"
 
 #. module: product
 #: help:product.uom,factor:0

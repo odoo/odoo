@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,29 +15,28 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Indian Chart of Account",
-    "version" : "1.0",
-    "description":"""
+    "name": "Indian Chart of Account",
+    "version": "1.0",
+    "description": """
     Indian Accounting : chart of Account
     """,
-    "author" : 'Tiny & Axelor',
+    "author": 'OpenERP SA & Axelor',
     "category": "Localisation/Account Charts",
-    "depends" : [
+    "depends": [
         "account",
         "account_chart"
     ],
-    "demo_xml" : [],
-    "update_xml" : [
-        "account_chart.xml",
-        "account_wizard.xml",
+    "demo_xml": [],
+    "update_xml": [
+        "l10n_in_chart.xml",
+        "l10n_in_wizard.xml",
     ],
     "active": False,
     "installable": True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

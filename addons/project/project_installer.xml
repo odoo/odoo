@@ -1,40 +1,37 @@
 <openerp>
   <data>
+
     <record id="view_project_installer" model="ir.ui.view">
       <field name="name">project.installer.view</field>
       <field name="model">project.installer</field>
       <field name="type">form</field>
       <field name="inherit_id" ref="base.res_config_installer"/>
       <field name="arch" type="xml">
-        <data>
+          <data>
           <form position="attributes">
-            <attribute name="string">Project Modules Installation</attribute>
+            <attribute name="string">Project Application Configuration</attribute>
           </form>
-
           <separator string="title" position="attributes">
-            <attribute name="string"
-                       >Project Management</attribute>
+            <attribute name="string">Configure Your Project Management Application</attribute>
           </separator>
            <xpath expr='//separator[@string="vsep"]' position='attributes'>
-          	  <attribute name='string'></attribute>
-     		</xpath>
-          <xpath expr="//label[@string='description']"
-                 position="attributes">
-            <attribute name="string">Various OpenERP applications are available to bring your project management to the next levels of control and flexibility.</attribute>
+                <attribute name='string'></attribute>
+             </xpath>
+          <xpath expr="//label[@string='description']" position="attributes">
+              <attribute name="string">Various OpenERP applications are available to manage your projects with different level of control and flexibility.</attribute>
           </xpath>
           <xpath expr="//button[@string='Install Modules']" position="attributes">
-                   <attribute name="string">Configure</attribute>
+              <attribute name="string">Configure</attribute>
           </xpath>
           <group colspan="8">
-            <field name="project_crm"/>
+            <field name="project_issue"/>
             <field name="project_long_term" groups="base.group_extended"/>
-            <field name="project_wiki"/>
             <field name="hr_timesheet_sheet"/>
-            <field name="hr_timesheet_invoice"/>
+            <field name="project_timesheet"/>
             <field name="account_budget" groups="base.group_extended"/>
-            <field name="project_messages" groups="base.group_extended"/>
+            <newline/>
             <separator string="Methodologies" colspan="4"/>
-            <field name="scrum"/>
+            <field name="project_scrum"/>
             <field name="project_gtd"/>
           </group>
         </data>
@@ -42,7 +39,7 @@
     </record>
 
     <record id="action_project_installer" model="ir.actions.act_window">
-      <field name="name">Project Modules Installation</field>
+      <field name="name">Project Application Configuration</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">project.installer</field>
       <field name="view_id" ref="view_project_installer"/>
@@ -52,19 +49,10 @@
     </record>
 
     <record id="project_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_project_installer"/>
-      <field name="sequence">3</field>
+        <field name="action_id" ref="action_project_installer"/>
+        <field name="restart">always</field>
+        <field name="sequence">3</field>
     </record>
-     <record id="project_ir_actions_todo_tree" model="ir.ui.view">
-		    <field name="model">ir.actions.todo</field>
-		    <field name="name">project_installer_action_replace</field>
-		    <field name="type">tree</field>
-		    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
-		    <field name="arch" type="xml">
-				<xpath expr="//button[@string='Launch']" position="replace">
-        			<button name="%(action_project_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
-  				</xpath>
-  			</field>
-	</record>
+
   </data>
 </openerp>

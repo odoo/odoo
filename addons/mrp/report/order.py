@@ -21,8 +21,6 @@
 
 import time
 from report import report_sxw
-from osv import osv
-import pooler
 
 class order(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -31,9 +29,6 @@ class order(report_sxw.rml_parse):
             'time': time,
         })
 
-
-
 report_sxw.report_sxw('report.mrp.production.order','mrp.production','addons/mrp/report/order.rml',parser=order,header=1)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,7 +23,6 @@ from base_calendar import base_calendar
 from osv import fields, osv
 from tools.translate import _
 import tools
-import mx.DateTime
 import re
 
 
@@ -82,12 +81,11 @@ class base_calendar_set_exrule(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
-
         """
-        crm_obj = self.pool.get('crm.meeting')
-        for meeting in crm_obj.browse(cr, uid, context.get('active_ids', [])):
-            if not meeting.rrule:
-                raise osv.except_osv(_("Warning !"), _("Please Apply Recurrency after Apply Exception Rule"))
+        event_obj = self.pool.get(context.get('active_model'))
+        for event in event_obj.browse(cr, uid, context.get('active_ids', [])):
+            if not event.rrule:
+                raise osv.except_osv(_("Warning !"), _("Please Apply Recurrency before applying Exception Rule."))
         return False
 
     def compute_exrule_string(self, cr, uid, ids, context=None):
@@ -104,11 +102,14 @@ class base_calendar_set_exrule(osv.osv_memory):
         weekstring = ''
         monthstring = ''
         yearstring = ''
-
+        ex_id = base_calendar.base_calendar_id2real_id(context['active_id'])
+        model = context.get('model', False)
+        model_obj = self.pool.get(model)
         for datas in self.read(cr, uid, ids, context=context):
             freq = datas.get('freq')
             if freq == 'None':
-                return ''
+                model_obj.write(cr, uid, ex_id,{'exrule': ''})
+                return{}
 
             interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
 
@@ -143,12 +144,8 @@ class base_calendar_set_exrule(osv.osv_memory):
 
             exrule_string = 'FREQ=' + freq.upper() + weekstring + interval_srting \
                                 + enddate + monthstring + yearstring
-            ex_id = base_calendar.base_calendar_id2real_id(context['active_id'])
-            model = context.get('model', False)
-            model_obj = self.pool.get(model)
-            exrule_value = model_obj.write(cr, uid,ex_id,{
-                            'exrule': exrule_string,
-                            })
+
+            model_obj.write(cr, uid, ex_id,{'exrule': exrule_string})
             return {}
 
         _defaults = {

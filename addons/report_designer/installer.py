@@ -26,9 +26,11 @@ class report_designer_installer(osv.osv_memory):
 
     _columns = {
         # Reporting
-        'base_report_designer':fields.boolean('OpenOffice Report Designer'),
-        'base_report_creator':fields.boolean('Query Builder'),
-        'olap':fields.boolean('Business Intelligence Report'),
-        }
+        'base_report_designer':fields.boolean('OpenOffice Report Designer',help="Adds wizards to Import/Export .SXW report which "
+                                "you can modify in OpenOffice.Once you have modified it you can "
+                                "upload the report using the same wizard."),
+        'base_report_creator':fields.boolean('Query Builder',help="Allows you to create any statistic "
+                                "reports  on several objects. It's a SQL query builder and browser for end users."),
+    }
 report_designer_installer()
 

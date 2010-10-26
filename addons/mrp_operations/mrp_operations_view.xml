@@ -1,28 +1,69 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-    <menuitem id="menu_mrp_planning" name="Planning"
-        parent="base.menu_mrp_root" sequence="2"
-        groups="base.group_extended"/>
+        
+    <record id="mrp_production_form_inherit_view" model="ir.ui.view">
+	    <field name="name">mrp.production.form.inherit</field>
+	    <field name="model">mrp.production</field>
+	    <field name="type">form</field>
+	    <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+	    <field name="arch" type="xml">
+	       <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/form/field[@name='hour']" position="after">
+	           <group colspan="8" col="8">
+	               <separator colspan="8"/>
+                   <field name="state"/>
+	               <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
+                   <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
+	               <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
+	               <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
+	               <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
+	               <button name="button_done" string="Finished" states="startworking" icon="terp-dialog-close" help="Finish Order"/>
+               </group>
+	       </xpath>
+	    </field>
+    </record>
+    
+    <record id="mrp_production_form_inherit_view2" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit2</field>
+        <field name="model">mrp.production</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+           <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
+                <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop"/>
+                <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
+                <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
+                <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
+                <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
+                <button name="button_done" string="Finished" states="startworking" icon="terp-dialog-close"/>
+                <field name="state"/>
+           </xpath>
+        </field>
+    </record>
+    
     <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
         <field name="name">mrp.production.workcenter.line.tree</field>
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">tree</field>
         <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
-            <tree string="Work Orders">
+            <tree string="Work Orders" colors="gray:state in ('done','cancel');black:state in ('draft','startworking') and date_planned&gt;=current_date;red:date_planned&lt;current_date and state in ('draft', 'confirmed', 'ready')">
                 <field name="production_id"/>
                 <field name="date_planned"/>
                 <field name="product"/>
                 <field name="qty"/>
                 <field name="uom"/>
                 <field name="name"/>
-                <field name="workcenter_id"/>
+                <field name="workcenter_id" widget="selection"/>
                 <field name="cycle"/>
                 <field name="hour"/>
                 <field name="state" />
-                <button name="button_start_working" string="Start working" states="draft,pause" icon="gtk-go-forward"/>
-                <button name="button_done" string="Finished" states="startworking" icon="gtk-jump-to"/>
+                <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
+                <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
+                <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
+                <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
+                <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
+                <button name="button_done" string="Finished" states="startworking" icon="terp-dialog-close" help="Finish Order"/>
             </tree>
         </field>
     </record>
@@ -36,7 +77,7 @@
             <form string="Work Orders">
                 <group col="6" colspan="4">
                     <field colspan="4" name="name" select="1"/>
-                    <field name="workcenter_id" select="1"/>
+                    <field name="workcenter_id" select="1" widget="selection"/>
                     <field name="production_id"/>
                     <field name="production_state"/>
                     <field name="sequence"/>
@@ -58,25 +99,25 @@
                     <group colspan="2" col="2">
                         <separator string="Real" colspan="2"/>
                         <field name="date_start" readonly="1"/>
-                        <field name="date_finnished" readonly="1"/>
+                        <field name="date_finished" readonly="1"/>
                         <field name="delay" widget="float_time"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Product to Produce" colspan="2"/>
                         <field name="product"/>
                         <field name="qty"/>
-                        <field name="uom"/>
+                        <field name="uom" widget="selection"/>
                     </group>
 
-                    <separator string="Status" colspan="4"/>
+                    <separator string="" colspan="4"/>
                     <group colspan="8" col="8">
                         <field name="state"/>
+                        <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop"/>
                         <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
-                        <button name="button_start_working" string="Start" states="draft" icon="gtk-execute"/>
+                        <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
                         <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
-                        <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-cancel"/>
-                        <button name="button_pause" string="Pause" states="startworking" icon="gtk-execute"/>
-                        <button name="button_done" string="Finished" states="startworking" icon="gtk-ok"/>
+                        <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
+                        <button name="button_done" string="Finished" states="startworking" icon="terp-dialog-close"/>
                     </group>
                 </page>
                 </notebook>
@@ -89,16 +130,33 @@
             <field name="model">mrp.production.workcenter.line</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Work Orders">
-                	<group col='6' colspan='4'>
-                		<field name="name"/>
-                		<field name="workcenter_id"/>
-                		<field name="production_id"/>
-                	</group>
+            <search string="Search Work Orders">
+                        <group col='9' colspan='4'>
+	                       <filter icon="terp-document-new" string="Draft"
+	                           domain="[('state','=','draft')]"/>
+	                       <filter icon="terp-check" string="In Progress" name="Current"
+	                           default="1"
+	                           domain="[('state','=','startworking')]"/>
+	                       <filter icon="terp-gtk-media-pause" string="Pending"
+	                           domain="[('state','=','pause')]"/>
+	                       <separator orientation="vertical"/>
+	                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
+	                           domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+	                           help="Production started late" />
+	                       <separator orientation="vertical"/>
+	                		<field name="name"/>
+	                		<field name="workcenter_id" widget="selection"/>
+	                		<field name="production_id" />
+	                		<field name="state" />
+	                		<field name="date_planned" widget="date"/>
+	                	</group>
                 	<newline/>
-                    <group expand="0" string="Group By" colspan="10" col="8" groups="base.group_extended">
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product'}"/>
+                    <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
+                        <filter string="Workcenter" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
+                        <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>                      
+                        <separator orientation="vertical"/>                   
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
                     </group>
                </search>
@@ -110,7 +168,7 @@
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">calendar</field>
         <field name="arch" type="xml">
-            <calendar color="product" date_stop="date_finnished" date_start="date_start" string="Operations">
+            <calendar color="product" date_stop="date_finished" date_start="date_start" string="Operations">
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
             </calendar>
@@ -123,9 +181,10 @@
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">gantt</field>
         <field name="arch" type="xml">
-            <gantt color="production_id" date_stop="date_planned_end" date_start="date_planned" string="Operations">
-                <level object="mrp.workcenter" link="workcenter_id" domain="[]">
+            <gantt color="workcenter_id" date_delay="hour" date_start="date_planned" string="Operations">
+                <level object="mrp.workcenter" link="production_id" domain="[]">
                     <field name="product"/>
+                    <field name="hour"/>
                     <field name="production_id"/>
                 </level>
             </gantt>
@@ -133,7 +192,7 @@
     </record>
 
 
-    <!-- Action for tree view of workcenter line   -->
+    <!-- Action for All Operations   -->
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action_form">
         <field name="name">Work Orders</field>
@@ -141,20 +200,9 @@
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,gantt,calendar,graph</field>
-        <field name="domain">[('id','=',active_id)]</field>
         <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
+        <field name="help">Work Orders is the list of operations to be performed for each manufacturing order. Once you start the first work order of a manufacturing order, the manufacturing order is automatically marked as started. Once you finish the latest operation of a manufacturing order, the MO is automatically done and the related products are produced.</field>
     </record>
-
-    <!-- Action for All Operations   -->
-
-    <record model="ir.actions.act_window" id="mrp_production_wc_action">
-        <field name="name">All Work Orders</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp.production.workcenter.line</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form,graph,calendar,gantt</field>
-    </record>
-
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action_planning">
         <field name="name">Work Orders Planning</field>
@@ -162,9 +210,35 @@
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
         <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
-        <field name="view_mode">tree,form,graph,calendar</field>
+        <field name="view_mode">gantt,tree,form,graph,calendar</field>
+        <field name="help">To manufacture or assemble products, as well as using raw materials and finished product you must also handle manufacturing operations. Manufacturing operations are often called work orders. The different operations will have different impacts on the costs of manufacture and planning depending on the available workload.</field>
     </record>
 
+
+    <record id="workcenter_line_resource_gantt" model="ir.ui.view">
+        <field name="name">mrp.production.workcenter.line.resource.gantt</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="type">gantt</field>
+        <field name="arch" type="xml">
+            <gantt color="production_id" date_delay="hour" date_start="date_planned">
+                <level object="mrp.workcenter" link="workcenter_id" domain="[]">
+                    <field name="product"/>
+                    <field name="hour"/>
+                    <field name="production_id"/>
+                </level>
+            </gantt>
+        </field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="mrp_production_wc_resource_planning">
+        <field name="name">Work Centers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
+        <field name="view_mode">gantt,tree,form,calendar,graph</field>
+        <field name="view_id" ref="workcenter_line_resource_gantt"/>
+    </record>
 
     <!-- Action for Confirm Operations   -->
 
@@ -199,18 +273,20 @@
 
     </record>
 
-    <menuitem action="mrp.mrp_production_action"
-        id="menu_mrp_production_order_action"
-        parent="menu_mrp_planning" sequence="1"
-        groups="base.group_extended"/>
     <menuitem name="Work Orders" parent="mrp.menu_mrp_manufacturing"
         id="menu_mrp_production_wc_order"
         action="mrp_production_wc_action_form"
-        groups="base.group_extended"/>
-    <menuitem name="Work Orders" parent="menu_mrp_planning"
+        groups="base.group_extended" sequence="2"/>
+    <menuitem name="Work Orders" parent="mrp.menu_mrp_planning"
         id="menu_mrp_production_wc_action_planning"
         action="mrp_production_wc_action_planning"
         sequence="2"
+        icon="STOCK_INDENT"
+        groups="base.group_extended"/>
+    <menuitem parent="mrp.menu_mrp_planning"
+        id="menu_mrp_production_wc_resource_planning"
+        action="mrp_production_wc_resource_planning"
+        icon="STOCK_INDENT"
         groups="base.group_extended"/>
 
     <!-- Operation codes -->
