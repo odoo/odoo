@@ -52,7 +52,7 @@ class pos_box_entries(osv.osv_memory):
     _name = 'pos.box.entries'
     _description = 'Pos Box Entries'
 
-    def _get_income_product(self, cr, uid, context):
+    def _get_income_product(self, cr, uid, context=None):
         """
              Make the selection list of purchasing  products.
              @param self: The object pointer.
@@ -61,10 +61,10 @@ class pos_box_entries(osv.osv_memory):
              @param context: A standard dictionary
              @return :Return of operation of product
         """
-        obj = self.pool.get('product.product')
-        ids = obj.search(cr, uid, [('income_pdt', '=', True)])
-        res = obj.read(cr, uid, ids, ['id', 'name'], context)
-        res = [(r['id'],r['name']) for r in res]
+        product_obj = self.pool.get('product.product')
+        ids = product_obj.search(cr, uid, [('income_pdt', '=', True)], context=context)
+        res = product_obj.read(cr, uid, ids, ['id', 'name'], context=context)
+        res = [(r['id'], r['name']) for r in res]
         res.insert(0, ('', ''))
 
         return res
@@ -72,17 +72,17 @@ class pos_box_entries(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Description', size=32, required=True),
-        'journal_id': fields.selection(get_journal, "Register", required=True),
-        'product_id': fields.selection(_get_income_product, "Operation", required=True),
+        'journal_id': fields.selection(get_journal, 'Register', required=True),
+        'product_id': fields.selection(_get_income_product, 'Operation', required=True),
         'amount': fields.float('Amount', digits=(16, 2)),
         'ref': fields.char('Ref', size=32),
     }
     _defaults = {
-         'journal_id': lambda *a: 1,
-         'product_id': lambda *a: 1,
+         'journal_id': 1,
+         'product_id': 1,
     }
 
-    def get_in(self, cr, uid, ids, context):
+    def get_in(self, cr, uid, ids, context=None):
         """
              Create the entry of statement in journal.
              @param self: The object pointer.
@@ -92,14 +92,13 @@ class pos_box_entries(osv.osv_memory):
              @return :Return of operation of product
         """
         statement_obj = self.pool.get('account.bank.statement')
-        product_obj = self.pool.get('product.template')
         res_obj = self.pool.get('res.users')
         product_obj = self.pool.get('product.product')
         bank_statement = self.pool.get('account.bank.statement.line')
-        for data in  self.read(cr, uid, ids):
-            args = {}
-            curr_company = res_obj.browse(cr, uid, uid).company_id.id
-            statement_id = statement_obj.search(cr, uid, [('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')])
+        for data in  self.read(cr, uid, ids, context=context):
+            vals = {}
+            curr_company = res_obj.browse(cr, uid, uid, context=context).company_id.id
+            statement_id = statement_obj.search(cr, uid, [('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')], context=context)
             if not statement_id:
                 raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
 
@@ -114,22 +113,20 @@ class pos_box_entries(osv.osv_memory):
                                     'journal_id': data['journal_id'],
                                     'company_id': curr_company,
                                     'user_id': uid,
-                                })
+                                }, context=context)
 
-            args['statement_id'] = statement_id
-            args['journal_id'] = data['journal_id']
+            vals['statement_id'] = statement_id
+            valss['journal_id'] = data['journal_id']
             if acc_id:
-                args['account_id'] = acc_id.id
-            args['amount'] = data['amount'] or 0.0
-            args['ref'] = "%s" % (data['ref'] or '')
-            args['name'] = "%s: %s " % (product_obj.browse(cr, uid, data['product_id']).name, data['name'].decode('utf8'))
-            address_u = res_obj.browse(cr, uid, uid).address_id
+                vals['account_id'] = acc_id.id
+            vals['amount'] = data['amount'] or 0.0
+            vals['ref'] = "%s" % (data['ref'] or '')
+            vals['name'] = "%s: %s " % (product_obj.browse(cr, uid, data['product_id'], context=context).name, data['name'].decode('utf8'))
+            address_u = res_obj.browse(cr, uid, uid, context=context).address_id
             if address_u:
-                partner_id = address_u.partner_id and address_u.partner_id.id or None
-                args['partner_id'] = partner_id
-            bank_statement.create(cr, uid, args)
-
-            return {}
+                vals['partner_id'] = address_u.partner_id and address_u.partner_id.id or None
+            bank_statement.create(cr, uid, vals, context=context)
+        return {}
 
 pos_box_entries()
 
