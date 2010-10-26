@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 
 class account_unreconcile(osv.osv_memory):
     _name = "account.unreconcile"
