@@ -31,9 +31,8 @@
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
-        'account_view.xml',
-        'account_report.xml',
-        'account_data.xml',
+        'account_reporting_view.xml',
+        'account_reporting_data.xml',
         'wizard/account_reporting_balance_report_view.xml',
     ],
     'demo_xml': ['account_reporting_demo.xml'],

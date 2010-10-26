@@ -28,7 +28,7 @@ import time
 import pooler
 import rml_parse
 
-class year_salary_report(report_sxw.rml_parse):
+class year_salary_report(rml_parse.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(year_salary_report, self).__init__(cr, uid, name, context)

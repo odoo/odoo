@@ -71,7 +71,6 @@ class crm_make_sale(osv.osv_memory):
         case_obj = self.pool.get('crm.lead')
         sale_obj = self.pool.get('sale.order')
         partner_obj = self.pool.get('res.partner')
-
         data = context and context.get('active_ids', []) or []
 
         for make in self.browse(cr, uid, ids, context=context):
@@ -81,7 +80,6 @@ class crm_make_sale(osv.osv_memory):
             pricelist = partner.property_product_pricelist.id
             fpos = partner.property_account_position and partner.property_account_position.id or False
             new_ids = []
-
             for case in case_obj.browse(cr, uid, data, context=context):
                 if not partner and case.partner_id:
                     partner = case.partner_id
@@ -89,7 +87,6 @@ class crm_make_sale(osv.osv_memory):
                     partner_addr = partner_obj.address_get(cr, uid, [partner.id], 
                             ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner.property_product_pricelist.id
-
                 if False in partner_addr.values():
                     raise osv.except_osv(_('Data Insufficient!'), _('Customer has no addresses defined!'))
 
@@ -105,10 +102,8 @@ class crm_make_sale(osv.osv_memory):
                     'date_order': time.strftime('%Y-%m-%d'), 
                     'fiscal_position': fpos, 
                 }
-
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid
-
                 new_id = sale_obj.create(cr, uid, vals)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
@@ -118,7 +113,6 @@ class crm_make_sale(osv.osv_memory):
 
             if make.close:
                 case_obj.case_close(cr, uid, data)
-
             if not new_ids:
                 return {}
             if len(new_ids)<=1:
@@ -157,7 +151,7 @@ class crm_make_sale(osv.osv_memory):
     }
     _defaults = {
          'shop_id': _get_shop_id, 
-         'close': lambda *args: 1, 
+         'close': True, 
          'partner_id': _selectPartner, 
     }
 
