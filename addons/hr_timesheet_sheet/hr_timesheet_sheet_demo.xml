@@ -10,11 +10,12 @@
             <field eval="time.strftime('%Y-%m-%d', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))" name="date_to"/>
         </record>
 
-        <!-- record id="sheet1" model="hr_timesheet_sheet.sheet">
+        <record id="sheet1" model="hr_timesheet_sheet.sheet">
             <field name="name">Sheet 1</field>
             <field name="user_id" ref="base.user_root"/>
+            <field name="employee_id" ref="hr.employee1" />
             <field eval="time.strftime('%Y-%m-%d')" name="date_current"/>
-        </record-->
+        </record>
 
     </data>
 </openerp>
