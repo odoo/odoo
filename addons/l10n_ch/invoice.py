@@ -30,7 +30,7 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from mx import DateTime
 
 from osv import fields, osv
 from tools import mod10r
@@ -71,8 +71,8 @@ class account_invoice(osv.osv):
             if invoice.move_id:
                 for line in invoice.move_id.line_id:
                     if not line.date_maturity or \
-                            datetime.strptime(line.date_maturity, '%Y-%m-%d') \
-                            < datetime.today():
+                            DateTime.strptime(line.date_maturity, '%Y-%m-%d') \
+                            < DateTime.now():
                         res[invoice.id] += line.amount_to_pay
         return res
 

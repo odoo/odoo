@@ -30,6 +30,7 @@
 #
 ##############################################################################
 
+import config
 import create_dta
 import bvr_report
 import bvr_import
