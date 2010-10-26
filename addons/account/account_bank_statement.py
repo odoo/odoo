@@ -38,12 +38,13 @@ class account_bank_statement(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
+        account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         for statement in self.browse(cr, uid, ids, context):
             seq = 0
             for line in statement.line_ids:
                 seq += 1
                 if not line.sequence:
-                    self.pool.get('account.bank.statement.line').write(cr, uid, [line.id], {'sequence': seq}, context=context)
+                    account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': seq}, context=context)
         return res
 
     def button_import_invoice(self, cr, uid, ids, context=None):
@@ -381,13 +382,14 @@ class account_bank_statement(osv.osv):
 
     def button_cancel(self, cr, uid, ids, context=None):
         done = []
+        account_move_obj = self.pool.get('account.move')
         for st in self.browse(cr, uid, ids, context):
             if st.state=='draft':
                 continue
             ids = []
             for line in st.line_ids:
                 ids += [x.id for x in line.move_ids]
-            self.pool.get('account.move').unlink(cr, uid, ids, context)
+            account_move_obj.unlink(cr, uid, ids, context)
             done.append(st.id)
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
 
