@@ -20,14 +20,12 @@
 ##############################################################################
 
 import time
-import pooler
-import locale
+
 from report import report_sxw
 
-
 parents = {
-    'tr':1,
-    'li':1,
+    'tr': 1,
+    'li': 1,
     'story': 0,
     'section': 0
 }
@@ -42,18 +40,17 @@ class account_report_bs(report_sxw.rml_parse):
         self.context = context
 
 
-    def line_total(self,line_id,ctx):
+    def line_total(self, line_id, ctx):
         _total = 0
-        bsline= self.pool.get('account.report.bs').browse(self.cr,self.uid,[line_id])[0]
-        bsline_accids = bsline.account_id
-        res =self.pool.get('account.report.bs').read(self.cr,self.uid,[line_id],['account_id','child_id'])[0]
+        bsline = self.pool.get('account.report.bs').browse(self.cr, self.uid, [line_id])[0]
+        res = self.pool.get('account.report.bs').read(self.cr, self.uid, [line_id], ['account_id', 'child_id'])[0]
         for acc_id in res['account_id']:
-            acc = self.pool.get('account.account').browse(self.cr,self.uid,[acc_id],ctx)[0]
+            acc = self.pool.get('account.account').browse(self.cr, self.uid, [acc_id], ctx)[0]
             _total += acc.balance
         bsline_reportbs = res['child_id']
 
         for report in bsline_reportbs:
-            _total +=self.line_total(report,ctx)
+            _total += self.line_total(report,ctx)
         return  _total
 
     def lines(self, form, ids={}, done=None, level=1, object=False):
@@ -64,14 +61,14 @@ class account_report_bs(report_sxw.rml_parse):
         if not ids:
             return []
         if not done:
-            done={}
+            done = {}
         result = []
         ctx = self.context.copy()
         ctx['fiscalyear'] = form['fiscalyear']
         ctx['periods'] = form['periods']
         report_objs = self.pool.get('account.report.bs').browse(self.cr, self.uid, ids)
         title_name = False
-        if level==1:
+        if level == 1:
             title_name = report_objs[0].name
         def cmp_code(x, y):
             return cmp(x.code, y.code)
@@ -92,41 +89,41 @@ class account_report_bs(report_sxw.rml_parse):
                 'name': report_obj.name,
                 'level': level,
                 'balance': self.line_total(report_obj.id,ctx),
-                'parent_id':False,
-                'color_font':color_font,
-                'color_back':color_back,
-                'font_style' : report_obj.font_style
+                'parent_id': False,
+                'color_font': color_font,
+                'color_back': color_back,
+                'font_style': report_obj.font_style
             }
             result.append(res)
             report_type = report_obj.report_type
             if report_type != 'only_obj':
-                account_ids = self.pool.get('account.report.bs').read(self.cr,self.uid,[report_obj.id],['account_id'])[0]['account_id']
+                account_ids = self.pool.get('account.report.bs').read(self.cr, self.uid, [report_obj.id], ['account_id'])[0]['account_id']
                 if report_type == 'acc_with_child':
-                    acc_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, account_ids )
+                    acc_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, account_ids)
                     account_ids = acc_ids
-                account_objs = self.pool.get('account.account').browse(self.cr,self.uid,account_ids,ctx)
+                account_objs = self.pool.get('account.account').browse(self.cr, self.uid, account_ids, ctx)
                 for acc_obj in account_objs:
-                    res1={}
+                    res1 = {}
                     res1 = {
                         'code': acc_obj.code,
                         'name': acc_obj.name,
                         'level': level+1,
                         'balance': acc_obj.balance,
-                        'parent_id':acc_obj.parent_id,
-                        'color_font' : 'black',
-                        'color_back' :'white',
-                        'font_style' : 'Helvetica',
+                        'parent_id': acc_obj.parent_id,
+                        'color_font': 'black',
+                        'color_back': 'white',
+                        'font_style': 'Helvetica',
                         }
                     if acc_obj.parent_id:
                         for r in result:
-                            if r['name']== acc_obj.parent_id.name:
+                            if r['name'] == acc_obj.parent_id.name:
                                 res1['level'] = r['level'] + 1
                                 break
                     result.append(res1)
             if report_obj.child_id:
-                ids2 = [(x.code,x.id) for x in report_obj.child_id]
+                ids2 = [(x.code, x.id) for x in report_obj.child_id]
                 ids2.sort()
-                result += self.lines(form,[x[1] for x in ids2], done, level+1,object=False)
+                result += self.lines(form, [x[1] for x in ids2], done, level+1, object=False)
 
         return result
 
