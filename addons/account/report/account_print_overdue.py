@@ -20,7 +20,6 @@
 ##############################################################################
 
 import time
-
 import ir
 from osv import osv
 from report import report_sxw

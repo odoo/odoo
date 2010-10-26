@@ -21,12 +21,10 @@
 
 import time
 import copy
-
-import rml_parse
 from report import report_sxw
 from common_report_header import common_report_header
 
-class tax_report(rml_parse.rml_parse, common_report_header):
+class tax_report(report_sxw.rml_parse, common_report_header):
     _name = 'report.account.vat.declaration'
     def __init__(self, cr, uid, name, context={}):
         super(tax_report, self).__init__(cr, uid, name, context=context)

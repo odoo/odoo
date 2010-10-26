@@ -28,12 +28,10 @@
 ##############################################################################
 
 import time
-
 from report import report_sxw
 from common_report_header import common_report_header
-import rml_parse
 
-class general_ledger(rml_parse.rml_parse, common_report_header):
+class general_ledger(report_sxw.rml_parse, common_report_header):
     _name = 'report.account.general.ledger'
 
     def set_context(self, objects, data, ids, report_type=None):
