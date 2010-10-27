@@ -3019,7 +3019,8 @@ class orm(orm_template):
                     cr.execute(query, [tuple(sub_ids)] + rule_params)
                     if cr.rowcount != len(sub_ids):
                         raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
+                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: read, Document type: %s).')
+                                         % (self._description,))
                 else:
                     cr.execute(query, (tuple(sub_ids),))
                 res.extend(cr.dictfetchall())
