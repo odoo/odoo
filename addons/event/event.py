@@ -281,8 +281,8 @@ class event_event(osv.osv):
         if context is None:
             context = {}
         team_pool = self.pool.get('crm.case.section')
-        team = team_pool.browse(cr, uid, team_id, context=context)
         res = {}
+        team = team_pool.browse(cr, uid, team_id, context=context)
         if team.reply_to:
             res = {'value': {'reply_to': team.reply_to}}
         return res
@@ -424,7 +424,6 @@ class event_registration(osv.osv):
                    res = self._make_invoice(cr, uid, k, [v], context=context)
                    self.do_close(cr, uid, [k.id], context={'invoice_id': res})
             if res: new_invoice_ids.append(res)
-
         return new_invoice_ids
 
     def do_open(self, cr, uid, ids, context=None):
