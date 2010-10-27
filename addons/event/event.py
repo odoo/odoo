@@ -604,7 +604,7 @@ class event_registration(osv.osv):
         @param event_id: Event ID
         @param partner_invoice_id: Partner Invoice ID
         """
-        context={}
+        context = {}
         if not event_id:
             return {'value': {'unit_price': False, 'event_product': False}}
 

@@ -55,6 +55,7 @@ class hr_contract_wage_type(osv.osv):
     _columns = {
         'type': fields.selection([('basic','Basic'), ('gross','Gross'), ('net','Net')], 'Type', required=True),
     }
+
 hr_contract_wage_type()
 
 class hr_passport(osv.osv):
@@ -121,8 +122,7 @@ class hr_payroll_structure(osv.osv):
             'code':code+"(copy)",
             'company_id':self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         }
-        res_id = super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
-        return res_id
+        return super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
 
 hr_payroll_structure()
 

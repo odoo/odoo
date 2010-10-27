@@ -216,12 +216,12 @@ class hr_holidays(osv.osv):
 
     def onchange_type(self, cr, uid, ids, holiday_type):
         result = {}
-        if holiday_type=='employee':
+        if holiday_type == 'employee':
             ids_employee = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
             if ids_employee:
                 result['value'] = {
                     'employee_id': ids_employee[0]
-                                    }
+                    }
         return result
 
     def _get_number_of_days(self, date_from, date_to):
@@ -314,8 +314,7 @@ class hr_holidays(osv.osv):
             vals['manager_id'] = ids2[0]
         else:
             raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
-        self.write(cr, uid, ids, vals)
-        return True
+        return self.write(cr, uid, ids, vals)
 
     def holidays_validate(self, cr, uid, ids, *args):
         obj_emp = self.pool.get('hr.employee')
@@ -399,8 +398,7 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_draft(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'draft'})
-        return True
+        return self.write(cr, uid, ids, {'state': 'draft'})
 
     def check_holidays(self, cr, uid, ids):
         holi_status_obj = self.pool.get('hr.holidays.status')
