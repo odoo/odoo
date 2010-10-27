@@ -28,27 +28,25 @@ class pos_receipt(osv.osv_memory):
 
     def view_init(self, cr, uid, fields_list, context=None):
         """
-         Creates view dynamically and adding fields at runtime.
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param context: A standard dictionary
-         @return: New arch of view with new columns.
+        Creates view dynamically and adding fields at runtime.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param context: A standard dictionary
+        @return: New arch of view with new columns.
         """
         order_lst = self. pool.get('pos.order').browse(cr, uid, context['active_id'], context=context)
 
     def print_report(self, cr, uid, ids, context=None):
         """
-              To get the date and print the report
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary
-             @return : retrun report
+        To get the date and print the report
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param context: A standard dictionary
+        @return : retrun report
         """
         datas = {'ids': context.get('active_ids', [])}
-        res = {}
-        datas['form'] = res
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'pos.receipt',

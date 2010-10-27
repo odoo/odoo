@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+
 from report import report_sxw
 from osv import osv
 from tools.translate import _
