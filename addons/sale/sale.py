@@ -931,9 +931,10 @@ class sale_order_line(osv.osv):
                                         'for this product: "%s" (id:%d)') % \
                                         (line.product_id.name, line.product_id.id,))
                 else:
-                    a = self.pool.get('ir.property').get(cr, uid,
+                    prop = self.pool.get('ir.property').get(cr, uid,
                             'property_account_income_categ', 'product.category',
-                            context=context).id
+                            context=context)
+                    a = prop and prop.id or False
                 uosqty = _get_line_qty(line)
                 uos_id = _get_line_uom(line)
                 pu = 0.0

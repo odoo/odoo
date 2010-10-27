@@ -346,6 +346,30 @@
             </field>
         </record>
 
+         <record id="view_phase_task_search_form_group" model="ir.ui.view">
+            <field name="name">phase.task.search.form.group</field>
+            <field name="model">project.task</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+            <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" position="after">
+            <filter string="Project Phase" name="group_project_id_phase" icon="terp-folder-violet" domain="[]" context="{'group_by':'phase_id'}" groups="base.group_extended"/>
+            </filter>
+            </field>
+        </record>
+
+         <record id="view_phase_task_search_form_tree" model="ir.ui.view">
+            <field name="name">phase.task.search.form.tree</field>
+            <field name="model">project.task</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="arch" type="xml">
+                <field name="project_id" position="after">
+                    <field name="phase_id" invisible="1" groups="base.group_extended"/>
+                </field>
+            </field>
+        </record>
+
     <act_window
         id="project_phase_task_list"
         name="Related Tasks"

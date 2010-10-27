@@ -40,7 +40,7 @@ class stock_production_lot(osv.osv):
                 # set date to False when no expiry time specified on the product
                 date = duration and (datetime.datetime.today()
                     + datetime.timedelta(days=duration))
-            return date and date.strftime('%Y-%m-%d %H:%M:%S')
+            return date and date.strftime('%Y-%m-%d %H:%M:%S') or False
         return calc_date
 
     _columns = {
