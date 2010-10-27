@@ -3225,7 +3225,7 @@ class orm(orm_template):
                 if cr.rowcount != len(sub_ids):
                     raise except_orm(_('AccessError'),
                                      _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
-                                     % (operation, self._name))
+                                     % (operation, self._description))
 
     def unlink(self, cr, uid, ids, context=None):
         """
@@ -3436,6 +3436,9 @@ class orm(orm_template):
             for sub_ids in cr.split_for_in_conditions(ids):
                 cr.execute('update ' + self._table + ' set ' + ','.join(upd0) + ' ' \
                            'where id IN %s', upd1 + [sub_ids])
+                if cr.rowcount != len(sub_ids):
+                    raise except_orm(_('AccessError'),
+                                     _('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
             if totranslate:
                 # TODO: optimize
