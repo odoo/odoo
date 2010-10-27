@@ -58,8 +58,10 @@ class document_directory(osv.osv):
                     " be located. If false, only ones that have this as parent." ),
         'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model',
             help="If you put an object here, this directory template will appear bellow all of these objects. " \
+                 "Such directories are \"attached\" to the specific model or record, just like attachments. " \
                  "Don't put a parent directory if you select a parent model."),
-        'ressource_id': fields.integer('Resource ID'),
+        'ressource_id': fields.integer('Resource ID',
+            help="Along with Parent Model, this ID attaches this folder to a specific record of Parent Model."),
         'ressource_tree': fields.boolean('Tree Structure',
             help="Check this if you want to use the same tree structure as the object selected in the system."),
         'dctx_ids': fields.one2many('document.directory.dctx', 'dir_id', 'Context fields'),
