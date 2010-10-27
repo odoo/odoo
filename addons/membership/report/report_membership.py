@@ -23,7 +23,6 @@ from osv import fields, osv
 import tools
 import decimal_precision as dp
 
-
 STATE = [
     ('none', 'Non Member'),
     ('canceled', 'Cancelled Member'),
@@ -63,7 +62,7 @@ class report_membership(osv.osv):
         'membership_state': fields.selection(STATE, 'Current Membership State', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True)
-}
+        }
 
     def init(self, cr):
         '''Create the view'''
@@ -127,17 +126,17 @@ class report_membership(osv.osv):
               ml.state,
               ml.id
         ) AS foo
-        GROUP BY 
-            year, 
-            month, 
-            date_from, 
-            date_to, 
-            partner_id, 
-            user_id, 
-            membership_id, 
-            company_id, 
-            membership_state, 
-            associate_member_id, 
+        GROUP BY
+            year,
+            month,
+            date_from,
+            date_to,
+            partner_id,
+            user_id,
+            membership_id,
+            company_id,
+            membership_state,
+            associate_member_id,
             membership_amount
         )""")
 

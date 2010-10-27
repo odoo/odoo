@@ -484,6 +484,7 @@ class Product(osv.osv):
     _defaults = {
         'membership': False,
     }
+
 Product()
 
 
@@ -501,6 +502,7 @@ class Invoice(osv.osv):
                         [l.id for l in invoice.invoice_line])])
             member_line_obj.write(cr, uid, mlines, {'date_cancel': today})
         return super(Invoice, self).action_cancel(cr, uid, ids)
+
 Invoice()
 
 class account_invoice_line(osv.osv):
@@ -573,4 +575,5 @@ class account_invoice_line(osv.osv):
         return result
 
 account_invoice_line()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
