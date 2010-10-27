@@ -60,7 +60,6 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             'get_basedon': self._get_basedon,
         })
 
-
     def _get_basedon(self, form):
         return form['form']['based_on']
 

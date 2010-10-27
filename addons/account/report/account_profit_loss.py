@@ -75,7 +75,6 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
         db_pool = pooler.get_pool(self.cr.dbname)
 
         account_pool = db_pool.get('account.account')
-        year_pool = db_pool.get('account.fiscalyear')
 
         types = [
             'expense',
