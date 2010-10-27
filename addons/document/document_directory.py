@@ -38,9 +38,9 @@ class document_directory(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
         'domain': fields.char('Domain', size=128, help="Use a domain if you want to apply an automatic filter on visible resources."),
         'user_id': fields.many2one('res.users', 'Owner'),
-        'storage_id': fields.many2one('document.storage', 'Storage'),
+        'storage_id': fields.many2one('document.storage', 'Storage', change_default=True),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
-        'parent_id': fields.many2one('document.directory', 'Parent Directory', select=1),
+        'parent_id': fields.many2one('document.directory', 'Parent Directory', select=1, change_default=True),
         'child_ids': fields.one2many('document.directory', 'parent_id', 'Children'),
         'file_ids': fields.one2many('ir.attachment', 'parent_id', 'Files'),
         'content_ids': fields.one2many('document.directory.content', 'directory_id', 'Virtual Files'),
@@ -48,15 +48,15 @@ class document_directory(osv.osv):
             ('directory','Static Directory'),
             ('ressource','Folders per resource'),
             ],
-            'Type', required=True, select=1,
+            'Type', required=True, select=1, change_default=True,
             help="Each directory can either have the type Static or be linked to another resource. A static directory, as with Operating Systems, is the classic directory that can contain a set of files. The directories linked to systems resources automatically possess sub-directories for each of resource types defined in the parent directory."),
-        'ressource_type_id': fields.many2one('ir.model', 'Resource model',
+        'ressource_type_id': fields.many2one('ir.model', 'Resource model', change_default=True,
             help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
         'resource_find_all': fields.boolean('Find all resources', required=True,
                 help="If true, all attachments that match this resource will " \
                     " be located. If false, only ones that have this as parent." ),
-        'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model',
+        'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model', change_default=True,
             help="If you put an object here, this directory template will appear bellow all of these objects. " \
                  "Such directories are \"attached\" to the specific model or record, just like attachments. " \
                  "Don't put a parent directory if you select a parent model."),
@@ -65,7 +65,7 @@ class document_directory(osv.osv):
         'ressource_tree': fields.boolean('Tree Structure',
             help="Check this if you want to use the same tree structure as the object selected in the system."),
         'dctx_ids': fields.one2many('document.directory.dctx', 'dir_id', 'Context fields'),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company', change_default=True),
     }
 
 
@@ -100,10 +100,10 @@ class document_directory(osv.osv):
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'document.directory', context=c),
         'user_id': lambda self,cr,uid,ctx: uid,
-        'domain': lambda self,cr,uid,ctx: '[]',
-        'type': lambda *args: 'directory',
-        'ressource_id': lambda *a: 0,
-        'storage_id': _get_def_storage,
+        'domain': '[]',
+        'type': 'directory',
+        'ressource_id': 0,
+        'storage_id': _get_def_storage, # Still, it is bad practice to set it everywhere.
         'resource_find_all': True,
     }
     _sql_constraints = [
