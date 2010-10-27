@@ -985,9 +985,9 @@ class node_res_obj(node_class):
             where1 = []
             if obj._parent_name in obj.fields_get(cr, uid):
                 where1 = where + [(obj._parent_name, '=', self.res_id)]
+            namefield = directory.resource_field.name or 'name'
             resids = obj.search(cr, uid, where1, context=ctx)
             for bo in obj.browse(cr, uid, resids, context=ctx):
-                namefield = directory.resource_field.name or 'name'
                 if not bo:
                     continue
                 res_name = getattr(bo, namefield)
