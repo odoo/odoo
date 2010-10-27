@@ -62,8 +62,6 @@ class stock_partial_move(osv.osv_memory):
     
     
     def __create_partial_move_memory(self, move):
-        print "CUUULLL"
-        print move.prodlot_id.id
         move_memory = {
             'product_id' : move.product_id.id,
             'quantity' : move.product_qty,
@@ -89,7 +87,6 @@ class stock_partial_move(osv.osv_memory):
                 continue           
             res.append(self.__create_partial_move_memory(move))
             
-        print res
         return res
     
     _defaults = {
