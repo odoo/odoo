@@ -954,10 +954,8 @@ class calendar_event(osv.osv):
             value['duration'] = duration
 
         if allday: # For all day event
-            value = {
-                 'duration': 24
-                 }
-            duration = 0.0
+            value = {'duration': 24}
+            duration = 24.0
 
         start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         if end_date and not duration:
@@ -968,7 +966,7 @@ class calendar_event(osv.osv):
         elif not end_date:
             end = start + timedelta(hours=duration)
             value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
-        elif end_date and duration:
+        elif end_date and duration and not allday:
             # we have both, keep them synchronized:
             # set duration based on end_date (arbitrary decision: this avoid 
             # getting dates like 06:31:48 instead of 06:32:00)
@@ -1294,8 +1292,8 @@ true, it will allow you to hide the event alarm information without removing it.
 
             count = 0
             for data in cr.dictfetchall():
-                start_date = base_start_date and datetime.strptime(base_start_date[:10], "%Y-%m-%d") or False
-                until_date = base_until_date and datetime.strptime(base_until_date[:10], "%Y-%m-%d") or False
+                start_date = base_start_date and datetime.strptime(base_start_date[:10]+ ' 00:00:00' , "%Y-%m-%d %H:%M:%S") or False
+                until_date = base_until_date and datetime.strptime(base_until_date[:10]+ ' 23:59:59', "%Y-%m-%d %H:%M:%S") or False
                 if count > limit:
                     break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
@@ -1428,8 +1426,9 @@ true, it will allow you to hide the event alarm information without removing it.
         args_without_date = []
         start_date = False
         until_date = False
+
         for arg in args:
-            if arg[0] not in ('date', unicode('date')):
+            if arg[0] not in ('date', unicode('date'), 'date_deadline', unicode('date_deadline')):
                 args_without_date.append(arg)
             else:
                 if arg[1] in ('>', '>='):

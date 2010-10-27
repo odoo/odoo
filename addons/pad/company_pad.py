@@ -9,7 +9,7 @@ class company_pad(osv.osv):
                                       "instance"),
     }
     _defaults = {
-        'pad_index': 'http://pad.openerp.com'
+        'pad_index': 'http://ietherpad.com/'
     }
 
 company_pad()

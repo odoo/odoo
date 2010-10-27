@@ -574,6 +574,8 @@ class account_voucher(osv.osv):
         currency_pool = self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
         for inv in self.browse(cr, uid, ids):
+            if not inv.line_ids:
+                raise osv.except_osv(_('No Lines !'), _('Please create some lines'))
             if inv.move_id:
                 continue
             if inv.number:
@@ -582,13 +584,17 @@ class account_voucher(osv.osv):
                 name = self.pool.get('ir.sequence').get_id(cr, uid, inv.journal_id.sequence_id.id)
             else:
                 raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal !'))
+            if not inv.reference:
+                ref = name.replace('/','')
+            else:
+                ref = inv.reference
 
             move = {
                 'name': name,
                 'journal_id': inv.journal_id.id,
                 'narration': inv.narration,
-                'date':inv.date,
-                'ref':inv.reference,
+                'date': inv.date,
+                'ref': ref,
                 'period_id': inv.period_id and inv.period_id.id or False
             }
             move_id = move_pool.create(cr, uid, move)
