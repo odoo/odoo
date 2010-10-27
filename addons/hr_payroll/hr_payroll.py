@@ -24,6 +24,7 @@ import time
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
+import datetime
 
 import netsvc
 from osv import fields, osv
@@ -52,7 +53,7 @@ class hr_contract_wage_type(osv.osv):
 
     _inherit = 'hr.contract.wage.type'
     _columns = {
-        'type' : fields.selection([('basic','Basic'), ('gross','Gross'), ('net','Net')], 'Type', required=True),
+        'type': fields.selection([('basic','Basic'), ('gross','Gross'), ('net','Net')], 'Type', required=True),
     }
 hr_contract_wage_type()
 
@@ -178,7 +179,7 @@ class hr_contract(osv.osv):
                     exp = line.category_id.condition
                     calculate = eval(exp, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
 
                 if not calculate:
                     continue
@@ -193,7 +194,7 @@ class hr_contract(osv.osv):
                     #Please have a look at the configuration guide.
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
 
                 if sal_type in ('gross', 'net'):
                     if line.amount_type == 'per':
@@ -231,7 +232,7 @@ class hr_contract(osv.osv):
                     per = (all_per - ded_per)
                 else:
                     per = all_per
-                if per <=0 :
+                if per <=0:
                     per *= -1
                 final = (per * 100) + 100
                 basic = (sal * 100) / final
@@ -283,7 +284,7 @@ class hr_contract(osv.osv):
                     try:
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
-                        raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
                 elif line.amount_type in ('fix', 'func'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
@@ -313,11 +314,11 @@ class hr_contract(osv.osv):
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
     _columns = {
-        'permit_no':fields.char('Work Permit No', size=256, required=False, readonly=False),
-        'passport_id':fields.many2one('hr.passport', 'Passport', required=False),
-        'visa_no':fields.char('Visa No', size=64, required=False, readonly=False),
+        'permit_no': fields.char('Work Permit No', size=256, required=False, readonly=False),
+        'passport_id': fields.many2one('hr.passport', 'Passport', required=False),
+        'visa_no': fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
-        'struct_id' : fields.many2one('hr.payroll.structure', 'Salary Structure'),
+        'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure'),
         'working_days_per_week': fields.integer('Working Days', help="No of Working days / week for an employee"),
         'basic': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Basic Salary', digits=(14,2)),
         'gross': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Gross Salary', digits=(14,2)),
@@ -859,7 +860,7 @@ class hr_payslip(osv.osv):
                     try:
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
-                        raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
                 elif line.amount_type in ('fix', 'func'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
@@ -1090,7 +1091,6 @@ class hr_payslip(osv.osv):
         #Check for the Holidays
         def get_days(start, end, month, year, calc_day):
             count = 0
-            import datetime
             for day in range(start, end):
                 if datetime.date(year, month, day).weekday() == calc_day:
                     count += 1
@@ -1157,7 +1157,7 @@ class hr_payslip(osv.osv):
                     exp = line.category_id.condition
                     calculate = eval(exp, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
 
                 if not calculate:
                     continue
@@ -1172,7 +1172,7 @@ class hr_payslip(osv.osv):
                     #Please have a look at the configuration guide.
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
 
                 if sal_type in ('gross', 'net'):
                     if line.amount_type == 'per':
@@ -1218,7 +1218,7 @@ class hr_payslip(osv.osv):
                     per = (all_per - ded_per)
                 else:
                     per = all_per
-                if per <=0 :
+                if per <=0:
                     per *= -1
                 final = (per * 100) + 100
                 basic = (sal * 100) / final
@@ -1459,7 +1459,7 @@ class hr_employee(osv.osv):
                 try:
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
                 amount = 0.0
                 if line.amount_type == 'per':
                     amount = amt * line.amount
