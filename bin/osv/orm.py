@@ -3224,7 +3224,7 @@ class orm(orm_template):
                            [sub_ids] + where_params)
                 if cr.rowcount != len(sub_ids):
                     raise except_orm(_('AccessError'),
-                                     _('Operation prohibited by access rules (Operation: %s, Document type: %s).')
+                                     _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
                                      % (operation, self._name))
 
     def unlink(self, cr, uid, ids, context=None):
