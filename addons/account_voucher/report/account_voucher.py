@@ -32,7 +32,7 @@ class report_voucher(report_sxw.rml_parse):
             'get_title': self.get_title,
             'debit':self.debit,
             'credit':self.credit,
-            'get_ref' : self._get_ref
+            'get_ref': self._get_ref
         })
 
     def convert(self, amount, cur):
@@ -58,9 +58,10 @@ class report_voucher(report_sxw.rml_parse):
         return credit
 
     def _get_ref(self, voucher_id, move_ids):
-        voucher_line = self.pool.get('account.voucher.line').search(self.cr, self.uid, [('partner_id', '=', move_ids.partner_id.id), ('voucher_id', '=', voucher_id)])
+        voucher_line_obj = self.pool.get('account.voucher.line')
+        voucher_line = voucher_line_obj.search(self.cr, self.uid, [('partner_id', '=', move_ids.partner_id.id), ('voucher_id', '=', voucher_id)])
         if voucher_line:
-            voucher = self.pool.get('account.voucher.line').browse(self.cr, self.uid, voucher_line)[0]
+            voucher = voucher_line_obj.browse(self.cr, self.uid, voucher_line)[0]
             return voucher.name
         else:
             return
