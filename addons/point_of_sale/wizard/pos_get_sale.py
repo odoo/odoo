@@ -28,10 +28,10 @@ class pos_get_sale(osv.osv_memory):
     _description = 'Get From Sale'
 
     _columns = {
-        'picking_id': fields.many2one('stock.picking', 'Sale Order', domain=[('state', 'in', ('assigned', 'confirmed')), ('type', '=', 'out')], context="{'contact_display':'partner'}", required=True),
+        'picking_id': fields.many2one('stock.picking', 'Sale Order', domain=[('state', 'in', ('assigned', 'confirmed')), ('type', '=', 'out')], context="{'contact_display': 'partner'}", required=True),
     }
 
-    def sale_complete(self, cr, uid, ids, context):
+    def sale_complete(self, cr, uid, ids, context=None):
         """
              Select the picking order and add the in Point of sale order
              @param self: The object pointer.
@@ -40,29 +40,29 @@ class pos_get_sale(osv.osv_memory):
              @param context: A standard dictionary
              @return : nothing
         """
-        this = self.browse(cr, uid, ids[0], context=context)
-        record_id = context and context.get('active_id', False)
-
         proxy_pos = self.pool.get('pos.order')
         proxy_pick = self.pool.get('stock.picking')
         proxy_order_line = self.pool.get('pos.order.line')
+        if context is None:
+            context = {}
+        this = self.browse(cr, uid, ids[0], context=context)
+        record_id = context and context.get('active_id', False)
 
         if record_id:
-            order = proxy_pos.browse(cr, uid, record_id, context)
-
+            order = proxy_pos.browse(cr, uid, record_id, context=context)
             if order.state in ('paid', 'invoiced'):
                 raise osv.except_osv(_('UserError '), _("You can't modify this order. It has already been paid"))
 
-            for pick in proxy_pick.browse(cr, uid, [this.picking_id.id], context):
+            for pick in proxy_pick.browse(cr, uid, [this.picking_id.id], context=context):
                 proxy_pos.write(cr, uid, record_id, {
                     'picking_id': this.picking_id.id,
                     'partner_id': pick.address_id and pick.address_id.partner_id.id
-                })
+                }, context=context)
 
             order = proxy_pick.write(cr, uid, [this.picking_id.id], {
                                         'invoice_state': 'none',
                                         'pos_order': record_id
-                                    })
+                                    }, context=context)
 
             for line in pick.move_lines:
                 proxy_order_line.create(cr, uid, {
@@ -72,8 +72,7 @@ class pos_get_sale(osv.osv_memory):
                     'product_id': line.product_id.id,
                     'price_unit': line.sale_line_id.price_unit,
                     'discount': line.sale_line_id.discount,
-                })
-
+                }, context=context)
         return {}
 
 pos_get_sale()

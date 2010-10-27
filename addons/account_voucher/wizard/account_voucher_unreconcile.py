@@ -25,15 +25,15 @@ from osv import fields
 class account_voucher_unreconcile(osv.osv_memory):
     _name = "account.voucher.unreconcile"
     _description = "Account voucher unreconcile"
-    
+
     _columns = {
         'remove':fields.boolean('Want to remove accounting entries too ?', required=False),
     }
-    
+
     _defaults = {
         'remove': True,
     }
-    
+
     def trans_unrec(self, cr, uid, ids, context=None):
 #        res = self.browse(cr, uid, ids[0])
         if context is None:
@@ -54,7 +54,7 @@ class account_voucher_unreconcile(osv.osv_memory):
             voucher_pool.cancel_voucher(cr, uid, [context.get('active_id')], context)
 #                wf_service = netsvc.LocalService("workflow")
 #                wf_service.trg_validate(uid, 'account.voucher', context.get('active_id'), 'cancel_voucher', cr)
-            
+
         return {}
 
 account_voucher_unreconcile()
