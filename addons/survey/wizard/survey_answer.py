@@ -49,7 +49,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for created view of particular survey pages.
         """
-
+        
         result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, \
                                         view_type, context, toolbar,submenu)
 
@@ -61,7 +61,8 @@ class survey_question_wiz(osv.osv_memory):
         sur_response_obj = self.pool.get('survey.response')
         que_col_head = self.pool.get('survey.question.column.heading')
         user_obj = self.pool.get('res.users')
-
+        if context is None:
+            context = {}
         if view_type in ['form']:
             wiz_id = 0
             if not context.has_key('sur_name_id'):
@@ -82,6 +83,8 @@ class survey_question_wiz(osv.osv_memory):
                 context.pop('active_id')
 
             survey_id = context.get('survey_id', False)
+            if not survey_id:
+                return {}
             sur_rec = survey_obj.browse(cr, uid, survey_id)
             p_id = map(lambda x:x.id, sur_rec.page_ids)
             total_pages = len(p_id)

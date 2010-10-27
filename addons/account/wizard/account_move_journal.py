@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from lxml import etree
+
 from osv import osv
 from tools.translate import _
 import tools
@@ -103,8 +105,11 @@ class account_move_journal(osv.osv_memory):
             </group>
         </form>""" % (tools.ustr(journal), tools.ustr(period))
 
+        view = etree.fromstring(view.encode('utf8'))
+        xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)
+        view = xarch
         res.update({
-            'arch':view
+            'arch': view
         })
         return res
 

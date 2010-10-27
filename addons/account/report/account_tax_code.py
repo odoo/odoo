@@ -21,11 +21,9 @@
 ##############################################################################
 
 import time
-import pooler
+
 import rml_parse
-import copy
 from report import report_sxw
-import re
 
 def _get_country(record):
     if record.partner_id \

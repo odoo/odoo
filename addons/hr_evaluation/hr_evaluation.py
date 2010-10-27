@@ -200,14 +200,12 @@ class hr_evaluation(osv.osv):
             for employee in employee_obj.browse(cr, uid, [employee_id], context=context):
                 if employee and employee.evaluation_plan_id and employee.evaluation_plan_id.id:
                     evaluation_plan_id=employee.evaluation_plan_id.id
-                employee_ids=employee_obj.search(cr, uid, [('parent_id','=',employee.id)], context=context)
         return {'value': {'plan_id':evaluation_plan_id}}
 
     def button_plan_in_progress(self, cr, uid, ids, context=None):
         hr_eval_inter_obj = self.pool.get('hr.evaluation.interview')
         if context is None:
             context = {}
-        apprai_id = []
         for evaluation in self.browse(cr, uid, ids, context=context):
             wait = False
             for phase in evaluation.plan_id.phase_ids:

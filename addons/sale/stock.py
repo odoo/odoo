@@ -116,10 +116,8 @@ class stock_picking(osv.osv):
         result = super(stock_picking, self).action_invoice_create(cursor, user,
                 ids, journal_id=journal_id, group=group, type=type,
                 context=context)
-
         picking_ids = result.keys()
         invoice_ids = result.values()
-
         invoices = {}
         for invoice in invoice_obj.browse(cursor, user, invoice_ids,
                 context=context):
@@ -127,20 +125,16 @@ class stock_picking(osv.osv):
 
         for picking in picking_obj.browse(cursor, user, picking_ids,
                 context=context):
-
             if not picking.sale_id:
                 continue
             sale_lines = picking.sale_id.order_line
             invoice_created = invoices[result[picking.id]]
-
             for inv in invoice_obj.browse(cursor, user, [invoice_created.id], context=context):
                 if not inv.fiscal_position:
                     invoice_obj.write(cursor, user, [inv.id], {'fiscal_position': picking.sale_id.fiscal_position.id}, context=context)
-
             if picking.sale_id.client_order_ref:
                 inv_name = picking.sale_id.client_order_ref + " : " + invoice_created.name
                 invoice_obj.write(cursor, user, [invoice_created.id], {'name': inv_name}, context=context)
-
             for sale_line in sale_lines:
                 if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
                     if group:
@@ -182,10 +176,9 @@ class stock_picking(osv.osv):
                         'account_analytic_id': account_analytic_id,
                         'notes':sale_line.notes
                     }, context=context)
-                    self.pool.get('sale.order.line').write(cursor, user, [sale_line.id], {'invoiced':True,
+                    self.pool.get('sale.order.line').write(cursor, user, [sale_line.id], {'invoiced': True,
                         'invoice_lines': [(6, 0, [invoice_line_id])],
                     })
-
         return result
 
     def action_cancel(self, cr, uid, ids, context={}):
@@ -194,7 +187,7 @@ class stock_picking(osv.osv):
             call_ship_end = True
             if pick.sale_id:
                 for picks in pick.sale_id.picking_ids:
-                    if picks.state not in ('done','cancel'):
+                    if picks.state not in ('done', 'cancel'):
                         call_ship_end = False
                         break
                 if call_ship_end:
