@@ -59,6 +59,7 @@ if HOST.lower() == 'none':
 else:
     netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Serving FTP on %s:%s\n" % (HOST, PORT))
     ds = ftp_server()
+    ds.daemon = True
     ds.start()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
