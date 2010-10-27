@@ -34,7 +34,7 @@ class tax_report(rml_parse.rml_parse, common_report_header):
         self.period_ids = []
         period_obj = self.pool.get('account.period')
         res['periods'] = ''
-        res['fiscalyear'] = data['form']['fiscalyear_id']
+        res['fiscalyear'] = data['form'].get('fiscalyear_id', False)
 
         if data['form']['period_from'] and data['form']['period_to']:
             self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, data['form']['period_from'], data['form']['period_to'])
