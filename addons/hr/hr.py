@@ -30,7 +30,7 @@ import addons
 class hr_employee_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
+        if not ids:
             return []
         reads = self.read(cr, uid, ids, ['name','parent_id'], context)
         res = []
@@ -167,9 +167,9 @@ class hr_employee(osv.osv):
         'passport_id':fields.char('Passport', size=64)
     }
 
-    def onchange_company(self, cr, uid, ids, company, context=None):       
+    def onchange_company(self, cr, uid, ids, company, context=None):
         address_id = False
-        if company:            
+        if company:
             company_id = self.pool.get('res.company').browse(cr,uid,company)
             address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['default'])
             address_id = address and address['default'] or False

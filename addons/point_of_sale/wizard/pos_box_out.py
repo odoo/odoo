@@ -123,7 +123,7 @@ class pos_box_out(osv.osv_memory):
             address_u = res_obj.browse(cr, uid, uid, context=context).address_id
             if address_u:
                 vals['partner_id'] = address_u.partner_id and address_u.partner_id.id or None
-            statement_line_id = statement_line_obj.create(cr, uid, vals, context=context)
+            statement_line_obj.create(cr, uid, vals, context=context)
         return {}
 
 pos_box_out()
