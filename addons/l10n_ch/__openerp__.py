@@ -87,9 +87,7 @@ TODO :
         "company_view.xml",
         "account_invoice.xml",
         "bank_view.xml",
-        "account_journal_view.xml",
         'wizard.xml',
-        'tax_template_view.xml',
         'security/ir.model.access.csv',
     ],
     'test' : [
