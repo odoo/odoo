@@ -30,7 +30,7 @@ import tools
 import tools.osutil
 from tools.safe_eval import safe_eval as eval
 import pooler
-
+from tools.translate import _
 
 import netsvc
 
@@ -806,7 +806,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         graph = create_graph(cr, ['base'], force)
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
-            raise osv.osv.except_osv('Could not load base module', 'module base cannot be loaded! (hint: verify addons-path)')
+            raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
         has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
         if update_module:

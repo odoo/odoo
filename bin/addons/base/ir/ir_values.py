@@ -229,7 +229,7 @@ class ir_values(osv.osv):
                             if not cnt:
                                 res2.remove(r)
                             if r[1] == 'Menuitem' and not res2:
-                                raise osv.except_osv('Error !','You do not have the permission to perform this operation !!!')
+                                raise osv.except_osv(_('Error !'), _('You do not have the permission to perform this operation !!!'))
         return res2
 ir_values()
 
