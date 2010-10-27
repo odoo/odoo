@@ -1174,6 +1174,10 @@
                         <field name="company_id" widget="selection" groups="base.group_multi_company" />
                     </group>
                     <newline/>
+                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
+                        <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
+                    </group>
+					<newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
@@ -1183,9 +1187,6 @@
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
                         <separator orientation="vertical" />
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
-                    </group>
-                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
-                        <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
                     </group>
                 </search>
             </field>
@@ -1609,7 +1610,7 @@
                         <field name="product_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended options..." groups="base.group_extended">
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
                        <field name="tracking_id" context="{'tracking': self}" filter_domain="[]" />
                     </group>
                     <newline/>
@@ -1644,7 +1645,7 @@
                         <field name="product_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended options..." groups="base.group_extended">
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
                        <field name="tracking_id" context="{'tracking': self}" filter_domain="[]" />
                     </group>
                     <newline/>
