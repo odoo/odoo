@@ -19,12 +19,9 @@
 #
 ##############################################################################
 
-import netsvc
-import tools
 from osv import fields, osv
 from tools.translate import _
 from decimal_precision import decimal_precision as dp
-
 
 class partner_event_registration(osv.osv_memory):
     """  event Registration """
@@ -150,4 +147,3 @@ class partner_event_registration(osv.osv_memory):
 partner_event_registration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

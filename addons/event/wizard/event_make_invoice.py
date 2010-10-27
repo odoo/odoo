@@ -57,6 +57,7 @@ class event_make_invoice(osv.osv_memory):
             if not event_reg.event_id.product_id:
                     raise osv.except_osv(_('Warning !'),
                         _("Event related doesn't have any product defined"))
+
             if not event_reg.partner_invoice_id:
                    raise osv.except_osv(_('Warning !'),
                         _("Registration doesn't have any partner to invoice."))
@@ -79,8 +80,8 @@ class event_make_invoice(osv.osv_memory):
         tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
         tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
         return {
-            'domain': "[('id','in',%s)]" % res,
-            'name': 'Invoices',
+            'domain': "[('id', 'in', %s)]" % res,
+            'name': 'Customer Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',

@@ -454,6 +454,7 @@ class product_template(osv.osv):
     _columns = {
         'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price')),
     }
+
 product_template()
 
 class Product(osv.osv):
@@ -513,8 +514,8 @@ class account_invoice_line(osv.osv):
         """
         if not context:
             context={}
-        res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
         member_line_obj = self.pool.get('membership.membership_line')
+        res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoice_id.type == 'out_invoice':
                 ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line', '=', line.id)], context=context)
@@ -552,9 +553,9 @@ class account_invoice_line(osv.osv):
     def create(self, cr, uid, vals, context=None):
         """Overrides orm create method
         """
+        member_line_obj = self.pool.get('membership.membership_line')
         result = super(account_invoice_line, self).create(cr, uid, vals, context=context)
         line = self.browse(cr, uid, result, context=context)
-        member_line_obj = self.pool.get('membership.membership_line')
         if line.invoice_id.type == 'out_invoice':
             ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line', '=', line.id)], context=context)
             if line.product_id and line.product_id.membership and not ml_ids:

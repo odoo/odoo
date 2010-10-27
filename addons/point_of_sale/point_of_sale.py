@@ -51,7 +51,6 @@ class pos_company_discount(osv.osv):
 
 pos_company_discount()
 
-
 class pos_order(osv.osv):
     """ Point of sale gives business owners a convenient way of checking out customers
         and of recording sales """
@@ -67,10 +66,10 @@ class pos_order(osv.osv):
                     raise osv.except_osv(_('Invalid action !'), _('Cannot delete a point of sale which is closed or contains confirmed cashboxes!'))
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
-    def onchange_partner_pricelist(self, cr, uid, ids, part, context=None):
+    def onchange_partner_pricelist(self, cr, uid, ids, part=False, context=None):
         """ Changed price list on_change of partner_id"""
         if not part:
-            return {}
+            return {'value': {}}
         pricelist = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_product_pricelist.id
         return {'value': {'pricelist_id': pricelist}}
 
@@ -106,10 +105,10 @@ class pos_order(osv.osv):
         val = None
         for order in self.browse(cr, uid, ids):
             cr.execute("SELECT date_payment FROM pos_order WHERE id = %s", (order.id,))
-            date_p=cr.fetchone()
-            date_p=date_p and date_p[0] or None
+            date_p = cr.fetchone()
+            date_p = date_p and date_p[0] or None
             if date_p:
-                res[order.id]=date_p
+                res[order.id] = date_p
                 return res
             cr.execute(" SELECT MAX(l.date) "
                         " FROM account_move_line l, account_move m, account_invoice i, account_move_reconcile r, pos_order o "
@@ -282,7 +281,6 @@ class pos_order(osv.osv):
         'contract_number': fields.char('Contract Number', size=512, select=1),
         'journal_entry': fields.boolean('Journal Entry'),
     }
-
 
     def _select_pricelist(self, cr, uid, context=None):
         """ To get default pricelist for the order"
@@ -469,7 +467,6 @@ class pos_order(osv.osv):
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [picking_id], context)
-
         return True
 
     def set_to_draft(self, cr, uid, ids, *args):
@@ -1226,6 +1223,7 @@ class stock_picking(osv.osv):
     _columns = {
         'pos_order': fields.many2one('pos.order', 'Pos order'),
     }
+
 stock_picking()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
