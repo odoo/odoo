@@ -31,13 +31,13 @@
 #   required
 #   size
 #
-from collections import defaultdict
+import datetime as DT
 import string
 import netsvc
 import sys
+import warnings
 
 from psycopg2 import Binary
-import warnings
 
 import tools
 from tools.translate import _
@@ -64,6 +64,8 @@ class _column(object):
     _symbol_get = None
 
     def __init__(self, string='unknown', required=False, readonly=False, domain=None, context={}, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
+        if not context:
+            context = {}
         self.states = states or {}
         self.string = string
         self.readonly = readonly
@@ -189,14 +191,42 @@ class float(_column):
 
 class date(_column):
     _type = 'date'
+    @staticmethod
+    def today(*args):
+        """ Returns the current date in a format fit for being a
+        default value to a ``date`` field.
 
+        This method should be provided as is to the _defaults dict, it
+        should not be called.
+        """
+        return DT.date.today().strftime(
+            tools.DEFAULT_SERVER_DATE_FORMAT)
 
 class datetime(_column):
     _type = 'datetime'
+    @staticmethod
+    def now(*args):
+        """ Returns the current datetime in a format fit for being a
+        default value to a ``datetime`` field.
 
+        This method should be provided as is to the _defaults dict, it
+        should not be called.
+        """
+        return DT.datetime.now().strftime(
+            tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
 class time(_column):
     _type = 'time'
+    @staticmethod
+    def now( *args):
+        """ Returns the current time in a format fit for being a
+        default value to a ``time`` field.
+
+        This method should be proivided as is to the _defaults dict,
+        it should not be called.
+        """
+        return DT.datetime.now().strftime(
+            tools.DEFAULT_SERVER_TIME_FORMAT)
 
 class binary(_column):
     _type = 'binary'
@@ -424,11 +454,14 @@ class one2many(_column):
         if not values:
             values = {}
 
-        res = defaultdict(list)
+        res = {}
+        for id in ids:
+            res[id] = []
 
         ids2 = obj.pool.get(self._obj).search(cr, user, self._domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            res[r[self._fields_id]].append(r['id'])
+            if r[self._fields_id] in res:
+                res[r[self._fields_id]].append(r['id'])
         return res
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
@@ -505,31 +538,50 @@ class many2many(_column):
             return res
         for id in ids:
             res[id] = []
-        limit_str = self._limit is not None and ' limit %d' % self._limit or ''
+        if offset:
+            warnings.warn("Specifying offset at a many2many.get() may produce unpredictable results.",
+                      DeprecationWarning, stacklevel=2)
         obj = obj.pool.get(self._obj)
 
-        d1, d2, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
-        if d1:
-            d1 = ' and ' + ' and '.join(d1)
-        else: d1 = ''
+        # static domains are lists, and are evaluated both here and on client-side, while string 
+        # domains supposed by dynamic and evaluated on client-side only (thus ignored here)
+        # FIXME: make this distinction explicit in API!
+        domain = isinstance(self._domain, list) and self._domain or []
+
+        wquery = obj._where_calc(cr, user, domain, context=context)
+        obj._apply_ir_rules(cr, user, wquery, 'read', context=context)
+        from_c, where_c, where_params = wquery.get_sql()
+        if where_c:
+            where_c = ' AND ' + where_c
+
+        if offset or self._limit:
+            order_by = ' ORDER BY "%s".%s' %(obj._table, obj._order.split(',')[0])
+        else:
+            order_by = ''
+
+        limit_str = ''
+        if self._limit is not None:
+            limit_str = ' LIMIT %d' % self._limit
+
         query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
-                   FROM %(rel)s, %(tbl)s \
-                  WHERE %(rel)s.%(id1)s in %%s \
+                   FROM %(rel)s, %(from_c)s \
+                  WHERE %(rel)s.%(id1)s IN %%s \
                     AND %(rel)s.%(id2)s = %(tbl)s.id \
-                 %(d1)s  \
+                 %(where_c)s  \
+                 %(order_by)s \
                  %(limit)s \
-                  ORDER BY %(tbl)s.%(order)s \
                  OFFSET %(offset)d' \
             % {'rel': self._rel,
+               'from_c': from_c,
                'tbl': obj._table,
                'id1': self._id1,
                'id2': self._id2,
-               'd1': d1,
+               'where_c': where_c,
                'limit': limit_str,
-               'order': obj._order,
+               'order_by': order_by,
                'offset': offset,
               }
-        cr.execute(query, [tuple(ids)] + d2)
+        cr.execute(query, [tuple(ids),] + where_params)
         for r in cr.fetchall():
             res[r[1]].append(r[0])
         return res

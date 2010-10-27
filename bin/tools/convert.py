@@ -216,6 +216,7 @@ class assertion_report(object):
         return res
 
 class xml_import(object):
+    __logger = logging.getLogger('tools.convert.xml_import')
     @staticmethod
     def nodeattr2bool(node, attr, default=False):
         if not node.get(attr):
@@ -300,7 +301,7 @@ form: module.record_id""" % (xml_id,)
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.get(f,'').encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
+        for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
             if rec.get(field):
                 res[dest] = rec.get(field).encode('utf8')
         if rec.get('auto'):
@@ -487,6 +488,8 @@ form: module.record_id""" % (xml_id,)
 
         if rec.get('target'):
             res['target'] = rec.get('target','')
+        if rec.get('multi'):
+            res['multi'] = rec.get('multi', False)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
@@ -847,7 +850,10 @@ form: module.record_id""" % (xml_id,)
                         try:
                             self._tags[rec.tag](self.cr, rec, n)
                         except:
-                            self.logger.notifyChannel("init", netsvc.LOG_ERROR, '\n'+etree.tostring(rec))
+                            self.__logger.error('Parse error in %s:%d: \n%s',
+                                                rec.getroottree().docinfo.URL,
+                                                rec.sourceline,
+                                                etree.tostring(rec).strip())
                             self.cr.rollback()
                             raise
         return True

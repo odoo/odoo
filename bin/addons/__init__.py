@@ -270,15 +270,16 @@ def get_module_resource(module, *args):
     @return: absolute path to the resource
     """
     a = get_module_path(module)
-    res = a and opj(a, *args) or False
+    if not a: return False
+    resource_path = opj(a, *args)
     if zipfile.is_zipfile( a +'.zip') :
         zip = zipfile.ZipFile( a + ".zip")
         files = ['/'.join(f.split('/')[1:]) for f in zip.namelist()]
-        res = '/'.join(args)
-        if res in files:
-            return opj(a, res)
-    elif os.path.isfile(res):
-        return res
+        resource_path = '/'.join(args)
+        if resource_path in files:
+            return opj(a, resource_path)
+    elif os.path.exists(resource_path):
+        return resource_path
     return False
 
 

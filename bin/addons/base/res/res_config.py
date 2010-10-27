@@ -99,8 +99,7 @@ class res_config_configurable(osv.osv_memory):
         if not previous_todo:
             raise LookupError(_("Couldn't find previous ir.actions.todo"))
         if not state:
-            raise ValueError(_("Can't set an ir.actions.todo's state to "
-                               "nothingness"))
+            raise ValueError(_("Can't set an ir.actions.todo's state to an empty value."))
         previous_todo.write({'state':state})
 
     def _next(self, cr, uid, context=None):

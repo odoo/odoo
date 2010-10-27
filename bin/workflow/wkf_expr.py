@@ -68,17 +68,17 @@ def execute(cr, ident, workitem, activity):
     return _eval_expr(cr, ident, workitem, activity['action'])
 
 def check(cr, workitem, ident, transition, signal):
-    ok = True
-    if transition['signal']:
-        ok = (signal==transition['signal'])
+    if transition['signal'] and signal != transition['signal']:
+        return False
 
     uid = ident[0]
-    if transition['role_id'] and uid != 1:
+    if transition['group_id'] and uid != 1:
         pool = pooler.get_pool(cr.dbname)
-        user_roles = pool.get('res.users').read(cr, uid, [uid], ['roles_id'])[0]['roles_id']
-        ok = ok and pool.get('res.roles').check(cr, uid, user_roles, transition['role_id'])
-    ok = ok and _eval_expr(cr, ident, workitem, transition['condition'])
-    return ok
+        user_groups = pool.get('res.users').read(cr, uid, [uid], ['groups_id'])[0]['groups_id']
+        if not transition['group_id'] in user_groups:
+            return False
+
+    return _eval_expr(cr, ident, workitem, transition['condition'])
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

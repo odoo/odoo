@@ -28,7 +28,7 @@ import re
 import time
 from interface import report_rml
 import preprocess
-import netsvc
+import logging
 import pooler
 import tools
 import zipfile
@@ -244,7 +244,7 @@ class rml_parse(object):
             if ids:
                 d = decimal_precision_obj.browse(self.cr, self.uid, ids)[0].digits
         elif obj and f:
-            res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16,DEFAULT_DIGITS)))
+            res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16, DEFAULT_DIGITS)))
             if isinstance(res_digits, tuple):
                 d = res_digits[1]
             else:
@@ -255,9 +255,19 @@ class rml_parse(object):
                 d = obj._field.digits[1] or DEFAULT_DIGITS
         return d
 
-    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False):
+    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False):
+        """
+            Assuming 'Account' decimal.precision=3:
+                formatLang(value) -> digits=2 (default)
+                formatLang(value, digits=4) -> digits=4
+                formatLang(value, dp='Account') -> digits=3
+                formatLang(value, digits=5, dp='Account') -> digits=5
+        """
         if digits is None:
-            digits = self.get_digits(value)
+            if dp:
+                digits = self.get_digits(dp=dp)
+            else:
+                digits = self.get_digits(value)
 
         if isinstance(value, (str, unicode)) and not value:
             return ''
@@ -300,7 +310,7 @@ class rml_parse(object):
                 if not self._transl_regex.match(piece_list[pn]):
                     source_string = piece_list[pn].replace('\n', ' ').strip()
                     if len(source_string):
-                        translated_string = transl_obj._get_source(self.cr, self.uid, self.name, 'rml', lang, source_string)
+                        translated_string = transl_obj._get_source(self.cr, self.uid, self.name, ('report', 'rml'), lang, source_string)
                         if translated_string:
                             piece_list[pn] = piece_list[pn].replace(source_string, translated_string)
             text = ''.join(piece_list)
@@ -345,12 +355,17 @@ class report_sxw(report_rml, preprocess.report):
         self.parser = parser
         self.header = header
         self.store = store
+        self.internal_header=False
+        if header=='internal' or header=='internal landscape':
+            self.internal_header=True
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = pooler.get_pool(cr.dbname).get(self.table)
         return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context, fields_process=_fields_process)
 
     def create(self, cr, uid, ids, data, context=None):
+        if self.internal_header:
+            context.update({'internal_header':self.internal_header})
         pool = pooler.get_pool(cr.dbname)
         ir_obj = pool.get('ir.actions.report.xml')
         report_xml_ids = ir_obj.search(cr, uid,
@@ -415,8 +430,8 @@ class report_sxw(report_rml, preprocess.report):
                 result = self.create_single_pdf(cr, uid, [obj.id], data, report_xml, context)
                 if not result:
                     return False
-                try:
-                    if aname:
+                if aname:
+                    try:
                         name = aname+'.'+result[1]
                         pool.get('ir.attachment').create(cr, uid, {
                             'name': aname,
@@ -426,9 +441,9 @@ class report_sxw(report_rml, preprocess.report):
                             'res_id': obj.id,
                             }, context=context
                         )
-                        cr.commit()
-                except Exception,e:
-                     netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,str(e))
+                    except Exception:
+                        #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
+                        logging.getLogger('report').error('Could not create saved report attachment', exc_info=True)
                 results.append(result)
             if results:
                 if results[0][1]=='pdf':

@@ -386,11 +386,14 @@ class orm_template(object):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        return self.pool.get('res.log').create(cr, uid, {
-            'name': message,
-            'res_model': self._name,
-            'secondary': secondary,
-            'res_id': id},
+        return self.pool.get('res.log').create(cr, uid,
+                {
+                    'name': message,
+                    'res_model': self._name,
+                    'secondary': secondary,
+                    'res_id': id,
+                    'context': context,
+                },
                 context=context
         )
 
@@ -1358,53 +1361,40 @@ class orm_template(object):
                 if trans:
                     node.set('sum', trans)
 
-        if childs:
-            for f in node:
+        for f in node:
+            if childs or (node.tag == 'field' and f.tag in ('filter','separator')):
                 fields.update(self.__view_look_dom(cr, user, f, view_id, context))
 
         return fields
 
-    def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
-        fields_def = self.__view_look_dom(cr, user, node, view_id, context=context)
+    def _disable_workflow_buttons(self, cr, user, node):
+        if user == 1:
+            # admin user can always activate workflow buttons
+            return node
 
-        rolesobj = self.pool.get('res.roles')
+        # TODO handle the case of more than one workflow for a model or multiple
+        # transitions with different groups and same signal
         usersobj = self.pool.get('res.users')
-
         buttons = (n for n in node.getiterator('button') if n.get('type') != 'object')
         for button in buttons:
-            can_click = True
-            if user != 1: # admin user has all roles
-                user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
-                # TODO handle the case of more than one workflow for a model
-                cr.execute("""SELECT DISTINCT t.role_id
-                                FROM wkf
-                          INNER JOIN wkf_activity a ON a.wkf_id = wkf.id
-                          INNER JOIN wkf_transition t ON (t.act_to = a.id)
-                               WHERE wkf.osv = %s
-                                 AND t.signal = %s
-                           """, (self._name, button.get('name'),))
-                roles = cr.fetchall()
-
-                # draft -> valid = signal_next (role X)
-                # draft -> cancel = signal_cancel (no role)
-                #
-                # valid -> running = signal_next (role Y)
-                # valid -> cancel = signal_cancel (role Z)
-                #
-                # running -> done = signal_next (role Z)
-                # running -> cancel = signal_cancel (role Z)
-
-                # As we don't know the object state, in this scenario,
-                #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
-                #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
-                # The verification will be made later in workflow process...
-                if roles:
-                    can_click = any((not role) or rolesobj.check(cr, user, user_roles, role) for (role,) in roles)
-
+            user_groups = usersobj.read(cr, user, [user], ['groups_id'])[0]['groups_id']
+            cr.execute("""SELECT DISTINCT t.group_id
+                        FROM wkf
+                  INNER JOIN wkf_activity a ON a.wkf_id = wkf.id
+                  INNER JOIN wkf_transition t ON (t.act_to = a.id)
+                       WHERE wkf.osv = %s
+                         AND t.signal = %s
+                         AND t.group_id is NOT NULL
+                   """, (self._name, button.get('name')))
+            group_ids = [x[0] for x in cr.fetchall() if x[0]]
+            can_click = not group_ids or bool(set(user_groups).intersection(group_ids))
             button.set('readonly', str(int(not can_click)))
+        return node
 
+    def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
+        fields_def = self.__view_look_dom(cr, user, node, view_id, context=context)
+        node = self._disable_workflow_buttons(cr, user, node)
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
-
         fields = {}
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
@@ -1736,7 +1726,6 @@ class orm_template(object):
             resprint = ir_values_obj.get(cr, user, 'action',
                     'client_print_multi', [(self._name, False)], False,
                     context)
-            resaction = []
             resaction = ir_values_obj.get(cr, user, 'action',
                     'client_action_multi', [(self._name, False)], False,
                     context)
@@ -1947,10 +1936,14 @@ class orm_template(object):
             # override defaults with the provided values, never allow the other way around
             defaults = self.default_get(cr, uid, missing_defaults, context)
             for dv in defaults:
-                # FIXME: also handle inherited m2m
-                if dv in self._columns and self._columns[dv]._type == 'many2many' \
+                if (dv in self._columns and self._columns[dv]._type == 'many2many') \
+                     or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'many2many') \
                         and defaults[dv] and isinstance(defaults[dv][0], (int, long)):
                     defaults[dv] = [(6, 0, defaults[dv])]
+                if dv in self._columns and self._columns[dv]._type == 'one2many' \
+                    or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'one2many') \
+                        and isinstance(defaults[dv], (list, tuple)) and isinstance(defaults[dv][0], dict):
+                    defaults[dv] = [(0, 0, x) for x in defaults[dv]]
             defaults.update(values)
             values = defaults
         return values
@@ -2158,7 +2151,8 @@ class orm_memory(orm_template):
                 'create_date': create_date,
                 'write_uid': False,
                 'write_date': False,
-                'id': id
+                'id': id,
+                'xmlid' : False,
             })
         return result
 
@@ -2237,10 +2231,10 @@ class orm(orm_template):
                 or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
         for f in fields_pre:
             if f not in ['id', 'sequence']:
-                operator = fget[f].get('group_operator', 'sum')
+                group_operator = fget[f].get('group_operator', 'sum')
                 if flist:
                     flist += ','
-                flist += operator+'('+f+') as '+f
+                flist += group_operator+'('+f+') as '+f
 
         gb = groupby and (' GROUP BY '+groupby) or ''
 
@@ -2975,26 +2969,6 @@ class orm(orm_template):
             for key, v in r.items():
                 if v is None:
                     r[key] = False
-                if key in self._columns:
-                    column = self._columns[key]
-                elif key in self._inherit_fields:
-                    column = self._inherit_fields[key][2]
-                else:
-                    continue
-# TODO: removed this, it's too slow
-#                if v and column._type == 'reference':
-#                    model_name, ref_id = v.split(',', 1)
-#                    model = self.pool.get(model_name)
-#                    if not model:
-#                        reset = True
-#                    else:
-#                        cr.execute('SELECT count(1) FROM "%s" WHERE id=%%s' % (model._table,), (ref_id,))
-#                        reset = not cr.fetchone()[0]
-#                    if reset:
-#                        if column._classic_write:
-#                            query = 'UPDATE "%s" SET "%s"=NULL WHERE id=%%s' % (self._table, key)
-#                            cr.execute(query, (r['id'],))
-#                        r[key] = False
 
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
@@ -3052,20 +3026,20 @@ class orm(orm_template):
         else:
             res = map(lambda x: {'id': x}, ids)
 
-        if not res:
-            res = map(lambda x: {'id': x}, ids)
-            for record in res:
-                for f in fields_to_read:
-                    field_val = False
-                    if f in self._columns.keys():
-                        ftype = self._columns[f]._type
-                    elif f in self._inherit_fields.keys():
-                        ftype = self._inherit_fields[f][2]._type
-                    else:
-                        continue
-                    if ftype in ('one2many', 'many2many'):
-                        field_val = []
-                    record.update({f:field_val})
+#        if not res:
+#            res = map(lambda x: {'id': x}, ids)
+#            for record in res:
+#                for f in fields_to_read:
+#                    field_val = False
+#                    if f in self._columns.keys():
+#                        ftype = self._columns[f]._type
+#                    elif f in self._inherit_fields.keys():
+#                        ftype = self._inherit_fields[f][2]._type
+#                    else:
+#                        continue
+#                    if ftype in ('one2many', 'many2many'):
+#                        field_val = []
+#                    record.update({f:field_val})
 
         for f in fields_pre:
             if f == self.CONCURRENCY_CHECK_FIELD:
@@ -3118,7 +3092,9 @@ class orm(orm_template):
                 for pos in val:
                     for record in res:
                         if isinstance(res2[record['id']], str): res2[record['id']] = eval(res2[record['id']]) #TOCHECK : why got string instend of dict in python2.6
-                        record[pos] = res2[record['id']][pos]
+                        multi_fields = res2.get(record['id'],{})
+                        if multi_fields:
+                            record[pos] = multi_fields.get(pos,[])
             else:
                 for f in val:
                     res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
@@ -3166,12 +3142,8 @@ class orm(orm_template):
 
     def perm_read(self, cr, user, ids, context=None, details=True):
         """
-        Read the permission for record of the given ids
+        Returns some metadata about the given records.
 
-        :param cr: database cursor
-        :param user: current user id
-        :param ids: id or list of ids
-        :param context: context arguments, like lang, time zone
         :param details: if True, \*_uid fields are replaced with the name of the user
         :return: list of ownership dictionaries for each requested record
         :rtype: list of dictionaries with the following keys:
@@ -3181,7 +3153,7 @@ class orm(orm_template):
                     * create_date: date when the record was created
                     * write_uid: last user who changed the record
                     * write_date: date of the last change to the record
-
+                    * xmlid: XML ID to use to refer to this record (if there is one), in format ``module.name``
         """
         if not context:
             context = {}
@@ -3191,18 +3163,25 @@ class orm(orm_template):
         uniq = isinstance(ids, (int, long))
         if uniq:
             ids = [ids]
-        fields = 'id'
+        fields = ['id']
         if self._log_access:
-            fields += ', create_uid, create_date, write_uid, write_date'
-        query = 'SELECT %s FROM "%s" WHERE id IN %%s' % (fields, self._table)
-        cr.execute(query, (tuple(ids),))
+            fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
+        quoted_table = '"%s"' % self._table
+        fields_str = ",".join('%s.%s'%(quoted_table, field) for field in fields)
+        query = '''SELECT %s, __imd.module, __imd.name
+                   FROM %s LEFT JOIN ir_model_data __imd
+                       ON (__imd.model = %%s and __imd.res_id = %s.id)
+                   WHERE %s.id IN %%s''' % (fields_str, quoted_table, quoted_table, quoted_table)
+        cr.execute(query, (self._name, tuple(ids)))
         res = cr.dictfetchall()
         for r in res:
             for key in r:
                 r[key] = r[key] or False
-                if key in ('write_uid', 'create_uid', 'uid') and details:
+                if details and key in ('write_uid', 'create_uid'):
                     if r[key]:
                         r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
+            r['xmlid'] = ("%(module)s.%(name)s" % r) if r['name'] else False
+            del r['name'], r['module']
         if uniq:
             return res[ids[0]]
         return res
@@ -3210,19 +3189,23 @@ class orm(orm_template):
     def _check_concurrency(self, cr, ids, context):
         if not context:
             return
-        if context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access:
-            def key(oid):
-                return "%s,%s" % (self._name, oid)
-            santa = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = tools.flatten(((oid, context[self.CONCURRENCY_CHECK_FIELD][key(oid)])
-                                          for oid in ids[i:i+cr.IN_MAX]
-                                          if key(oid) in context[self.CONCURRENCY_CHECK_FIELD]))
-                if sub_ids:
-                    cr.execute("SELECT count(1) FROM %s WHERE %s" % (self._table, " OR ".join([santa]*(len(sub_ids)/2))), sub_ids)
-                    res = cr.fetchone()
-                    if res and res[0]:
-                        raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
+        if not (context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access):
+            return
+        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
+        for sub_ids in cr.split_for_in_conditions(ids):
+            ids_to_check = []
+            for id in sub_ids:
+                id_ref = "%s,%s" % (self._name, id)
+                update_date = context[self.CONCURRENCY_CHECK_FIELD].pop(id_ref, None)
+                if update_date:
+                    ids_to_check.extend([id, update_date])
+            if not ids_to_check:
+                continue
+            cr.execute("SELECT id FROM %s WHERE %s" % (self._table, " OR ".join([check_clause]*(len(ids_to_check)/2))), tuple(ids_to_check))
+            res = cr.fetchone()
+            if res:
+                # mention the first one only to keep the error message readable
+                raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """Verifies that the operation given by ``operation`` is allowed for the user
@@ -3491,7 +3474,8 @@ class orm(orm_template):
             for val in updend:
                 if self._inherit_fields[val][0] == table:
                     v[val] = vals[val]
-            self.pool.get(table).write(cr, user, nids, v, context)
+            if v:
+                self.pool.get(table).write(cr, user, nids, v, context)
 
         self._validate(cr, user, ids, context)
 
@@ -3925,8 +3909,12 @@ class orm(orm_template):
 
            :param query: the current query object
         """
-        def apply_rule(added_clause, added_params, added_tables):
+        def apply_rule(added_clause, added_params, added_tables, parent_model=None, child_object=None):
             if added_clause:
+                if parent_model and child_object:
+                    # as inherited rules are being applied, we need to add the missing JOIN
+                    # to reach the parent table (if it was not JOINed yet in the query)
+                    child_object._inherits_join_add(parent_model, query)
                 query.where_clause += added_clause
                 query.where_clause_params += added_params
                 for table in added_tables:
@@ -3939,13 +3927,10 @@ class orm(orm_template):
         rule_obj = self.pool.get('ir.rule')
         apply_rule(*rule_obj.domain_get(cr, uid, self._name, mode, context=context))
 
-        # apply ir.rules from the parents (through _inherits), adding the appropriate JOINs if needed
+        # apply ir.rules from the parents (through _inherits)
         for inherited_model in self._inherits:
-            if apply_rule(*rule_obj.domain_get(cr, uid, inherited_model, mode, context=context)):
-                # if some rules were applied, need to add the missing JOIN for them to make sense, passing the previous
-                # list of table in case the inherited table was not in the list before (as that means the corresponding
-                # JOIN(s) was(were) not present)
-                self._inherits_join_add(inherited_model, query)
+            kwargs = dict(parent_model=inherited_model, child_object=self) #workaround for python2.5
+            apply_rule(*rule_obj.domain_get(cr, uid, inherited_model, mode, context=context), **kwargs)
 
     def _generate_m2o_order_by(self, order_field, query):
         """
