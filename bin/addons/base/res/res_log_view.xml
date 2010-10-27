@@ -7,10 +7,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Logs">
-                    <filter icon="terp-stock_align_left_24" string="Read" domain="[('read','=',True)]" name="read"/>
-                    <filter icon="terp-stock_align_left_24" string="Unread" domain="[('read','&lt;&gt;',True)]" name="unread"/>
+                    <filter icon="terp-camera_test" string="Read" domain="[('read','=',True)]" name="read"/>
+                    <filter icon="terp-gtk-jump-to-ltr" string="Unread" domain="[('read','&lt;&gt;',True)]" name="unread"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-stock_align_left_24" string="My Logs" domain="[('user_id','=',uid)]" name="my"/>
+                    <filter icon="terp-personal" string="My Logs" domain="[('user_id','=',uid)]" name="my"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="user_id"/>
