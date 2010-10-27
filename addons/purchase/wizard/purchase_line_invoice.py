@@ -91,8 +91,8 @@ class purchase_line_invoice(osv.osv_memory):
                 else:
                     pay_term = False
                 inv = {
-                    'name': multiple_order_invoice_name(orders), #trouver 
-                    #'origin': order.name, #origin
+                    'name': multiple_order_invoice_name(orders),  
+                    'origin': multiple_order_invoice_name(orders),  
                     'type': 'in_invoice',
                     'reference': multiple_order_invoice_reference(partner, orders),
                     'account_id': a,
@@ -100,8 +100,8 @@ class purchase_line_invoice(osv.osv_memory):
                     'address_invoice_id': orders[0].partner_address_id.id,
                     'address_contact_id': orders[0].partner_address_id.id,
                     'invoice_line': [(6,0,lines_ids)],
-                    'currency_id' : orders[0].pricelist_id.currency_id.id, #currency form the fist ordes
-                    'comment': multiple_order_invoice_notes(orders), #concatener les notes
+                    'currency_id' : orders[0].pricelist_id.currency_id.id, 
+                    'comment': multiple_order_invoice_notes(orders),
                     'payment_term': pay_term,
                     'fiscal_position': partner.property_account_position.id
                 }

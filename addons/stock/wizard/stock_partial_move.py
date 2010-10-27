@@ -34,7 +34,6 @@ class stock_partial_move_memory(osv.osv_memory):
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot'),
         'move_id' : fields.many2one('stock.move', "Move"),
         'wizard_id' : fields.many2one('stock.partial.move', string="Wizard"),
-        #cas in    
         'cost' : fields.float("Cost", help="Unit Cost for this product line", readonly=True),
         'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", readonly=True),
     }
@@ -45,7 +44,7 @@ class stock_partial_move(osv.osv_memory):
     _columns = {
         'date': fields.datetime('Date', required=True),
         'type': fields.char("Type", size=3),
-        'product_moves' : fields.one2many('stock.move.memory', 'wizard_id', _('Moves')),
+        'product_moves' : fields.one2many('stock.move.memory', 'wizard_id', 'Moves'),
      }
     
     def view_init(self, cr, uid, fields_list, context=None):
