@@ -22,8 +22,6 @@
 import time
 
 from osv import osv, fields
-from tools.translate import _
-
 
 class pos_details(osv.osv_memory):
     _name = 'pos.details'
@@ -57,7 +55,7 @@ class pos_details(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'pos.details',
             'datas': datas,
-       }
+        }
 
 pos_details()
 

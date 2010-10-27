@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import time
+
 import re
 import sys
 
@@ -100,7 +102,7 @@ class rml_parse(report_sxw.rml_parse):
             return Stringer
         return Stringer
     def explode_this(self,chaine,length):
-        chaine = rstrip(chaine)
+        chaine = chaine.rstrip()
         ast = list(chaine)
         i = length
         while i <= len(ast):

@@ -56,7 +56,7 @@ class hr_payroll_year_salary(osv.osv_memory):
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
          @param context: A standard dictionary
-         @return : return report
+         @return: return report
         """
         if context is None:
             context = {}

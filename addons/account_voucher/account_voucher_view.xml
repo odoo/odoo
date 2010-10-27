@@ -184,11 +184,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-            	<field name="currency" invisible="1" position="after">
-            		<button name="%(action_view_account_statement_from_invoice_lines)d"
+              <field name="currency" invisible="1" position="after">
+                <button name="%(action_view_account_statement_from_invoice_lines)d"
                             string="Import Invoices" type="action" icon="gtk-execute"
                             attrs="{'invisible':[('state','=','confirm')]}"/>
-            	</field>
+              </field>
             </field>
         </record>
 
@@ -221,7 +221,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@name='line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
+                <xpath expr="/form/notebook/page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -233,7 +233,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@name='line_ids']/field[@name='line_ids']/form/field[@name='amount']" position="after">
+                <xpath expr="/form/notebook/page/field[@name='line_ids']/form/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>

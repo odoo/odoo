@@ -201,11 +201,11 @@ class survey_browse_response(report_rml):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
                 tbl_width = float(_tbl_widths.replace('cm', ''))
                 colwidth =  "4.6cm,5cm," + str(tbl_width - 16.4) +"cm,4cm,3cm"
+                resp_create = tools.ustr(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S')))
                 rml += """<blockTable colWidths='""" + colwidth + """' style="Table_heading">
                           <tr>
                             <td><para style="terp_tblheader_General_Centre">Answer Create Date:- </para></td>
-                            # *-* formatting hard coded, breaks with utf8
-                            <td><para style="terp_tblheader_General_Centre_simple">""" + to_xml(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S'))) + """</para></td>
+                            <td><para style="terp_tblheader_General_Centre_simple">""" + to_xml(resp_create) +  """</para></td>
                             <td><para style="terp_tblheader_General_Centre"></para></td>
                             <td><para style="terp_tblheader_General_right">Answer By:- </para></td>
                             <td><para style="terp_tblheader_General_right_simple">""" + to_xml(response.user_id.login or '') + """</para></td>

@@ -136,7 +136,7 @@ class hr_employee(osv.osv):
         warning_sign = 'sign'
         res = {}
 
-        #Special case when button calls this method :type=context
+        #Special case when button calls this method: type=context
         if isinstance(type, dict):
             type = type.get('type','action')
         if type == 'sign_in':

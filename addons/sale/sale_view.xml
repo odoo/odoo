@@ -292,6 +292,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="help">Sales Orders helps you manage quotations and orders done with your customers. OpenERP suggests that you to start by creating a quotation. Once the order is confirmed, the quotation is converted into a Sale Order. OpenERP can handle several types of products so that a sales order can trigger tasks, delivery orders, manufacturing orders, purchases and so on. Based on the configuration of the sale order, a draft invoice will be generated so that you just have to confirm it when you want to bill your customer.</field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3" groups="base.group_sale_salesman,base.group_sale_manager"/>
