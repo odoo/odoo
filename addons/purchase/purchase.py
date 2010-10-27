@@ -271,7 +271,6 @@ class purchase_order(osv.osv):
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context={}):
-        product = []
         todo = []
         for po in self.browse(cr, uid, ids):
             if not po.order_line:
@@ -281,7 +280,7 @@ class purchase_order(osv.osv):
                     todo.append(line.id)
             message = _("Purchase order '%s' is confirmed.") % (po.name,)
             self.log(cr, uid, po.id, message)
-        current_name = self.name_get(cr, uid, ids)[0][1]
+#        current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
