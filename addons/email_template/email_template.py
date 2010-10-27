@@ -740,8 +740,7 @@ class email_template_preview(osv.osv_memory):
             if default_id and default_id not in ref_obj_ids:
                 ref_obj_ids.insert(0, default_id)
             return model_obj.name_get(cr, uid, ref_obj_ids, context)
-        else:
-            return []
+        return []
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
@@ -765,7 +764,7 @@ class email_template_preview(osv.osv_memory):
                                                    user,
                                                    context['template_id'],
                                                    ['object_name'],
-                                                   context)['object_name'] or False
+                                                   context).get('object_name', False)
 
     _columns = {
         'ref_template':fields.many2one(
