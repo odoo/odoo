@@ -190,7 +190,6 @@ class document_directory(osv.osv):
             dbro = self.browse(cr, uid, ids, context=context)
 
         if dynamic:
-            assert dbro.type == 'directory'
             return nodes.node_res_obj
         elif dbro.type == 'directory':
             return nodes.node_dir
