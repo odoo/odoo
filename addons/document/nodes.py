@@ -433,12 +433,12 @@ class node_database(node_class):
             return res[0]
         return None
 
-    def _child_get(self, cr, name=False, parent_id=False, domain=None):
+    def _child_get(self, cr, name=False, domain=None):
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('parent_id','=',parent_id)]
+        where = [('parent_id','=', False), ('ressource_parent_type_id','=',False)]
         if name:
             where.append(('name','=',name))
             is_allowed = self.check_perms(1)
@@ -448,23 +448,14 @@ class node_database(node_class):
         if not is_allowed:
             raise IOError(errno.EPERM, "Permission into directory denied")
 
-        if not domain:
-            domain = []
-
-        where2 = where + domain + ['|', ('type', '=', 'directory'), \
-                    '&', ('type', '=', 'ressource'), ('ressource_parent_type_id','=',False)]
-        ids = dirobj.search(cr, uid, where2, context=ctx)
+        if domain:
+            where = where + domain
+        ids = dirobj.search(cr, uid, where, context=ctx)
         res = []
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             klass = dirr.get_node_class(dirr, context=ctx)
             res.append(klass(dirr.name, self, self.context,dirr))
 
-        fil_obj = dirobj.pool.get('ir.attachment')
-        ids = fil_obj.search(cr, uid, where, context=ctx)
-        if ids:
-            for fil in fil_obj.browse(cr, uid, ids, context=ctx):
-                klass = self.context.node_file_class
-                res.append(klass(fil.name, self, self.context, fil))
         return res
 
     def _file_get(self,cr, nodename=False):
@@ -559,7 +550,46 @@ class node_dir(node_database):
         return res
     
     def _child_get(self, cr, name=None, domain=None):
-        return super(node_dir,self)._child_get(cr, name, self.dir_id, domain=domain)
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('parent_id','=',self.dir_id)]
+        if name:
+            where.append(('name','=',name))
+            is_allowed = self.check_perms(1)
+        else:
+            is_allowed = self.check_perms(5)
+        
+        if not is_allowed:
+            raise IOError(errno.EPERM, "Permission into directory denied")
+
+        if not domain:
+            domain = []
+
+        where2 = where + domain + [('ressource_parent_type_id','=',False)]
+        ids = dirobj.search(cr, uid, where2, context=ctx)
+        res = []
+        for dirr in dirobj.browse(cr, uid, ids, context=ctx):
+            klass = dirr.get_node_class(dirr, context=ctx)
+            res.append(klass(dirr.name, self, self.context,dirr))
+
+        # Static directories should never return files with res_model/res_id
+        # because static dirs are /never/ related to a record.
+        # In fact, files related to some model and parented by the root dir
+        # (the default), will NOT be accessible in the node system unless
+        # a resource folder for that model exists (with resource_find_all=True).
+        # Having resource attachments in a common folder is bad practice,
+        # because they would be visible to all users, and their names may be
+        # the same, conflicting.
+        where += [('res_model', '=', False)]
+        fil_obj = dirobj.pool.get('ir.attachment')
+        ids = fil_obj.search(cr, uid, where, context=ctx)
+        if ids:
+            for fil in fil_obj.browse(cr, uid, ids, context=ctx):
+                klass = self.context.node_file_class
+                res.append(klass(fil.name, self, self.context, fil))
+        return res
 
     def rmcol(self, cr):
         uid = self.context.uid
@@ -963,7 +993,7 @@ class node_res_obj(node_class):
                     continue
                 # TODO Revise
                 klass = directory.get_node_class(directory, dynamic=True, context=ctx)
-                res.append(klass(res_name, self.dir_id, self, self.context, self.res_model, res_bo = bo))
+                res.append(klass(res_name, dir_id=self.dir_id, parent=self, context=self.context, res_model=self.res_model, res_bo=bo))
 
 
         where2 = where + [('parent_id','=',self.dir_id) ]
