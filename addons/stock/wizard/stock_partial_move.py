@@ -157,7 +157,6 @@ class stock_partial_move(osv.osv_memory):
         
         move_ids = context.get('active_ids', False)
         partial = self.browse(cr, uid, ids[0], context)
-        #print partial.date
         partial_datas = {
             'delivery_date' : partial.date
         }

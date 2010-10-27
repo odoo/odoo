@@ -21,7 +21,7 @@
                     <field name="product_id" readonly="1" />
                     <field name="quantity" ></field>
                     <field name="product_uom"></field>
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" ></field>
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]"  groups="base.group_extended" ></field>
                     <field name="cost"></field>
                     <field name="currency" ></field>
                 </tree>
@@ -37,7 +37,7 @@
                    <field name="product_id" readonly="1" />
                     <field name="quantity" ></field>
                     <field name="product_uom"></field>
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]"></field>
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" ></field>
                     <field name="cost"></field>
                     <field name="currency"></field>
                 </form>

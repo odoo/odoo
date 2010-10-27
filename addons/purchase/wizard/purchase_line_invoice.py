@@ -147,13 +147,10 @@ class purchase_line_invoice(osv.osv_memory):
 
             res = []
             for result in invoices.values():
-                #order = result[0][0].order_id 
                 il = map(lambda x: x[1], result)
                 orders = list(set(map(lambda x : x[0].order_id, result)))
                
                 res.append(make_invoice_by_partner(orders[0].partner_id, orders, il))
-            #debug
-            print res
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,res))+"])]",
