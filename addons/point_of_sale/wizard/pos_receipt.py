@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,10 +26,6 @@ class pos_receipt(osv.osv_memory):
     _name = 'pos.receipt'
     _description = 'Point of sale receipt'
 
-    _columns = {
-
-    }
-
     def view_init(self, cr, uid, fields_list, context=None):
         """
          Creates view dynamically and adding fields at runtime.
@@ -39,10 +35,9 @@ class pos_receipt(osv.osv_memory):
          @param context: A standard dictionary
          @return: New arch of view with new columns.
         """
-        order_lst = self. pool.get('pos.order').browse(cr, uid, context['active_id'])
+        order_lst = self. pool.get('pos.order').browse(cr, uid, context['active_id'], context=context)
 
     def print_report(self, cr, uid, ids, context=None):
-
         """
               To get the date and print the report
              @param self: The object pointer.
@@ -54,11 +49,10 @@ class pos_receipt(osv.osv_memory):
         datas = {'ids': context.get('active_ids', [])}
         res = {}
         datas['form'] = res
-
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'pos.receipt',
             'datas': datas,
-       }
+        }
 
 pos_receipt()

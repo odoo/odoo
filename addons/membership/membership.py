@@ -22,7 +22,6 @@
 import time
 
 from osv import fields, osv
-from tools import config
 import decimal_precision as dp
 from tools.translate import _
 
@@ -525,15 +524,15 @@ class account_invoice_line(osv.osv):
                     date_to = line.product_id.membership_date_to
                     if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                         date_from = line.invoice_id.date_invoice
-                    line_id = member_line_obj.create(cr, uid, {
-                        'partner': line.invoice_id.partner_id.id,
-                        'membership_id': line.product_id.id,
-                        'member_price': line.price_unit,
-                        'date': time.strftime('%Y-%m-%d'),
-                        'date_from': date_from,
-                        'date_to': date_to,
-                        'account_invoice_line': line.id,
-                        }, context=context)
+                    member_line_obj.create(cr, uid, {
+                                    'partner': line.invoice_id.partner_id.id,
+                                    'membership_id': line.product_id.id,
+                                    'member_price': line.price_unit,
+                                    'date': time.strftime('%Y-%m-%d'),
+                                    'date_from': date_from,
+                                    'date_to': date_to,
+                                    'account_invoice_line': line.id,
+                                    }, context=context)
                 if line.product_id and not line.product_id.membership and ml_ids:
                     # Product line has changed to a non membership product
                     member_line_obj.unlink(cr, uid, ml_ids, context=context)
@@ -564,7 +563,7 @@ class account_invoice_line(osv.osv):
                 date_to = line.product_id.membership_date_to
                 if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                     date_from = line.invoice_id.date_invoice
-                line_id = member_line_obj.create(cr, uid, {
+                member_line_obj.create(cr, uid, {
                             'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
                             'membership_id': line.product_id.id,
                             'member_price': line.price_unit,

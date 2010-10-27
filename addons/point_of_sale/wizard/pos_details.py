@@ -22,8 +22,6 @@
 import time
 
 from osv import osv, fields
-from tools.translate import _
-
 
 class pos_details(osv.osv_memory):
     _name = 'pos.details'
