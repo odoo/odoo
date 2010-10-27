@@ -19,11 +19,7 @@
 #
 ##############################################################################
 
-import time
-
 from osv import fields, osv
-from tools.translate import _
-import tools
 import decimal_precision as dp
 
 class membership_invoice(osv.osv_memory):
@@ -35,7 +31,7 @@ class membership_invoice(osv.osv_memory):
         'product_id': fields.many2one('product.product','Membership', required=True),
         'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True),
     }
-    def onchange_product(self, cr, uid, ids, product_id):
+    def onchange_product(self, cr, uid, ids, product_id=False):
         """This function returns value of  product's member price based on product id.
         """
         if not product_id:
@@ -49,15 +45,14 @@ class membership_invoice(osv.osv_memory):
         datas = {}
         if not context:
             context = {}
-        data = self.browse(cr, uid, ids)
+        data = self.browse(cr, uid, ids, context=context)
         if data:
             data = data[0]
             datas = {
                 'membership_product_id': data.product_id.id,
                 'amount': data.member_price
             }
-        invoice_ids = context.get('active_ids', [])
-        invoice_list = partner_obj.create_membership_invoice(cr, uid, invoice_ids, datas=datas, context=context)
+        invoice_list = partner_obj.create_membership_invoice(cr, uid, context.get('active_ids', []), datas=datas, context=context)
 
         return  {
             'domain': [('id', 'in', invoice_list)],

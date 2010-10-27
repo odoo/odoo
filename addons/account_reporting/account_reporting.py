@@ -18,19 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
+
 import netsvc
 from osv import fields, osv
-
 from tools.misc import currency
-
 
 class color_rml(osv.osv):
     _name = "color.rml"
     _description = "Rml Color"
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'code': fields.char('code',size=64,required=True),
+        'code': fields.char('code', size=64, required=True),
         }
 
 color_rml()
@@ -39,44 +39,44 @@ class account_report_bs(osv.osv):
     _name = "account.report.bs"
     _description = "Account reporting for Balance Sheet"
     _font = [
-             ('',''),
-             ('Courier','Courier'),
-             ('Courier-Bold','Courier-Bold'),
-             ('Courier-BoldOblique','Courier-BoldOblique'),
-             ('Courier-Oblique','Courier-Oblique'),
-             ('Helvetica','Helvetica'),
-             ('Helvetica-Bold','Helvetica-Bold'),
-             ('Helvetica-Oblique','Helvetica-Oblique'),
-             ('Times-Bold','Times-Bold'),
-             ('Times-BoldItalic','Times-BoldItalic'),
-             ('Times-Italic','Times-Italic'),
-             ('Times-Roman','Times-Roman'),
+             ('', ''),
+             ('Courier', 'Courier'),
+             ('Courier-Bold', 'Courier-Bold'),
+             ('Courier-BoldOblique', 'Courier-BoldOblique'),
+             ('Courier-Oblique', 'Courier-Oblique'),
+             ('Helvetica', 'Helvetica'),
+             ('Helvetica-Bold', 'Helvetica-Bold'),
+             ('Helvetica-Oblique', 'Helvetica-Oblique'),
+             ('Times-Bold', 'Times-Bold'),
+             ('Times-BoldItalic', 'Times-BoldItalic'),
+             ('Times-Italic', 'Times-Italic'),
+             ('Times-Roman', 'Times-Roman'),
             ]
     _color = [
             ('', ''),
-            ('green','Green'),
-            ('red','Red'),
-            ('pink','Pink'),
-            ('blue','Blue'),
-            ('yellow','Yellow'),
-            ('cyan','Cyan'),
-            ('lightblue','Light Blue'),
-            ('orange','Orange'),
+            ('green', 'Green'),
+            ('red', 'Red'),
+            ('pink', 'Pink'),
+            ('blue', 'Blue'),
+            ('yellow', 'Yellow'),
+            ('cyan', 'Cyan'),
+            ('lightblue', 'Light Blue'),
+            ('orange', 'Orange'),
             ]
     _style = [
             ('', ''),
-            ('h1','Header 1'),
-            ('h2','Header 2'),
-            ('h3','Header 3'),
+            ('h1', 'Header 1'),
+            ('h2', 'Header 2'),
+            ('h3', 'Header 3'),
             ]
 
     def onchange_parent_id(self, cr, uid, ids, parent_id):
-        v={}
+        v = {}
         if parent_id:
-            acc=self.pool.get('account.report.report').browse(cr, uid, parent_id)
-            v['type']=acc.type
+            acc = self.pool.get('account.report.report').browse(cr, uid, parent_id)
+            v['type'] = acc.type
             if int(acc.style) < 6:
-                v['style'] = str(int(acc.style)+1)
+                v['style'] = str(int(acc.style) + 1)
         return {'value': v}
 
     _columns = {
@@ -85,36 +85,35 @@ class account_report_bs(osv.osv):
         'code': fields.char('Code', size=64, required=True),
         'account_id': fields.many2many('account.account', 'account_report_rel', 'report_id', 'account_id', 'Accounts'),
         'note': fields.text('Note'),
-        'color_font' : fields.many2one('color.rml','Font Color'),
-        'color_back' : fields.many2one('color.rml','Back Color'),
-        'font_style' : fields.selection(_font, 'Font'),
+        'color_font': fields.many2one('color.rml', 'Font Color'),
+        'color_back': fields.many2one('color.rml', 'Back Color'),
+        'font_style': fields.selection(_font, 'Font'),
         'parent_id': fields.many2one('account.report.bs', 'Parent'),
         'child_id': fields.one2many('account.report.bs', 'parent_id', 'Children'),
-        'report_type' : fields.selection([('only_obj', 'Report Objects Only'),('with_account', 'Report Objects With Accounts'),('acc_with_child', 'Report Objects With Accounts and child of Accounts')],"Report Type")
+        'report_type': fields.selection([('only_obj', 'Report Objects Only'), ('with_account', 'Report Objects With Accounts'), ('acc_with_child', 'Report Objects With Accounts and child of Accounts')], "Report Type")
     }
     _defaults = {
-        'report_type': lambda *a :'only_obj',
-        'color_font': lambda *a :'',
-        'color_back': lambda *a :'',
-        'font_style': lambda *a :'',
+        'report_type': 'only_obj',
+        'color_font': '',
+        'color_back': '',
+        'font_style': '',
     }
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
+            args = []
         if not context:
-            context={}
+            context = {}
         ids = []
         if name:
-            ids = self.search(cr, user, [('code','=',name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('code', '=', name)]+ args, limit=limit, context=context)
             if not ids:
-                ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+                ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
 account_report_bs()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

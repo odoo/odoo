@@ -26,6 +26,8 @@ import tools
 from tools.translate import _
 import addons
 
+import addons
+
 class hr_employee_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
@@ -182,7 +184,7 @@ class hr_employee(osv.osv):
 
     def _get_photo(self, cr, uid, context=None):
         return open(addons.get_module_resource('hr','image','photo.png'),
-                    'rb') .read().encode('base64')
+                    'rb').read().encode('base64')
 
     _defaults = {
         'active': 1,

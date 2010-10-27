@@ -30,26 +30,26 @@ class sale_report(osv.osv):
     _columns = {
         'date': fields.date('Date Order', readonly=True),
         'date_confirm': fields.date('Date Confirm', readonly=True),
-        'shipped':fields.boolean('Shipped', readonly=True),
-        'shipped_qty_1':fields.integer('Shipped Qty', readonly=True),
+        'shipped': fields.boolean('Shipped', readonly=True),
+        'shipped_qty_1': fields.integer('Shipped Qty', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
+            ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
+            ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
-        'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'uom_name': fields.char('Default UoM', size=128, readonly=True),
-        'product_uom_qty':fields.float('# of Qty', readonly=True),
+        'product_uom_qty': fields.float('# of Qty', readonly=True),
 
-        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
-        'shop_id':fields.many2one('sale.shop', 'Shop', readonly=True),
-        'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
-        'price_total':fields.float('Total Price', readonly=True),
-        'delay':fields.float('Commitment Delay', digits=(16,2), readonly=True),
-        'price_average':fields.float('Average Price', readonly=True,group_operator="avg"),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
+        'shop_id': fields.many2one('sale.shop', 'Shop', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
+        'price_total': fields.float('Total Price', readonly=True),
+        'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
+        'price_average': fields.float('Average Price', readonly=True,group_operator="avg"),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
-        'nbr':fields.integer('# of Lines', readonly=True),
+        'nbr': fields.integer('# of Lines', readonly=True),
         'state': fields.selection([
             ('draft', 'Quotation'),
             ('waiting_date', 'Waiting Schedule'),
@@ -124,5 +124,4 @@ class sale_report(osv.osv):
         """)
 sale_report()
 
-
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
