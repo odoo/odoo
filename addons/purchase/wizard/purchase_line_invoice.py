@@ -111,8 +111,6 @@ class purchase_line_invoice(osv.osv_memory):
             for line in purchase_line_obj.browse(cr,uid,record_ids):
                 if (not line.invoiced) and (line.state not in ('draft','cancel')):
                     if not line.partner_id.id in invoices:
-                        #création des clés
-                        print "id of partner %d" % line.partner_id.id
                         invoices[line.partner_id.id] = []
                     if line.product_id:
                         a = line.product_id.product_tmpl_id.property_account_expense.id
