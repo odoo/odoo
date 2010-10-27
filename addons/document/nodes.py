@@ -366,12 +366,14 @@ class node_class(object):
     def create_child(self, cr, path, data=None):
         """ Create a regular file under this node
         """
-        raise NotImplementedError(repr(self))
+        logger.warning("Attempted to create a file under %r, not possible.", self)
+        raise IOError(errno.EPERM, "Not allowed to create files here")
     
     def create_child_collection(self, cr, objname):
         """ Create a child collection (directory) under self
         """
-        raise NotImplementedError(repr(self))
+        logger.warning("Attempted to create a collection under %r, not possible.", self)
+        raise IOError(errno.EPERM, "Not allowed to create folders here")
 
     def rm(self, cr):
         raise NotImplementedError(repr(self))
