@@ -791,7 +791,7 @@ class node_res_dir(node_class):
         ctx.update(self.dctx)
         where = []
         if self.domain:
-            app = safe_eval(self.domain, self.dctx)
+            app = safe_eval(self.domain, ctx)
             if not app:
                 pass
             elif isinstance(app, list):
