@@ -191,6 +191,17 @@ msgid "Your bank BVR number should be of the form 0X-XXX-X!\n' \\n"
 msgstr ""
 
 #. module: l10n_ch
+#: code:addons/l10n_ch/wizard/create_dta.py:0
+#, python-format
+msgid "No address defined \n' \\n"
+"                    'for the partner: ' + pline.partner_id.name + '\n' \\n"
+"                    'on line: ' + pline.name))\n"
+"\n"
+"        if pline.order_id.date_scheduled:\n"
+"            date_value = datetime.strptime(pline.order_id.date_scheduled, '%Y-%m-%d"
+msgstr ""
+
+#. module: l10n_ch
 #: view:bvr.invoices.report:0
 #: view:bvr.report:0
 msgid "Print"

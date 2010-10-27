@@ -205,7 +205,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv("Operation not supported", "Sorry, campaign duplication is not supported at the moment.")
+        raise osv.except_osv(_("Operation not supported"), _("Sorry, campaign duplication is not supported at the moment."))
 
 marketing_campaign()
 

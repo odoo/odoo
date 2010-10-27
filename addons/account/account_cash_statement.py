@@ -241,14 +241,14 @@ class account_cash_statement(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if 'journal_id' not in vals:
-            raise osv.except_osv('Error', _('You cannot create a bank or cash register without a journal!'))
+            raise osv.except_osv(_('Error'), _('You cannot create a bank or cash register without a journal!'))
         sql = [
                 ('journal_id', '=', vals.get('journal_id', False)),
                 ('state', '=', 'open')
         ]
         open_jrnl = self.search(cr, uid, sql)
         if open_jrnl:
-            raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
+            raise osv.except_osv(_('Error'), _('You can not have two open register for the same journal'))
 
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id']).type == 'cash':
             open_close = self._get_cash_open_close_box_lines(cr, uid, context)
