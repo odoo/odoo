@@ -476,9 +476,9 @@
                 <search string="Stock Locations">
                     <filter icon="terp-go-home" name="in_location"
                         string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations" />
-                    <filter icon="terp-go-home" name="customer"
+                    <filter icon="terp-personal" name="customer"
                         string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations" />
-                    <filter icon="terp-go-home" name="supplier"
+                    <filter icon="terp-personal" name="supplier"
                         string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations" />
                     <separator orientation="vertical"/>
                     <field name="name"/>
@@ -766,7 +766,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
-                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'address_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'address_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
@@ -960,7 +960,7 @@
                    </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
-                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
@@ -1179,7 +1179,7 @@
                     </group>
 					<newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
-                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter icon="terp-stock_effects-object-colorize" name="state" string="State" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
