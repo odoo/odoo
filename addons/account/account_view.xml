@@ -33,8 +33,8 @@
                     <separator colspan="4" string="States"/>
                     <group>
                         <field name="state" select="1" readonly="1"/>
-                        <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="gtk-dnd"/>
-                        <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="gtk-dnd"/>
+                        <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="terp-document-new"/>
+                        <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="terp-document-new"/>
                     </group>
                 </form>
             </field>
@@ -207,7 +207,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Parent Account" icon="terp-folder-green" domain="" context="{'group_by':'parent_id'}"/>
+                        <filter string="Parent Account" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Account Type" icon="terp-folder-blue" domain="" context="{'group_by':'user_type'}"/>
                         <filter string="Internal Type" icon="terp-folder-yellow" domain="" context="{'group_by':'type'}"/>
