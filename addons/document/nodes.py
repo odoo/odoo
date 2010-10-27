@@ -478,6 +478,16 @@ def mkdosname(company_name, default='noname'):
     return n
     
 
+def _uid2unixperms(perms, has_owner):
+    """ Convert the uidperms and the owner flag to full unix bits
+    """
+    res = 0
+    res |= (perms & 0x07) << 6
+    res |= (perms & 0x05) << 3
+    if not has_owner:
+        res |= 0x05
+    return res
+
 class node_dir(node_database):
     our_type = 'collection'
     def __init__(self, path, parent, context, dirr, dctx=None):
@@ -492,13 +502,13 @@ class node_dir(node_database):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr and (dirr.write_date or dirr.create_date) or False
         self.content_length = 0
-        self.unixperms = 040750
         try:
             self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
         except Exception:
             self.uuser = 'nobody'
         self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
         self.uidperms = dirr.get_dir_permissions()
+        self.unixperms = 040000 | _uid2unixperms(self.uidperms, dirr and dirr.user_id)
         if dctx:
             self.dctx.update(dctx)
         dc2 = self.context.context
@@ -731,13 +741,13 @@ class node_res_dir(node_class):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
-        self.unixperms = 040750
         try:
             self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
         except Exception:
             self.uuser = 'nobody'
         self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
         self.uidperms = dirr.get_dir_permissions()
+        self.unixperms = 040000 | _uid2unixperms(self.uidperms, dirr and dirr.user_id)
         self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
         self.resm_id = dirr.ressource_id
         self.res_find_all = dirr.resource_find_all
@@ -855,8 +865,8 @@ class node_res_obj(node_class):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = parent.write_date
         self.content_length = 0
-        self.unixperms = 040750
         self.uidperms = parent.uidperms & 15
+        self.unixperms = 040000 | _uid2unixperms(self.uidperms, True)
         self.uuser = parent.uuser
         self.ugroup = parent.ugroup
         self.res_model = res_model

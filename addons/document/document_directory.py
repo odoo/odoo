@@ -21,6 +21,7 @@
 
 
 from osv import osv, fields
+from osv.orm import except_orm
 
 import os
 import nodes
@@ -212,22 +213,20 @@ class document_directory(osv.osv):
         """
         return
 
-    def get_dir_permissions(self, cr, uid, ids ):
+    def get_dir_permissions(self, cr, uid, ids, context=None ):
         """Check what permission user 'uid' has on directory 'id'
         """
         assert len(ids) == 1
         id = ids[0]
 
-        cr.execute( "SELECT count(dg.item_id) AS needs, count(ug.uid) AS has " \
-                " FROM document_directory_group_rel dg " \
-                "   LEFT OUTER JOIN res_groups_users_rel ug " \
-                "   ON (dg.group_id = ug.gid AND ug.uid = %s) " \
-                " WHERE dg.item_id = %s ", (uid, id))
-        needs, has = cr.fetchone()
-        if needs and not has:
-            return 1  # still allow to descend into.
-        else:
-            return 15
+        res = 0
+        for pperms in [('read', 5), ('write', 2), ('unlink', 8)]:
+            try:
+                self.check_access_rule(cr, uid, ids, pperms[0], context=context)
+                res |= pperms[1]
+            except except_orm:
+                pass
+        return res
 
     def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
         """ try to locate the node in uri,
