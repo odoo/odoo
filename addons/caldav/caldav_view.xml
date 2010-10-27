@@ -21,6 +21,7 @@
         <field name="arch" type="xml">
             <tree string="Calendar Collections" toolbar="1">
                 <field name="name"/>
+                <field name="parent_id"/>
                 <field name="user_id"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
@@ -127,8 +128,10 @@
                 <field name="name"/>
                 <field name="type"/>
                 <field name="user_id"/>
-                <field name="create_date"/>
-                <field name="write_date"/>
+                <field name="collection_id" required="1"/>
+                <field name="has_webcal" groups="base.group_extended" />
+                <field name="calendar_color" groups="base.group_extended" />
+                <field name="calendar_order" groups="base.group_extended" />
             </tree>
         </field>
     </record>
