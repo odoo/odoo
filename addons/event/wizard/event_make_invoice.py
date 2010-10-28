@@ -75,10 +75,10 @@ class event_make_invoice(osv.osv_memory):
         for data in self.browse(cr, uid, ids, context=context):
             res = reg_obj.action_invoice_create(cr, uid, context.get(('active_ids'),[]), data.grouped, date_inv = data.invoice_date)
 
-        form_id = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
-        form_res = mod_obj.browse(cr, uid, form_id, context=context).res_id
-        tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
-        tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
+        form_id = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form') or False
+        form_res = form_id and form_id[1] or False
+        tree_id = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree') or False
+        tree_res = tree_id and tree_id[1] or False
         return {
             'domain': "[('id', 'in', %s)]" % res,
             'name': 'Customer Invoices',
