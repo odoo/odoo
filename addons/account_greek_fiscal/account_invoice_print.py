@@ -21,6 +21,7 @@
 ##############################################################################
 
 from osv import fields, osv
+import netsvc
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
@@ -53,7 +54,28 @@ class account_invoice(osv.osv):
         return super(account_invoice,self).action_cancel(cr,uid,ids,args)
 	
     def action_fiscalgr_print(self, cr, uid, ids, *args):
-	    raise osv.except_osv(_('Invalid action !'), _('Cannot print such an invoice !'))
+	fiscalgr_obj = self.pool.get('account.fiscalgr.print')
+	logger = netsvc.Logger()
+        invoices = self.read(cr, uid, ids, ['id','number','state','type','fiscalgr_print'])
+	# First, iterate once to check if the invoices are valid for printing.
+        for i in invoices:
+	    if not i['number']:
+		raise osv.except_osv(_('Cannot print!'), _('Cannot print invoice, because it is not numbered!'))
+	    if i['state'] != 'open':
+		raise osv.except_osv(_('Cannot print!'), _('Cannot print invoice \"%s\" which is not open.')%i['number'])
+	    if (not i['type'] or (i['type'][0:3] != 'out')):
+		raise osv.except_osv(_('Cannot print!'), _('Cannot print invoice \"%s\", it is not an outgoing one.')%i['number'])
+            if i['fiscalgr_print']:
+	    	raise osv.except_osv(_('Cannot print!'), _('Cannot print invoice \"%s\" which is already printed !')%i['number'])
+	    #raise osv.except_osv(_('Invalid action !'), _('Cannot print such an invoice !'))
+	
+	#Then, iterate again, and issue those invoices for printing
+	for i in invoices:
+		if fiscalgr_obj.print_invoice(cr,uid,i,self._name, i['type']):
+			self.write(cr,uid,i['id'],{'state':'printed'})
+			logger.notifyChannel("fiscalgr", netsvc.LOG_INFO, 'printed invoice %s'%i['number'])
+       
+	return True
 
 account_invoice()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

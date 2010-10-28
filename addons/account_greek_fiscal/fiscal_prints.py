@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import netsvc
 from osv import osv, fields
 
 class fiscal_print(osv.osv):
@@ -37,6 +38,9 @@ class fiscal_print(osv.osv):
   }
   _defaults = {
   }
+  def print_invoice(self,cr,uid,inv_data,inv_model, inv_type):
+	logger=netsvc.Logger()
+	logger.notifyChannel("fiscalgr", netsvc.LOG_INFO, 'printing one %s invoice '%inv_type)
 
 fiscal_print()
 
