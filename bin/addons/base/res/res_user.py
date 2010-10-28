@@ -263,7 +263,7 @@ class users(osv.osv):
     ]
 
     _sql_constraints = [
-        ('login_key', 'UNIQUE (login)',  _('You can not have two users with the same login !'))
+        ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
 
     def _get_email_from(self, cr, uid, ids, context=None):
