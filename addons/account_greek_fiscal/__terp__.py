@@ -23,6 +23,7 @@
     "name" : "Greek Fiscal printing",
     "version" : "0.1",
     "depends" : ["account" ],
+    "ext_depends" : ["python-cups"],
     "author" : "P. Christeas",
     "description": """This enables the greek fiscal printing of reports (invoices). 
     When an invoice is settled, it is marked by the (legal) fiscal machine and locked
