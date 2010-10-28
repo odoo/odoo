@@ -27,7 +27,7 @@
             <field name="name">Γήπεδα-Οικόπεδα</field>
             <field eval="chartgr_10" name="parent_id"/>
             <field name="type">other</field>
-            <field name="nocreate" />
+            <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_asset"/>
             <field name="note"></field>
         </record>
@@ -37,7 +37,7 @@
             <field name="name">Ορυχεία</field>
             <field eval="chartgr_10" name="parent_id"/>
             <field name="type">other</field>
-            <field name="nocreate" eval="1"/>
+            <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_asset"/>
             <field name="note"></field>
         </record>
@@ -47,7 +47,7 @@
             <field name="name">Μεταλλεία</field>
             <field eval="chartgr_10" name="parent_id"/>
             <field name="type">other</field>
-            <field name="nocreate" >1</field>
+            <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_asset"/>
             <field name="note"></field>
         </record>
@@ -234,7 +234,7 @@
 
        <record id="chartgr_11_08" model="account.account.template">
             <field name="code">11.08</field>
-            <field name="name">Τεχνικά έργα εξυπηρέτησεις μεταφορών σε ακινητα τρίτων</field>
+            <field name="name">Τεχνικά έργα εξυπηρετήσεις μεταφορών σε ακίνητα τρίτων</field>
             <field eval="chartgr_11" name="parent_id"/>
             <field name="type">other</field>
             <field name="nocreate" eval="True"/>
@@ -314,7 +314,7 @@
 
        <record id="chartgr_11_22" model="account.account.template">
             <field name="code">11.22</field>
-            <field name="name">Τεχνικά έργα εξθπηρέτησης μεταφορών σε ακίνητα τρίτων εκτός εκμετ/σης</field>
+            <field name="name">Τεχνικά έργα εξυπηρέτησης μεταφορών σε ακίνητα τρίτων εκτός εκμετ/σης</field>
             <field eval="chartgr_11" name="parent_id"/>
             <field name="type">other</field>
             <field name="nocreate" eval="True"/>
@@ -344,7 +344,7 @@
 
        <record id="chartgr_11_99" model="account.account.template">
             <field name="code">11.99</field>
-            <field name="name">Αποσβεσμένα κτίρια - εγκαταστάσεις κτιρίων - Τεχνικά έργα</field>
+            <field name="name">Αποσβεσμένα κτίρια – εγκαταστάσεις κτιρίων - Τεχνικά έργα</field>
             <field eval="chartgr_11" name="parent_id"/>
             <field name="type">other</field>
             <field name="nocreate" eval="True"/>
@@ -2456,7 +2456,7 @@
             <field name="code">30</field>
             <field name="name">ΠΕΛΑΤΕΣ</field>
             <field eval="chartgr_3" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2466,7 +2466,7 @@
             <field name="code">30.00</field>
             <field name="name">Πελάτες εσωτερικού</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2476,7 +2476,7 @@
             <field name="code">30.01</field>
             <field name="name">Πελάτες εξωτερικού</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2486,7 +2486,7 @@
             <field name="code">30.02</field>
             <field name="name">Ελληνικό Δημόσιο</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2496,7 +2496,7 @@
             <field name="code">30.03</field>
             <field name="name">Ν.Π.Δ.Δ. Και Δημόσιες Επιχειρήσεις</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2506,7 +2506,7 @@
             <field name="code">30.04</field>
             <field name="name">Πελάτες - Εγγυήσεις ειδών συσκευασίας </field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2516,7 +2516,7 @@
             <field name="code">30.05</field>
             <field name="name">Προκαταβολές πελατών</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2526,7 +2526,7 @@
             <field name="code">30.06</field>
             <field name="name">Πελάτες - Παρακρατημένες εγγυήσεις</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2536,7 +2536,7 @@
             <field name="code">30.07</field>
             <field name="name">Πελάτες αντίθετος λογ. αξίας ειδών συσκευασίας</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2546,7 +2546,7 @@
             <field name="code">30.80</field>
             <field name="name">Πελάτες εσωτερικού εκχωρ. με σύμβαση Factoring</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2556,7 +2556,7 @@
             <field name="code">30.81</field>
             <field name="name">Πελάτες εξωτερικού εκχωρ. με σύμβαση Factoring</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2566,7 +2566,7 @@
             <field name="code">30.82</field>
             <field name="name">Πελάτες Ελλ.Δημόσιο εκχώρ με σύμβαση Factoring</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2576,7 +2576,7 @@
             <field name="code">30.83</field>
             <field name="name">Πελάτες N.Π.Δ.Δ. εκχώρηθέντες  με σύμβαση Factoring</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2586,7 +2586,7 @@
             <field name="code">30.90</field>
             <field name="name">Έξοδα για λογαριασμό Πελατών</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2596,7 +2596,7 @@
             <field name="code">30.97</field>
             <field name="name">Πελάτες επισφαλείς</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2606,7 +2606,7 @@
             <field name="code">30.98</field>
             <field name="name">Ελληνικό Δημόσιο (με την ιδιότητα του πελάτη) λογ. επίδικων απαιτήσεων</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2616,7 +2616,7 @@
             <field name="code">30.99</field>
             <field name="name">Λοιποί πελάτες λογ/σμός επίδικων απαιτήσεων</field>
             <field eval="chartgr_30" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2626,7 +2626,7 @@
             <field name="code">31</field>
             <field name="name">ΓΡΑΜΜΑΤΙΑ ΕΙΣΠΡΑΚΤΕΑ</field>
             <field eval="chartgr_3" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2636,7 +2636,7 @@
             <field name="code">31.00</field>
             <field name="name">Γραμμάτια στο χαρτοφυλάκιο</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2646,7 +2646,7 @@
             <field name="code">31.01</field>
             <field name="name">Γραμμάτια στις Τράπεζες για είσπραξη</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2656,7 +2656,7 @@
             <field name="code">31.02</field>
             <field name="name">Γραμμάτια στις Τράπεζες σε εγγύηση</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2666,7 +2666,7 @@
             <field name="code">31.03</field>
             <field name="name">Γραμμάτια σε καθυστέρηση</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2676,7 +2676,7 @@
             <field name="code">31.04</field>
             <field name="name">Γραμμάτια μεταβιβασμένα σε τρίτους</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2686,7 +2686,7 @@
             <field name="code">31.05</field>
             <field name="name">Γραμμάτια προεξοφλημένα</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2696,7 +2696,7 @@
             <field name="code">31.06</field>
             <field name="name">Μη δεδουλευμένοι τόκοι γραμματίων εισπρακτέων</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2706,7 +2706,7 @@
             <field name="code">31.07</field>
             <field name="name">Γραμμάτια σε Ξ.Ν στο χαρτοφυλάκιο</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2716,7 +2716,7 @@
             <field name="code">31.08</field>
             <field name="name">Γραμμάτια σε Ξ.Ν στις Τράπεζες για είσπραξη</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2726,7 +2726,7 @@
             <field name="code">31.09</field>
             <field name="name">Γραμμάτια σε Ξ.Ν στις Τράπεζες σε εγγύηση</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2736,7 +2736,7 @@
             <field name="code">31.10</field>
             <field name="name">Γραμμάτια σε Ξ.Ν σε καθυστέρηση</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2746,7 +2746,7 @@
             <field name="code">31.11</field>
             <field name="name">Γραμμάτια σε Ξ.Ν μεταβιβασμένα σε τρίτους</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2756,7 +2756,7 @@
             <field name="code">31.12</field>
             <field name="name">Γραμμάτια σε Ξ.Ν προεξοφλημένα</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2766,7 +2766,7 @@
             <field name="code">31.13</field>
             <field name="name">Μη δεδουλευμένοι τόκοι γραμματίων εισπρακτέων σε Ξ.Ν.</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2776,7 +2776,7 @@
             <field name="code">31.90</field>
             <field name="name">Υποσχετικές επιστολές εισπρακτέες σε δρχ.</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2786,7 +2786,7 @@
             <field name="code">31.91</field>
             <field name="name">Υποσχετικές επιστολές εισπρακτέες σε Ξ.Ν.</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2796,7 +2796,7 @@
             <field name="code">31.94</field>
             <field name="name">Γραμμάτια στις Τράπεζες για είσπραξη (Factoring)</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2806,7 +2806,7 @@
             <field name="code">31.95</field>
             <field name="name">Τίτλοι trade credit</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -2816,7 +2816,7 @@
             <field name="code">31.99</field>
             <field name="name">Διάμεσος λογ.ελένχου διακίνησης γραμματίων εισπρακτέων</field>
             <field eval="chartgr_31" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -3816,7 +3816,7 @@
             <field name="code">39</field>
             <field name="name">ΑΠΑΙΤΗΣΕΙΣ ΚΑΙ ΔΙΑΘΕΣΙΜΑ ΥΠΟΚΑΤΑΣΤΗΜΑΤΩΝ Ή ΑΛΛΩΝ ΚΕΝΤΡΩΝ</field>
             <field eval="chartgr_3" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"> (Όμιλος λογαριασμών προαιρετικής χρήσης)</field>
@@ -3826,7 +3826,7 @@
             <field name="code">39.30</field>
             <field name="name">Πελάτες </field>
             <field eval="chartgr_39" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -3836,7 +3836,7 @@
             <field name="code">39.31</field>
             <field name="name">Γραμμάτια εισπρακτέα</field>
             <field eval="chartgr_39" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -3846,7 +3846,7 @@
             <field name="code">39.32</field>
             <field name="name">Παραγγελίες στο εξωτερικό</field>
             <field eval="chartgr_39" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -3856,7 +3856,7 @@
             <field name="code">39.33</field>
             <field name="name">Χρεώστες Διάφοροι</field>
             <field eval="chartgr_39" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -3866,7 +3866,7 @@
             <field name="code">39.34</field>
             <field name="name">Χρεώγραφα</field>
             <field eval="chartgr_39" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -3876,7 +3876,7 @@
             <field name="code">39.35</field>
             <field name="name">Λογαρ.διαχειρίσεως Προκατ/λών και πιστώσεων</field>
             <field eval="chartgr_39" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -3886,7 +3886,7 @@
             <field name="code">39.36</field>
             <field name="name">Μεταβατικοί λογαριασμοί Ενεργητικού</field>
             <field eval="chartgr_39" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -3896,7 +3896,7 @@
             <field name="code">39.38</field>
             <field name="name">Χρηματικά Διαθέσιμα</field>
             <field eval="chartgr_39" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             
             <field name="user_type" ref="account_type_receivable"/>
             <field name="note"></field>
@@ -4766,7 +4766,7 @@
             <field name="code">50</field>
             <field name="name">ΠΡΟΜΗΘΕΥΤΕΣ</field>
             <field eval="chartgr_5" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4776,7 +4776,7 @@
             <field name="code">50.00</field>
             <field name="name">Προμηθευτές εσωτερικού</field>
             <field eval="chartgr_50" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4786,7 +4786,7 @@
             <field name="code">50.01</field>
             <field name="name">Προμηθευτές εξωτερικού</field>
             <field eval="chartgr_50" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4796,7 +4796,7 @@
             <field name="code">50.02</field>
             <field name="name">Ελληνικό Δημόσιο</field>
             <field eval="chartgr_50" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4806,7 +4806,7 @@
             <field name="code">50.03</field>
             <field name="name">ΝΠΔΔ και Δημόσιες Επιχειρήσεις</field>
             <field eval="chartgr_50" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4816,7 +4816,7 @@
             <field name="code">50.04</field>
             <field name="name">Προμηθευτές -  Εγγυήσεις ειδών συσκευασίας</field>
             <field eval="chartgr_50" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4826,7 +4826,7 @@
             <field name="code">50.05</field>
             <field name="name">Προκαταβολές σε προμηθευτές</field>
             <field eval="chartgr_50" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4836,7 +4836,7 @@
             <field name="code">50.06</field>
             <field name="name">Προμηθευτές - Παρακρατημένες εγγυήσεις</field>
             <field eval="chartgr_50" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4846,7 +4846,7 @@
             <field name="code">50.07</field>
             <field name="name">Προμηθευτές αντίθετος λοαριασμός, ειδών συσκευασίας</field>
             <field eval="chartgr_50" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4856,7 +4856,7 @@
             <field name="code">50.08</field>
             <field name="name">Προμηθευτές αντίθετος λοαριασμός, παγίων στοιχείων</field>
             <field eval="chartgr_50" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4866,7 +4866,7 @@
             <field name="code">50.90</field>
             <field name="name">Τρίτοι λογ/σμοί πωλήσεων εμπορευμάτων για λογαριασμό τους </field>
             <field eval="chartgr_50" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4876,7 +4876,7 @@
             <field name="code">51</field>
             <field name="name">ΓΡΑΜΜΑΤΙΑ ΠΛΗΡΩΤΕΑ</field>
             <field eval="chartgr_5" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4886,7 +4886,7 @@
             <field name="code">51.00</field>
             <field name="name">Γραμμάτια πληρωτέα σε δρχ.</field>
             <field eval="chartgr_51" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4896,7 +4896,7 @@
             <field name="code">51.01</field>
             <field name="name">Γραμμάτια πληρωτέα σε Ξ.Ν.</field>
             <field eval="chartgr_51" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4906,7 +4906,7 @@
             <field name="code">51.02</field>
             <field name="name">Γραμμάτια πληρωτέα εκδόσης Ν.Π.Δ.Δ. Και Δημοσίων Επιχειρήσεων</field>
             <field eval="chartgr_51" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4916,7 +4916,7 @@
             <field name="code">51.03</field>
             <field name="name">Μη δεδουλευμένοι τόκοι γραμματίων πληρωτέων σε δρχ</field>
             <field eval="chartgr_51" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4926,7 +4926,7 @@
             <field name="code">51.04</field>
             <field name="name">Μη δεδουλευμένοι τόκοι γραμματίων πληρωτέων σε Ξ.Ν.</field>
             <field eval="chartgr_51" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4936,7 +4936,7 @@
             <field name="code">51.05</field>
             <field name="name">Μη δεδουλευμένοι τόκοι γραμματίων πληρωτέων  εκδόσης Ν.Π.Δ.Δ.  και Δημοσίων Επιχειρήσεων (αντίθετος λογαριασμός)</field>
             <field eval="chartgr_51" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4946,7 +4946,7 @@
             <field name="code">51.90</field>
             <field name="name">Υποχρεωτικές επιστολές πληρωτέες σε δρχ</field>
             <field eval="chartgr_51" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -4956,7 +4956,7 @@
             <field name="code">51.91</field>
             <field name="name">Υποχρεωτικές επιστολές πληρωτέες σε Ξ.Ν.</field>
             <field eval="chartgr_51" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5006,7 +5006,7 @@
             <field name="code">53</field>
             <field name="name">ΠΙΣΤΩΤΕΣ ΔΙΑΦΟΡΟΙ</field>
             <field eval="chartgr_5" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5016,7 +5016,7 @@
             <field name="code">53.00</field>
             <field name="name">Αποδοχές προσωπικού πληρωτέες</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5026,7 +5026,7 @@
             <field name="code">53.01</field>
             <field name="name">Μερίσματα πληρωτέα</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5036,7 +5036,7 @@
             <field name="code">53.02</field>
             <field name="name">Προμερίσματα πληρωτέα</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5046,7 +5046,7 @@
             <field name="code">53.03</field>
             <field name="name">Οφειλόμενες αμοιβές προσωπικού</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5056,7 +5056,7 @@
             <field name="code">53.04</field>
             <field name="name">Ομολογίες πληρωτέες</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5066,7 +5066,7 @@
             <field name="code">53.05</field>
             <field name="name">Τοκομερίδια πληρωτέα</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5076,7 +5076,7 @@
             <field name="code">53.06</field>
             <field name="name">Οφειλόμενες δόσεις προσωπικού</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5086,7 +5086,7 @@
             <field name="code">53.07</field>
             <field name="name">Οφειλόμενες δόσεις ομολογιών και λοιπών χρεωγράφων</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5096,7 +5096,7 @@
             <field name="code">53.08</field>
             <field name="name">Δικαιούχοι αμοιβών</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5106,7 +5106,7 @@
             <field name="code">53.09</field>
             <field name="name">Δικαιούχοι χρηματικών εγγυήσεων</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5116,7 +5116,7 @@
             <field name="code">53.10</field>
             <field name="name">Βραχυπρόθεσμες υποχρεώσεις προς συνδεδεμένες επιχειρήσεις σε δρχ</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5126,7 +5126,7 @@
             <field name="code">53.11</field>
             <field name="name">Βραχυπρόθεσμες υποχρεώσεις προς συνδεδεμένες επιχειρήσεις σε Ξ.Ν.</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5136,7 +5136,7 @@
             <field name="code">53.12</field>
             <field name="name">Βραχυπρόθεσμες υποχρεώσεις προς λοιπές συμμετοχικού ενδιαφέροντος  επιχειρήσεις σε δρχ</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5146,7 +5146,7 @@
             <field name="code">53.13</field>
             <field name="name">Βραχυπρόθεσμες υποχρεώσεις προς λοιπές συμμετοχικού ενδιαφέροντος  επιχειρήσεις σε Ξ.Ν.</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5156,7 +5156,7 @@
             <field name="code">53.14</field>
             <field name="name">Βραχυπρόθεσμες υποχρεώσεις προς εταίρους</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5166,7 +5166,7 @@
             <field name="code">53.15</field>
             <field name="name">Δικαιούχοι ομολογιούχοι παροχών επί πλέον τόκου</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5176,7 +5176,7 @@
             <field name="code">53.16</field>
             <field name="name">Μέτοχοι - αξία μετοχών τους προς απόδοση λόγω απόσβεσης ή μείωση  του κεφαλαίου</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5186,7 +5186,7 @@
             <field name="code">53.17</field>
             <field name="name">Μακροπρόθεσμες  υποχρεώσεις πληρωτέες στην επόμενη χρήση σε δρχ.</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5196,7 +5196,7 @@
             <field name="code">53.18</field>
             <field name="name">Μακροπρόθεσμες  υποχρεώσεις πληρωτέες στην επόμενη χρήση σε Ξ.Ν.</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5206,7 +5206,7 @@
             <field name="code">53.90</field>
             <field name="name">Επιταγές πληρωτέες (μεταχρονολογημένες)</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5216,7 +5216,7 @@
             <field name="code">53.98</field>
             <field name="name">Λοιπές βραχυπρόθεσμες υποχρεώσεις σε δρχ.</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5226,7 +5226,7 @@
             <field name="code">53.99</field>
             <field name="name">Λοιπές βραχυπρόθεσμες υποχρεώσεις σε Ξ.Ν.</field>
             <field eval="chartgr_53" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5236,7 +5236,7 @@
             <field name="code">54</field>
             <field name="name">ΥΠΟΧΡΕΩΣΕΙΣ ΑΠΟ ΦΟΡΟΥΣ - ΤΕΛΗ</field>
             <field eval="chartgr_5" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5246,7 +5246,7 @@
             <field name="code">54.00</field>
             <field name="name">Φόρος Προστιθέμενης Αξίας</field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5256,7 +5256,7 @@
             <field name="code">54.01</field>
             <field name="name">Ειδικός φόρος κατανάλωσης</field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5266,7 +5266,7 @@
             <field name="code">54.03</field>
             <field name="name">Φόροι - Τέλη αμοιβών προσωπικού</field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5276,7 +5276,7 @@
             <field name="code">54.03.00</field>
             <field name="name">Φόρος μισθωτών υπηρεσιών</field>
             <field eval="chartgr_54_03" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5286,7 +5286,7 @@
             <field name="code">54.03.02</field>
             <field name="name">Χαρτόσημο και ΟΓΑ μισθωτών υπηρεσιών</field>
             <field eval="chartgr_54_03" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5296,7 +5296,7 @@
             <field name="code">54.03.04</field>
             <field name="name">Φόρος αποζημιώσεων απολυομένων</field>
             <field eval="chartgr_54_03" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5306,7 +5306,7 @@
             <field name="code">54.03.06</field>
             <field name="name">Χαρτόσημο και ΟΓΑ αποζημιώσεων απολυομένων</field>
             <field eval="chartgr_54_03" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5316,7 +5316,7 @@
             <field name="code">54.04</field>
             <field name="name">Φόροι - Τέλη αμοιβών τρίτων </field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5326,7 +5326,7 @@
             <field name="code">54.04.00</field>
             <field name="name">Φόρος αμοιβών ελευθέρων επαγγελματιών</field>
             <field eval="chartgr_54_04" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5336,7 +5336,7 @@
             <field name="code">54.04.01</field>
             <field name="name">Χαρτόσημο και ΟΓΑ αμοιβών ελευθέρων επαγγελματιών</field>
             <field eval="chartgr_54_04" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5346,7 +5346,7 @@
             <field name="code">54.04.02</field>
             <field name="name">Χαρτόσημο και ΟΓΑ λοιπών αμοιβών τρίτων</field>
             <field eval="chartgr_54_04" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5356,7 +5356,7 @@
             <field name="code">54.05</field>
             <field name="name">Φόροι - Τέλη κυκλοφορίας μεταφορικών μέσων</field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5366,7 +5366,7 @@
             <field name="code">54.06</field>
             <field name="name">Φόροι - Τέλη τιμολογιών αγοράς</field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5376,7 +5376,7 @@
             <field name="code">54.07</field>
             <field name="name">Φόρος εισοδήματος φορολογητέων κερδών</field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5386,7 +5386,7 @@
             <field name="code">54.08</field>
             <field name="name">Λογ/σμός εκκαθάρισης φόρων-τελών ετήσιας δήλωσης φόρου εισοδήματος</field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5396,7 +5396,7 @@
             <field name="code">54.09</field>
             <field name="name">Λοιποί φόροι και τέλη</field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5406,7 +5406,7 @@
             <field name="code">54.09.00</field>
             <field name="name">Φόρος μερισμάτων</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5416,7 +5416,7 @@
             <field name="code">54.09.01</field>
             <field name="name">Φόρος αμοιβών διοικιτικού συμβουλίου</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5426,7 +5426,7 @@
             <field name="code">54.09.02</field>
             <field name="name">Χαρτόσημα και ΟΓΑ αμοιβών διοικιτικού συμβουλίου</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5436,7 +5436,7 @@
             <field name="code">54.09.03</field>
             <field name="name">Φόρος τόκων</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5446,7 +5446,7 @@
             <field name="code">54.09.04</field>
             <field name="name">Χαρτόσημα και ΟΓΑ τόκων</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5456,7 +5456,7 @@
             <field name="code">54.09.05</field>
             <field name="name">Χαρτόσημα και ΟΓΑ εισοδημάτων από οικοδομές</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5466,7 +5466,7 @@
             <field name="code">54.09.06</field>
             <field name="name">Τέλη ύδρευσης εισοδημάτωναπό οικοδομές</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5476,7 +5476,7 @@
             <field name="code">54.09.07</field>
             <field name="name">Φόροι ακίνητης περιουσίας</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5486,7 +5486,7 @@
             <field name="code">54.09.08</field>
             <field name="name">Φόροι - Τέλη αναγειρόμενων οικοδομών </field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5496,7 +5496,7 @@
             <field name="code">54.09.09</field>
             <field name="name">Τέλη καθαριότητας και φωτισμού</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5506,7 +5506,7 @@
             <field name="code">54.09.10</field>
             <field name="name">Χαρτόσημο και ΟΓΑ δανείων</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5516,7 +5516,7 @@
             <field name="code">54.09.11</field>
             <field name="name">Χαρτόσημο και ΟΓΑ κερδών προσωπικών εταιριών</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5526,7 +5526,7 @@
             <field name="code">54.09.12</field>
             <field name="name">Φόρος αμοιβών εργολάβων</field>
             <field eval="chartgr_54_09" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5536,7 +5536,7 @@
             <field name="code">54.90</field>
             <field name="name">Αγγελιόσημο υπέρ Τ.ΣΠ.ΕΑΘ.</field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5546,7 +5546,7 @@
             <field name="code">54.99</field>
             <field name="name">Φόροι - Τέλη πρηγούμενων χρήσεων</field>
             <field eval="chartgr_54" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5556,7 +5556,7 @@
             <field name="code">55</field>
             <field name="name">ΑΣΦΑΛΙΣΤΙΚΟΙ ΟΡΓΑΝΙΣΜΟΙ</field>
             <field eval="chartgr_5" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5566,7 +5566,7 @@
             <field name="code">55.00</field>
             <field name="name">Ίδρυμα Κοινωνικών Ασφαλίσεων (ΙΚΑ)</field>
             <field eval="chartgr_55" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5576,7 +5576,7 @@
             <field name="code">55.00.00</field>
             <field name="name">Λογαριασμός τρέχουσας κίνησης</field>
             <field eval="chartgr_55_00" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5586,7 +5586,7 @@
             <field name="code">55.00.01</field>
             <field name="name">Λογαριασμός δόσεων καθυστερούμενων κρατήσεων και εισφορών</field>
             <field eval="chartgr_55_00" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5596,7 +5596,7 @@
             <field name="code">55.00.02</field>
             <field name="name">Λογαριασμός τρέχουσας κίνησης εισφορών ανεγειρόμενων οικοδομών</field>
             <field eval="chartgr_55_00" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5606,7 +5606,7 @@
             <field name="code">55.00.03</field>
             <field name="name">Λογαριασμός δωρόσημου ημερισίων οικοδομικών εργασίων</field>
             <field eval="chartgr_55_00" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5616,7 +5616,7 @@
             <field name="code">55.01</field>
             <field name="name">Λοιπά Ταμεία κύριας ασφάλισης</field>
             <field eval="chartgr_55" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5626,7 +5626,7 @@
             <field name="code">55.02</field>
             <field name="name">Επικουρικά Ταμεία</field>
             <field eval="chartgr_55" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5636,7 +5636,7 @@
             <field name="code">55.03</field>
             <field name="name">Εργατική Εστία</field>
             <field eval="chartgr_55" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5646,7 +5646,7 @@
             <field name="code">55.99</field>
             <field name="name">Κρατήσεις &amp; εισφορές καθηστερούμενες προηγουμένων χρήσεων</field>
             <field eval="chartgr_55" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5656,7 +5656,7 @@
             <field name="code">56</field>
             <field name="name">ΜΕΤΑΒΑΤΙΚΟΙ ΛΟΓΑΡΙΑΣΜΟΙ ΠΑΘΗΤΙΚΟΥ</field>
             <field eval="chartgr_5" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5666,7 +5666,7 @@
             <field name="code">56.00</field>
             <field name="name">Έσοδα επομένων χρήσεων</field>
             <field eval="chartgr_56" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5676,7 +5676,7 @@
             <field name="code">56.01</field>
             <field name="name">Έξοδα χρήσης δεδουλευμένα (πληρωτέα)</field>
             <field eval="chartgr_56" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5686,7 +5686,7 @@
             <field name="code">56.02</field>
             <field name="name">Αγορές υπό τακτοποίηση</field>
             <field eval="chartgr_56" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5696,7 +5696,7 @@
             <field name="code">56.03</field>
             <field name="name">Εκπτώσεις επί πωλήσεων χρήσης υπό διακανονισμό</field>
             <field eval="chartgr_56" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5706,7 +5706,7 @@
             <field name="code">56.90</field>
             <field name="name">Πωλήσης ανεγειρόμενων οικοδομών υπό διακανονισμό</field>
             <field eval="chartgr_56" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5716,7 +5716,7 @@
             <field name="code">58</field>
             <field name="name">ΛΟΓΑΡΙΑΣΜΟΙ ΠΕΡΙΟΔΙΚΗΣ ΚΑΤΑΝΟΜΗΣ</field>
             <field eval="chartgr_5" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5726,7 +5726,7 @@
             <field name="code">59</field>
             <field name="name">ΒΡΑΧΥΠΡΟΘΕΣΜΕΣ ΥΠΟΧΡΕΩΣΕΙΣ ΥΠΟΚΑΤΑΣΤΗΜΑΤΩΝ Ή ΑΛΛΩΝ ΚΕΝΤΡΩΝ</field>
             <field eval="chartgr_5" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5736,7 +5736,7 @@
             <field name="code">59.50</field>
             <field name="name">Προμηθευτές</field>
             <field eval="chartgr_59" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5746,7 +5746,7 @@
             <field name="code">59.51</field>
             <field name="name">Γραμμάτια πληρωτέα</field>
             <field eval="chartgr_59" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5756,7 +5756,7 @@
             <field name="code">59.52</field>
             <field name="name">Τράπεζες λογαριασμοί βραχυπρόθεσμων υποχρεώσεων</field>
             <field eval="chartgr_59" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5766,7 +5766,7 @@
             <field name="code">59.53</field>
             <field name="name">Πιστωτές διάφοροι</field>
             <field eval="chartgr_59" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5776,7 +5776,7 @@
             <field name="code">59.54</field>
             <field name="name">Υποχρεώσεις από φόρους - τέλη</field>
             <field eval="chartgr_59" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5786,7 +5786,7 @@
             <field name="code">59.55</field>
             <field name="name">Ασφαλιστικοί οργανισμοί</field>
             <field eval="chartgr_59" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5796,7 +5796,7 @@
             <field name="code">59.56</field>
             <field name="name">Μεταβατικοί λογαριασμοί παθητικού</field>
             <field eval="chartgr_59" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -5806,7 +5806,7 @@
             <field name="code">59.58</field>
             <field name="name">Λογαριασμοί περιοδικής κατανομής</field>
             <field eval="chartgr_59" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="nocreate" eval="True"/>
             <field name="user_type" ref="account_type_payable"/>
             <field name="note"></field>
@@ -6824,7 +6824,7 @@
 
        <record id="chartgr_62_03_10" model="account.account.template">
             <field name="code">62.03.10</field>
-            <field name="name">Αγορές Τηλεκαρτών πρός διάθεση</field>
+            <field name="name">Αγορές Τηλεκαρτών προς διάθεση</field>
             <field eval="chartgr_62_03" name="parent_id"/>
             <field name="type">other</field>
             <field name="nocreate" eval="True"/>
@@ -7144,7 +7144,7 @@
 
        <record id="chartgr_62_98_03" model="account.account.template">
             <field name="code">62.98.03</field>
-            <field name="name">Έξοδα ξενοδοχείωνγια εξυπηρέτηση πελατών μας</field>
+            <field name="name">Έξοδα ξενοδοχείων για εξυπηρέτηση πελατών μας</field>
             <field eval="chartgr_62_98" name="parent_id"/>
             <field name="type">other</field>
             <field name="nocreate" eval="True"/>
@@ -13132,7 +13132,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_02_00" model="account.account.template">
             <field name="code">86.02.00</field>
             <field name="name">Έκτακτα και ανόργανα έσοδα</field>
             <field eval="chartgr_86_02" name="parent_id"/>
@@ -13142,7 +13142,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_02_01" model="account.account.template">
             <field name="code">86.02.01</field>
             <field name="name">Έκτακτα κέρδη</field>
             <field eval="chartgr_86_02" name="parent_id"/>
@@ -13152,7 +13152,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_02_02" model="account.account.template">
             <field name="code">86.02.02</field>
             <field name="name">Έσοδα προηγουμένων χρήσεων</field>
             <field eval="chartgr_86_02" name="parent_id"/>
@@ -13162,7 +13162,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_02_03" model="account.account.template">
             <field name="code">86.02.03</field>
             <field name="name">Έσοδα και προβλέψεις προηγουμένων χρήσεων</field>
             <field eval="chartgr_86_02" name="parent_id"/>
@@ -13172,7 +13172,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_02_07" model="account.account.template">
             <field name="code">86.02.07</field>
             <field name="name">Έκτακτα και ανόργανα έξοδα</field>
             <field eval="chartgr_86_02" name="parent_id"/>
@@ -13182,7 +13182,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_02_08" model="account.account.template">
             <field name="code">86.02.08</field>
             <field name="name">Έκτακτες ζημιές</field>
             <field eval="chartgr_86_02" name="parent_id"/>
@@ -13192,7 +13192,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_02_09" model="account.account.template">
             <field name="code">86.02.09</field>
             <field name="name">Έξοδα προηγουμένων χρήσεων</field>
             <field eval="chartgr_86_02" name="parent_id"/>
@@ -13202,7 +13202,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_02_10" model="account.account.template">
             <field name="code">86.02.10</field>
             <field name="name">Προβλέψεις για έκτακτους κινδύνους</field>
             <field eval="chartgr_86_02" name="parent_id"/>
@@ -13212,7 +13212,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_03" model="account.account.template">
             <field name="code">86.03</field>
             <field name="name">Μη ενσωματωμένες στο λειτουργικό κόστος αποσβέσεις παγίων</field>
             <field eval="chartgr_86" name="parent_id"/>
@@ -13222,7 +13222,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_03_00" model="account.account.template">
             <field name="code">86.03.00</field>
             <field name="name">Εδαφικών εκτάσεων</field>
             <field eval="chartgr_86_03" name="parent_id"/>
@@ -13232,7 +13232,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_03_01" model="account.account.template">
             <field name="code">86.03.01</field>
             <field name="name">Κτιρίων - εγκαταστάσεων κτιρίων - τεχνικών έργων</field>
             <field eval="chartgr_86_03" name="parent_id"/>
@@ -13242,7 +13242,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_03_02" model="account.account.template">
             <field name="code">86.03.02</field>
             <field name="name">Μηχανημάτων - τεχνικών εγκαταστάσεων - λοιπού μηχανολογικού εξοπλισμού</field>
             <field eval="chartgr_86_03" name="parent_id"/>
@@ -13252,7 +13252,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_03_03" model="account.account.template">
             <field name="code">86.03.03</field>
             <field name="name">Μεταφορικών μέσων</field>
             <field eval="chartgr_86_03" name="parent_id"/>
@@ -13262,7 +13262,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_03_04" model="account.account.template">
             <field name="code">86.03.04</field>
             <field name="name">Επίπλων και λοιπού εξοπλισμού</field>
             <field eval="chartgr_86_03" name="parent_id"/>
@@ -13272,7 +13272,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_03_05" model="account.account.template">
             <field name="code">86.03.05</field>
             <field name="name">Ασώματων ακινητοποιήσεων και εξόδων πολυετούς απόσβεσης</field>
             <field eval="chartgr_86_03" name="parent_id"/>
@@ -13282,7 +13282,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_86_99" model="account.account.template">
             <field name="code">86.99</field>
             <field name="name">Καθαρά αποτελέσματα χρήσης</field>
             <field eval="chartgr_86" name="parent_id"/>
@@ -13292,7 +13292,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88" model="account.account.template">
             <field name="code">88</field>
             <field name="name">ΑΠΟΤΕΛΕΣΜΑΤΑ ΠΡΟΣ ΔΙΑΘΕΣΗ</field>
             <field eval="chartgr_8" name="parent_id"/>
@@ -13302,7 +13302,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_00" model="account.account.template">
             <field name="code">88.00</field>
             <field name="name">Καθαρά κέρδη χρήσης</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13312,7 +13312,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_01" model="account.account.template">
             <field name="code">88.01</field>
             <field name="name">Ζημιές χρήσης</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13322,7 +13322,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_02" model="account.account.template">
             <field name="code">88.02</field>
             <field name="name">Υπόλοιπο κερδών προηγούμενης χρήσης</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13332,7 +13332,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_03" model="account.account.template">
             <field name="code">88.03</field>
             <field name="name">Ζημιές προηγούμενης χρήσης προς κάλυψη</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13342,7 +13342,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_04" model="account.account.template">
             <field name="code">88.04</field>
             <field name="name">Ζημιές προηγούμενων χρήσεων προς κάλυψη</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13352,7 +13352,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_06" model="account.account.template">
             <field name="code">88.06</field>
             <field name="name">Διαφορές φορολογικού ελένχου προηγουμένων χρήσεων</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13362,7 +13362,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_07" model="account.account.template">
             <field name="code">88.07</field>
             <field name="name">Λογαριασμός αποθεματικών προς διάθεση</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13372,7 +13372,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_08" model="account.account.template">
             <field name="code">88.08</field>
             <field name="name">Φόρος εισοδήματος και εισφορά ΟΓΑ</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13382,7 +13382,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_09" model="account.account.template">
             <field name="code">88.09</field>
             <field name="name">Λοιποί μη ενσωματωμένοι στο λειτουργικό κόστος φόροι</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13392,7 +13392,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_98" model="account.account.template">
             <field name="code">88.98</field>
             <field name="name">Ζημιές εις νέο</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13402,7 +13402,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_88_99" model="account.account.template">
             <field name="code">88.99</field>
             <field name="name">Κέρδη εις νέο</field>
             <field eval="chartgr_88" name="parent_id"/>
@@ -13412,7 +13412,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_89" model="account.account.template">
             <field name="code">89</field>
             <field name="name">ΙΣΟΛΟΓΙΣΜΟΣ</field>
             <field eval="chartgr_8" name="parent_id"/>
@@ -13422,7 +13422,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_89_00" model="account.account.template">
             <field name="code">89.00</field>
             <field name="name">Ισολογισμός ανοίγματος χρήσης</field>
             <field eval="chartgr_89" name="parent_id"/>
@@ -13432,7 +13432,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_89_01" model="account.account.template">
             <field name="code">89.01</field>
             <field name="name">Ισολογισμός κλεισίματος χρήσης</field>
             <field eval="chartgr_89" name="parent_id"/>
@@ -13442,7 +13442,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_9" model="account.account.template">
             <field name="code">9</field>
             <field name="name">ΛΟΓΑΡΙΑΣΜΟΙ ΑΝΑΛΥΤΙΚΗΣ ΛΟΓΙΣΤΙΚΗΣ ΕΚΜΕΤΑΛΕΥΣΕΩΣ</field>
             <field eval="chartgr_0" name="parent_id"/>
@@ -13452,7 +13452,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_90" model="account.account.template">
             <field name="code">90</field>
             <field name="name">ΔΙΑΜΕΣΟΙ ΑΝΤΙΚΡΥΖΟΜΕΝΟΙ ΛΟΓΑΡΙΑΣΜΟΙ</field>
             <field eval="chartgr_9" name="parent_id"/>
@@ -13462,7 +13462,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_91" model="account.account.template">
             <field name="code">91</field>
             <field name="name">ΑΝΑΚΑΤΑΤΑΞΗ ΕΞΟΔΩΝ - ΑΓΟΡΩΝ ΚΑΙ ΕΣΟΔΩΝ</field>
             <field eval="chartgr_9" name="parent_id"/>
@@ -13472,7 +13472,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_92" model="account.account.template">
             <field name="code">92</field>
             <field name="name">ΚΕΝΤΡΑ (ΘΕΣΕΙΣ) ΚΟΣΤΟΥΣ</field>
             <field eval="chartgr_9" name="parent_id"/>
@@ -13482,7 +13482,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_92_00" model="account.account.template">
             <field name="code">92.00</field>
             <field name="name">Έξοδα λειτουργίας παραγωγής</field>
             <field eval="chartgr_92" name="parent_id"/>
@@ -13492,7 +13492,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_92_01" model="account.account.template">
             <field name="code">92.01</field>
             <field name="name">Έξοδα Διοικητικής λειτουργίας</field>
             <field eval="chartgr_92" name="parent_id"/>
@@ -13502,7 +13502,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_92_02" model="account.account.template">
             <field name="code">92.02</field>
             <field name="name">Έξοδα λειτουργίας ερευνών και ανάπτυξης</field>
             <field eval="chartgr_92" name="parent_id"/>
@@ -13512,7 +13512,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_92_03" model="account.account.template">
             <field name="code">92.03</field>
             <field name="name">Έξοδα λειτουργίας διαθέσεως</field>
             <field eval="chartgr_92" name="parent_id"/>
@@ -13522,7 +13522,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_92_04" model="account.account.template">
             <field name="code">92.04</field>
             <field name="name">Έξοδα χρηματοοικονομικής λειτουργίας</field>
             <field eval="chartgr_92" name="parent_id"/>
@@ -13532,7 +13532,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_93" model="account.account.template">
             <field name="code">93</field>
             <field name="name">ΚΟΣΤΟΣ ΠΑΡΑΓΩΓΗΣ (Παραγωγή σε εξέλιξη)</field>
             <field eval="chartgr_9" name="parent_id"/>
@@ -13542,7 +13542,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94" model="account.account.template">
             <field name="code">94</field>
             <field name="name">ΑΠΟΘΕΜΑΤΑ</field>
             <field eval="chartgr_9" name="parent_id"/>
@@ -13552,7 +13552,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_20" model="account.account.template">
             <field name="code">94.20</field>
             <field name="name">Εμπορεύματα</field>
             <field eval="chartgr_94" name="parent_id"/>
@@ -13562,7 +13562,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_20_97" model="account.account.template">
             <field name="code">94.20.97</field>
             <field name="name">Εμπορεύματα σε τρίτους</field>
             <field eval="chartgr_94_20" name="parent_id"/>
@@ -13572,7 +13572,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_21" model="account.account.template">
             <field name="code">94.21</field>
             <field name="name">Προϊόντα έτοιμα και ημιτελή</field>
             <field eval="chartgr_94" name="parent_id"/>
@@ -13582,7 +13582,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_21_97" model="account.account.template">
             <field name="code">94.21.97</field>
             <field name="name">Προϊόντα έτοιμα και ημιτελή σε τρίτους</field>
             <field eval="chartgr_94_21" name="parent_id"/>
@@ -13592,7 +13592,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_22" model="account.account.template">
             <field name="code">94.22</field>
             <field name="name">Υποπροϊόντα και υπολείμματα</field>
             <field eval="chartgr_94" name="parent_id"/>
@@ -13602,7 +13602,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_22_97" model="account.account.template">
             <field name="code">94.22.97</field>
             <field name="name">Υποπροϊόντα και υπολείμματα σε τρίτους</field>
             <field eval="chartgr_94_22" name="parent_id"/>
@@ -13612,7 +13612,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_23" model="account.account.template">
             <field name="code">94.23</field>
             <field name="name">Παραγωγή σε εξέλιξη</field>
             <field eval="chartgr_94" name="parent_id"/>
@@ -13622,7 +13622,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_23_97" model="account.account.template">
             <field name="code">94.23.97</field>
             <field name="name">Παραγωγή σε εξέλιξη σε τρίτους</field>
             <field eval="chartgr_94_23" name="parent_id"/>
@@ -13632,7 +13632,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_24" model="account.account.template">
             <field name="code">94.24</field>
             <field name="name">Πρώτες και βοηθητικές ύλες - Υλικά συσκευασίας</field>
             <field eval="chartgr_94" name="parent_id"/>
@@ -13642,7 +13642,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_24_97" model="account.account.template">
             <field name="code">94.24.97</field>
             <field name="name">Πρώτες και βοηθητικές ύλες - Υλικά συσκευασίας σε τρίτους</field>
             <field eval="chartgr_94_24" name="parent_id"/>
@@ -13652,7 +13652,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_25" model="account.account.template">
             <field name="code">94.25</field>
             <field name="name">Αναλώσιμα υλικά</field>
             <field eval="chartgr_94" name="parent_id"/>
@@ -13662,7 +13662,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_25_00" model="account.account.template">
             <field name="code">94.25.00</field>
             <field name="name">Μικρά εργαλεία</field>
             <field eval="chartgr_94_25" name="parent_id"/>
@@ -13672,7 +13672,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_25_01" model="account.account.template">
             <field name="code">94.25.01</field>
             <field name="name">Λιγνίτης</field>
             <field eval="chartgr_94_25" name="parent_id"/>
@@ -13682,7 +13682,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_25_02" model="account.account.template">
             <field name="code">94.25.02</field>
             <field name="name">Πετρέλαιο</field>
             <field eval="chartgr_94_25" name="parent_id"/>
@@ -13692,7 +13692,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_25_03" model="account.account.template">
             <field name="code">94.25.03</field>
             <field name="name">Μαζούτ</field>
             <field eval="chartgr_94_25" name="parent_id"/>
@@ -13702,7 +13702,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_25_97" model="account.account.template">
             <field name="code">94.25.97</field>
             <field name="name">Αναλώσιμα υλικά σε τριτούς</field>
             <field eval="chartgr_94_25" name="parent_id"/>
@@ -13712,7 +13712,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_26" model="account.account.template">
             <field name="code">94.26</field>
             <field name="name">Ανταλλακτικά παγίων στοιχείων</field>
             <field eval="chartgr_94" name="parent_id"/>
@@ -13722,7 +13722,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_26_97" model="account.account.template">
             <field name="code">94.26.97</field>
             <field name="name">Ανταλλακτικά παγίων στοιχείων σε τρίτους</field>
             <field eval="chartgr_94_26" name="parent_id"/>
@@ -13732,7 +13732,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_28" model="account.account.template">
             <field name="code">94.28</field>
             <field name="name">Είδη συσκευασίας</field>
             <field eval="chartgr_94" name="parent_id"/>
@@ -13742,7 +13742,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_28_00" model="account.account.template">
             <field name="code">94.28.00</field>
             <field name="name">Είδη συσκευασίας στις αποθήκες</field>
             <field eval="chartgr_94_28" name="parent_id"/>
@@ -13752,7 +13752,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_28_50" model="account.account.template">
             <field name="code">94.28.50</field>
             <field name="name">Είδη συσκευασίας σε τρίτους επιστρεπτέα</field>
             <field eval="chartgr_94_28" name="parent_id"/>
@@ -13762,7 +13762,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_94_28_97" model="account.account.template">
             <field name="code">94.28.97</field>
             <field name="name">Είδη συσκευασίας σε τρίτους (ως παρακαταθήκη)</field>
             <field eval="chartgr_94_28" name="parent_id"/>
@@ -13772,7 +13772,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_95" model="account.account.template">
             <field name="code">95</field>
             <field name="name">ΑΠΟΚΛΙΣΕΙΣ ΑΠΟ ΠΡΟΤΥΠΟ ΚΟΣΤΟΥΣ</field>
             <field eval="chartgr_9" name="parent_id"/>
@@ -13782,7 +13782,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_96" model="account.account.template">
             <field name="code">96</field>
             <field name="name">ΕΣΟΔΑ - ΜΙΚΤΑ ΑΝΑΛΥΤΙΚΑ ΑΠΟΤΕΛΕΣΜΑΤΑ</field>
             <field eval="chartgr_9" name="parent_id"/>
@@ -13792,7 +13792,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_97" model="account.account.template">
             <field name="code">97</field>
             <field name="name">ΔΙΑΦΟΡΕΣ ΕΝΣΩΜΑΤΩΜΕΝΕΣ ΚΑΙ ΚΑΤΑΛΟΓΙΣΜΟΥ</field>
             <field eval="chartgr_9" name="parent_id"/>
@@ -13802,7 +13802,7 @@
             <field name="note"></field>
         </record>
 
-       <record id="" model="account.account.template">
+       <record id="chartgr_98" model="account.account.template">
             <field name="code">98</field>
             <field name="name">ΑΝΑΛΥΤΙΚΑ ΑΠΟΤΕΛΕΣΜΑΤΑ</field>
             <field eval="chartgr_9" name="parent_id"/>
