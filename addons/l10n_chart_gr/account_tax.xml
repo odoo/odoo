@@ -108,6 +108,19 @@
             <field name="parent_id" ref="vat_code_output_aeg"/>
         </record>
         
+	<!-- Chart Template -->
+        
+        <record id="l10n_gr_chart_template" model="account.chart.template">
+            <field name="name">GR Account Chart Template</field>
+            <field name="account_root_id" ref="chartgr_0"/>
+            <field name="tax_code_root_id" ref="vat_code_chart_root"/>
+            <field name="bank_account_view_id" ref="chartgr_38_03"/>
+            <field name="property_account_receivable" ref="chartgr_31"/>
+            <field name="property_account_payable"  ref="chartgr_50"/>
+            <field name="property_account_expense_categ" ref="chartgr_64"/>
+            <field name="property_account_income_categ" ref="chartgr_72"/>
+        </record>
+
         <!-- VAT Codes -->
         <!-- Purchases + Input VAT -->
         
@@ -143,18 +156,6 @@
         </record>
 	
         
-	<!-- Chart Template -->
-        
-        <record id="l10n_gr_chart_template" model="account.chart.template">
-            <field name="name">GR Account Chart Template</field>
-            <field name="account_root_id" ref="chart0"/>
-            <field name="tax_code_root_id" ref="vat_code_chart_root"/>
-            <field name="bank_account_view_id" ref="chartgr_38_03"/>
-            <field name="property_account_receivable" ref="chartgr_31"/>
-            <field name="property_account_payable"  ref="chartgr_50"/>
-            <field name="property_account_expense_categ" ref="chartgr_64"/>
-            <field name="property_account_income_categ" ref="chartgr_72"/>
-        </record>
 
     </data>
 </openerp>
