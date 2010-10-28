@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+	<record model="ir.ui.view" id="view_account_ficalgr_print_form">
+		<field name="name">account.fiscalgr.print.form</field>
+		<field name="model">account.fiscalgr.print</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Prints">
+				<field name="cups_jobid" />
+				<field name="job_title" colspan="2"/>
+				<field name="report" />
+				<field name="cups_msg" />
+				<field name="hash" />
+				<field name="date" />
+				<field name="machine_id" />
+				<field name="day_no" />
+				<field name="total_no" />
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="view_account_fiscalgr_print_tree_form">
+		<field name="name">Fiscal Prints</field>
+		<field name="res_model">account.fiscalgr.print</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Fiscal prints" id="menu_account_fiscalgr" parent="account.menu_finance_reporting"/>
+	<menuitem name="All Prints" id="menu_account_fiscalgr_print_tree_form" action="view_account_fiscalgr_print_tree_form" parent="menu_account_fiscalgr"/>
+
+	</data>
+</openerp>
