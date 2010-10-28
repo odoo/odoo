@@ -583,7 +583,7 @@ class many2many(_column):
               }
         cr.execute(query, [tuple(ids),] + where_params)
         for r in cr.fetchall():
-            res[r[1]].append(r[0])
+            if r[0] not in res[r[1]]: res[r[1]].append(r[0])
         return res
 
     def set(self, cr, obj, id, name, values, user=None, context=None):
