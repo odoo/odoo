@@ -7155,7 +7155,7 @@
        <record id="chartgr_63" model="account.account.template">
             <field name="code">63</field>
             <field name="name">ΦΟΡΟΙ - ΤΕΛΗ</field>
-            <field eval="#NAME?" name="parent_id"/>
+            <field eval="chartgr_6" name="parent_id"/>
             <field name="type">other</field>
             
             <field name="user_type" ref="account_type_expense"/>
@@ -7165,7 +7165,7 @@
        <record id="chartgr_63_00" model="account.account.template">
             <field name="code">63.00</field>
             <field name="name">Φόρος εισοδήματος μη συμψηφιζόμενος</field>
-            <field eval="#NAME?" name="parent_id"/>
+            <field eval="chartgr_63" name="parent_id"/>
             <field name="type">other</field>
             
             <field name="user_type" ref="account_type_expense"/>
