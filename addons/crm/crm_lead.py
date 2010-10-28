@@ -100,7 +100,7 @@ class crm_lead(crm_case, osv.osv):
 
     _columns = {
         # Overridden from res.partner.address:
-        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', 
+        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
             select=True, help="Optional linked partner, usually after conversion of the lead"),
 
         # From crm.case
@@ -124,7 +124,7 @@ class crm_lead(crm_case, osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
         'channel_id': fields.many2one('res.partner.canal', 'Channel'),
 
-        'contact_name': fields.char('Contact Name', size=64), 
+        'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64),
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
         'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
@@ -147,7 +147,7 @@ class crm_lead(crm_case, osv.osv):
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
@@ -341,7 +341,7 @@ class crm_lead(crm_case, osv.osv):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs 
+        @param ids: List of update mail’s IDs
         """
 
         if isinstance(ids, (str, int, long)):

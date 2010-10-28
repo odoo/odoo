@@ -45,7 +45,6 @@ class crm_claim_report(osv.osv):
     _name = "crm.claim.report"
     _auto = False
     _description = "CRM Claim Report"
-
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
@@ -60,7 +59,7 @@ class crm_claim_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True), 
+        'day': fields.char('Day', size=128, readonly=True),
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\

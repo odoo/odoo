@@ -42,8 +42,8 @@
         name: All day test event
         rrule_type: none
 -   |
-    In order to check reminder I will first create reminder 
-- 
+    In order to check reminder I will first create reminder
+-
   !record {model: res.alarm, id: res_alarm_daybeforeeventstarts0}:
     name: 1 Day before event starts
     trigger_duration: 1
@@ -57,7 +57,7 @@
      self.write(cr, uid, [ref("calendar_event_alldaytestevent0")], {'alarm_id': ref("res_alarm_daybeforeeventstarts0")})
 -   |
     In order to assign attendee I will invite Demo user
-- 
+-
   !record {model: base_calendar.invite.attendee, id: base_calendar_invite_attendee_0}:
     type: internal
     send_mail: False

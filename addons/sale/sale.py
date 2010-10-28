@@ -1065,7 +1065,7 @@ class sale_order_line(osv.osv):
                     'title': _('Picking Information !'),
                     'message': warn_msg
                     }
-            result['product_uom_qty'] = qty
+            result['product_uom_qty'] = pack.qty
 
         uom2 = False
         if uom:

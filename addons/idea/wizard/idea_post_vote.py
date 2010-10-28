@@ -109,6 +109,7 @@ class idea_post_vote(osv.osv_memory):
         for do_vote_obj in self.read(cr, uid, ids):
             score = str(do_vote_obj['vote'])
             comment = do_vote_obj.get('note', False)
+        for vote_id in vote_ids:
             vote = {
                 'idea_id': vote_id,
                 'user_id': uid,

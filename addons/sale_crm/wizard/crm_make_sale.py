@@ -154,5 +154,4 @@ class crm_make_sale(osv.osv_memory):
          'close': True, 
          'partner_id': _selectPartner, 
     }
-
 crm_make_sale()

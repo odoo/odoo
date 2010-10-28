@@ -20,6 +20,7 @@
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
         <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
     </record>
+
     <record id="crm_rule_all_lead" model="ir.rule">
         <field name="name">All Leads</field>
         <field ref="model_crm_lead" name="model_id"/>

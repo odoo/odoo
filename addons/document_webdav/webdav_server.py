@@ -262,6 +262,17 @@ class DAVAuthProvider(OpenERPAuthProvider):
             return True
         return OpenERPAuthProvider.authenticate(self, db, user, passwd, client_address)
 
+from service.http_server import reg_http_service,OpenERPAuthProvider
+
+class DAVAuthProvider(OpenERPAuthProvider):
+    def authenticate(self, db, user, passwd, client_address):
+        """ authenticate, but also allow the False db, meaning to skip
+            authentication when no db is specified.
+        """
+        if db is False:
+            return True
+        return OpenERPAuthProvider.authenticate(self, db, user, passwd, client_address)
+
 try:
 
     if (config.get_misc('webdav','enable',True)):
