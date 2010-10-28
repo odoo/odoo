@@ -61,9 +61,11 @@
 		<field name="inherit_id" ref="base.act_report_xml_view"/>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<xpath expr="/form/field[@name='attachment']" position="after">
+			<xpath expr="/form/notebook/page[@string='Other Configuration']" position="after">
+			    <page string="Server Printing">
 				<field name="printer"/>
 				<field name="copies"/>
+			    </page>
 			</xpath>
 		</field>
 	</record>
