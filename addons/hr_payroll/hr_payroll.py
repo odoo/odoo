@@ -27,7 +27,6 @@ from datetime import timedelta
 
 import netsvc
 from osv import fields, osv
-from tools import config
 from tools.translate import _
 
 def prev_bounds(cdate=False):
@@ -135,7 +134,6 @@ class hr_contract(osv.osv):
         res = {}
         ids += context.get('employee_structure', [])
 
-        slip_pool = self.pool.get('hr.payslip')
         slip_line_pool = self.pool.get('hr.payslip.line')
 
         for contract in self.browse(cr, uid, ids, context):
@@ -156,14 +154,13 @@ class hr_contract(osv.osv):
                 update['basic'] = contract.wage
 
             sal_type = contract.wage_type_id.type
-            function = contract.struct_id.id
+#            function = contract.struct_id.id
             lines = contract.struct_id.line_ids
             if not contract.struct_id:
                 res[contract.id] = obj['basic']
                 continue
 
             ad = []
-            c_type = {}
             for line in lines:
                 cd = line.code.lower()
                 obj[cd] = line.amount or 0.0
@@ -186,7 +183,7 @@ class hr_contract(osv.osv):
                 percent = 0.0
                 value = 0.0
                 base = False
-                company_contrib = 0.0
+#                company_contrib = 0.0
                 base = line.category_id.base
 
                 try:
@@ -395,8 +392,6 @@ class payroll_register(osv.osv):
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
-        func_pool = self.pool.get('hr.payroll.structure')
-        slip_line_pool = self.pool.get('hr.payslip.line')
         wf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
@@ -995,7 +990,6 @@ class hr_payslip(osv.osv):
         return True
 
     def verify_sheet(self, cr, uid, ids, context={}):
-        payslip_pool = self.pool.get('hr.payslip.line')
         register_pool = self.pool.get('company.contribution')
         register_line_pool = self.pool.get('hr.contibution.register.line')
 
@@ -1076,12 +1070,9 @@ class hr_payslip(osv.osv):
         return result
 
     def compute_sheet(self, cr, uid, ids, context=None):
-        emp_pool = self.pool.get('hr.employee')
-        slip_pool = self.pool.get('hr.payslip')
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
         holiday_pool = self.pool.get('hr.holidays')
-        contract_obj = self.pool.get('hr.contract')
         sequence_obj = self.pool.get('ir.sequence')
         if context is None:
             context = {}
@@ -1125,7 +1116,6 @@ class hr_payslip(osv.osv):
             #lines += slip.employee_id.line_ids
 
             ad = []
-            lns = {}
             all_per = 0.0
             ded_per = 0.0
             all_fix = 0.0
@@ -1142,7 +1132,6 @@ class hr_payslip(osv.osv):
                 obj['basic'] = contract.wage
                 update['basic'] = contract.wage
 
-            c_type = { }
             for line in lines:
                 cd = line.code.lower()
                 obj[cd] = line.amount or 0.0
@@ -1165,7 +1154,7 @@ class hr_payslip(osv.osv):
                 percent = 0.0
                 value = 0.0
                 base = False
-                company_contrib = 0.0
+#                company_contrib = 0.0
                 base = line.category_id.base
 
                 try:
@@ -1310,7 +1299,7 @@ class hr_payslip(osv.osv):
 
                 slip_line_pool.create(cr, uid, res, context=context)
             basic = basic - total
-            leaves = total
+#            leaves = total
             update.update({
                 'basic':basic,
                 'basic_before_leaves': round(basic_before_leaves),
@@ -1332,7 +1321,6 @@ class hr_payslip_line(osv.osv):
     _description = 'Payslip Line'
 
     def onchange_category(self, cr, uid, ids, category_id):
-        seq = 0
         res = {
         }
         if category_id:
