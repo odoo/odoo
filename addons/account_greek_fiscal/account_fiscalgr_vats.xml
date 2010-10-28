@@ -7,8 +7,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Tax authorities">
-				<field name="name" colspan="2" search="1"/>
-				<field name="code" search="1"/>
+				<field name="name" colspan="2" select="1" />
+				<field name="code" select="1" />
 				<field name="country_id" />
 				<field name="descr" colspan="4" />
 			</form>
@@ -21,9 +21,9 @@
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
 			<tree string="Tax authorities">
-				<field name="name" search="1"/>
-				<field name="code" search="1"/>
-				<field name="country_id" search="1" />
+				<field name="name" select="1"/>
+				<field name="code" select="1"/>
+				<field name="country_id" select="1" />
 			</tree>
 		</field>
 	</record>
@@ -43,8 +43,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Tax occupations">
-				<field name="name" colspan="2" search="1"/>
-				<field name="code" search="1"/>
+				<field name="name" colspan="2" select="1"/>
+				<field name="code" select="1"/>
 				<field name="descr" colspan="4" />
 			</form>
 		</field>
@@ -56,8 +56,8 @@
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
 			<tree string="Tax occupations">
-				<field name="name" search="1"/>
-				<field name="code" search="1"/>
+				<field name="name" select="1"/>
+				<field name="code" select="1"/>
 			</tree>
 		</field>
 	</record>
@@ -86,7 +86,7 @@
 		<field name="inherit_id" ref="base_vat.view_partner_form"/>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<xpath expr="/form/notebook/page[@name='Accounting']/group/field[@name='vat']" position="after">
+			<xpath expr="/form/notebook/page[@string='Accounting']/group/field[@name='vat']" position="after">
 				<field name="vat_taxauth"/>
 				<field name="vat_occup" />
 			</xpath>
