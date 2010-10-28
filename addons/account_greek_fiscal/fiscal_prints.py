@@ -38,9 +38,9 @@ class fiscal_print(osv.osv):
   }
   _defaults = {
   }
-  def print_invoice(self,cr,uid,inv_data,inv_model, inv_type):
+  def print_invoice(self,cr,uid,inv_data,inv_model, inv_report):
 	logger=netsvc.Logger()
-	logger.notifyChannel("fiscalgr", netsvc.LOG_INFO, 'printing one %s invoice '%inv_type)
+	logger.notifyChannel("fiscalgr", netsvc.LOG_INFO, 'printing one %s invoice '%(type(inv_report)))
 
 fiscal_print()
 

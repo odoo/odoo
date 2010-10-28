@@ -37,6 +37,9 @@ class account_invoice(osv.osv):
             ('cancel','Canceled'),
 	    ('printed','Printed'),
         ],'State', select=True, readonly=True),
+	'property_fiscalgr_invoice_report': fields.property( 'ir.actions.report.xml', type='many2one',
+		relation='ir.actions.report.xml', string="Fiscal report template", method=True,
+		view_load=True, group_name="Reports"),
         }
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -56,7 +59,8 @@ class account_invoice(osv.osv):
     def action_fiscalgr_print(self, cr, uid, ids, *args):
 	fiscalgr_obj = self.pool.get('account.fiscalgr.print')
 	logger = netsvc.Logger()
-        invoices = self.read(cr, uid, ids, ['id','number','state','type','fiscalgr_print'])
+        invoices = self.read(cr, uid, ids, ['id','number','state','type',
+		'fiscalgr_print','property_fiscalgr_invoice_report'])
 	# First, iterate once to check if the invoices are valid for printing.
         for i in invoices:
 	    if not i['number']:
@@ -65,13 +69,15 @@ class account_invoice(osv.osv):
 		raise osv.except_osv(_('Cannot print!'), _('Cannot print invoice \"%s\" which is not open.')%i['number'])
 	    if (not i['type'] or (i['type'][0:3] != 'out')):
 		raise osv.except_osv(_('Cannot print!'), _('Cannot print invoice \"%s\", it is not an outgoing one.')%i['number'])
+	    if not i['property_fiscalgr_invoice_report']:
+		raise osv.except_osv(_('Cannot print!'), _('Cannot locate report setting for fiscal printing!'))
             if i['fiscalgr_print']:
 	    	raise osv.except_osv(_('Cannot print!'), _('Cannot print invoice \"%s\" which is already printed !')%i['number'])
 	    #raise osv.except_osv(_('Invalid action !'), _('Cannot print such an invoice !'))
 	
 	#Then, iterate again, and issue those invoices for printing
 	for i in invoices:
-		if fiscalgr_obj.print_invoice(cr,uid,i,self._name, i['type']):
+		if fiscalgr_obj.print_invoice(cr,uid,i,self._name, i['property_fiscalgr_invoice_report']):
 			self.write(cr,uid,i['id'],{'state':'printed'})
 			logger.notifyChannel("fiscalgr", netsvc.LOG_INFO, 'printed invoice %s'%i['number'])
        

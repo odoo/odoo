@@ -30,7 +30,7 @@
     """,
     "website" : "http://www.hellug.gr",
     "category" : "Generic Modules/Accounting",
-    "init_xml" : [
+    "init_xml" : [ "account_invoice_data.xml",
     ],
     "demo_xml" : [
     ],
