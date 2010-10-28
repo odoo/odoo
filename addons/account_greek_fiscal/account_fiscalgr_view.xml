@@ -28,5 +28,18 @@
 	<menuitem name="Fiscal prints" id="menu_account_fiscalgr" parent="account.menu_finance_reporting"/>
 	<menuitem name="All Prints" id="menu_account_fiscalgr_print_tree_form" action="view_account_fiscalgr_print_tree_form" parent="menu_account_fiscalgr"/>
 
+	
+	<record model="ir.ui.view" id="view_invoice_fiscalgr_inherit_1">
+		<field name="name">account.invoice.fiscalgr.view.inherit_1</field>
+		<field name="model">account.invoice</field>
+		<field name="inherit_id" ref="account.invoice_form"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<xpath expr="/form/notebook/page/group/group/button[@name='invoice_cancel']" position="before">
+				<button name="action_fiscalgr_print" states="open" string="Print" type="object"/>
+			</xpath>
+		</field>
+	</record>
+
 	</data>
 </openerp>

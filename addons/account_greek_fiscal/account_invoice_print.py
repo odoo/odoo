@@ -27,6 +27,15 @@ class account_invoice(osv.osv):
     _columns = {
         # states={'open':[('readonly',False)]}
         'fiscalgr_print': fields.many2one('account.fiscalgr.print','Fiscal print', readonly=True, ),
+	'state': fields.selection([
+            ('draft','Draft'),
+            ('proforma','Pro-forma'),
+            ('proforma2','Pro-forma'),
+            ('open','Open'),
+            ('paid','Done'),
+            ('cancel','Canceled'),
+	    ('printed','Printed'),
+        ],'State', select=True, readonly=True),
         }
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -42,6 +51,9 @@ class account_invoice(osv.osv):
             if i['fiscalgr_print']:
 	    	raise osv.except_osv(_('Invalid action !'), _('Cannot cancel invoice(s) which are already printed !'))
         return super(account_invoice,self).action_cancel(cr,uid,ids,args)
+	
+    def action_fiscalgr_print(self, cr, uid, ids, *args):
+	    raise osv.except_osv(_('Invalid action !'), _('Cannot print such an invoice !'))
 
 account_invoice()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

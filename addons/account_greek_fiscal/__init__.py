@@ -22,6 +22,7 @@
 
 import fiscal_prints
 import account_invoice_print
+import wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
