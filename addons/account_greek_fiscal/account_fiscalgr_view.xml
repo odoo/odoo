@@ -9,14 +9,28 @@
 			<form string="Prints">
 				<field name="cups_jobid" />
 				<field name="name" colspan="2"/>
+				<field name="state" />
 				<field name="report" />
-				<field name="cups_msg" />
-				<field name="hash" />
 				<field name="date" />
+				<field name="cups_msg" colspan="4"/>
+				<field name="hash" />
 				<field name="machine_id" />
 				<field name="day_no" />
 				<field name="total_no" />
 			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="view_account_ficalgr_print_tree">
+		<field name="name">account.fiscalgr.print.tree</field>
+		<field name="model">account.fiscalgr.print</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Prints">
+				<field name="cups_jobid" />
+				<field name="name" colspan="2"/>
+				<field name="state" />
+				<field name="date" />
+			</tree>
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="view_account_fiscalgr_print_tree_form">
@@ -53,6 +67,19 @@
 			</xpath>
 		</field>
 	</record>
+	
+	<record forcecreate="True" id="ir_cron_scheduler_action" model="ir.cron">
+            <field name="name">Check fiscal print result</field>
+            <field eval="False" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field name="model">account.fiscalgr.print</field>
+            <field name="function">check_results</field>
+            <field name="args"></field>
+        </record>
 
 	</data>
 </openerp>

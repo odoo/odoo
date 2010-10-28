@@ -28,18 +28,22 @@ class fiscal_print(osv.osv):
   _columns = {
       'hash': fields.char('Secure hash', size=40, readonly=True,),
       'date': fields.char('Print date', size=10, readonly=True,),
+      'state': fields.selection([('unknown','Unknown'),
+           ('queued','Queued'), ('printed','Printed'), ('error','Failed')],
+	   'State', readonly = True, required = True),
       'machine_id': fields.char('Machine ID', size=12, readonly=True,),
       'day_no': fields.integer('Daily sequence', readonly=True),
       'total_no': fields.integer('Total sequence', readonly=True),
       'cups_jobid': fields.integer('Job ID', readonly=True, required=True, help="CUPS job id"),
       'name': fields.char('Title',size=200,required=True, readonly=True,help="Title of the CUPS job, typically the invoice reference."),
-      'cups_msg': fields.text('CUPS message',help="This is the message returned by cups, if the printing fails."),
+      'cups_msg': fields.text('CUPS message',help="This is the message returned by cups, if the printing fails.", readonly=True),
       'report': fields.many2one('ir.actions.report.xml', 'Report', required=True,readonly=True),
   }
   _defaults = {
+	'state' : lambda *a: 'unknown',
   }
   
-  def _print_fiscal(self,cr,uid,report_id,title,format,content,printer='Forol',copies=1,context=None):
+  def _print_fiscal(self,cr,uid,report_id,title,format,content,printer=False,copies=1,context=None):
 	import tempfile
 	import os
 	if not printer:
@@ -64,7 +68,8 @@ class fiscal_print(osv.osv):
 	os.unlink(fp_name)
 	if job:
 		print 'Created job %d'% job
-		fprn=self.create(cr,uid,{'cups_jobid':job,'name':title,'report':report_id},context)
+		fprn=self.create(cr,uid,{'cups_jobid':job,'name':title,'report':report_id, 'state': 'queued'},context)
+		self._set_pooler_active(cr,uid,True)
 		return True
 	else:
 		raise Exception(_('Cannot print at printer %s')%printer)
@@ -107,6 +112,69 @@ class fiscal_print(osv.osv):
 		#return False
 	return False
 
+  def check_results(self,cr,uid,context=None):
+	logger = netsvc.Logger()
+	logger.notifyChannel('fiscalgr-prints', netsvc.LOG_DEBUG,
+		'Checking for pending fiscal prints.')
+	if not context:
+            context={}
+	
+	try:
+		import cups
+	except:
+		raise Exception(_('Cannot talk to cups, please install pycups'))
+
+	ccon = cups.Connection()
+	open_prints=self.search(cr,uid,[('state','=','queued')])
+	if not open_prints:
+		self._set_pooler_active(cr,uid,False)
+		return
+	
+	logger.notifyChannel('fiscalgr-prints', netsvc.LOG_DEBUG,
+		'Found %d pending fiscal prints.'%len(open_prints))
+	
+	prints = self.read(cr,uid,open_prints,['state','title','cups_jobid'])
+	
+	pending_jobs = len(prints)
+	for pjob in prints:
+		jats = ccon.getJobAttributes(pjob['cups_jobid'])
+		ndata = {}
+		print "Job %d attributes" % pjob['cups_jobid'],jats
+		if 'job-printer-state-message' in jats:
+			jpsm = jats['job-printer-state-message']
+		else:
+			jpsm = ''
+		
+		if jats['job-state'] == cups.IPP_OK:
+			pending_jobs -= 1
+			if jpsm.startswith('eafdSigns-1:'):
+				ndata['hash'] = jpsm[12:]
+			ndata['state'] = 'printed'
+			#TODO more fields
+		else:
+			# job is still pending
+			ndata['cups_msg'] = jpsm
+			
+		if ndata:
+			self.write(cr,uid,pjob['id'],ndata)
+	
+	self._set_pooler_active(cr,uid,(pending_jobs > 0))
+	return True
+	
+  def _set_pooler_active(self,cr,uid,active=True):
+		'''We ask the pooler to periodically check our jobs
+		'''
+		logger = netsvc.Logger()
+		obj = self.pool.get('ir.cron')
+		pids = obj.search(cr,uid,[('model','=',self._name),('function','=','check_results')])
+		
+		if len(pids) != 1 :
+			logger.notifyChannel('fiscalgr-prints', netsvc.LOG_WARNING,
+				'Found %d pooler jobs instead of 1.'%len(pids))
+		
+		print "trying to update the state"
+		obj.write(cr,uid,pids[0],{'active': active})
+		return True
 fiscal_print()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
