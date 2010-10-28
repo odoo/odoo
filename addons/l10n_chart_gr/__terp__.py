@@ -29,7 +29,7 @@
     "depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["account_types.xml","account_chart.xml",
+    "update_xml" : ["account_types.xml","account_chart.xml", "account_full_chart.xml",
         "account_tax.xml","l10n_gr_wizard.xml"],
     "installable": True
 }
