@@ -35,7 +35,7 @@ class seller_form_report(report_sxw.rml_parse):
             'sum_taxes': self.sum_taxes,
             'sellerinfo' : self.seller_info,
             'grand_total' : self.grand_seller_total,
-})
+    })
 
 
     def sum_taxes(self, lot):
@@ -45,7 +45,7 @@ class seller_form_report(report_sxw.rml_parse):
             taxes.append(lot.bord_vnd_id.tax_id)
         elif lot.auction_id and lot.auction_id.seller_costs:
             taxes += lot.auction_id.seller_costs
-        tax=self.pool.get('account.tax').compute(self.cr, self.uid, taxes, lot.obj_price, 1)
+        tax=self.pool.get('account.tax').compute_all(self.cr, self.uid, taxes, lot.obj_price, 1)
         for t in tax:
             amount+=t['amount']
         return amount
