@@ -38,9 +38,69 @@ class fiscal_print(osv.osv):
   }
   _defaults = {
   }
-  def print_invoice(self,cr,uid,inv_data,inv_model, inv_report):
+  
+  def _print_fiscal(self,cr,uid,report_id,title,format,content,context=None):
+	import tempfile
+	import os
+	(fileno, fp_name) = tempfile.mkstemp('.'+format, 'openerp_')
+	fp = file(fp_name, 'wb+')
+	fp.write(content.encode('iso8859-7'))
+	fp.close()
+	os.close(fileno)
+	PRINTER='Forol2'
+	try:
+		import cups
+	except:
+		common.message(_('Cannot talk to cups, please install pycups'))
+		return False
+	ccon = cups.Connection()
+	#attrs=ccon.getPrinterAttributes(name=PRINTER)
+	#print "Located \"%s\" at a v%s CUPS server" %(attrs['printer-make-and-model'],attrs['cups-version'])
+	print 'Trying to print %s at %s'%(fp_name,PRINTER)
+	job = ccon.printFile(PRINTER,fp_name,title,{})
+	os.unlink(fp_name)
+	if job:
+		print 'Created job %d'% job
+		fprn=self.create(cr,uid,{'cups_jobid':job,'name':title,'report':report_id},context)
+		return True
+	else:
+		common.message(_('Cannot print at printer %s')%PRINTER)
+		return False
+
+  def print_invoice(self,cr,uid,inv_data,inv_model,inv_title, inv_report, context):
 	logger=netsvc.Logger()
 	logger.notifyChannel("fiscalgr", netsvc.LOG_INFO, 'printing one %s invoice '%(type(inv_report)))
+	report_obj=self.pool.get('ir.actions.report.xml')
+	rep= report_obj.read(cr,uid,inv_report,[])
+	if (rep['model']!=inv_model or rep['report_type'] != 'txt'):
+		raise osv.except_osv(_('Cannot print!'), _('The set invoice at %d is not valid for this object.')%inv_report)
+	try:
+		obj = netsvc.LocalService('report.'+rep['report_name'])
+		if not obj:
+			raise Exception('cannot get object report.%s'% rep['report_name'])
+		data = { 'model' : inv_model, 'id':inv_data['id'], 'report_type': rep['report_type']}
+		(result, format) = obj.create(cr, uid, [inv_data['id'],], data, context=context)
+		if (format != 'txt'):
+			raise Exception("Invoice format is not txt, strange")
+		print result
+		return self._print_fiscal(cr,uid,inv_report,inv_title,format,result.decode('utf-8'),context)
+
+		#self._reports[id]['result'] = result
+		#self._reports[id]['format'] = format
+		#self._reports[id]['state'] = True
+	except Exception, exception:
+		import traceback
+		import sys
+		tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
+			sys.exc_type, sys.exc_value, sys.exc_traceback))
+		logger = netsvc.Logger()
+		logger.notifyChannel('web-services', netsvc.LOG_ERROR,
+			'Exception: %s\n%s' % (str(exception), tb_s))
+		#self._reports[id]['exception'] = exception
+		#self._reports[id]['state'] = True
+		raise
+		#return False
+	return False
 
 fiscal_print()
 

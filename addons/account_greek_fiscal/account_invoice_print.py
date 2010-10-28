@@ -56,11 +56,10 @@ class account_invoice(osv.osv):
 	    	raise osv.except_osv(_('Invalid action !'), _('Cannot cancel invoice(s) which are already printed !'))
         return super(account_invoice,self).action_cancel(cr,uid,ids,args)
 	
-    def action_fiscalgr_print(self, cr, uid, ids, *args):
+    def action_fiscalgr_print(self, cr, uid, ids, context, *args):
 	fiscalgr_obj = self.pool.get('account.fiscalgr.print')
 	logger = netsvc.Logger()
-        invoices = self.read(cr, uid, ids, ['id','number','state','type',
-		'fiscalgr_print','property_fiscalgr_invoice_report'])
+        invoices = self.read(cr, uid, ids, [])
 	# First, iterate once to check if the invoices are valid for printing.
         for i in invoices:
 	    if not i['number']:
@@ -77,7 +76,7 @@ class account_invoice(osv.osv):
 	
 	#Then, iterate again, and issue those invoices for printing
 	for i in invoices:
-		if fiscalgr_obj.print_invoice(cr,uid,i,self._name, i['property_fiscalgr_invoice_report']):
+		if fiscalgr_obj.print_invoice(cr,uid,i,self._name,i['number'], i['property_fiscalgr_invoice_report'][0],context):
 			self.write(cr,uid,i['id'],{'state':'printed'})
 			logger.notifyChannel("fiscalgr", netsvc.LOG_INFO, 'printed invoice %s'%i['number'])
        
