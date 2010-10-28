@@ -34,7 +34,7 @@ from osv.orm import browse_record, browse_null
 # Model definition
 #
 class purchase_order(osv.osv):
-    
+
     def _calc_amount(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = {}
         for order in self.browse(cr, uid, ids):
@@ -42,7 +42,7 @@ class purchase_order(osv.osv):
             for oline in order.order_line:
                 res[order.id] += oline.price_unit * oline.product_qty
         return res
-         
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
@@ -186,7 +186,7 @@ class purchase_order(osv.osv):
         'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Picking')], 'Invoicing Control', required=True,
             help="From Order: a draft invoice will be pre-generated based on the purchase order. The accountant " \
                 "will just have to validate this invoice for control.\n" \
-                "From Picking: a draft invoice will be pre-generated based on validated receptions.\n" \
+                "From Picking: you manually have to generate the invoices based on the receptions.\n" \
                 "Manual: no invoice will be pre-generated. The accountant will have to encode manually."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Expected Date', type='date', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
