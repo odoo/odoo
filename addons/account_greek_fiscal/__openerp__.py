@@ -21,9 +21,9 @@
 ##############################################################################
 {
     "name" : "Greek Fiscal printing",
-    "version" : "0.1",
-    "depends" : ["account" ],
-    "ext_depends" : ["python-cups"],
+    "version" : "0.2",
+    "depends" : ["account", ],
+    "ext_depends" : ["python-cups", ],
     "author" : "P. Christeas",
     "description": """This enables the greek fiscal printing of reports (invoices). 
     When an invoice is settled, it is marked by the (legal) fiscal machine and locked
@@ -31,16 +31,14 @@
     """,
     "website" : "http://www.hellug.gr",
     "category" : "Generic Modules/Accounting",
-    "init_xml" : [ "account_invoice_data.xml",
-    ],
-    "demo_xml" : [
-    ],
+    "init_xml" : [ ],
+    "demo_xml" : [ ],
     "update_xml" : [ "account_fiscalgr_vats.xml",
-	"account_fiscalgr_view.xml", 
-	"account_invoice_report.xml",
-	"security/ir.model.access.csv",
-	"doytable.xml"
-	],
+        "account_fiscalgr_view.xml", 
+        "account_invoice_report.xml",
+        "security/ir.model.access.csv",
+        "doytable.xml"
+        ],
     "active": False,
     "installable": True
 }
