@@ -244,7 +244,7 @@ class mrp_bom(osv.osv):
                 v['name'] = prod.name
             return {'value': v}
         return {}
-   
+
     def _bom_find(self, cr, uid, product_id, product_uom, properties=[]):
         """ Finds BoM for particular product and product uom.
         @param product_id: Selected product.

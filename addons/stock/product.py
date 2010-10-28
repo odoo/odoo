@@ -423,6 +423,7 @@ class product_template(osv.osv):
             string='Stock Output Account', method=True, view_load=True,
             help='When doing real-time inventory valuation, counterpart Journal Items for all outgoing stock moves will be posted in this account. If not set on the product, the one from the product category is used.'),
     }
+
 product_template()
 
 class product_category(osv.osv):
@@ -448,6 +449,7 @@ class product_category(osv.osv):
             method=True, view_load=True,
             help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
     }
+
 product_category()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

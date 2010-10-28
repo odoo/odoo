@@ -140,7 +140,7 @@ class mailgate_thread(osv.osv):
                 'description': details or (hasattr(case, 'description') and case.description or False),
                 'attachment_ids': [(6, 0, attachments)]
             }
-            attachments = []
+
             if history:
                 for param in (email, email_cc, email_bcc):
                     if isinstance(param, list):

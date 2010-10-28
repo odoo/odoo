@@ -110,7 +110,7 @@
 
                             <group colspan="2" col="2" name="status" groups="base.group_extended">
                                 <separator string="Status" colspan="2"/>
-                                <field name="categ_id" select="1" groups="base.group_extended"/>
+                                <field name="categ_id"/>
                                 <field name="state"/>
                                 <field name="product_manager"/>
                             </group>
@@ -220,7 +220,6 @@
                     <field name="name" select="1"/>
                     <field name="parent_id"/>
                     <field name="sequence" invisible="1"/>
-                    <field name="property_stock_variation"/>
                     <field name="type"/>
                     <newline/>
                 </form>

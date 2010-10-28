@@ -38,6 +38,7 @@
     'init_xml': [
     ],
     'update_xml': [
+        "security/ir.model.access.csv", 
         "hr_payroll_account_view.xml",
     ],
     'demo_xml': [

@@ -380,7 +380,6 @@ class account_invoice(osv.osv):
                 raise orm.except_orm(_('Configuration Error!'),
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
-                raise
                 raise orm.except_orm(_('UnknownError'), str(e))
 
     def confirm_paid(self, cr, uid, ids, context=None):
@@ -1656,3 +1655,5 @@ class res_partner(osv.osv):
     }
 
 res_partner()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

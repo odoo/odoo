@@ -177,15 +177,7 @@ class product_category(osv.osv):
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
-        'property_stock_variation': fields.property(
-          'account.account',
-          type='many2one', 
-          relation='account.account', 
-          string="Stock variation Account", 
-          method=True,
-          view_load=True,  help="This account will be used in product when valuation type is real-time valuation ",),
     }
-    
 
 
     _defaults = {
@@ -738,6 +730,7 @@ class pricelist_partnerinfo(osv.osv):
     }
     _order = 'min_quantity asc'
 pricelist_partnerinfo()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 class res_users(osv.osv):
     _inherit = 'res.users'
@@ -757,5 +750,3 @@ class res_users(osv.osv):
     }
 
 res_users()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -67,7 +67,7 @@
         'board_sale_view.xml',
         'process/sale_process.xml',
     ],
-#    'demo_xml': ['sale_demo.xml'],
+    'demo_xml': ['sale_demo.xml'],
     'test': [
         'test/data_test.yml',
         'test/manual_order_policy.yml',

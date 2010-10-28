@@ -43,7 +43,6 @@
     'website': 'http://www.openerp.com',
     'data': [
         'security/share_security.xml',
-        'security/ir.model.access.csv',
         'share_view.xml',
         'res_users_view.xml',
         'wizard/share_wizard_view.xml'
