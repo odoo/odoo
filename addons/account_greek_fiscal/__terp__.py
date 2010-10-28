@@ -36,7 +36,8 @@
     ],
     "update_xml" : [ "account_fiscalgr_vats.xml",
 	"account_fiscalgr_view.xml", 
-	"account_invoice_report.xml"
+	"account_invoice_report.xml",
+	"security/ir.model.access.csv"
 	],
     "active": False,
     "installable": True

@@ -26,7 +26,7 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'vat_taxauth': fields.many2one('account.fiscalgr.tauth','Tax authority', 
-		domain=[('country_id','=','country_id')],
+		domain="[('country_id','=',country)]",
 		help="Select the local tax service branch, where the partner is registered."),
 	'vat_occup': fields.many2one('account.fiscalgr.occup','VAT Occupation', 
 		help="Select the corresponding occupation of the partner, as registered with tax authorities."),
