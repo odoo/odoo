@@ -82,7 +82,7 @@ class fiscal_print(osv.osv):
 		(result, format) = obj.create(cr, uid, [inv_data['id'],], data, context=context)
 		if (format != 'txt'):
 			raise Exception("Invoice format is not txt, strange")
-		print result
+		# print result
 		return self._print_fiscal(cr,uid,inv_report,inv_title,format,result.decode('utf-8'),context)
 
 		#self._reports[id]['result'] = result

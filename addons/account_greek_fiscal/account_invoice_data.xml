@@ -1,11 +1,5 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-		<!-- default properties -->
-		<record model="ir.property" id="property_fiscalgr_invoice_report_out">
-			<field name="name">property_fiscalgr_invoice_report</field> 
-			<field name="fields_id" search="[('model','=','account.invoice'),('name','=','property_fiscalgr_invoice_report')]"/> 
-			<field name="value" eval="'ir.actions.report.xml,'+str(1)"/> 
-		</record>
 	</data>
 </openerp>

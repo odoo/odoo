@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    "name" : "account_greek_fiscal",
+    "name" : "Greek Fiscal printing",
     "version" : "0.1",
     "depends" : ["account" ],
     "author" : "P. Christeas",

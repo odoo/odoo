@@ -20,10 +20,7 @@
 #
 ##############################################################################
 
-import fiscal_prints
-import account_invoice_print
-import wizard
-import report
+import invoice
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
