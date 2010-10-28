@@ -475,7 +475,7 @@ class task(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion,('Error ! You cannot create recursive tasks.'), ['parent_ids'])
+        (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids'])
     ]
     #
     # Override view according to the company definition

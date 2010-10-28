@@ -257,7 +257,7 @@ class marketing_campaign_segment(osv.osv):
         return True
 
     _constraints = [
-        (_check_model,('Model of filter must be same as resource model of Campaign '), ['ir_filter_id,campaign_id']),
+        (_check_model, 'Model of filter must be same as resource model of Campaign ', ['ir_filter_id,campaign_id']),
     ]
 
     def onchange_campaign_id(self, cr, uid, ids, campaign_id):
@@ -539,7 +539,7 @@ class marketing_campaign_transition(osv.osv):
         return True
 
     _constraints = [
-            (_check_campaign,('The To/From Activity of transition must be of the same Campaign '), ['activity_from_id,activity_to_id']),
+            (_check_campaign, 'The To/From Activity of transition must be of the same Campaign ', ['activity_from_id,activity_to_id']),
         ]
 
     _sql_constraints = [
