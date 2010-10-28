@@ -39,9 +39,13 @@ class fiscal_print(osv.osv):
   _defaults = {
   }
   
-  def _print_fiscal(self,cr,uid,report_id,title,format,content,context=None):
+  def _print_fiscal(self,cr,uid,report_id,title,format,content,printer='Forol',copies=1,context=None):
 	import tempfile
 	import os
+	if not printer:
+		raise Exception(_('No printer specified for report'))
+	if not copies:
+		copies=1
 	(fileno, fp_name) = tempfile.mkstemp('.'+format, 'openerp_')
 	fp = file(fp_name, 'wb+')
 	fp.write(content.encode('iso8859-7'))
@@ -51,25 +55,24 @@ class fiscal_print(osv.osv):
 	try:
 		import cups
 	except:
-		common.message(_('Cannot talk to cups, please install pycups'))
-		return False
+		raise Exception(_('Cannot talk to cups, please install pycups'))
 	ccon = cups.Connection()
 	#attrs=ccon.getPrinterAttributes(name=PRINTER)
 	#print "Located \"%s\" at a v%s CUPS server" %(attrs['printer-make-and-model'],attrs['cups-version'])
-	print 'Trying to print %s at %s'%(fp_name,PRINTER)
-	job = ccon.printFile(PRINTER,fp_name,title,{})
+	#print 'Trying to print %s at %s'%(fp_name,PRINTER)
+	job = ccon.printFile(printer,fp_name,title,{'copies': str(copies)})
 	os.unlink(fp_name)
 	if job:
 		print 'Created job %d'% job
 		fprn=self.create(cr,uid,{'cups_jobid':job,'name':title,'report':report_id},context)
 		return True
 	else:
-		common.message(_('Cannot print at printer %s')%PRINTER)
+		raise Exception(_('Cannot print at printer %s')%printer)
 		return False
 
   def print_invoice(self,cr,uid,inv_data,inv_model,inv_title, inv_report, context):
 	logger=netsvc.Logger()
-	logger.notifyChannel("fiscalgr", netsvc.LOG_INFO, 'printing one %s invoice '%(type(inv_report)))
+	logger.notifyChannel("fiscalgr", netsvc.LOG_DEBUG, 'printing one %s invoice '%(inv_report))
 	report_obj=self.pool.get('ir.actions.report.xml')
 	rep= report_obj.read(cr,uid,inv_report,[])
 	if (rep['model']!=inv_model or rep['report_type'] != 'txt'):
@@ -83,7 +86,9 @@ class fiscal_print(osv.osv):
 		if (format != 'txt'):
 			raise Exception("Invoice format is not txt, strange")
 		# print result
-		return self._print_fiscal(cr,uid,inv_report,inv_title,format,result.decode('utf-8'),context)
+		return self._print_fiscal(cr,uid,inv_report,title=inv_title,format=format,
+			content=result.decode('utf-8'),printer=rep['printer'],
+			copies=rep['copies'],context=context)
 
 		#self._reports[id]['result'] = result
 		#self._reports[id]['format'] = format

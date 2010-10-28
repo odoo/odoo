@@ -41,5 +41,18 @@
 		</field>
 	</record>
 
+	<record model="ir.ui.view" id="view_report_fiscalgr_inherit_1">
+		<field name="name">ir.actions.report.xml.fiscalgr_1</field>
+		<field name="model">ir.actions.report.xml</field>
+		<field name="inherit_id" ref="base.act_report_xml_view"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<xpath expr="/form/field[@name='attachment']" position="after">
+				<field name="printer"/>
+				<field name="copies"/>
+			</xpath>
+		</field>
+	</record>
+
 	</data>
 </openerp>

@@ -78,7 +78,7 @@ class account_invoice(osv.osv):
 	for i in invoices:
 		if fiscalgr_obj.print_invoice(cr,uid,i,self._name,i['number'], i['property_fiscalgr_invoice_report'][0],context):
 			self.write(cr,uid,i['id'],{'state':'printed'})
-			logger.notifyChannel("fiscalgr", netsvc.LOG_INFO, 'printed invoice %s'%i['number'])
+			logger.notifyChannel("fiscalgr", netsvc.LOG_INFO, 'printed invoice ref. %s'%i['number'])
        
 	return True
 

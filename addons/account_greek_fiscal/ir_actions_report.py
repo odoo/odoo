@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2008 P. Christeas. All Rights Reserved
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,11 +20,17 @@
 #
 ##############################################################################
 
-import fiscal_prints
-import account_invoice_print
-import ir_actions_report
-import wizard
-import report
+from osv import fields, osv
+# import netsvc
+
+class report_xml(osv.osv):
+    _inherit = "ir.actions.report.xml"
+    _columns = {
+        # states={'open':[('readonly',False)]}
+	'printer': fields.char('Printer', size=50, help="Preferred printer for this report. Useful for server-side printing."),
+	'copies': fields.integer('Copies', help="Default number of copies."),
+        }
+
+report_xml()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
