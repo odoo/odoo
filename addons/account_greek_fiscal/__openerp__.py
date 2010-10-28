@@ -22,7 +22,7 @@
 {
     "name" : "Greek Fiscal printing",
     "version" : "0.2",
-    "depends" : ["account", ],
+    "depends" : ["account", "base_vat" ],
     "ext_depends" : ["python-cups", ],
     "author" : "P. Christeas",
     "description": """This enables the greek fiscal printing of reports (invoices). 
