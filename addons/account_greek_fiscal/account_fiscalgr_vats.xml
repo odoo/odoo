@@ -86,10 +86,10 @@
 		<field name="inherit_id" ref="base_vat.view_partner_form"/>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<xpath expr="/form/notebook/page[@string='Accounting']/group/field[@name='vat']" position="after">
+			<field name="vat" position="after">
 				<field name="vat_taxauth"/>
 				<field name="vat_occup" />
-			</xpath>
+			</field>
 		</field>
 	</record>
 
