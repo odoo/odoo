@@ -328,7 +328,7 @@ class account_cash_statement(osv.osv):
             vals = {}
             force_allow = context.get('force_allow',False)
             if not force_allow and not self._user_allow(cr, uid, statement.id, context=context):
-                raise osv.except_osv(_('Error !'), _('User %s does not have rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
+                raise osv.except_osv(_('Error !'), (_('User %s does not have rights to access %s journal !') % (statement.user_id.name, statement.journal_id.name)))
 
             if statement.name and statement.name == '/':
                 number = self.pool.get('ir.sequence').get(cr, uid, 'account.cash.statement')
