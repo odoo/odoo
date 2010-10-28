@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+	<record model="ir.ui.view" id="view_account_ficalgr_tauth_form">
+		<field name="name">account.fiscalgr.tauth.form</field>
+		<field name="model">account.fiscalgr.tauth</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Tax authorities">
+				<field name="name" colspan="2" search="1"/>
+				<field name="code" search="1"/>
+				<field name="country_id" />
+				<field name="descr" colspan="4" />
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_account_ficalgr_tauth_tree">
+		<field name="name">account.fiscalgr.tauth.tree</field>
+		<field name="model">account.fiscalgr.tauth</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Tax authorities">
+				<field name="name" search="1"/>
+				<field name="code" search="1"/>
+				<field name="country_id" search="1" />
+			</tree>
+		</field>
+	</record>
+
+	
+	<record model="ir.actions.act_window" id="view_account_fiscalgr_tauth_tf">
+		<field name="name">Tax authorities</field>
+		<field name="res_model">account.fiscalgr.tauth</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	
+	<!-- Tax occupations -->
+	<record model="ir.ui.view" id="view_account_ficalgr_occup_form">
+		<field name="name">account.fiscalgr.occup.form</field>
+		<field name="model">account.fiscalgr.occup</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Tax occupations">
+				<field name="name" colspan="2" search="1"/>
+				<field name="code" search="1"/>
+				<field name="descr" colspan="4" />
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_account_ficalgr_occup_tree">
+		<field name="name">account.fiscalgr.occup.tree</field>
+		<field name="model">account.fiscalgr.occup</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Tax occupations">
+				<field name="name" search="1"/>
+				<field name="code" search="1"/>
+			</tree>
+		</field>
+	</record>
+
+	
+	<record model="ir.actions.act_window" id="view_account_fiscalgr_occup_tf">
+		<field name="name">Tax occupations</field>
+		<field name="res_model">account.fiscalgr.occup</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+
+	<menuitem name="Tax authorities" id="menu_account_fiscalgr_tauth_tf" 
+		action="view_account_fiscalgr_tauth_tf"
+		parent="account.menu_finance_accounting"/>
+
+	<menuitem name="Tax occupations" id="menu_account_fiscalgr_occup_tf" 
+		action="view_account_fiscalgr_occup_tf"
+		parent="account.menu_finance_accounting"/>
+
+
+	<record model="ir.ui.view" id="view_partner_fiscalgr_inherit_1">
+		<field name="name">account.partner.fiscalgr.inherit_1</field>
+		<field name="model">res.partner</field>
+		<field name="inherit_id" ref="base_vat.view_partner_form"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<xpath expr="/form/notebook/page[@name='Accounting']/group/field[@name='vat']" position="after">
+				<field name="vat_taxauth"/>
+				<field name="vat_occup" />
+			</xpath>
+		</field>
+	</record>
+
+
+    </data>
+</openerp>

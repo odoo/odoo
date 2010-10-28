@@ -2,8 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2008 P. Christeas. All Rights Reserved
-#    $Id$
+#    Copyright (C) 2009 P. Christeas. All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -20,13 +19,19 @@
 #
 ##############################################################################
 
-import fiscal_prints
-import account_vats
-import partner
-import account_invoice_print
-import ir_actions_report
-import wizard
-import report
+import netsvc
+from osv import osv, fields
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    _columns = {
+        'vat_taxauth': fields.many2one('account.fiscalgr.tauth','Tax authority', 
+		domain=[('country_id','=','country_id')],
+		help="Select the local tax service branch, where the partner is registered."),
+	'vat_occup': fields.many2one('account.fiscalgr.occup','VAT Occupation', 
+		help="Select the corresponding occupation of the partner, as registered with tax authorities."),
+    }
 
+res_partner()
+
+#eof
