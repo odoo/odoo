@@ -67,9 +67,12 @@ class fiscal_print(osv.osv):
 	job = ccon.printFile(printer,fp_name,title,{'copies': str(copies)})
 	os.unlink(fp_name)
 	if job:
-		print 'Created job %d'% job
+		# print 'Created job %d'% job
 		fprn=self.create(cr,uid,{'cups_jobid':job,'name':title,'report':report_id, 'state': 'queued'},context)
-		self._set_pooler_active(cr,uid,True)
+		try:
+			self._set_pooler_active(cr,uid,True)
+		except:
+			pass
 		return True
 	else:
 		raise Exception(_('Cannot print at printer %s')%printer)
@@ -139,18 +142,31 @@ class fiscal_print(osv.osv):
 	for pjob in prints:
 		jats = ccon.getJobAttributes(pjob['cups_jobid'])
 		ndata = {}
-		print "Job %d attributes" % pjob['cups_jobid'],jats
+		# print "Job %d attributes" % pjob['cups_jobid'],jats
 		if 'job-printer-state-message' in jats:
 			jpsm = jats['job-printer-state-message']
 		else:
 			jpsm = ''
 		
-		if jats['job-state'] == cups.IPP_OK:
+		if jats['job-state'] == cups.IPP_OK or \
+			jats['job-state'] == cups.IPP_JOB_COMPLETED:
 			pending_jobs -= 1
 			if jpsm.startswith('eafdSigns-1:'):
 				ndata['hash'] = jpsm[12:]
 			ndata['state'] = 'printed'
 			#TODO more fields
+		elif jats['job-state'] == IPP_JOB_ABORTED:
+			ndata['cups_msg'] = _('Print job aborted')
+		elif jats['job-state'] == IPP_JOB_CANCELLED:
+			ndata['cups_msg'] = _('Print job cancelled')
+		elif jats['job-state'] == IPP_JOB_HELD:
+			ndata['cups_msg'] = _('Print job held')
+		elif jats['job-state'] == IPP_JOB_PENDING:
+			ndata['cups_msg'] = _('Print job pending')
+		elif jats['job-state'] == IPP_JOB_PROCESSING:
+			ndata['cups_msg'] = _('Print job processing...')
+		elif jats['job-state'] == IPP_JOB_STOPPED:
+			ndata['cups_msg'] = _('Print job stopped')
 		else:
 			# job is still pending
 			ndata['cups_msg'] = jpsm
@@ -166,14 +182,14 @@ class fiscal_print(osv.osv):
 		'''
 		logger = netsvc.Logger()
 		obj = self.pool.get('ir.cron')
-		pids = obj.search(cr,uid,[('model','=',self._name),('function','=','check_results')])
+		pids = obj.search(cr,uid,[('model','=',self._name),('function','=','check_results'),'|',('active','=',True),('active','=',False)])
 		
 		if len(pids) != 1 :
 			logger.notifyChannel('fiscalgr-prints', netsvc.LOG_WARNING,
-				'Found %d pooler jobs instead of 1.'%len(pids))
+				'Found %d cron jobs instead of 1.'%len(pids))
 		
-		print "trying to update the state"
-		obj.write(cr,uid,pids[0],{'active': active})
+		if len(pids) > 0:
+			obj.write(cr,uid,pids[0],{'active': active})
 		return True
 fiscal_print()
 
