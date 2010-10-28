@@ -26,7 +26,7 @@
   I clicked on Open CashBox button to open the cashbox
 -
  !python {model: account.bank.statement}: |
-    self.button_open(cr, uid, [ref("account_bank_statement_1")], {"lang": "en_US", "tz": False, "active_model": "account.bank.statement", "active_ids": [ref("account_bank_statement_1")], "active_id": ref("account_bank_statement_1"), })
+    self.button_open(cr, uid, [ref("account_bank_statement_1")], {"force_allow":True, "lang": "en_US", "tz": False, "active_model": "account.bank.statement", "active_ids": [ref("account_bank_statement_1")], "active_id": ref("account_bank_statement_1"), })
 
 -
   I check that now bank statement is in the "Open" state
