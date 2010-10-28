@@ -34,7 +34,7 @@ with flatten, everything is turned into text.
 """
 
 import os
-import netsvc,logging
+import tempfile
 
 
 HEAD="""%FDF-1.2
@@ -91,14 +91,30 @@ def write_fields(out, fields):
 
 def extract_keys_from_pdf(filename):
     # what about using 'pdftk filename dump_data_fields' and parsing the output ?
-    os.system('pdftk %s generate_fdf output /tmp/toto.fdf' % filename)
-    lines = file('/tmp/toto.fdf').readlines()
+    tmp_file = tempfile.mkstemp(".fdf")[1]
+    try:
+        os.system('pdftk %s generate_fdf output \"%s\"' % (filename, tmp_file))
+        with open(tmp_file, "r") as ofile:
+            lines = ofile.readlines()
+    finally:
+        try:
+            os.remove(tmp_file)
+        except:
+            pass # nothing to do
     return extract_keys(lines)
 
 
 def fill_pdf(infile, outfile, fields):
-    write_fields(file('/tmp/toto.fdf', 'w'), fields)
-    os.system('pdftk %s fill_form /tmp/toto.fdf output %s flatten' % (infile, outfile))
+    tmp_file = tempfile.mkstemp(".fdf")[1]
+    try:
+        with open(tmp_file, "w") as ofile:
+            write_fields(ofile, fields)
+        os.system('pdftk %s fill_form \"%s\" output %s flatten' % (infile, tmp_file, outfile))
+    finally:
+        try:
+            os.remove(tmp_file)
+        except:
+            pass # nothing to do
 
 def testfill_pdf(infile, outfile):
     keys = extract_keys_from_pdf(infile)
