@@ -229,7 +229,7 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1" string="Summary"
                             colspan="4" required="1" />
-                        <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
+                        <field name="allday" colspan="2" on_change="onchange_dates(date,False,False,allday)" />
                         <newline/>
                         <field name="date" string="Start Date" required="1" select="1"
                             on_change="onchange_dates(date,duration,False,allday)" />
