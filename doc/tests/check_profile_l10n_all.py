@@ -37,7 +37,7 @@ profiles = [
     'profile_manufacturing'
 ]
 l10n_charts = [
-    'l10n_minimal_chart_uk',
+    'l10n_uk',
     False,
     'l10n_be',
     'l10n_fr'
