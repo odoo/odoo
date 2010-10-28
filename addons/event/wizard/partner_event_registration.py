@@ -64,14 +64,14 @@ class partner_event_registration(osv.osv_memory):
                         contact_id = contact.contact_id.id
                         email = contact.email
 
-        result = mod_obj.get_object_reference(cr, uid, 'event', 'view_registration_search') or False
+        result = mod_obj.get_object_reference(cr, uid, 'event', 'view_registration_search')
         res = result and result[1] or False
 
         # Select the view
 
-        id2 = mod_obj.get_object_reference(cr, uid, 'event', 'view_event_registration_form') or False
+        id2 = mod_obj.get_object_reference(cr, uid, 'event', 'view_event_registration_form')
         id2 = id2 and id2[1] or False
-        id3 = mod_obj.get_object_reference(cr, uid, 'event', 'view_event_registration_tree') or False
+        id3 = mod_obj.get_object_reference(cr, uid, 'event', 'view_event_registration_tree')
         id3 = id3 and id3[1] or False
 
         for current in self.browse(cr, uid, ids, context=context):

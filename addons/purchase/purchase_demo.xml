@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-    
+
     <!--Resource: purchase.order-->
-        
+
         <record id="order_purchase1" model="purchase.order">
             <field model="stock.location" name="location_id" search="[]"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field model="res.partner" name="partner_id" search="[]"/>
+            <field model="res.partner" name="partner_id" search="[('supplier','=','True')]" />
             <field model="res.partner.address" name="partner_address_id" search="[]"/>
         </record>
-        
+
         <record id="order_purchase2" model="purchase.order">
             <field model="stock.location" name="location_id" search="[]"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field model="res.partner" name="partner_id" search="[]"/>
+            <field model="res.partner" name="partner_id" search="[('supplier','=','True')]" />
             <field model="res.partner.address" name="partner_address_id" search="[]"/>
         </record>
-        
+
         <!--Resource: purchase.order.line-->
-        
+
         <record id="line1_purchase" model="purchase.order.line">
             <field name="order_id" ref="order_purchase1"/>
             <field name="date_planned">2010/09/15</field>
@@ -29,7 +29,7 @@
             <field name="price_unit">150</field>
             <field name="product_qty">5</field>
         </record>
-        
+
         <record id="line2_purchase" model="purchase.order.line">
             <field name="order_id" ref="order_purchase1"/>
             <field name="date_planned">2010/09/15</field>
@@ -39,7 +39,7 @@
             <field name="price_unit">450</field>
             <field name="product_qty">2</field>
         </record>
-        
+
         <record id="line3_purchase" model="purchase.order.line">
             <field name="order_id" ref="order_purchase2"/>
             <field name="date_planned">2010/09/15</field>
@@ -49,9 +49,9 @@
             <field name="price_unit">900</field>
             <field name="product_qty">1</field>
         </record>
-        
+
         <workflow action="purchase_confirm" model="purchase.order" ref="order_purchase2"/>
-        
+
     </data>
 </openerp>
-    
+

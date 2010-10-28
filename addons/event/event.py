@@ -115,7 +115,7 @@ class event_event(osv.osv):
             else:
                 unconfirmed_ids.append(event.id)
         if unconfirmed_ids:
-            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_confirm') or False
+            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_confirm')
             view_id = view_id and view_id[1] or False
             context['event_ids'] = unconfirmed_ids
             return {
@@ -466,7 +466,7 @@ class event_registration(osv.osv):
             else:
                 unconfirmed_ids.append(registration.id)
         if unconfirmed_ids:
-            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_confirm_registration') or False
+            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_confirm_registration')
             view_id = view_id and view_id[1] or False
             context['registration_ids'] = unconfirmed_ids
             return {
@@ -496,7 +496,7 @@ class event_registration(osv.osv):
             else:
                 self.do_close(cr, uid, [registration.id], context=context)
         if unclosed_ids:
-            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_make_invoice') or False
+            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_make_invoice')
             view_id = view_id and view_id[1] or False
             context['active_ids'] = unclosed_ids
             return {

@@ -34,7 +34,7 @@ from osv.orm import browse_record, browse_null
 # Model definition
 #
 class purchase_order(osv.osv):
-    
+
     def _calc_amount(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = {}
         for order in self.browse(cr, uid, ids):
@@ -42,7 +42,7 @@ class purchase_order(osv.osv):
             for oline in order.order_line:
                 res[order.id] += oline.price_unit * oline.product_qty
         return res
-         
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
@@ -271,7 +271,6 @@ class purchase_order(osv.osv):
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context={}):
-        product = []
         todo = []
         for po in self.browse(cr, uid, ids):
             if not po.order_line:
@@ -281,7 +280,7 @@ class purchase_order(osv.osv):
                     todo.append(line.id)
             message = _("Purchase order '%s' is confirmed.") % (po.name,)
             self.log(cr, uid, po.id, message)
-        current_name = self.name_get(cr, uid, ids)[0][1]
+#        current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
@@ -369,7 +368,7 @@ class purchase_order(osv.osv):
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'origin': o.name,
                 'invoice_line': il,
-                'fiscal_position': o.partner_id.property_account_position.id,
+                'fiscal_position': o.fiscal_position.id or o.partner_id.property_account_position.id,
                 'payment_term': o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
                 'company_id': o.company_id.id,
             }
