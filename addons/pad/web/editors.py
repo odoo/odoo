@@ -14,7 +14,7 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
                 output.index(self.ADD_ATTACHMENT_BUTTON)) + 1
         output = output[:form_opener_insertion] + \
                  '''<a href="#" id="add-pad" class="button-a"
-                       style="right: 44px;"
+                       style="right: 36px;"
                        >${_("Pad")}</a>\n''' + \
                  output[form_opener_insertion:]
         return output
@@ -39,6 +39,7 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
                             .submit(createAttachment);
                     jQuery('#add-pad').click(function(e){
                         $padForm.show();
+                        jQuery('#sidebar_pad_datas').focus();
                         e.preventDefault();
                     });
                 });
