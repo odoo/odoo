@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    
+    <data noupdate="True">
+        
+        <!-- VAT Code Definitions -->
+        
+        <!-- Invoiced VAT -->
+        
+        <!-- Input VAT -->
+        
+        <record id="vat_code_chart_root" model="account.tax.code.template">
+            <field name="name">Taxes GR</field>
+        </record>
+        
+        <record id="vat_code_balance_net" model="account.tax.code.template">
+            <field name="name">VAT Balance to Pay</field>
+            <field name="parent_id" ref="vat_code_chart_root"/>
+        </record>
+        
+        <record id="vat_code_input" model="account.tax.code.template">
+            <field name="name">Input VAT</field>
+            <field name="parent_id" ref="vat_code_balance_net"/>
+        </record>
+        
+	<record id="vat_code_input_restgr" model="account.tax.code.template">
+            <field name="name">Rest of Greece</field>
+            <field name="parent_id" ref="vat_code_input"/>
+        </record>
+
+        <record id="vat_code_input_9" model="account.tax.code.template">
+            <field name="name">Input VAT 9%</field>
+            <field name="parent_id" ref="vat_code_input_restgr"/>
+        </record>
+        
+        <record id="vat_code_input_4" model="account.tax.code.template">
+            <field name="name">Input VAT 4,5%</field>
+            <field name="parent_id" ref="vat_code_input_restgr"/>
+        </record>
+        
+	<record id="vat_code_input_19" model="account.tax.code.template">
+            <field name="name">Input VAT 19%</field>
+            <field name="parent_id" ref="vat_code_input_restgr"/>
+        </record>
+
+	<record id="vat_code_input_aeg" model="account.tax.code.template">
+            <field name="name">Aegean Islands</field>
+            <field name="parent_id" ref="vat_code_input"/>
+        </record>
+
+        <record id="vat_code_input_6" model="account.tax.code.template">
+            <field name="name">Input VAT 6%</field>
+            <field name="parent_id" ref="vat_code_input_aeg"/>
+        </record>
+        
+        <record id="vat_code_input_3" model="account.tax.code.template">
+            <field name="name">Input VAT 3%</field>
+            <field name="parent_id" ref="vat_code_input_aeg"/>
+        </record>
+        
+	<record id="vat_code_input_13" model="account.tax.code.template">
+            <field name="name">Input VAT 13%</field>
+            <field name="parent_id" ref="vat_code_input_aeg"/>
+        </record>
+        
+        <record id="vat_code_output" model="account.tax.code.template">
+            <field name="name">Output VAT</field>
+            <field name="parent_id" ref="vat_code_balance_net"/>
+        </record>
+        
+	<record id="vat_code_output_restgr" model="account.tax.code.template">
+            <field name="name">Rest of Greece</field>
+            <field name="parent_id" ref="vat_code_output"/>
+        </record>
+
+        <record id="vat_code_output_9" model="account.tax.code.template">
+            <field name="name">Output VAT 9%</field>
+            <field name="parent_id" ref="vat_code_output_restgr"/>
+        </record>
+        
+        <record id="vat_code_output_4" model="account.tax.code.template">
+            <field name="name">Output VAT 4,5%</field>
+            <field name="parent_id" ref="vat_code_output_restgr"/>
+        </record>
+        
+	<record id="vat_code_output_19" model="account.tax.code.template">
+            <field name="name">Output VAT 19%</field>
+            <field name="parent_id" ref="vat_code_output_restgr"/>
+        </record>
+
+	<record id="vat_code_output_aeg" model="account.tax.code.template">
+            <field name="name">Aegean Islands</field>
+            <field name="parent_id" ref="vat_code_output"/>
+        </record>
+
+        <record id="vat_code_output_6" model="account.tax.code.template">
+            <field name="name">Output VAT 6%</field>
+            <field name="parent_id" ref="vat_code_output_aeg"/>
+        </record>
+        
+        <record id="vat_code_output_3" model="account.tax.code.template">
+            <field name="name">Output VAT 3%</field>
+            <field name="parent_id" ref="vat_code_output_aeg"/>
+        </record>
+        
+	<record id="vat_code_output_13" model="account.tax.code.template">
+            <field name="name">Output VAT 13%</field>
+            <field name="parent_id" ref="vat_code_output_aeg"/>
+        </record>
+
+        <!-- Chart Template -->
+        
+        <record id="l10n_gr_chart_template" model="account.chart.template">
+            <field name="name">GR Account Chart Template</field>
+            <field name="account_root_id" ref="l10n_chart_gr.chart0"/>
+            <field name="tax_code_root_id" ref="l10n_chart_gr.vat_code_chart_root"/>
+            <field name="bank_account_view_id" ref="l10n_chart_gr.bnk"/>
+            <field name="property_account_receivable" ref="l10n_chart_gr.a_recv"/>
+            <field name="property_account_payable" ref="l10n_chart_gr.a_pay"/>
+            <field name="property_account_expense_categ" ref="l10n_chart_gr.a_expense"/>
+            <field name="property_account_income_categ" ref="l10n_chart_gr.a_sale"/>
+        </record>
+        
+        <!-- VAT Codes -->
+        <!-- Purchases + Input VAT -->
+        
+        <record id="ivat19" model="account.tax.template">
+       	 	<field name="chart_template_id" ref="l10n_gr_chart_template"/>
+            <field name="name">IVAT 19</field>
+            <field eval="0.19" name="amount"/>
+            <field name="type">percent</field>
+            <field name="account_collected_id" ref="l10n_chart_gr.iva"/>
+            <field name="account_paid_id" ref="l10n_chart_gr.iva"/>
+            <field name="base_code_id" ref="vat_code_input_19"/>
+            <field name="tax_code_id" ref="vat_code_input_19"/>
+            
+	    <!-- refunds: <field name="ref_base_code_id" ref="vat_code_purch_S"/>
+            <field name="ref_tax_code_id" ref="vat_code_input_S"/> -->
+        </record>
+        
+        <record id="ovat19" model="account.tax.template">
+       	 	<field name="chart_template_id" ref="l10n_gr_chart_template"/>
+            <field name="name">OVAT 19</field>
+            <field eval="0.19" name="amount"/>
+            <field name="type">percent</field>
+            <field name="account_collected_id" ref="l10n_chart_gr.iva"/>
+            <field name="account_paid_id" ref="l10n_chart_gr.iva"/>
+            <field name="base_code_id" ref="vat_code_output_19"/>
+            <field name="tax_code_id" ref="vat_code_output_19"/>
+            
+	    <!-- refunds: <field name="ref_base_code_id" ref="vat_code_purch_S"/>
+            <field name="ref_tax_code_id" ref="vat_code_input_S"/> -->
+        </record>
+	
+        
+    </data>
+</openerp>
