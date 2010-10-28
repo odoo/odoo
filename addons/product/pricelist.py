@@ -559,7 +559,7 @@ class product_pricelist_item(osv.osv):
     }
 
     _constraints = [
-        (_check_recursion,('Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!'), ['base_pricelist_id'])
+        (_check_recursion, 'Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!', ['base_pricelist_id'])
     ]
 
     def product_id_change(self, cr, uid, ids, product_id, context={}):
