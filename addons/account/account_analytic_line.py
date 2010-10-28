@@ -23,6 +23,7 @@ import time
 
 from osv import fields
 from osv import osv
+import logging
 from tools.translate import _
 
 class account_analytic_line(osv.osv):
