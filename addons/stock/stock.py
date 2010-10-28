@@ -2008,7 +2008,6 @@ class stock_move(osv.osv):
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
-        picking_obj = self.pool.get('stock.picking')
         wf_service = netsvc.LocalService("workflow")
         for pick_id in picking_ids:
             wf_service.trg_write(uid, 'stock.picking', pick_id, cr)

@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-from itertools import groupby
-from operator import itemgetter
 from datetime import datetime
 from osv import osv, fields
 from tools.translate import _

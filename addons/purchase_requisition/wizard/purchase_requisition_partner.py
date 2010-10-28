@@ -24,6 +24,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from osv import fields, osv
 from osv.orm import browse_record, browse_null
+from tools.translate import _
 
 class purchase_requisition_partner(osv.osv_memory):
     _name = "purchase.requisition.partner"
@@ -38,7 +39,7 @@ class purchase_requisition_partner(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         tender = self.pool.get('purchase.requisition').browse(cr, uid, record_id)
         if not tender.line_ids:
-            raise osv.except_osv('Error!','No Product in Tender')
+            raise osv.except_osv(_('Error!'), _('No Product in Tender'))
         True
 
     def onchange_partner_id(self, cr, uid, ids, partner_id):
