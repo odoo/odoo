@@ -46,24 +46,25 @@ class fiscal_print(osv.osv):
   def _print_fiscal(self,cr,uid,report_id,title,format,content,printer=False,copies=1,context=None):
 	import tempfile
 	import os
+	import locale
 	if not printer:
 		raise Exception(_('No printer specified for report'))
 	if not copies:
 		copies=1
 	(fileno, fp_name) = tempfile.mkstemp('.'+format, 'openerp_')
 	fp = file(fp_name, 'wb+')
-	fp.write(content.encode('iso8859-7'))
+	try:
+		encoding = locale.getdefaultlocale()[1]
+	except:
+		encoding = 'UTF-8'
+	fp.write(content.encode(encoding))
 	fp.close()
 	os.close(fileno)
-	PRINTER='Forol2'
 	try:
 		import cups
 	except:
 		raise Exception(_('Cannot talk to cups, please install pycups'))
 	ccon = cups.Connection()
-	#attrs=ccon.getPrinterAttributes(name=PRINTER)
-	#print "Located \"%s\" at a v%s CUPS server" %(attrs['printer-make-and-model'],attrs['cups-version'])
-	#print 'Trying to print %s at %s'%(fp_name,PRINTER)
 	job = ccon.printFile(printer,fp_name,title,{'copies': str(copies)})
 	os.unlink(fp_name)
 	if job:
