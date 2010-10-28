@@ -79,7 +79,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             move_state = ['posted']
 
         full_account = []
-        result_tmp = 0.0
         self.cr.execute(
             "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
                     "CASE WHEN sum(debit) > sum(credit) " \

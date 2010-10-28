@@ -38,8 +38,7 @@ from tools.safe_eval import safe_eval as eval
 try:
     import vobject
 except ImportError:
-    raise osv.except_osv('vobject Import Error!','Please install python-vobject \
-                     from http://vobject.skyhouseconsulting.com/')
+    raise osv.except_osv(_('vobject Import Error!'), _('Please install python-vobject from http://vobject.skyhouseconsulting.com/'))
 
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once

@@ -55,7 +55,8 @@ class event_event(osv.osv):
             'registration_ids': False,
         })
         return super(event_event, self).copy(cr, uid, id, default=default, context=context)
-    def onchange_product(self, cr, uid, ids, product_id):
+
+    def onchange_product(self, cr, uid, ids, product_id=False):
         """This function returns value of  product's unit price based on product id.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -132,7 +133,6 @@ class event_event(osv.osv):
             }
         return res
 
-
     def _get_register(self, cr, uid, ids, fields, args, context=None):
         """Get Confirm or uncofirm register value.
         @param ids: List of Event registration type's id
@@ -165,7 +165,6 @@ class event_event(osv.osv):
                 res[event.id]['register_current'] = number and number[0] or 0.0
             if 'register_prospect' in fields:
                 res[event.id]['register_prospect'] = number and number[0] or 0.0
-
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -707,7 +706,7 @@ class event_registration_badge(osv.osv):
     _name = 'event.registration.badge'
     _description = __doc__
     _columns = {
-        'registration_id': fields.many2one('event.registration', 'Registration', required=True),
+        "registration_id": fields.many2one('event.registration', 'Registration', required=True),
         "title": fields.char('Title', size=128),
         "name": fields.char('Name', size=128, required=True),
         "address_id": fields.many2one('res.partner.address', 'Address'),

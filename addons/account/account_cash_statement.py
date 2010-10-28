@@ -241,14 +241,14 @@ class account_cash_statement(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if 'journal_id' not in vals:
-            raise osv.except_osv('Error', _('You cannot create a bank or cash register without a journal!'))
+            raise osv.except_osv(_('Error'), _('You cannot create a bank or cash register without a journal!'))
         sql = [
                 ('journal_id', '=', vals.get('journal_id', False)),
                 ('state', '=', 'open')
         ]
         open_jrnl = self.search(cr, uid, sql)
         if open_jrnl:
-            raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
+            raise osv.except_osv(_('Error'), _('You can not have two open register for the same journal'))
 
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id']).type == 'cash':
             open_close = self._get_cash_open_close_box_lines(cr, uid, context)
@@ -328,8 +328,8 @@ class account_cash_statement(osv.osv):
         statement_pool = self.pool.get('account.bank.statement')
         for statement in statement_pool.browse(cr, uid, ids, context=context):
             vals = {}
-
-            if not self._user_allow(cr, uid, statement.id, context=context):
+            force_allow = context.get('force_allow',False)
+            if not force_allow and not self._user_allow(cr, uid, statement.id, context=context):
                 raise osv.except_osv(_('Error !'), _('User %s does not have rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
 
             if statement.name and statement.name == '/':

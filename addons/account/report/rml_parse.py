@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 import re
 import sys
 
@@ -55,15 +54,15 @@ class rml_parse(report_sxw.rml_parse):
         ellipsis = ellipsis or ''
         try:
             return string[:maxlen - len(ellipsis) ] + (ellipsis, '')[len(string) < maxlen]
-        except Exception, e:
+        except:
             return False
     def _strip_name(self, name, maxlen=50):
         return self._ellipsis(name, maxlen, '...')
 
-    def _get_and_change_date_format_for_swiss (self,date_to_format):
+    def _get_and_change_date_format_for_swiss(self,date_to_format):
         date_formatted=''
         if date_to_format:
-            date_formatted = strptime (date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
+            date_formatted = strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
 
     def _explode_name(self,chaine,length):
@@ -109,15 +108,14 @@ class rml_parse(report_sxw.rml_parse):
             i = i + length
         chaine = str("".join(ast))
         return chaine
-    def repair_string(self,chaine):
+    def repair_string(self, chaine):
         ast = list(chaine)
         UnicodeAst = []
-        _previouslyfound = False
         i = 0
         while i < len(ast):
             elem = ast[i]
             try:
-                Stringer = elem.encode("utf-8")
+                elem.encode("utf-8")
             except UnicodeDecodeError:
                 to_reencode = elem + ast[i+1]
                 print str(to_reencode)
