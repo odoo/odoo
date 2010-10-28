@@ -328,8 +328,7 @@ class account_cash_statement(osv.osv):
         statement_pool = self.pool.get('account.bank.statement')
         for statement in statement_pool.browse(cr, uid, ids, context=context):
             vals = {}
-            force_allow = context.get('force_allow',False)
-            if not force_allow and not self._user_allow(cr, uid, statement.id, context=context):
+            if not self._user_allow(cr, uid, statement.id, context=context):
                 raise osv.except_osv(_('Error !'), _('User %s does not have rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
 
             if statement.name and statement.name == '/':
