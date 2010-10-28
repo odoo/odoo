@@ -31,7 +31,7 @@ class fiscal_print(osv.osv):
       'day_no': fields.integer('Daily sequence', readonly=True),
       'total_no': fields.integer('Total sequence', readonly=True),
       'cups_jobid': fields.integer('Job ID', readonly=True, required=True, help="CUPS job id"),
-      'job_title': fields.char('Title',size=200,required=True, readonly=True,help="Title of the CUPS job, typically the invoice reference."),
+      'name': fields.char('Title',size=200,required=True, readonly=True,help="Title of the CUPS job, typically the invoice reference."),
       'cups_msg': fields.text('CUPS message',help="This is the message returned by cups, if the printing fails."),
       'report': fields.many2one('ir.actions.report.xml', 'Report', required=True,readonly=True),
   }

@@ -34,7 +34,7 @@
     ],
     "demo_xml" : [
     ],
-    "update_xml" : [
+    "update_xml" : [ "account_fiscalgr_view.xml",
     ],
     "active": False,
     "installable": True
