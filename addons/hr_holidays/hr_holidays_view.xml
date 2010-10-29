@@ -349,6 +349,22 @@
             sequence="40"/>
 
         <!-- holidays status -->
+        <record id="view_holidays_status_filter" model="ir.ui.view">
+            <field name="name">hr.holidays.status.filter</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Leave Type">
+                    <field name="name"/>
+                    <field name="categ_id" widget="selection"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Meeting Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
         <record model="ir.ui.view" id="edit_holiday_status_form">
             <field name="name">hr.holidays.status.form</field>
             <field name="model">hr.holidays.status</field>
@@ -377,6 +393,7 @@
                     <field name="name"/>
                     <field name="remaining_leaves"/>
                     <field name="limit" />
+                     <field name="categ_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -387,6 +404,7 @@
             <field name="res_model">hr.holidays.status</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_holidays_status_filter"/>
         </record>
 
         <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Holidays" groups="base.group_hr_manager"/>
