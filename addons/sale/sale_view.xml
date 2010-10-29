@@ -113,7 +113,7 @@
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended"/>
@@ -210,7 +210,7 @@
                                 <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-ok"/>
                                 <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-apply"/>
                                 <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
-                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="gtk-go-forward" type="object"/>
+                                <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                 <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>

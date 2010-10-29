@@ -41,7 +41,7 @@
             parent="base.menu_purchase_root" sequence="4"/>
       <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_inventory"
             name="Incoming Shipments" sequence="9"
-	    groups="base.group_extended"/>
+      groups="base.group_extended"/>
       <menuitem action="stock.action_reception_picking_move" id="menu_action_picking_tree_in_move"
             parent="menu_procurement_management_inventory" sequence="11"/>
 
@@ -115,7 +115,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Purchase Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1}"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('supplier','=',True)]" context="{'search_default_supplier':1}" />
                             <field name="partner_address_id"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="origin" groups="base.group_extended"/>
@@ -144,10 +144,10 @@
                                 <button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancel Purchase Order" type="object" icon="gtk-cancel"/>
                                 <button name="picking_ok" states="except_picking" string="Manually Corrected" icon="gtk-convert"/>
                                 <button name="invoice_ok" states="except_invoice" string="Manually Corrected" icon="gtk-convert"/>
-                                <button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-go-forward"/>
+                                <button name="purchase_confirm" states="draft" string="Convert to Purchase Order" icon="gtk-go-forward"/>
                                 <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" icon="gtk-ok"/>
                                 <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-go-forward"/>
-				<button name="%(report_purchase_order)d" string="Print" states="approved" type="action" icon="gtk-print"/>
+								<button name="%(report_purchase_order)d" string="Print" states="approved" type="action" icon="gtk-print"/>
 
                             </group>
                         </page>
@@ -307,12 +307,16 @@
                 <tree string="Purchase Order Lines">
                     <field name="order_id"/>
                     <field name="name"/>
-                    <field name="date_planned" widget="date" width="135"/>
+                    <field name="partner_id" string="Supplier" />
                     <field name="product_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom"/>
                     <field name="price_unit"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom"/>                    
                     <field name="price_subtotal"/>
+                    <field name="date_planned"  widget="date" width="135"/>
+                    
+                   
+                    
                     <field name="state" invisible="1"/>
                     <field name="invoiced" invisible="1"/>
                 </tree>
@@ -369,10 +373,12 @@
                         <group>
                         <field name="order_id"/>
                         <field name="product_id"/>
-                        </group>
+                        <field name="partner_id"  string="Supplier"/>
+                        </group> 
                         <newline/>
                         <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by' : 'product_id'}" />
+                        <filter string="Supplier" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
                          <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
@@ -401,7 +407,7 @@
             <field name="name">Purchase Lines Not Invoiced</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
-            <field name="domain">[('state','in',('confirmed','done')), ('invoiced','=',False)]</field>
+            <field name="domain">[('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="purchase_order_line_search"/>

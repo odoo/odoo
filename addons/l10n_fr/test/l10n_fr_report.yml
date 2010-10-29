@@ -8,6 +8,11 @@
     date_stop: '2012-12-31'
     name: Fiscal Year 2012
 -
+  I create the fiscal periods
+-
+  !python {model: account.fiscalyear}:
+    self.create_period(cr, uid, [ref('account_fiscalyear_01'),])
+-
   In order to test the PDF reports defined on a l10n_fr, we will print an Account Move Line Report for l10n_fr
 -
   !python {model: account.move.line}: |

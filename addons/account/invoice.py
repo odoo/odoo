@@ -358,7 +358,7 @@ class account_invoice(osv.osv):
         if context is None:
             context = {}
         mob_obj = self.pool.get('ir.model.data')
-        res = mob_obj.get_object_reference(cr, uid, 'account', 'invoice_form') or False
+        res = mob_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         view_id = res and res[1] or False
         context.update({'view_id': view_id})
         return context
