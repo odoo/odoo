@@ -102,10 +102,10 @@
                                             help="Change Type"/>
                                         <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
                                         <field name="state" invisible="context.get('set_visible',False)"/>
+                                        <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-stop" help="For cancelling the task"/>
                                         <button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="terp-camera_test" help="For changing to open state" invisible="context.get('set_visible',False)"/>
                                         <button groups="base.group_extended" name="%(project.action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-sort-descending" help="For changing to delegate state"/>
                                         <button name="do_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close" help="For changing to done state"/>
-                                        <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-stop" help="For cancelling the task"/>
                                 </tree>
                             </field>
                         </page>
