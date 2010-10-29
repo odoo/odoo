@@ -438,8 +438,6 @@ def TestConnection(btnProcessor,*args):
         win32ui.MessageBox("No database found on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return
 
-
-
     uname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
     pwd = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[2])
 
@@ -1106,6 +1104,8 @@ def GetDefaultEmail(txtProcessor,*args):
     new_con_state = ""
     if country_ref == None:
         country_ref = ""
+
+
     if not b:
         return
     #Acquiring control of the text box
@@ -1442,6 +1442,7 @@ def SerachOpenDocuemnt(txtProcessor,*args):
         txtProcessor.init_done=True
         return
     linktodoc = ""
+
     message_id = None
     try:
         outlook = win32com.client.Dispatch("Outlook.Application")
