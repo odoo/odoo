@@ -19,12 +19,7 @@
 #
 ##############################################################################
 
-import os
-
 from osv import fields, osv
-import tools
-from tools.translate import _
-import addons
 
 import addons
 

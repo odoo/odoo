@@ -115,9 +115,9 @@ class account_voucher(osv.osv):
         return [(r['id'], (str("%.2f" % r['amount']) or '')) for r in self.read(cr, uid, ids, ['amount'], context, load='_classic_write')]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
-        if not view_id and context.get('invoice_type', False):
+        if not view_id:
             mod_obj = self.pool.get('ir.model.data')
-            if context.get('invoice_type') in ('out_invoice', 'out_refund'):
+            if context.get('invoice_type', False) in ('out_invoice', 'out_refund') or context.get('line_type', False) == 'customer':
                 result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
             else:
                 result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
