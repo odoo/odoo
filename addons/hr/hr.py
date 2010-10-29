@@ -65,7 +65,7 @@ class hr_employee_category(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Categories.', ['parent_id'])
+        (_check_recursion, _('Error ! You cannot create recursive Categories.'), ['parent_id'])
     ]
 
 hr_employee_category()
@@ -208,8 +208,8 @@ class hr_employee(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
-        (_check_department_id, 'Error ! You cannot select a department for which the employee is the manager.', ['department_id']),
+        (_check_recursion, _('Error ! You cannot create recursive Hierarchy of Employees.'), ['parent_id']),
+        (_check_department_id, _('Error ! You cannot select a department for which the employee is the manager.'), ['department_id']),
     ]
 
 hr_employee()

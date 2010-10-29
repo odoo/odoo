@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 import tools
+from tools.translate import _
 
 class hr_department(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
@@ -80,7 +81,7 @@ class hr_department(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error! You can not create recursive departments.', ['parent_id'])
+        (_check_recursion, _('Error! You can not create recursive departments.'), ['parent_id'])
     ]
 
 hr_department()

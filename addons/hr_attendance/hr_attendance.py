@@ -85,7 +85,7 @@ class hr_attendance(osv.osv):
                 return False
         return True
 
-    _constraints = [(_altern_si_so, 'Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)', ['action'])]
+    _constraints = [(_altern_si_so, _('Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)'), ['action'])]
     _order = 'name desc'
 
 hr_attendance()

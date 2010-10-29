@@ -257,7 +257,7 @@ class hr_holidays(osv.osv):
                 return False
         return True
 
-    _constraints = [(_check_date, 'Start date should not be larger than end date!\nNumber of Days should be greater than 1!', ['number_of_days_temp'])]
+    _constraints = [(_check_date, _('Start date should not be larger than end date!\nNumber of Days should be greater than 1!'), ['number_of_days_temp'])]
 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:

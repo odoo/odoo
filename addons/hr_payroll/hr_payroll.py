@@ -77,7 +77,7 @@ class hr_passport(osv.osv):
         'note': fields.text('Description'),
     }
     _sql_constraints = [
-        ('passport_no_uniq', 'unique (employee_id, name)', 'The Passport No must be unique !'),
+        ('passport_no_uniq', _('unique (employee_id, name)'), 'The Passport No must be unique !'),
     ]
 hr_passport()
 
