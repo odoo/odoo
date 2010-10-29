@@ -469,13 +469,14 @@ class sale_order(osv.osv):
                 inv_ids1.add(record.id)
         inv_ids = list(inv_ids1.difference(inv_ids))
 
-        result = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
-        result = {
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res_id = res and res[1] or False,
+
+        return {
             'name': 'Customer Invoices',
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': [res['res_id']],
+            'view_id': [res_id],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
@@ -483,7 +484,6 @@ class sale_order(osv.osv):
             'target': 'current',
             'res_id': inv_ids and inv_ids[0] or False,
         }
-        return result
 
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
@@ -1220,8 +1220,8 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
             if o.step == 'one':
                 md = self.pool.get('ir.model.data')
-                location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
-                location_id = md.browse(cr, uid, location_id, context=context).res_id
+                location_id = md.get_object_reference(cr, uid, 'stock', 'stock_location_output')
+                location_id = location_id and location_id[1] or False
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
 
 sale_config_picking_policy()
