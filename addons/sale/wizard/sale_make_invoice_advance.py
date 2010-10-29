@@ -135,8 +135,8 @@ sale_advance_payment_inv()
 class sale_open_invoice(osv.osv_memory):
     _name = "sale.open.invoice"
     _description = "Sale Open Invoice"
-    
-    def open_invoice(self, cr, uid, ids, context):
+
+    def open_invoice(self, cr, uid, ids, context=None):
 
         """
              To open invoice.
@@ -148,7 +148,8 @@ class sale_open_invoice(osv.osv_memory):
              @return:
 
         """
-
+        if context is None:
+            context = {}
         mod_obj = self.pool.get('ir.model.data')
         for advance_pay in self.browse(cr, uid, ids):
             form_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
