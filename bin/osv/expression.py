@@ -148,7 +148,8 @@ class expression(object):
                     right1 = table.search(cr, uid, [(fargs[0],'in', right)], context=context)
                     self.__exp[i] = ('id', 'in', right1)                    
                 
-                continue
+                if not isinstance(field,fields.property):
+                    continue
 
             if field._properties and ((not field.store) or field._fnct_search):
 
