@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-20 08:51+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-09-29 11:11+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: procurement
+#: model:ir.ui.menu,name:procurement.menu_stock_sched
+msgid "Schedulers"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_make_procurement
@@ -165,15 +170,9 @@ msgid "Scheduler Parameters"
 msgstr "Parametry planisty"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action11
-msgid "Temporary Procurement Exceptions"
-msgstr "Tymczasowe wyjątki zapotrzebowania"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:0
-#, python-format
-msgid "has an exception."
-msgstr "ma wyjątek."
+#: model:ir.model,name:procurement.model_stock_move
+msgid "Stock Move"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -184,6 +183,11 @@ msgstr "Gotowe"
 #: field:procurement.order.compute.all,automatic:0
 msgid "Automatic orderpoint"
 msgstr "Punkt automatycznego zamawiania"
+
+#. module: procurement
+#: field:mrp.property,composition:0
+msgid "Properties composition"
+msgstr "Kompozycja właściwości"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -221,11 +225,6 @@ msgid "Minimum Inventory Rule"
 msgstr "Reguła minimalnych zapasów"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action4
-msgid "Procurement Exceptions to Fix"
-msgstr "Wyjątki zapotrzebowania do poprawy"
-
-#. module: procurement
 #: field:procurement.order,priority:0
 msgid "Priority"
 msgstr "Priorytet"
@@ -242,6 +241,11 @@ msgstr "Stan"
 #: field:stock.warehouse.orderpoint,location_id:0
 msgid "Location"
 msgstr "Strefa mag."
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_stock_picking
+msgid "Picking List"
+msgstr ""
 
 #. module: procurement
 #: field:make.procurement,warehouse_id:0
@@ -266,8 +270,8 @@ msgid "Compute Procurement"
 msgstr "Oblicz zapotrzebowanie"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action3
 #: model:ir.module.module,shortdesc:procurement.module_meta_information
+#: field:stock.move,procurements:0
 msgid "Procurements"
 msgstr "Zapotrzebowania"
 
@@ -344,23 +348,14 @@ msgid "MRP & Logistic Scheduler"
 msgstr "MRP i planowanie logistyczne"
 
 #. module: procurement
-#: view:procurement.order.compute.all:0
-msgid ""
-"Wizard run all the procurements, and generate task, production order or "
-"purchase order based on the product type"
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement
+msgid "Automatic Procurements"
 msgstr ""
-"Kreator uruchomi wszystkie zapotrzebowania, wygeneruje zadania, zamówienia "
-"produkcji lub zamówienia zakupu w oparciu o typ produktu."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Max Quantity"
 msgstr "Ilość maks."
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Procurement Reason"
-msgstr "Powód zapotrzebowania"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
@@ -406,20 +401,14 @@ msgid "Compute Stock"
 msgstr "Oblicz zapas"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Late"
+msgstr "Późno"
+
+#. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
 msgstr "Usługa"
-
-#. module: procurement
-#: model:ir.module.module,description:procurement.module_meta_information
-msgid ""
-"\n"
-"    This is the module for computing Procurements.\n"
-"    "
-msgstr ""
-"\n"
-"    To jest moduł do obliczania Zapotrzebowań.\n"
-"    "
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
@@ -466,6 +455,17 @@ msgid "Procurement Lines"
 msgstr "Pozycje zapotrzebowania"
 
 #. module: procurement
+#: view:procurement.order.compute.all:0
+msgid ""
+"This wizard allows you to run all procurement, production and/or purchase "
+"orders that should be processed based on their configuration. By default, "
+"the scheduler is launched automatically every night by OpenERP. You can use "
+"this menu to force it to be launched now. Note that it runs in the "
+"background, you may have to wait for a few minutes until it has finished "
+"computing."
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order:0
 #: field:procurement.order,note:0
 msgid "Note"
@@ -475,6 +475,11 @@ msgstr "Notatka"
 #: selection:procurement.order,state:0
 msgid "Draft"
 msgstr "Projekt"
+
+#. module: procurement
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
 
 #. module: procurement
 #: constraint:ir.model:0
@@ -488,12 +493,6 @@ msgstr ""
 #: view:procurement.order:0
 msgid "Status"
 msgstr "Stan"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:0
-#, python-format
-msgid "Procurement "
-msgstr "Zapotrzebowanie "
 
 #. module: procurement
 #: help:res.company,schedule_range:0
@@ -526,16 +525,9 @@ msgstr ""
 "konieczności jego usuwania."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
-#, python-format
-msgid "is running."
-msgstr "jest uruchomione."
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:0
-#, python-format
-msgid "Not enough stock "
-msgstr "Brak zapasu "
+#: field:stock.warehouse.orderpoint,active:0
+msgid "Active"
+msgstr "Aktywne"
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_procureproducts0
@@ -551,6 +543,12 @@ msgstr "Planowana data"
 #: selection:procurement.order,state:0
 msgid "Exception"
 msgstr "Wyjątek"
+
+#. module: procurement
+#: code:addons/procurement/schedulers.py:0
+#, python-format
+msgid "Automatic OP: %s"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_orderpoint_compute
@@ -578,9 +576,9 @@ msgid "Procurement name."
 msgstr "Nazwa zapotrzebowania."
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,active:0
-msgid "Active"
-msgstr "Aktywne"
+#: view:procurement.order:0
+msgid "Procurement Reason"
+msgstr "Powód zapotrzebowania"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -599,14 +597,16 @@ msgid "Date Closed"
 msgstr "Data zamknięcia"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Late"
-msgstr "Późno"
+#: code:addons/procurement/procurement.py:0
+#, python-format
+msgid "Procurement '%s' is in exception: not enough stock."
+msgstr ""
 
 #. module: procurement
-#: field:mrp.property,composition:0
-msgid "Properties composition"
-msgstr "Kompozycja właściwości"
+#: code:addons/procurement/procurement.py:0
+#, python-format
+msgid "Cannot delete Procurement Order(s) which are in %s State!"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -692,12 +692,6 @@ msgid "Current"
 msgstr "Bieżące"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
-#, python-format
-msgid "Project_mrp module not installed !"
-msgstr "Nie zainstalowano modułu Project_mrp !"
-
-#. module: procurement
 #: view:procurement.order:0
 msgid "Details"
 msgstr "Szczegóły"
@@ -705,6 +699,9 @@ msgstr "Szczegóły"
 #. module: procurement
 #: view:board.board:0
 #: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
 msgid "Procurement Exceptions"
 msgstr "Wyjątki zapotrzebowania"
 
@@ -713,6 +710,7 @@ msgstr "Wyjątki zapotrzebowania"
 #: model:ir.actions.act_window,name:procurement.act_product_product_2_stock_warehouse_orderpoint
 #: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
 #: model:ir.actions.act_window,name:procurement.action_orderpoint_form
+#: model:ir.ui.menu,name:procurement.menu_stock_order_points
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules"
 msgstr "Reguły minimalnych zapasów"
@@ -734,6 +732,11 @@ msgstr "Zaplanowana data"
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
 msgstr "Produkt"
+
+#. module: procurement
+#: view:procurement.order:0
+msgid "Temporary"
+msgstr ""
 
 #. module: procurement
 #: field:mrp.property,description:0
@@ -801,12 +804,6 @@ msgstr ""
 "może wygenerować zadanie, zamówienie produkcji lub zakupu."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
-#, python-format
-msgid "is done."
-msgstr "zostało wykonane."
-
-#. module: procurement
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
@@ -830,6 +827,7 @@ msgstr "z zapasu: produkty przypisano."
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
+#: model:ir.ui.menu,name:procurement.menu_stock_proc_schedulers
 #: view:procurement.order.compute.all:0
 msgid "Compute Schedulers"
 msgstr "Oblicz planowania"
@@ -867,22 +865,58 @@ msgid "Procurement Details"
 msgstr "Szczegóły zapotrzebowania"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
-#, python-format
-msgid ""
-"Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
-"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
-"\n"
-"    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
-"        \"\"\" Finds UoM and UoS of changed product.\n"
-"        @param product_id: Changed id of product.\n"
-"        @return: Dictionary of values.\n"
-"        \"\"\"\n"
-"        if product_id:\n"
-"            w = self.pool.get('product.product"
-msgstr ""
-
-#. module: procurement
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
 msgstr "Reguły nie są obsługiwane w obiektach osv_memory !"
+
+#. module: procurement
+#: code:addons/procurement/schedulers.py:0
+#, python-format
+msgid "SCHEDULER"
+msgstr ""
+
+#, python-format
+#~ msgid "has an exception."
+#~ msgstr "ma wyjątek."
+
+#~ msgid "Temporary Procurement Exceptions"
+#~ msgstr "Tymczasowe wyjątki zapotrzebowania"
+
+#~ msgid "Procurement Exceptions to Fix"
+#~ msgstr "Wyjątki zapotrzebowania do poprawy"
+
+#~ msgid ""
+#~ "Wizard run all the procurements, and generate task, production order or "
+#~ "purchase order based on the product type"
+#~ msgstr ""
+#~ "Kreator uruchomi wszystkie zapotrzebowania, wygeneruje zadania, zamówienia "
+#~ "produkcji lub zamówienia zakupu w oparciu o typ produktu."
+
+#~ msgid ""
+#~ "\n"
+#~ "    This is the module for computing Procurements.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    To jest moduł do obliczania Zapotrzebowań.\n"
+#~ "    "
+
+#, python-format
+#~ msgid "Procurement "
+#~ msgstr "Zapotrzebowanie "
+
+#, python-format
+#~ msgid "is running."
+#~ msgstr "jest uruchomione."
+
+#, python-format
+#~ msgid "Not enough stock "
+#~ msgstr "Brak zapasu "
+
+#, python-format
+#~ msgid "Project_mrp module not installed !"
+#~ msgstr "Nie zainstalowano modułu Project_mrp !"
+
+#, python-format
+#~ msgid "is done."
+#~ msgstr "zostało wykonane."

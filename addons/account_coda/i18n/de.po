@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-27 08:09+0000\n"
+"PO-Revision-Date: 2010-10-29 16:34+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-28 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_coda
@@ -39,7 +39,7 @@ msgstr "Fehler bei Modellbezeichnung der Aktion"
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda_import
 msgid "Account Coda Import"
-msgstr ""
+msgstr "Coda Konten Import"
 
 #. module: account_coda
 #: field:account.coda,name:0
@@ -49,12 +49,12 @@ msgstr "Datei CODA"
 #. module: account_coda
 #: view:account.coda:0
 msgid "Group By..."
-msgstr ""
+msgstr "Gruppierung..."
 
 #. module: account_coda
 #: field:account.coda.import,awaiting_account:0
 msgid "Default Account for Unrecognized Movement"
-msgstr ""
+msgstr "Standard Konto für nicht erkannte Buchung"
 
 #. module: account_coda
 #: help:account.coda,date:0
@@ -64,7 +64,7 @@ msgstr "Importiere Datum"
 #. module: account_coda
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
 
 #. module: account_coda
 #: field:account.coda,note:0
@@ -74,7 +74,7 @@ msgstr "Import Protokoll"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Import"
-msgstr ""
+msgstr "Import"
 
 #. module: account_coda
 #: view:account.coda:0
@@ -93,12 +93,14 @@ msgid ""
 "Set here the default account that will be used, if the partner is found but "
 "does not have the bank account, or if he is domiciled"
 msgstr ""
+"Definieren Sie hier das Standard Konto, welches verwendet werden soll, "
+"wennder Partner kein Bank Konto oder keine vollst. Adresse hat"
 
 #. module: account_coda
 #: view:account.coda:0
 #: field:account.coda,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Unternehmen"
 
 #. module: account_coda
 #: help:account.coda.import,def_payable:0
@@ -106,11 +108,13 @@ msgid ""
 "Set here the payable account that will be used, by default, if the partner "
 "is not found"
 msgstr ""
+"Definieren Sie hier das Kreditorenkonto, welches als Standard verwendet "
+"werdensoll, wenn der Partner nicht gefunden werden konnte."
 
 #. module: account_coda
 #: view:account.coda:0
 msgid "Search Coda"
-msgstr ""
+msgstr "Suche Coda"
 
 #. module: account_coda
 #: view:account.coda:0
@@ -122,12 +126,12 @@ msgstr "Benutzer"
 #: view:account.coda:0
 #: field:account.coda,date:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_statement
 msgid "Coda Import Logs"
-msgstr ""
+msgstr "Coda Import Protokolle"
 
 #. module: account_coda
 #: constraint:ir.ui.view:0
@@ -147,17 +151,17 @@ msgstr "Standard Kreditoren Konto"
 #. module: account_coda
 #: help:account.coda,name:0
 msgid "Store the detail of bank statements"
-msgstr ""
+msgstr "Speiche Details zu Bankauszügen"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Open Statements"
-msgstr ""
+msgstr "Offene Auszüge"
 
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_import
@@ -173,12 +177,12 @@ msgstr "Import CODA Bankauszug"
 #. module: account_coda
 #: view:account.coda:0
 msgid "Statements"
-msgstr ""
+msgstr "Bankauszüge"
 
 #. module: account_coda
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Regeln werden nur unterstützt für osv_memory Objekte !"
 
 #. module: account_coda
 #: field:account.bank.statement,coda_id:0
@@ -193,7 +197,7 @@ msgstr "Ergebnis :"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Result of Imported Coda Statements"
-msgstr ""
+msgstr "Ergenis des importierten Auszugs"
 
 #. module: account_coda
 #: help:account.coda.import,def_receivable:0
@@ -201,6 +205,8 @@ msgid ""
 "Set here the receivable account that will be used, by default, if the "
 "partner is not found"
 msgstr ""
+"Definieren Sie hier das Standard Debitoren Konto, welches als Standard "
+"verwendetwerden soll, wenn kein Partner gefunden wird"
 
 #. module: account_coda
 #: field:account.coda.import,coda:0
@@ -211,62 +217,62 @@ msgstr "CODA Datei"
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_bank_statement
 msgid "Bank Statement"
-msgstr ""
+msgstr "Bank Auszug"
 
 #. module: account_coda
 #: model:ir.actions.act_window,name:account_coda.action_account_coda
 msgid "Coda Logs"
-msgstr ""
+msgstr "Coda Protokolle"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:0
 #, python-format
 msgid "Result"
-msgstr ""
+msgstr "Ergebnis"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Click on 'New' to select your file :"
-msgstr ""
+msgstr "Klicke auf 'Neu' für Auswahl Datei:"
 
 #. module: account_coda
 #: field:account.coda.import,def_receivable:0
 msgid "Default Receivable Account"
-msgstr ""
+msgstr "Standard Kreditoren Konto"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Close"
-msgstr ""
+msgstr "Beenden"
 
 #. module: account_coda
 #: field:account.coda,statement_ids:0
 msgid "Generated Bank Statements"
-msgstr ""
+msgstr "Erzeugter Bank Auszug"
 
 #. module: account_coda
 #: model:ir.module.module,shortdesc:account_coda.module_meta_information
 msgid "Account CODA - import bank statements from coda file"
-msgstr ""
+msgstr "Finanzen CODA - Importiere Bank Auszug von Coda Datei"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Configure Your Journal and Account :"
-msgstr ""
+msgstr "Konfiguriere Journal und Konto :"
 
 #. module: account_coda
 #: view:account.coda:0
 msgid "Coda Import"
-msgstr ""
+msgstr "Coda Import"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:0
 #, python-format
 msgid "The bank account %s is not defined for the partner %s.\n"
-msgstr ""
+msgstr "Das Bank Konto %s wurde nicht definiert für den Partner %s.\n"
 
 #. module: account_coda
 #: view:account.coda:0
 #: field:account.coda,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
