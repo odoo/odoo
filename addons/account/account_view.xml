@@ -983,7 +983,7 @@
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id" groups="base.group_extended"/>
-                    <field name="analytic_account_id" groups="base.group_extended" domain="[('parent_id','!=',False)]"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                     <field name="amount_currency" groups="base.group_extended" attrs="{'readonly':[('state','=','valid')]}"/>
                     <field name="currency_id" groups="base.group_extended" attrs="{'readonly':[('state','=','valid')]}"/>
                     <field name="reconcile_partial_id" groups="base.group_extended"/>
@@ -1060,7 +1060,7 @@
 
                             <group col="2" colspan="2"  groups="base.group_extended">
                                 <separator colspan="2" string="Analytic"/>
-                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                             </group>
                             <separator string="Narration" colspan="4"/>
                             <field name="narration" colspan="4" nolabel="1"/>
@@ -1105,7 +1105,7 @@
                             <field name="blocked" select="3"/>
                             <newline/>
                             <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-                            <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                            <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                             <separator colspan="4" string="State"/>
                             <newline/>
                             <field name="reconcile_id"/>
@@ -1353,7 +1353,7 @@
 
                                             <group col="2" colspan="2" groups="base.group_extended">
                                                 <separator colspan="2" string="Analytic"/>
-                                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                                             </group>
                                             <separator string="Narration" colspan="4"/>
                                             <field name="narration" colspan="4" nolabel="1"/>
@@ -1372,7 +1372,7 @@
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
-                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency" groups="base.group_extended"/>
                                     <field name="currency_id" groups="base.group_extended"/>
                                     <field name="tax_code_id"/>
@@ -1990,7 +1990,7 @@
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
-                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -2672,7 +2672,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                         <field name="state" colspan="4"/>
                         <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object" groups="base.group_extended"/>
                         <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-dialog-close" type="object"/>
-                        <button name="button_open" states="draft" string="Open CashBox" icon="terp-document-new" type="object"/>
+                        <button name="button_open" states="draft" string="Open CashBox" icon="gtk-go-forward" type="object"/>
                     </group>
                 </form>
             </field>
