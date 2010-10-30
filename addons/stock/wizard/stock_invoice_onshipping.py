@@ -78,6 +78,8 @@ class stock_invoice_onshipping(osv.osv_memory):
             onshipdata_obj[ids] = onshipdata_obj.new_picking
 
         context['date_inv'] = onshipdata_obj['invoice_date']
+        journal_id = onshipdata_obj['journal_id']
+        context['journal_type'] =self.pool.get('account.journal').browse(cr, uid, journal_id).type
         invoice_ids = []
         for picking in picking_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if picking.invoice_state == '2binvoiced':
