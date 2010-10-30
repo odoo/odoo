@@ -60,7 +60,7 @@ def GetConn():
     mngr = manager.GetManager()
     return d
 
-class ButtonEvent:
+class Configuration:
     def OnClick(self, button, cancel):
         import win32ui
         try:
@@ -170,7 +170,7 @@ class OutlookAddin:
 
             item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
-            item = self.menu_bar_Button = DispatchWithEvents(item, ButtonEvent)
+            item = self.menu_bar_Button = DispatchWithEvents(item, Configuration)
             item.Caption="OpenERP Configuration"
             item.TooltipText = "Click to configure OpenERP"
             item.Enabled = True
@@ -209,19 +209,19 @@ class OutlookAddin:
             item.Enabled = True
 
             # Hook events for the item
-            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
-            item = self.toolbarButtonPartner = DispatchWithEvents(item, ViewPartners)
-            item.Caption = "Open Contact"
-            item.TooltipText = "Click to Open OpenERP Partner Contact Information."
-            item.Enabled = True
+#            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
+#            item = self.toolbarButtonPartner = DispatchWithEvents(item, ViewPartners)
+#            item.Caption = "Open Contact"
+#            item.TooltipText = "Click to Open OpenERP Partner Contact Information."
+#            item.Enabled = True
 
 
-            item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
-            # Hook events for the item
-            item = self.menu_bar_viewpartner_Button = DispatchWithEvents(item, ViewPartners)
-            item.Caption = "Open Contact"
-            item.TooltipText = "Click to Open Partner detail"
-            item.Enabled = True
+#            item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
+#            # Hook events for the item
+#            item = self.menu_bar_viewpartner_Button = DispatchWithEvents(item, ViewPartners)
+#            item.Caption = "Open Contact"
+#            item.TooltipText = "Click to Open Partner detail"
+#            item.Enabled = True
 
             item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
