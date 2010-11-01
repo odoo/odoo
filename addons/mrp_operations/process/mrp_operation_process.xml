@@ -28,7 +28,6 @@
 		</record>
 
 		<record id="process_node_workorder0" model="process.node">
-<!--			<field name="menu_id" ref="menu_mrp_production_operation_action"/>-->
 			<field name="model_id" ref="mrp.model_mrp_production_workcenter_line"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Information from the routing definition.&quot;&quot;&quot;" name="note"/>
@@ -39,7 +38,6 @@
 		</record>
 
 		<record id="process_node_startoperation0" model="process.node">
-<!--			<field name="menu_id" ref="menu_mrp_production_operation_action"/>-->
 			<field name="model_id" ref="mrp.model_mrp_production_workcenter_line"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Start the operation.&quot;&quot;&quot;" name="note"/>
@@ -50,7 +48,6 @@
 		</record>
 
 		<record id="process_node_doneoperation0" model="process.node">
-<!--			<field name="menu_id" ref="menu_mrp_production_operation_action"/>-->
 			<field name="model_id" ref="mrp.model_mrp_production_workcenter_line"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Finish the operation.&quot;&quot;&quot;" name="note"/>
@@ -61,7 +58,6 @@
 		</record>
 
 		<record id="process_node_canceloperation0" model="process.node">
-<!--			<field name="menu_id" ref="menu_mrp_production_operation_action"/>-->
 			<field name="model_id" ref="mrp.model_mrp_production_workcenter_line"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Cancel the operation.&quot;&quot;&quot;" name="note"/>
@@ -76,7 +72,6 @@
 		-->
 
 		<record id="process_transition_productionstart0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Creation of the work order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The work orders are created on the basis of the production order.&quot;&quot;&quot;" name="note"/>
@@ -85,7 +80,6 @@
 		</record>
 
 		<record id="process_transition_workstartoperation0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Details of the work order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;There is 1 work order per work center. The information about the number of cycles or the cycle time.&quot;&quot;&quot;" name="note"/>
@@ -94,7 +88,6 @@
 		</record>
 
 		<record id="process_transition_startdoneoperation0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Operation done&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;When the operation is finished, the operator updates the system by finishing the work order.&quot;&quot;&quot;" name="note"/>
@@ -103,7 +96,6 @@
 		</record>
 
 		<record id="process_transition_startcanceloperation0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Operation cancelled&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;When the operation needs to be cancelled, you can do it in the work order form.&quot;&quot;&quot;" name="note"/>

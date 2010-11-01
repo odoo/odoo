@@ -22,19 +22,33 @@
 
       '
 -
-    I Get Help on this current page by clicking on "Basic wiki Editing" wizard
--
-    !python {model: wiki.wiki}: |
-      self.open_wiki_page(cr, uid, [ref("wiki_wiki_openerpwikiediting0")], context)
--
     I create Index on this current page by clicking on "Create Index" wizard
 -
     !python {model: wiki.make.index}: |
-      ids = self.search(cr, uid, [])
-      self.wiki_do_index(cr, uid, ids , {'active_ids': [ref('wiki_wiki_openerpwikiediting0')]})
+      self.wiki_do_index(cr, uid, [1], {"active_model": "wiki.wiki", 
+            "active_ids": [ref("wiki_wiki_openerpwikiediting0")], "tz": False, 
+            "active_id": ref("wiki_wiki_openerpwikiediting0"), })
 -
-    # Remaining Act window
+    Now I will update the wikipage with other text
+-
+    !record {model: wiki.wiki, id: wiki_wiki_openerpwikiediting0}:
+      text_area: '=The Open ERP wiki=
+
+      The Open ERP wiki allows you to manage your enterprise contents using wiki
+
+      restructured texts. This module provides a collaborative way to manage internal
+
+      FAQs, quality manuals, technical references, etc.
+      
+      Wiki text can easily be edited
+      '
+-
     I check the page history for the current page by clicking on "Page History".After that find difference between history.
+-
+    !python {model: wizard.wiki.history.show_diff}: |
+      hist_obj = model.pool.get('wiki.wiki.history')
+      ids = hist_obj.search(cr, uid, [('wiki_id', '=', ref("wiki_wiki_openerpwikiediting0"))])
+      model.get_diff(cr, uid, {'active_ids': ids[:] })
 -
     I create a new wiki group on the Given Home Page
 -
@@ -42,13 +56,11 @@
       name: Wiki Group Editing
       home: wiki.wiki_wiki_quickstart0
 -
-    I open a wiki page on this given group and page by clicking on Open wiki Page wizard.
+    I Open the page for click on  "Open Wiki Page" button.
 -
-    !python {model: wiki.wiki.page.open}: |
-      ids = self.search(cr, uid, [])
-      self.open_wiki_page(cr, uid, ids, {'active_ids': [ref('wiki_groups_wikigroupediting0')]})
+    !python {model: wiki.groups}: |
+      self.open_wiki_page(cr, uid, [ref("wiki_groups_wikigroupediting0")], context)
 -
-    # Remaining beacuse of Act window (I search the page by clicking on the "search page".)
     In order to create a menu I will create wizard data
 -
     !record {model: wiki.groups, id: wiki.wiki_groups_wikiformatting0}:
@@ -59,9 +71,8 @@
     !record {model: wiki.create.menu, id: wiki_create_menu_0}:
       menu_name: Wiki Test menu
       menu_parent_id: base.menu_base_partner
-      page: wiki.wiki_wiki_openerpwikiediting0
 -
-    I will check that menu is generated properly
+    I fill in the form and create the menu
 -
     !python {model: wiki.create.menu}: |
       ids = self.search(cr, uid, [])

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    Copyright (c) 2004 Axelor SPRL. (http://www.axelor.com) All Rights Reserved.
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -22,11 +22,11 @@
 {
     "name" : "Thunderbird Interface",
     "version" : "1.0",
-    "author" : "Axelor",
-    "website" : "http://www.axelor.com/",
-    "depends" : ["base","crm"],
+    "author" : "OpenERP SA & Axelor",
+    "website" : "http://www.openerp.com/",
+    "depends" : ["base","mail_gateway"],
     "category" : "Generic Modules/Thunderbird interface",
-    "description": '''
+    "description": """
       This module is required for the thuderbird plug-in to work
       properly.
 
@@ -35,8 +35,7 @@
       a project, an analytical account, or any other object and attach selected
       mail as .eml file in attachment of selected record.
 
-      You can create new case in crm using Create Case button.
-      Select a section for which you want to create case.''',
+      """,
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : ['thunderbird_installer.xml',

@@ -9,14 +9,16 @@
             <field name="model">mrp.product_price</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Paid ?">
+                <form string="Product Cost Structure">
+                    <separator colspan="4" string="Print Cost Structure of Product." />
 				    <field name="number"/>
 				    <newline/>
+                    <separator string="" colspan="4"/>
 				    <group col="2" colspan="4">
-                		<button icon='gtk-cancel' special="cancel"
+                		<button icon='gtk-stop' special="cancel"
                 			string="Cancel" />
                 		<button name="print_report" string="Print"
-                			colspan="1" type="object" icon="gtk-ok" />
+                			colspan="1" type="object" icon="gtk-print" />
                 	</group>
                 </form>
             </field>
@@ -27,7 +29,7 @@
             src_model="product.product"
 		    view_mode="form"
 		    target="new"        
-            key2="client_action_multi"    
+            key2="client_print_multi"    
 		    id="action_view_mrp_product_price_wizard"/>
 	</data>
 </openerp>	

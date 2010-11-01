@@ -19,12 +19,6 @@
 #
 ##############################################################################
 from osv import fields, osv
-from tools.translate import _
-import netsvc
-import pooler
-import time
-import tools
-import wizard
 
 class auction_taken(osv.osv_memory):
     """
@@ -38,20 +32,22 @@ class auction_taken(osv.osv_memory):
     }
     
     def _to_xml(s):
-        return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+        return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
-    def process(self, cr, uid, ids, context):
+    def process(self, cr, uid, ids, context=None):
           """
-          Update Auction lots state to taken_away.
+          This Function update Auction lots state to taken_away.
           @param cr: the current row, from the database cursor.
           @param uid: the current user’s ID for security checks.
           @param ids: List of Auction taken’s IDs
           @return: dictionary of lot_ids fields with empty list 
           """
+          if not context:
+              context={}
           lot_obj = self.pool.get('auction.lots')
-          for data in self.read(cr, uid, ids): 
-              if data['lot_ids']:
-                  lot_obj.write(cr, uid, data['lot_ids'], {'state':'taken_away'})
+          for current in self.browse(cr, uid, ids, context):
+              for lot in current.lot_ids:
+                  lot_obj.write(cr, uid, lot.id, {'state':'taken_away', 'ach_emp': True})
               return {'lot_ids': []}
 
 auction_taken()

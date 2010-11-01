@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Multiple-plans management in Analytic Accounting',
-    'version': '1.0',
-    'category': 'Generic Modules/Accounting',
+    'name'      : 'Multiple-plans management in Analytic Accounting',
+    'version'   : '1.0',
+    'category'  : 'Generic Modules/Accounting',
     'description': """This module allows to use several analytic plans, according to the general journal,
 so that multiple analytic lines are created when the invoice or the entries
 are confirmed.
@@ -54,10 +54,10 @@ for one account entry.
 The analytic plan validates the minimum and maximum percentage at the time of creation
 of distribution models.
         """,
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['account', 'account_analytic_default'],
-    'init_xml': [],
+    'author'    : 'OpenERP SA',
+    'website'   : 'http://www.openerp.com',
+    'depends'   : ['account', 'account_analytic_default'],
+    'init_xml'  : [],
     'update_xml': [
         'security/ir.model.access.csv',
         'account_analytic_plans_view.xml',
@@ -65,9 +65,11 @@ of distribution models.
         'wizard/analytic_plan_create_model_view.xml',
         'wizard/account_crossovered_analytic_view.xml'
     ],
-    'demo_xml': [],
+    'demo_xml'  : [],
+    'test' : ['test/acount_analytic_plans_report.yml'],
     'installable': True,
-    'active': False,
+    'active'    : False,
     'certificate': '0036417675373',
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

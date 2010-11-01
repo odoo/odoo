@@ -6,16 +6,16 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -201,10 +201,11 @@ class survey_browse_response(report_rml):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
                 tbl_width = float(_tbl_widths.replace('cm', ''))
                 colwidth =  "4.6cm,5cm," + str(tbl_width - 16.4) +"cm,4cm,3cm"
+                resp_create = tools.ustr(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S')))
                 rml += """<blockTable colWidths='""" + colwidth + """' style="Table_heading">
                           <tr>
                             <td><para style="terp_tblheader_General_Centre">Answer Create Date:- </para></td>
-                            <td><para style="terp_tblheader_General_Centre_simple">""" + to_xml(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S'))) + """</para></td>
+                            <td><para style="terp_tblheader_General_Centre_simple">""" + to_xml(resp_create) +  """</para></td>
                             <td><para style="terp_tblheader_General_Centre"></para></td>
                             <td><para style="terp_tblheader_General_right">Answer By:- </para></td>
                             <td><para style="terp_tblheader_General_right_simple">""" + to_xml(response.user_id.login or '') + """</para></td>
@@ -273,7 +274,7 @@ class survey_browse_response(report_rml):
                                         style = 'tbl_white'
                                     else:
                                         style = 'tbl_gainsboro'
-                                    i +=1 
+                                    i +=1
                                     rml += """<blockTable colWidths=" """ + str(colWidths) + """ " style='"""+style+"""'><tr>"""
                                     table_data = col_heading.browse(cr, uid, col_heading.search(cr, uid, [('response_table_id', '=', answer[0].id), ('name', '=', row)]))
                                     for column in matrix_ans:
@@ -521,7 +522,6 @@ class survey_browse_response(report_rml):
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
-
         return (pdf, report_type)
 
 survey_browse_response('report.survey.browse.response', 'survey','','')

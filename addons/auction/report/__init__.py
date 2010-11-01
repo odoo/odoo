@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,10 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-#import flagey_huissier
 import total
 import auction_invoice
 import seller_address
@@ -32,14 +31,12 @@ import auction_objects
 import buyer_form_report
 import seller_form_report
 
-
+import report_auction
 
 import buyer_list
 
 import auction_catelog
 import auction_buyer_result
-#import auction_total_rml
-#import auction_report
 import auction_total_rml
 import deposit_seller
 import auction_artists

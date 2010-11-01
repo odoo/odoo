@@ -43,19 +43,19 @@ You can also add with this module one of the following account plan:
  - l10n_ch_c2c_pcg
 
 
-    
+
 ------------------------------------------------------------------------
-    
-Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp. Cette nouvelle version 
-comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement) 
-et l'import du relevé de compte depuis la banque de manière automatisée. 
+
+Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp. Cette nouvelle version
+comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement)
+et l'import du relevé de compte depuis la banque de manière automatisée.
 De plus, nous avons intégré la définition de toutes les banques Suisses(adresse, swift et clearing).
 
 Par ailleurs, conjointement à ce module, nous proposons 1 plan comptables issus de l'USAM :
 
 
  - l10n_ch_c2c_pcg
- 
+
 --------------------------------------------------------------------------
 TODO :
 - Implement bvr import partial reconciliation
@@ -66,17 +66,16 @@ TODO :
 
 
 """,
-    "version" : "5.0",
+    "version" : "5.1",
     "author" : "Camptocamp SA",
     "category" : "Localisation/Europe",
     "website": "http://www.camptocamp.com",
-    
+
     "depends" : [
-        "base", 
-        "account", 
-        "base_vat", 
+        "base_vat",
         "base_iban",
         "account_payment",
+        "account_voucher",
     ],
     "init_xml" : [
         "dta_data.xml",
@@ -87,15 +86,17 @@ TODO :
     ],
     "update_xml" : [
         "dta_view.xml",
-        "dta_wizard.xml",
-        "bvr_report.xml",
-        "bvr_wizard.xml",
-        "bvr_view.xml",
+        "wizard/bvr_import_view.xml",
+        "wizard/bvr_report_view.xml",
+        "wizard/create_dta_view.xml",
         "company_view.xml",
         "account_invoice.xml",
         "bank_view.xml",
         "account_journal_view.xml",
         "security/ir.model.access.csv",
+    ],
+    'test' : [
+        'test/l10n_ch_report.yml',
     ],
     "active": False,
     "installable": True,

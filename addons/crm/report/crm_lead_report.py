@@ -37,51 +37,14 @@ class crm_lead_report(osv.osv):
     _auto = False
     _description = "CRM Lead Report"
 
-    def _get_data(self, cr, uid, ids, field_name, arg, context={}):
-
-        """ @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of case and section Data’s IDs
-            @param context: A standard dictionary for contextual values """
-
-        res = {}
-        state_perc = 0.0
-        avg_ans = 0.0
-
-        for case in self.browse(cr, uid, ids, context):
-            if field_name != 'avg_answers':
-                state = field_name[5:]
-                cr.execute("select count(*) from crm_opportunity where \
-                    section_id =%s and state='%s'"%(case.section_id.id, state))
-                state_cases = cr.fetchone()[0]
-                perc_state = (state_cases / float(case.nbr)) * 100
-
-                res[case.id] = perc_state
-            else:
-                model_name = self._name.split('report.')
-                if len(model_name) < 2:
-                    res[case.id] = 0.0
-                else:
-                    model_name = model_name[1]
-
-                    cr.execute("select count(*) from crm_case_log l, ir_model m \
-                         where l.model_id=m.id and m.model = '%s'" , model_name)
-                    logs = cr.fetchone()[0]
-
-                    avg_ans = logs / case.nbr
-                    res[case.id] = avg_ans
-
-        return res
-
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
+        'country_id':fields.many2one('res.country', 'Country', readonly=True),
+        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
+        'channel_id':fields.many2one('res.partner.canal', 'Channel', readonly=True),
+        'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
-        'perc_done': fields.function(_get_data, string='%Done', method=True, type="float"),
-        'perc_cancel': fields.function(_get_data, string='%Cancel', method=True, type="float"),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -91,25 +54,23 @@ class crm_lead_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
-        'email': fields.integer('# of Emails', size=128, readonly=True),
-        'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'email': fields.integer('# Emails', size=128, readonly=True),
+        'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'delay_close': fields.float('Delay to close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'probability': fields.float('Probability',digits=(16,2),readonly=True),
+        'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
+        'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.lead')]" , readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.lead')]", readonly=True),
+                         domain="['|',('section_id','=',False),('section_id','=',section_id)]" , readonly=True),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="('object_id.model', '=', 'crm.lead')]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'opening_date': fields.date('Opening Date', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Close Date', readonly=True),
+        'nbr': fields.integer('# of Cases', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),
@@ -121,60 +82,40 @@ class crm_lead_report(osv.osv):
             CRM Lead Report
             @param cr: the current row, from the database cursor
         """
-
         tools.drop_view_if_exists(cr, 'crm_lead_report')
         cr.execute("""
-            create or replace view crm_lead_report as (
-                select
-                    min(c.id) as id,
+            CREATE OR REPLACE VIEW crm_lead_report AS (
+                SELECT
+                    id,
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
-                    c.state as state,
-                    c.user_id,
-                    c.probability,
-                    c.stage_id,
-                    c.type as type,
-                    c.company_id,
-                    c.priority,
-                    c.section_id,
-                    c.categ_id,
-                    c.partner_id,
-                    c.planned_revenue,
-                    (select 1) as nbr,
-                    0 as avg_answers,
-                    0.0 as perc_done,
-                    0.0 as perc_cancel,
-                    (select count(id) from mailgate_message where thread_id=c.id) as email,
-                    date_trunc('day',c.create_date) as create_date,
-                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
-                    avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24) as  delay_expected,
-                    avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open
-                from
-                    crm_lead c
-                group by
-                    to_char(c.create_date, 'YYYY'),
-                    to_char(c.date_open, 'YYYY-MM-DD'),
-                    to_char(c.date_closed, 'YYYY-mm-dd'),
-                    to_char(c.create_date, 'MM'),
                     c.state,
                     c.user_id,
-                    c.id,
-                    c.section_id,
-                    c.stage_id,
                     c.probability,
-                    c.categ_id,
-                    c.partner_id,
-                    c.planned_revenue,
+                    c.stage_id,
+                    c.type,
                     c.company_id,
                     c.priority,
-                    c.type,
-                    c.create_date,
-                    to_char(c.create_date, 'YYYY-MM-DD')
-
+                    c.section_id,
+                    c.channel_id,
+                    c.type_id,
+                    c.categ_id,
+                    c.partner_id,
+                    c.country_id,
+                    c.planned_revenue,
+                    c.planned_revenue*(c.probability/100) as probable_revenue, 
+                    1 as nbr,
+                    (SELECT count(id) FROM mailgate_message WHERE model='crm.lead' AND res_id=c.id AND history=True) AS email,
+                    date_trunc('day',c.create_date) as create_date,
+                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
+                    abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
+                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
+                FROM
+                    crm_lead c
             )""")
 
 crm_lead_report()

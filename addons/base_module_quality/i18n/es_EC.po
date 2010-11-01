@@ -1,4 +1,4 @@
-# Spanish (Ecuador) translation for openobject-addons
+# Spanish translation for openobject-addons
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
@@ -8,13 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-27 01:23+0000\n"
-"Last-Translator: Cristian Salamea (GnuThink) <ovnicraft@gmail.com>\n"
-"Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
+"PO-Revision-Date: 2010-09-17 19:08+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
+"Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:20+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_quality
@@ -27,13 +28,13 @@ msgstr "Puntuación final (%)"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+"El nombre del objeto debe comenzar por x_ y no contener ningún símbolo "
+"especial"
 
 #. module: base_module_quality
 #: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
 msgid "Base module quality"
-msgstr "Módulo base de Calidad"
+msgstr "Calidad del módulo base"
 
 #. module: base_module_quality
 #: field:module.quality.check,name:0
@@ -48,12 +49,12 @@ msgstr "Detalle"
 #. module: base_module_quality
 #: field:module.quality.detail,note:0
 msgid "Note"
-msgstr "Nota"
+msgstr "Notas"
 
 #. module: base_module_quality
 #: field:module.quality.detail,state:0
 msgid "State"
-msgstr "Estado"
+msgstr "Estado / provincia"
 
 #. module: base_module_quality
 #: field:module.quality.detail,detail:0
@@ -71,8 +72,8 @@ msgid ""
 "Some tests are more critical than others, so they have a bigger weight in "
 "the computation of final rating"
 msgstr ""
-"Algunos exámenes son  más analíticos que otros, por lo que tienen un mayor "
-"peso en la computación de la nota final"
+"Algunas pruebas son más críticas que otras, por lo que tienen un mayor peso "
+"en el cálculo de la valoración final."
 
 #. module: base_module_quality
 #: view:module.quality.check:0
@@ -83,7 +84,7 @@ msgstr "Pruebas"
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
 msgid "Skipped"
-msgstr "Omitido"
+msgstr "Ignorado"
 
 #. module: base_module_quality
 #: help:module.quality.detail,state:0
@@ -91,18 +92,18 @@ msgid ""
 "The test will be completed only if the module is installed or if the test "
 "may be processed on uninstalled module."
 msgstr ""
-"La prueba se completará sólo si el módulo es instalado o si la prueba puede "
-"ser procesada en el módulo no instalado."
+"La prueba solo se podrá completarse si se instala el módulo or si se puede "
+"procesar con el módulo desinstalado."
 
 #. module: base_module_quality
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+msgstr "XML no válido para ver arquitectura"
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
 msgid "module.quality.check"
-msgstr "Módulo de revisión de Calidad"
+msgstr "comprobar.calidad.módulo"
 
 #. module: base_module_quality
 #: field:module.quality.detail,name:0
@@ -112,12 +113,12 @@ msgstr "Nombre"
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,module_file:0
 msgid "Save report"
-msgstr "Guardar reporte"
+msgstr "Guardar informe"
 
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,name:0
 msgid "File name"
-msgstr "Nombre de archivo"
+msgstr "Nombre del archivo"
 
 #. module: base_module_quality
 #: field:module.quality.detail,score:0
@@ -127,7 +128,7 @@ msgstr "Puntuación (%)"
 #. module: base_module_quality
 #: help:quality_detail_save,init,name:0
 msgid "Save report as .html format"
-msgstr "Guardar el reporte con formato .html"
+msgstr "Guardar el informe como archivo con formato .html"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
@@ -138,7 +139,7 @@ msgstr "Resumen"
 #. module: base_module_quality
 #: model:ir.actions.wizard,name:base_module_quality.quality_detail_save
 msgid "Report Save"
-msgstr "Guardar Reporte"
+msgstr "Guardar informe"
 
 #. module: base_module_quality
 #: wizard_view:quality_detail_save,init:0
@@ -148,22 +149,22 @@ msgstr "Asientos normales"
 #. module: base_module_quality
 #: view:module.quality.detail:0
 msgid "Save Report"
-msgstr "Guardar Reporte"
+msgstr "Guardar informe"
 
 #. module: base_module_quality
 #: model:ir.actions.wizard,name:base_module_quality.create_quality_check_id
 msgid "Quality Check"
-msgstr "Revisión de Calidad"
+msgstr "Comprobar la calidad"
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_detail
 msgid "module.quality.detail"
-msgstr "Detalle de Calidad"
+msgstr "detalles.calidad.módulo"
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
 msgid "Done"
-msgstr "Completado"
+msgstr "Listo"
 
 #. module: base_module_quality
 #: view:module.quality.check:0

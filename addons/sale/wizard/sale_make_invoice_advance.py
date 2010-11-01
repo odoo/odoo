@@ -19,21 +19,21 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
-import ir
 
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
     _description = "Sale Advance Payment Invoice"
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product', required=True),
-        'amount': fields.float('Unit Price', size=(16, 2), required=True),
+        'product_id': fields.many2one('product.product', 'Advance Product', required=True,
+            help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
+        'amount': fields.float('Advance Amount', size=(16, 2), required=True, help="The amount to be invoiced in advance."),
         'qtty': fields.float('Quantity', size=(16, 2), required=True),
     }
-    _default = {
-        'qtty' : lambda *a: 1
-               }
+    _defaults = {
+        'qtty': 1.0
+    }
+
     def create_invoices(self, cr, uid, ids, context={}):
         """
              To create invoices.
@@ -54,8 +54,6 @@ class sale_advance_payment_inv(osv.osv_memory):
 
         for sale_adv_obj in self.browse(cr, uid, ids):
             for sale in obj_sale.browse(cr, uid, context['active_ids']):
-                address_contact = False
-                address_invoice = False
                 create_ids = []
                 ids_inv = []
                 if sale.order_policy == 'postpaid':
@@ -64,8 +62,8 @@ class sale_advance_payment_inv(osv.osv_memory):
                         _("You cannot make an advance on a sale order \
                              that is defined as 'Automatic Invoice after delivery'."))
                 val = obj_lines.product_id_change(cr, uid, [], sale_adv_obj.product_id.id,
-                        uom = False, partner_id = sale.partner_id.id, fposition_id=sale.fiscal_position.id)
-                line_id =obj_lines.create(cr, uid, {
+                        uom = False, partner_id = sale.partner_id.id, fposition_id = sale.fiscal_position.id)
+                line_id = obj_lines.create(cr, uid, {
                     'name': val['value']['name'],
                     'account_id': val['value']['account_id'],
                     'price_unit': sale_adv_obj.amount,
@@ -79,33 +77,34 @@ class sale_advance_payment_inv(osv.osv_memory):
                 })
                 create_ids.append(line_id)
                 inv = {
-                    'name': sale.name,
+                    'name': sale.client_order_ref or sale.name,
                     'origin': sale.name,
                     'type': 'out_invoice',
                     'reference': False,
                     'account_id': sale.partner_id.property_account_receivable.id,
                     'partner_id': sale.partner_id.id,
-                    'address_invoice_id':sale.partner_invoice_id.id,
-                    'address_contact_id':sale.partner_order_id.id,
+                    'address_invoice_id': sale.partner_invoice_id.id,
+                    'address_contact_id': sale.partner_order_id.id,
                     'invoice_line': [(6, 0, create_ids)],
-                    'currency_id' :sale.pricelist_id.currency_id.id,
+                    'currency_id': sale.pricelist_id.currency_id.id,
                     'comment': '',
-                    'payment_term':sale.payment_term.id,
+                    'payment_term': sale.payment_term.id,
                     'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id
-                    }
+                }
 
                 inv_id = inv_obj.create(cr, uid, inv)
+                inv_obj.button_reset_taxes(cr, uid, [inv_id], context=context)
 
                 for inv in sale.invoice_ids:
                     ids_inv.append(inv.id)
                 ids_inv.append(inv_id)
-                obj_sale.write(cr, uid, sale.id, {'invoice_ids':[(6, 0, ids_inv)]})
+                obj_sale.write(cr, uid, sale.id, {'invoice_ids': [(6, 0, ids_inv)]})
                 list_inv.append(inv_id)
         #
         # If invoice on picking: add the cost on the SO
         # If not, the advance will be deduced when generating the final invoice
         #
-                if sale.order_policy=='picking':
+                if sale.order_policy == 'picking':
                     self.pool.get('sale.order.line').create(cr, uid, {
                         'order_id': sale.id,
                         'name': val['value']['name'],
@@ -121,67 +120,52 @@ class sale_advance_payment_inv(osv.osv_memory):
 
         context.update({'invoice_id':list_inv})
 
-        return {#'invoice_ids':list_inv,
-                'name': 'Open Invoice',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'sale.open.invoice',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'context':context
-                }
+        return {
+            'name': 'Open Invoice',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'sale.open.invoice',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': context
+        }
 
 sale_advance_payment_inv()
 
 class sale_open_invoice(osv.osv_memory):
     _name = "sale.open.invoice"
     _description = "Sale Open Invoice"
-    _columns = {
-    }
-
     def open_invoice(self, cr, uid, ids, context):
 
         """
              To open invoice.
-
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
              @param ids: the ID or list of IDs if we want more than one
              @param context: A standard dictionary
-
              @return:
 
         """
-        record_id = context and context.get('active_id', False) or False
 
         mod_obj = self.pool.get('ir.model.data')
-        obj_inv = self.pool.get('account.invoice')
-        invoices = []
-        invoice = obj_inv.browse(cr, uid, record_id, context=context)
-
         for advance_pay in self.browse(cr, uid, ids):
             result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-            id = mod_obj.read(cr, uid, result, ['res_id'])
             form_id = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
             form_res = mod_obj.browse(cr, uid, form_id, context=context).res_id
             tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
             tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
         return {
-#            'domain': "[('id','in', ["+','.join(map(str, invoices))+"])]", # TODO
-            'name': 'Invoices',
+            'name': _('Advance Invoice'),
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'account.invoice',
             'res_id': int(context['invoice_id'][0]),
             'view_id': False,
             'views': [(form_res, 'form'), (tree_res, 'tree')],
-            'context': "{'type':'out_invoice'}",
+            'context': "{'type': 'out_invoice'}",
             'type': 'ir.actions.act_window',
          }
-
-
-
 
 sale_open_invoice()
 

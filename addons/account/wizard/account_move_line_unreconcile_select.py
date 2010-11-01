@@ -20,15 +20,13 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
-import tools
 
 class account_move_line_unreconcile_select(osv.osv_memory):
     _name = "account.move.line.unreconcile.select"
     _description = "Unreconciliation"
     _columns ={
        'account_id': fields.many2one('account.account','Account',required=True),
-               }
+    }
     def action_open_window(self, cr, uid, ids, context={}):
         data = self.read(cr, uid, ids, context=context)[0]
         return {
@@ -39,7 +37,7 @@ class account_move_line_unreconcile_select(osv.osv_memory):
                 'view_id': False,
                 'res_model': 'account.move.line',
                 'type': 'ir.actions.act_window'
-            }
+        }
 
 account_move_line_unreconcile_select()
 

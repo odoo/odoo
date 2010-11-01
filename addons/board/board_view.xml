@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-graph" id="base.reporting_menu"
-            name="Reporting" sequence="8" />
+<!--Board Note Search View  -->
+        <record id="view_board_note_search" model="ir.ui.view">
+            <field name="name">board.note.search</field>
+            <field name="model">board.note</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Notes">
+                    <group col="10" colspan="4">
+                        <field name="name" string="Subject"/>
+                        <field name="type" string="Note Type"/>
+                        <field name="date" string="Date"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" colspan="4" string="Group By...">
+                        <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
- <!--Board Note Tree View  -->
+<!--Board Note Tree View  -->
 
         <record id="view_board_note_tree" model="ir.ui.view">
             <field name="name">board.note.tree</field>
@@ -13,6 +30,7 @@
             <field name="arch" type="xml">
                 <tree string="Notes">
                     <field name="name"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
@@ -29,7 +47,8 @@
                     <field name="type" select="1" required="1"/>
                     <field name="user_id" select="1"/>
                     <field name="date" select="1"/>
-                    <field colspan="4" name="note"/>
+                    <separator string="Notes"  colspan="4"/>
+                    <field colspan="4" name="note" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -41,6 +60,7 @@
             <field name="res_model">board.note</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
+            <field name="search_view_id" ref="view_board_note_search"/>
         </record>
 
 <!--  Board Tree View  -->
@@ -65,12 +85,12 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Dashboard">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <button colspan="2"
                         name="%(action_board_menu_create)d"
                         string="Create Menu" type="action"
                         icon="gtk-justify-fill" />
-                    <field colspan="4" name="line_ids">
+                    <field colspan="4" name="line_ids" nolabel="1">
                         <tree string="Dashboard View">
                             <field name="name"/>
                             <field name="sequence"/>
@@ -91,6 +111,18 @@
             </field>
         </record>
 
+        <record id="view_board_search" model="ir.ui.view">
+            <field name="name">board.board.search</field>
+            <field name="model">board.board</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Dashboard">
+                    <field name="name"/>
+                    <field name="line_ids"/>
+                </search>
+            </field>
+        </record>
+
     <!-- Action for DashBoard Definition form -->
 
         <record id="action_view_board_list_form" model="ir.actions.act_window">
@@ -98,21 +130,16 @@
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_board_search"/>
         </record>
 
         <menuitem
-            id="base.next_id_50"
-            name="Configuration"
-            parent="base.reporting_menu"
-            groups="base.group_system"
-            sequence="3"/>
-        <menuitem
             action="action_view_board_list_form"
-            id="menu_view_board_form"
-            parent="base.next_id_50" sequence="1"/>
+            id="menu_view_board_form" parent="base.reporting_menu" sequence="1"/>
 
         <menuitem action="action_view_board_note_form"
-            id="menu_view_board_note_form" parent="base.next_id_50"
+            id="menu_view_board_note_form"
+            parent="base.reporting_menu"
             sequence="3" groups="base.group_system" />
 
         <act_window context="{'view': active_id}" id="dashboard_open"

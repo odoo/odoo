@@ -27,9 +27,9 @@ class knowledge_installer(osv.osv_memory):
     _columns = {
         # Knowledge Management
         'document_ftp':fields.boolean('Shared Repositories (FTP)',
-            help="Provides an FTP access to your OpenERP's Document "
-                 "Management System. Lets you access attachments and "
-                 "virtual documents through a standard FTP client."),
+            help="Provides an FTP access to your OpenERP's "
+                "Document Management System. It lets you access attachments "
+                "and virtual documents through a standard FTP client."),
         'document_webdav':fields.boolean('Shared Repositories (WebDAV)',
             help="Provides a WebDAV access to your OpenERP's Document "
                  "Management System. Lets you access attachments and "
@@ -38,7 +38,7 @@ class knowledge_installer(osv.osv_memory):
             help="Lets you create wiki pages and page groups in order "
                  "to keep track of business knowledge and share it with "
                  "and  between your employees."),
-        # Templates of Content
+        # Content templates
         'wiki_faq':fields.boolean('Internal FAQ',
             help="Creates a skeleton internal FAQ pre-filled with "
                  "documentation about OpenERP's Document Management "

@@ -941,20 +941,11 @@ if __name__ == '__main__':
     cal = Calendar()
 
     start = EndDate("10.1.2005")
-    print "start", start.strftime(), type(start)
 
     delay = Minutes("4H")
-    print "delay", delay, delay.strftime()
 
-    print "Start", cal.StartDate is StartDate
-    print "base", cal.StartDate.__bases__[0] == StartDate.__bases__[0]
-    print "type", type(start)
-
-    print "convert start"
     start2 = cal.StartDate(start)
-    print "convert end"
 
     start3 = cal.StartDate("10.1.2005")
-    print "start2", start2.strftime(), type(start2)
 #@-node:@file pcalendar.py
 #@-leo

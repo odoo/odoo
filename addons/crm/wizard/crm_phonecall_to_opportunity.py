@@ -85,11 +85,19 @@ Call Could not convert into Opportunity"))
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
             for this in self.browse(cr, uid, ids, context=context):
+                address = None
+                if this.partner_id:
+                    address_id = self.pool.get('res.partner').address_get(cr, uid, [this.partner_id.id])
+                    if address_id['default']:
+                        address = self.pool.get('res.partner.address').browse(cr, uid, address_id['default'], context=context)
                 new_opportunity_id = opp_obj.create(cr, uid, {
                                 'name': this.name,
                                 'planned_revenue': this.planned_revenue,
                                 'probability': this.probability,
                                 'partner_id': this.partner_id and this.partner_id.id or False,
+                                'partner_address_id': address and address.id, 
+                                'phone': address and address.phone,
+                                'mobile': address and address.mobile,
                                 'section_id': case.section_id and case.section_id.id or False,
                                 'description': case.description or False,
                                 'phonecall_id': case.id,

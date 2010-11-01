@@ -24,7 +24,6 @@ import re
 import os
 import base64
 import tools
-import mx.DateTime
 
 from tools.translate import _
 from osv import fields
@@ -69,12 +68,10 @@ this if you want the rule to send an email to the partner."),
         return tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, openobject_id=str(obj.id))
     
     def do_check(self, cr, uid, action, obj, context={}):
-
         """ @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values"""
-
         ok = super(base_action_rule, self).do_check(cr, uid, action, obj, context=context)
 
         if hasattr(obj, 'section_id'):
@@ -82,6 +79,27 @@ this if you want the rule to send an email to the partner."),
         if hasattr(obj, 'categ_id'):
             ok = ok and (not action.trg_categ_id or action.trg_categ_id.id==obj.categ_id.id)
 
+        #Cheking for history 
+        regex = action.regex_history
+        result_history = True
+        if regex:
+            res = False
+            ptrn = re.compile(str(regex))
+            for history in obj.message_ids:
+                _result = ptrn.search(str(history.name))
+                if _result:
+                    res = True
+                    break
+            result_history = res
+        ok = ok and (not regex or result_history)
+
+        res_count = True
+        if action.trg_max_history:
+            res_count = False
+            history_ids = filter(lambda x: x.history, obj.message_ids)
+            if len(history_ids) <= action.trg_max_history:
+                res_count = True
+        ok = ok and res_count
         return ok
 
     def do_action(self, cr, uid, action, model_obj, obj, context={}):
@@ -89,7 +107,6 @@ this if you want the rule to send an email to the partner."),
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
-
         res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         write = {}
         
@@ -104,7 +121,11 @@ this if you want the rule to send an email to the partner."),
                     write['email_cc'] = obj.email_cc+','+obj.act_email_cc
             else:
                 write['email_cc'] = obj.act_email_cc
-        
+
+        # Put state change by rule in communication history
+        if hasattr(obj, 'state') and action.act_state:
+            model_obj._history(cr, uid, [obj], _(action.act_state))
+
         model_obj.write(cr, uid, [obj.id], write, context)
         emails = []
 
@@ -118,25 +139,21 @@ this if you want the rule to send an email to the partner."),
 
 
     def state_get(self, cr, uid, context={}):
-
-        """@param self: The object pointer
+        """Gets available states for crm
+        @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
-
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
-        return res + [('escalate', 'Escalate')] + crm.AVAILABLE_STATES
+        return res  + crm.AVAILABLE_STATES
 
     def priority_get(self, cr, uid, context={}):
-
         """@param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
-
         res = super(base_action_rule, self).priority_get(cr, uid, context=context)
         return res + crm.AVAILABLE_PRIORITIES
-
 
 base_action_rule()
 

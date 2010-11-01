@@ -1,9 +1,8 @@
-- |
-  In order to test hr_contract module in OpenERP,   
-  I will create contract for "Mark Johnson" employee.
-  
-- |
-  First I create Employee "Mark Johnson" 
+-
+  In order to test hr_contract module in OpenERP, I will create a new employee and create contract for the same.
+
+-
+  I create a new employee "Mark Johnson".
 -
   !record {model: hr.employee, id: hr_employee_employee0}:
     address_home_id: base.res_partner_address_1
@@ -11,36 +10,41 @@
     gender: male
     name: Mark Johnson
     user_id: base.user_root
-    
-- |
-  Given that I have Contract wage period "monthly" and 
-  specify "hours in period" is "176.00"
-- 
+    children: 2
+    marital: hr.hr_employee_marital_status_married
+    place_of_birth: Belgium
+    vehicle: 'No'
+    vehicle_distance: 12
+
+
+-
+  I create a new Contract wage period.
+-
   !record {model: hr.contract.wage.type.period, id: hr_contract_wage_type_period_monthly0}:
-    factor_days: 178.0
+    factor_days: 176.0
     name: monthly
-- |
-  Given that I have Contract wage type "Monthly Gross Wage". 
-  select wage period "monthly" and type "Gross". with hour cost "1.9" 
-- 
+-
+  I create a new Contract Wage Type.
+-
   !record {model: hr.contract.wage.type, id: hr_contract_wage_type_monthlygrosswage0}:
     factor_type: 1.9
     name: Monthly Gross Wage
     period_id: 'hr_contract_wage_type_period_monthly0'
     type: gross
-       
-- |
-  Now I start by create contract for "Mark Johnson".
-  Select wage type "Monthly Gross Wage" and Wage period "monthly" 
-  which I have given.
-- 
+
+-
+  I create a new contract for "Mark Johnson".
+-
   !record {model: hr.contract, id: hr_contract_contract0}:
     advantages_gross: 0.0
     employee_id: 'hr_employee_employee0'
     advantages_net: 0.0
     date_end: '2011-05-18'
     date_start: '2010-05-18'
+    trial_date_end: '2010-03-01'
+    trial_date_start: '2010-04-30'
     name: contract1
     wage: 1.0
     wage_type_id: hr_contract_wage_type_monthlygrosswage0
+    type_id: hr_contract_type_emp
     working_hours: resource.timesheet_group1

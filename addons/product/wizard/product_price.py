@@ -21,11 +21,11 @@
 
 from osv import osv, fields
 from tools.translate import _
-  
+
 
 class product_price_list(osv.osv_memory):
     _name = 'product.price_list'
-    _description = 'Product Price List'
+    _description = 'Price List'
 
     _columns = {
         'price_list': fields.many2one('product.pricelist', 'PriceList', required=True),
@@ -36,22 +36,17 @@ class product_price_list(osv.osv_memory):
         'qty5': fields.integer('Quantity-5'),
     }
     _defaults = {
-        'qty1': lambda *a: 0,
-        'qty2': lambda *a: 0,
-        'qty3': lambda *a: 0,
-        'qty4': lambda *a: 0,
-        'qty5': lambda *a: 0,
+        'qty1': 1,
+        'qty2': 5,
+        'qty3': 10,
+        'qty4': 0,
+        'qty5': 0,
     }
 
     def print_report(self, cr, uid, ids, context=None):
-
         """
-              To get the date and print the report
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary
-             @return : return report
+        To get the date and print the report
+        @return : return report
         """
         datas = {'ids': context.get('active_ids', [])}
         res = self.read(cr, uid, ids, ['price_list','qty1', 'qty2','qty3','qty4','qty5'], context)
@@ -62,6 +57,6 @@ class product_price_list(osv.osv_memory):
             'report_name': 'product.pricelist',
             'datas': datas,
        }
-product_price_list()        
+product_price_list()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

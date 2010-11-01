@@ -23,12 +23,12 @@
 {
     "name" : "Manufacturing Resource Planning",
     "version" : "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Production",
     "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
-    This is the base module to manage the manufacturing process in Open ERP.
+    This is the base module to manage the manufacturing process in OpenERP.
 
     Features:
     * Make to Stock / Make to Order (by line)
@@ -53,6 +53,11 @@
     * Load forecast on workcenters
     * Print a production order
     * Stock forecasts
+    Dashboard provided by this module::
+    * List of next production orders
+    * List of deliveries (out picking)
+    * Graph of work center load
+    * List of procurement in exception
     """,
     'init_xml': [],
     'update_xml': [
@@ -64,9 +69,8 @@
         'wizard/change_production_qty_view.xml',
         'wizard/mrp_price_view.xml',
         'wizard/mrp_workcenter_load_view.xml',
-#        'wizard/mrp_track_prod_view.xml',
+        'wizard/mrp_change_standard_price_view.xml',
         'mrp_view.xml',
-        'mrp_wizard.xml',
         'mrp_report.xml',
         'company_view.xml',
         'process/stockable_product_process.xml',
@@ -75,12 +79,20 @@
         'mrp_installer.xml',
         'report/mrp_report_view.xml',
         'report/mrp_production_order_view.xml',
+        'board_manufacturing_view.xml',
+
+
     ],
-    'demo_xml': ['mrp_demo.xml'],
+    'demo_xml': [
+         'mrp_demo.xml',
+    ],
     'test': [
-             'test/mrp_phantom_bom.yml',
-             'test/mrp_production_order.yml',
-             'test/mrp_procurement.yml'
+         'test/mrp_procurement.yml',
+         'test/mrp_packs.yml',
+         'test/mrp_phantom_bom.yml',
+         'test/mrp_production_order.yml',
+         'test/mrp_report.yml',
+
     ],
     'installable': True,
     'active': False,

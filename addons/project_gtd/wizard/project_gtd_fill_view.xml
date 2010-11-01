@@ -8,8 +8,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               	<form string="Plannify Timebox">
-              		  <field name="timebox_id" />
-              		  <field name="timebox_to_id" />
+              		  <field name="timebox_id" widget="selection"/>
+              		  <field name="timebox_to_id" widget="selection"/>
               		  <field colspan="4" name="task_ids" nolabel="1" domain="[('timebox_id','=',timebox_id),('state','=','open')]" />
 		              <group colspan="4" col="6">
 				            <button icon="gtk-cancel" special="cancel" string="_Cancel"/>

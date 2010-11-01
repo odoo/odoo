@@ -1,36 +1,35 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_auction_artists","auction.artists","model_auction_artists","base.group_user",1,1,1,1
-"access_auction_dates","auction.dates","model_auction_dates","base.group_user",1,1,1,1
-"access_auction_deposit","auction.deposit","model_auction_deposit","base.group_user",1,1,1,1
-"access_auction_deposit_cost","auction.deposit.cost","model_auction_deposit_cost","base.group_user",1,1,1,1
-"access_auction_lot_category","auction.lot.category","model_auction_lot_category","base.group_user",1,1,1,1
-"access_auction_lots","auction.lots","model_auction_lots","base.group_user",1,1,1,1
-"access_auction_bid","auction.bid","model_auction_bid","base.group_user",1,1,1,1
-"access_auction_bid_line","auction.bid.line","model_auction_bid_line","base.group_user",1,1,1,1
-"access_auction_lot_history","auction.lot.history","model_auction_lot_history","base.group_user",1,1,1,1
-"access_report_buyer_auction","report.buyer.auction","model_report_buyer_auction","base.group_user",1,0,0,0
-"access_report_buyer_auction2","report.buyer.auction2","model_report_buyer_auction2","base.group_user",1,0,0,0
-"access_report_seller_auction","report.seller.auction","model_report_seller_auction","base.group_user",1,0,0,0
-"access_report_seller_auction2","report.seller.auction2","model_report_seller_auction2","base.group_user",1,0,0,0
-"access_report_auction_view","report.auction.view","model_report_auction_view","base.group_user",1,0,0,0
-"access_report_auction_view2","report.auction.view2","model_report_auction_view2","base.group_user",1,0,0,0
-"access_report_auction_object_date","report.auction.object.date","model_report_auction_object_date","base.group_user",1,0,0,0
-"access_report_auction_estimation_adj_category","report.auction.estimation.adj.category","model_report_auction_estimation_adj_category","base.group_user",1,0,0,0
-"access_report_auction_adjudication","report.auction.adjudication","model_report_auction_adjudication","base.group_user",1,0,0,0
-"access_report_attendance","report.attendance","model_report_attendance","base.group_user",1,0,0,0
-"access_report_deposit_border","report.deposit.border","model_report_deposit_border","base.group_user",1,0,0,0
-"access_report_object_encoded","report.object.encoded","model_report_object_encoded","base.group_user",1,0,0,0
-"access_report_object_encoded_manager","report.object.encoded.manager","model_report_object_encoded_manager","base.group_user",1,0,0,0
-"access_report_unclassified_objects","report.unclassified.objects","model_report_unclassified_objects","base.group_user",1,0,0,0
-"access_auction_lots_able","auction.lots.able","model_auction_lots_able","base.group_user",1,0,0,0
-"access_auction_lots_auction_move","auction.lots.auction.move","model_auction_lots_auction_move","base.group_user",1,0,0,0
-"access_auction_lots_enable","auction.lots.enable","model_auction_lots_enable","base.group_user",1,0,0,0
-"access_auction_lots_make_invoice_buyer","auction.lots.make.invoice.buyer","model_auction_lots_make_invoice_buyer","base.group_user",1,0,0,0
-"access_auction_lots_make_invoice","auction.lots.make.invoice","model_auction_lots_make_invoice","base.group_user",1,0,0,0
-"access_auction_lots_sms_send","auction.lots.sms.send","model_auction_lots_sms_send","base.group_user",1,0,0,0
-"access_auction_pay_buy","auction.pay.buy","model_auction_pay_buy","base.group_user",1,0,0,0
-"acess_auction_payer","auction.payer","model_auction_payer","base.group_user",1,0,0,0
-"access_auction_pay_sel","auction.pay.sel","model_auction_payer_sel","base.group_user",1,0,0,0
-"acess_auction_taken","auction.taken","model_auction_taken","base.group_user",1,0,0,0
-"access_auction_catalog_flagey","auction.catalog.flagey","model_auction_catalog_flagey","base.group_user",1,0,0,0
-"access_auction_lots_buyer_map_user","auction_lots_buyer_map_user","model_auction_lots_buyer_map","base.group_user",1,0,0,0
+"access_auction_artists","auction.artists","model_auction_artists","group_auction_manager",1,1,1,1
+"access_auction_dates_user","auction.dates user","model_auction_dates","group_auction_user",1,0,0,0
+"access_auction_dates_manager","auction.dates manager","model_auction_dates","group_auction_manager",1,1,1,1
+"access_auction_deposit_manager","auction.deposit manager","model_auction_deposit","group_auction_manager",1,1,1,1
+"access_auction_deposit_user","auction.deposit user","model_auction_deposit","group_auction_user",1,0,0,0
+"access_auction_deposit_cost","auction.deposit.cost","model_auction_deposit_cost","group_auction_manager",1,1,1,1
+"access_auction_lot_category","auction.lot.category","model_auction_lot_category","group_auction_user",1,0,0,0
+"access_auction_lot_category_manager","auction.lot.category manager","model_auction_lot_category","group_auction_manager",1,1,1,1
+"access_auction_lots","auction.lots","model_auction_lots","group_auction_user",1,1,1,0
+"access_auction_lots_manager","auction.lots manager","model_auction_lots","group_auction_manager",1,0,0,0
+"access_auction_bid","auction.bid","model_auction_bid","group_auction_user",1,1,1,1
+"access_auction_bid_manager","auction.bid manager","model_auction_bid","group_auction_manager",1,0,0,0
+"access_auction_bid_line","auction.bid.line","model_auction_bid_line","group_auction_user",1,1,1,1
+"access_auction_bid_line_manager","auction.bid.line manager","model_auction_bid_line","group_auction_manager",1,0,0,0
+"access_auction_lot_history","auction.lot.history","model_auction_lot_history","group_auction_user",1,1,1,1
+"access_auction_lot_history_manager","auction.lot.history manager","model_auction_lot_history","group_auction_manager",1,0,0,0
+"access_report_auction","report.auction","model_report_auction","group_auction_manager",1,1,1,1
+"access_report_auction_object_date","report.auction.object.date","model_report_auction_object_date","group_auction_manager",1,1,1,1
+"access_report_auction_adjudication","report.auction.adjudication","model_report_auction_adjudication","group_auction_manager",1,1,1,1
+"access_report_object_encoded","report.object.encoded","model_report_object_encoded","group_auction_manager",1,1,1,1
+"access_aie_category","aie.category","model_aie_category","group_auction_manager",1,1,1,1
+"access_auction_account_tax_user","account.tax user","account.model_account_tax","group_auction_user",1,0,0,0
+"access_auction_account_tax","account.tax manager","account.model_account_tax","group_auction_manager",1,1,1,0
+"access_auction_account_fiscalyear","account.fiscalyear manager","account.model_account_fiscalyear","group_auction_manager",1,1,1,0
+"access_auction_account_journal","account.journal manager","account.model_account_journal","group_auction_manager",1,1,1,0
+"access_auction_account_invoice","account.invoice manager","account.model_account_invoice","group_auction_manager",1,1,1,0
+"access_auction_account_invoice_line","account.invoice.line manager","account.model_account_invoice_line","group_auction_manager",1,1,1,0
+"access_auction_account_invoice_tax","account.invoice.tax manager","account.model_account_invoice_tax","group_auction_manager",1,1,1,0
+"access_auction_account_analytic_journal","account.analytic.journal manager","account.model_account_analytic_journal","group_auction_manager",1,1,1,0
+"access_auction_account_period","account.period manager","account.model_account_period","group_auction_manager",1,1,1,0
+"access_auction_account_move","account.move manager","account.model_account_move","group_auction_manager",1,1,1,0
+"access_auction_account_move_line","account.move.line manager","account.model_account_move_line","group_auction_manager",1,1,1,0
+"access_auction_account_journal_period","account.journal.period manager","account.model_account_journal_period","group_auction_manager",1,1,1,0
+"access_auction_account_analytic_line","account.analytic.line manager","account.model_account_analytic_line","group_auction_manager",1,1,1,1

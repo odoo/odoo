@@ -24,8 +24,6 @@ import locale
 from report import report_sxw
 import rml_parse
 
-#from addons.account.wizard import wizard_account_balance_report
-
 parents = {
     'tr':1,
     'li':1,
@@ -59,267 +57,6 @@ class account_balance_landscape(rml_parse.rml_parse):
             })
         self.context = context
 
-#    def repeatIn(self, lst, name, nodes_parent=False,td=False,width=[],value=[],type=[]):
-#        self._node.data = ''
-#        node = self._find_parent(self._node, nodes_parent or parents)
-#        ns = node.nextSibling
-##start
-#        if value==['Cash','%']:
-#            if show==1:
-#                if perc==1:
-#                    if pattern=='none':
-#                        value=['','Cash','%']
-#                        type=['lable','lable','lable']
-#                        width=[130,65,65]
-#                    else:
-#                        value=[' ','','Cash','%']
-#                        type=['string','lable','lable','lable']
-#                        width=[65,130,65,65]
-#                else:
-#                    if pattern=='none':
-#                        value=['']
-#                        type=['lable']
-#                        width=[195]
-#                    else:
-#                        value=[' ','']
-#                        type=['string','lable']
-#                        width=[65,195]
-#            else:
-#                if perc==1:
-#                    if pattern=='none':
-#                        value=['Cash','%']
-#                        type=['lable','lable']
-#                        width=[65,65]
-#                    else:
-#                        value=[' ','Cash','%']
-#                        type=['string','lable','lable']
-#                        width=[65,65,65]
-#                else:
-#                    if pattern=='none':
-#                        value=['']
-#                        type=['lable']
-#                        width=[65]
-#                    else:
-#                        value=[' ','']
-#                        type=['string','lable']
-#                        width=[65,65]
-#
-#
-#        if value==['year']:
-#            if show==1:
-#                if perc==1:
-#                    if pattern=='none':
-#                        width=[260]
-#                    else:
-#                        value=[' ','year']
-#                        type=['string','string']
-#                        width=[65,260]
-#                else:
-#                    if pattern=='none':
-#                        width=[195]
-#                    else:
-#                        value=[' ','year']
-#                        type=['string','string']
-#                        width=[65,195]
-#            else:
-#                if perc==1:
-#                    if pattern=='none':
-#                        width=[130]
-#                    else:
-#                        value=[' ','year']
-#                        type=['string','string']
-#                        width=[65,130]
-#
-#                else:
-#                    if pattern=='none':
-#                        width=[65]
-#                    else:
-#                        value=[' ','year']
-#                        type=['string','string']
-#                        width=[65,65]
-#
-#        if value==['Debit','Credit','Balance']:
-#            if show==1:
-#                if perc==1:
-#                    if pattern=='none':
-#                        width=[65,65,130]
-#                    else:
-#                        value=[' ','Debit','Credit','Balance']
-#                        type=['string','lable','lable','lable']
-#                        width=[65,65,65,130]
-#                else:
-#                    if pattern=='none':
-#                        width=[65,65,65]
-#                    else:
-#                        value=[' ','Debit','Credit','Balance']
-#                        type=['string','lable','lable','lable']
-#                        width=[65,65,65,65]
-#
-#            else:
-#                if perc==1:
-#                    if pattern=='none':
-#                        value=['Balance']
-#                        type=['lable']
-#                        width=[130]
-#                    else:
-#                        value=[' ','Balance']
-#                        type=['string','lable']
-#                        width=[65,130]
-#                else:
-#                    if pattern=='none':
-#                        value=['Balance']
-#                        type=['lable']
-#                        width=[65]
-#                    else:
-#                        value=[' ','Balance']
-#                        type=['string','lable']
-#                        width=[65,65]
-#
-#        if value==['debit','credit','balance']:
-#            if show==1:
-#                if perc==1:
-#                    if pattern=='none':
-#                        value=['debit','credit','balance','balance_perc']
-#                        type=['string','string','string','string']
-#                        width=[65,65,65,65]
-#                    else:
-#                        value=[pattern,'debit','credit','balance','balance_perc']
-#                        type=['string','string','string','string','string']
-#                        width=[65,65,65,65,65]
-#                else:
-#                    if pattern=='none':
-#                        value=['debit','credit','balance']
-#                        type=['string','string','string']
-#                        width=[65,65,65]
-#                    else:
-#                        value=[pattern,'debit','credit','balance']
-#                        type=['string','string','string','string']
-#                        width=[65,65,65,65]
-#
-#            else:
-#                if perc==1:
-#                    if pattern=='none':
-#                        value=['balance','balance_perc']
-#                        type=['string','string']
-#                        width=[65,65]
-#                    else:
-#                        value=[pattern,'balance','balance_perc']
-#                        type=['string','string','string']
-#                        width=[65,65,65]
-#                else:
-#                    if pattern=='none':
-#                        value=['balance']
-#                        type=['string']
-#                        width=[65]
-#                    else:
-#                        value=[pattern,'balance']
-#                        type=['string','string']
-#                        width=[65,65]
-#
-#        if value==['sum_debit','sum_credit','']:
-#            if show==1:
-#                if perc==1:
-#                    if pattern=='none':
-#                        width=[65,65,130]
-#                    else:
-#                        value=[' ','sum_debit','sum_credit','']
-#                        type=['string','string','string','lable']
-#                        width=[65,65,65,130]
-#                else:
-#                    if pattern=='none':
-#                        width=[65,65,65]
-#                    else:
-#                        value=[' ','sum_debit','sum_credit','']
-#                        type=['string','string','string','lable']
-#                        width=[65,65,65,65]
-#            else:
-#                if perc==1:
-#                    if pattern=='none':
-#                        value=['']
-#                        type=['lable']
-#                        width=[130]
-#                    else:
-#                        value=[' ','']
-#                        type=['string','lable']
-#                        width=[65,130]
-#                else:
-#                    if pattern=='none':
-#                        value=['']
-#                        type=['lable']
-#                        width=[65]
-#                    else:
-#                        value=[' ','']
-#                        type=['string','lable']
-#                        width=[65,65]
-#
-#        if not lst:
-#            lst.append(1)
-#        for ns in node.childNodes :
-#            if ns and ns.nodeName!='#text' and ns.tagName=='blockTable' and td :
-#                width_str = ns._attrs['colWidths'].nodeValue
-#                ns.removeAttribute('colWidths')
-#                total_td = td * len(value)
-#
-#                if not width:
-#                    for v in value:
-#                        width.append(30)
-#                check1=0
-#                for t in range(td):
-#                    for v in range(len(value)):
-#                        if type[v] in ('String','STRING','string'):
-#                            if (value[v]==" " or value[0]==pattern):
-#                                if check1==0:
-#                                    check1=1
-#                                    width_str +=',0.0'
-#                                else:
-#                                    width_str +=',%d'%width[v]
-#                            else:
-#                                width_str +=',%d'%width[v]
-#                        else:
-#                            width_str +=',%d'%width[v]
-#                ns.setAttribute('colWidths',width_str)
-#
-#                child_list =  ns.childNodes
-#
-#                check=0
-#                for child in child_list:
-#                    if child.nodeName=='tr':
-#                        lc = child.childNodes[1]
-#                        for t in range(td):
-#                            i=0
-#                            for v in value:
-#
-#                                newnode = lc.cloneNode(1)
-#                                temp2="%s['status']==1 and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]]"%(name)
-##
-#                                if type[i] in ('String','STRING','string'):
-#                                    if (v==" " or v==pattern) and i==0 and check==0:
-#                                        check=1
-#                                        if newnode.childNodes[1].lastChild:
-#                                            newnode.childNodes[1].lastChild.data=""
-#                                    else:
-#                                        if v==" ":
-#                                            if newnode.childNodes[1].lastChild:
-#                                                newnode.childNodes[1].lastChild.data=""
-#                                        else:
-#                                            t1= "[[ %s['%s%d'] ]]"%(name,v,t)
-#                                            if v=="year" or v=="sum_debit" or v=="sum_credit":
-#                                                if newnode.childNodes[1].lastChild:
-#                                                    newnode.childNodes[1].lastChild.data = t1
-#                                            else:
-#                                                if newnode.childNodes[1].lastChild:
-#                                                    newnode.childNodes[1].lastChild.data = t1+"[["+temp2
-##                                   newnode.childNodes[1].lastChild.data=[[ a['status']==1 and ( setTag('para','para',{'fontName':'Times-bold'})) ]]
-#                                elif type[i] in ('Lable','LABLE','lable'):
-#                                    if newnode.childNodes[1].lastChild:
-#                                        newnode.childNodes[1].lastChild.data= v
-#
-#                                child.appendChild(newnode)
-#
-#                                newnode=False
-#                                i+=1
-#        return super(account_balance_landscape,self).repeatIn(lst, name, nodes_parent=False)
-#end
     def linesForYear(self,form):
         temp=0
         years={}
@@ -351,7 +88,7 @@ class account_balance_landscape(rml_parse.rml_parse):
 
         if perc==1:
             if form['select_account']!=False:
-                ref_ac=self.pool.get('account.account').browse(self.cr, self.uid,form['select_account'],ctx.copy())
+                ref_ac=self.pool.get('account.account').browse(self.cr, self.uid, form['select_account'], ctx.copy())
                 if ref_ac.balance<>0.00:
                     ref_bal=ref_ac.balance
                 else:
@@ -363,26 +100,23 @@ class account_balance_landscape(rml_parse.rml_parse):
 
 
         total_for_perc=[]
-#       if perc==1:
         self.done_total=1
-        self.total_for_perc=self.linesForTotal(form,ids={},doneAccount={},level=1)
+        self.total_for_perc=self.linesForTotal(form, ids={}, doneAccount={}, level=1)
         self.done_total=0
 
         for t1 in range(0,len(form['fiscalyear'])):
             locale.setlocale(locale.LC_ALL, '')
             self.result_total["sum_credit" + str(t1)]=locale.format("%.2f", self.result_total["sum_credit" + str(t1)], grouping=True)
             self.result_total["sum_debit" + str(t1)]=locale.format("%.2f", self.result_total["sum_debit" + str(t1)], grouping=True)
-#           self.flag=1
-#           self.result_total = {}
 
         for temp in range(0,len(form['fiscalyear'])):
-            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][temp])
+            fy=self.pool.get('account.fiscalyear').name_get(self.cr, self.uid, form['fiscalyear'][temp])
             years["year"+str(temp)]=fy[0][1][12:16]
 
         return [years]
 
 
-    def linesForTotal(self,form,ids={},doneAccount={},level=1):
+    def linesForTotal(self, form, ids={}, doneAccount={}, level=1):
         if self.done_total==1:
             self.done_total==1
         else:
@@ -405,7 +139,7 @@ class account_balance_landscape(rml_parse.rml_parse):
             ctx['state'] = form['context'].get('state','all')
             tmp = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx.copy())
 
-            if len(tmp):
+            if tmp:
                 accounts.append(tmp)
 
         merged_accounts=zip(*accounts)
@@ -443,7 +177,7 @@ class account_balance_landscape(rml_parse.rml_parse):
                 ids2 = [(x.code,x.id) for x in entry[0].child_id]
                 ids2.sort()
 
-                result_total_parent = self.linesForTotal(form, [x[1] for x in ids2],doneAccount,level+1)
+                result_total_parent = self.linesForTotal(form, [x[1] for x in ids2], doneAccount, level+1)
 
         return [self.result_total]
 
@@ -462,9 +196,9 @@ class account_balance_landscape(rml_parse.rml_parse):
             ctx['periods'] = form['periods']
             ctx['period_manner']=form['period_manner']
             ctx['state'] = form['context'].get('state','all')
-            tmp1 = self.pool.get('account.account').browse(self.cr, self.uid, ids,ctx.copy())
+            tmp1 = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx.copy())
 
-            if len(tmp1):
+            if tmp1:
                 accounts.append(tmp1)
 
         if level==1:   #if parent is called,done is not empty when called again.
@@ -598,12 +332,12 @@ class account_balance_landscape(rml_parse.rml_parse):
 
         return result
 
-    def get_years(self,form):
+    def get_years(self, form):
         result =[]
         res={}
-        for temp in range(0,len(form['fiscalyear'])):
+        for temp in range(0, len(form['fiscalyear'])):
             res={}
-            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][temp])
+            fy=self.pool.get('account.fiscalyear').name_get(self.cr, self.uid, form['fiscalyear'][temp])
             res['year']=fy[0][1]
             res['last_str']=temp
 
@@ -611,7 +345,7 @@ class account_balance_landscape(rml_parse.rml_parse):
         self.linesForYear(form)
         return result
 
-    def get_lines(self,year_dict,form):
+    def get_lines(self, year_dict, form):
         final_result = []
         line_l =[]
         res = {}
@@ -643,7 +377,7 @@ class account_balance_landscape(rml_parse.rml_parse):
                 final_result.append(res)
         return final_result
 
-    def cal_total(self,year_dict):
+    def cal_total(self, year_dict):
         total_l = self.result_total
         if total_l:
             for k,v in total_l.items():
@@ -661,6 +395,6 @@ class account_balance_landscape(rml_parse.rml_parse):
     def total_cr(self):
         return self.cr_total
 
-report_sxw.report_sxw('report.account.account.balance.landscape', 'account.account', 'addons/account/report/account_balance_landscape.rml', parser=account_balance_landscape, header=False)
+report_sxw.report_sxw('report.account.account.balance.landscape', 'account.account', 'addons/account/report/account_balance_landscape.rml', parser=account_balance_landscape, header="internal landscape")
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

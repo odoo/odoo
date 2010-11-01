@@ -12,7 +12,7 @@
      context_lang: en_US
      context_section_id: crm.section_sales_department
      groups_id:
-       - crm.group_crm_user
+       - base.group_sale_salesman
      login: user_crm
      name: user_crm
      password: user_crm
@@ -29,7 +29,6 @@
      mobile: (333) 715-1450
      section_id: crm.section_sales_department
      referred: False
-     title: M.
 -  |
    I check that the lead is in 'draft' state, 
 -    
@@ -79,37 +78,25 @@
   !python {model: crm.lead2opportunity}: |
      self.action_apply(cr, uid, [ref('crm_lead2opportunity_stonage_0')], {'active_id': ref('crm_lead_newcustomer0')})
 
--  |   
-   I can check that a lead and a business opportunity is now assigned to this
-   lead.
-#-
-#   !python {model: crm.lead, id: crm_lead_newcustomer0}: 
-#     - opportunity_id == False
-         
 -  |
-   I check that the partner associated to this lead as the same country, phone number
-   and name than the opportunity.
+   In order to check the opportunity is created or not, I check type.
 -  
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref("crm_lead_newcustomer0"))
-    obj_opportunity = self.pool.get('crm.lead')
-    ids = obj_opportunity.search(cr, uid, [('name', '=', lead.partner_name)])
-    opportunity = obj_opportunity.browse(cr, uid, ids)[0]
-    assert lead.partner_name == opportunity.partner_id.name
-    assert lead.phone == opportunity.phone
+    assert lead.type == 'opportunity'
 
 #-
 #  |
-#  yaml is also not working  smpt server and send new email.
+#  yaml is also not working with smtp server and send new email.
 
 - |
   I configure with smtp server.
 - |
-  And I communicate with lead through send New mail to Lead using it email address from user which are loged.
+  And I communicate with lead through send New mail to Lead using its email address from the user who is logged in.
 - |
   I check that communication history generated when send email to lead.
 - |
-  Then,  I add a cc which receive copy of future communication between partner and users by mail.
+  Then, I add a cc which receive copy of future communication between partner and users by mail.
 
 - |
   I Reply to last Email to lead with some document attached.and check that communication history generated or not.

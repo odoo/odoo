@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,20 +24,17 @@ from tools.translate import _
 import tools
 from tools.sql import drop_view_if_exists
 
-#
-# Check if it works with UoM ???
-#
 class stock_report_prodlots(osv.osv):
     _name = "stock.report.prodlots"
     _description = "Stock report by production lots"
     _auto = False
     _columns = {
-            'name': fields.float('Quantity', readonly=True),
-            'location_id': fields.many2one('stock.location', 'Location', readonly=True, select=True),
-            'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
-            'prodlot_id': fields.many2one('stock.production.lot', 'Production lot', readonly=True, select=True),
+        'qty': fields.float('Quantity', readonly=True),
+        'location_id': fields.many2one('stock.location', 'Location', readonly=True, select=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Production lot', readonly=True, select=True),
     }
-    
+
     def init(self, cr):
         drop_view_if_exists(cr, 'stock_report_prodlots')
         cr.execute("""
@@ -46,7 +43,7 @@ class stock_report_prodlots(osv.osv):
                     location_id,
                     product_id,
                     prodlot_id,
-                    sum(qty) as name
+                    sum(qty) as qty
                 from (
                     select -max(sm.id) as id,
                         sm.location_id,
@@ -76,11 +73,11 @@ class stock_report_prodlots(osv.osv):
                 ) as report
                 group by location_id, product_id, prodlot_id
             )""")
-        
+
     def unlink(self, cr, uid, ids, context={}):
         raise osv.except_osv(_('Error !'), _('You cannot delete any record!'))
 
-        
+
 stock_report_prodlots()
 
 class stock_report_tracklots(osv.osv):
@@ -88,17 +85,17 @@ class stock_report_tracklots(osv.osv):
     _description = "Stock report by tracking lots"
     _auto = False
     _columns = {
-            'name': fields.float('Quantity', readonly=True),
-            'location_id': fields.many2one('stock.location', 'Location', readonly=True, select=True),
-            'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
-            'tracking_id': fields.many2one('stock.tracking', 'Tracking lot', readonly=True, select=True),
+        'name': fields.float('Quantity', readonly=True),
+        'location_id': fields.many2one('stock.location', 'Location', readonly=True, select=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
+        'tracking_id': fields.many2one('stock.tracking', 'Tracking lot', readonly=True, select=True),
     }
-    
+
     def init(self, cr):
         drop_view_if_exists(cr, 'stock_report_tracklots')
         cr.execute("""
            create or replace view stock_report_tracklots as (
-                
+
             select max(id) as id,
                     location_id,
                     product_id,

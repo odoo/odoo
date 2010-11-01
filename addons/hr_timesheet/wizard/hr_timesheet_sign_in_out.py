@@ -27,33 +27,42 @@ class hr_so_project(osv.osv_memory):
     _name = 'hr.sign.out.project'
     _description = 'Sign Out By Project'
     _columns = {
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, domain=[('type','=','normal')]),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('type','=','normal')]),
         'info': fields.char('Work Description', size=256, required=True),
         'date_start': fields.datetime('Starting Date', readonly=True),
         'date': fields.datetime('Closing Date'),
         'analytic_amount': fields.float('Minimum Analytic Amount'),
         'name': fields.char('Employees name', size=32, required=True, readonly=True),
-        'state': fields.char('Current state', size=32, required=True, readonly=True),
+        'state': fields.related('emp_id', 'state', string='Current state', type='char', required=True, readonly=True),
         'server_date': fields.datetime('Current Date', required=True, readonly=True),
-        'emp_id': fields.char('Employee ID', size=256, required=False),
+        'emp_id': fields.many2one('hr.employee', 'Employee ID')
                 }
 
     def _get_empid(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
-        if emp_id:
-            employee = emp_obj.read(cr, uid, emp_id)[0]
-            return {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0], 'server_date':time.strftime('%Y-%m-%d %H:%M:%S')}
-        raise osv.except_osv(_('UserError'), _('No employee defined for your user !'))
+        if context is None:
+            context = {}
+        emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
+        if emp_ids:
+            for employee in emp_obj.browse(cr, uid, emp_ids, context=context):
+                return {'name': employee.name, 'state': employee.state, 'emp_id': emp_ids[0], 'server_date':time.strftime('%Y-%m-%d %H:%M:%S')}
 
-    def _get_empid2(self, cr, uid, context):
-        res = self._get_empid(cr, uid, context)
+    def _get_empid2(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        res = self._get_empid(cr, uid, context=context)
         cr.execute('select name,action from hr_attendance where employee_id=%s order by name desc limit 1', (res['emp_id'],))
+
         res['server_date'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        res['date_start'] = cr.fetchone()[0]
+        date_start = cr.fetchone()
+
+        if date_start:
+            res['date_start'] = date_start[0]
         return res
 
     def default_get(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         res = super(hr_so_project, self).default_get(cr, uid, fields_list, context=context)
         res.update(self._get_empid2(cr, uid, context=context))
         return res
@@ -61,19 +70,23 @@ class hr_so_project(osv.osv_memory):
     def _write(self, cr, uid, data, emp_id, context=None):
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
         emp_obj = self.pool.get('hr.employee')
+        if context is None:
+            context = {}
         hour = (time.mktime(time.strptime(data['date'] or time.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')) -
             time.mktime(time.strptime(data['date_start'], '%Y-%m-%d %H:%M:%S'))) / 3600.0
         minimum = data['analytic_amount']
         if minimum:
             hour = round(round((hour + minimum / 2) / minimum) * minimum, 2)
-        res = timesheet_obj.default_get(cr, uid, ['product_id','product_uom_id'])
+        res = timesheet_obj.default_get(cr, uid, ['product_id','product_uom_id'], context=context)
+
         if not res['product_uom_id']:
             raise osv.except_osv(_('UserError'), _('No cost unit defined for this employee !'))
-        up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour, res['product_uom_id'])['value']
+        up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour,False, res['product_uom_id'])['value']
+
         res['name'] = data['info']
-        res['account_id'] = data['account_id']
+        res['account_id'] = data['account_id'].id
         res['unit_amount'] = hour
-        emp_journal = emp_obj.browse(cr, uid, emp_id, context).journal_id
+        emp_journal = emp_obj.browse(cr, uid, emp_id, context=context).journal_id
         res['journal_id'] = emp_journal and emp_journal.id or False
         res.update(up)
         up = timesheet_obj.on_change_account_id(cr, uid, [], res['account_id']).get('value', {})
@@ -81,44 +94,68 @@ class hr_so_project(osv.osv_memory):
         return timesheet_obj.create(cr, uid, res, context=context)
 
     def sign_out_result_end(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         emp_obj = self.pool.get('hr.employee')
-        data = self.read(cr, uid, ids, [])[0]
-        emp_id = data['emp_id']
-        emp_obj.attendance_action_change(cr, uid, [emp_id], type='sign_out',dt=data['date'])
-        self._write(cr, uid, data, emp_id, context=context)
+        for data in self.browse(cr, uid, ids, context=context):
+            emp_id = data.emp_id.id
+            emp_obj.attendance_action_change(cr, uid, [emp_id], type='sign_out', dt=data.date)
+            self._write(cr, uid, data, emp_id, context=context)
         return {}
 
     def sign_out_result(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         emp_obj = self.pool.get('hr.employee')
-        data = self.read(cr, uid, ids, [])[0]
-        emp_id = data['emp_id']
-        emp_obj.attendance_action_change(cr, uid, [emp_id], type='action', dt=data['date'])
-        self._write(cr, uid, data, emp_id, context=context)
+        for data in self.browse(cr, uid, ids, context=context):
+            emp_id = data.emp_id.id
+            emp_obj.attendance_action_change(cr, uid, [emp_id], type='action', dt=data.date)
+            self._write(cr, uid, data, emp_id, context=context)
         return {}
 
 hr_so_project()
 
 class hr_si_project(osv.osv_memory):
+
     _name = 'hr.sign.in.project'
     _description = 'Sign In By Project'
     _columns = {
-        'name': fields.char('Employees name', size=32, required=True, readonly=True),
-        'state': fields.char('Current state', size=32, required=True, readonly=True),
+        'name': fields.char('Employees name', size=32,  readonly=True),
+        'state': fields.related('emp_id', 'state', string='Current state', type='char', required=True, readonly=True),
         'date': fields.datetime('Starting Date'),
-        'server_date': fields.datetime('Current Date', required=True, readonly=True),
-        'emp_id': fields.char('Employee ID', size=512, required=False),
+        'server_date': fields.datetime('Current Date',  readonly=True),
+        'emp_id': fields.many2one('hr.employee', 'Employee ID')
                 }
+
+    def view_init(self, cr, uid, fields, context=None):
+        """
+        This function checks for precondition before wizard executes
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+        """
+        emp_obj = self.pool.get('hr.employee')
+        if context is None:
+            context = {}
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
+        if not emp_id:
+            raise osv.except_osv(_('UserError'), _('No employee defined for your user !'))
+        return False
 
     def check_state(self, cr, uid, ids, context=None):
         obj_model = self.pool.get('ir.model.data')
-        emp_id = self._get_empid(cr, uid, context)['emp_id']
+        if context is None:
+            context = {}
+        emp_id = self.default_get(cr, uid, context)['emp_id']
         # get the latest action (sign_in or out) for this employee
         cr.execute('select action from hr_attendance where employee_id=%s and action in (\'sign_in\',\'sign_out\') order by name desc limit 1', (emp_id,))
         res = (cr.fetchone() or ('sign_out',))[0]
-        in_out = res == 'sign_out' and 'out' or 'in'
+        in_out = (res == 'sign_out') and 'in' or 'out'
         #TODO: invert sign_in et sign_out
-        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_timesheet_sign_%s' % in_out)])
-        resource_id = obj_model.read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
+        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_timesheet_sign_%s' % in_out)], context=context)
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {
             'name': 'Sign in / Sign out',
             'view_type': 'form',
@@ -129,24 +166,24 @@ class hr_si_project(osv.osv_memory):
             'target': 'new'
         }
 
-    def _get_empid(self, cr, uid, context=None):
+    def sign_in_result(self, cr, uid, ids, context=None):
         emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
-        if emp_id:
-            employee = emp_obj.read(cr, uid, emp_id)[0]
-            return {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0], 'server_date':time.strftime('%Y-%m-%d %H:%M:%S')}
-        raise osv.except_osv(_('UserError'), _('No employee defined for your user !'))
-
-    def sign_in_result(self, cr, uid, ids, context):
-        emp_obj = self.pool.get('hr.employee')
-        data = self.read(cr, uid, ids, [], context)[0]
-        emp_id = data['emp_id']
-        success = emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data['date'] or False)
+        if context is None:
+            context = {}
+        for data in self.browse(cr, uid, ids, context=context):
+            emp_id = data.emp_id.id
+            emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data.date or False)
         return {}
 
     def default_get(self, cr, uid, fields_list, context=None):
         res = super(hr_si_project, self).default_get(cr, uid, fields_list, context=context)
-        res.update(self._get_empid(cr, uid, context=context))
+        if context is None:
+            context = {}
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
+        if emp_id:
+            for employee in emp_obj.browse(cr, uid, emp_id, context=context):
+                res.update({'name': employee.name, 'state': employee.state, 'emp_id': emp_id[0], 'server_date':time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
 
 hr_si_project()

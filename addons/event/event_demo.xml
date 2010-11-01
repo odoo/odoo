@@ -55,65 +55,74 @@
 <!-- Demo data for Event -->
 	<record id="event_0" model="event.event">
 		<field name="name">Concert of Bon Jovi</field>
-		<field name="date_begin">2008-01-01 19:00:00</field>
-		<field name="date_end">2008-01-01 23:00:00</field>
+        <field eval="time.strftime('%Y-%m-01 19:05:15')" name="date_begin"/>
+        <field eval="time.strftime('%Y-%m-01 23:05:15')" name="date_end"/>
 		<field name="product_id" ref="event_product_0"/>
-		<field name="parent_id" ref="case_section_event"/>
-		<field name="user_id" ref="base.user_root"/>
-		<field name="register_max">500</field>
-		<field name="type" ref="event_type_1"/>
-		<field name="state">draft</field>
-	</record>
-<!--
-	<record id="demo_event_0bis" model="event.event">
-		<field name="name">Concert of Bon Jovi - Brussel</field>
-		<field name="date_begin">2008-02-02 19:00:00</field>
-		<field name="date_end">2008-02-02 23:00:00</field>
-		<field name="product_id" ref="event_product_0"/>
-		<field name="parent_id" ref="event_0"/>
+		<field name="unit_price">68.00</field>
 		<field name="user_id" ref="base.user_root"/>
 		<field name="register_max">500</field>
 		<field name="type" ref="event_type_1"/>
 	</record>
 
-	<record id="demo_event_0ter" model="event.event">
-		<field name="name">Concert of Bon Jovi - London</field>
-		<field name="date_begin">2008-04-04 19:00:00</field>
-		<field name="date_end">2008-04-04 23:00:00</field>
-		<field name="product_id" ref="event_product_0"/>
-		<field name="parent_id" ref="event_0"/>
-		<field name="user_id" ref="base.user_root"/>
-		<field name="register_max">500</field>
-		<field name="type" ref="event_type_1"/>
-	</record>
--->
 	<record id="event_1" model="event.event">
 		<field name="name">Opera of Verdi</field>
-		<field name="date_begin">2008-03-05 18:00:00</field>
-		<field name="date_end">2008-03-05 21:00:00</field>
+        <field eval="time.strftime('%Y-%m-05 18:00:00')" name="date_begin"/>
+        <field eval="time.strftime('%Y-%m-05 21:00:00')" name="date_end"/>
 		<field name="product_id" ref="event_product_1"/>
+		<field name="unit_price">24.00</field>
 		<field name="type" ref="event_type_1"/>
 		<field name="user_id" ref="base.user_root"/>
-		<field name="parent_id" ref="case_section_event"/>
 		<field name="register_max">350</field>
-		<field name="state">confirm</field>
 	</record>
-
+    <function model="event.event" name="button_confirm" eval="[ref('event_1')]"/>
 	<record id="event_2" model="event.event">
 		<field name="name">Conference on ERP Buisness</field>
-		<field name="date_begin">2008-09-09 14:00:00</field>
-		<field name="date_end">2008-09-09 16:30:00</field>
+        <field eval="time.strftime('%Y-%m-05 14:00:00')" name="date_begin"/>
+        <field eval="time.strftime('%Y-%m-05 16:30:00')" name="date_end"/>
 		<field name="product_id" ref="event_product_2"/>
+		<field name="unit_price">15.50</field>
 		<field name="type" ref="event_type_2"/>
 		<field name="register_max">200</field>
 		<field name="user_id" ref="base.user_root"/>
-		<field name="parent_id" ref="case_section_event"/>
 		<field name="mail_auto_registr">True</field>
 		<field name="mail_auto_confirm">True</field>
-		<field name="state">done</field>
-		<field name="mail_registr">Thanks for registrering. We will keep you informed of the modalities.</field>
-		<field name="mail_confirm">Thanks for registrering. The conference will begin at 2 PM and will be given by Mister Pinckaers.</field>
+		<field name="mail_registr">Thanks for registration. We will keep you informed of the modalities.</field>
+		<field name="mail_confirm">Thanks for registration. The conference will begin at 2 PM and will be given by Mr. Pinckaers.</field>
 	</record>
+    <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
+    <function model="event.event" name="button_done" eval="[ref('event_2')]"/>
+
+<!-- Demo data for Event Registration-->
+	<record id="reg_1_1" model="event.registration">
+		<field name="event_id" ref="event_1"/>
+		<field name="partner_id" ref="base.res_partner_asus"/>
+		<field name="partner_invoice_id" ref="base.res_partner_asus"/>
+		<field name="nb_register">5</field>
+		<field name="event_product">Ticket for Opera</field>
+		<field name="unit_price">24.00</field>
+	</record>
+
+	<record id="reg_1_2" model="event.registration">
+		<field name="event_id" ref="event_1"/>
+		<field name="partner_id" ref="base.res_partner_agrolait"/>
+		<field name="partner_invoice_id" ref="base.res_partner_agrolait"/>
+		<field name="nb_register">10</field>
+		<field name="event_product">Ticket for Opera</field>
+		<field name="unit_price">24.00</field>
+	</record>
+
+	 <function model="event.registration" name="check_confirm" eval="[ref('reg_1_2')]"/> 
+
+	<record id="reg_0_1" model="event.registration">
+		<field name="event_id" ref="event_0"/>
+		<field name="partner_id" ref="base.res_partner_c2c"/>
+		<field name="partner_invoice_id" ref="base.res_partner_c2c"/>
+		<field name="nb_register">6</field>
+		<field name="event_product">Ticket for Concert</field>
+		<field name="unit_price">15.50</field>
+	</record>
+
+	 <function model="event.registration" name="check_confirm" eval="[ref('reg_0_1')]"/> 
 
 	</data>
 </openerp>

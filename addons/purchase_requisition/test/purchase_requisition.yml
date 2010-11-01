@@ -17,6 +17,7 @@
       - delay: 1
         name: base.res_partner_asus
         qty: 5.0
+        min_qty: 1.0
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
@@ -57,13 +58,13 @@
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_testtender0}
 - 
-  I launch he scheduler to compute all procurements, and specify all requisitions orders.
+  I launch the scheduler to compute all procurements, and specify all requisitions orders.
 - 
   !python {model: procurement.order.compute.all}: |
     proc_obj = self.pool.get('procurement.order')
     proc_obj._procure_confirm(cr,uid)
 -
-  On the purchase tender, I create a new purchase order for the supplier 'DistriPC' by clicking on
+  On the purchase requisition, I create a new purchase order for the supplier 'DistriPC' by clicking on
   the button 'New RfQ'. This opens a window to ask me the supplier and I set DistriPC . 
 - 
   !record {model: purchase.requisition.partner, id: purchase_requisition_partner_0}:
@@ -74,23 +75,25 @@
 - 
   !python {model: purchase.requisition.partner}: |
     req_obj = self.pool.get('purchase.requisition')
-    ids =req_obj.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
+    ids =req_obj.search(cr, uid, [('origin','=','Laptop ACER')])
     self.create_order(cr, uid, [ref("purchase_requisition_partner_0")], {"lang":
       'en_US', "active_model": "purchase.requisition", "tz": False, "record_id":
       1, "active_ids": ids, "active_id": ids[0], })
     
 -
- I check that I have two purchase orders on the purchase tender.  
+ I check that I have two purchase orders on the purchase requisition.  
 -
  !python {model: purchase.order}: |
+    from tools.translate import _ 
     order_ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
     ids=len(order_ids)
-    assert (ids==2), "Purchase order  hasn't Created"
+    assert(ids == 2), _('Purchase Order not Created') 
+
 - 
  I set the purchase requisition as 'Not Exclusive'.
 -
  !python {model: purchase.requisition}: |
-    ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
+    ids =self.search(cr, uid, [('origin','=','Laptop ACER')])
     self.write(cr,uid,ids[0],{'exclusive': 'multiple' })
 -
   I change the quantities so that the purchase order for DistriPC includes 3 pieces and the
@@ -100,7 +103,7 @@
     line_obj=self.pool.get('purchase.order.line')  
     partner_obj=self.pool.get('res.partner')    
     requistion_obj=self.pool.get('purchase.requisition')
-    requistion_ids =requistion_obj.search(cr, uid, [('origin','=','TEST/TENDER/0001')])    
+    requistion_ids =requistion_obj.search(cr, uid, [('origin','=','Laptop ACER')])    
     partner_id1=partner_obj.search(cr,uid,[('name','=','ASUStek')])[0] 
     partner_id2=partner_obj.search(cr,uid,[('name','=','Distrib PC')])[0]   
     purchase_id1= self.search(cr, uid, [('partner_id','=',partner_id1),('requisition_id','in',requistion_ids)])
@@ -123,11 +126,13 @@
   I check that the delivery order of the customer is in state 'Waiting Goods'.
 -
   !python {model: stock.picking }: |
-    picking_id = self.search(cr, uid, [('origin','=','TEST/TENDER/0001'),('type','=','delivery')])
+    from tools.translate import _   
+    picking_id = self.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
     if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
-      assert (pick.state) =='confirmed'," Order is  not confirm"
-      assert(pick.move_lines[0].state=='wating'),'Order is  not wating"'
+      assert (pick.state =='confirmed'),_('Picking  is  not in confirm state.')
+      assert (pick.move_lines[0].state == 'waiting'), _('Stock Move is  not Waiting state.') 
+      
 -
   I receive the order of the supplier Asustek from the Incoming Products menu.
 -
@@ -141,12 +146,12 @@
      pick=self.browse(cr,uid,picking_id[0])
      move =pick.move_lines[0]
      partial_datas = {
-              'partner_id': 2,
-              'address_id': 6,
+              'partner_id': pick.address_id.partner_id.id,
+              'address_id': pick.address_id.id,
               'delivery_date' : time.strftime('%Y-%m-%d'),
            }
      partial_datas['move%s'%(move.id)]= {
-       'product_id': move.product_id,
+       'product_id': move.product_id.id,
        'product_qty': move.product_qty,
        'product_uom': move.product_uom.id,
       } 
@@ -167,7 +172,7 @@
             'delivery_date' : time.strftime('%Y-%m-%d'),
            }
       partial_datas['move%s'%(move.id)]= {
-          'product_id': move.product_id,
+          'product_id': move.product_id.id,
           'product_qty': move.product_qty,
           'product_uom': move.product_uom.id,
       } 
@@ -176,8 +181,9 @@
   I check that the delivery order of the customer is in the state Available.
 -
   !python {model: stock.picking }: |
+   from tools.translate import _
    picking_id = self.search(cr, uid, [('origin','=','TEST/TENDER/0001'),('type','=','out')])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
-      assert (pick.state) =='available'," Order is  not available"    
+      assert(pick.state == 'assigned'), _('Picking  is  not in available state')
 

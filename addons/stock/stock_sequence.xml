@@ -20,14 +20,9 @@
             <field name="code">stock.picking.internal</field>
         </record>
 
-        <record id="seq_type_picking_delivery" model="ir.sequence.type">
-            <field name="name">Picking Delivery</field>
-            <field name="code">stock.picking.delivery</field>
-        </record>
-
-		<!--
-    		Sequences for pickings
-    	-->
+        <!--
+            Sequences for pickings
+        -->
 
         <record id="seq_picking_in" model="ir.sequence">
             <field name="name">Picking IN</field>
@@ -50,22 +45,15 @@
             <field name="padding">5</field>
         </record>
 
-        <record id="seq_picking_delivery" model="ir.sequence">
-            <field name="name">Picking DLV</field>
-            <field name="code">stock.picking.delivery</field>
-            <field name="prefix">DLV/</field>
-            <field name="padding">5</field>
-        </record>
-
         <!--
     Sequences from tracking numbers
     -->
         <record id="sequence_type_serial" model="ir.sequence.type">
-            <field name="name">Stock Production Lots</field>
+            <field name="name">Production Lots</field>
             <field name="code">stock.lot.serial</field>
         </record>
         <record id="sequence_production_lots" model="ir.sequence">
-            <field name="name">Stock Production Lots</field>
+            <field name="name">Production Lots</field>
             <field name="code">stock.lot.serial</field>
             <field name="prefix"></field>
             <field name="padding">7</field>
@@ -74,12 +62,12 @@
         </record>
 
         <record id="sequence_type_tracking" model="ir.sequence.type">
-            <field name="name">Stock Tracking Lots</field>
+            <field name="name">Packs</field>
             <field name="code">stock.lot.tracking</field>
         </record>
 
         <record id="sequence_tracking" model="ir.sequence">
-            <field name="name">Stock Tracking Lots</field>
+            <field name="name">Packs</field>
             <field name="code">stock.lot.tracking</field>
             <field name="prefix"></field>
             <field name="padding">7</field>

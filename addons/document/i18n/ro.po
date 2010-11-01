@@ -4,22 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-02-04 06:27+0000\n"
+"PO-Revision-Date: 2010-08-03 03:30+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:19+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
 #: field:document.directory,create_date:0
 msgid "Date Created"
-msgstr ""
+msgstr "Data creării"
 
 #. module: document
 #: field:document.directory,ressource_id:0
@@ -36,6 +36,8 @@ msgstr ""
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
+"special !"
 
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
@@ -70,7 +72,7 @@ msgstr ""
 #. module: document
 #: field:ir.attachment,file_size:0
 msgid "File Size"
-msgstr ""
+msgstr "Mărime fişier"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -102,7 +104,7 @@ msgstr ""
 #. module: document
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nume invalid de model în definirea acțiunii"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -152,7 +154,7 @@ msgstr ""
 #: field:document.directory,file_ids:0
 #: view:ir.attachment:0
 msgid "Files"
-msgstr ""
+msgstr "Fişiere"
 
 #. module: document
 #: field:ir.attachment,store_fname:0
@@ -202,7 +204,7 @@ msgstr ""
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document
 msgid "Document Management"
-msgstr ""
+msgstr "Managementul documentelor"
 
 #. module: document
 #: selection:ir.attachment,store_method:0
@@ -212,7 +214,7 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 msgid "Directory Type"
-msgstr ""
+msgstr "Tip de director"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -263,7 +265,7 @@ msgstr ""
 #. module: document
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "XML invalid pentru arhitectura machetei de afișare !"
 
 #. module: document
 #: model:ir.module.module,description:document.module_meta_information
@@ -314,13 +316,13 @@ msgstr ""
 #: field:document.directory.content,directory_id:0
 #: field:ir.attachment,parent_id:0
 msgid "Directory"
-msgstr ""
+msgstr "Director"
 
 #. module: document
 #: field:document.directory,user_id:0
 #: field:ir.attachment,user_id:0
 msgid "Owner"
-msgstr ""
+msgstr "Deținător"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
@@ -447,7 +449,7 @@ msgstr ""
 #. module: document
 #: field:ir.attachment,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partener"
 
 #. module: document
 #: view:document.directory:0
@@ -468,3 +470,165 @@ msgstr ""
 #: view:document.directory:0
 msgid "Contents"
 msgstr ""
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_partner
+msgid "Files Per Month"
+msgstr "Fişiere pe lună"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_wall
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_shame
+#: view:report.document.wall:0
+msgid "Wall of Shame"
+msgstr "Panoul ruşinii"
+
+#. module: document
+#: model:ir.model,name:document.model_report_files_partner
+msgid "Files details by Partners"
+msgstr "Detalii fişier după parteneri"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all
+msgid "All Months"
+msgstr "Toate lunile"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all_myfile
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this_myfile
+msgid "My files"
+msgstr "Fişierele mele"
+
+#. module: document
+#: view:report.document.user:0
+msgid "Files by users"
+msgstr "Fişiere după utilizatori"
+
+#. module: document
+#: view:report.files.partner:0
+msgid "Files per Month"
+msgstr "Fişiere pe lună"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_my_document_tree1
+msgid "My files (All months)"
+msgstr "Fişierele mele (toale lunile)"
+
+#. module: document
+#: field:report.document.wall,file_name:0
+msgid "Last Posted File Name"
+msgstr "Numele ultimului fişier postat"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report
+msgid "Reporting"
+msgstr "Raportare"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_wall
+msgid "Users that did not inserted documents since one month"
+msgstr "Utilizatori care nu au inserat documente în ultima lună"
+
+#. module: document
+#: view:report.files.partner:0
+msgid "Files By Partner"
+msgstr "Fişiere după parteneri"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this
+msgid "This Month"
+msgstr "Luna curentă"
+
+#. module: document
+#: field:report.document.user,user:0 field:report.document.wall,user:0
+msgid "User"
+msgstr "Utilizator"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all_userfile
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this_userfile
+msgid "All Users files"
+msgstr "Fişierele tuturor utilizatorilor"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_my_document_tree
+msgid "My files (This months)"
+msgstr "Fişierele mele (luna curentă)"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_user
+msgid "Files details by Users"
+msgstr "Detalii fişiere după utilizator"
+
+#. module: document
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
+#: field:report.files.partner,nbr:0
+msgid "# of Files"
+msgstr "Număr de fişiere"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_user_graph
+msgid "Files By Users"
+msgstr "Fişiere după utilizatori"
+
+#. module: document
+#: model:ir.module.module,shortdesc:report_document.module_meta_information
+msgid "Document Management - Reporting"
+msgstr "Management documente - Raportări"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files (All months)"
+msgstr "Toate fişierele utilizatorilor (toate lunile)"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_file
+msgid "Files details by Directory"
+msgstr "Detalii fişiere după directoare"
+
+#. module: document
+#: field:report.document.user,change_date:0
+#: field:report.files.partner,change_date:0
+msgid "Modified Date"
+msgstr "Data modificării"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_size_month
+#: view:report.document.file:0
+msgid "File Size by Month"
+msgstr "Mărime fişiere pe luni"
+
+#. module: document
+#: field:report.document.user,file_title:0
+#: field:report.files.partner,file_title:0
+msgid "File Name"
+msgstr "Nume fișier"
+
+#. module: document
+#: field:report.document.file,month:0 field:report.document.user,month:0
+#: field:report.document.user,name:0 field:report.document.wall,month:0
+#: field:report.document.wall,name:0 field:report.files.partner,name:0
+msgid "Month"
+msgstr "Luna"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
+#: view:report.document.user:0
+msgid "Files by Month"
+msgstr "Fişiere pe luni"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
+#: view:report.document.user:0
+msgid "Files by Resource Type"
+msgstr "Fişiere pe tipuri de resursă"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree
+msgid "All Users files (This month)"
+msgstr "Fişierele tuturor utilizatorilor (luna curentă)"
+
+#. module: document
+#: field:report.document.wall,last:0
+msgid "Last Posted Time"
+msgstr "Ora ultimei postări"

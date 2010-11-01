@@ -12,23 +12,23 @@
         name: Technical Presentation
         rrule_type: none
 -   |
-    Now I will set recurrence for this event to occure monday and friday of week
+    Now I will set recurrence for this event to occur monday and friday of week
 -
     !python {model: calendar.event}: |
      self.write(cr, uid, [ref("calendar_event_technicalpresentation0")], {'fr': 1, 'mo': 1, 'interval': 1, 'freq': 'weekly', 'rrule_type': 'custom'})
 -   |
-    In order to check that recurrent events are views successfully in calenadar view,
+    In order to check that recurrent events are views successfully in calendar view,
     I will open calendar view of events
 -
     !python {model: calendar.event}: |
      self.fields_view_get(cr, uid, False, 'calendar', context)
 -   |
-    In order to check that recurrent events are views successfully in calenadar view,
+    In order to check that recurrent events are views successfully in calendar view,
     I will search for one of the recurrent event and count the number of events
 -
     !python {model: calendar.event}: |
-     ids = self.search(cr, uid, [('date', '>=', '2010-05-01 00:00:00'), ('date', '<=', '2010-05-31 00:00:00')] )
-     assert len(ids) == 9
+     ids = self.search(cr, uid, [('date', '>=', '2010-04-30 16:00:00'), ('date', '<=', '2010-05-31 00:00:00')] )
+     assert len(ids) == 10
 -   |
     Now I will make All day event and test it
 -
@@ -60,6 +60,7 @@
 - 
   !record {model: base_calendar.invite.attendee, id: base_calendar_invite_attendee_0}:
     type: internal
+    send_mail: False
     partner_id: base.res_partner_9 # Put bcz of problem in read
     user_ids:
       - base.user_demo

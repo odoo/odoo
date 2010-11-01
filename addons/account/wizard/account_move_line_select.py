@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
+from osv import osv
 
 class account_move_line_select(osv.osv_memory):
     """
@@ -43,11 +42,10 @@ class account_move_line_select(osv.osv_memory):
         else:
             fiscalyear_ids = [context['fiscalyear']]
 
-        fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
         fiscalyears = fiscalyear_obj.browse(cr, uid, fiscalyear_ids)
 
         period_ids = []
-        if fiscalyears :
+        if fiscalyears:
             for fiscalyear in fiscalyears:
                 for period in fiscalyear.period_ids:
                     period_ids.append(period.id)
@@ -57,7 +55,7 @@ class account_move_line_select(osv.osv_memory):
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id])[0]
         result['context'] = {
-            'fiscalyear': False ,
+            'fiscalyear': False,
             'account_id': context['active_id'],
             'active_id': context['active_id'],
         }

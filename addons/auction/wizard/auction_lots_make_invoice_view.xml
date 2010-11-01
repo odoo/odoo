@@ -6,16 +6,19 @@
             <field name="model">auction.lots.make.invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Paid">
+                <form string="Seller Invoice">
                 	<group colspan="4" >
+                	     <separator string="Create Invoices For Seller" colspan="4"/>  
                 		 <field name="amount"/>
                 		 <field name="objects"/>
-                		 <field name="number" colspan="3"/>
+                		 <field name="number" colspan="1"/>
+                		 <label string="(Keep empty for automatic number)" colspan="2"/>
                     </group>
-                       	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button icon="gtk-ok" string="Create invoices" name="makeInvoices" type="object"/>
+                    <separator string="" colspan="4"/>
+                    <group colspan="2" col="2"/>
+                    <group colspan="2" col="2">
+                    	<button icon="gtk-close" special="cancel" string="Close"/>
+                    	<button icon="terp-gtk-go-back-rtl" string="Create invoices" name="makeInvoices" type="object"/>
                    </group>
                </form>
             </field>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,15 +15,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-
 {
-    'name': 'Account Analytic Default',
-    'version': '1.0',
-    'category': 'Generic Modules/Accounting',
+    'name'      : 'Account Analytic Default',
+    'version'   : '1.0',
+    'category'  : 'Generic Modules/Accounting',
     'description': """
 Allows to automatically select analytic accounts based on criterions:
 * Product
@@ -32,14 +31,15 @@ Allows to automatically select analytic accounts based on criterions:
 * Company
 * Date
     """,
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['account', 'sale'],
-    'init_xml': [],
+    'author'    : 'OpenERP SA',
+    'website'   : 'http://www.openerp.com',
+    'depends'   : ['sale'],
+    'init_xml'  : [],
     'update_xml': ['security/ir.model.access.csv', 'account_analytic_default_view.xml'],
-    'demo_xml': [],
+    'demo_xml'  : [],
     'installable': True,
     'active': False,
     'certificate': '0074229833581',
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

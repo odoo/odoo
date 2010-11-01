@@ -36,42 +36,6 @@ class crm_fundraising_report(osv.osv):
     _name = "crm.fundraising.report"
     _auto = False
     _description = "CRM Fundraising Report"
-    
-    def _get_data(self, cr, uid, ids, field_name, arg, context={}):
-
-        """ @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of case and section Data’s IDs
-            @param context: A standard dictionary for contextual values """
-
-        res = {}
-        state_perc = 0.0
-        avg_ans = 0.0
-
-        for case in self.browse(cr, uid, ids, context):
-            if field_name != 'avg_answers':
-                state = field_name[5:]
-                cr.execute("select count(*) from crm_opportunity where \
-                    section_id =%s and state='%s'"%(case.section_id.id, state))
-                state_cases = cr.fetchone()[0]
-                perc_state = (state_cases / float(case.nbr)) * 100
-
-                res[case.id] = perc_state
-            else:
-                model_name = self._name.split('report.')
-                if len(model_name) < 2:
-                    res[case.id] = 0.0
-                else:
-                    model_name = model_name[1]
-
-                    cr.execute("select count(*) from crm_case_log l, ir_model m \
-                         where l.model_id=m.id and m.model = '%s'" , model_name)
-                    logs = cr.fetchone()[0]
-
-                    avg_ans = logs / case.nbr
-                    res[case.id] = avg_ans
-
-        return res
 
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
@@ -79,9 +43,6 @@ class crm_fundraising_report(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
-        'perc_done': fields.function(_get_data, string='%Done', method=True, type="float"),
-        'perc_cancel': fields.function(_get_data, string='%Cancel', method=True, type="float"),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -100,6 +61,10 @@ class crm_fundraising_report(osv.osv):
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'company_id': fields.many2one('res.company', 'Company'),
+        'type_id': fields.many2one('crm.case.resource.type', 'Fundraising Type', \
+                             domain="[('section_id','=',section_id),\
+                             ('object_id.model', '=', 'crm.fundraising')]"),
+         'planned_cost': fields.float('Planned Costs',readonly=True,digits=(16,2)),
     }
 
     def init(self, cr):
@@ -113,29 +78,28 @@ class crm_fundraising_report(osv.osv):
             create or replace view crm_fundraising_report as (
                 select
                     min(c.id) as id,
-                    to_char(c.create_date, 'YYYY') as name,
-                    to_char(c.create_date, 'MM') as month,
-                    to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    to_char(c.date, 'YYYY') as name,
+                    to_char(c.date, 'MM') as month,
+                    to_char(c.date, 'YYYY-MM-DD') as day,
                     c.state,
                     c.user_id,
                     c.section_id,
                     c.categ_id,
+                    c.type_id,
                     c.company_id,
                     c.partner_id,
                     count(*) as nbr,
-                    0 as avg_answers,
-                    0.0 as perc_done,
-                    0.0 as perc_cancel,
                     date_trunc('day',c.create_date) as create_date,
                     sum(planned_revenue) as amount_revenue,
+                    sum(planned_cost) as planned_cost,
                     sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
                     avg(probability)::decimal(16,2) as probability,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
                     crm_fundraising c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
-                     c.state, c.user_id,c.section_id,c.categ_id,c.partner_id,c.company_id,
-                     c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
+                group by to_char(c.date, 'YYYY'), to_char(c.date, 'MM'),\
+                     c.state, c.user_id,c.section_id,c.categ_id,type_id,c.partner_id,c.company_id,
+                     c.create_date,to_char(c.date, 'YYYY-MM-DD')
             )""")
 
 crm_fundraising_report()

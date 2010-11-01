@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+         <record id="account_partner_ledger_view" model="ir.ui.view">
+            <field name="name">Partner Ledger</field>
+            <field name="model">account.partner.ledger</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account_common_report_view" />
+            <field name="arch" type="xml">
+               <field name="target_move" position="after">
+                    <field name="result_selection"/>
+                    <field name="initial_balance"/>
+                    <field name="reconcil"/>
+                    <field name="amount_currency"/>
+                    <field name="page_split"/>
+                    <newline/>
+               </field>
+            </field>
+        </record>
+
+         <record id="action_account_partner_ledger" model="ir.actions.act_window">
+             <field name="name">Select Period</field>
+             <field name="res_model">account.partner.ledger</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="account_partner_ledger_view"/>
+             <field name="context">{'record_id':active_id}</field>
+             <field name="target">new</field>
+             <field name="help">To get detailed information about a partner you can ask for the Partner Ledgers.</field>
+       </record>
+
+        <menuitem icon="STOCK_PRINT"
+            name="Partner Ledger"
+            action="action_account_partner_ledger"
+            groups="group_account_manager,group_account_user"
+            id="menu_account_partner_ledger"
+            parent="account.next_id_22"/>
+
+     </data>
+ </openerp>

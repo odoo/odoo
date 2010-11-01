@@ -4,22 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 06:58+0000\n"
+"PO-Revision-Date: 2010-10-12 14:58+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:19+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
 msgid "Responsible User"
-msgstr "责任用户"
+msgstr "负责用户"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -30,12 +30,12 @@ msgstr "% 执行%"
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
-msgstr "预算位于"
+msgstr "预算状况"
 
 #. module: account_budget
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+msgstr "在动作定义使用了无效的模式名称。"
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
@@ -65,17 +65,12 @@ msgid "Confirmed"
 msgstr "已确认"
 
 #. module: account_budget
-#: field:account.budget.post.dotation,period_id:0
-msgid "Period"
-msgstr "会计期间"
-
-#. module: account_budget
 #: wizard_field:account.budget.report,init,date2:0
 #: wizard_field:wizard.analytic.account.budget.report,init,date_to:0
 #: wizard_field:wizard.crossovered.budget,init,date_to:0
 #: wizard_field:wizard.crossovered.budget.summary,init,date_to:0
 msgid "End of period"
-msgstr "会计期间结束"
+msgstr "结束会计期间"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -183,7 +178,7 @@ msgstr ""
 #: rml:account.budget:0
 #: rml:crossovered.budget.report:0
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
@@ -207,7 +202,7 @@ msgstr "打印"
 #. module: account_budget
 #: rml:account.budget:0
 msgid "A/c No."
-msgstr ""
+msgstr "A/c No."
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
@@ -244,7 +239,7 @@ msgstr "会计期间预算"
 #. module: account_budget
 #: rml:account.budget:0
 msgid "Budget Analysis"
-msgstr "预算核算"
+msgstr "预算辅助核算"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -255,7 +250,7 @@ msgstr "完成"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Validate"
-msgstr "确认"
+msgstr "审核"
 
 #. module: account_budget
 #: wizard_view:wizard.crossovered.budget,init:0
@@ -288,7 +283,6 @@ msgstr "理论金额"
 
 #. module: account_budget
 #: field:account.budget.post,name:0
-#: field:account.budget.post.dotation,name:0
 #: field:crossovered.budget,name:0
 msgid "Name"
 msgstr "名称"
@@ -321,17 +315,6 @@ msgid "Budget"
 msgstr "预算"
 
 #. module: account_budget
-#: field:account.budget.post.dotation,post_id:0
-msgid "Item"
-msgstr "项"
-
-#. module: account_budget
-#: field:account.budget.post.dotation,amount:0
-#: wizard_field:account.budget.spread,init,amount:0
-msgid "Amount"
-msgstr "金额"
-
-#. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
 msgid "Paid Date"
 msgstr "支付日期"
@@ -349,17 +332,6 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: account_budget
-#: view:account.budget.post.dotation:0
-#: model:ir.model,name:account_budget.model_account_budget_post_dotation
-msgid "Budget Dotation"
-msgstr "预算给予"
-
-#. module: account_budget
-#: view:account.budget.post.dotation:0
-msgid "Budget Dotations"
-msgstr "预算给予"
-
-#. module: account_budget
 #: rml:account.budget:0
 msgid "Budget Item Detail"
 msgstr "预算项详情"
@@ -369,7 +341,7 @@ msgstr "预算项详情"
 #: field:crossovered.budget.lines,general_budget_id:0
 #: model:ir.model,name:account_budget.model_account_budget_post
 msgid "Budgetary Position"
-msgstr "预算位于"
+msgstr "预算状况"
 
 #. module: account_budget
 #: wizard_field:account.budget.report,init,date1:0
@@ -377,7 +349,7 @@ msgstr "预算位于"
 #: wizard_field:wizard.crossovered.budget,init,date_from:0
 #: wizard_field:wizard.crossovered.budget.summary,init,date_from:0
 msgid "Start of period"
-msgstr "期初日期"
+msgstr "开始会计期间"
 
 #. module: account_budget
 #: model:ir.actions.report.xml,name:account_budget.account_analytic_account_budget
@@ -392,11 +364,6 @@ msgstr "打印预算"
 #: field:crossovered.budget,code:0
 msgid "Code"
 msgstr "代码"
-
-#. module: account_budget
-#: field:account.budget.post.dotation,tot_planned:0
-msgid "Total Planned Amount"
-msgstr "计划金额合计"
 
 #. module: account_budget
 #: wizard_view:wizard.analytic.account.budget.report,init:0
@@ -493,7 +460,7 @@ msgstr "辅助核算从"
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
-msgstr "确认"
+msgstr "审核"
 
 #. module: account_budget
 #: wizard_view:account.budget.report,init:0

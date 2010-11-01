@@ -39,7 +39,7 @@
      self.write(cr, uid, [ref('crm_meeting_regardingpresentation0')], {'alarm_id': ref("res_alarm_minituesbefore0")})
 - |
   In order to check recurrence on meetings I will set Recurrency to Custom
-  and I set the fields so that the meeting will occure weekly on Monday and Friday 10 times
+  and I set the fields so that the meeting will occur weekly on Monday and Friday 10 times
 -
   !python {model: crm.meeting}: |
      self.write(cr, uid, [ref("crm_meeting_regardingpresentation0")], {'fr': 1, 'mo': 1, 'th': 1, 'tu': 1, 'we':1,   'count':10, 'interval': 1, 'freq': 'weekly', 'rrule_type': 'custom'})
@@ -55,18 +55,18 @@
   I will search for one of the recurrent event and count the number of meeting.
 -
   !python {model: crm.meeting}: |
-     ids = self.search(cr, uid, [('date', '>=', '2010-05-21 00:00:00'), ('date', '<=', '2010-04-21 00:00:00')] )
-     assert len(ids) == 9      
+     ids = self.search(cr, uid, [('date', '>=', '2010-04-21 00:00:00'), ('date', '<=', '2010-05-21 00:00:00')] )
+     assert len(ids) == 10      
 
 - |
-  Now If I want to edit meetings information for all occurence I click on "Edit All" button.
+  Now If I want to edit meetings information for all occurrence I click on "Edit All" button.
 -
   !python {model: crm.meeting}: |
     self.open_meeting(cr, uid, [ref('crm_meeting_regardingpresentation0')])
 - |   
   I can see that new meeting form is opened with same value
   I change some data for meeting and save it
-  I can see from meeting's calendar view that all meeting occurences are changed accordingly
+  I can see from meeting's calendar view that all meeting occurrences are changed accordingly
 - 
   !record {model: crm.meeting, id: crm.crm_meeting_regardingpresentation0}:
     alarm_id: base_calendar.alarm9
@@ -78,14 +78,10 @@
 - 
   !record {model: base_calendar.invite.attendee, id: base_calendar_invite_attendee_0}:
     type: internal
+    send_mail: False
     partner_id: base.res_partner_9
     user_ids:
       - base.user_demo
-- |
-  If I set Send mail boolean as True I can see that an email is send to 
-    specified email address with proper meeting information.
--
-  #This is not working for send mail boolean as True.
 -
   I click on "Invite" button of "Invite attendee" wizard.    
 -

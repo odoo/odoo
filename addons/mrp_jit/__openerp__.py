@@ -39,10 +39,11 @@
     
     
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['procurement'],
     'update_xml': ['mrp_jit.xml'],
     'demo_xml': [],
+    'test': ['test/mrp_jit.yml'],
     'installable': True,
     'active': False,
     'certificate': '0086634760061',

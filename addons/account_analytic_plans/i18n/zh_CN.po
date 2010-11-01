@@ -4,22 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 06:54+0000\n"
+"PO-Revision-Date: 2010-09-29 10:06+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:11+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
-msgstr "科目4ID"
+msgstr "项目4ID"
 
 #. module: account_analytic_plans
 #: constraint:ir.model:0
@@ -36,7 +36,7 @@ msgstr "交叉辅助核算"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
 msgid "Account5 Id"
-msgstr "科目5ID"
+msgstr "项目5ID"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date2:0
@@ -75,7 +75,7 @@ msgstr "打印"
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "To Date"
-msgstr "至今为止"
+msgstr "日期到"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,plan_id:0
@@ -90,7 +90,7 @@ msgstr "辅助核算分配模型"
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Account Name"
-msgstr "科目名称"
+msgstr "项目名称"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -105,7 +105,7 @@ msgstr "分配代码"
 #. module: account_analytic_plans
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+msgstr "在行动定义中的模式名称无效"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
@@ -135,13 +135,13 @@ msgstr "选择信息"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
-msgstr "科目3ID"
+msgstr "项目3ID"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
 msgid "Analytic Journal"
-msgstr "辅助核算分类帐"
+msgstr "辅助核算类型"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -151,12 +151,12 @@ msgstr "100.00%"
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,ref:0
 msgid "Analytic Account Ref."
-msgstr "辅助核算项目参考"
+msgstr "关联的辅助核算项目"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
-msgstr "辅助核算项目:"
+msgstr "辅助核算项:"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
@@ -166,7 +166,7 @@ msgstr "辅助核算方案明细"
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account Reference:"
-msgstr "辅助核算项目参考:"
+msgstr "关联的辅助核算项目:"
 
 #. module: account_analytic_plans
 #: model:ir.actions.wizard,name:account_analytic_plans.create_model
@@ -194,7 +194,7 @@ msgstr "最小允许(%)"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
 msgid "Account1 Id"
-msgstr "科目1ID"
+msgstr "项目1ID"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,max_required:0
@@ -209,7 +209,7 @@ msgstr "分配模型保存"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
-msgstr "核算方案实例"
+msgstr "辅助核算方案实例"
 
 #. module: account_analytic_plans
 #: constraint:ir.ui.view:0
@@ -255,32 +255,25 @@ msgid ""
 "for one account entry.\n"
 "        "
 msgstr ""
-"这模块允许使用几个辅助核算方案并根据他们生成分类帐\n"
-"\t所以当开发票或确认凭证时\n"
-"建立多个辅助核算明细\n"
-"\t\n"
-"\t例子:你可以定义以下辅助核算结构:\n"
-"\t项目\n"
-"\t\t项目1\n"
-"\t\t\t子项目1.1  \n"
-"\t\t\t子项目1.2  \n"
-"\t\t项目2\n"
-"\t业务员\n"
-"\t\t小李\n"
-"\t\t小张\n"
-"\n"
-"这里我们有两个项目和业务员.发票必须能够写如：两项目和业务员辅助核算凭证,金额也可以分割.下面的例子是发票涉及两个项目和一个业务员.\n"
-"\n"
-"\n"
-"\t方案1:\n"
-"\t\t子项目1.1  :50%\n"
-"\t\t子项目1.2  :50%\n"
-"\n"
-"\t方案2:\n"
-"\t\t小李:100%\n"
-"\t\n"
-"\t因此当这发票的明细确认时\n"
-"将产生3个辅助核算明细\n"
+"这模块允许使用几个辅助核算方案并根据业务类型生成,\n"
+"所以当开发票或确认凭证时建立多个辅助核算明细.\n"
+"例如,你可以定义以下辅助核算结构:\n"
+"      项目\n"
+"        项目1\n"
+"                      子项目1.1\n"
+"                      子项目1.2 \n"
+"              项目2\n"
+"      业务员\n"
+"        小李\n"
+"        小张\n"
+"这里我们有两个项目和业务员,发票要能做有两个项目和业务员的辅助核算凭证：\n"
+"    下面的例子: 发票涉及两个项目和一个业务员.\n"
+"       方案1:\n"
+"             子项目1.1 :50%\n"
+"             子项目1.2 :50%\n"
+"       方案2:\n"
+"             小李:100%\n"
+"因此当这发票的辅助核算凭证有3个辅助核算明细\n"
 "        "
 
 #. module: account_analytic_plans
@@ -307,7 +300,7 @@ msgstr "模型方案"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account2_ids:0
 msgid "Account2 Id"
-msgstr "科目2ID"
+msgstr "项目2ID"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -322,7 +315,7 @@ msgstr "这方案的根辅助核算项目"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
 msgid "Account6 Id"
-msgstr "科目6ID"
+msgstr "项目6ID"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -332,7 +325,7 @@ msgstr "数量"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account_ids:0
 msgid "Account Id"
-msgstr "科目ID"
+msgstr "项目ID"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -347,7 +340,7 @@ msgstr "确定"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
 msgid "Root Account"
-msgstr "根辅助核算项目"
+msgstr "根项"
 
 #. module: account_analytic_plans
 #: wizard_view:create.model,info:0
@@ -397,4 +390,4 @@ msgstr "在"
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
-msgstr "根据日期"
+msgstr "日期从"

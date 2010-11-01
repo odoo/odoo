@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	   <record id="view_report_lunch_order_tree" model="ir.ui.view">
+        <field name="name">report.lunch.order.tree</field>
+        <field name="model">report.lunch.order</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Analysis">
+                <field name="date" invisible="1"/>
+                <field name="year" invisible="1"/>
+                <field name="day" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="user_id" />
+                <field name="box_name"/>
+                <field name="price_total"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_report_lunch_order_search" model="ir.ui.view">
+        <field name="name">report.lunch.order.search</field>
+        <field name="model">report.lunch.order</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Lunch Order Analysis">
+                <group>
+                    <filter icon="terp-go-year" string="  365 Days  "
+                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                        help="Tasks performed in last 365 days"/>
+                    <filter icon="terp-go-month" string="   30 Days   "
+                        name="month"
+                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                        help="Tasks performed in last 30 days"/>
+                    <filter icon="terp-go-week"
+                         string="    7 Days    "
+                         separator="1"
+                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                         help="Tasks during last 7 days"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By..." colspan="10" col="12">
+                    <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                    <filter string="Box" icon="terp-dolar" context="{'group_by':'box_name'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                </group>
+                <newline/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_report_lunch_order_all" model="ir.actions.act_window">
+        <field name="name">Lunch Order Analysis</field>
+        <field name="res_model">report.lunch.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_report_lunch_order_search"/>
+        <field name="context">{'search_default_month':1,'search_default_User':1}</field>
+    </record>
+
+<!--    <menuitem name="Lunch Order Analysis" parent="menu_lunch_reporting_order"-->
+<!--              id="menu_lunch_order_analysis" action="action_report_lunch_order_all"  sequence="1" />-->
+
+	</data>
+</openerp>

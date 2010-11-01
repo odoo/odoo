@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 16:40+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-09-29 08:49+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:10+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -33,6 +33,8 @@ msgid ""
 "The cost of the product for accounting stock valuation. It can serves as a "
 "base price for supplier price."
 msgstr ""
+"Chi phí của sản phẩm để xác định giá trị kế toán của hàng trong kho. Nó có "
+"thể dùng như giá cơ bản cho giá nhà cung cấp."
 
 #. module: product
 #: selection:product.template,type:0
@@ -45,6 +47,8 @@ msgid ""
 "Determine if the product is visible in the list of products within a "
 "selection from a purchase order line."
 msgstr ""
+"Xác định xem sản phẩm có hiển thị trong danh sách sản phẩm trong vòng lựa "
+"chọn từ một dòng của đơn đặt hàng."
 
 #. module: product
 #: help:product.supplierinfo,name:0
@@ -67,6 +71,8 @@ msgid ""
 "The minimal quantity to purchase for this supplier, expressed in the default "
 "unit of measure."
 msgstr ""
+"Số lượng tối thiểu phải mua từ nhà cung cấp này, được tính bằng đơn vị đo "
+"mặc định."
 
 #. module: product
 #: field:product.template,weight_net:0
@@ -79,6 +85,8 @@ msgid ""
 "Quantities of products that are planned to arrive in selected locations or "
 "all internal if none have been selected."
 msgstr ""
+"Số lượng sản phẩm dự kiến để đến địa điểm được lựa chọn hoặc tất cả các địa "
+"điểm nếu không địa điểm nào được chọn."
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -87,6 +95,9 @@ msgid ""
 "internal if none have been selected. Computed as: Real Stock - Outgoing + "
 "Incoming."
 msgstr ""
+"Số lượng hàng tương lai của sản phẩm này theo địa điểm được chọn hoặc toàn "
+"bộ nếu không địa điểm nào được chọn. Được tính như sau: Số lượng hàng thực "
+"có - Số lượng ra + Số lượng vào."
 
 #. module: product
 #: field:product.packaging,width:0
@@ -99,6 +110,8 @@ msgid ""
 "Set a template if this rule only apply to a template of product. Keep empty "
 "for all products"
 msgstr ""
+"Thiết lập một bản mẫu nếu quy tắc này chỉ áp dụng đối với một bản mẫu của "
+"sản phẩm. Để trống cho tất cả sản phẩm\""
 
 #. module: product
 #: field:product.template,procure_method:0
@@ -108,7 +121,7 @@ msgstr "Phương thức đặt hàng"
 #. module: product
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Tên mẫu không hợp lệ khi định nghĩa hành động"
 
 #. module: product
 #: model:process.process,name:product.process_process_productprocess0
@@ -163,7 +176,7 @@ msgstr "Công ty"
 #. module: product
 #: field:product.template,rental:0
 msgid "Rentable Product"
-msgstr ""
+msgstr "Sản phẩm có thể cho thuê"
 
 #. module: product
 #: field:product.product,lst_price:0
@@ -192,6 +205,7 @@ msgid ""
 "Base price for computing the customer price. Sometimes called the catalog "
 "price."
 msgstr ""
+"Giá cơ bản để tính giá bán cho khách hàng. Đôi khi được gọi là giá catalog."
 
 #. module: product
 #: field:pricelist.partnerinfo,min_quantity:0
@@ -206,12 +220,12 @@ msgstr ""
 #. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
-msgstr ""
+msgstr "Tên của loại giá này."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
 msgid "Starting date for this pricelist version to be valid."
-msgstr ""
+msgstr "Ngày bắt đầu để phiên bản bảng giá này có hiệu lực."
 
 #. module: product
 #: field:product.product,incoming_qty:0
@@ -240,11 +254,13 @@ msgid ""
 "Produce will generate production order or tasks, according to the product "
 "type. Purchase will trigger purchase orders when requested."
 msgstr ""
+"Sản xuất sẽ tạo ra yêu cầu hoặc các nhiệm vụ sản xuất, tùy theo loại sản "
+"phẩm. Mua hàng sẽ xử lý các đơn đặt hàng khi được yêu cầu."
 
 #. module: product
 #: model:process.transition,note:product.process_transition_supplierofproduct0
 msgid "You can see the list of suppliers for that product."
-msgstr ""
+msgstr "Bạn có thể thấy danh sách các nhà cung cấp sản phầm này"
 
 #. module: product
 #: help:product.packaging,rows:0
@@ -338,7 +354,7 @@ msgstr "Thông số"
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layer"
-msgstr ""
+msgstr "Số lớp"
 
 #. module: product
 #: constraint:product.category:0

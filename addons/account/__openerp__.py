@@ -18,13 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 {
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
-    "depends" : ["product", "analytic", "process"],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules/Accounting',
     "description": """Financial and accounting module that covers:
     General accountings
@@ -34,53 +31,62 @@
     Budgets
     Customer and Supplier Invoices
     Bank statements
+    Reconciliation process by partner
+    Creates a dashboard for accountants that includes:
+    * List of uninvoiced quotations
+    * Graph of aged receivables
+    * Graph of aged incomes
 
 The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
 grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
-module named account_voucherss
+module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
+    "depends" : ["product", "analytic", "process","board"],
     'update_xml': [
-        #'test/test_parent_structure.yml',
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
         'account_wizard.xml',
-        'wizard/account_statement_from_invoice_view.xml',
+        'report/account_invoice_report_view.xml',
+        'report/account_entries_report_view.xml',
+        'report/account_report_view.xml',
+        'report/account_analytic_entries_report_view.xml',
         'wizard/account_move_bank_reconcile_view.xml',
         'wizard/account_use_model_view.xml',
+        'account_installer.xml',
+        'wizard/account_period_close_view.xml',
         'account_view.xml',
         'account_report.xml',
+        'wizard/account_report_common_view.xml',
         'wizard/account_invoice_refund_view.xml',
-        'wizard/account_period_close_view.xml',
         'wizard/account_fiscalyear_close_state.xml',
         'wizard/account_chart_view.xml',
+        'wizard/account_tax_chart_view.xml',
         'wizard/account_move_journal_view.xml',
         'wizard/account_move_line_reconcile_select_view.xml',
         'wizard/account_open_closed_fiscalyear_view.xml',
         'wizard/account_move_line_unreconcile_select_view.xml',
         'wizard/account_vat_view.xml',
-        'wizard/account_print_journal_view.xml',
-        'wizard/account_general_journal_view.xml',
-        'wizard/account_central_journal_view.xml',
+        'wizard/account_report_print_journal_view.xml',
+        'wizard/account_report_general_journal_view.xml',
+        'wizard/account_report_central_journal_view.xml',
         'wizard/account_subscription_generate_view.xml',
         'wizard/account_fiscalyear_close_view.xml',
         'wizard/account_state_open_view.xml',
         'wizard/account_journal_select_view.xml',
         'wizard/account_change_currency_view.xml',
         'wizard/account_validate_move_view.xml',
-        'wizard/account_pay_invoice_view.xml',
         'wizard/account_unreconcile_view.xml',
-        'wizard/account_general_ledger_report_view.xml',
+        'wizard/account_report_general_ledger_view.xml',
         'wizard/account_invoice_state_view.xml',
-        'wizard/account_partner_balance_report_view.xml',
-        'wizard/account_balance_report_view.xml',
-        'wizard/account_move_line_select_view.xml',
-        'wizard/account_aged_trial_balance_view.xml',
-        'wizard/account_compare_account_balance_report_view.xml',
-        'wizard/account_third_party_ledger.xml',
+        'wizard/account_report_partner_balance_view.xml',
+        'wizard/account_report_account_balance_view.xml',
+        'wizard/account_report_aged_partner_balance_view.xml',
+        'wizard/account_report_partner_ledger_view.xml',
         'wizard/account_reconcile_view.xml',
+        'wizard/account_reconcile_partner_process_view.xml',
         'wizard/account_automatic_reconcile_view.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_end_fy.xml',
@@ -91,7 +97,6 @@ module named account_voucherss
         'account_invoice_workflow.xml',
         'project/project_view.xml',
         'project/project_report.xml',
-        'project/wizard/account_analytic_check_view.xml',
         'project/wizard/account_analytic_balance_report_view.xml',
         'project/wizard/account_analytic_cost_ledger_view.xml',
         'project/wizard/account_analytic_inverted_balance_report.xml',
@@ -105,25 +110,30 @@ module named account_voucherss
         'process/supplier_invoice_process.xml',
         'sequence_view.xml',
         'company_view.xml',
-        'account_installer.xml',
-        'report/account_invoice_report_view.xml',
-        'report/account_entries_report_view.xml',
-        'report/account_report_view.xml',
-        'report/account_analytic_report_view.xml',
-        'report/account_account_report_view.xml',
-        'report/account_analytic_entries_report_view.xml'
+        'board_account_view.xml',
+        "wizard/account_report_profit_loss_view.xml",
+        "wizard/account_report_balance_sheet_view.xml"
     ],
     'demo_xml': [
-        #'demo/price_accuracy00.yml',
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
-        'account_unit_test.xml',
+        #'account_unit_test.xml',
     ],
     'test': [
         'test/account_customer_invoice.yml',
         'test/account_supplier_invoice.yml',
+        'test/account_change_currency.yml',
+        'test/chart_of_account.yml',
+        'test/account_period_close.yml',
+        'test/account_fiscalyear_close_state.yml',
+        'test/account_use_model.yml',
+        'test/account_validate_account_move.yml',
+        'test/account_fiscalyear_close.yml',
+        'test/account_bank_statement.yml',
+        'test/account_cash_statement.yml',
+        'test/account_report.yml',
     ],
     'installable': True,
     'active': False,

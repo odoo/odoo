@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 import tools
 
@@ -32,19 +33,25 @@ class available_holidays_report(osv.osv):
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'employee_id': fields.many2one ('hr.employee', "Employee's Name", readonly=True),
-        'category_id' : fields.many2one('hr.employee.category', "Category's Name", readonly=True),
+        'category_id': fields.many2one('hr.employee.category', "Category's Name", readonly=True),
         'holiday_status_id': fields.many2one('hr.holidays.status', 'Leave Type', readonly=True),
         'max_leave': fields.float('Allocated Leaves', readonly=True),
         'taken_leaves': fields.float('Taken Leaves', readonly=True),
-        'remaining_leave': fields.float('Remaining Leaves',readonly=True),
-        'department_id':fields.many2one('hr.department','Department',readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'remaining_leave': fields.float('Remaining Leaves', readonly=True),
+        'department_id': fields.many2one('hr.department', 'Department', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'state': fields.selection([('draft', 'Draft'),
+                                   ('confirm', 'Waiting Validation'),
+                                   ('refuse', 'Refused'),
+                                   ('validate', 'Validated'),
+                                   ('cancel', 'Cancelled')]
+                                   ,'State', readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'available_holidays_report')
         cr.execute("""
-            create or replace view available_holidays_report as (
-                select
+            CREATE or REPLACE view available_holidays_report as (
+                SELECT
                     min(h.id) as id,
                     date_trunc('day',h.create_date) as date,
                     to_char(s.create_date, 'YYYY') as year,
@@ -67,15 +74,16 @@ class available_holidays_report(osv.osv):
                                                      and employee_id=h.employee_id
                                                      and holiday_status_id=h.holiday_status_id
                                                      and state='validate') as max_leave
-                from hr_holidays h
-                left join hr_holidays_status s on (s.id = h.holiday_status_id)
-                where h.state='validate'
+                FROM hr_holidays h
+                LEFT JOIN hr_holidays_status s on (s.id = h.holiday_status_id)
+                WHERE h.state='validate'
                 and s.active <> 'f'
-                group by h.holiday_status_id, h.employee_id,
+                GROUP BY h.holiday_status_id, h.employee_id,
                          date_trunc('day',h.create_date),to_char(s.create_date, 'YYYY'),
                          to_char(s.create_date, 'MM'), to_char(s.create_date, 'YYYY-MM-DD'), h.user_id,h.state, h.category_id, h.department_id
 
             )""")
+
 available_holidays_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

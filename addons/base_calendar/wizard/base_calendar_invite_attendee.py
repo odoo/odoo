@@ -36,11 +36,11 @@ class base_calendar_invite_attendee(osv.osv_memory):
     _columns = {
         'type': fields.selection([('internal', 'Internal User'), \
               ('external', 'External Email'), \
-              ('partner', 'Partner Contacts')], 'Type', required=True),
+              ('partner', 'Partner Contacts')], 'Type', required=True, help="Select whom you want to Invite"),
         'user_ids': fields.many2many('res.users', 'invite_user_rel',
                                   'invite_id', 'user_id', 'Users'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'email': fields.char('Email', size=124),
+        'email': fields.char('Email', size=124, help="Provide external email address who will receive this invitation."),
         'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel',
                                   'invite_id', 'contact_id', 'Contacts'),
         'send_mail': fields.boolean('Send mail?', help='Check this if you want to \
@@ -48,7 +48,8 @@ send an Email to Invited Person')
     }
 
     _defaults = {
-        'type': lambda *x: 'internal'
+        'type': 'internal',
+        'send_mail': True
     }
 
     def do_invite(self, cr, uid, ids, context=None):
@@ -65,7 +66,6 @@ send an Email to Invited Person')
             context = {}
 
         model = False
-        model_field = False
         context_id = context and context.get('active_id', False) or False
         if not context or not context.get('model'):
             return {}
@@ -76,7 +76,8 @@ send an Email to Invited Person')
         obj = self.pool.get(model)
         res_obj = obj.browse(cr, uid, context_id)
         att_obj = self.pool.get('calendar.attendee')
-
+        user_obj = self.pool.get('res.users')
+        current_user = user_obj.browse(cr, uid, uid, context=context)
         for datas in self.read(cr, uid, ids, context=context):
             type = datas.get('type')
             vals = []
@@ -90,7 +91,7 @@ send an Email to Invited Person')
                 else:
                     return {}
             if type == 'internal':
-                user_obj = self.pool.get('res.users')
+                
                 if not datas.get('user_ids'):
                     raise osv.except_osv(_('Error!'), ("Please select any User"))
                 for user_id in datas.get('user_ids'):
@@ -127,8 +128,9 @@ send an Email to Invited Person')
                     att = att_obj.browse(cr, uid, context_id)
                     att_val.update({
                         'parent_ids': [(4, att.id)],
-                        'ref': att.ref._name + ',' +str(att.ref.id)
+                        'ref': att.ref and (att.ref._name + ',' +str(att.ref.id)) or False
                         })
+
                 attendees.append(att_obj.create(cr, uid, att_val))
             if model_field:
                 for attendee in attendees:
@@ -140,7 +142,7 @@ send an Email to Invited Person')
                                        self._columns['type'].selection))
                     raise osv.except_osv(_('Error!'), ("%s must have an email  Address to send mail") %(name[0]))
                 att_obj._send_mail(cr, uid, attendees, mail_to, \
-                       email_from= tools.config.get('email_from', False))
+                       email_from = current_user.user_email or tools.config.get('email_from', False))
 
         return {}
 
@@ -157,8 +159,8 @@ send an Email to Invited Person')
 
         if not partner_id:
             return {'value': {'contact_ids': []}}
-        cr.execute('select id from res_partner_address \
-                         where partner_id=%s' % (partner_id))
+        cr.execute('SELECT id FROM res_partner_address \
+                         WHERE partner_id=%s', (partner_id,))
         contacts = map(lambda x: x[0], cr.fetchall())
         return {'value': {'contact_ids': contacts}}
 

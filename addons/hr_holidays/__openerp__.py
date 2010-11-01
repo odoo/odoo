@@ -21,15 +21,17 @@
 
 
 {
-    "name" : "Human Resources: Holidays management",
-    "version" : "1.5",
-    "author" : "Tiny & Axelor",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
-    "description": """Human Ressources: Holidays tracking and workflow
+    "name": "Human Resources: Holidays management",
+    "version": "1.5",
+    "author": "OpenERP SA & Axelor",
+    "category": "Generic Modules/Human Resources",
+    "website": "http://www.openerp.com",
+    "description": """Human Resources: Holidays tracking and workflow
 
-    This module allows you to manage leaves and leaves requests.
-
+    This module allows you to manage leaves and leaves' requests.
+    Implements a dashboard for human resource management that includes.
+        * My Leaves
+        * My Expenses
     Note that:
     - A synchronisation with an internal agenda (use of the CRM module) is possible: in order to automatically create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your colour preferences in
                 HR / Configuration / Holidays Status
@@ -41,28 +43,34 @@
                 HR / Employees / Employees
             then select the ones you want to choose, click on the print icon and select the option
                 'Print Summary of Employee's Holidays'
-    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR' and with the role 'holidays'. You can define these features in the security tab from the user data in
+    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR'. You can define these features in the security tab from the user data in
                 Administration / Users / Users
-            for example, you maybe will do it for the user 'admin'.
+            for example, you maybe will do it for the user 'admin'
+            .
 """,
-    'author': 'Tiny & Axelor',
+    'author': 'OpenERP SA & Axelor',
     'website': 'http://www.openerp.com',
     'depends': ['hr', 'crm', 'process', 'resource'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'hr_holidays_workflow.xml',
         'hr_holidays_view.xml',
+        'hr_holidays_data.xml',
         'hr_holidays_wizard.xml',
         'hr_holidays_report.xml',
         'report/hr_holidays_report_view.xml',
         'report/available_holidays_view.xml',
         'wizard/hr_holidays_summary_department_view.xml',
         'wizard/hr_holidays_summary_employees_view.xml',
-        #'process/hr_holidays_process.xml'
-    ],
+        'board_hr_holidays_view.xml',
+        'board_hr_manager_holidays_view.xml',
+        ],
     'demo_xml': ['hr_holidays_demo.xml',],
-    'test': ['test/test_hr_holiday.yml'],
+    'test': ['test/test_hr_holiday.yml',
+             'test/hr_holidays_report.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate': '0086579209325',

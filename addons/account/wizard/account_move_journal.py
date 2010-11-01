@@ -19,29 +19,99 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from lxml import etree
+
+from osv import osv
 from tools.translate import _
 import tools
 
 class account_move_journal(osv.osv_memory):
     _name = "account.move.journal"
     _description = "Move journal"
-    _columns = {
-       'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-       'period_id': fields.many2one('account.period', 'Period', required=True),
-                }
 
     def _get_period(self, cr, uid, context={}):
-        """Return  default account period value"""
-        ids = self.pool.get('account.period').find(cr, uid, context=context)
+        """
+        Return  default account period value
+        """
+        account_period_obj = self.pool.get('account.period')
+        ids = account_period_obj.find(cr, uid, context=context)
         period_id = False
-        if len(ids):
+        if ids:
             period_id = ids[0]
         return period_id
 
-    _defaults = {
-        'period_id': _get_period
-                }
+    def _get_journal(self, cr, uid, context={}):
+        """
+        Return journal based on the journal type
+        """
+
+        journal_id = False
+
+        journal_pool = self.pool.get('account.journal')
+        if context.get('journal_type', False):
+            jids = journal_pool.search(cr, uid, [('type','=', context.get('journal_type'))])
+            if not jids:
+                raise osv.except_osv(_('Configuration Error !'), _('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.' % (context.get('journal_type'))))
+            journal_id = jids[0]
+
+        return journal_id
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        """
+        Returns views and fields for current model where view will depend on {view_type}.
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param view_id: list of fields, which required to read signatures
+        @param view_type: defines a view type. it can be one of (form, tree, graph, calender, gantt, search, mdx)
+        @param context: context arguments, like lang, time zone
+        @param toolbar: contains a list of reports, wizards, and links related to current model
+
+        @return: Returns a dict that contains definition for fields, views, and toolbars
+        """
+
+        res = super(account_move_journal, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+
+        if not view_id:
+            return res
+
+        period_pool = self.pool.get('account.period')
+        journal_pool = self.pool.get('account.journal')
+
+        journal_id = self._get_journal(cr, uid, context)
+        period_id = self._get_period(cr, uid, context)
+
+        journal = False
+        if journal_id:
+            journal = journal_pool.read(cr, uid, [journal_id], ['name'])[0]['name']
+        else:
+            journal = "All"
+
+        period = False
+        if period_id:
+            period = period_pool.browse(cr, uid, [period_id], ['name'])[0]['name']
+
+        view = """<?xml version="1.0" encoding="utf-8"?>
+        <form string="Standard entries">
+            <separator string="Open Journal Items !" colspan="4"/>
+            <group colspan="4" >
+                <label width="300" string="Journal: %s"/>
+                <newline/>
+                <label width="300" string="Period:  %s"/>
+            </group>
+            <group colspan="4" col="4">
+                <label string ="" colspan="2"/>
+                <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                <button icon="terp-gtk-go-back-rtl" string="Open" name="action_open_window" default_focus="1" type="object"/>
+            </group>
+        </form>""" % (tools.ustr(journal), tools.ustr(period))
+
+        view = etree.fromstring(view.encode('utf8'))
+        xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)
+        view = xarch
+        res.update({
+            'arch': view
+        })
+        return res
 
     def action_open_window(self, cr, uid, ids, context=None):
         """
@@ -50,47 +120,59 @@ class account_move_journal(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: account move journal’s ID or list of IDs
         @return: dictionary of Open action move line window on given period and  Journal/Payment Mode
-
         """
-        jp = self.pool.get('account.journal.period')
-        mod_obj = self.pool.get('ir.model.data')
+
+        period_pool = self.pool.get('account.journal.period')
+        data_pool = self.pool.get('ir.model.data')
+        journal_pool = self.pool.get('account.journal')
+        account_period_obj = self.pool.get('account.period')
+
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, ['journal_id', 'period_id'], context=context)[0]
-        cr.execute('select id,name from ir_ui_view where model=%s and type=%s', ('account.move.line', 'form'))
-        view_res = cr.fetchone()
-        journal_id = data['journal_id']
-        period_id = data['period_id']
 
-        ids = jp.search(cr, uid, [('journal_id', '=', journal_id), \
-                                    ('period_id', '=', period_id)],context=context)
+        journal_id = self._get_journal(cr, uid, context)
+        period_id = self._get_period(cr, uid, context)
 
-        if not len(ids):
-            name = self.pool.get('account.journal').read(cr, uid, [journal_id])[0]['name']
-            state = self.pool.get('account.period').read(cr, uid, [period_id])[0]['state']
-            if state == 'done':
-                raise osv.except_osv(_('UserError'), _('This period is already closed !'))
-            company = self.pool.get('account.period').read(cr, uid, [period_id])[0]['company_id'][0]
-            jp.create(cr, uid, {'name': name, 'period_id': period_id, 'journal_id': journal_id, 'company_id': company},context=context)
+        name = _("Journal Items")
+        if journal_id:
+            ids = period_pool.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)], context=context)
 
-        ids = jp.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)],context=context)
-        jp = jp.browse(cr, uid, ids, context=context)[0]
-        name = (jp.journal_id.code or '') + ':' + (jp.period_id.code or '')
+            if not ids:
+                journal = journal_pool.browse(cr, uid, journal_id)
+                period = account_period_obj.browse(cr, uid, period_id)
 
-        result = mod_obj._get_id(cr, uid, 'account', 'view_account_move_line_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'],context=context)
+                name = journal.name
+                state = period.state
+
+                if state == 'done':
+                    raise osv.except_osv(_('UserError'), _('This period is already closed !'))
+
+                company = period.company_id.id
+                res = {
+                    'name': name,
+                    'period_id': period_id,
+                    'journal_id': journal_id,
+                    'company_id': company
+                }
+                period_pool.create(cr, uid, res,context=context)
+
+            ids = period_pool.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)],context=context)
+            period = period_pool.browse(cr, uid, ids[0], context=context)
+            name = (period.journal_id.code or '') + ':' + (period.period_id.code or '')
+
+        result = data_pool._get_id(cr, uid, 'account', 'view_account_move_line_filter')
+        res_id = data_pool.browse(cr, uid, result, context=context).res_id
 
         return {
-            'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (journal_id, period_id),
             'name': name,
             'view_type': 'form',
-            'view_mode': 'tree,form',
+            'view_mode': 'tree,graph,form',
             'res_model': 'account.move.line',
-            'view_id': view_res,
-            'context': "{'journal_id': %d, 'period_id': %d}" % (journal_id, period_id),
+            'view_id': False,
+            'context': "{'visible_id':%s, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (journal_id, journal_id, period_id),
             'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id']
-            }
+            'search_view_id': res_id
+        }
 
 account_move_journal()
 

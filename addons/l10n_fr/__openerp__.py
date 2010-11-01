@@ -28,28 +28,28 @@
 {
     "name" : "France - Plan Comptable Général",
     "version" : "1.0",
-    "author" : "OpenERP",
+    "author" : "OpenERP SA",
     "website": "http://www.openerp.com",
     "category" : "Localisation/Account Charts",
-    "description": """This is the module to manage the accounting chart for France in Open ERP.
+    "description": """This is the module to manage the accounting chart for France in OpenERP.
 
 Credits: Sistheo Zeekom CrysaLEAD
 """,
-    "depends" : ['base', 'account', 'account_chart', 'account_report', 'base_vat'],
-    "init_xml" : [
-    ],
+    "depends" : ['base', 'account', 'account_chart', 'base_vat'],
+    "init_xml" : [],
     "update_xml" : [
-        "report.xml",
-        "pcg.xml",
-        "l10n_fr_pcg_taxes.xml",
-        "tax.xml",
-        "fiscal_templates_fr.xml",
-        "l10n_fr_pcg_account_report.xml",
-        "l10n_fr_pcg_report.xml",
-        "l10n_fr_pcg_wizard.xml",
-        "l10n_fr_pcg_view.xml",
+        "fr_report_demo.xml",
+        "plan_comptable_general_demo.xml",
+        "l10n_fr_wizard.xml",
+        "fr_pcg_taxes_demo.xml",
+        "fr_tax_demo.xml",
+        "fr_fiscal_templates_demo.xml",
         "security/ir.model.access.csv",
+        "wizard/fr_report_bilan_view.xml",
+        "wizard/fr_report_compute_resultant_view.xml",
+
     ],
+    "test": ['test/l10n_fr_report.yml'],
     "demo_xml" : [],
     "certificate" : "00435321693876313629",
     "active": False,

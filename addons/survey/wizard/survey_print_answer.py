@@ -34,15 +34,15 @@ class survey_print_answer(osv.osv_memory):
         'paper_size': fields.selection([('letter','Letter (8.5" x 11")'),\
                             ('legal','Legal (8.5" x 14")'),\
                             ('a4','A4 (210mm x 297mm)')], 'Paper Size'),
-        'page_number': fields.boolean('Include Page Numvers'),
+        'page_number': fields.boolean('Include Page Number'),
         'without_pagebreak': fields.boolean('Print Without Page Breaks')
     }
 
     _defaults = {
-            'orientation': lambda *a:'vertical',
-            'paper_size': lambda *a:'letter',
-            'page_number': lambda *a: 0,
-            'without_pagebreak': lambda *a: 0
+        'orientation': lambda *a:'vertical',
+        'paper_size': lambda *a:'letter',
+        'page_number': lambda *a: 0,
+        'without_pagebreak': lambda *a: 0
     }
 
     def action_next(self, cr, uid, ids, context=None):

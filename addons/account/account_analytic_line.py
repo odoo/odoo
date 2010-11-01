@@ -20,36 +20,35 @@
 ##############################################################################
 
 import time
-import decimal_precision as dp
 
 from osv import fields
 from osv import osv
 from tools.translate import _
-import tools
-from tools import config
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
     _columns = {
-        'product_uom_id' : fields.many2one('product.uom', 'UoM'),
-        'product_id' : fields.many2one('product.product', 'Product'),
-        'general_account_id' : fields.many2one('account.account', 'General Account', required=True, ondelete='cascade'),
-        'move_id' : fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
-        'journal_id' : fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='cascade', select=True),
-        'code' : fields.char('Code', size=8),
+        'product_uom_id': fields.many2one('product.uom', 'UoM'),
+        'product_id': fields.many2one('product.product', 'Product'),
+        'general_account_id': fields.many2one('account.account', 'General Account', required=True, ondelete='cascade'),
+        'move_id': fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
+        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='cascade', select=True),
+        'code': fields.char('Code', size=8),
         'ref': fields.char('Ref.', size=64),
+        'currency_id': fields.related('move_id', 'currency_id', type='many2one', relation='res.currency', string='Account currency', store=True, help="The related account currency if not equal to the company one.", readonly=True),
+        'amount_currency': fields.related('move_id', 'amount_currency', type='float', string='Amount currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
     }
+
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
-                }
-    _order = 'date'
+    }
+    _order = 'date desc'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
-
         if context.get('from_date',False):
             args.append(['date', '>=',context['from_date']])
 
@@ -66,20 +65,30 @@ class account_analytic_line(osv.osv):
                 return False
         return True
     _constraints = [
-#        (_check_company, 'You can not create analytic line that is not in the same company than the account line', ['account_id'])
     ]
 
     # Compute the cost based on the price type define into company
     # property_valuation_price_type property
-    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,company_id,
-            unit=False, context=None):
+    def on_change_unit_amount(self, cr, uid, id, prod_id, quantity, company_id,
+            unit=False, journal_id=False, context=None):
         if context==None:
             context={}
-        uom_obj = self.pool.get('product.uom')
+        if not journal_id:
+            j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=','purchase')])
+            j_id = j_ids and j_ids[0] or False
+        if not journal_id or not prod_id:
+            return {}
         product_obj = self.pool.get('product.product')
-        company_obj=self.pool.get('res.company')
-        if  prod_id:
-            prod = product_obj.browse(cr, uid, prod_id)
+        analytic_journal_obj =self.pool.get('account.analytic.journal')
+        company_obj = self.pool.get('res.company')
+        product_price_type_obj = self.pool.get('product.price.type')
+        j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
+        prod = product_obj.browse(cr, uid, prod_id)
+        if not company_id:
+            company_id = j_id.company_id.id
+        result = 0.0
+
+        if j_id.type <> 'sale':
             a = prod.product_tmpl_id.property_account_expense.id
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id
@@ -88,20 +97,44 @@ class account_analytic_line(osv.osv):
                         _('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d)') % \
                                 (prod.name, prod.id,))
-            if not company_id:
-                company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
+            amount_unit = prod.price_get('standard_price', context)[prod.id]
+        else:
+            a = prod.product_tmpl_id.property_account_income.id
+            if not a:
+                a = prod.categ_id.property_account_income_categ.id
+            if not a:
+                raise osv.except_osv(_('Error !'),
+                        _('There is no income account defined ' \
+                                'for this product: "%s" (id:%d)') % \
+                                (prod.name, prod_id,))
+            amount_unit = prod.price_get('list_price', context)[prod_id]
 
+        if not company_id:
+            company_id = company_obj._company_default_get(cr, uid, 'account.analytic.line', context=context)
+            flag = False
             # Compute based on pricetype
-            pricetype=self.pool.get('product.price.type').browse(cr,uid,company_obj.browse(cr,uid,company_id).property_valuation_price_type.id)
+            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context)
+            pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
+            if journal_id:
+                journal = analytic_journal_obj.browse(cr, uid, journal_id)
+                if journal.type == 'sale':
+                    product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context)
+                    if product_price_type_ids:
+                        pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
             # Take the company currency as the reference one
-            context['currency_id']=company_obj.browse(cr,uid,company_id).currency_id.id
-            amount_unit=prod.price_get(pricetype.field, context)[prod.id]
-            amount=amount_unit*unit_amount or 1.0
-            return {'value': {
-                'amount': - round(amount, 2),
-                'general_account_id': a,
-                }}
-        return {}
+            if pricetype.field == 'list_price':
+                flag = True
+            amount_unit = prod.price_get(pricetype.field, context)[prod.id]
+            prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+            amount = amount_unit*unit or 1.0
+            result = round(amount, prec)
+            if not flag:
+                result *= -1
+        return {'value': {
+            'amount': result,
+            'general_account_id': a,
+            }
+        }
 
     def view_header_get(self, cr, user, view_id, view_type, context):
         if context.get('account_id', False):
@@ -114,52 +147,6 @@ class account_analytic_line(osv.osv):
         return False
 
 account_analytic_line()
-
-
-class timesheet_invoice(osv.osv):
-    _name = "report.hr.timesheet.invoice.journal"
-    _description = "Analytic Account Costs and Revenues"
-    _auto = False
-    _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, select=True),
-        'journal_id': fields.many2one('account.analytic.journal', 'Journal', readonly=True),
-        'quantity': fields.float('Quantities', readonly=True),
-        'cost': fields.float('Credit', readonly=True),
-        'revenue': fields.float('Debit', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
-    }
-    _order = 'name desc, account_id'
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_hr_timesheet_invoice_journal')
-        cr.execute("""
-        create or replace view report_hr_timesheet_invoice_journal as (
-            select
-                min(l.id) as id,
-                to_char(l.date, 'YYYY') as name,
-                to_char(l.date,'MM') as month,
-                sum(
-                    CASE WHEN l.amount>0 THEN 0 ELSE l.amount
-                    END
-                ) as cost,
-                sum(
-                    CASE WHEN l.amount>0 THEN l.amount ELSE 0
-                    END
-                ) as revenue,
-                sum(l.unit_amount* COALESCE(u.factor, 1)) as quantity,
-                journal_id,
-                account_id
-            from account_analytic_line l
-                LEFT OUTER join product_uom u on (u.id=l.product_uom_id)
-            group by
-                to_char(l.date, 'YYYY'),
-                to_char(l.date,'MM'),
-                journal_id,
-                account_id
-        )""")
-timesheet_invoice()
-
 
 class res_partner(osv.osv):
     """ Inherits partner and adds contract information in the partner form """

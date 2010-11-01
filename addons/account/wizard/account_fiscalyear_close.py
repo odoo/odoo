@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 from tools.translate import _
-import tools
 
 class account_fiscalyear_close(osv.osv_memory):
     """
@@ -30,19 +30,18 @@ class account_fiscalyear_close(osv.osv_memory):
     _description = "Fiscalyear Close"
     _columns = {
        'fy_id': fields.many2one('account.fiscalyear', \
-                                 'Fiscal Year to close', required=True),
+                                 'Fiscal Year to close', required=True, help="Select a Fiscal year to close"),
        'fy2_id': fields.many2one('account.fiscalyear', \
                                  'New Fiscal Year', required=True),
        'journal_id': fields.many2one('account.journal', \
-                                 'Opening Entries Journal', required=True),
+                                 'Opening Entries Journal', required=True, help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts and with a centralized counterpart.'),
        'period_id': fields.many2one('account.period', \
                                  'Opening Entries Period', required=True),
-       'report_name': fields.char('Name of new entries',size=64, required=True),
-       'sure': fields.boolean('Check this box'),
-              }
+       'report_name': fields.char('Name of new entries',size=64, required=True, help="Give name of the new entries"),
+    }
     _defaults = {
         'report_name':'End of Fiscal Year Entry',
-        }
+    }
 
     def data_save(self, cr, uid, ids, context=None):
         """
@@ -63,13 +62,12 @@ class account_fiscalyear_close(osv.osv_memory):
 
         if context is None:
             context = {}
-        if not data[0]['sure']:
-            raise osv.except_osv(_('UserError'), _('Closing of fiscal year cancelled, please check the box !'))
         fy_id = data[0]['fy_id']
 
-
-        period_ids = obj_acc_period.search(cr, uid, [('fiscalyear_id', '=', fy_id)])
-        periods_fy2 = obj_acc_period.search(cr, uid, [('fiscalyear_id', '=', data[0]['fy2_id'])])
+        cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)", (str(data[0]['fy2_id']),))
+        fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
+        cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)", (str(fy_id),))
+        fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
         period = obj_acc_period.browse(cr, uid, data[0]['period_id'], context=context)
         new_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0]['fy2_id'], context=context)
@@ -81,26 +79,26 @@ class account_fiscalyear_close(osv.osv_memory):
         if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
             raise osv.except_osv(_('UserError'),
                     _('The journal must have default credit and debit account'))
-        if not new_journal.centralisation:
+        if (not new_journal.centralisation) or new_journal.entry_posted:
             raise osv.except_osv(_('UserError'),
-                    _('The journal must have centralised counterpart'))
+                    _('The journal must have centralised counterpart without the Skipping draft state option checked!'))
 
         move_ids = obj_acc_move_line.search(cr, uid, [
-            ('journal_id','=',new_journal.id),('period_id.fiscalyear_id','=',new_fyear.id)])
+            ('journal_id', '=', new_journal.id), ('period_id.fiscalyear_id', '=', new_fyear.id)])
+
         if move_ids:
-            raise osv.except_osv(_('UserError'),
-                    _('The opening journal must not have any entry in the new fiscal year !'))
-        query = "SELECT id FROM account_fiscalyear WHERE date_stop < '" + str(new_fyear.date_start) + "'"
-        cr.execute(query)
+            obj_acc_move_line._remove_move_reconcile(cr, uid, move_ids, context=context)
+            obj_acc_move_line.unlink(cr, uid, move_ids, context=context)
+
+        cr.execute("SELECT id FROM account_fiscalyear WHERE date_stop < %s", (str(new_fyear.date_start),))
         result = cr.dictfetchall()
         fy_ids = ','.join([str(x['id']) for x in result])
         query_line = obj_acc_move_line._query_get(cr, uid,
                 obj='account_move_line', context={'fiscalyear': fy_ids})
-        cr.execute('select id from account_account WHERE active')
+        cr.execute('select id from account_account WHERE active AND company_id = %s', (old_fyear.company_id.id,))
         ids = map(lambda x: x[0], cr.fetchall())
         for account in obj_acc_account.browse(cr, uid, ids,
             context={'fiscalyear': fy_id}):
-
             accnt_type_data = account.user_type
             if not accnt_type_data:
                 continue
@@ -151,19 +149,17 @@ class account_fiscalyear_close(osv.osv_memory):
                 offset = 0
                 limit = 100
                 while True:
-                    #TODO: this query could be improved in order to work if there is more than 2 open FY
-                    # a.period_id IN ('+fy2_period_set+') is the problematic clause
-                    cr.execute('SELECT b.id, b.name, b.quantity, b.debit, b.credit, b.account_id, b.ref, ' \
+                    cr.execute('SELECT  DISTINCT b.id, b.name, b.quantity, b.debit, b.credit, b.account_id, b.ref, ' \
                                 'b.amount_currency, b.currency_id, b.blocked, b.partner_id, ' \
                                 'b.date_maturity, b.date_created ' \
                             'FROM account_move_line a, account_move_line b ' \
                             'WHERE b.account_id = %s ' \
                                 'AND b.reconcile_id is NOT NULL ' \
                                 'AND a.reconcile_id = b.reconcile_id ' \
-                                'AND b.period_id =ANY(%s)'\
-                                'AND a.period_id =ANY(%s)' \
+                                'AND b.period_id IN ('+fy_period_set+') ' \
+                                'AND a.period_id IN ('+fy2_period_set+') ' \
                             'ORDER BY id ' \
-                            'LIMIT %s OFFSET %s', (account.id,period_ids,periods_fy2,limit, offset))
+                            'LIMIT %s OFFSET %s', (account.id, limit, offset))
                     result = cr.dictfetchall()
                     if not result:
                         break

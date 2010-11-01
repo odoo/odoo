@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-02-14 21:27+0000\n"
+"PO-Revision-Date: 2010-09-09 07:20+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 03:59+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -73,6 +73,7 @@ msgstr "Onaylanan Alış"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Fatura Muafiyeti"
 
@@ -127,6 +128,7 @@ msgstr "Alış Onayla"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Onaylanmış"
 
@@ -270,6 +272,7 @@ msgstr "Sipariş Kalemi"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Onaylandı"
 
@@ -296,6 +299,7 @@ msgstr "Teklif İsteği"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "Bekliyor"
 
@@ -377,6 +381,7 @@ msgstr "Sipariş Referansı"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Bitti"
 
@@ -427,6 +432,7 @@ msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "İstisnai Sevkiyat"
 
@@ -873,3 +879,39 @@ msgstr ""
 #: view:purchase.order.line:0
 msgid "Stock Moves"
 msgstr "Stok Hareketi"
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Waiting Schedule"
+msgstr ""
+
+#. module: purchase
+#: field:report.purchase.order.category,price_total:0
+#: field:report.purchase.order.product,price_total:0
+msgid "Total Price"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Quotation"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Manual in progress"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "In progress"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr ""

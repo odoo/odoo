@@ -33,8 +33,8 @@ class report_custom(report_rml):
 
         price_list_id = data['form']['price_list']
 
-        product_categ_id =pool.get('product.category').search(cr,uid,[])
-        currency = pool.get('product.pricelist').read(cr,uid,[price_list_id],['currency_id','name'])[0]
+        product_categ_id =pool.get('product.category').search(cr, uid, [])
+        currency = pool.get('product.pricelist').read(cr, uid, [price_list_id], ['currency_id','name'])[0]
 
 
         qty =[]
@@ -68,10 +68,10 @@ class report_custom(report_rml):
         product_xml.append("<product>")
 
         for p_categ_id in product_categ_id:
-            product_ids = pool.get('product.product').search(cr,uid,[('id','in',ids),('categ_id','=',p_categ_id)])
+            product_ids = pool.get('product.product').search(cr, uid, [('id','in',ids),('categ_id','=',p_categ_id)])
             if product_ids:
-                categ_name = pool.get('product.category').read(cr,uid,[p_categ_id],['name'])
-                products = pool.get('product.product').read(cr,uid,product_ids,['id','name','code'])
+                categ_name = pool.get('product.category').read(cr, uid, [p_categ_id], ['name'])
+                products = pool.get('product.product').read(cr, uid, product_ids, ['id','name','code'])
                 pro = []
                 i=0
                 pro.append('<pro name="%s" categ="true">' % (categ_name[0]['name']))
@@ -90,20 +90,17 @@ class report_custom(report_rml):
                         pro.append('<pro name="%s" >' % (x['name']))
                     temp = []
                     for q in qty:
-                        price_dict = pool.get('product.pricelist').price_get(cr,uid,[price_list_id],x['id'],q)
+                        price_dict = pool.get('product.pricelist').price_get(cr, uid, [price_list_id], x['id'], q)
                         if price_dict[price_list_id]:
                             price = price_dict[price_list_id]
                         else:
-                            res = pool.get('product.product').read(cr, uid,[x['id']])
+                            res = pool.get('product.product').read(cr, uid, [x['id']])
                             price =  res[0]['list_price']
-#                        temp.append('<price name="%s %s" />'%(price_list[i][x['id']]*q[2]['name'],currency['currency_id'][1]))
 
                         temp.append('<price name="%.2f" />'%(price))
                     i+=1
                     pro.extend(temp)
                     pro.append('</pro>')
-#                categ.extend(pro)
-#                categ.append('</categ>')
                 product_xml.extend(pro)
 
         product_xml.append('</product>')

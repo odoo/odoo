@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-	<data noupdate="1">            
+	<data noupdate="1">
 
 <!--		Event Attribute mapping for Calendar-->
 
@@ -22,13 +22,20 @@
 			<field name="calendar_id" ref="caldav.basic_calendar1" />
 			<field name="object_id" search="[('model','=','calendar.alarm')]" />
 		</record>
-		
+
 		<record model="basic.calendar.lines" id="base_calendar.calendar_lines_attendee">
 			<field name="name">attendee</field>
 			<field name="calendar_id" ref="caldav.basic_calendar1" />
 			<field name="object_id" search="[('model','=','calendar.attendee')]" />
 		</record>
-		
+
+        <record model="basic.calendar.fields" id="map_event_0">
+            <field name="name" ref="caldav.field_event_organizer"/>
+            <field name="type_id" ref="base_calendar.calendar_lines_event" />
+	        <field name="field_id" search="[('name','=','organizer'),('model_id.model','=','calendar.event')]" />
+            <field name="fn">field</field>
+        </record>
+
         <record model="basic.calendar.fields" id="map_event_1">
             <field name="name" ref="caldav.field_event_uid"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
@@ -42,7 +49,7 @@
 	        <field name="field_id" search="[('name','=','recurrent_id'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
-        
+
         <record model="basic.calendar.fields" id="map_event_3">
             <field name="name" ref="caldav.field_event_vtimezone"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
@@ -55,7 +62,7 @@
 			<field name="type_id" ref="base_calendar.calendar_lines_event" />
 			<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','crm.meeting')]" />
 			<field name="fn">field</field>
-		</record>		
+		</record>
 
         <record model="basic.calendar.fields" id="map_event_5">
             <field name="name" ref="caldav.field_event_rrule"/>
@@ -154,7 +161,7 @@
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
 	        <field name="field_id" search="[('name','=','name'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
-        </record>       
+        </record>
 
 
 
@@ -313,7 +320,7 @@
             <field name="fn">field</field>
         </record>
 
-		
+
 
 	</data>
 </openerp>

@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields, osv
+
+from osv import osv
 
 class account_unreconcile(osv.osv_memory):
     _name = "account.unreconcile"
@@ -26,20 +27,10 @@ class account_unreconcile(osv.osv_memory):
 
     def trans_unrec(self, cr, uid, ids, context=None):
         obj_move_line = self.pool.get('account.move.line')
-        obj_move_reconcile = self.pool.get('account.move.reconcile')
         if context is None:
             context = {}
-        recs = obj_move_line.read(cr, uid, context['active_ids'], ['reconcile_id','reconcile_partial_id'])
-        unlink_ids = []
-        full_recs = filter(lambda x: x['reconcile_id'], recs)
-        rec_ids = [rec['reconcile_id'][0] for rec in full_recs]
-        part_recs = filter(lambda x: x['reconcile_partial_id'], recs)
-        part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
-        unlink_ids += rec_ids
-        unlink_ids += part_rec_ids
-
-        if len(unlink_ids):
-            self.pool.get('account.move.reconcile').unlink(cr, uid, unlink_ids)
+        if context.get('active_ids', False):
+            obj_move_line._remove_move_reconcile(cr, uid, context['active_ids'], context=context)
         return {}
 
 account_unreconcile()
@@ -53,7 +44,7 @@ class account_unreconcile_reconcile(osv.osv_memory):
         rec_ids = context['active_ids']
         if context is None:
             context = {}
-        if len(rec_ids):
+        if rec_ids:
             obj_move_reconcile.unlink(cr, uid, rec_ids)
         return {}
 

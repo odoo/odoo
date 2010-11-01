@@ -18,7 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
+from tools.translate import _
 
 class event_make_invoice(osv.osv_memory):
     """
@@ -27,109 +29,67 @@ class event_make_invoice(osv.osv_memory):
     _name = "event.make.invoice"
     _description = "Event Make Invoice"
     _columns = {
-        'inv_created': fields.char('Invoice Created', size=32, readonly=True),
-        'inv_rejected': fields.char('Invoice Rejected', size=32, readonly=True),
-        'inv_rej_reason': fields.text('Error Messages', readonly=True),
-#        'invoice_ids': fields.char('Invoice Ids', size=128), # Improve me
-               }
+        'grouped': fields.boolean('Group the invoices'),
+        'invoice_date': fields.date('Invoice Date'),
+    }
 
-    def _makeInvoices(self, cr, uid, context={}):
-        invoices = {}
-        invoice_ids = []
-        create_ids=[]
-        tax_ids=[]
-        inv_create = 0
-        inv_reject = 0
-        inv_rej_reason = ""
-        list_inv = []
+    def view_init(self, cr, uid, fields, context=None):
+        """
+        This function checks for precondition before wizard executes
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+        """
         obj_event_reg = self.pool.get('event.registration')
-        obj_lines = self.pool.get('account.invoice.line')
-        inv_obj = self.pool.get('account.invoice')
-        data_event_reg = obj_event_reg.browse(cr,uid, context['active_ids'], context=context)
+        data = context and context.get('active_ids', [])
 
-        for reg in data_event_reg:
-            if reg.state=='draft':
-                inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Invoice cannot be created if the registration is in draft state. \n"
-                continue
-            if (not reg.tobe_invoiced):
-                inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration is set as 'Cannot be invoiced'. \n"
-                continue
-            if reg.invoice_id:
-                inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration already has an invoice linked. \n"
-                continue
-            if not reg.event_id.product_id:
-                inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Event related doesn't have any product defined. \n"
-                continue
-            if not reg.partner_invoice_id:
-                inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration doesn't have any partner to invoice. \n"
-                continue
-            else:
-                val_invoice = inv_obj.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
-                val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
-                partner_address_id = val_invoice['value']['address_invoice_id']
-                
-            if not partner_address_id:
-                inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registered partner doesn't have an address to make the invoice. \n"
-                continue
+        for event_reg in obj_event_reg.browse(cr, uid, data, context=context):
+            if event_reg.state in ('draft', 'done', 'cancel'):
+                     raise osv.except_osv(_('Warning !'),
+                        _("Invoice cannot be created if the registration is in %s state.") % (event_reg.state))
 
-            inv_create = inv_create + 1
-            value = obj_lines.product_id_change(cr, uid, [], reg.event_id.product_id.id,uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
-            data_product = self.pool.get('product.product').browse(cr,uid,[reg.event_id.product_id.id])
-            for tax in data_product[0].taxes_id:
-                tax_ids.append(tax.id)
+            if (not event_reg.tobe_invoiced):
+                    raise osv.except_osv(_('Warning !'),
+                        _("Registration is set as Cannot be invoiced"))
 
-            vals = value['value']
-            c_name = reg.contact_id and ('-' + self.pool.get('res.partner.contact').name_get(cr, uid, [reg.contact_id.id])[0][1]) or ''
-            vals.update({
-                'name': reg.invoice_label + '-' + c_name,
-                'price_unit': reg.unit_price,
-                'quantity': reg.nb_register,
-                'product_id':reg.event_id.product_id.id,
-                'invoice_line_tax_id': [(6, 0, tax_ids)],
-            })
-            inv_line_ids = obj_event_reg._create_invoice_lines(cr, uid, [reg.id], vals)
-
-            val_invoice['value'].update({
-                'origin': reg.invoice_label,
-                'reference': False,
-                'invoice_line': [(6,0,[inv_line_ids])],
-                'comment': "",
-            })
-
-            inv_id = inv_obj.create(cr, uid, val_invoice['value'])
-            list_inv.append(inv_id)
-            obj_event_reg.write(cr, uid, reg.id, {'invoice_id': inv_id, 'state': 'done'})
-            obj_event_reg._history(cr, uid, [reg.id], 'Invoiced', history=True)
-
-#        {'inv_created' : str(inv_create) , 'inv_rejected' : str(inv_reject), 'invoice_ids': str(list_inv), 'inv_rej_reason': inv_rej_reason}
-        return {'inv_created' : str(inv_create) , 'inv_rejected' : str(inv_reject), 'inv_rej_reason': inv_rej_reason}
+            if not event_reg.event_id.product_id:
+                    raise osv.except_osv(_('Warning !'),
+                        _("Event related doesn't have any product defined"))
+            if not event_reg.partner_invoice_id:
+                   raise osv.except_osv(_('Warning !'),
+                        _("Registration doesn't have any partner to invoice."))
 
     def default_get(self, cr, uid, fields_list, context=None):
-        res = super(event_make_invoice, self).default_get(cr, uid, fields_list, context)
-        res.update(self._makeInvoices(cr, uid, context=context))
-        return res
+        return super(event_make_invoice, self).default_get(cr, uid, fields_list, context=context)
 
-    def confirm(self, cr, uid, ids, context={}):
-        obj_model = self.pool.get('ir.model.data')
-        data_inv = self.read(cr, uid, ids, [], context)[0]
-        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','invoice_form')])
-        resource_id = obj_model.read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
+    def make_invoice(self, cr, uid, ids, context=None):
+        reg_obj = self.pool.get('event.registration')
+        mod_obj = self.pool.get('ir.model.data')
+        newinv = []
+        if context is None:
+            context = {}
+
+        for data in self.browse(cr, uid, ids, context=context):
+            res = reg_obj.action_invoice_create(cr, uid, context.get(('active_ids'),[]), data.grouped, date_inv = data.invoice_date)
+
+        form_id = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
+        form_res = mod_obj.browse(cr, uid, form_id, context=context).res_id
+        tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
+        tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
         return {
-#            'domain': "[('id','in', ["+','.join(map(str,data_inv['invoice_ids']))+"])]",
+            'domain': "[('id','in',%s)]" % res,
             'name': 'Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
-            'views': [(False,'tree'),(resource_id,'form')],
-            'context': "{'type':'out_invoice'}",
-            'type': 'ir.actions.act_window'
+            'view_id': False,
+            'views': [(tree_res, 'tree'), (form_res, 'form')],
+            'context': "{'type':'out_refund'}",
+            'type': 'ir.actions.act_window',
         }
 
 event_make_invoice()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

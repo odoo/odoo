@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_sale_orderfor" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit5</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="create_date" position="after">
+                    <field name="requested_date"/>
+                </field>
+                <field name="date_confirm" position="after">
+                    <field name="commitment_date"/>
+                    <field name="effective_date"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

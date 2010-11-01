@@ -49,7 +49,7 @@ class purchase_line_invoice(osv.osv_memory):
             property_obj=self.pool.get('ir.property')
             account_fiscal_obj=self.pool.get('account.fiscal.position')
             invoice_line_obj=self.pool.get('account.invoice.line')
-            
+
             def make_invoice(order, lines):
                 a = order.partner_id.property_account_payable.id
                 if order.partner_id and order.partner_id.property_payment_term.id:
@@ -73,7 +73,7 @@ class purchase_line_invoice(osv.osv_memory):
                 }
                 inv_id = invoice_obj.create(cr, uid, inv)
                 return inv_id
-        
+
             for line in purchase_line_obj.browse(cr,uid,record_ids):
                 if (not line.invoiced) and (line.state not in ('draft','cancel')):
                     if not line.order_id.id in invoices:
@@ -108,25 +108,25 @@ class purchase_line_invoice(osv.osv_memory):
                     cr.execute('insert into purchase_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
                     purchase_line_obj.write(cr, uid, [line.id], {'invoiced': True})
                     invoices[line.order_id.id].append((line,inv_id))
-            
+
             res = []
             for result in invoices.values():
                 order = result[0][0].order_id
                 il = map(lambda x: x[1], result)
                 res.append(make_invoice(order, il))
-                
+
         return {
-                'domain': "[('id','in', ["+','.join(map(str,res))+"])]",
-                'name': _('Supplier Invoices'),
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'account.invoice',
-                'view_id': False,
-                'context': "{'type':'in_invoice'}",
-                'type': 'ir.actions.act_window'
-            }    
+            'domain': "[('id','in', ["+','.join(map(str,res))+"])]",
+            'name': _('Supplier Invoices'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'view_id': False,
+            'context': "{'type':'in_invoice'}",
+            'type': 'ir.actions.act_window'
+        }
 purchase_line_invoice()
-    
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

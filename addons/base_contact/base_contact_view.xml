@@ -29,37 +29,39 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Partner Contact">
-                <field name="name" select="1"/>
-                <field name="first_name" select="1"/>
+                <group colspan="4" col="6">
+                    <field name="title" select="1" widget="selection" domain="[('domain', '=', 'contact')]" size="0"/>
+                    <field name="name" select="1"/>
+                    <field name="first_name" select="1"/>
+                </group>
                 <notebook colspan="4" >
-                    <page string="General">
-                        <newline/>
-                        <separator string="General Information" colspan="4"/>
-                       <group string="Partner" colspan="2" col="2">
-                           <field name="partner_id" invisible="1" select="1"/>
-                           <field name="title" select="1"/>
-                           <field name="function" invisible="1"/>
-                        <field name="email"/>
-                           <field name="lang_id"/>
-                           <field name="active"/>
-                       </group>
-                       <group string="Communication" colspan="2" col="2">
-                           <field name="mobile"/>
-                           <field name="email"  widget="email"/>
-                           <field name="website"/>
-                       </group>
+                    <page string="General">                        
+                       <group colspan="4" col="4">
+                            <group colspan="2" col="4">
+                                <separator string="Communication" colspan="4"/>
+                                <field name="mobile"/>
+                                <field name="email"  widget="email"/>
+                                <field name="website"/>
+                            </group>
+                            <group colspan="2" col="1">
+                                <separator string="Photo" colspan="4"/>
+                                <field name="photo" widget='image' nolabel="1"/>
+                            </group>
+                       </group> 
                        <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions and Addresses">
-                               <group string="Partner" colspan="2" col="4">
+                               <group colspan="4" col="4">
+                                   <field name="sequence_contact" />
                                    <field name="function"/>
-                                   <field name="address_id"/>
-                                   <field name="name"/>
+                                   <field name="name" on_change="onchange_name(name,address_id)"/> 
+                                   <field name="address_id"/>                                   
                                    <field name="date_start" />
                                    <field name="date_stop" />
                                    <field name="state" />
-                                   <field name="sequence_contact" />
+                                   
                                </group>
-                               <group string="Communication" colspan="2" col="2">
+                                <separator string="Communication" colspan="4"/>
+                               <group colspan="4" col="4">
                                    <field name="phone"/>
                                    <field name="fax"/>
                                    <field name="email" widget="email"/>
@@ -70,8 +72,8 @@
                             <tree string="Functions and Addresses">
                                 <field name="sequence_contact" string="Seq."/>
                                 <field name="function"/>
-                                <field name="name"/>
-                                <field name="address_id"/>
+                                <field name="name" on_change="onchange_partner(name)"/> 
+								<field name="address_id" attrs="{'required': [('name', '!=', False)]}" on_change="onchange_address(address_id)"/>
                                 <field name="phone"/>
                                 <field name="fax"/>
                                 <field name="extension"/>
@@ -81,16 +83,18 @@
                             </tree>
                         </field>
                     </page>
-                    <page string="Extra Information">
+                    <page string="Extra Information">                        
+                        <field name="active"/>
+                        <field name="lang_id" widget="selection"/>
+                        <field name="partner_id" invisible="1" select="1"/>                                
+                        <field name="function" invisible="1" />  
                         <field name="country_id"/>
                         <field name="birthdate"/>
                     </page>
                     <page string="Notes">
                         <field name="comment" nolabel="1"/>
                     </page>
-                    <page string="Picture">
-                        <field name="photo" nolabel="1" colspan="2" widget="image"/>
-                    </page>
+                    
                 </notebook>
             </form>
         </field>
@@ -122,6 +126,18 @@
         <field name="search_view_id" ref="view_partner_contact_search"/>
     </record>
     <menuitem name="Contacts" id="menu_partner_contact_form" action="action_partner_contact_form" parent = "base.menu_address_book" sequence="2"/>
+    
+    <!--    
+    Contacts for Suppliers
+    -->
+    <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases"
+             sequence="3"/>
+    <menuitem id="base.menu_procurement_management_supplier" name="Address Book"
+            parent="base.menu_purchase_root" sequence="3"/>
+    <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
+            parent="base.menu_procurement_management_supplier" action="base.action_partner_supplier_form" sequence="1"/>
+    <menuitem name="Contacts" id="menu_purchases_partner_contact_form" action="action_partner_contact_form" 
+            parent = "base.menu_procurement_management_supplier" sequence="2"/>
 
     <!-- Views for Partners Form View -->
 
@@ -162,20 +178,18 @@
                                 <field name="email"/>
                             </tree>
                             <form string="Contacts">
-                            <group string="Partner" colspan="2" col="2">
+                            <group colspan="4" col="4">
                                 <field name="sequence_partner"/>
-                                <field name="name"/>
                                 <field name="contact_id"/>
                                 <field name="function"/>
                             </group>
-                            <group string="Communication" colspan="2" col="2">
+                            <separator string="Communication" colspan="4"/>
+                            <group colspan="4" col="4">
                                 <field name="phone"/>
                                 <field name="fax"/>
                                 <field name="extension"/>
                                 <field name="other"/>
                                 <field name="email" widget="email"/>
-                                <field name="extension"/>
-                                <field name="other"/>
                             </group>
                             </form>
                         </field>
@@ -394,19 +408,12 @@
     <!-- Act window defining a shorcut on partner address to open all his jobs -->
 
     <act_window
-        id="act_res_partner_jobs" name="Open Jobs"
-        domain="[('address_id', '=', active_id)]"
+        id="act_res_partner_jobs" 
+        name="Open Jobs"
+        context="{'search_default_address_id': [active_id]}"
         res_model="res.partner.job"
         src_model="res.partner.address"
         />
-
-    <menuitem icon="terp-purchase" id="base.menu_purchase_root"
-        name="Procurement Management" sequence="7" />
-    <menuitem id="base.menu_procurement_management_supplier"
-        name="Suppliers" parent="base.menu_purchase_root" sequence="3" />
-    <menuitem name="Contacts" id="menu_partner_contact_supplier_form"
-        action="action_partner_contact_form"
-        parent="base.menu_procurement_management_supplier" sequence="2" />
 
 </data>
 </openerp>

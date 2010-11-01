@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 12:56+0000\n"
-"Last-Translator: Sergei Kostigoff <sergei.kostigoff@gmail.com>\n"
+"PO-Revision-Date: 2010-08-03 06:23+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:12+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_invoice
@@ -34,7 +34,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Недопустимое имя модели в определении действия."
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -111,7 +111,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: wizard_button:hr.timesheet.invoice.create,init,create:0
 msgid "Create Invoices"
-msgstr ""
+msgstr "Создать счета"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -141,7 +141,7 @@ msgstr "Нужна ли детализация по уаждой позиции 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Date or Code"
-msgstr ""
+msgstr "Дата или Код"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
@@ -201,7 +201,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Printing date"
-msgstr ""
+msgstr "Дата печати"
 
 #. module: hr_timesheet_invoice
 #: constraint:ir.ui.view:0
@@ -223,7 +223,7 @@ msgstr "Теоретическая"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_tree_invoiced_my
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree_invoiced_my
 msgid "My Uninvoiced Entries"
-msgstr ""
+msgstr "Мои необработанные записи"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.final.invoice.create,init,name:0
@@ -239,7 +239,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "Currency"
-msgstr ""
+msgstr "Валюта"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,product:0
@@ -277,17 +277,17 @@ msgstr "От"
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_invoiced:0
 msgid "Total invoiced"
-msgstr ""
+msgstr "Сумма счета"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Status"
-msgstr ""
+msgstr "Состояние"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Period to"
-msgstr ""
+msgstr "Период по"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,balance_product:0
@@ -330,7 +330,7 @@ msgstr "Счета аналитики"
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Total:"
-msgstr ""
+msgstr "Всего:"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -355,7 +355,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "Totals:"
-msgstr ""
+msgstr "Итоги:"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:account.analytic.profit,init,date_to:0
@@ -426,7 +426,7 @@ msgstr "Продукция"
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,name:0
@@ -487,3 +487,295 @@ msgstr ""
 #: wizard_field:hr.timesheet.invoice.create,init,price:0
 msgid "Cost"
 msgstr "Стоимость"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
+msgid "Analytic account to close"
+msgstr "Счет аналитики к закрытию"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity_max:0
+msgid "Max. Quantity"
+msgstr "Макс. кол-во"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,name:0
+msgid "Analytic account"
+msgstr "Счет аналитики"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,state:0
+msgid "State"
+msgstr "Состояние"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,date_deadline:0
+msgid "Deadline"
+msgstr "Срок"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Analytic Account Reporting"
+msgstr "Отчет аналитического профиля"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,partner_id:0
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
+#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_analytic_account_tree
+#: view:report.analytic.account.close:0
+msgid "Expired analytic accounts"
+msgstr "Истекшие счета аналитики"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity:0
+msgid "Quantity"
+msgstr "Количество"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
+msgid "Lines to Invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: model:ir.ui.menu,name:hr_timesheet_invoice.account_analytic_lines_to_invoice_report
+#: view:report.account.analytic.line.to.invoice:0
+msgid "Analytic Lines to Invoice"
+msgstr "Позиции аналитики к выставлению счетов"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,sale_price:0
+msgid "Sale price"
+msgstr "Цена продажи"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Analytic lines - Reporting"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,name:0
+msgid "Month"
+msgstr "Месяц"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,amount:0
+msgid "Amount"
+msgstr "Количество"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
+msgid "Analytic lines to invoice report"
+msgstr "Отчет по позициям аналитики к выставлению счетов"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,product_uom_id:0
+msgid "UoM"
+msgstr "Ед-ца изм."
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_date_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_date_my
+msgid "My daily timesheets by account"
+msgstr "Мои дневные табели по счетам"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.user:0
+msgid "Timesheet by user"
+msgstr "Табель по пользователям"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_all
+msgid "Timesheet by Account"
+msgstr "Табель по счетам"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account:0
+msgid "Timesheet by account"
+msgstr "Табель по счетам"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_invoice
+msgid "Costs to invoice"
+msgstr "Расходы для выставления счетов"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user_my
+msgid "My Timesheet of the Month"
+msgstr "Мой табель за месяц"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_random_timesheet_lines_board
+#: model:ir.model,name:report_timesheet_invoice.model_random_timesheet_lines
+msgid "Random Timesheet Lines"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_account_analytic_account_2_report_timehsheet_account
+msgid "Timesheets"
+msgstr "Табели"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timehsheet_account
+msgid "Timesheets per account"
+msgstr "Табели по счетам"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:0
+msgid "Timesheets to invoice"
+msgstr "Табели для выставления счетов"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timesheet_user
+msgid "Timesheets per day"
+msgstr "Табели по дням"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_date_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_date_all
+msgid "Daily Timesheet by Account"
+msgstr "Дневной табель по счетам"
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,name:0 field:report.random.timesheet,name:0
+msgid "Description"
+msgstr "Описание"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_account
+#: view:report_timesheet.account:0
+msgid "Timesheet per account"
+msgstr "Табиль по счетам"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:report_timesheet.module_meta_information
+msgid "Timesheet - Reporting"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:0
+msgid "Timesheet by invoice"
+msgstr "Табели по счетам"
+
+#. module: hr_timesheet_invoice
+#: model:ir.ui.menu,name:report_timesheet_invoice.next_id_69
+msgid "This Month"
+msgstr "Этот месяц"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_my
+msgid "My timesheets by account"
+msgstr "Мои табели по счетам"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_random_timesheet
+msgid "Random Timesheet Report"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,user_id:0
+#: field:report.random.timesheet,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr "Пользователь"
+
+#. module: hr_timesheet_invoice
+#: view:report.random.timesheet:0
+msgid "Random Timesheets"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet by account"
+msgstr "Дневные табели по счетам"
+
+#. module: hr_timesheet_invoice
+#: view:random.timesheet.lines:0
+msgid "Random Timesheets Lines"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,account_id:0
+msgid "Project"
+msgstr "Проект"
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,amount_invoice:0
+msgid "To invoice"
+msgstr "Выставить счет"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user_all
+msgid "Timesheet by User"
+msgstr "Табель по пользователям"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_invoice_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_invoice_all
+msgid "Timesheet by Invoice"
+msgstr "Табели по счетам"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_random_timesheet_board
+msgid "Random Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,general_account_id:0
+msgid "General Account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_user
+msgid "Timesheet per day"
+msgstr "Табель по дням"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_invoice_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_invoice_my
+msgid "My timesheets to invoice"
+msgstr "Мои табели для выставления счетов"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_account_date
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet per account"
+msgstr "Дневной табель по счетам"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,description:report_timesheet.module_meta_information
+msgid ""
+"Module to add timesheet views like\n"
+"    All Month, Timesheet By User, Timesheet Of Month, Timesheet By Account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,analytic_account_id:0
+#: field:report.random.timesheet,analytic_account_id:0
+#: field:report_timesheet.account,account_id:0
+#: field:report_timesheet.account.date,account_id:0
+msgid "Analytic Account"
+msgstr "Счет аналитического учета"
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,manager_id:0
+msgid "Manager"
+msgstr "Менеджер"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user
+msgid "Timesheet by user (this month)"
+msgstr "Табель по пользователям (тек.мес.)"

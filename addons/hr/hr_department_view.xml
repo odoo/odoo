@@ -14,9 +14,9 @@
             <field name="arch" type="xml">
                 <form string="department">
                     <group col="6" colspan="4">
-                        <field colspan="4" name="name" select="1"/>
+                        <field name="name" select="1"/>
                         <field name="parent_id"/>
-                        <field colspan="4" name="manager_id" select="1"/>
+                        <field name="manager_id" select="1"/>
                         <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                     </group>
                     <notebook colspan="4" >
@@ -49,45 +49,35 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Departments">
-                    <group col='4' colspan='2'>
-                        <field name="name" />
-                        <field name="manager_id" widget="selection"/>
+                    <field name="name"/>
+                    <field name="manager_id" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
                     </group>
                 </search>
              </field>
          </record>
-        <record id="open_module_tree_department_tree" model="ir.actions.act_window">
-            <field name="name">Departments</field>
-            <field name="res_model">hr.department</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('parent_id','=',False)]</field>
-            <field name="search_view_id" ref="view_department_filter"/>
-        </record>
-       <menuitem action="open_module_tree_department_tree" id="menu_department_tree" parent="base.menu_users"/>
 
         <record id="open_module_tree_department" model="ir.actions.act_window">
             <field name="name">Departments</field>
             <field name="res_model">hr.department</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_department_filter"/>
+            <field name="help">Your Company's Departments Structure is used to manage all documents related to employees by departments: expenses and timesheet validation, leaves management, recruitements, etc.</field>
         </record>
 
-       <menuitem action="open_module_tree_department" id="menu_department_def" parent="hr.menu_department_tree"/>
-       <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="menu_hr_root" sequence="5"/>
+       <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="hr.menu_hr_management" sequence="6" />
 
-        <record model="ir.ui.view" id="view_users_form_inherit">
+       <record model="ir.ui.view" id="view_users_form_inherit">
             <field name="name">res.users.form</field>
             <field name="type">form</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Departements Informations" groups="base.group_extended">
+                    <page string="Departments" groups="base.group_extended">
                         <field name="context_department_id" completion="1" widget="selection" string="Department"/>
-                        <separator string="Managers" colspan="4"/>
-                        <field name="parent_id" nolabel="1" colspan="4"/>
-                        <separator string="Subordinates" colspan="4"/>
-                        <field name="child_ids" nolabel="1" colspan="4"/>
                     </page>
                 </notebook>
             </field>
@@ -99,7 +89,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <page string="Current Activity" position="inside">
-                    <field name="context_department_id" widget="selection" />
+                    <field name="context_department_id" widget="selection" readonly="0"/>
                 </page>
             </field>
         </record>

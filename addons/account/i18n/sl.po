@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* account
+# 	* account
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-10 13:46+0000\n"
-"Last-Translator: Simon Vidmar <Unknown>\n"
+"PO-Revision-Date: 2010-09-29 10:34+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:07+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -623,8 +623,8 @@ msgstr "(Postite prazno da se odpre terenutno stanje)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
-msgid "Fiscal Position Accounts Mapping"
-msgstr "Preslikava kontov glede na davčno pozicijo"
+msgid "Accounts Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,contact_id:0
@@ -1019,8 +1019,8 @@ msgstr "Skupaj (brez davkov):"
 #: field:account.invoice,fiscal_position:0
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
-msgid "Fiscal Position"
-msgstr "Davčna pozicija"
+msgid "Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -1041,8 +1041,8 @@ msgstr "Otroci"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
-msgid "Fiscal Position Taxes Mapping"
-msgstr "Preslikava davkov glede na davčno pozicijo"
+msgid "Taxes Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2_new
@@ -1130,8 +1130,8 @@ msgstr "Nov analitičen konto"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
-msgid "Fiscal Position Templates"
-msgstr "Predloge davčnih pozicij"
+msgid "Fiscal Mapping Templates"
+msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
@@ -1162,8 +1162,8 @@ msgstr "Znesek izražen v poljubni drugi valuti"
 #. module: account
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
-msgid "Fiscal Position Template"
-msgstr "Vzorec za davčno pozicijo"
+msgid "Fiscal Mapping Template"
+msgstr ""
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -1228,8 +1228,8 @@ msgstr "Valute družba"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Fiscal Position Template Account Mapping"
-msgstr "Preslikava kontov za vzorec za davčno pozicijo"
+msgid "Template Account Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,parent_id:0
@@ -1810,11 +1810,9 @@ msgstr "Naslednji"
 #. module: account
 #: help:res.partner,property_account_position:0
 msgid ""
-"The fiscal position will determine taxes and the accounts used for the the "
+"The fiscal mapping will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
-"Davčna pozicija bo določila davke in konte, ki se bodo uporabljali za tega "
-"partnerja."
 
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
@@ -1824,7 +1822,7 @@ msgstr "Datum ali šifra"
 #. module: account
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
-msgstr "Računovodja"
+msgstr "Odgovorni za stranko"
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -2087,8 +2085,8 @@ msgstr "Proces računa stranke"
 
 #. module: account
 #: rml:account.invoice:0
-msgid "Fiscal Position Remark :"
-msgstr "Opomba za davčno pozicijo"
+msgid "Fiscal Mapping Remark :"
+msgstr ""
 
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,period_id:0
@@ -2159,7 +2157,8 @@ msgid "Analytic Entry"
 msgstr "Analitičen vnos"
 
 #. module: account
-#: view:res.company:0 field:res.company,overdue_msg:0
+#: view:res.company:0
+#: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
 msgstr "Sporočilo za opomin za zapadle postavke"
 
@@ -3656,7 +3655,7 @@ msgstr "Zaporedje"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
+msgid "Template for Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -3761,7 +3760,7 @@ msgstr "Osnutki računov"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
-msgid "Fiscal Position Template Tax Mapping"
+msgid "Template Tax Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -5905,7 +5904,7 @@ msgstr "Plačilni pogoj"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
-msgid "Fiscal Positions"
+msgid "Fiscal Mappings"
 msgstr ""
 
 #. module: account
@@ -5960,3 +5959,360 @@ msgstr ""
 #: wizard_button:account.subscription.generate,init,generate:0
 msgid "Compute Entry Dates"
 msgstr "Izračunaj datume vknjižb"
+
+#. module: account
+#: view:board.board:0
+msgid "Analytic accounts to close"
+msgstr "Analitični konti za zapiranje"
+
+#. module: account
+#: view:board.board:0
+msgid "Draft invoices"
+msgstr "Osnutki računov"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.open_board_account
+#: model:ir.ui.menu,name:account.menu_board_account
+msgid "Accounting Dashboard"
+msgstr "Računovodska pregledna plošča"
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.act_my_account
+msgid "Accounts to invoice"
+msgstr "Zaračunavanje po kontih"
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.action_account_analytic_line_to_invoice
+msgid "Costs to invoice"
+msgstr "Zaračunavanje stroškov"
+
+#. module: account
+#: view:board.board:0
+msgid "Aged receivables"
+msgstr "Zastarane terjatve"
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Board for accountant"
+msgstr "Odbor za računovodjo"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_aged_income
+msgid "Income Accounts"
+msgstr "Konti prihodkov"
+
+#. module: account
+#: view:board.board:0
+msgid "My indicators"
+msgstr "Moji kazalci"
+
+#. module: account
+#: view:board.board:0
+msgid "Account Board"
+msgstr "Odbor za računovodstvo"
+
+#. module: account
+#: view:board.board:0
+msgid "Aged income"
+msgstr "Zastarani prihodki"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,show_columns:0
+msgid "Show Debit/Credit Information"
+msgstr "Prikaži oinformacijo breme/dobro"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,account_choice:0
+msgid "All accounts"
+msgstr "Vsi konti"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,period_manner:0
+msgid "Entries Selection Based on"
+msgstr "Izbira vnosov temelji na"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "Notification"
+msgstr "Obvestilo"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Financial Period"
+msgstr "Finančno obdobje"
+
+#. module: account
+#: model:ir.actions.report.xml,name:account.account_account_balance
+#: model:ir.actions.report.xml,name:account.account_account_balance_landscape
+msgid "Account balance"
+msgstr "Stanje konta"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period(s)"
+msgstr "Izberi obdobje(a)"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Percentage"
+msgstr "Delež"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Compare Selected Years In Terms Of"
+msgstr "Primerjaj izbrana leta po"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Fiscal Year(s)(Maximum Three Years)"
+msgstr "Izberite poslovna leta (največ tri)"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,select_account:0
+msgid "Select Reference Account(for  % comparision)"
+msgstr "Izberite referenčni konto (za primerjavo v %)"
+
+#. module: account
+#: model:ir.actions.wizard,name:account.wizard_account_balance_report
+msgid "Account balance-Compare Years"
+msgstr "Stanje konta - primerjaj med leti"
+
+#. module: account
+#: model:ir.module.module,description:account.module_meta_information
+msgid ""
+"Account Balance Module is an added functionality to the Financial Management "
+"module.\n"
+"\n"
+"    This module gives you the various options for printing balance sheet.\n"
+"\n"
+"    1. You can compare the balance sheet for different years.\n"
+"\n"
+"    2. You can set the cash or percentage comparison between two years.\n"
+"\n"
+"    3. You can set the referential account for the percentage comparison for "
+"particular years.\n"
+"\n"
+"    4. You can select periods as an actual date or periods as creation "
+"date.\n"
+"\n"
+"    5. You have an option to print the desired report in Landscape format.\n"
+"    "
+msgstr ""
+"Modul \"Stanje konta\" je dodatek funkcionalnosti modula \"Finančno "
+"upravljanje\".\n"
+"\n"
+"    Ta modul vam nudi različne možnosti za tiskanje bilance stanja.\n"
+"\n"
+"    1. Lahko primerjate bilance stanja za različna leta.\n"
+"\n"
+"    2. Nastavite lahko denarno ali odstotkovno primerjavo med dvema letoma.\n"
+"\n"
+"    3. Lahko nastavite referenčni konto za odstotekovno primerjavo za "
+"posamezna leta.\n"
+"\n"
+"    4. Izberete lahko dobe kot dejanski datum ali obdobja kot datum "
+"nastanka.\n"
+"\n"
+"    5. Imate možnost tiskanja želenega poročila v ležečem formatu.\n"
+"    "
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You have to select 'Landscape' option. Please Check it."
+msgstr "Izbrati morate možnost \"Ležeče\". Prosim, reverite."
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,landscape:0
+msgid "Show Report in Landscape Form"
+msgstr "Prikaži poročilo v ležeči obliki"
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Total :"
+msgstr "Skupaj:"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,format_perc:0
+msgid "Show Comparision in %"
+msgstr "Prikaži primerjavo v %"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period"
+msgstr "Izberi obdobje"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Report Options"
+msgstr "Možnosti poročila"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Don't Compare"
+msgstr "Ne primerjaj"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,account_choice:0
+msgid "Show Accounts"
+msgstr "Prikaži konto"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "1. You have selected more than 3 years in any case."
+msgstr "1. V vsakem primeru ste izbrali več kot 3 leta."
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Accounting and financial management-Compare Accounts"
+msgstr "Računovodstvo in finančno upravljanje - primerjaj konte"
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Year :"
+msgstr "Leto:"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You can select maximum 3 years. Please check again."
+msgstr "Izberete lahko največ tri leta. Prosim, preverite ponovno."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"3. You have selected 'Percentage' option with more than 2 years, but you "
+"have not selected landscape format."
+msgstr ""
+"3. Izbrali ste možnost \"odstotki\" za več kot dve leti, vendar niste "
+"izbrali ležečega formata."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"You might have done following mistakes. Please correct them and try again."
+msgstr ""
+"Naredili ste naslednje napake. Prosim, popravite jih in poskusite znova."
+
+#. module: account
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
+msgstr "Pustite prazno za primerjavo z nadrejenim."
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Creation Date"
+msgstr "Ustvarjeno dne"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"2. You have not selected 'Percentage' option, but you have selected more "
+"than 2 years."
+msgstr ""
+"3. Niste izbrali možnosti \"odstotki\" , vendatr ste izbrali več kot dve "
+"leti."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid ""
+"You may have selected the compare options with more than 1 year with "
+"credit/debit columns and % option.This can lead contents to be printed out "
+"of the paper.Please try again."
+msgstr ""
+"Najbrž ste izbrali možnost za primerjavo več kot enega leta s kolonami "
+"breme/dobro  in možnostjo %. To lahko privede k temu, da se bo vsebina "
+"izpisala izven papirja. Poskuste znova."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You have to select at least 1 Fiscal Year. Try again."
+msgstr "Izbrati morate vsaj eno poslovno leto. Poskusite znova."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Customize Report"
+msgstr "Prilagodi poročilo"
+
+#. module: account
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr "Mesečno obdobje"
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_view_created_invoice_dashboard
+msgid "Invoices Created Within Past 15 Days"
+msgstr "Računi narejeni v zadnjih 15-ih dneh"
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_invoice_created
+msgid "Report of Invoices Created within Last 15 days"
+msgstr "Poročilo o računih narejenih v zadnjih 15-ih dneh"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Total Amount"
+msgstr "Skupni znesek"
+
+#. module: account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr "Računi po vrsti"
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr "Zastarane terjatve do danes"
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_account_receivable
+msgid "Receivable accounts"
+msgstr "Konti terjatev"
+
+#. module: account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr "Obseg"
+
+#. module: account
+#: model:ir.module.module,description:report_account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr "Modul, ki doda nova poročila na osnovi modula konti."
+
+#. module: account
+#: model:ir.module.module,shortdesc:report_account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr "Poročanje po kontih - poročanje"
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
+#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr "Bilanca po vrsti konta"
+
+#. module: account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr "Teden v letu"
+
+#. module: account
+#: field:report.invoice.created,create_date:0
+msgid "Create Date"
+msgstr "Datum izdelave"
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr "Zastarane terjatve"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Untaxed Amount"
+msgstr "Neobdavčen znesek"
+
+#~ msgid "account.config.wizard"
+#~ msgstr "account.config.wizard"

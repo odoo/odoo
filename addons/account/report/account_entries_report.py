@@ -21,103 +21,139 @@
 
 import tools
 from osv import fields,osv
+import decimal_precision as dp
 
 class account_entries_report(osv.osv):
     _name = "account.entries.report"
-    _description = "Entries"
+    _description = "Journal Items Analysis"
     _auto = False
     _rec_name = 'date'
     _columns = {
         'date': fields.date('Effective Date', readonly=True),
         'date_created': fields.date('Date Created', readonly=True),
         'date_maturity': fields.date('Date Maturity', readonly=True),
-        'nbr':fields.integer('# of Entries', readonly=True),
-        'nbl':fields.integer('# of Lines', readonly=True),
-        'amount': fields.float('Amount',readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
+        'ref': fields.char('Reference', size=64, readonly=True),
+        'nbr': fields.integer('# of Items', readonly=True),
+        'debit': fields.float('Debit', readonly=True),
+        'credit': fields.float('Credit', readonly=True),
+        'balance': fields.float('Balance', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
+        'year': fields.char('Year', size=4, readonly=True),
+        'date': fields.date('Date', size=128, readonly=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'amount_currency': fields.float('Amount Currency', digits_compute=dp.get_precision('Account'), readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'ref': fields.char('Reference', size=64,readonly=True),
+            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
         'period_id': fields.many2one('account.period', 'Period', readonly=True),
         'account_id': fields.many2one('account.account', 'Account', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
+        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State',readonly=True,
-                                  help='When new account move is created the state will be \'Draft\'. When all the payments are done it will be in \'Posted\' state.'),
-        'state_2': fields.selection([('draft','Draft'), ('valid','Valid')], 'State of Move Line', readonly=True,
-                                  help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
+        'product_uom_id': fields.many2one('product.uom', 'Product UOM', readonly=True),
+        'move_state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'State', readonly=True),
+        'move_line_state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True),
+        'reconcile_id': fields.many2one('account.move.reconcile', readonly=True),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),
-        'period_id2': fields.many2one('account.period', 'Move Line Period', readonly=True),
-        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'journal_id2': fields.many2one('account.journal', 'Move Line Journal', readonly=True),
-        'type': fields.selection([
-            ('pay_voucher','Cash Payment'),
-            ('bank_pay_voucher','Bank Payment'),
-            ('rec_voucher','Cash Receipt'),
-            ('bank_rec_voucher','Bank Receipt'),
-            ('cont_voucher','Contra'),
-            ('journal_sale_vou','Journal Sale'),
-            ('journal_pur_voucher','Journal Purchase'),
-            ('journal_voucher','Journal Voucher'),
-        ],'Type',readonly=True),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),
+        'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
+        'type': fields.selection([
+            ('receivable', 'Receivable'),
+            ('payable', 'Payable'),
+            ('cash', 'Cash'),
+            ('view', 'View'),
+            ('consolidation', 'Consolidation'),
+            ('other', 'Regular'),
+            ('closed', 'Closed'),
+        ], 'Internal Type', readonly=True, help="This type is used to differentiate types with "\
+            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
+            "can have children accounts for multi-company consolidations, payable/receivable are for "\
+            "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
+
     _order = 'date desc'
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        fiscalyear_obj = self.pool.get('account.fiscalyear')
+        period_obj = self.pool.get('account.period')
+        for arg in args:
+            if arg[0] == 'period_id' and arg[2] == 'current_period':
+                current_period = period_obj.find(cr, uid)[0]
+                args.append(['period_id','in',[current_period]])
+                break
+            elif arg[0] == 'period_id' and arg[2] == 'current_year':
+                current_year = fiscalyear_obj.find(cr, uid)
+                ids = fiscalyear_obj.read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                args.append(['period_id','in',ids])
+        for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
+            if a in args:
+                args.remove(a)
+        return super(account_entries_report, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
+            context=context, count=count)
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
+        todel=[]
+        fiscalyear_obj = self.pool.get('account.fiscalyear')
+        period_obj = self.pool.get('account.period')
+        for arg in domain:
+            if arg[0] == 'period_id' and arg[2] == 'current_period':
+                current_period = period_obj.find(cr, uid)[0]
+                domain.append(['period_id','in',[current_period]])
+                todel.append(arg)
+                break
+            elif arg[0] == 'period_id' and arg[2] == 'current_year':
+                current_year = fiscalyear_obj.find(cr, uid)
+                ids = fiscalyear_obj.read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                domain.append(['period_id','in',ids])
+                todel.append(arg)
+        for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
+            if a in domain:
+                domain.remove(a)
+        return super(account_entries_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')
         cr.execute("""
             create or replace view account_entries_report as (
-              select
-                   min(l.id) as id,
-                   am.ref as ref,
-                   sum(l.quantity) as quantity,
-                   am.state as state,
-                   l.state as state_2,
-                   am.date as date,
-                   count(l.id) as nbr,
-                   count(distinct am.id) as nbl,
-                   l.debit as amount,
-                   to_char(am.date, 'YYYY') as year,
-                   to_char(am.date, 'MM') as month,
-                   to_char(am.date, 'YYYY-MM-DD') as day,
-                   am.company_id as company_id,
-                   l.account_id as account_id,
-                   l.analytic_account_id as analytic_account_id,
-                   l.date_created as date_created,
-                   l.date_maturity as date_maturity,
-                   am.journal_id as journal_id,
-                   l.journal_id as journal_id2,
-                   l.period_id as period_id2,
-                   am.period_id as period_id,
-                   l.partner_id as partner_id,
-                   l.product_id as product_id,
-                   am.type as type
-             from
-             account_move_line l
-                 left join
-             account_move am on (am.id=l.move_id)
-                group by am.ref,
-                am.state,
-                am.date,
-                am.company_id,
-                am.journal_id,
-                l.journal_id,
-                am.period_id,
-                l.period_id,
-                am.type,
-                l.partner_id,
-                l.analytic_account_id,
-                l.product_id,
-                l.date_created,
-                l.date_maturity,
-                l.account_id,
-                l.state,
-                l.debit
+            select
+                l.id as id,
+                am.date as date,
+                l.date_maturity as date_maturity,
+                l.date_created as date_created,
+                am.ref as ref,
+                am.state as move_state,
+                l.state as move_line_state,
+                l.reconcile_id as reconcile_id,
+                to_char(am.date, 'YYYY') as year,
+                to_char(am.date, 'MM') as month,
+                to_char(am.date, 'YYYY-MM-DD') as day,
+                l.partner_id as partner_id,
+                l.product_id as product_id,
+                l.product_uom_id as product_uom_id,
+                am.company_id as company_id,
+                am.journal_id as journal_id,
+                p.fiscalyear_id as fiscalyear_id,
+                am.period_id as period_id,
+                l.account_id as account_id,
+                l.analytic_account_id as analytic_account_id,
+                a.type as type,
+                a.user_type as user_type,
+                1 as nbr,
+                l.quantity as quantity,
+                l.currency_id as currency_id,
+                l.amount_currency as amount_currency,
+                l.debit as debit,
+                l.credit as credit,
+                l.debit-l.credit as balance
+            from
+                account_move_line l
+                left join account_account a on (l.account_id = a.id)
+                left join account_move am on (am.id=l.move_id)
+                left join account_period p on (am.period_id=p.id)
+                where l.state != 'draft'
             )
         """)
-
 account_entries_report()

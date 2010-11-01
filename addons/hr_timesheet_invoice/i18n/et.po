@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* hr_timesheet_invoice
+# 	* hr_timesheet_invoice
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-09 17:43+0000\n"
+"PO-Revision-Date: 2010-08-03 06:18+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:12+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_invoice
@@ -487,3 +487,298 @@ msgstr "Sulgemata arveldatavad kontod"
 #: wizard_field:hr.timesheet.invoice.create,init,price:0
 msgid "Cost"
 msgstr "Maksumus"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
+msgid "Analytic account to close"
+msgstr "Analüütiline konto sulgeda"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity_max:0
+msgid "Max. Quantity"
+msgstr "Maks kogus"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,name:0
+msgid "Analytic account"
+msgstr "Analüütiline konto"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,state:0
+msgid "State"
+msgstr "Olek"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,date_deadline:0
+msgid "Deadline"
+msgstr "Tähtaeg"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Analytic Account Reporting"
+msgstr "Analüütilise konto aruandlus"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
+#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_analytic_account_tree
+#: view:report.analytic.account.close:0
+msgid "Expired analytic accounts"
+msgstr "Aegunud analüütilised kontod"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity:0
+msgid "Quantity"
+msgstr "Kogus"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
+msgid "Lines to Invoice"
+msgstr "Read arveldada"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: model:ir.ui.menu,name:hr_timesheet_invoice.account_analytic_lines_to_invoice_report
+#: view:report.account.analytic.line.to.invoice:0
+msgid "Analytic Lines to Invoice"
+msgstr "Analüütilised read arveldada"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,sale_price:0
+msgid "Sale price"
+msgstr "Müügihind"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Analytic lines - Reporting"
+msgstr "Analüütilised read - Aruandlus"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,name:0
+msgid "Month"
+msgstr "Kuu"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,amount:0
+msgid "Amount"
+msgstr "Kogus"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
+msgid "Analytic lines to invoice report"
+msgstr "Analüütilised read arve aruandesse"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,product_uom_id:0
+msgid "UoM"
+msgstr "Mõõtühik"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_date_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_date_my
+msgid "My daily timesheets by account"
+msgstr "Minu igapäevased tööajakaardid konto järgi"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.user:0
+msgid "Timesheet by user"
+msgstr "Tööajakaart kasutaja järgi"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_all
+msgid "Timesheet by Account"
+msgstr "Tööajakaart konto järgi"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account:0
+msgid "Timesheet by account"
+msgstr "Tööajakaart konto järgi"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_invoice
+msgid "Costs to invoice"
+msgstr "Kulud arveldamiseks"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user_my
+msgid "My Timesheet of the Month"
+msgstr "Minu kuu tööajakaart"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_random_timesheet_lines_board
+#: model:ir.model,name:report_timesheet_invoice.model_random_timesheet_lines
+msgid "Random Timesheet Lines"
+msgstr "Juhuslikud tööajalehe read"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_account_analytic_account_2_report_timehsheet_account
+msgid "Timesheets"
+msgstr "Tööajalehed"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timehsheet_account
+msgid "Timesheets per account"
+msgstr "Tööajakaardid konto kohta"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:0
+msgid "Timesheets to invoice"
+msgstr "Tääajakaardid arveldamiseks"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timesheet_user
+msgid "Timesheets per day"
+msgstr "Tööajakaardid päeva kohta"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_date_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_date_all
+msgid "Daily Timesheet by Account"
+msgstr "Igapäevane tööajakaart konto järgi"
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,name:0 field:report.random.timesheet,name:0
+msgid "Description"
+msgstr "Kirjeldus"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_account
+#: view:report_timesheet.account:0
+msgid "Timesheet per account"
+msgstr "Tööajakaart konto kohta"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:report_timesheet.module_meta_information
+msgid "Timesheet - Reporting"
+msgstr "Tööajaleht - Aruandlus"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:0
+msgid "Timesheet by invoice"
+msgstr "Tööajakaart arveldamiseks"
+
+#. module: hr_timesheet_invoice
+#: model:ir.ui.menu,name:report_timesheet_invoice.next_id_69
+msgid "This Month"
+msgstr "Käesolev kuu"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_my
+msgid "My timesheets by account"
+msgstr "Minu tööajakaardid konto järgi"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_random_timesheet
+msgid "Random Timesheet Report"
+msgstr "Juhuslik tööajalehe aruanne"
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,user_id:0
+#: field:report.random.timesheet,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr "Kasutaja"
+
+#. module: hr_timesheet_invoice
+#: view:report.random.timesheet:0
+msgid "Random Timesheets"
+msgstr "Juhuslikud tööajalehed"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet by account"
+msgstr "Igapäevane tööajakaart konto järgi"
+
+#. module: hr_timesheet_invoice
+#: view:random.timesheet.lines:0
+msgid "Random Timesheets Lines"
+msgstr "Juhuslikud tööajalehtede read"
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,account_id:0
+msgid "Project"
+msgstr "Projekt"
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,amount_invoice:0
+msgid "To invoice"
+msgstr "Arveldada"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user_all
+msgid "Timesheet by User"
+msgstr "Tööajakaart kasutaja järgi"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_invoice_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_invoice_all
+msgid "Timesheet by Invoice"
+msgstr "Tööajakaart arve järgi"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_random_timesheet_board
+msgid "Random Timesheet"
+msgstr "Juhuslik tööajaleht"
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,general_account_id:0
+msgid "General Account"
+msgstr "Üldine konto"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_user
+msgid "Timesheet per day"
+msgstr "Tööajakaart päeva kohta"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_invoice_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_invoice_my
+msgid "My timesheets to invoice"
+msgstr "Minu tööajakaardid arveldamiseks"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_account_date
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet per account"
+msgstr "Igapäevane tööajakaart konto kohta"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,description:report_timesheet.module_meta_information
+msgid ""
+"Module to add timesheet views like\n"
+"    All Month, Timesheet By User, Timesheet Of Month, Timesheet By Account"
+msgstr ""
+"Moodul tööajalehe vaadete lisamiseks nagu nt\n"
+"    Kõik kuud, Tööajaleht kasutaja järgi, Kuu tööajaleht, Tööajaleht konto "
+"järgi"
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,analytic_account_id:0
+#: field:report.random.timesheet,analytic_account_id:0
+#: field:report_timesheet.account,account_id:0
+#: field:report_timesheet.account.date,account_id:0
+msgid "Analytic Account"
+msgstr "Analüütiline konto"
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,manager_id:0
+msgid "Manager"
+msgstr "Haldur"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user
+msgid "Timesheet by user (this month)"
+msgstr "Tööajakaart kasutaja järgi (see kuu)"

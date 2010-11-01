@@ -6,20 +6,19 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 
 {
     'name': 'Issue Management in Project Management',
@@ -28,13 +27,11 @@
     'description': """
         This module provide Issues/Bugs Management in Project
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
         'crm',
         'project',
-        'hr_timesheet_sheet',
-        'project_long_term',
     ],
     'init_xml': [
         'project_issue_data.xml'
@@ -45,9 +42,15 @@
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
+        "board_project_issue_view.xml",
      ],
     'demo_xml': ['project_issue_demo.xml'],
+    'test': [
+      'test/convert_issue_to_task.yml',
+      'test/test_project_issue_states.yml'
+    ],
     'installable': True,
     'active': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -73,8 +73,8 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 values = {
                         'name': this.name,
                         'user_id': this.user_id and this.user_id.id,
-                        'categ_id': phonecall.categ_id and phonecall.categ_id.id or False,
-                        'section_id': phonecall.section_id and phonecall.section_id.id,
+                        'categ_id': this.categ_id.id,
+                        'section_id': this.section_id.id or (phonecall.section_id and phonecall.section_id.id),
                         'description': phonecall.description or '',
                         'partner_id': phonecall.partner_id.id,
                         'partner_address_id': phonecall.partner_address_id.id,
@@ -94,6 +94,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
                 'type': 'ir.actions.act_window',
                 'res_id': phonecall_id, 
+                'domain': [('id', '=', phonecall_id)], 
                 'search_view_id': res['res_id']
                 }
         return res
@@ -101,7 +102,10 @@ class crm_phonecall2phonecall(osv.osv_memory):
     _columns = {
                 'name' : fields.char('Call summary', size=64, required=True, select=1),
                 'user_id' : fields.many2one('res.users',"Assign To"),
-                'date': fields.datetime('Date'),
+                'categ_id': fields.many2one('crm.case.categ', 'Category', required=True, \
+                        domain="['|',('section_id','=',False),('section_id','=',section_id),\
+                        ('object_id.model', '=', 'crm.phonecall')]"), 
+                'date': fields.datetime('Date', required=True),
                 'section_id':fields.many2one('crm.case.section','Sales Team'),
                 }
 
@@ -118,9 +122,15 @@ class crm_phonecall2phonecall(osv.osv_memory):
         """
         res = super(crm_phonecall2phonecall, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
-
+        
         if record_id:
             phonecall = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
+
+            categ_id = False
+            data_obj = self.pool.get('ir.model.data')
+            res_id = data_obj._get_id(cr, uid, 'crm', 'categ_phone2')
+            if res_id:
+                categ_id = data_obj.browse(cr, uid, res_id, context=context).res_id
 
             if 'name' in fields:
                 res.update({'name': phonecall.name})
@@ -130,7 +140,8 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 res.update({'date': phonecall.date})
             if 'section_id' in fields:
                 res.update({'section_id': phonecall.section_id and phonecall.section_id.id or False})
-
+            if 'categ_id' in fields:
+                res.update({'categ_id': categ_id})
         return res
 
 crm_phonecall2phonecall()

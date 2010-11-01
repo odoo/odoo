@@ -21,39 +21,43 @@
 
 from osv import fields
 from osv import osv
-from tools import config
-
 import base64
-class base_openoffice(osv.osv_memory):
-    _name = "base.openoffice"
+from tools.translate import _
+import addons
+
+class base_report_designer_installer(osv.osv_memory):
+    _name = 'base_report_designer.installer'
     _inherit = 'res.config.installer'
-    _description = "Open Office Report Desinger"
+
+    def default_get(self, cr, uid, fields, context={}):
+        data = super(base_report_designer_installer, self).default_get(cr, uid, fields, context)
+        plugin_file = open(addons.get_module_resource('base_report_designer','plugin', 'openerp_report_designer.zip'),'rb')
+        data['plugin_file'] = base64.encodestring(plugin_file.read())
+        return data
+
     _columns = {
-                'base_desinger_url': fields.char('Documentation URL', size=300, readonly=True),
-                'plugin_file':fields.binary('OpenOffice Report Desinger',readonly=True),
-                'pdf_file':fields.binary('Documenation', size=64 ,readonly=True),
+        'name':fields.char('File name', size=34),
+        'plugin_file':fields.binary('OpenObject Report Designer Plug-in', readonly=True, help="OpenObject Report Designer plug-in file. Save as this file and install this plug-in in OpenOffice."),
+        'description':fields.text('Description', readonly=True)
     }
-    def add_plugin(self, cr, uid, ids, context):
-        data = {}
-        file = open(config['addons_path'] + "/base_report_designer/report_desinger/openoffice_report_designer/openerp_report_designer.zip", 'r')
-        data['plugin_file'] = base64.encodestring(file.read())
-        self.write(cr, uid, ids, data)
-        return False
 
-    def process_pdf_file(self, cr, uid, ids, context):
-        """
-        Default Attach Thunderbird Plug-in Installation File.
-        """
-        data = {}
-        pdf_file = open(config['addons_path'] + "/base_report_designer/report_desinger/doc/OpenOffice.pdf", 'r')
-        data['pdf_file'] = base64.encodestring(pdf_file.read())
-        self.write(cr, uid, ids, data)
-        return False
     _defaults = {
-        'name' : 'tiny_plugin-2.0.xpi',
-        'pdf_name' : 'Installation Guide to OpenOffice Report Desinger.pdf',
-        'base_desinger_url':'http://doc.openerp.com/developer/7_23_RAD_tools/index.html#open-office-report-designer'
+        'name' : 'openerp_report_designer.zip',
+        'description' : """
+        * Save the OpenERP Report Designer plug-­in.
+        * Follow these steps to install plug-­in.
+            1. Open Extension Manager window from Menu Bar of Openoffice writer, Open Tools > Extension Menu.
+            2. Click on "Add" button.
+            3. Select path where the openerp_report_designer.zip is located.
+            4. On the completion of adding package you will get your package under 'Extension Manager' and the status of your package become 'Enabled'.
+            5. Restart openoffice writer.
+        * Follow the steps to configure OpenERP Report Designer plug-­in in Openoffice writer.
+            1. Connect OpenERP Server from Menu bar , OpenERP Report Designer > Server parameter.
+            2. Select Server url, database and provide user name and password
+            3. Click "Connect".
+            4. if your connection success, A message appears like 'You can start creating your report in current document.'.
+        """
+    }
+base_report_designer_installer()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
-        }
-
-base_openoffice()

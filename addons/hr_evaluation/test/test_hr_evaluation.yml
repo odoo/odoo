@@ -1,0 +1,154 @@
+-
+  In order to test hr_evaluation module for OpenERP, I will create plan then create evaluation under that plan.
+-
+
+  I create new Department.
+-
+  !record {model: hr.department, id: hr_department_rd0}:
+    manager_id: base.user_root
+    name: 'R & D'
+-
+  I create a new employee.
+-
+  !record {model: hr.employee, id: hr_employee_employee0}:
+    address_home_id: base.res_partner_address_1
+    company_id: base.main_company
+    gender: male
+    marital: hr.hr_employee_marital_status_single
+    name: Mark Johnson
+    user_id: base.user_root
+    department_id: 'hr_department_rd0'
+-
+  I create another new employee and assign first one as it's Manager.
+-
+  !record {model: hr.employee, id: hr_employee_employee1}:
+    address_home_id: base.res_partner_address_3000
+    company_id: base.main_company
+    gender: male
+    name: Phil Graves
+    user_id: base.user_demo
+    parent_id: 'hr_employee_employee0'
+
+-
+  I Create an "Employee Evaluation" survey for Manager's Evaluation Plan.
+-
+    !record {model: 'survey', id: survey_0}:
+        title: 'Employee Evaluation'
+        max_response_limit: 20
+        response_user: 2
+-
+  I Create an "Employee Evaluation" page in "Employee Evaluation" survey.
+-
+    !record {model: 'survey.page', id: survey_employee_page_0}:
+        title: 'Employee Evaluation'
+        survey_id: survey_0
+-
+  I Create "What is your Name" question in "Employee Evaluation" survey page.
+-
+    !record {model: 'survey.question', id: survey_p_question_0}:
+        question: 'What is your Name?'
+        type: 'single_textbox'
+        sequence: 1
+        page_id: survey_employee_page_0
+-
+  I Create "What is your gender" Question in "Employee Evaluation" survey page.
+-
+    !record {model: 'survey.question', id: survey_p_question_1}:
+        question: 'What is your gender?'
+        type: multiple_choice_only_one_ans
+        sequence: 2
+        is_require_answer: true
+        page_id: survey_employee_page_0
+-
+  I Create "Male" answer in question "What is your gender?"
+-
+    !record {model: 'survey.answer', id: survey_p_1_1}:
+        answer: 'Male'
+        sequence: 1
+        question_id : survey_p_question_1
+-
+  I Create "Female" answer in question "What is your gender?"
+-
+    !record {model: 'survey.answer', id: survey_p_1_2}:
+        answer: 'Female'
+        sequence: 2
+        question_id : survey_p_question_1
+
+-
+  I set the survey in open state.
+-
+  !python {model: survey}: |
+       self.survey_open(cr, uid, [ref("survey_0")], context)
+
+-
+  I create an Evaluation plan and select "Employee Evaluation" survey for "Send to Subordinates" and "Final interview with Manager" Phase.
+-
+  !record {model: hr_evaluation.plan, id: hr_evaluation_plan_managersplan0}:
+    company_id: base.main_company
+    month_first: 3
+    month_next: 6
+    name: Manager's  Plan
+    phase_ids:
+      - action: bottom-up
+        name: Send to Subordinates
+        survey_id: 'survey_0'
+      - action: top-down
+        name: Final Interview with manager
+        sequence: 2
+        survey_id: 'survey_0'
+
+-
+  I create an Evaluation for employee under "Manager Evaluation Plan".
+-
+  !record {model: hr_evaluation.evaluation, id: hr_evaluation_evaluation_0}:
+    date: '2010-06-28'
+    employee_id: 'hr_employee_employee1'
+    plan_id: 'hr_evaluation_plan_managersplan0'
+    progress: 0.0
+    state: draft
+-
+  I create an Interview Request record
+- 
+  !record {model: hr.evaluation.interview, id: hr_evaluation_interview_0}:
+    date_deadline: '2010-06-28'
+    evaluation_id: 'hr_evaluation_evaluation_0'
+    survey_id:  hr_evaluation.survey_0
+-
+  I check that evaluation is in "Draft" state.
+-
+  !assert {model: hr_evaluation.evaluation, id: hr_evaluation_evaluation_0}:
+     - state == 'draft'
+-
+  I start the evaluation process by click on "Start Evaluation" button.
+-
+  !python {model: hr_evaluation.evaluation}: |
+     self.button_plan_in_progress(cr, uid, [ref('hr_evaluation_evaluation_0')])
+
+-
+  I close this survey request by giving answer of survey question.
+-
+  !python {model: hr.evaluation.interview}: |
+    self.survey_req_done(cr, uid, [ref('hr_evaluation_interview_0')])
+-
+  I click on "Final Validation" button to finalise evaluation.
+-
+  !python {model: hr_evaluation.evaluation}: |
+    self.button_final_validation(cr, uid, [ref("hr_evaluation.hr_evaluation_evaluation_0")],
+      {"active_ids": [ref("hr_evaluation.menu_open_view_hr_evaluation_tree")]})
+
+-
+  I check that state is "Final Validation".
+-
+  !assert {model: hr_evaluation.evaluation, id: hr_evaluation_evaluation_0}:
+      - state == 'progress'
+-
+  Give Rating "Meet expectations" by selecting overall Rating.
+-
+  !record {model: hr_evaluation.evaluation, id: hr_evaluation.hr_evaluation_evaluation_0}:
+    rating: '2'
+
+-
+  I close this Evaluation by click on "Done" button of this wizard.
+-
+  !python {model: hr_evaluation.evaluation}: |
+    self.button_done(cr, uid, [ref("hr_evaluation.hr_evaluation_evaluation_0")], {"active_ids": [ref("hr_evaluation.menu_open_view_hr_evaluation_tree")]})

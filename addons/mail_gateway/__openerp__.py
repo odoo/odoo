@@ -26,13 +26,15 @@
     'description': """The generic email gateway system allows to send and receive emails
     * History for Emails
     * Easy Integration with any Module""",
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],
     'update_xml': [
         "mail_gateway_view.xml",
+        "res_partner_view.xml",
         'security/ir.model.access.csv'
+
     ],
     'demo_xml': [],
     'installable': True,

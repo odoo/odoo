@@ -31,24 +31,25 @@ class hr_attendance_error(osv.osv_memory):
         'init_date': fields.date('Starting Date', required=True),
         'end_date': fields.date('Ending Date', required=True),
         'max_delay': fields.integer('Max. Delay (Min)', required=True)
-
-                }
+    }
     _defaults = {
-         'init_date': lambda *a: time.strftime('%Y-%m-%d'),
-         'end_date': lambda *a: time.strftime('%Y-%m-%d'),
+         'init_date': time.strftime('%Y-%m-%d'),
+         'end_date': time.strftime('%Y-%m-%d'),
          'max_delay': 120,
-             }
+    }
 
     def print_report(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         emp_ids = []
-        data_error = self.read(cr, uid, ids)[0]
+        data_error = self.read(cr, uid, ids, context=context)[0]
         date_from = data_error['init_date']
         date_to = data_error['end_date']
-        cr.execute("select id from hr_attendance where employee_id =ANY(%s) and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action =ANY(%s) order by name" ,(context['active_ids'], date_to, date_from, ['sign_in','sign_out']))
+        cr.execute("SELECT id FROM hr_attendance WHERE employee_id IN %s AND to_char(name,'YYYY-mm-dd')<=%s AND to_char(name,'YYYY-mm-dd')>=%s AND action IN %s ORDER BY name" ,(tuple(context['active_ids']), date_to, date_from, tuple(['sign_in','sign_out'])))
         attendance_ids = [x[0] for x in cr.fetchall()]
         if not attendance_ids:
             raise osv.except_osv(_('No Data Available'), _('No records found for your selection!'))
-        attendance_records = self.pool.get('hr.attendance').browse(cr, uid, attendance_ids)
+        attendance_records = self.pool.get('hr.attendance').browse(cr, uid, attendance_ids, context=context)
 
         for rec in attendance_records:
             if rec.employee_id.id not in emp_ids:
@@ -58,12 +59,12 @@ class hr_attendance_error(osv.osv_memory):
              'ids': [],
              'model': 'hr.employee',
              'form': data_error
-                 }
+        }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'hr.attendance.error',
             'datas': datas,
-            }
+        }
 
 hr_attendance_error()
 

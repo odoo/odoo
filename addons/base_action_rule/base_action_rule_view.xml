@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem id="menu_base_action_rule" name="Action Rule"
+        <menuitem id="base.menu_base_action_rule" name="Automated Actions"
             groups="base.group_extended"
-            parent="base.menu_base_config" sequence="0" />
+            parent="base.menu_base_config" sequence="3" />
 
         <!--
             Action Rule Form View
@@ -14,16 +14,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action Rule">
-                    <field name="name" select="1"/>
-                    <field name="active"/>
-                    <field name="sequence"/>
-                    <field name="max_level" />
-                    <field name="domain" colspan="4"/>
+                    <group col="6" colspan="4">
+                        <field name="name"/>
+                        <field name="model_id" select="1" on_change="onchange_model_id(model_id)"/>
+                        <field name="filter_id" />
+                        <field name="sequence"/>
+                        <field name="active"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Conditions">
                             <group col="2" colspan="2" name="model">
                                 <separator colspan="4" string="Conditions on Model Fields"/>
-                                <field name="regex_name" string="Regex on Model Name" colspan="2"/>
+                                <field name="regex_name" colspan="2"/>
                                 <field name="trg_user_id"/>
                             </group>
                             <group col="2" colspan="2" name="partner">
@@ -54,25 +56,22 @@
                             <field name="act_state"/>
                             <separator colspan="4" string="Server Action to be Triggered"/>
                             <field name="server_action_id"/>
-                            <field name="filter_id"/>
                         </page>
                         <page string="Email Actions">
-<!--                        	<group col="4" colspan="2">-->
-	                            <separator colspan="4" string="Email Information"/>
-	                            <field name="act_mail_to_watchers"/>
-	                            <field name="act_mail_to_user"/>
-	                            <field colspan="4" name="act_mail_to_email"/>
-<!--	                        </group>-->
-<!--	                        <group col="4" colspan="2">-->
-	                            <separator colspan="4" string="Email Reminders"/>
-	                            <field name="act_remind_partner"/>
-	                            <field name="act_remind_attach"/>
-	                            <field name="act_remind_user"/>
-	                            <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
-	                                <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
-	                            </group>
-	                            <field colspan="4" name="act_email_cc"/>
-<!--	                        </group>-->
+                                <separator colspan="4" string="Email Reminders"/>
+                                <field name="act_remind_partner"/>
+                                <field name="act_remind_attach"/>
+                                <field name="act_remind_user"/>
+                                <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
+                                    <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
+                                </group>
+                                <separator colspan="4" string="Email Information"/>
+                                <field name="act_email_from" />
+                                <field name="act_email_to" />
+                                <field name="act_mail_to_user"/>
+                                <field colspan="4" name="act_mail_to_email"/>
+                                <field name="act_mail_to_watchers"/>
+                                <field colspan="4" name="act_email_cc"/>
                             <separator colspan="4" string="Email Body"/>
                             <field colspan="4" name="act_mail_body" height="250"
                             	nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />
@@ -100,10 +99,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Action Rule">
-                    <field name="name" colspan="4"/>
                     <field name="sequence"/>
-                    <field name="max_level"/>
-                    <field name="domain"/>
+                    <field name="name" colspan="4"/>
+                    <field name="filter_id"/>
                 </tree>
             </field>
            </record>
@@ -111,15 +109,16 @@
 <!-- Action Rule Action -->
 
            <record id="base_action_rule_act" model="ir.actions.act_window">
-            <field name="name">Action Rules</field>
+            <field name="name">Automated Actions</field>
             <field name="res_model">base.action.rule</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_base_action_rule_tree"/>
+            <field name="help">Create actions automatically triggered based on a user activity in the system.E.g.: an opportunity created by a specific user can be automatically maintained with a specific sales team, or an opportunity which still has status pending after 14 days triggers an automatic reminder email.</field>
         </record>
 
            <menuitem id="menu_base_action_rule_form"
-               parent="menu_base_action_rule" action="base_action_rule_act" />
+               parent="base.menu_base_action_rule" action="base_action_rule_act" sequence="1"/>
 
 
     </data>

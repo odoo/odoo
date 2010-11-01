@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,24 +15,27 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-
-from osv import fields,osv
+from osv import fields, osv
 
 class ir_sequence_fiscalyear(osv.osv):
     _name = 'account.sequence.fiscalyear'
     _rec_name = "sequence_main_id"
     _columns = {
-        "sequence_id": fields.many2one("ir.sequence", 'Sequence', required=True, ondelete='cascade'),
-        "sequence_main_id": fields.many2one("ir.sequence", 'Main Sequence', required=True, ondelete='cascade'),
-        "fiscalyear_id": fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, ondelete='cascade')
+        "sequence_id": fields.many2one("ir.sequence", 'Sequence', required=True,
+            ondelete='cascade'),
+        "sequence_main_id": fields.many2one("ir.sequence", 'Main Sequence',
+            required=True, ondelete='cascade'),
+        "fiscalyear_id": fields.many2one('account.fiscalyear', 'Fiscal Year',
+            required=True, ondelete='cascade')
     }
 
     _sql_constraints = [
-        ('main_id', 'CHECK (sequence_main_id != sequence_id)',  'Main Sequence must be different from current !'),
+        ('main_id', 'CHECK (sequence_main_id != sequence_id)',
+            'Main Sequence must be different from current !'),
     ]
 
 ir_sequence_fiscalyear()
@@ -40,17 +43,26 @@ ir_sequence_fiscalyear()
 class ir_sequence(osv.osv):
     _inherit = 'ir.sequence'
     _columns = {
-        'fiscal_ids' : fields.one2many('account.sequence.fiscalyear', 'sequence_main_id', 'Sequences')
+        'fiscal_ids': fields.one2many('account.sequence.fiscalyear',
+            'sequence_main_id', 'Sequences')
     }
-    def get_id(self, cr, uid, sequence_id, test='id', context={}):
-        cr.execute('select id from ir_sequence where '+test+'=%s and active=%s', (sequence_id, True,))
+    def get_id(self, cr, uid, sequence_id, test='id', context=None):
+        if context is None:
+            context = {}
+        cr.execute('select id from ir_sequence where '
+                   + test + '=%s and active=%s', (sequence_id, True,))
         res = cr.dictfetchone()
         if res:
-            for line in self.browse(cr, uid, res['id'], context=context).fiscal_ids:
-                if line.fiscalyear_id.id==context.get('fiscalyear_id', False):
-                    return super(ir_sequence, self).get_id(cr, uid, line.sequence_id.id, test="id", context=context)
-        return super(ir_sequence, self).get_id(cr, uid, sequence_id, test, context)
-ir_sequence()
+            for line in self.browse(cr, uid, res['id'],
+                                    context=context).fiscal_ids:
+                if line.fiscalyear_id.id == context.get('fiscalyear_id', False):
+                    return super(ir_sequence, self).get_id(cr, uid,
+                                                           line.sequence_id.id,
+                                                           test="id",
+                                                           context=context)
+        return super(ir_sequence, self).get_id(cr, uid, sequence_id, test,
+                                               context=context)
 
+ir_sequence()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

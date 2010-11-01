@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv,fields
+from osv import osv, fields
 
 class company(osv.osv):
     _inherit = 'res.company'
@@ -29,9 +29,9 @@ class company(osv.osv):
             "for security purpose"),
     }
     _defaults = {
-        'security_lead': lambda *a: 5.0,
+        'security_lead': 5.0,
     }
+    
 company()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -30,21 +30,23 @@ class hr_holidays_summary_employee(osv.osv_memory):
         'date_from': fields.date('From', required=True),
         'emp': fields.many2many('hr.employee', 'summary_emp_rel', 'sum_id', 'emp_id', 'Employee(s)'),
         'holiday_type': fields.selection([('Validated','Validated'),('Confirmed','Confirmed'),('both','Both Validated and Confirmed')], 'Select Holiday Type', required=True)
-                }
+    }
 
     _defaults = {
-         'date_from': time.strftime('%Y-%m-%d'),
+         'date_from': time.strftime('%Y-%m-01'),
          'holiday_type': 'Validated',
-                 }
+    }
 
     def print_report(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, [])[0]
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids, [], context=context)[0]
         data['emp'] = context['active_ids']
         datas = {
              'ids': [],
              'model': 'hr.employee',
              'form': data
-                 }
+            }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'holidays.summary',

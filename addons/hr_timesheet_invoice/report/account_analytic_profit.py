@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -34,8 +34,7 @@ class account_analytic_profit(report_sxw.rml_parse):
     def _user_ids(self, lines):
         user_obj=pooler.get_pool(self.cr.dbname).get('res.users')
         ids=list(set([b.user_id.id for b in lines]))
-        res=user_obj.browse(self.cr, self.uid, ids)
-        return res
+        return user_obj.browse(self.cr, self.uid, ids)
 
     def _journal_ids(self, form, user_id):
         line_obj=pooler.get_pool(self.cr.dbname).get('account.analytic.line')
@@ -47,8 +46,7 @@ class account_analytic_profit(report_sxw.rml_parse):
             ('user_id', '=', user_id),
             ])
         ids=list(set([b.journal_id.id for b in line_obj.browse(self.cr, self.uid, line_ids)]))
-        res=journal_obj.browse(self.cr, self.uid, ids)
-        return res
+        return journal_obj.browse(self.cr, self.uid, ids)
 
     def _line(self, form, journal_ids, user_ids):
         pool=pooler.get_pool(self.cr.dbname)
@@ -103,12 +101,11 @@ class account_analytic_profit(report_sxw.rml_parse):
                     res[id]['amount'] += xxx
             else:
                 res[id]['amount'] += xxx
-
             res[id]['cost']+=line.amount
             res[id]['unit_amount']+=line.unit_amount
         for id in res:
             res[id]['profit']=res[id]['amount']+res[id]['cost']
-            res[id]['eff']='%d' % (-res[id]['amount'] / res[id]['cost'] * 100,)
+            res[id]['eff']=res[id]['cost'] and '%d' % (-res[id]['amount'] / res[id]['cost'] * 100,) or 0.0
         return res.values()
 
     def _lines(self, form):
@@ -119,10 +116,8 @@ class account_analytic_profit(report_sxw.rml_parse):
             ('journal_id', 'in', form['journal_ids'][0][2]),
             ('user_id', 'in', form['employee_ids'][0][2]),
             ])
-        res=line_obj.browse(self.cr, self.uid, ids)
-        return res
+        return line_obj.browse(self.cr, self.uid, ids)
 
 report_sxw.report_sxw('report.account.analytic.profit', 'account.analytic.line', 'addons/hr_timesheet_invoice/report/account_analytic_profit.rml', parser=account_analytic_profit)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

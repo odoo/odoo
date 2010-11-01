@@ -23,15 +23,9 @@ from osv import osv,fields
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
+
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-    }
-
-    def _get_section(self, cr, uid, context):
-       return context.get('context_section_id',False)
-
-    _defaults = {
-          'section_id': _get_section
     }
 
 sale_order()

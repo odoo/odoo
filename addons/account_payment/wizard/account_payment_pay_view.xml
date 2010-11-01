@@ -7,13 +7,13 @@
              <field name="model">account.payment.make.payment</field>
              <field name="type">form</field>
              <field name="arch" type="xml">
-	             <form string="Make Payment">
-                 	<label string ="Are you sure you want to make payment?" />
-				    <group colspan="4" col="6">
-                       	<label string ="" colspan="2"/>
-     					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-               			<button name="launch_wizard" string="Print" type="object" icon="gtk-print" default_focus="1"/>
- 					</group>
+				<form string="Make Payment">
+					<separator string="Are you sure you want to make payment?"/>
+					<newline/>
+					<group  colspan="2" col="4">
+						<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+						<button name="launch_wizard" string="Yes" type="object" icon="gtk-ok" default_focus="1"/>
+	 				</group>
 				</form>
 			</field>
 		</record>

@@ -1,0 +1,84 @@
+-
+  In order to test hr_timesheet_invoice in OpenERP, I create account line to manage invoice based on costs.
+-
+  I create an account analytic line.
+-
+  !record {model: account.analytic.line, id: account_analytic_line_developyamlforhrmodule0}:
+    account_id: account.analytic_sednacom
+    amount: -1.0
+    company_id: base.main_company
+    date: '2010-05-30'
+    general_account_id: account.a_expense
+    journal_id: hr_timesheet.analytic_journal
+    name: develop yaml for hr module
+    product_id: hr_timesheet.product_consultant
+    product_uom_id: product.uom_hour
+    to_invoice: hr_timesheet_invoice.timesheet_invoice_factor2
+    unit_amount: 5.00
+    user_id: base.user_root
+
+-
+  Assign partner name and price list in analytic account.
+-
+  !record {model: account.analytic.account, id: account.analytic_sednacom}:
+    partner_id: base.res_partner_desertic_hispafuentes
+    pricelist_id: product.list0
+
+-
+  I create invoice on analytic Line using "Invoice analytic Line" wizard.
+-
+  !record {model: hr.timesheet.invoice.create, id: hr_timesheet_invoice_create_0}:
+    date: 1
+    name: 1
+    price: 1
+    product: hr_timesheet.product_consultant
+    time: 1
+
+-
+  I click on "Create Invoice" button of "Invoice analytic Line" wizard to create invoice.
+-
+  !python {model: hr.timesheet.invoice.create}: |
+    self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_0")], {"active_ids": [ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule0")]})
+
+-
+  I check that Invoice is created for this timesheet.
+-
+  !python {model: account.analytic.line}: |
+	account_id = self.pool.get('account.analytic.line')
+ 	accounts = account_id.browse(cr, uid, [ref("account_analytic_line_developyamlforhrmodule0")])[0]
+    exp = self.browse(cr, uid, [ref('account_analytic_line_developyamlforhrmodule0')])[0]
+    analytic_account_obj = self.pool.get('account.analytic.account')
+    data = self.pool.get('hr.timesheet.invoice.create').read(cr, uid, [ref("hr_timesheet_invoice_create_0")], [], context)[0]
+    account_ids = accounts['account_id']
+    for account in analytic_account_obj.browse(cr, uid, account_ids, context):
+            partner = account.partner_id.id
+
+    invoice_obj = self.pool.get('account.invoice')
+    invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', partner)])
+    invoice_id = invoice_obj.browse(cr, uid, invoice_ids)[0]
+
+    for invoice in invoice_id.invoice_line:
+      product = invoice.product_id.id
+
+    product_exp = data['product']
+
+    assert product == product_exp
+-
+  I create final invoice for this analytic account.
+-
+  !record {model: hr.timesheet.invoice.create.final, id: hr_timesheet_invoice_create_final_0}:
+    balance_product: hr_timesheet.product_consultant
+    date: 1
+    name: 1
+    price: 1
+    time: 1
+-
+  I click on "Create Invoice" button to create Invoice.
+-
+  !python {model: hr.timesheet.invoice.create.final}: |
+    self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_final_0")], {"active_ids": [ref("account.analytic_sednacom")]})
+
+-
+  I can also make some theoretical revenue reports.
+-
+  I can also see timesheet profit using Timesheet profit report.

@@ -31,7 +31,6 @@
 
 from osv import fields, osv
 
-
 class Bank(osv.osv):
     """Inherit res.bank class in order to add swiss specific field"""
     _inherit = 'res.bank'
@@ -47,9 +46,12 @@ Bank()
 class bvr_checkbox(osv.osv):
     """ Add function to generate function """
     _inherit = "res.partner.bank"
+
     _columns = {
         'print_bank' : fields.boolean('Print Bank on BVR'),
         'print_account' : fields.boolean('Print Account Number on BVR'),
         }
+
 bvr_checkbox()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

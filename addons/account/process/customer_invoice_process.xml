@@ -1,21 +1,21 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-        
-        <!--    
-            Process    
+
+        <!--
+            Process
         -->
-        
+
         <record id="process_process_invoiceprocess0" model="process.process">
             <field eval="1" name="active"/>
              <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;Customer Invoice&quot;&quot;&quot;" name="name"/>
         </record>
-        
-        <!--    
+
+        <!--
             Process Node
         -->
-        
+
         <record id="process_node_analytic0" model="process.node">
             <field name="menu_id" ref="account.account_analytic_def_account"/>
             <field name="model_id" ref="analytic.model_account_analytic_account"/>
@@ -26,7 +26,7 @@
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'close')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
-        
+
         <record id="process_node_draftinvoices0" model="process.node">
             <field name="menu_id" ref="account.menu_action_invoice_tree1"/>
             <field name="model_id" ref="account.model_account_invoice"/>
@@ -37,9 +37,9 @@
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-    
+
         <record id="process_node_invoiceinvoice0" model="process.node">
-            <field name="menu_id" ref="account.menu_finance_invoice"/>
+            <field name="menu_id" ref="account.menu_finance_receivables"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Create Invoice&quot;&quot;&quot;" name="name"/>
@@ -48,9 +48,9 @@
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-    
+
         <record id="process_node_accountingentries0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_form"/>
+            <field name="menu_id" ref="account.menu_action_move_journal_line_form"/>
             <field name="model_id" ref="account.model_account_move"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Accounting&quot;&quot;&quot;" name="name"/>
@@ -58,7 +58,7 @@
             <field name="process_id" ref="process_process_invoiceprocess0"/>
             <field eval="0" name="flow_start"/>
         </record>
-    
+
         <record id="process_node_bankstatement0" model="process.node">
             <field name="menu_id" ref="account.menu_bank_statement_tree"/>
             <field name="model_id" ref="account.model_account_bank_statement"/>
@@ -70,9 +70,9 @@
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
   		</record>
-    
+
         <record id="process_node_paymententries0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_form"/>
+            <field name="menu_id" ref="account.menu_action_move_journal_line_form"/>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Payment&quot;&quot;&quot;" name="name"/>
@@ -81,9 +81,8 @@
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'valid')&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-    
+
         <record id="process_node_reconciliation0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_search"/>
             <field name="model_id" ref="account.model_account_move_reconcile"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Reconciliation&quot;&quot;&quot;" name="name"/>
@@ -92,7 +91,7 @@
             <field eval="&quot;&quot;&quot;object.state=='valid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-    
+
         <record id="process_node_paidinvoice0" model="process.node">
             <field name="menu_id" ref="account.menu_action_invoice_tree1"/>
             <field name="model_id" ref="account.model_account_invoice"/>
@@ -103,9 +102,8 @@
             <field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-        
+
         <record id="process_node_accountingstatemententries0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_search"/>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Bank Statement&quot;&quot;&quot;" name="name"/>
@@ -115,103 +113,87 @@
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'valid')&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-        
 
-        <!--    
+
+        <!--
             Process Transition
         -->
-        
-        <record id="res_roles_invoice0" model="res.roles">
-            <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
-        </record>
-        
-        <record id="account.t5" model="workflow.transition">
-            <field name="role_id" ref="res_roles_invoice0"/>
-        </record>
-        
+
         <record id="process_transition_confirmstatementfromdraft0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirm statement&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The accountant confirms the statement.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_accountingstatemententries0"/>
             <field model="process.node" name="source_node_id" ref="account.process_node_draftstatement0"/>
         </record>
-    
+
         <record id="process_transition_analyticinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From analytic accounts&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Analytic costs (timesheets, some purchased products, ...) come from analytic accounts. These generate draft invoices.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_draftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_analytic0"/>
         </record>
-        
+
         <record id="process_transition_customerinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Validation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Draft invoices are checked, validated and printed.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_invoiceinvoice0"/>
             <field model="process.node" name="source_node_id" ref="process_node_draftinvoices0"/>
-            <field eval="[(6,0,[ref('account.t5')])]" name="transition_ids"/>
+            <field eval="[(6,0,[ref('account.pro2_to_open')])]" name="transition_ids"/>
         </record>
-    
+
         <record id="process_transition_validentries0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Validation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Accountant validates the accounting entries coming from the invoice.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_accountingentries0"/>
             <field model="process.node" name="source_node_id" ref="process_node_invoiceinvoice0"/>
         </record>
-    
+
         <record id="process_transition_entriesreconcile0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Accounting entries&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Accounting entries are the first input of the reconciliation.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_reconciliation0"/>
             <field model="process.node" name="source_node_id" ref="process_node_accountingentries0"/>
         </record>
-    
+
         <record id="process_transition_statemententries0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Validation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Manual or automatic creation of payment entries according to the statements&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_paymententries0"/>
             <field model="process.node" name="source_node_id" ref="process_node_bankstatement0"/>
         </record>
-    
+
         <record id="process_transition_paymentreconcile0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Payment entries&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Payment entries are the second input of the reconciliation.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_reconciliation0"/>
             <field model="process.node" name="source_node_id" ref="process_node_paymententries0"/>
         </record>
-    
+
         <record id="process_transition_reconcilepaid0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Payment&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;As soon as the reconciliation is done, the invoice can be paid.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_paidinvoice0"/>
             <field model="process.node" name="source_node_id" ref="process_node_reconciliation0"/>
         </record>
-        
-        <!--    
+
+        <!--
             Process Action
         -->
-        
+
         <record id="process_transition_action_createentries0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;action_move_create&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
             <field eval="&quot;&quot;&quot;Create entry&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_customerinvoice0"/>
         </record>
-    
+
     </data>
 </openerp>

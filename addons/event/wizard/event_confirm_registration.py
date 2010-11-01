@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class event_confirm_registration(osv.osv_memory):
     """
@@ -29,19 +30,40 @@ class event_confirm_registration(osv.osv_memory):
     _description = "Event Registraion"
 
     _columns = {
-                'msg': fields.text('Message', readonly=True), 
-               }
-    _defaults={
-                'msg':lambda *a:'The event limit is reached. What do you want to do?'
-               }
+        'msg': fields.text('Message', readonly=True),
+     }
+    _defaults = {
+        'msg': 'The event limit is reached. What do you want to do?'
+     }
 
-    def confirm(self, cr, uid, ids, context):
-        registration_obj = self.pool.get('event.registration')
-        reg_id = context.get('reg_id', False) or context.get('active_id', False)
-        if reg_id:
-            registration_obj.write(cr, uid, [reg_id], {'state':'open', })
-            registration_obj._history(cr, uid, [reg_id], 'Open', history=True)
-            registration_obj.mail_user(cr, uid, [reg_id])
+    def default_get(self, cr, uid, fields, context=None):
+        """
+        This function gets default values
+        """
+        if context is None:
+            context = {}
+        registration_pool = self.pool.get('event.registration')
+        registration_ids = context.get('registration_ids', [])
+        res = super(event_confirm_registration, self).default_get(cr, uid, fields, context=context)
+        msg = ""
+        overlimit_event_ids = []
+        for registration in registration_pool.browse(cr, uid, registration_ids, context=context):
+            total_confirmed = registration.event_id.register_current
+            register_max = registration.event_id.register_max
+            if registration.event_id.id not in overlimit_event_ids:
+                overlimit_event_ids.append(registration.event_id.id)
+                msg += _("Warning: The Event '%s' has reached its Maximum Limit (%s).") \
+                            %(registration.event_id.name, register_max)
+        if 'msg' in fields:
+            res.update({'msg': msg})
+        return res
+
+    def confirm(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        registration_pool = self.pool.get('event.registration')
+        registration_ids = context.get('registration_ids', [])
+        registration_pool.do_open(cr, uid, registration_ids, context=context)
         return {}
 
 event_confirm_registration()

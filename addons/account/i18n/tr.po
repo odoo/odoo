@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-02-14 03:27+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-09-29 09:15+0000\n"
+"Last-Translator: Omer Barlas <omer@barlas.com.tr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:08+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -168,11 +168,14 @@ msgid ""
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
 msgstr ""
+"Ayın günü, bulunduğumuz ayın son günü için -1 girin. Eğer pozitif bir değer "
+"girilir ise bir sonraki ayın gününü verir. Net günler için 0 girin (aksi "
+"takdirde ayın başına göre hesaplanır)."
 
 #. module: account
 #: view:account.move:0
 msgid "Total Credit"
-msgstr "Toplam alacak"
+msgstr "Toplam Alacak"
 
 #. module: account
 #: field:account.config.wizard,charts:0
@@ -252,7 +255,7 @@ msgstr "Tedarikçi vergileri"
 #. module: account
 #: view:account.move:0
 msgid "Total Debit"
-msgstr "Toplam borç"
+msgstr "Toplam Borç"
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -610,8 +613,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
-msgid "Fiscal Position Accounts Mapping"
-msgstr "Mali Durum Eşleme Hes."
+msgid "Accounts Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,contact_id:0
@@ -1004,8 +1007,8 @@ msgstr "Net Toplam:"
 #: field:account.invoice,fiscal_position:0
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
-msgid "Fiscal Position"
-msgstr "Mali Durum"
+msgid "Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -1026,8 +1029,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
-msgid "Fiscal Position Taxes Mapping"
-msgstr "Mali Durum Vergi Haritası"
+msgid "Taxes Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2_new
@@ -1113,8 +1116,8 @@ msgstr "Yeni Analiz Hesabı"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
-msgid "Fiscal Position Templates"
-msgstr "Mali Durum Şablonu"
+msgid "Fiscal Mapping Templates"
+msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
@@ -1145,8 +1148,8 @@ msgstr ""
 #. module: account
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
-msgid "Fiscal Position Template"
-msgstr "Mali Durum Şablonu"
+msgid "Fiscal Mapping Template"
+msgstr ""
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -1211,8 +1214,8 @@ msgstr "Firma Dövizi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Fiscal Position Template Account Mapping"
-msgstr "Mali Durum Şablonu Eşleme Hes."
+msgid "Template Account Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,parent_id:0
@@ -1789,7 +1792,7 @@ msgstr ""
 #. module: account
 #: help:res.partner,property_account_position:0
 msgid ""
-"The fiscal position will determine taxes and the accounts used for the the "
+"The fiscal mapping will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
 
@@ -2060,8 +2063,8 @@ msgstr "Müşteri Fatura İşlemleri"
 
 #. module: account
 #: rml:account.invoice:0
-msgid "Fiscal Position Remark :"
-msgstr "Mali Durum Beyanı :"
+msgid "Fiscal Mapping Remark :"
+msgstr ""
 
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,period_id:0
@@ -2132,7 +2135,8 @@ msgid "Analytic Entry"
 msgstr ""
 
 #. module: account
-#: view:res.company:0 field:res.company,overdue_msg:0
+#: view:res.company:0
+#: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
 msgstr "Vadesi Geçmiş Ödeme için Mesaj"
 
@@ -3625,8 +3629,8 @@ msgstr "Sıra No"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "Mali Durum için Şablon"
+msgid "Template for Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3730,8 +3734,8 @@ msgstr "Taslak Faturalar"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
-msgid "Fiscal Position Template Tax Mapping"
-msgstr "Mali Durum Şablonu Vergi Eşlemesi"
+msgid "Template Tax Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
@@ -4204,7 +4208,7 @@ msgstr "Ödeme Tarihi"
 #. module: account
 #: wizard_button:account_use_models,create,end:0
 msgid "Ok"
-msgstr ""
+msgstr "Tamam"
 
 #. module: account
 #: rml:account.invoice:0
@@ -5729,7 +5733,7 @@ msgstr ""
 #: selection:account.analytic.journal,type:0
 #: selection:account.journal,type:0
 msgid "Cash"
-msgstr ""
+msgstr "Nakit"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
@@ -5865,8 +5869,8 @@ msgstr "Ödeme Vadesi"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
-msgid "Fiscal Positions"
-msgstr "Mali Durumlar"
+msgid "Fiscal Mappings"
+msgstr ""
 
 #. module: account
 #: model:process.process,name:account.process_process_statementprocess0
@@ -5920,3 +5924,334 @@ msgstr ""
 #: wizard_button:account.subscription.generate,init,generate:0
 msgid "Compute Entry Dates"
 msgstr "Giriş Tarihlerini Hesapla"
+
+#. module: account
+#: view:board.board:0
+msgid "Analytic accounts to close"
+msgstr "Çözümleyici hesabı kapat"
+
+#. module: account
+#: view:board.board:0
+msgid "Draft invoices"
+msgstr "Taslak Faturlar"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.open_board_account
+#: model:ir.ui.menu,name:account.menu_board_account
+msgid "Accounting Dashboard"
+msgstr "Hesap Panosu"
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.act_my_account
+msgid "Accounts to invoice"
+msgstr "Hesapları faturala"
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.action_account_analytic_line_to_invoice
+msgid "Costs to invoice"
+msgstr "Maliyetleri faturala"
+
+#. module: account
+#: view:board.board:0
+msgid "Aged receivables"
+msgstr "Eski Alacaklar"
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Board for accountant"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_aged_income
+msgid "Income Accounts"
+msgstr "Gelir Hesapları"
+
+#. module: account
+#: view:board.board:0
+msgid "My indicators"
+msgstr "Göstergelerim"
+
+#. module: account
+#: view:board.board:0
+msgid "Account Board"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "Aged income"
+msgstr "Yaşlandırılmış Gelir"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,show_columns:0
+msgid "Show Debit/Credit Information"
+msgstr "Borç/Kredi Bilgisini Göster"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,account_choice:0
+msgid "All accounts"
+msgstr "Tüm hesaplar"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,period_manner:0
+msgid "Entries Selection Based on"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "Notification"
+msgstr "Bildirim"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Financial Period"
+msgstr "Mali Dönem"
+
+#. module: account
+#: model:ir.actions.report.xml,name:account.account_account_balance
+#: model:ir.actions.report.xml,name:account.account_account_balance_landscape
+msgid "Account balance"
+msgstr "Hesap bakiyesi"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period(s)"
+msgstr "Dönem(leri) Seç"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Percentage"
+msgstr "Oran"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Compare Selected Years In Terms Of"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Fiscal Year(s)(Maximum Three Years)"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,select_account:0
+msgid "Select Reference Account(for  % comparision)"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.wizard,name:account.wizard_account_balance_report
+msgid "Account balance-Compare Years"
+msgstr "Hesap Bakiyesi (Yıl Karşılaştırma)"
+
+#. module: account
+#: model:ir.module.module,description:account.module_meta_information
+msgid ""
+"Account Balance Module is an added functionality to the Financial Management "
+"module.\n"
+"\n"
+"    This module gives you the various options for printing balance sheet.\n"
+"\n"
+"    1. You can compare the balance sheet for different years.\n"
+"\n"
+"    2. You can set the cash or percentage comparison between two years.\n"
+"\n"
+"    3. You can set the referential account for the percentage comparison for "
+"particular years.\n"
+"\n"
+"    4. You can select periods as an actual date or periods as creation "
+"date.\n"
+"\n"
+"    5. You have an option to print the desired report in Landscape format.\n"
+"    "
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You have to select 'Landscape' option. Please Check it."
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,landscape:0
+msgid "Show Report in Landscape Form"
+msgstr ""
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Total :"
+msgstr "Toplam :"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,format_perc:0
+msgid "Show Comparision in %"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period"
+msgstr "Dönem seçin"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Report Options"
+msgstr "Rapor Seçenekleri"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Don't Compare"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,account_choice:0
+msgid "Show Accounts"
+msgstr "Hsapları Göster"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "1. You have selected more than 3 years in any case."
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Accounting and financial management-Compare Accounts"
+msgstr ""
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Year :"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You can select maximum 3 years. Please check again."
+msgstr "En fazla 3 yıl seçebilirsiniz. Lütfen tekrar kontrol edin."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"3. You have selected 'Percentage' option with more than 2 years, but you "
+"have not selected landscape format."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"You might have done following mistakes. Please correct them and try again."
+msgstr ""
+"Aşağıdaki hataları yapmış olabilirsiniz. Lütfen bunları düzeltin ve tekrar "
+"deneyin."
+
+#. module: account
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Creation Date"
+msgstr "Oluşturulma Tarihi"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"2. You have not selected 'Percentage' option, but you have selected more "
+"than 2 years."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid ""
+"You may have selected the compare options with more than 1 year with "
+"credit/debit columns and % option.This can lead contents to be printed out "
+"of the paper.Please try again."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You have to select at least 1 Fiscal Year. Try again."
+msgstr "En az 1 Mali Yıl seçmelisiniz. Tekrar deneyin."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Customize Report"
+msgstr "Raporu Yapılandır"
+
+#. module: account
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_view_created_invoice_dashboard
+msgid "Invoices Created Within Past 15 Days"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_invoice_created
+msgid "Report of Invoices Created within Last 15 days"
+msgstr ""
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Total Amount"
+msgstr "Toplam Tutar"
+
+#. module: account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr "Bugüne kadarki Yaşlandırılmış Alacak"
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_account_receivable
+msgid "Receivable accounts"
+msgstr "Alıcılar Hesabı"
+
+#. module: account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,description:report_account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,shortdesc:report_account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
+#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr "Hesap Tipi Bazında Bakiye"
+
+#. module: account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr "Yıl:Hafta"
+
+#. module: account
+#: field:report.invoice.created,create_date:0
+msgid "Create Date"
+msgstr "Tarih Oluştur"
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr "Yaşlandırılmış Alacak"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Untaxed Amount"
+msgstr "Tutar"

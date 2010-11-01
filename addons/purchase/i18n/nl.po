@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-14 22:29+0000\n"
-"Last-Translator: Pieter J. Kersten (EduSense BV) <Unknown>\n"
+"PO-Revision-Date: 2010-08-07 07:37+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 03:58+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -74,6 +74,7 @@ msgstr "Goedgekeurde inkoop"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Factuur uitzondering"
 
@@ -132,6 +133,7 @@ msgstr "Goedgekeurde inkoopfacturen"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Goedgekeurd"
 
@@ -284,6 +286,7 @@ msgstr "Orderregel"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Bevestigd"
 
@@ -306,10 +309,11 @@ msgstr "Factuurcontrole"
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
-msgstr "RFQ"
+msgstr "Offerte-aanvraag"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "Wachten"
 
@@ -391,6 +395,7 @@ msgstr "Order referentie"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Gereed"
 
@@ -407,7 +412,7 @@ msgstr "Wanneer inkoopfacturen worden gecontroleerd op basis van orders."
 #. module: purchase
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML, kan overzicht niet weergeven!"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoicecontrol0
@@ -442,6 +447,7 @@ msgstr "Keur inkooporder goed na bevestiging"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Verzenduitzondering"
 
@@ -722,7 +728,7 @@ msgstr "Verzamel inkooporders"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action_new
@@ -900,3 +906,39 @@ msgstr ""
 #: view:purchase.order.line:0
 msgid "Stock Moves"
 msgstr "Goederenstromen"
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Waiting Schedule"
+msgstr ""
+
+#. module: purchase
+#: field:report.purchase.order.category,price_total:0
+#: field:report.purchase.order.product,price_total:0
+msgid "Total Price"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Quotation"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Manual in progress"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "In progress"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr ""

@@ -148,10 +148,8 @@ class report_sales_by_margin_pos(osv.osv):
     _description = "Sales by margin"
     _auto = False
     _columns = {
-#        'pos_name': fields.char('POS Order', size=64, readonly=True),
         'product_name':fields.char('Product Name', size=64, readonly=True),
         'date_order': fields.date('Order Date',required=True, select=True),
-     #   'amount': fields.float('Total', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
         'qty': fields.float('Qty', readonly=True, select=True),
         'net_margin_per_qty':fields.float('Net margin per Qty', readonly=True, select=True),
@@ -197,14 +195,12 @@ class report_sales_by_margin_pos_month(osv.osv):
     _description = "Sales by margin monthly"
     _auto = False
     _columns = {
-
         'product_name':fields.char('Product Name', size=64, readonly=True),
         'date_order': fields.date('Order Date',required=True, select=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
         'qty': fields.float('Qty', readonly=True, select=True),
         'net_margin_per_qty':fields.float('Net margin per Qty', readonly=True, select=True),
         'total':fields.float('Margin', readonly=True, select=True),
-
     }
 
     def init(self, cr):

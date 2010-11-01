@@ -25,11 +25,12 @@
     'version': '1.0',
     'category': 'Generic Modules/Sales & MRP',
     'description': """
-    This module provides facility to the user to install mrp and sale modules 
-    at a time. It is basically used when we want to keep track of production 
-    orders generated from sale orders.
+    This module provides facility to the user to install mrp and sale modules
+    at a time. It is basically used when we want to keep track of production
+    orders generated from sales order.
+    It adds sales name and sales Reference on production order
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['mrp', 'sale'],
     'init_xml': [],
@@ -37,6 +38,7 @@
         'sale_mrp_view.xml',
     ],
     'demo_xml': [],
+    'test':['test/sale_mrp.yml'],
     'installable': True,
     'active': False,
     'certificate': '',

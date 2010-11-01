@@ -39,42 +39,6 @@ class crm_phonecall_report(osv.osv):
     _description = "Phone calls by user and section"
     _auto = False
     
-    def _get_data(self, cr, uid, ids, field_name, arg, context={}):
-
-        """ @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of case and section Data’s IDs
-            @param context: A standard dictionary for contextual values """
-
-        res = {}
-        state_perc = 0.0
-        avg_ans = 0.0
-
-        for case in self.browse(cr, uid, ids, context):
-            if field_name != 'avg_answers':
-                state = field_name[5:]
-                cr.execute("select count(*) from crm_opportunity where \
-                    section_id =%s and state='%s'"%(case.section_id.id, state))
-                state_cases = cr.fetchone()[0]
-                perc_state = (state_cases / float(case.nbr)) * 100
-
-                res[case.id] = perc_state
-            else:
-                model_name = self._name.split('report.')
-                if len(model_name) < 2:
-                    res[case.id] = 0.0
-                else:
-                    model_name = model_name[1]
-
-                    cr.execute("select count(*) from crm_case_log l, ir_model m \
-                         where l.model_id=m.id and m.model = '%s'" , model_name)
-                    logs = cr.fetchone()[0]
-
-                    avg_ans = logs / case.nbr
-                    res[case.id] = avg_ans
-
-        return res
-
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
@@ -82,9 +46,6 @@ class crm_phonecall_report(osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
-        'perc_done': fields.function(_get_data, string='%Done', method=True, type="float"),
-        'perc_cancel': fields.function(_get_data, string='%Cancel', method=True, type="float"),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -100,9 +61,6 @@ class crm_phonecall_report(osv.osv):
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.phonecall')]", readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'opening_date': fields.date('Opening Date', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
@@ -114,15 +72,14 @@ class crm_phonecall_report(osv.osv):
         """ Phone Calls By User And Section
             @param cr: the current row, from the database cursor,
         """
-
         tools.drop_view_if_exists(cr, 'crm_phonecall_report')
         cr.execute("""
             create or replace view crm_phonecall_report as (
                 select
-                    min(c.id) as id,
-                    to_char(c.create_date, 'YYYY') as name,
-                    to_char(c.create_date, 'MM') as month,
-                    to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    id,
+                    to_char(c.date, 'YYYY') as name,
+                    to_char(c.date, 'MM') as month,
+                    to_char(c.date, 'YYYY-MM-DD') as day,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
@@ -131,39 +88,14 @@ class crm_phonecall_report(osv.osv):
                     c.section_id,
                     c.categ_id,
                     c.partner_id,
-                    c.stage_id,
                     c.duration,
                     c.company_id,
                     c.priority,
-                    (select 1) as nbr,
-                    0 as avg_answers,
-                    0.0 as perc_done,
-                    0.0 as perc_cancel,
+                    1 as nbr,
                     date_trunc('day',c.create_date) as create_date,
-                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
-                    avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open
-                    
+                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
+                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 from
                     crm_phonecall c
-                where c.categ_id in (select res_id from ir_model_data where (name = 'categ_phone1' or name ='categ_phone2'))
-                group by 
-                    to_char(c.create_date, 'YYYY'),
-                    to_char(c.create_date, 'MM'),\
-                    c.state,
-                    c.user_id,
-                    c.section_id,
-                    c.categ_id,
-                    c.partner_id,
-                    c.company_id,
-                    c.duration,
-                    c.priority,
-                    to_char(c.date_open, 'YYYY-MM-DD'),
-                    to_char(c.date_closed, 'YYYY-mm-dd'),
-                    c.stage_id,
-                    to_char(c.create_date, 'YYYY-MM-DD'),
-                    c.create_date
             )""")
-
 crm_phonecall_report()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

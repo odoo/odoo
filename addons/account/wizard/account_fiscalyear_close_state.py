@@ -20,8 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
-import tools
 
 class account_fiscalyear_close_state(osv.osv_memory):
     """
@@ -31,9 +29,8 @@ class account_fiscalyear_close_state(osv.osv_memory):
     _description = "Fiscalyear Close state"
     _columns = {
        'fy_id': fields.many2one('account.fiscalyear', \
-                                 'Fiscal Year to close', required=True),
-       'sure': fields.boolean('Check this box', required=False)
-              }
+                                 'Fiscal Year to close', required=True, help="Select a fiscal year to close"),
+    }
 
     def data_save(self, cr, uid, ids, context=None):
         """
@@ -43,10 +40,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
         @param ids: List of Account fiscalyear close state’s IDs
 
         """
-        for data in  self.read(cr, uid, ids,context=context):
-            if not data['sure']:
-                raise osv.except_osv(_('UserError'), _('Closing of states \
-cancelled, please check the box !'))
+        for data in  self.read(cr, uid, ids, context=context):
             fy_id = data['fy_id']
 
             cr.execute('UPDATE account_journal_period ' \
@@ -58,6 +52,11 @@ cancelled, please check the box !'))
                     'WHERE fiscalyear_id = %s', ('done', fy_id))
             cr.execute('UPDATE account_fiscalyear ' \
                     'SET state = %s WHERE id = %s', ('done', fy_id))
+
+            # Log message for Fiscalyear
+            fy_pool = self.pool.get('account.fiscalyear')
+            fy_code = fy_pool.browse(cr, uid, fy_id, context=context).code
+            fy_pool.log(cr, uid, fy_id, "Fiscal year '%s' is closed, no more modification allowed." % (fy_code))
             return {}
 
 account_fiscalyear_close_state()

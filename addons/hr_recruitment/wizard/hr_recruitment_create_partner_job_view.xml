@@ -9,9 +9,7 @@
             <field name="arch" type="xml">
 			<form string="Convert To Partner">
 			    <group col="4" colspan="6">
-			            <label string="Are you sure you want to create a partner based on this job request ?" colspan="4"/>
-       					<label string="You may have to verify that this partner does not exist already." colspan="4"/>
-        				<!--field name="close"/-->
+			            <label string="Are you sure you want to create a partner based on this job request ?"/>
 				</group>
 				<separator colspan="4"/>
 			    <group col="2" colspan="4">
@@ -29,16 +27,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-        </record>
-
-		<record model="ir.values" id="hr_recruitment_partner_create_values">
-            <field name="model_id" ref="model_hr_applicant" />
-            <field name="object" eval="1" />
-            <field name="name">Create Partner</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_recruitment_partner_create'))" />
-            <field name="key">action</field>
-            <field name="model">hr.applicant</field>
         </record>
 
 	</data>

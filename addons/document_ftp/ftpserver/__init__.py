@@ -25,13 +25,8 @@ import authorizer
 import abstracted_fs
 import netsvc
 from tools import config
-from tools.misc import detect_ip_addr
 
-if detect_ip_addr:
-    HOST = config.get('ftp_server_host', detect_ip_addr())
-else:
-    HOST = config.get('ftp_server_host', '127.0.0.1')
-
+HOST = config.get('ftp_server_host', '127.0.0.1')
 PORT = int(config.get('ftp_server_port', '8021'))
 PASSIVE_PORTS = None
 pps = config.get('ftp_server_passive_ports', '').split(':')
@@ -64,6 +59,7 @@ if HOST.lower() == 'none':
 else:
     netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Serving FTP on %s:%s\n" % (HOST, PORT))
     ds = ftp_server()
+    ds.daemon = True
     ds.start()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

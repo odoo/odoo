@@ -20,13 +20,12 @@
 ##############################################################################
 
 import time
-import datetime
-import mx.DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 import pooler
 import tools
 from osv import fields,osv
-
 
 def _code_get(self, cr, uid, context={}):
     acc_type_obj = self.pool.get('account.account.type')
@@ -75,7 +74,7 @@ class temp_range(osv.osv):
     _description = 'A Temporary table used for Dashboard view'
 
     _columns = {
-        'name' : fields.char('Range',size=64)
+        'name': fields.char('Range',size=64)
     }
 
 temp_range()
@@ -122,20 +121,19 @@ class report_aged_receivable(osv.osv):
         """ This view will be used in dashboard
         The reason writing this code here is, we need to check date range from today to first date of fiscal year.
         """
-#        ranges = _get_ranges(cr) # Gets the ranges for the x axis of the graph (name column values)
         pool_obj_fy = pooler.get_pool(cr.dbname).get('account.fiscalyear')
         today = time.strftime('%Y-%m-%d')
         fy_id = pool_obj_fy.find(cr, uid, exception=False)
         LIST_RANGES = []
         if fy_id:
             fy_start_date = pool_obj_fy.read(cr, uid, fy_id, ['date_start'])['date_start']
-            fy_start_date = mx.DateTime.strptime(fy_start_date, '%Y-%m-%d')
-            last_month_date = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
+            fy_start_date = datetime.strptime(fy_start_date, '%Y-%m-%d')
+            last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
 
             while (last_month_date > fy_start_date):
                 LIST_RANGES.append(today + " to " + last_month_date.strftime('%Y-%m-%d'))
-                today = (last_month_date- 1).strftime('%Y-%m-%d')
-                last_month_date = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
+                today = (last_month_date- relativedelta(days=1)).strftime('%Y-%m-%d')
+                last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
 
             LIST_RANGES.append(today +" to " + fy_start_date.strftime('%Y-%m-%d'))
             cr.execute('delete from temp_range')
@@ -167,7 +165,7 @@ class report_invoice_created(osv.osv):
         'amount_untaxed': fields.float('Untaxed', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'date_invoice': fields.date('Date Invoiced', readonly=True),
+        'date_invoice': fields.date('Invoice Date', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'residual': fields.float('Residual', readonly=True),
         'state': fields.selection([
@@ -179,7 +177,7 @@ class report_invoice_created(osv.osv):
             ('cancel','Cancelled')
         ],'State', readonly=True),
         'origin': fields.char('Source Document', size=64, readonly=True, help="Reference of the document that generated this invoice report."),
-        'create_date' : fields.datetime('Create Date', readonly=True)
+        'create_date': fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
 
@@ -207,15 +205,15 @@ class report_account_type_sales(osv.osv):
     _description = "Report of the Sales by Account Type"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'period_id': fields.many2one('account.period', 'Force Period',readonly=True),
-        'product_id': fields.many2one('product.product', 'Product',readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'period_id': fields.many2one('account.period', 'Force Period', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
     }
     _order = 'name desc,amount_total desc'
 
@@ -249,15 +247,15 @@ class report_account_sales(osv.osv):
     _description = "Report of the Sales by Account"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'period_id': fields.many2one('account.period', 'Force Period',readonly=True),
-        'product_id': fields.many2one('product.product', 'Product',readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'period_id': fields.many2one('account.period', 'Force Period', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'account_id': fields.many2one('account.account', 'Account', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
     }
     _order = 'name desc,amount_total desc'
 
@@ -286,4 +284,3 @@ class report_account_sales(osv.osv):
 report_account_sales()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -1,31 +1,17 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
-	  <menuitem
+    <data>
+      <menuitem
             id="hr.menu_hr_reporting"
             name="Reporting"
             parent="hr.menu_hr_root"
             sequence="10" />
+
      <menuitem
             id="menu_hr_reporting_holidays"
             name="Holidays"
             parent="hr.menu_hr_reporting"
-            sequence="6" />
-	<!--<wizard string="Holidays by Departement"
-		  name="hr.holidays.summary"
-		  id="holidays_summary"/>-->
-	<!--<menuitem name="Leaves by Departement" parent="menu_hr_reporting_holidays"
-                  icon="STOCK_PRINT"
-		 action="holidays_summary"
-		 type="wizard"
-		 id="menu_holidays_summary" sequence="20"/>
-	 <record model='ir.ui.menu' id="menu_holidays_summary">
-		 <field eval="[(6,0,[ref('hr.group_hr_manager')])]" name="groups_id"/>
-  	 </record>
--->
-
-	<!--<wizard string="Employee's Holidays"
-		model="hr.employee" name="hr.holidays.summary.employee"
-		keyword="client_print_multi" id="wizard_holidays_summary" />-->
+            sequence="6"
+            groups="base.group_hr_manager" />
  	</data>
 </openerp>

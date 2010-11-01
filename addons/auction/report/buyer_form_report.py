@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -44,7 +44,7 @@ class buyer_form_report(report_sxw.rml_parse):
             taxes.append(lot.author_right)
         if lot.auction_id:
             taxes += lot.auction_id.buyer_costs
-        tax=self.pool.get('account.tax').compute(self.cr,self.uid,taxes,lot.obj_price,1)
+        tax=self.pool.get('account.tax').compute_all(self.cr, self.uid, taxes, lot.obj_price, 1)
         for t in tax:
             amount+=t['amount']
         return amount
@@ -55,13 +55,10 @@ class buyer_form_report(report_sxw.rml_parse):
         for object in objects:
             partner = ret_dict.get(object.ach_uid.id,False)
             if not partner:
-                ret_dict[object.ach_uid.id] = {'partner' : object.ach_uid or False,'lots':[object]}
+                ret_dict[object.ach_uid.id] = {'partner' : object.ach_uid or False, 'lots':[object]}
             else:
                 lots = partner.get('lots')
                 lots.append(object)
-#       buyer_ids=self.pool.get(auction.lots).read(cr,uid,lot)
-
-
         return ret_dict.values()
 
     def grand_buyer_total(self,o):

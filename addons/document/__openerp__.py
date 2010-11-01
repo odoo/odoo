@@ -22,36 +22,42 @@
 
 {
     'name': 'Integrated Document Management System',
-    'version': '1.99',
+    'version': '2.0',
     'category': 'Generic Modules/Others',
     'description': """This is a complete document management system:
     * User Authentication
     * Document Indexation :- .pptx and .docx files are not support in windows platform.
-
+    * Dashboard for Document that includes:
+        * New Files (list)
+        * Files by Resource Type (graph)
+        * Files by Partner (graph)
+        * Files by Month (graph)
     ATTENTION:
     - When you install this module in a running company that have already PDF files stored into the database,
       you will lose them all.
     - After installing this module PDF's are no longer stored into the database,
       but in the servers rootpad like /server/bin/filestore.
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process'],
+    'depends': ['process','board', 'knowledge'],
     'init_xml': [],
     'update_xml': [
+        'security/document_security.xml',
         'document_view.xml',
         'document_data.xml',
-        'security/document_security.xml',
+#        'wizard/document_configuration_view.xml',
         'security/ir.model.access.csv',
-        'report/document_report_view.xml'
+        'report/document_report_view.xml',
+        'board_document_view.xml',
     ],
-    'demo_xml': [ 'document_demo.xml',],
+    'demo_xml': [ 'document_demo.xml','board_document_demo.xml'],
     'test': [
-        'test/document_test.yml',
+        'test/document_test2.yml',
     ],
     'installable': True,
     'active': False,
-    'certificate': None,
+    'certificate': '0070515416461',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

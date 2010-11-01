@@ -1,60 +1,81 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <openerp>
-    <data>
-    <record id="view_base_report_designer" model="ir.ui.view">
-            <field name="name">OpenOffice Report Designer</field>
-            <field name="model">base.openoffice</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_installer"/>
-            <field name="arch" type="xml">
-            <data>
-                <form position="attributes">
-                  <attribute name="string">Base Report Designer Module Installation</attribute>
-                </form>
-                <separator string="title" position="attributes">
-                   <attribute name="string">Base Report Designer</attribute>
-                </separator>
-              <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                <attribute name='string'></attribute>
-                <attribute name='rowspan'>15</attribute>
+  <data>
+
+
+    <record id="view_report_designer_installer" model="ir.ui.view">
+      <field name="name">Form View: OpenERP Report Designer Installation</field>
+      <field name="model">base_report_designer.installer</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="arch" type="xml">
+          <data>
+              <form position="attributes">
+                  <attribute name="string">OpenERP Report Designer Configuration</attribute>
+              </form>
+              <separator string="title" position="attributes">
+                   <attribute name="string">OpenERP Report Designer</attribute>
+              </separator>
+              <xpath expr="//label[@string='description']" position="attributes">
+                  <attribute name="string">This plug-in allows you to create/modify OpenERP Reports into OpenOffice Writer.</attribute>
               </xpath>
-              <group colspan="8" height="250" width="700">
-                <separator string="OpenOffice Report Desinger" colspan="4"/>
-                <field name="base_desinger_url"  widget="url" />
-                <newline/>
-                <field name="plugin_file"/>
-                <button name="add_plugin" string="Click To Get the plugin"
-                    colspan="1" type="object" icon="gtk-execute" />
-
-                <newline/>
-                <field name="pdf_file"/>
-                <button name="process_pdf_file" string="Click To Documenation"
-                    colspan="1" type="object" icon="gtk-execute" />
-                <newline/>
-                <separator string="Openoffice Report Desinger plugin installation note." colspan="4"/>
-                <label colspan="2" string="Save The  plug­in and Documenation read the step to How to install it from Documenation"/>
-                <button special="cancel" string="Close" icon="gtk-cancel"/>
-            </group>
-           </data>
-            </field>
-        </record>
-
-        <record id="action_base_report_designer" model="ir.actions.act_window">
-            <field name="name">Base Report Designer Module Installation</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">base.openoffice</field>
-            <field name="view_id" ref="view_base_report_designer"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <record id="report_designer_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_base_report_designer"/>
-      <field name="sequence">4</field>
+              <xpath expr="//button[@string='Install Modules']" position="replace">
+                <button colspan="1" icon="gtk-close" special="cancel" string="_Close" invisible="not context.get('menu',False)"/>
+                <button name="action_next" icon="gtk-go-forward"
+                        type="object" string="Configure" colspan="1" invisible="context.get('menu',False)"/>
+              </xpath>
+              <xpath expr="//button[@string='Skip']" position="replace">
+                <button name="action_skip" icon="gtk-jump-to" special="cancel"
+                        type="object" string="Skip" colspan="1" invisible="context.get('menu',False)"/>
+              </xpath>
+              <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                  <attribute name='string'></attribute>
+                  <attribute name='rowspan'>15</attribute>
+                </xpath>
+                <group colspan="8" position="replace">
+              <group colspan="8" height="450" width="750">
+                  <field name="name" invisible="1"/>
+                  <field name="plugin_file" filename="name"/>
+                  <separator string="Installation and Configuration Steps" colspan="4"/>
+                  <field name="description" nolabel="1" colspan="8"/>
+              </group>
+              </group>
+          </data>
+      </field>
     </record>
 
-  
-   </data>
+    <record id="action_report_designer_installer" model="ir.actions.act_window">
+      <field name="name">OpenERP Report Designer Installation</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">base_report_designer.installer</field>
+      <field name="view_id" ref="view_report_designer_installer"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="report_designer_installer_todo" model="ir.actions.todo">
+        <field name="action_id" ref="action_report_designer_installer"/>
+        <field name="sequence">3</field>
+        <field name="restart">always</field>
+    </record>
+
+    <record id="action_report_designer_wizard" model="ir.actions.act_window">
+      <field name="name">OpenERP Report Designer</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">base_report_designer.installer</field>
+      <field name="view_id" ref="view_report_designer_installer"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+      <field name="context">{'menu':True}</field> 
+    </record>
+
+    <menuitem parent="base.reporting_menu" name="Report Designer"
+        action="action_report_designer_wizard"
+        id="menu_action_report_designer_wizard" sequence="70" />
+
+  </data>
 </openerp>
+
 

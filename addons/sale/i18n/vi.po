@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-18 05:50+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-10-04 06:52+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:09+0000\n"
+"X-Launchpad-Export-Date: 2010-10-05 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -35,17 +35,17 @@ msgstr "Xác nhận mua hàng"
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr ""
+msgstr "Đặt giao hàng"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr ""
+msgstr "Đối tác phân phối"
 
 #. module: sale
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Tên mẫu không hợp lệ khi định nghĩa hành động"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -58,11 +58,13 @@ msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
 msgstr ""
+"Nếu bạn không có đủ hàng để giao hàng toàn bộ một lần, bạn có chấp nhận giao "
+"hàng từng phần hay không?"
 
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "from stock"
-msgstr ""
+msgstr "theo nhu cầu dự báo"
 
 #. module: sale
 #: field:sale.config.picking_policy,step:0
@@ -100,13 +102,13 @@ msgstr "Sửa lại"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Hóa đơn ngoại lệ"
 
 #. module: sale
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this invoice"
-msgstr ""
+msgstr "Đây là danh sách các sản phẩm đã chọn được tạo ra cho hóa đơn này"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
@@ -126,7 +128,7 @@ msgstr "Xác nhận"
 #. module: sale
 #: view:sale.order:0
 msgid "Make Invoice"
-msgstr ""
+msgstr "Lập hóa đơn"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -139,6 +141,8 @@ msgid ""
 "Whenever confirm button is clicked, the draft state is moved to manual. that "
 "is, quotation is moved to  sale order."
 msgstr ""
+"Bất kỳ khi nào nút xác nhận được chọn, trạng thái dự thảo sẽ được chuyển "
+"sang thủ công. Nghĩa là, báo giá được chuyển thành đơn chào hàng."
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
@@ -186,14 +190,15 @@ msgid "Shipping Policy"
 msgstr "Hình thức vận chuyển"
 
 #. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Đã hủy bỏ"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Shipping Exception"
-msgstr ""
+msgstr "Vận chuyển ngoại lệ"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -228,13 +233,13 @@ msgstr "Tất cả một lúc"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleprocurement0
 msgid "Procurement is created after confirmation of sale order."
-msgstr ""
+msgstr "Việc thu mua hàng được tạo sau khi có xác nhận của đơn chào hàng."
 
 #. module: sale
 #: field:sale.order,project_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
-msgstr "Аналітичний Рахунок"
+msgstr "Tài khoản Phân tích"
 
 #. module: sale
 #: rml:sale.order:0
@@ -254,7 +259,7 @@ msgstr "Thông tin thêm"
 #. module: sale
 #: rml:sale.order:0
 msgid "Fax :"
-msgstr "Факс :"
+msgstr "Fax :"
 
 #. module: sale
 #: field:sale.order.line,price_net:0
@@ -270,7 +275,7 @@ msgstr "Thông tin các dơn đặt hàng"
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "Số lượng (Đơn vị bán)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -280,6 +285,11 @@ msgid ""
 "choose if you invoice based on ordered or shipped quantities. If the product "
 "is a service, shipped quantities means hours spent on the associated tasks."
 msgstr ""
+"Đơn chào hàng sẽ tự động tạo hóa đơn gợi ý (hóa đơn dự thảo). Số lượng yêu "
+"cầu và số lượng giao hàng có thể không giống nhau. Bạn phải chọn nếu bạn lập "
+"hóa đơn dựa trên số lượng đặt hàng hay số lượng giao hàng. Nếu sản phẩm là "
+"một dịch vụ, số lượng giao hàng có nghĩa là số giờ đã dùng để thực hiện các "
+"công việc liên quan."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -349,17 +359,17 @@ msgstr "KM(%)"
 #: view:sale.order.line:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr "Рядки Інвойсу"
+msgstr "Dòng hoá đơn"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
 msgid "Force Assignation"
-msgstr ""
+msgstr "Phân phối lực lượng"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Untaxed amount"
-msgstr "Сума без податку"
+msgstr "Giá trị miễn thuế"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_packing0
@@ -367,6 +377,9 @@ msgid ""
 "Packing list is created when 'Assign' is being clicked after confirming the "
 "sale order. This transaction moves the sale order to packing list."
 msgstr ""
+"Bảng kê bao bì hàng hóa được tạo khi nút 'Chỉ định' được chọn sau khi xác "
+"nhận đơn chào hàng. Giao dịch này chuyển đơn chào hàng sang bảng kê bao bì "
+"hàng hóa."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree8
@@ -385,6 +398,8 @@ msgid ""
 "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
 "will automatic create after delivery."
 msgstr ""
+"Khi bạn chọn chính sách vận chuyển = 'Tự động xuất hóa đơn sau khi giao "
+"hàng', nó sẽ tự động tạo sau khi giao hàng."
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
@@ -406,7 +421,7 @@ msgstr "Số lượng (đv)"
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree1
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr "Рядки Замовлення на Продаж"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -443,7 +458,7 @@ msgstr "Thông tin tham khảo"
 #: view:sale.order.line:0
 #: selection:sale.order.line,state:0
 msgid "Done"
-msgstr ""
+msgstr "Hoàn tất"
 
 #. module: sale
 #: field:sale.order,pricelist_id:0
@@ -474,7 +489,7 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,payment_account_id:0
 msgid "Payment Accounts"
-msgstr ""
+msgstr "Tài khoản thanh toán"
 
 #. module: sale
 #: constraint:product.template:0
@@ -505,7 +520,7 @@ msgstr "Tài khoản thanh toán"
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,create,end:0
 msgid "Close"
-msgstr ""
+msgstr "Đóng"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_invoice0
@@ -533,18 +548,18 @@ msgstr "Giảm giá (%)"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "Draft customer invoice, to be reviewed by accountant."
-msgstr ""
+msgstr "Hóa đơn khách hàng dự thảo, sẽ được kế toán xem xét lại."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree3
 #: model:ir.ui.menu,name:sale.menu_action_order_tree3
 msgid "Sales Order To Be Invoiced"
-msgstr ""
+msgstr "Đơn chào hàng sẽ được lập hóa đơn"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
 msgid "Procurement for each line"
-msgstr ""
+msgstr "Thu mua hàng cho mỗi sản phẩm"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree10
@@ -555,7 +570,7 @@ msgstr ""
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "Invoices"
-msgstr ""
+msgstr "Hóa đơn"
 
 #. module: sale
 #: view:sale.order:0
@@ -580,7 +595,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "Đóng gói"
 
 #. module: sale
 #: model:ir.module.module,shortdesc:sale.module_meta_information
@@ -807,7 +822,7 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "VAT"
-msgstr "ПДВ"
+msgstr "Thuế giá trị gia tăng (GTGT)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -1272,6 +1287,246 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sale Order line"
+msgstr ""
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Dashboard for sales"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sale Dashboard"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales of the month"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales manager board"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "Cases of the month"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "My open quotations"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "Cases statistics"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+msgid "Top ten sales of the month"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,price_average:0
+#: field:report.sale.order.product,price_average:0
+msgid "Average Price"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_created
+msgid "Report of Created Sale Order"
+msgstr ""
+
+#. module: sale
+#: view:report.sale.order.category:0
+msgid "Sales Orders by category"
+msgstr ""
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_6
+#: model:ir.report.custom,title:sale.ir_report_custom_6
+msgid "Monthly cumulated sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_product
+msgid "Sales Orders by Products"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu1
+msgid "Monthly Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_product_tree
+#: model:ir.model,name:sale.model_report_turnover_per_product
+#: view:report.turnover.per.product:0
+msgid "Turnover Per Product"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_82
+msgid "All Months"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,price_total:0
+#: field:report.sale.order.product,price_total:0
+msgid "Total Price"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_category
+msgid "Sales Orders by Categories"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_sale_list
+#: model:ir.ui.menu,name:sale.menu_report_order_sale_list
+msgid "Sales of the Month"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_product
+msgid "Sales by Product (this month)"
+msgstr ""
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_4
+#: model:ir.report.custom,title:sale.ir_report_custom_4
+msgid "Monthly sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_category_all
+#: view:report.sale.order.category:0
+msgid "Sales by Category of Products"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu3
+msgid "Monthly Cumulated Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,quantity:0
+#: field:report.sale.order.product,quantity:0
+msgid "# of Products"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_product_all
+#: view:report.sale.order.product:0
+msgid "Sales by Product"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_81
+msgid "This Month"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,category_id:0
+msgid "Categories"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_created_sale_order_dashboard
+msgid "Created Sale Orders"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_80
+msgid "Reporting"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_month_tree
+#: model:ir.model,name:sale.model_report_turnover_per_month
+#: view:report.turnover.per.month:0
+msgid "Turnover Per Month"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu2
+msgid "Daily Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_83
+msgid "Graphs"
+msgstr ""
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "Manual in progress"
+msgstr ""
+
+#. module: sale
+#: field:report.turnover.per.month,turnover:0
+#: field:report.turnover.per.product,turnover:0
+msgid "Total Turnover"
+msgstr ""
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "In progress"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_category
+msgid "Sales by Category of Product (this month)"
+msgstr ""
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_5
+#: model:ir.report.custom,title:sale.ir_report_custom_5
+msgid "Daily sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,name:0
+#: field:report.sale.order.product,name:0
+#: field:report.turnover.per.month,name:0
+msgid "Month"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,count:0
+#: field:report.sale.order.product,count:0
+msgid "# of Lines"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.created,create_date:0
+msgid "Create Date"
+msgstr ""
+
+#. module: sale
+#: view:report.sale.order.created:0
+msgid "Created Sales orders"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_so_pipeline
+#: view:sale.order:0
+msgid "Sales by State"
 msgstr ""
 
 #~ msgid "Customer Ref."

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+<document filename="Request for Quotation.pdf">
+  <template pageSize="(595.0,842.0)" title="Request for Quotation" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="23.0" y1="43.0" width="530" height="799"/>
     </pageTemplate>
@@ -33,16 +33,16 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="Standard" fontName="Times-Roman"/>
-    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Table Contents" fontName="Times-Roman"/>
-    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
-    <paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="Index" fontName="Times-Roman"/>
-    <paraStyle name="Footer" fontName="Times-Roman"/>
-    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Helvetica"/>
+    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER"/>
+    <paraStyle name="Caption" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Helvetica"/>
+    <paraStyle name="Footer" fontName="Helvetica"/>
+    <paraStyle name="Horizontal Line" fontName="Helvetica" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
     <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
@@ -66,8 +66,8 @@
     <paraStyle name="terp_default_8_italic" rightIndent="0.0" leftIndent="20.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Note" rightIndent="0.0" leftIndent="9.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Space bet user and signature" fontName="Helvetica" fontSize="4.0" leading="5" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <images/>
   </stylesheet>
-  <images/>
   <story>
     <para style="terp_default_9">[[repeatIn(objects,'order')]]</para>
     <para style="terp_default_9">[[ setLang(order.partner_id.lang) ]]</para>
@@ -76,11 +76,11 @@
         <td>
           <para style="terp_default_Bold_9">Expected Delivery address:</para>
           <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id.partner_id.name) or (order.warehouse_id and order.warehouse_id.name) or '']]</para>
-          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.title) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.title) or ' ']] [[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.name) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.name) or '' ]]</para>
           <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.street) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.street) or '']]</para>
-          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.street2) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.street2) or '']]</para>
-          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.zip) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.zip) or '' ]] [[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.city) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.city) or '' ]]</para>
-          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.state_id and order.dest_address_id.state_id.name) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.state_id and order.warehouse_id.partner_address_id.state_id.name) or '']] [[(order.dest_address_id and order.dest_address_id and order.dest_address_id.country_id and order.dest_address_id.country_id.name) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.country_id and order.warehouse_id.partner_address_id.country_id.name) or '' ]]</para>
+          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.street2) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.street2) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.zip) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.zip) or '' ]][[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.city) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.city) or '' ]]</para>
+          <para style="terp_default_9">[[(order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.state_id and order.warehouse_id.partner_address_id.state_id.name) or order.partner_address_id and order.partner_address_id.state_id and order.partner_address_id.state_id.name or removeParentNode('para') ]] </para>
+          <para style="terp_default_9">[[(order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.country_id and order.warehouse_id.partner_address_id.country_id.name) or order.partner_address_id.country_id.name ]]</para>
         </td>
         <td>
           <para style="terp_default_9">
@@ -88,17 +88,18 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ order.partner_id.name ]] [[ order.partner_id.title or '' ]]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.title) or '' ]] [[ order.partner_address_id.name ]] </para>
-          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.street) or '']] [[ order.partner_address_id.street2 ]]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.zip) or '' ]] [[ (order.partner_address_id and order.partner_address_id.city) or '' ]]</para>
-          <para style="terp_default_9">[[ order.partner_address_id.state_id.code ]] [[ (order.partner_address_id and order.partner_address_id.country_id and order.partner_address_id.country_id.code) or '' ]]</para>
+          <para style="terp_default_9">[[ (order.partner_id and order.partner_id.title and order.partner_id.title.name) or '' ]] [[ order.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.street) or '']]</para>
+          <para style="terp_default_9">[[ (order.partner_address_id.street2) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.zip) or '' ]][[ (order.partner_address_id and order.partner_address_id.city) or '' ]]</para>
+          <para style="terp_default_9">[[ (order.partner_address_id.state_id.name) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.country_id and order.partner_address_id.country_id.name) or '' ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tel.: [[ (order.partner_address_id and order.partner_address_id.phone) or '' ]]</para>
-          <para style="terp_default_9">Fax: [[ (order.partner_address_id and order.partner_address_id.fax) or '' ]]</para>
-          <para style="terp_default_9">TVA: [[ (order.partner_id and order.partner_id.vat) or '' ]]</para>
+          <para style="terp_default_9">Tel.: [[ (order.partner_address_id and order.partner_address_id.phone) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Fax: [[ (order.partner_address_id and order.partner_address_id.fax) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">TVA: [[ (order.partner_id and order.partner_id.vat) or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -123,14 +124,14 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_9">[[repeatIn(order.order_line,'order_line')]]</para>
-      <blockTable colWidths="371.0,100.0,39.0,20.0" style="Table_Product_Line">
+      <para style="terp_default_2">[[repeatIn(order.order_line,'order_line')]]</para>
+      <blockTable colWidths="370.0,100.0,39.0,20.0" style="Table_Product_Line">
         <tr>
           <td>
             <para style="terp_default_9">[[ order_line.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ formatLang(order_line.date_planned, date_time = True) ]]</para>
+            <para style="terp_default_Centre_9">[[ formatLang(order_line.date_planned, date = True) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(order_line.product_qty )]]</para>

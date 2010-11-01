@@ -28,17 +28,25 @@ class l10n_be_vat_declaration(osv.osv_memory):
     _name = "l1on_be.vat.declaration"
     _description = "Vat Declaration"
 
+    def _get_xml_data(self, cr, uid, context=None):
+        if context.get('file_save', False):
+            return base64.encodestring(context['file_save'].encode('utf8'))
+        return ''
+
     _columns = {
         'name': fields.char('File Name', size=32),
         'period_id': fields.many2one('account.period','Period', required=True),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)]),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
-        'ask_resitution': fields.boolean('Ask Restitution'),
-        'ask_payment': fields.boolean('Ask Payment'),
+        'ask_resitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
+        'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to made or not?'),
         'client_nihil': fields.boolean('Last Declaration of Enterprise',help='Tick this case only if it concerns only the last statement on the civil or cessation of activity'),
     }
     _defaults = {
         'msg': 'Save the File with '".xml"' extension.',
+        'file_save': _get_xml_data,
+        'name': 'vat_declaration.xml',
     }
 
     def create_xml(self, cr, uid, ids, context=None):
@@ -46,18 +54,20 @@ class l10n_be_vat_declaration(osv.osv_memory):
         obj_tax_code = self.pool.get('account.tax.code')
         obj_acc_period = self.pool.get('account.period')
         obj_user = self.pool.get('res.users')
-        obj_comp = self.pool.get('res.company')
-        obj_data = self.pool.get('ir.model.data')
+        mod_obj = self.pool.get('ir.model.data')
 
         if context is None:
             context = {}
 
-        list_of_tags=['00','01','02','03','44','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','81','82','83','84','85','86','87','88','91']
-        obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
-        user_cmpny = obj_company.name
+        list_of_tags = ['00','01','02','03','44','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','81','82','83','84','85','86','87','88','91']
+        data_tax = self.browse(cr, uid, ids[0])
+        if data_tax.tax_code_id:
+            obj_company = data_tax.tax_code_id.company_id
+        else:
+            obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
         vat_no = obj_company.partner_id.vat
         if not vat_no:
-            osv.except_osv(_('Data Insufficient'), _('No VAT  Number Associated with Main Company!'))
+            raise osv.except_osv(_('Data Insufficient'), _('No VAT Number Associated with Main Company!'))
 
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
@@ -66,15 +76,13 @@ class l10n_be_vat_declaration(osv.osv_memory):
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
         address = post_code = city = country_code = ''
-        city, post_code, address, country_code =self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
-        year_id = obj_fyear.find(cr, uid)
+        city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
 
         account_period = obj_acc_period.browse(cr, uid, data['period_id'], context=context)
-        period_code = account_period.code
 
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
-        data_of_file='<?xml version="1.0"?>\n<VATSENDING xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-14.xml">'
-        data_of_file +='\n\t<DECLARER>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<NAME>'+str(obj_company.name)+'</NAME>\n\t\t<ADDRESS>'+address+'</ADDRESS>'
+        data_of_file = '<?xml version="1.0"?>\n<VATSENDING xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-16.xml">'
+        data_of_file +='\n\t<DECLARER>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<NAME>'+ obj_company.name +'</NAME>\n\t\t<ADDRESS>'+address+'</ADDRESS>'
         data_of_file +='\n\t\t<POSTCODE>'+post_code+'</POSTCODE>\n\t\t<CITY>'+city+'</CITY>\n\t\t<COUNTRY>'+country_code+'</COUNTRY>\n\t\t<SENDINGREFERENCE>'+send_ref+'</SENDINGREFERENCE>\n\t</DECLARER>'
         data_of_file +='\n\t<VATRECORD>\n\t\t<RECNUM>1</RECNUM>\n\t\t<VATNUMBER>'+((vat_no and str(vat_no[2:])) or '')+'</VATNUMBER>\n\t\t<DPERIODE>\n\t\t\t'
 
@@ -92,16 +100,31 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
         for item in tax_info:
+            if item['code'] == '91' and ending_month != 12:
+                #the tax code 91 can only be send for the declaration of December
+                continue
             if item['code']:
                 if item['code'] == '71-72':
                     item['code']='71'
                 if item['code'] in list_of_tags:
                     data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(abs(int(item['sum_period']*100))) +  '</D'+str(int(item['code'])) +'>'
 
-        data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
-        data['file_save'] = base64.encodestring(data_of_file)
-        self.write(cr, uid, ids, {'file_save': data['file_save'], 'name': 'vat_declare.xml'}, context=context)
-        return True
+        data_of_file += '\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
+        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context['file_save'] = data_of_file
+        return {
+            'name': _('Save XML For Vat declaration'),
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'l1on_be.vat.declaration',
+            'views': [(resource_id,'form')],
+            'view_id': 'view_vat_save',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
+
 l10n_be_vat_declaration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

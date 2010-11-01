@@ -42,7 +42,7 @@
     seller_ids:
       - delay: 1
         name: base.res_partner_maxtor
-        qty: 300.0
+        min_qty: 300.0
     standard_price: 1.0
     supply_method: buy
     type: product
@@ -68,7 +68,7 @@
     seller_ids:
       - delay: 1
         name: base.res_partner_asus
-        qty: 100.0
+        min_qty: 100.0
     standard_price: 1.0
     supply_method: buy
     type: product
@@ -177,18 +177,8 @@
     purch_ids = self.search(cr, uid, [('partner_id.name','=','Maxtor')])
     wf_service = netsvc.LocalService("workflow")
     for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
--
-  I get the approval from the supplier. So I approve my purchase orders.
--
-  !python {model: purchase.order}: |
-    from tools.translate import _
-    import netsvc
-    purch_ids = self.search(cr, uid, [('state','=','confirmed')])
-    assert purch_ids, _('No Confirmed Purchase Orders found!')
-    wf_service = netsvc.LocalService("workflow")
-    for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_approve', cr)
+        wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
+
 -
   I confirm purchase order for Buttons.
 -
@@ -197,18 +187,8 @@
     purch_ids = self.search(cr, uid, [('partner_id.name','=','ASUStek')])
     wf_service = netsvc.LocalService("workflow")
     for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
--
-  I get the approval from the supplier. So I approve my purchase orders.
--
-  !python {model: purchase.order}: |
-    from tools.translate import _
-    import netsvc
-    purch_ids = self.search(cr, uid, [('state','=','confirmed')])
-    assert purch_ids, _('No Confirmed Purchase Orders found!')
-    wf_service = netsvc.LocalService("workflow")
-    for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_approve', cr)
+        wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
+
 -
   I Check incoming shipments for cloth. And receive products.
 -
@@ -221,8 +201,7 @@
 -
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
     date: '2010-04-30 16:53:36'
-    partner_id: base.res_partner_maxtor
-    address_id: base.res_partner_address_wong
+
 -
   I make my picking done.
 -
@@ -231,8 +210,6 @@
      picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Wong'),('state','=','assigned')])
      partial = self.browse(cr, uid, 1, context)
      partial_datas = {
-            'partner_id' : partial.partner_id and partial.partner_id.id or False,
-            'address_id' : partial.address_id and partial.address_id.id or False,
             'delivery_date' : partial.date         
      }
      for pick in pick_obj.browse(cr, uid, picking_ids):
@@ -260,8 +237,7 @@
 -
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
     date: '2010-04-30 16:53:36'
-    partner_id: base.res_partner_maxtor
-    address_id: base.res_partner_address_wong
+
 -
   I make my picking done.
 -
@@ -270,8 +246,6 @@
      picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Tang'),('state','=','assigned')])
      partial = self.browse(cr, uid, 1, context)
      partial_datas = {
-            'partner_id': partial.partner_id and partial.partner_id.id or False,
-            'address_id': partial.address_id and partial.address_id.id or False,
             'delivery_date': partial.date         
      }
      for pick in pick_obj.browse(cr, uid, picking_ids):
@@ -310,7 +284,7 @@
     assert prod_ids, _('No Ready Manufacturing Orders found!')
     wf_service = netsvc.LocalService("workflow")
     for p_id in prod_ids:
-    	wf_service.trg_validate(uid, 'mrp.production', p_id, 'button_produce', cr)
+        wf_service.trg_validate(uid, 'mrp.production', p_id, 'button_produce', cr)
 -
   I create record for producing products with quantity 5.00.
 -
@@ -324,7 +298,7 @@
     from tools.translate import _
     prod_obj = self.pool.get('mrp.production')
     prod_ids = prod_obj.search(cr, uid, [('product_id.name','=','Shirt')])
-    self.do_produce(cr, uid, [1], context={'active_ids': prod_ids})
+    self.do_produce(cr, uid, [ref('mrp_product_produce0')], context={'active_ids': prod_ids})
 -
   I create record for remaining products with quantity 35.00.
 -
@@ -340,7 +314,7 @@
     from tools.translate import _
     stock_obj = self.pool.get('stock.move')
     stock_ids = stock_obj.search(cr, uid, [('product_id.name','=','Buttons')])
-    self.do_move_consume(cr, uid, [1], context={'active_ids': stock_ids})
+    self.do_move_consume(cr, uid, [ref('stock_move_consume0')], context={'active_ids': stock_ids})
 -
   And finally production order is done.
 -

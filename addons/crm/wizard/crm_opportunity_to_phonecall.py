@@ -33,6 +33,9 @@ class crm_opportunity2phonecall(osv.osv_memory):
         'user_id' : fields.many2one('res.users', "Assign To"),
         'date': fields.datetime('Date' , required=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', required=True, \
+                        domain="['|',('section_id','=',False),('section_id','=',section_id),\
+                        ('object_id.model', '=', 'crm.phonecall')]"), 
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -47,6 +50,12 @@ class crm_opportunity2phonecall(osv.osv_memory):
         @return : default values of fields.
         """
         opp_obj = self.pool.get('crm.lead')
+        categ_id = False
+        data_obj = self.pool.get('ir.model.data')
+        res_id = data_obj._get_id(cr, uid, 'crm', 'categ_phone2')
+        if res_id:
+            categ_id = data_obj.browse(cr, uid, res_id, context=context).res_id
+
         record_ids = context and context.get('active_ids', []) or []
         res = super(crm_opportunity2phonecall, self).default_get(cr, uid, fields, context=context)
         for opp in opp_obj.browse(cr, uid, record_ids, context=context):
@@ -56,6 +65,8 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 res.update({'user_id': opp.user_id and opp.user_id.id or False})
             if 'section_id' in fields:
                 res.update({'section_id': opp.section_id and opp.section_id.id or False})
+            if 'categ_id' in fields:
+                res.update({'categ_id': categ_id})
         return res
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -90,8 +101,6 @@ class crm_opportunity2phonecall(osv.osv_memory):
         res = mod_obj.read(cr, uid, result, ['res_id'])
 
         data_obj = self.pool.get('ir.model.data')
-        categ_id = mod_obj._get_id(cr, uid, 'crm', 'categ_phone1')
-        categ_id = data_obj.browse(cr, uid, categ_id, context=context).res_id
 
         # Select the view
         id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
@@ -107,16 +116,16 @@ class crm_opportunity2phonecall(osv.osv_memory):
                         'name' : opp.name,
                         'case_id' : opp.id ,
                         'user_id' : this.user_id and this.user_id.id or False,
-                        'categ_id' : categ_id,
+                        'categ_id' : this.categ_id.id,
                         'description' : opp.description or False,
                         'date' : this.date,
-                        'section_id' : opp.section_id and opp.section_id.id or False,
+                        'section_id' : this.section_id.id or opp.section_id.id or False,
                         'partner_id': opp.partner_id and opp.partner_id.id or False,
                         'partner_address_id': opp.partner_address_id and opp.partner_address_id.id or False,
                         'partner_phone' : opp.phone or (opp.partner_address_id and opp.partner_address_id.phone or False),
                         'partner_mobile' : opp.partner_address_id and opp.partner_address_id.mobile or False,
                         'priority': opp.priority,
-                        'opp_id': opp.id
+                        'opportunity_id': opp.id
                 }, context=context)
 
                 phonecall_obj.case_open(cr, uid, [new_case])

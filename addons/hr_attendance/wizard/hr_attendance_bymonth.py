@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import osv, fields
@@ -26,26 +27,27 @@ class hr_attendance_bymonth(osv.osv_memory):
     _name = 'hr.attendance.month'
     _description = 'Print Monthly Attendance Report'
     _columns = {
-        'month': fields.selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
-                                  'Month', required=True),
+        'month': fields.selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], 'Month', required=True),
         'year': fields.integer('Year', required=True)
-                }
+    }
     _defaults = {
-         'month': lambda * a: time.gmtime()[1],
-         'year': lambda * a: time.gmtime()[0],
-             }
+         'month': time.gmtime()[1],
+         'year': time.gmtime()[0],
+    }
 
     def print_report(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         datas = {
              'ids': [],
              'model': 'hr.employee',
              'form': self.read(cr, uid, ids)[0]
-                 }
+        }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'hr.attendance.bymonth',
             'datas': datas,
-            }
+        }
 
 hr_attendance_bymonth()
 

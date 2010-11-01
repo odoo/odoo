@@ -47,7 +47,6 @@ class crm_partner2opportunity(osv.osv_memory):
         @return : default values of fields.
         """
         partner_obj = self.pool.get('res.partner')
-        #data = context and context.get('active_id', False) or False
         data = context and context.get('active_ids', []) or []
         res = super(crm_partner2opportunity, self).default_get(cr, uid, fields, context=context)
 
@@ -57,13 +56,6 @@ class crm_partner2opportunity(osv.osv_memory):
             if 'partner_id' in fields:
                 res.update({'partner_id': data and data[0] or False})
         return res
-
-    def _select_data(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        part_obj = pool.get('res.partner')
-        part = part_obj.read(cr, uid, data['id' ], ['name'])
-        return {'partner_id' : data['id'], 'name' : part['name'] }
-
 
     def make_opportunity(self, cr, uid, ids, context):
         """

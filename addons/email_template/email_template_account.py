@@ -1,5 +1,26 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2009 Sharoon Thomas
+#    Copyright (C) 2004-2010 OpenERP SA (<http://www.openerp.com>)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
+#
+##############################################################################
+
 from osv import osv, fields
-from html2text import html2text
 import re
 import smtplib
 import base64
@@ -9,14 +30,40 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.header import decode_header, Header
 from email.utils import formatdate
-import re
 import netsvc
-import string
-import email
-import time, datetime
-import email_template_engines
+import datetime
 from tools.translate import _
 import tools
+import logging
+
+EMAIL_PATTERN = re.compile(r'([^()\[\] ,<:\\>@";]+@[^()\[\] ,<:\\>@";]+)') # See RFC822
+def extract_emails(emails_str):
+    """
+    Returns a list of email addresses recognized in a string, ignoring the rest of the string.
+    extract_emails('a@b.com,c@bcom, "John Doe" <d@b.com> , e@b.com') -> ['a@b.com','c@bcom', 'd@b.com', 'e@b.com']"
+    """
+    return EMAIL_PATTERN.findall(emails_str)
+
+
+def extract_emails_from_dict(addresses={}):
+    """
+    Extracts email addresses from a dictionary with comma-separated address string values, handling
+    separately the To, CC, BCC and Reply-To addresses.
+
+    :param addresses: a dictionary of addresses in the form {'To': 'a@b.com,c@bcom; d@b.com;e@b.com' , 'CC': 'e@b.com;f@b.com', ... }
+    :return: a dictionary with a list of separate addresses for each header (To, CC, BCC), with an additional key 'all-recipients'
+             containing all addresses for the 'To', 'CC', 'BCC' entries.
+    """
+    result = {'all-recipients':[]}
+    keys = ['To', 'CC', 'BCC', 'Reply-To']
+    for each in keys:
+        emails = extract_emails(addresses.get(each, u''))
+        while u'' in emails:
+            emails.remove(u'')
+        result[each] = emails
+        if each != 'Reply-To':
+            result['all-recipients'].extend(emails)
+    return result
 
 class email_template_account(osv.osv):
     """
@@ -33,25 +80,32 @@ class email_template_account(osv.osv):
         'name': fields.char('Description',
                         size=64, required=True,
                         readonly=True, select=True,
+                        help="The description is used as the Sender name along with the provided From Email, \
+unless it is already specified in the From Email, e.g: John Doe <john@doe.com>", 
                         states={'draft':[('readonly', False)]}),
+        'auto_delete': fields.boolean('Auto Delete', size=64, readonly=True, 
+                                      help="Permanently delete emails after sending", 
+                                      states={'draft':[('readonly', False)]}),
         'user':fields.many2one('res.users',
                         'Related User', required=True,
                         readonly=True, states={'draft':[('readonly', False)]}),
-        'email_id': fields.char('Email ID',
+        'email_id': fields.char('From Email',
                         size=120, required=True,
                         readonly=True, states={'draft':[('readonly', False)]} ,
-                        help=" eg:yourname@yourdomain.com "),
+                        help="eg: 'john@doe.com' or 'John Doe <john@doe.com>'"),
         'smtpserver': fields.char('Server',
                         size=120, required=True,
                         readonly=True, states={'draft':[('readonly', False)]},
-                        help="Enter name of outgoing server,eg:smtp.gmail.com "),
-        'smtpport': fields.integer('SMTP Port ',
+                        help="Enter name of outgoing server, eg: smtp.yourdomain.com"),
+        'smtpport': fields.integer('SMTP Port',
                         size=64, required=True,
                         readonly=True, states={'draft':[('readonly', False)]},
-                        help="Enter port number,eg:SMTP-587 "),
+                        help="Enter port number, eg: 25 or 587"),
         'smtpuname': fields.char('User Name',
                         size=120, required=False,
-                        readonly=True, states={'draft':[('readonly', False)]}),
+                        readonly=True, states={'draft':[('readonly', False)]},
+                        help="Specify the username if your SMTP server requires authentication, "
+                        "otherwise leave it empty."),
         'smtppass': fields.char('Password',
                         size=120, invisible=True,
                         required=False, readonly=True,
@@ -62,18 +116,19 @@ class email_template_account(osv.osv):
         'smtpssl':fields.boolean('SSL/TLS (only in python 2.6)',
                         states={'draft':[('readonly', False)]}, readonly=True),
         'send_pref':fields.selection([
-                                      ('html', 'HTML otherwise Text'),
-                                      ('text', 'Text otherwise HTML'),
-                                      ('both', 'Both HTML & Text')
+                                      ('html', 'HTML, otherwise Text'),
+                                      ('text', 'Text, otherwise HTML'),
+                                      ('alternative', 'Both HTML & Text (Alternative)'),
+                                      ('mixed', 'Both HTML & Text (Mixed)')
                                       ], 'Mail Format', required=True),
         'company':fields.selection([
                         ('yes', 'Yes'),
                         ('no', 'No')
-                        ], 'Company Mail A/c',
+                        ], 'Corporate',
                         readonly=True,
-                        help="Select if this mail account does not belong" \
-                        "to specific user but the organisation as a whole." \
-                        "eg:info@somedomain.com",
+                        help="Select if this mail account does not belong " \
+                        "to specific user but to the organization as a whole. " \
+                        "eg: info@companydomain.com",
                         required=True, states={
                                            'draft':[('readonly', False)]
                                            }),
@@ -83,7 +138,7 @@ class email_template_account(osv.osv):
                                   ('suspended', 'Suspended'),
                                   ('approved', 'Approved')
                                   ],
-                        'Status', required=True, readonly=True),
+                        'State', required=True, readonly=True),
     }
 
     _defaults = {
@@ -97,9 +152,12 @@ class email_template_account(osv.osv):
                                                         context
                                                         )['name'],
          'state':lambda * a:'draft',
+         'smtpport':lambda *a:25,
+         'smtpserver':lambda *a:'localhost',
+         'company':lambda *a:'yes',
          'user':lambda self, cursor, user, context:user,
-         'send_pref':lambda * a: 'html',
-         'smtptls':lambda * a:True,
+         'send_pref':lambda *a: 'html',
+         'smtptls':lambda *a:True,
      }
     
     _sql_constraints = [
@@ -108,7 +166,10 @@ class email_template_account(osv.osv):
          'unique (email_id)',
          'Another setting already exists with this email ID !')
     ]
-    
+
+    def name_get(self, cr, uid, ids, context=None):
+        return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
+
     def _constraint_unique(self, cursor, user, ids):
         """
         This makes sure that you dont give personal 
@@ -133,25 +194,7 @@ class email_template_account(osv.osv):
          'Error: You are not allowed to have more than 1 account.',
          [])
     ]
-    
-    def on_change_emailid(self, cursor, user, ids, name=None, email_id=None, context=None):
-        """
-        Called when the email ID field changes.
-        
-        UI enhancement
-        Writes the same email value to the smtpusername
-        and incoming username
-        """
-        #TODO: Check and remove the write. Is it needed?
-        self.write(cursor, user, ids, {'state':'draft'}, context=context)
-        return {
-                'value': {
-                          'state': 'draft',
-                          'smtpuname':email_id,
-                          'isuser':email_id
-                          }
-                }
-    
+
     def get_outgoing_server(self, cursor, user, ids, context=None):
         """
         Returns the Out Going Connection (SMTP) object
@@ -185,7 +228,7 @@ class email_template_account(osv.osv):
                     raise error
                 try:
                     if serv.has_extn('AUTH') or this_object.smtpuname or this_object.smtppass:
-                        serv.login(this_object.smtpuname, this_object.smtppass)
+                        serv.login(str(this_object.smtpuname), str(this_object.smtppass))
                 except Exception, error:
                     raise error
                 return serv
@@ -238,35 +281,12 @@ class email_template_account(osv.osv):
             return False
                       
 #**************************** MAIL SENDING FEATURES ***********************#
-    def split_to_ids(self, ids_as_str):
-        """
-        Identifies email IDs separated by separators
-        and returns a list
-        TODO: Doc this
-        "a@b.com,c@bcom; d@b.com;e@b.com->['a@b.com',...]"
-        """
-        email_sep_by_commas = ids_as_str \
-                                    .replace('; ', ',') \
-                                    .replace(';', ',') \
-                                    .replace(', ', ',')
-        return email_sep_by_commas.split(',')
+
+
+
     
-    def get_ids_from_dict(self, addresses={}):
-        """
-        TODO: Doc this
-        """
-        result = {'all':[]}
-        keys = ['To', 'CC', 'BCC']
-        for each in keys:
-            ids_as_list = self.split_to_ids(addresses.get(each, u''))
-            while u'' in ids_as_list:
-                ids_as_list.remove(u'')
-            result[each] = ids_as_list
-            result['all'].extend(ids_as_list)
-        return result
-    
-    def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, context=None):
-        #TODO: Replace all this crap with a single email object
+    def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, message_id=None, context=None):
+        #TODO: Replace all this with a single email object
         if body is None:
             body = {}
         if payload is None:
@@ -279,20 +299,38 @@ class email_template_account(osv.osv):
             serv = self.smtp_connection(cr, uid, id)
             if serv:
                 try:
-                    msg = MIMEMultipart()
+                    # Prepare multipart containers depending on data
+                    text_subtype = (core_obj.send_pref == 'alternative') and 'alternative' or 'mixed'
+                    # Need a multipart/mixed wrapper for attachments if content is alternative
+                    if payload and text_subtype == 'alternative':
+                        payload_part = MIMEMultipart(_subtype='mixed')
+                        text_part = MIMEMultipart(_subtype=text_subtype)
+                        payload_part.attach(text_part)
+                    else:
+                        # otherwise a single multipart/mixed will do the whole job 
+                        payload_part = text_part = MIMEMultipart(_subtype=text_subtype)
+
                     if subject:
-                        msg['Subject'] = subject
-                    sender_name = Header(core_obj.name, 'utf-8').encode()
-                    msg['From'] = sender_name + " <" + core_obj.email_id + ">"
-                    msg['Organization'] = tools.ustr(core_obj.user.company_id.name)
-                    msg['Date'] = formatdate()
-                    addresses_l = self.get_ids_from_dict(addresses) 
+                        payload_part['Subject'] = subject
+                    from_email = core_obj.email_id
+                    if '<' in from_email:
+                        # We have a structured email address, keep it untouched
+                        payload_part['From'] = Header(core_obj.email_id, 'utf-8').encode()
+                    else:
+                        # Plain email address, construct a structured one based on the name:
+                        sender_name = Header(core_obj.name, 'utf-8').encode()
+                        payload_part['From'] = sender_name + " <" + core_obj.email_id + ">"
+                    payload_part['Organization'] = tools.ustr(core_obj.user.company_id.name)
+                    payload_part['Date'] = formatdate()
+                    addresses_l = extract_emails_from_dict(addresses) 
                     if addresses_l['To']:
-                        msg['To'] = u','.join(addresses_l['To'])
+                        payload_part['To'] = u','.join(addresses_l['To'])
                     if addresses_l['CC']:
-                        msg['CC'] = u','.join(addresses_l['CC'])
-#                    if addresses_l['BCC']:
-#                        msg['BCC'] = u','.join(addresses_l['BCC'])
+                        payload_part['CC'] = u','.join(addresses_l['CC'])
+                    if addresses_l['Reply-To']:
+                        payload_part['Reply-To'] = addresses_l['Reply-To'][0]
+                    if message_id:
+                        payload_part['Message-ID'] = message_id
                     if body.get('text', False):
                         temp_body_text = body.get('text', '')
                         l = len(temp_body_text.replace(' ', '').replace('\r', '').replace('\n', ''))
@@ -301,39 +339,41 @@ class email_template_account(osv.osv):
                     # Attach parts into message container.
                     # According to RFC 2046, the last part of a multipart message, in this case
                     # the HTML message, is best and preferred.
-                    if core_obj.send_pref == 'text' or core_obj.send_pref == 'both':
-                        body_text = body.get('text', u'No Mail Message')
+                    if core_obj.send_pref in ('text', 'mixed', 'alternative'):
+                        body_text = body.get('text', u'<Empty Message>')
                         body_text = tools.ustr(body_text)
-                        msg.attach(MIMEText(body_text.encode("utf-8"), _charset='UTF-8'))
-                    if core_obj.send_pref == 'html' or core_obj.send_pref == 'both':
+                        text_part.attach(MIMEText(body_text.encode("utf-8"), _charset='UTF-8'))
+                    if core_obj.send_pref in ('html', 'mixed', 'alternative'):
                         html_body = body.get('html', u'')
                         if len(html_body) == 0 or html_body == u'':
-                            html_body = body.get('text', u'<p>No Mail Message</p>').replace('\n', '<br/>').replace('\r', '<br/>')
+                            html_body = body.get('text', u'<p>&lt;Empty Message&gt;</p>').replace('\n', '<br/>').replace('\r', '<br/>')
                         html_body = tools.ustr(html_body)
-                        msg.attach(MIMEText(html_body.encode("utf-8"), _subtype='html', _charset='UTF-8'))
-                    #Now add attachments if any
-                    for file in payload.keys():
-                        part = MIMEBase('application', "octet-stream")
-                        part.set_payload(base64.decodestring(payload[file]))
-                        part.add_header('Content-Disposition', 'attachment; filename="%s"' % file)
-                        Encoders.encode_base64(part)
-                        msg.attach(part)
+                        text_part.attach(MIMEText(html_body.encode("utf-8"), _subtype='html', _charset='UTF-8'))
+
+                    #Now add attachments if any, wrapping into a container multipart/mixed if needed
+                    if payload:
+                        for file in payload:
+                            part = MIMEBase('application', "octet-stream")
+                            part.set_payload(base64.decodestring(payload[file]))
+                            part.add_header('Content-Disposition', 'attachment; filename="%s"' % file)
+                            Encoders.encode_base64(part)
+                            payload_part.attach(part)
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, error))
-                    return error
+                    return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 try:
-                    #print msg['From'],toadds
-                    serv.sendmail(msg['From'], addresses_l['all'], msg.as_string())
+                    serv.sendmail(payload_part['From'], addresses_l['all-recipients'], payload_part.as_string())
                 except Exception, error:
-                    logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Server Send Error\nDescription: %s") % (id, error))
-                    return error
+                    logging.getLogger('email_template').error("Mail from Account %s failed. Probable Reason: Server Send Error\n Description: %s", id, error, exc_info=True)
+                    return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 #The mail sending is complete
                 serv.close()
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_INFO, _("Mail from Account %s successfully Sent.") % (id))
                 return True
             else:
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Account not approved") % id)
-                                
+                return {'error_msg':"Mail from Account %s failed. Probable Reason:Account not approved"% id}
+
     def extracttime(self, time_as_string):
         """
         TODO: DOC THis
@@ -341,7 +381,6 @@ class email_template_account(osv.osv):
         logger = netsvc.Logger()
         #The standard email dates are of format similar to:
         #Thu, 8 Oct 2009 09:35:42 +0200
-        #print time_as_string
         date_as_date = False
         convertor = {'+':1, '-':-1}
         try:
@@ -380,7 +419,6 @@ class email_template_account(osv.osv):
                 offset = datetime.timedelta(hours=0)
             dt = dt + offset
             date_as_date = dt.strftime('%Y-%m-%d %H:%M:%S')
-            #print date_as_date
         except Exception, e:
             logger.notifyChannel(
                     _("Email Template"),
@@ -394,7 +432,6 @@ class email_template_account(osv.osv):
         return date_as_date
         
     def send_receive(self, cr, uid, ids, context=None):
-        self.get_mails(cr, uid, ids, context)
         for id in ids:
             ctx = context.copy()
             ctx['filters'] = [('account_id', '=', id)]

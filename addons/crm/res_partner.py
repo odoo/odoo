@@ -24,17 +24,14 @@ from osv import fields,osv
 class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
-    
     _columns = {
-                'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
-                                        'Opportunities', readonly=True, \
-                                        domain=[('type', '=', 'opportunity')]), 
-                'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
-                                        'Meetings', readonly=True), 
-                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
-                                        'Phonecalls', readonly=True), 
-                }
-
+        'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
+            'Leads and Opportunities'),
+        'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
+            'Meetings'),
+        'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
+            'Phonecalls'),
+    }
 res_partner()
 
 

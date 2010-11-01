@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -49,19 +49,20 @@
     So that we can compare the theoretic delay and real delay.
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['stock', 'hr', 'purchase', 'product', 'mrp'],
+    'depends': ['mrp'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
         'mrp_operations_workflow.xml',
         'mrp_operations_view.xml',
         'mrp_operations_report.xml',
+        'report/mrp_workorder_analysis_view.xml',
         'process/mrp_operation_process.xml'
     ],
     'demo_xml': ['mrp_operation_data.xml'],
-    'test': ['test/mrp_operations.yml'],
+    'test': ['test/mrp_operations.yml', 'test/mrp_operations_report.yml'],
     'installable': True,
     'active': False,
     'certificate': '0056233813133',

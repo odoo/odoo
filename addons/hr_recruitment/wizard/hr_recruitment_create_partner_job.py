@@ -6,16 +6,16 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -31,9 +31,11 @@ class hr_recruitment_partner_create(osv.osv_memory):
 
     def view_init(self, cr , uid , fields_list, context=None):
         case_obj = self.pool.get('hr.applicant')
-        for case in case_obj.browse(cr, uid, context['active_ids']):
+        if context is None:
+            context = {}
+        for case in case_obj.browse(cr, uid, context['active_ids'], context=context):
             if case.partner_id:
-                raise osv.except_osv(_('Warning !'),
+                raise osv.except_osv(_('Error !'),
                     _('A partner is already defined on this job request.'))
         pass
 
@@ -45,31 +47,31 @@ class hr_recruitment_partner_create(osv.osv_memory):
 
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context)[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
+        res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
 
-        for case in case_obj.browse(cr, uid, context['active_ids']):
-            partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)])
+        for case in case_obj.browse(cr, uid, context['active_ids'], context=context):
+            partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)], context=context)
             if partner_id:
-                raise osv.except_osv(_('Warning !'),_('A partner is already existing with the same name.'))
+                raise osv.except_osv(_('Error !'),_('A partner is already existing with the same name.'))
             partner_id = partner_obj.create(cr, uid, {
                 'name': case.partner_name or case.name,
                 'user_id': case.user_id.id,
                 'comment': case.description,
-            })
+            }, context=context)
             contact_id = contact_obj.create(cr, uid, {
                 'partner_id': partner_id,
                 'name': case.partner_name,
                 'phone': case.partner_phone,
                 'mobile': case.partner_mobile,
                 'email': case.email_from
-            })
+            }, context=context)
 
             case_obj.write(cr, uid, case.id, {
                 'partner_id': partner_id,
                 'partner_address_id': contact_id
-            })
+            }, context=context)
         if data['close']:
             case_obj.case_close(cr, uid, context['active_ids'])
 

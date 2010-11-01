@@ -8,39 +8,39 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Knowledge Modules Installation</attribute>
+            <attribute name="string">Knowledge Application Configuration</attribute>
           </form>
 
           <separator string="title" position="attributes">
             <attribute name="string"
-                       >Knowledge Management</attribute>
+                       >Configure Your Knowledge Application</attribute>
           </separator>
           <xpath expr='//separator[@string="vsep"]' position='attributes'>
-          			<attribute name='string'></attribute>
-	      		</xpath>
+                      <attribute name='string'></attribute>
+                  </xpath>
           <xpath expr="//label[@string='description']"
                  position="attributes">
-            <attribute name="string">From this screen, you can select various OpenERP applications which will help employees store information, distribute it and share it with one another.</attribute>
+            <attribute name="string">Share information within the company with these specific Addons.</attribute>
           </xpath>
           <group colspan="8" position="replace">
           <group colspan="4">
             <field name="document_ftp"/>
             <field name="document_webdav"/>
             <field name="wiki"/>
-            <separator string="Templates of Content" colspan="4"/>
+            <separator string="Content templates" colspan="4"/>
             <field name="wiki_faq"/>
             <field name="wiki_quality_manual"/>
           </group>
           </group>
          <xpath expr="//button[@string='Install Modules']" position="attributes">
-          	<attribute name="string">Configure</attribute>
+              <attribute name="string">Configure</attribute>
          </xpath>
         </data>
       </field>
     </record>
 
     <record id="action_knowledge_installer" model="ir.actions.act_window">
-      <field name="name">Knowledge Modules Installation</field>
+      <field name="name">Knowledge Application Configuration</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">knowledge.installer</field>
       <field name="view_id" ref="view_knowledge_installer"/>
@@ -53,18 +53,8 @@
       <field name="action_id" ref="action_knowledge_installer"/>
       <field name="sequence">3</field>
       <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
+            <field name="restart">always</field>
     </record>
 
-    <record id="knowledge_ir_actions_todo_tree" model="ir.ui.view">
-    <field name="model">ir.actions.todo</field>
-    <field name="name">knowledge_installer_action_replace</field>
-    <field name="type">tree</field>
-    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
-	<field name="arch" type="xml">
-	 <xpath expr="//button[@string='Launch']" position="replace">
-        <button name="%(action_knowledge_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
-      </xpath>
-    </field>
-	</record>
   </data>
 </openerp>

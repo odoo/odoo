@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
+from datetime import datetime
+
 from osv import fields, osv
-from mx import DateTime
 
 class Invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -35,8 +36,8 @@ class Invoice(osv.osv):
             if invoice.move_id:
                 for line in invoice.move_id.line_id:
                     if not line.date_maturity or \
-                            DateTime.strptime(line.date_maturity, '%Y-%m-%d') \
-                            < DateTime.now():
+                            datetime.strptime(line.date_maturity, '%Y-%m-%d') \
+                            < datetime.today():
                         res[invoice.id] += line.amount_to_pay
         return res
 
@@ -50,4 +51,3 @@ class Invoice(osv.osv):
 Invoice()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

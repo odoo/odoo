@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-05-15 09:04+0000\n"
-"Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
+"PO-Revision-Date: 2010-09-29 10:00+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-05-17 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-09-30 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -24,7 +24,7 @@ msgstr "Вътрешно име"
 #. module: account
 #: view:account.tax.code:0
 msgid "Account Tax Code"
-msgstr "Код на данъчна сметка"
+msgstr "Данъчен код"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree9
@@ -40,7 +40,7 @@ msgstr "Кодиране на записи"
 #. module: account
 #: model:ir.actions.todo,note:account.config_wizard_account_base_setup_form
 msgid "Specify The Message for the Overdue Payment Report."
-msgstr "Определи съобщението за доклад на просрочените плащания."
+msgstr "Определи съобщението за доклада с просрочени плащания."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
@@ -89,7 +89,7 @@ msgstr "Резултат от изравняване"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled entries"
-msgstr "Несъгласувани стойности"
+msgstr "Неизравнени стойности"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -117,7 +117,7 @@ msgstr "Основна"
 #. module: account
 #: selection:account.move,type:0
 msgid "Journal Voucher"
-msgstr ""
+msgstr "Разписка за дневник"
 
 #. module: account
 #: field:account.invoice,residual:0
@@ -624,7 +624,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
-msgid "Fiscal Position Accounts Mapping"
+msgid "Accounts Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -1018,7 +1018,7 @@ msgstr ""
 #: field:account.invoice,fiscal_position:0
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
-msgid "Fiscal Position"
+msgid "Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -1040,7 +1040,7 @@ msgstr "Деца"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
-msgid "Fiscal Position Taxes Mapping"
+msgid "Taxes Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -1129,7 +1129,7 @@ msgstr "Нова аналитична сметка"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
-msgid "Fiscal Position Templates"
+msgid "Fiscal Mapping Templates"
 msgstr ""
 
 #. module: account
@@ -1161,7 +1161,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
-msgid "Fiscal Position Template"
+msgid "Fiscal Mapping Template"
 msgstr ""
 
 #. module: account
@@ -1227,7 +1227,7 @@ msgstr "Валута на компанията"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Fiscal Position Template Account Mapping"
+msgid "Template Account Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -1807,7 +1807,7 @@ msgstr ""
 #. module: account
 #: help:res.partner,property_account_position:0
 msgid ""
-"The fiscal position will determine taxes and the accounts used for the the "
+"The fiscal mapping will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
 
@@ -2078,7 +2078,7 @@ msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
-msgid "Fiscal Position Remark :"
+msgid "Fiscal Mapping Remark :"
 msgstr ""
 
 #. module: account
@@ -3654,7 +3654,7 @@ msgstr "Последователност"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
+msgid "Template for Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -3759,7 +3759,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
-msgid "Fiscal Position Template Tax Mapping"
+msgid "Template Tax Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -4476,7 +4476,7 @@ msgstr "Записи на сметка"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_unreconciled
 msgid "Receivables & Payables"
-msgstr "Приходни и разходни"
+msgstr ""
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -5908,8 +5908,8 @@ msgstr "Условие за плащане"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
-msgid "Fiscal Positions"
-msgstr "Фискални позиции"
+msgid "Fiscal Mappings"
+msgstr ""
 
 #. module: account
 #: model:process.process,name:account.process_process_statementprocess0
@@ -5967,3 +5967,651 @@ msgstr ""
 #: wizard_button:account.subscription.generate,init,generate:0
 msgid "Compute Entry Dates"
 msgstr "Изчисляване на въведените дати"
+
+#. module: account
+#: view:board.board:0
+msgid "Analytic accounts to close"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "Draft invoices"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.open_board_account
+#: model:ir.ui.menu,name:account.menu_board_account
+msgid "Accounting Dashboard"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.act_my_account
+msgid "Accounts to invoice"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.action_account_analytic_line_to_invoice
+msgid "Costs to invoice"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "Aged receivables"
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Board for accountant"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_aged_income
+msgid "Income Accounts"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "My indicators"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "Account Board"
+msgstr ""
+
+#. module: account
+#: view:board.board:0
+msgid "Aged income"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,show_columns:0
+msgid "Show Debit/Credit Information"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,account_choice:0
+msgid "All accounts"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,period_manner:0
+msgid "Entries Selection Based on"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "Notification"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Financial Period"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.report.xml,name:account.account_account_balance
+#: model:ir.actions.report.xml,name:account.account_account_balance_landscape
+msgid "Account balance"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period(s)"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Percentage"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Compare Selected Years In Terms Of"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Fiscal Year(s)(Maximum Three Years)"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,select_account:0
+msgid "Select Reference Account(for  % comparision)"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.wizard,name:account.wizard_account_balance_report
+msgid "Account balance-Compare Years"
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,description:account.module_meta_information
+msgid ""
+"Account Balance Module is an added functionality to the Financial Management "
+"module.\n"
+"\n"
+"    This module gives you the various options for printing balance sheet.\n"
+"\n"
+"    1. You can compare the balance sheet for different years.\n"
+"\n"
+"    2. You can set the cash or percentage comparison between two years.\n"
+"\n"
+"    3. You can set the referential account for the percentage comparison for "
+"particular years.\n"
+"\n"
+"    4. You can select periods as an actual date or periods as creation "
+"date.\n"
+"\n"
+"    5. You have an option to print the desired report in Landscape format.\n"
+"    "
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You have to select 'Landscape' option. Please Check it."
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,landscape:0
+msgid "Show Report in Landscape Form"
+msgstr ""
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Total :"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,format_perc:0
+msgid "Show Comparision in %"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Report Options"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Don't Compare"
+msgstr ""
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,account_choice:0
+msgid "Show Accounts"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "1. You have selected more than 3 years in any case."
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Accounting and financial management-Compare Accounts"
+msgstr ""
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Year :"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You can select maximum 3 years. Please check again."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"3. You have selected 'Percentage' option with more than 2 years, but you "
+"have not selected landscape format."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"You might have done following mistakes. Please correct them and try again."
+msgstr ""
+
+#. module: account
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
+msgstr ""
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Creation Date"
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"2. You have not selected 'Percentage' option, but you have selected more "
+"than 2 years."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid ""
+"You may have selected the compare options with more than 1 year with "
+"credit/debit columns and % option.This can lead contents to be printed out "
+"of the paper.Please try again."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You have to select at least 1 Fiscal Year. Try again."
+msgstr ""
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Customize Report"
+msgstr ""
+
+#. module: account
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_view_created_invoice_dashboard
+msgid "Invoices Created Within Past 15 Days"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_invoice_created
+msgid "Report of Invoices Created within Last 15 days"
+msgstr ""
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Total Amount"
+msgstr ""
+
+#. module: account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_account_receivable
+msgid "Receivable accounts"
+msgstr ""
+
+#. module: account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,description:report_account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,shortdesc:report_account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
+#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr ""
+
+#. module: account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr ""
+
+#. module: account
+#: field:report.invoice.created,create_date:0
+msgid "Create Date"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr ""
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Untaxed Amount"
+msgstr ""
+
+#, python-format
+#~ msgid ""
+#~ "Specified Journal does not have any account move entries in draft state for "
+#~ "this period"
+#~ msgstr ""
+#~ "Посоченият дневник няма сметка с движения в състояние проект за този период"
+
+#, python-format
+#~ msgid "Account move line \"%s\" is not valid"
+#~ msgstr "Ред \"%s\" от движение по сметка не е валиден"
+
+#, python-format
+#~ msgid "Sales Journal"
+#~ msgstr "Дневник продажби"
+
+#, python-format
+#~ msgid "No Period found on Invoice!"
+#~ msgstr "Не е намерен период за фактура!"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Предупреждение !"
+
+#, python-format
+#~ msgid "Can not %s draft/proforma/cancel invoice."
+#~ msgstr "Не може да %s проект/проформа/отказ на фактура"
+
+#, python-format
+#~ msgid "Bank Journal "
+#~ msgstr "Банков дневник "
+
+#, python-format
+#~ msgid "You must first select a partner !"
+#~ msgstr "Първо трябва да изберете партньор !"
+
+#, python-format
+#~ msgid "No Data Available"
+#~ msgstr "Няма налични данни"
+
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "Грешка за цялостност !"
+
+#, python-format
+#~ msgid "No journal for ending writing has been defined for the fiscal year"
+#~ msgstr "Не е зададен дневник за краен запис за финансовата година"
+
+#, python-format
+#~ msgid "You have to provide an account for the write off entry !"
+#~ msgstr "Трябва да изберете сметка за записа на отписването !"
+
+#, python-format
+#~ msgid "No analytic journal !"
+#~ msgstr "Не е аналитичен дневник !"
+
+#, python-format
+#~ msgid "No period found !"
+#~ msgstr "Не е намерен период !"
+
+#, python-format
+#~ msgid ""
+#~ "You can not do this modification on a reconciled entry ! Please note that "
+#~ "you can just change some non important fields !"
+#~ msgstr ""
+#~ "Не може да извършите това върху приравнен запис ! Моля отбележете че може "
+#~ "само да промените само някои неважни полета !"
+
+#, python-format
+#~ msgid "You must select accounts to reconcile"
+#~ msgstr "Трябва да изберете сметки за изравняване"
+
+#, python-format
+#~ msgid "Cannot create invoice move on centralised journal"
+#~ msgstr ""
+#~ "Не може да бъде създадено движение на фактура върху централизиран дневник"
+
+#, python-format
+#~ msgid "No Partner Defined !"
+#~ msgstr "Не е зададен партньор !"
+
+#, python-format
+#~ msgid "Purchase Journal"
+#~ msgstr "Дневник за поръчки"
+
+#, python-format
+#~ msgid "Free Reference"
+#~ msgstr "Свободна отпратка"
+
+#, python-format
+#~ msgid "Entries are not of the same account or already reconciled ! "
+#~ msgstr "Записите не са от същата сметка или не са изравнени ! "
+
+#, python-format
+#~ msgid "You can not use this general account in this journal !"
+#~ msgstr "Не може да използвате главна сметка за този дневник !"
+
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "Очаквания баланс (%.2f) е различен от изчисления. (%.2f)"
+
+#, python-format
+#~ msgid ""
+#~ "You can not do this modification on a confirmed entry ! Please note that you "
+#~ "can just change some non important fields !"
+#~ msgstr ""
+#~ "Не може да извършите това върху потвърден запис ! Моля отбележете че може "
+#~ "само да промените само някои неважни полета !"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Невалидно действие !"
+
+#, python-format
+#~ msgid "Cannot delete invoice(s) that are already opened or paid !"
+#~ msgstr "Не може да изтриете фактура(и) които вече са отворени или платени !"
+
+#, python-format
+#~ msgid "Your journal must have a default credit and debit account."
+#~ msgstr ""
+#~ "Вашия дневник трябва да има по подразбиране сметки за дебит и кредит."
+
+#, python-format
+#~ msgid "You can not add/modify entries in a closed journal."
+#~ msgstr "Не може да добавяте/променяте записи в затворен дневник."
+
+#, python-format
+#~ msgid "No sequence defined in the journal !"
+#~ msgstr "Не са зададени последоватености за този дневник !"
+
+#, python-format
+#~ msgid "The opening journal must not have any entry in the new fiscal year !"
+#~ msgstr ""
+#~ "Отваряния дневник не трябва да има запис за новата финансова година !"
+
+#, python-format
+#~ msgid "Unable to find a valid period !"
+#~ msgstr "Не може да бъде намерен валиден период !"
+
+#, python-format
+#~ msgid "The journal must have default credit and debit account"
+#~ msgstr "Дневника трябва да има сметки по подрабиране за кредит и дебит"
+
+#, python-format
+#~ msgid "Some entries are already reconciled !"
+#~ msgstr "Някой записи вече са били приравнени !"
+
+#, python-format
+#~ msgid "No Analytic Journal !"
+#~ msgstr "Не е аналитичен дневник !"
+
+#, python-format
+#~ msgid "Already Reconciled"
+#~ msgstr "Вече приравнен"
+
+#, python-format
+#~ msgid "Unable to change tax !"
+#~ msgstr "Не може да се сменя данъка !"
+
+#, python-format
+#~ msgid "Unable to reconcile entry \"%s\": %.2f"
+#~ msgstr "Не може да приравни запис %s\": %.2f"
+
+#, python-format
+#~ msgid "Please set an analytic journal on this financial journal !"
+#~ msgstr "Моля изберете аналитичен дневник за този финансов дневник !"
+
+#, python-format
+#~ msgid "Date to must be set between %s and %s"
+#~ msgstr "Датата трябва да бъде между %s и %s"
+
+#, python-format
+#~ msgid "You can not delete posted movement: \"%s\"!"
+#~ msgstr "Не може да изтриете публикувано движение: \"%s\"!"
+
+#, python-format
+#~ msgid ""
+#~ "The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+#~ "defined !"
+#~ msgstr ""
+#~ "Условията за плащане на доставчика нямат зададени редове за условия за "
+#~ "плащане (изчисление) !"
+
+#, python-format
+#~ msgid "The account entries lines are not in valid state."
+#~ msgstr "Редовете на записите на сметката не са във валидно състояние."
+
+#, python-format
+#~ msgid "No records found for your selection!"
+#~ msgstr "Няма намерен данък за вашия избор"
+
+#, python-format
+#~ msgid "You can not modify/delete a journal with entries for this period !"
+#~ msgstr "Не може да променяте/узтривате дневник със записи от този период !"
+
+#, python-format
+#~ msgid "Invoice is already reconciled"
+#~ msgstr "Фактурата вече е приравнена"
+
+#, python-format
+#~ msgid "Entries: "
+#~ msgstr "Записи: "
+
+#, python-format
+#~ msgid "You can not change the tax, you should remove and recreate lines !"
+#~ msgstr ""
+#~ "Не може да промените данъка, трябва да изтриете и създадете отново редовете !"
+
+#, python-format
+#~ msgid "Couldn't create move between different companies"
+#~ msgstr "Не може да създаде движение между различни фирми"
+
+#, python-format
+#~ msgid "Entry \"%s\" is not valid !"
+#~ msgstr "Запис \"%s\" е невалиден !"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Грешка!"
+
+#, python-format
+#~ msgid "Global taxes defined, but are not in invoice lines !"
+#~ msgstr "Общите данъци са зададени, но не са в редовете на фактурата !"
+
+#, python-format
+#~ msgid "Bad total !"
+#~ msgstr "Грешна обща сума !"
+
+#, python-format
+#~ msgid "The journal must have centralised counterpart"
+#~ msgstr "Дневника трябва да има централно копие"
+
+#, python-format
+#~ msgid "End of Fiscal Year Entry"
+#~ msgstr "Запис за край на финансова година"
+
+#, python-format
+#~ msgid "Data Insufficient !"
+#~ msgstr "Недостатъчни данни !"
+
+#, python-format
+#~ msgid "Can not pay draft/proforma/cancel invoice."
+#~ msgstr "Не може да бъде платена  проект/проформа/отказана фактура."
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Потребителска грешка"
+
+#, python-format
+#~ msgid "Date not in a defined fiscal year"
+#~ msgstr "Датата не е в зададената финансова година"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Предупреждение"
+
+#, python-format
+#~ msgid "Please verify that an account is defined in the journal."
+#~ msgstr "Моля проверете че в дневника е зададена сметка"
+
+#, python-format
+#~ msgid "You can not use an inactive account!"
+#~ msgstr "Не може да използвате неактивна сметка!"
+
+#, python-format
+#~ msgid "Entry is already reconciled"
+#~ msgstr "Записа вече е приравнен"
+
+#, python-format
+#~ msgid ""
+#~ "Selected Move lines does not have any account move enties in draft state"
+#~ msgstr ""
+#~ "Избраните редове от движения нямат движения по сметка в състояние проект"
+
+#, python-format
+#~ msgid "This period is already closed !"
+#~ msgstr "Този период вече е затворен !"
+
+#, python-format
+#~ msgid "Bad account!"
+#~ msgstr "Грешна сметка!"
+
+#, python-format
+#~ msgid "Standard Encoding"
+#~ msgstr "Стандартно кодиране"
+
+#, python-format
+#~ msgid "You must define an analytic journal of type '%s' !"
+#~ msgstr "Трябва да зададете аналитичен дневник от вид '%s' !"
+
+#, python-format
+#~ msgid "Bad account !"
+#~ msgstr "Грешна сметка !"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Грешка"
+
+#, python-format
+#~ msgid "Taxes missing !"
+#~ msgstr "Липсват данъци !"
+
+#, python-format
+#~ msgid "Closing of fiscal year cancelled, please check the box !"
+#~ msgstr "Затварянето на финансовата година прекратено, моля отменете полето !"
+
+#, python-format
+#~ msgid "You must enter a period length that cannot be 0 or below !"
+#~ msgstr ""
+#~ "Трябва да въведете дължина на период, която не може да бъде 0 или по-малко."
+
+#, python-format
+#~ msgid "No piece number !"
+#~ msgstr "Няма номер на цена !"
+
+#, python-format
+#~ msgid "You have to define an analytic journal on the '%s' journal!"
+#~ msgstr "Трябва да зададете аналитичен дневник в '%s' дневник!"

@@ -39,7 +39,7 @@ class hr_timesheet_analytic_cost_ledger(osv.osv_memory):
         datas = {
              'ids': 'active_ids' in context and context['active_ids'] or [],
              'model': 'account.analytic.account',
-             'form': self.read(cr, uid, ids)[0]
+             'form': self.read(cr, uid, ids, context=context)[0]
                  }
         return {
             'type': 'ir.actions.report.xml',

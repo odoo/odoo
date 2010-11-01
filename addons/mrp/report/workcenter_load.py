@@ -22,15 +22,17 @@
 from report.render import render
 from report.interface import report_int
 from pychart import *
-from mx.DateTime import *
+import time
+from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
 from report.misc import choice_colors
-import time, mx
+
 import random
 import StringIO
 
 
 theme.use_color = 1
-#theme.scale = 2
 random.seed(0)
 
 #
@@ -52,8 +54,8 @@ class report_custom(report_int):
             stop = start
         if time_unit == 'month':
             dates = {}
-            a = Date(*map(int, start.split("-"))).year*12+Date(*map(int, start.split("-"))).month
-            z = Date(*map(int,  stop.split("-"))).year*12+Date(*map(int,  stop.split("-"))).month+1
+            a = int(start.split("-")[0])*12 + int(start.split("-")[1])
+            z = int(stop.split("-")[0])*12 + int(stop.split("-")[1]) + 1
             for i in range(a,z):
                 year = i/12
                 month = i%12
@@ -63,27 +65,31 @@ class report_custom(report_int):
                 months = {1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"}
                 dates[i] = {
                     'name' :months[month],
-                    'start':(Date(year, month, 2) + RelativeDateTime(day=1)).strftime('%Y-%m-%d'),
-                    'stop' :(Date(year, month, 2) + RelativeDateTime(day=-1)).strftime('%Y-%m-%d'),
+                    'start':(datetime(year, month, 2) + relativedelta(day=1)).strftime('%Y-%m-%d'),
+                    'stop' :(datetime(year, month, 2) + relativedelta(day=31)).strftime('%Y-%m-%d'),
                 }
             return dates
         elif time_unit == 'week':
             dates = {}
-            a = Date(*map(int, start.split("-"))).iso_week[0]*52+Date(*map(int, start.split("-"))).iso_week[1]
-            z = Date(*map(int,  stop.split("-"))).iso_week[0]*52+Date(*map(int,  stop.split("-"))).iso_week[1]
+            start_week = date(int(start.split("-")[0]),int(start.split("-")[1]),int(start.split("-")[2])).isocalendar()
+            end_week = date(int(stop.split("-")[0]),int(stop.split("-")[1]),int(stop.split("-")[2])).isocalendar()
+            a = int(start.split("-")[0])*52 + start_week[1]
+            z = int(stop.split("-")[0])*52 + end_week[1]
             for i in range(a,z+1):
                 year = i/52
                 week = i%52
+                d = date(year, 1, 1)
+                
                 dates[i] = {
                     'name' :"Week #%d" % week,
-                    'start':ISO.WeekTime(year, week, 1).strftime('%Y-%m-%d'),
-                    'stop' :ISO.WeekTime(year, week, 7).strftime('%Y-%m-%d'),
+                    'start':(d + timedelta(days=-d.weekday(), weeks=week)).strftime('%Y-%m-%d'),
+                    'stop' :(d + timedelta(days=6-d.weekday(), weeks=week)).strftime('%Y-%m-%d'),
                 }
             return dates
         else: # time_unit = day
             dates = {}
-            a = Date(*map(int, start.split("-")))
-            z = Date(*map(int, stop.split("-")))
+            a = datetime(int(start.split("-")[0]),int(start.split("-")[1]),int(start.split("-")[2]))
+            z = datetime(int(stop.split("-")[0]),int(stop.split("-")[1]),int(stop.split("-")[2]))
             i = a
             while i <= z:
                 dates[map(int,i.strftime('%Y%m%d').split())[0]] = {
@@ -91,7 +97,7 @@ class report_custom(report_int):
                     'start':i.strftime('%Y-%m-%d'),
                     'stop' :i.strftime('%Y-%m-%d'),
                 }
-                i = i + RelativeDateTime(days=+1)
+                i = i + relativedelta(days=+1)
             return dates
         return {}
 
@@ -104,7 +110,7 @@ class report_custom(report_int):
             "WHERE mrp_production_workcenter_line.production_id=mrp_production.id "\
             "AND mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id "\
             "AND mrp_production.state NOT IN ('cancel','done') "\
-            "AND mrp_workcenter.id =ANY(%s)",(ids,))
+            "AND mrp_workcenter.id IN %s",(tuple(ids),))
         res = cr.dictfetchone()
         if not res['stop']:
             res['stop'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -135,8 +141,8 @@ class report_custom(report_int):
         # select workcenters
         cr.execute(
             "SELECT mw.id, rs.name FROM mrp_workcenter mw, resource_resource rs " \
-            "WHERE mw.id=ANY(%s) and mw.resource_id=rs.id " \
-            "ORDER BY mw.id" ,(ids,))
+            "WHERE mw.id IN %s and mw.resource_id=rs.id " \
+            "ORDER BY mw.id" ,(tuple(ids),))
         workcenters = cr.dictfetchall()
 
         data = []
@@ -148,6 +154,7 @@ class report_custom(report_int):
                             FROM mrp_production_workcenter_line, mrp_production, mrp_workcenter, resource_resource \
                             WHERE (mrp_production_workcenter_line.production_id=mrp_production.id) \
                                 AND (mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id) \
+                                AND (mrp_workcenter.resource_id=resource_resource.id) \
                                 AND (mrp_workcenter.id=%s) \
                                 AND (mrp_production.date_planned BETWEEN %s AND %s) \
                             GROUP BY mrp_production_workcenter_line.workcenter_id, resource_resource.name, mrp_workcenter.id \
@@ -173,7 +180,6 @@ class report_custom(report_int):
             ar.add_plot(bar_plot.T(label=workcenter['name'], data=data, fill_style=f, hcol=workcenter_num+1, cluster=(workcenter_num, len(res))))
             workcenter_num += 1
 
-        #plot = bar_plot.T(label=workcenter['name'], data=data, hcol=1, fill_style=fill_style.white, cluster=(color_index,len(ids)))
         if (not data) or (len(data[0]) <= 1):
             ar = self._empty_graph(time.strftime('%Y-%m-%d'))
         ar.draw(can)

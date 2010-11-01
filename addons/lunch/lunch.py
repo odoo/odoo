@@ -52,7 +52,7 @@ class lunch_product(osv.osv):
 
     _defaults = {
         'active': lambda *a : True,
-        }
+    }
 
 lunch_product()
 
@@ -81,8 +81,8 @@ class lunch_cashbox(osv.osv):
     _columns = {
         'manager': fields.many2one('res.users', 'Manager'),
         'name': fields.char('Name', size=30, required=True, unique = True),
-        'sum_remain': fields.function(amount_available, method=True, string='Remained Total'),
-        }
+        'sum_remain': fields.function(amount_available, method=True, string='Total Remaining'),
+    }
 
 lunch_cashbox()
 
@@ -94,16 +94,16 @@ class lunch_cashmove(osv.osv):
     _description = "Cash Move"
 
     _columns = {
-        'name': fields.char('Name', size=128),
+        'name': fields.char('Description', size=128),
         'user_cashmove': fields.many2one('res.users', 'User Name', required=True),
         'amount': fields.float('Amount', digits=(16, 2)),
         'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, required=True),
         'active': fields.boolean('Active'),
-        'create_date': fields.datetime('Created date', readonly=True),
-        }
+        'create_date': fields.datetime('Creation Date', readonly=True),
+    }
 
     _defaults = {
-    'active': lambda *a: True,
+        'active': lambda *a: True,
     }
 
 lunch_cashmove()
@@ -136,17 +136,18 @@ class lunch_order(osv.osv):
             readonly=True, states={'draft':[('readonly', False)]}, change_default=True),
         'date': fields.date('Date', readonly=True, states={'draft':[('readonly', False)]}),
         'cashmove': fields.many2one('lunch.cashmove', 'CashMove' , readonly=True),
-        'descript': fields.char('Description Order', readonly=True, size=50, \
+        'descript': fields.char('Description Order', readonly=True, size=250, \
             states = {'draft':[('readonly', False)]}),
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ], \
             'State', readonly=True, select=True),
         'price': fields.function(_price_get, method=True, string="Price"),
+        'category': fields.many2one('lunch.category','Category'),
     }
 
     _defaults = {
-        'user_id': lambda self,cr,uid,context: uid,
-        'date': lambda self,cr,uid,context: time.strftime('%Y-%m-%d'),
-        'state': lambda self,cr,uid,context: 'draft',
+        'user_id': lambda self, cr, uid, context: uid,
+        'date': lambda self, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'state': lambda self, cr, uid, context: 'draft',
     }
 
     def confirm(self, cr, uid, ids, box, context):
@@ -198,7 +199,8 @@ class lunch_order(osv.osv):
         if not product:
             return {'value': {'price': 0.0}}
         price = self.pool.get('lunch.product').read(cr, uid, product, ['price'])['price']
-        return {'value': {'price': price}}
+        categ_id = self.pool.get('lunch.product').browse(cr, uid, product).category_id.id
+        return {'value': {'price': price,'category':categ_id}}
 
 lunch_order()
 
@@ -215,7 +217,13 @@ class report_lunch_amount(osv.osv):
         'user_id': fields.many2one('res.users', 'User Name', readonly=True),
         'amount': fields.float('Amount', readonly=True, digits=(16, 2)),
         'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, readonly=True),
-        }
+        'year': fields.char('Year', size=4, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
+            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
+        'date': fields.date('Created Date', readonly=True),
+    }
 
     def init(self, cr):
 
@@ -225,6 +233,10 @@ class report_lunch_amount(osv.osv):
             create or replace view report_lunch_amount as (
                 select
                     min(lc.id) as id,
+                    to_date(to_char(lc.create_date, 'dd-MM-YYYY'),'dd-MM-YYYY') as date,
+                    to_char(lc.create_date, 'YYYY') as year,
+                    to_char(lc.create_date, 'MM') as month,
+                    to_char(lc.create_date, 'YYYY-MM-DD') as day,
                     lc.user_cashmove as user_id,
                     sum(amount) as amount,
                     lc.box as box
@@ -232,7 +244,7 @@ class report_lunch_amount(osv.osv):
                     lunch_cashmove lc
                 where
                     active = 't'
-                group by lc.user_cashmove, lc.box
+                group by lc.user_cashmove, lc.box, lc.create_date
                 )""")
 
 report_lunch_amount()

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -49,13 +49,13 @@ class quality_test(base_module_quality.abstract_quality_check):
         score = 1.0
         feel_good_factor = 0
         feel_bad_factor = 0
-        if '__terp__.py' not in list_files:
+        if '__openerp__.py' not in list_files:
             self.no_terp = True
-            self.result += _("The module does not contain the __terp__.py file")
+            self.result += _("The module does not contain the __openerp__.py file")
             return None
         result_dict = {}
         result_dict1 = {}
-        terp_file = os.path.join(module_path,'__terp__.py')
+        terp_file = os.path.join(module_path,'__openerp__.py')
         res = eval(tools.file_open(terp_file).read())
         terp_keys = ['category', 'name', 'description', 'author', 'website', 'update_xml', 'init_xml', 'depends', 'version', 'active', 'installable', 'demo_xml']
         for key in terp_keys:
@@ -117,7 +117,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 
         self.result_details += self.get_result_details(result_dict)
         self.result_details += self.get_result_details(result_dict1)
-        return [_('__terp__.py file'), score]
+        return [_('__openerp__.py file'), score]
 
     def run_test(self, cr, uid, module_path):
         terp_score = self.run_test_terp(cr, uid, module_path)
@@ -125,7 +125,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         if self.score*100 < self.min_score:
             self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         if terp_score:
-            self.result = self.get_result({'__terp__.py': terp_score})
+            self.result = self.get_result({'__openerp__.py': terp_score})
         return None
 
     def get_result(self, dict_terp):

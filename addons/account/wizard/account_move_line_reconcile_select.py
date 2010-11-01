@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 from tools.translate import _
 
@@ -27,7 +28,7 @@ class account_move_line_reconcile_select(osv.osv_memory):
     _columns = {
        'account_id': fields.many2one('account.account', 'Account', \
                             domain = [('reconcile', '=', 1)], required=True),
-              }
+    }
 
     def action_open_window(self, cr, uid, ids, context={}):
         """
@@ -47,7 +48,7 @@ class account_move_line_reconcile_select(osv.osv_memory):
             'view_id': False,
             'res_model': 'account.move.line',
             'type': 'ir.actions.act_window'
-            }
+        }
 
 account_move_line_reconcile_select()
 

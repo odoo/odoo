@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 03:59+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -74,6 +74,7 @@ msgstr "확정된 구매"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "인보이스 예외"
 
@@ -128,6 +129,7 @@ msgstr "구매 승인"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "승인됨"
 
@@ -277,6 +279,7 @@ msgstr "주문 라인"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "확정됨"
 
@@ -303,6 +306,7 @@ msgstr "RFQ"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "대기"
 
@@ -384,6 +388,7 @@ msgstr "주문 참조"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "완료"
 
@@ -434,6 +439,7 @@ msgstr "확정 후 구매 주문 승인"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "선적 예외"
 
@@ -881,6 +887,42 @@ msgstr "구매 주문을 승인한 뒤, 공급자 인보이스로 들어갑니�
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Waiting Schedule"
+msgstr ""
+
+#. module: purchase
+#: field:report.purchase.order.category,price_total:0
+#: field:report.purchase.order.product,price_total:0
+msgid "Total Price"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Quotation"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Manual in progress"
+msgstr ""
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "In progress"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr ""
 
 #~ msgid ""

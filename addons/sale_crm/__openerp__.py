@@ -19,31 +19,33 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'Creates Sale orders from Opportunity',
+    'name': 'Creates Sales order from Opportunity',
     'version': '1.0',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
 This module adds a shortcut on one or several opportunity cases in the CRM.
-This shortcut allows you to generate a sale order based on the selected case.
+This shortcut allows you to generate a sales order based on the selected case.
 If different cases are open (a list), it generates one sale order by
 case.
-The case is then closed and linked to the generated sale order.
+The case is then closed and linked to the generated sales order.
 
 We suggest you to install this module if you installed both the sale and the
 crm modules.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['sale', 'crm'],
     'init_xml': [],
-    'update_xml': ['sale_crm_wizard.xml',
+    'update_xml': ['wizard/crm_make_sale_view.xml',
                    'sale_crm_view.xml',
+                   'board_sale_crm_view.xml',
                    'process/sale_crm_process.xml',
                    'security/sale_crm_security.xml',
+                   'security/ir.model.access.csv'
                    ],
     'demo_xml': [],
+    'test': ['test/sale_crm.yml'],
     'installable': True,
     'active': False,
     'certificate': '0064360130141',

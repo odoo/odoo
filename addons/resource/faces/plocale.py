@@ -23,7 +23,7 @@
 import gettext
 import os.path
 import locale
-
+import sys
 
 def _get_translation():
     try:

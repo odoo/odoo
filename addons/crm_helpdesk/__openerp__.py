@@ -25,7 +25,7 @@
     'version': '1.0', 
     'category': 'Generic Modules/CRM & SRM', 
     'description': """Helpdesk Management""", 
-    'author': 'Tiny', 
+    'author': 'OpenERP SA', 
     'website': 'http://www.openerp.com', 
     'depends': ['crm'], 
     'init_xml': [

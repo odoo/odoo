@@ -19,16 +19,10 @@
 #
 ##############################################################################
 
-from report import report_sxw
-import xml.dom.minidom
-import os, time
-import osv
-import re
-import tools
-import pooler
 import re
 import sys
 
+from report import report_sxw
 
 class rml_parse(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -36,17 +30,17 @@ class rml_parse(report_sxw.rml_parse):
         self.localcontext.update({
             'comma_me': self.comma_me,
             'format_date': self._get_and_change_date_format_for_swiss,
-            'strip_name' : self._strip_name,
-            'explode_name' : self._explode_name,
+            'strip_name': self._strip_name,
+            'explode_name': self._explode_name,
         })
 
     def comma_me(self,amount):
         #print "#" + str(amount) + "#"
         if not amount:
             amount = 0.0
-        if  type(amount) is float :
+        if  type(amount) is float:
             amount = str('%.2f'%amount)
-        else :
+        else:
             amount = str(amount)
         if (amount == '0'):
              return ' '
@@ -60,15 +54,15 @@ class rml_parse(report_sxw.rml_parse):
         ellipsis = ellipsis or ''
         try:
             return string[:maxlen - len(ellipsis) ] + (ellipsis, '')[len(string) < maxlen]
-        except Exception, e:
+        except:
             return False
     def _strip_name(self, name, maxlen=50):
         return self._ellipsis(name, maxlen, '...')
 
-    def _get_and_change_date_format_for_swiss (self,date_to_format):
+    def _get_and_change_date_format_for_swiss(self,date_to_format):
         date_formatted=''
         if date_to_format:
-            date_formatted = strptime (date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
+            date_formatted = strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
 
     def _explode_name(self,chaine,length):
@@ -106,7 +100,6 @@ class rml_parse(report_sxw.rml_parse):
             return Stringer
         return Stringer
     def explode_this(self,chaine,length):
-        #chaine = self.repair_string(chaine)
         chaine = rstrip(chaine)
         ast = list(chaine)
         i = length
@@ -115,16 +108,14 @@ class rml_parse(report_sxw.rml_parse):
             i = i + length
         chaine = str("".join(ast))
         return chaine
-    def repair_string(self,chaine):
+    def repair_string(self, chaine):
         ast = list(chaine)
         UnicodeAst = []
-        _previouslyfound = False
         i = 0
-        #print str(ast)
         while i < len(ast):
             elem = ast[i]
             try:
-                Stringer = elem.encode("utf-8")
+                elem.encode("utf-8")
             except UnicodeDecodeError:
                 to_reencode = elem + ast[i+1]
                 print str(to_reencode)
@@ -151,34 +142,5 @@ class rml_parse(report_sxw.rml_parse):
 
         else:
             return Stringer
-
-    def _add_header(self, node, header=1):
-        if header==2:
-            rml_head =  self.rml_header2
-        else:
-            rml_head =  self.rml_header
-        rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
-        return True
-
-    # def _add_header(self, node):
-    #   rml_head = tools.file_open('specific_param/report/header/corporate_rml_header_ch.rml').read()
-    #   head_dom = xml.dom.minidom.parseString(rml_head)
-    #   #for frame in head_dom.getElementsByTagName('frame'):
-    #   #   frame.parentNode.removeChild(frame)
-    #   node2 = head_dom.documentElement
-    #   for tag in node2.childNodes:
-    #       if tag.nodeType==tag.ELEMENT_NODE:
-    #           found = self._find_node(node, tag.localName)
-    #   #       rml_frames = found.getElementsByTagName('frame')
-    #           if found:
-    #               if tag.hasAttribute('position') and (tag.getAttribute('position')=='inside'):
-    #                   found.appendChild(tag)
-    #               else:
-    #                   found.parentNode.replaceChild(tag, found)
-    #   #       for frame in rml_frames:
-    #   #           tag.appendChild(frame)
-    #   return True
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

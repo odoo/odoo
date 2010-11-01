@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import pooler
@@ -37,17 +37,18 @@ class lot_overview(report_sxw.rml_parse):
     def process(self,location_id):
         location_obj = pooler.get_pool(self.cr.dbname).get('stock.location')
         data = location_obj._product_get_report(self.cr,self.uid, [location_id])
-        data['location_name'] = location_obj.read(self.cr, self.uid, [location_id],['name'])[0]['name']
+         
+        data['location_name'] = location_obj.read(self.cr, self.uid, [location_id],['complete_name'])[0]['complete_name']
         self.price_total = 0.0
         self.price_total += data['total_price']
         self.grand_total += data['total_price']
         return [data]
 
     def _price_total(self):
-        return str( self.price_total)
+        return self.price_total
 
     def _grand_total(self):
-        return str( self.grand_total)
+        return self.grand_total
 
 report_sxw.report_sxw('report.lot.stock.overview', 'stock.location', 'addons/stock/report/lot_overview.rml', parser=lot_overview)
 

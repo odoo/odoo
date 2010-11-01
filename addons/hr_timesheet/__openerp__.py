@@ -35,7 +35,7 @@ Lots of reporting on time and employee tracking are provided.
 It is completely integrated with the cost accounting module. It allows you
 to set up a management by affair.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['account', 'hr', 'base', 'hr_attendance', 'process'],
     'init_xml': ['hr_timesheet_data.xml'],
@@ -50,6 +50,9 @@ to set up a management by affair.
         'wizard/hr_timesheet_sign_in_out_view.xml',
     ],
     'demo_xml': ['hr_timesheet_demo.xml'],
+    'test': ['test/test_hr_timesheet.yml',
+             'test/hr_timesheet_report.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate': '0071405533469',

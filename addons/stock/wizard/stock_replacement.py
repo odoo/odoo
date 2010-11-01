@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,17 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
-import netsvc
-import pooler
 import time
-import wizard
 
 class stock_replacement(osv.osv_memory):
     """
@@ -38,23 +34,23 @@ class stock_replacement(osv.osv_memory):
         return {}
 
     def replace_composant(self, cr, uid, ids, context = {}):
-        """ To open a new wizard that acknowledge, a replacement task 
+        """ To open a new wizard that acknowledge, a replacement task
         @return: It returns the replacement acknowledgement form
-        """                
+        """
         return {
-                'name': False, 
-                'view_type': 'form', 
-                'view_mode': 'form', 
-                'res_model': 'stock.replacement.result', 
-                'type': 'ir.actions.act_window', 
-                'target':'new',
+            'name': False,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.replacement.result',
+            'type': 'ir.actions.act_window',
+            'target':'new',
         }
 
 stock_replacement()
 
 class stock_replacement_result(osv.osv_memory):
     """
-        This class has been defined for replacement result 
+        This class has been defined for replacement result
     """
     _name = "stock.replacement.result"
     _description = "Stock Replacement result"

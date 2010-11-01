@@ -32,35 +32,38 @@
      It completely manages an auction such as managing bids,
      keeping track of the sold articles along with the paid
      and unpaid objects including delivery of the articles.
+     Dashboards for auction that includes:
+       * My Latest Objects (list)
+       * My Latest Deposits (list)
+       * Objects Statistics (list)
+       * My Objects By Day (list)
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['base', 'account', 'hr_attendance'],
-    'init_xml': ['auction_sequence.xml'],
+    'init_xml': ['auction_sequence.xml', 'auction_data.xml'],
     'update_xml': [
+        'security/auction_security.xml',
         'security/ir.model.access.csv',
-#        'wizard/auction_lots_cancel_view.xml',
-#        'wizard/auction_transfer_unsold_object_view.xml',
-        'wizard/auction_lots_able_view.xml',
-        'wizard/auction_lots_enable_view.xml',
         'wizard/auction_lots_make_invoice_buyer_view.xml',
         'wizard/auction_lots_make_invoice_view.xml',
         'wizard/auction_taken_view.xml',
         'wizard/auction_lots_auction_move_view.xml',
         'wizard/auction_pay_buy_view.xml',
-        'wizard/auction_payer_sel_view.xml',
         'wizard/auction_lots_sms_send_view.xml',
         'wizard/auction_catalog_flagey_view.xml',
-#        'wizard/auction_aie_send_view.xml',
-#        'wizard/auction_aie_send_result_view.xml',
         'wizard/auction_lots_buyer_map_view.xml',
-#        'wizard/auction_lots_numerotate_view.xml',
-        
         'auction_view.xml',
         'auction_report.xml',
-        'auction_wizard.xml'
+        'report/report_auction_view.xml',
+        'auction_wizard.xml',
+        'board_auction_view.xml',
+
     ],
-    'demo_xml': ['auction_demo.xml'],
-#    'test' : ['test/auction.yml','test/auction_wizard.yml'],  
+    'demo_xml': ['auction_demo.xml','board_auction_demo.xml'],
+    'test': ['test/auction.yml',
+             'test/auction_report.yml',
+             ],
+
     'installable': True,
     'active': False,
     'certificate': '0039333102717',

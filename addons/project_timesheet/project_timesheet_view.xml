@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="project_invoice_form" model="ir.ui.view">
+            <field name="name">Inherit project form : Invoicing Data</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <field name="warn_customer" position="after">
+                    <group colspan="4" col="4">
+                        <separator colspan="4" string="Invoicing Data"/>
+                        <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection"/>
+                        <field name="to_invoice" widget="selection" string="Invoice Task Work"/>
+                        <field name="amount_max" groups="base.group_extended"/>
+                        <field name="amount_invoiced" groups="base.group_extended"/>
+                    </group>
+                </field>
+            </field>
+        </record>
+
+        <record id="project_invoice_search" model="ir.ui.view">
+            <field name="name">Inherit project search view : Invoicing Data</field>
+            <field name="model">project.project</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="project.view_project_project_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr='//filter[@string="Member"]' position='after'>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-camera_test" string="Invoiceable" domain="[('to_invoice','!=', False)]" help="Invoiceable Project"/>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem id="menu_project_billing" name="Invoicing"
+                  parent="base.menu_main_pm" sequence="5"/>
+        <menuitem id="menu_project_billing_line" name="Invoice Tasks Work"
+            parent="menu_project_billing" action="hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree"/>
+        <menuitem id="base.menu_project_management_time_tracking" name="Time Tracking"
+                parent="base.menu_main_pm" sequence="5"/>
+    </data>
+</openerp>

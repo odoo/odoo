@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import pooler
 import time
 from report import report_sxw
 
@@ -32,15 +31,9 @@ class account_analytic_balance(report_sxw.rml_parse):
             'get_objects': self._get_objects,
             'lines_g': self._lines_g,
             'move_sum': self._move_sum,
-#            'move_sum_debit': self._move_sum_debit,
-#            'move_sum_credit': self._move_sum_credit,
             'sum_all': self._sum_all,
-#            'sum_debit': self._sum_debit,
-#            'sum_credit': self._sum_credit,
             'sum_balance': self._sum_balance,
-#            'sum_quantity': self._sum_quantity,
             'move_sum_balance': self._move_sum_balance,
-#            'move_sum_quantity': self._move_sum_quantity,
         })
         self.acc_ids = []
         self.read_data = []
@@ -49,7 +42,6 @@ class account_analytic_balance(report_sxw.rml_parse):
         self.acc_sum_list = []# maintains a list of all ids
 
     def get_children(self, ids):
-        ids2 = []
         read_data = self.pool.get('account.analytic.account').read(self.cr, self.uid, ids,['child_ids','code','complete_name','balance'])
         for data in read_data:
             if (data['id'] not in self.acc_ids):
@@ -60,7 +52,7 @@ class account_analytic_balance(report_sxw.rml_parse):
                     self.acc_ids.append(data['id'])
                     self.read_data.append(data)
                     if data['child_ids']:
-                        res = self.get_children(data['child_ids'])
+                        self.get_children(data['child_ids'])
         return True
 
 
@@ -70,7 +62,6 @@ class account_analytic_balance(report_sxw.rml_parse):
         self.empty_acc = empty_acc
         self.read_data = []
         self.get_children(self.ids)
-
         return self.read_data
 
     def _lines_g(self, account_id, date1, date2):
@@ -81,10 +72,10 @@ class account_analytic_balance(report_sxw.rml_parse):
                     sum(aal.amount) AS balance, sum(aal.unit_amount) AS quantity \
                 FROM account_analytic_line AS aal, account_account AS aa \
                 WHERE (aal.general_account_id=aa.id) \
-                    AND (aal.account_id in (" + ','.join(map(str, ids)) + "))\
+                    AND (aal.account_id IN %s)\
                     AND (date>=%s) AND (date<=%s) AND aa.active \
                 GROUP BY aal.general_account_id, aa.name, aa.code, aal.code \
-                ORDER BY aal.code", (date1, date2))
+                ORDER BY aal.code", (tuple(ids), date1, date2))
         res = self.cr.dictfetchall()
 
         for r in res:
@@ -108,138 +99,60 @@ class account_analytic_balance(report_sxw.rml_parse):
         else:
             ids = self.acc_data_dict[account_id]
 
-        if option == "credit" :
-            self.cr.execute("SELECT -sum(amount) FROM account_analytic_line \
-                    WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount<0",
-                    (ids,date1, date2))
-        elif option == "debit" :
-            self.cr.execute("SELECT sum(amount) FROM account_analytic_line \
-                    WHERE account_id =ANY(%s)\
-                        AND date>=%s AND date<=%s AND amount>0",
-                    (ids,date1, date2))
-        elif option == "quantity" :
-            self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line \
-                WHERE account_id =ANY(%s)\
-                    AND date>=%s AND date<=%s",
-                (ids,date1, date2))
+        query_params = (tuple(ids), date1, date2)
+        if option == "credit":
+            self.cr.execute("SELECT COALESCE(-sum(amount),0.0) FROM account_analytic_line \
+                    WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0",query_params)
+        elif option == "debit":
+            self.cr.execute("SELECT COALESCE(sum(amount),0.0) FROM account_analytic_line \
+                    WHERE account_id IN %s\
+                        AND date>=%s AND date<=%s AND amount>0",query_params)
+        elif option == "quantity":
+            self.cr.execute("SELECT COALESCE(sum(unit_amount),0.0) FROM account_analytic_line \
+                WHERE account_id IN %s\
+                    AND date>=%s AND date<=%s",query_params)
         return self.cr.fetchone()[0] or 0.0
 
-
-#    def _move_sum_debit(self, account_id, date1, date2):
-#        account_analytic_obj = self.pool.get('account.analytic.account')
-#        ids = account_analytic_obj.search(self.cr, self.uid,
-#                [('parent_id', 'child_of', [account_id])])
-#        self.cr.execute("SELECT sum(amount) \
-#                FROM account_analytic_line \
-#                WHERE account_id in ("+ ','.join(map(str, ids)) +") \
-#                    AND date>=%s AND date<=%s AND amount>0",
-#                (date1, date2))
-#        return self.cr.fetchone()[0] or 0.0
-#
-#    def _move_sum_credit(self, account_id, date1, date2):
-#        account_analytic_obj = self.pool.get('account.analytic.account')
-#        ids = account_analytic_obj.search(self.cr, self.uid,
-#                [('parent_id', 'child_of', [account_id])])
-#        self.cr.execute("SELECT -sum(amount) \
-#                FROM account_analytic_line \
-#                WHERE account_id in ("+ ','.join(map(str, ids)) +") \
-#                    AND date>=%s AND date<=%s AND amount<0",
-#                (date1, date2))
-#        return self.cr.fetchone()[0] or 0.0
-#
     def _move_sum_balance(self, account_id, date1, date2):
         debit = self._move_sum(account_id, date1, date2, 'debit')
         credit = self._move_sum(account_id, date1, date2, 'credit')
         return (debit-credit)
 
-#    def _move_sum_quantity(self, account_id, date1, date2):
-#        account_analytic_obj = self.pool.get('account.analytic.account')
-#        ids = account_analytic_obj.search(self.cr, self.uid,
-#                [('parent_id', 'child_of', [account_id])])
-#        self.cr.execute("SELECT sum(unit_amount) \
-#                FROM account_analytic_line \
-#                WHERE account_id in ("+ ','.join(map(str, ids)) +") \
-#                    AND date>=%s AND date<=%s",
-#                (date1, date2))
-#        return self.cr.fetchone()[0] or 0.0
-
     def _sum_all(self, accounts, date1, date2, option):
+        account_analytic_obj = self.pool.get('account.analytic.account')
         ids = map(lambda x: x['id'], accounts)
-        if not len(ids):
+        if not ids:
             return 0.0
 
         if not self.acc_sum_list:
-            account_analytic_obj = self.pool.get('account.analytic.account')
             ids2 = account_analytic_obj.search(self.cr, self.uid,[('parent_id', 'child_of', ids)])
             self.acc_sum_list = ids2
         else:
             ids2 = self.acc_sum_list
-        if option == "debit" :
-            self.cr.execute("SELECT sum(amount) FROM account_analytic_line \
-                    WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount>0",
-                    (ids,date1, date2,))
-        elif option == "credit" :
-            self.cr.execute("SELECT -sum(amount) FROM account_analytic_line \
-                    WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount<0",
-                    (ids,date1, date2,))
-        elif option == "quantity" :
-            self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line \
-                    WHERE account_id =ANY(%s)AND date>=%s AND date<=%s",
-                    (ids,date1, date2,))
+
+        query_params = (tuple(ids2), date1, date2)
+        if option == "debit":
+            self.cr.execute("SELECT COALESCE(sum(amount),0.0) FROM account_analytic_line \
+                    WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0",query_params)
+        elif option == "credit":
+            self.cr.execute("SELECT COALESCE(-sum(amount),0.0) FROM account_analytic_line \
+                    WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0",query_params)
+        elif option == "quantity":
+            self.cr.execute("SELECT COALESCE(sum(unit_amount),0.0) FROM account_analytic_line \
+                    WHERE account_id IN %s AND date>=%s AND date<=%s",query_params)
         return self.cr.fetchone()[0] or 0.0
 
 
-#    def _sum_debit(self, accounts, date1, date2):
-#        ids = map(lambda x: x['id'], accounts)
-#        if not len(ids):
-#            return 0.0
-#        account_analytic_obj = self.pool.get('account.analytic.account')
-#        ids2 = account_analytic_obj.search(self.cr, self.uid,
-#                [('parent_id', 'child_of', ids)])
-#        self.cr.execute("SELECT sum(amount) \
-#                FROM account_analytic_line \
-#                WHERE account_id IN ("+','.join(map(str, ids2))+") \
-#                    AND date>=%s AND date<=%s AND amount>0",
-#                (date1, date2))
-#        return self.cr.fetchone()[0] or 0.0
-#
-#    def _sum_credit(self, accounts, date1, date2):
-#        ids = map(lambda x: x['id'], accounts)
-#        if not len(ids):
-#            return 0.0
-#        ids = map(lambda x: x['id'], accounts)
-#        account_analytic_obj = self.pool.get('account.analytic.account')
-#        ids2 = account_analytic_obj.search(self.cr, self.uid,
-#                [('parent_id', 'child_of', ids)])
-#        self.cr.execute("SELECT -sum(amount) \
-#                FROM account_analytic_line \
-#                WHERE account_id IN ("+','.join(map(str, ids2))+") \
-#                    AND date>=%s AND date<=%s AND amount<0",
-#                (date1, date2))
-#        return self.cr.fetchone()[0] or 0.0
 
     def _sum_balance(self, accounts, date1, date2):
         debit = self._sum_all(accounts, date1, date2, 'debit') or 0.0
         credit = self._sum_all(accounts, date1, date2, 'credit') or 0.0
         return (debit-credit)
 
-#    def _sum_quantity(self, accounts, date1, date2):
-#        ids = map(lambda x: x['id'], accounts)
-#        if not len(ids):
-#            return 0.0
-#        account_analytic_obj = self.pool.get('account.analytic.account')
-#        ids2 = account_analytic_obj.search(self.cr, self.uid,
-#                [('parent_id', 'child_of', ids)])
-#        self.cr.execute("SELECT sum(unit_amount) \
-#                FROM account_analytic_line \
-#                WHERE account_id IN ("+','.join(map(str, ids2))+") \
-#                    AND date>=%s AND date<=%s",
-#                (date1, date2))
-#        return self.cr.fetchone()[0] or 0.0
 
 report_sxw.report_sxw('report.account.analytic.account.balance',
         'account.analytic.account', 'addons/account/project/report/analytic_balance.rml',
-        parser=account_analytic_balance, header=False)
+        parser=account_analytic_balance, header="internal")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

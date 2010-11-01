@@ -20,13 +20,9 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
-from tools.misc import UpdateableStr, UpdateableDict
+
 from tools.translate import _
-import netsvc
-import pooler
 import time
-import wizard
 
 class stock_inventory_line_split(osv.osv_memory):
     _inherit = "stock.move.split"
@@ -44,10 +40,14 @@ class stock_inventory_line_split(osv.osv_memory):
         @return: A dictionary which of fields with values. 
         """        
         record_id = context and context.get('active_id',False)
-        res = super(stock_inventory_line_split, self).default_get(cr, uid, fields, context=context)
-        line=  self.pool.get('stock.inventory.line').browse(cr, uid, record_id)        
+        res = {}
+        line = self.pool.get('stock.inventory.line').browse(cr, uid, record_id)        
         if 'product_id' in fields:
-            res.update({'product_id':line.product_id.id})       
+            res.update({'product_id':line.product_id.id})
+        if 'product_uom' in fields:
+            res.update({'product_uom': line.product_uom.id})
+        if 'qty' in fields:
+            res.update({'qty': line.product_qty})       
         return res
     
     def split(self, cr, uid, ids, line_ids, context=None):
@@ -68,11 +68,13 @@ class stock_inventory_line_split(osv.osv_memory):
             for inv_line in line_obj.browse(cr, uid, line_ids):
                 line_qty = inv_line.product_qty
                 quantity_rest = inv_line.product_qty                
-                new_line = []                            
-                for line in data.line_ids:
+                new_line = []   
+                if data.use_exist:
+                    lines = [l for l in data.line_exist_ids if l]
+                else:
+                    lines = [l for l in data.line_ids if l]                         
+                for line in lines:
                     quantity = line.quantity
-                    
-
                     if quantity <= 0 or line_qty == 0:
                         continue
                     quantity_rest -= quantity                    
@@ -85,14 +87,13 @@ class stock_inventory_line_split(osv.osv_memory):
                     current_line = line_obj.copy(cr, uid, inv_line.id, default_val)
                     new_line.append(current_line)
                     prodlot_id = False
-                    if line.use_exist and line.name:
-                        prodlot_id = prodlot_obj.search(cr, uid, [('prefix','=',line.name),('product_id','=',data.product_id.id)])
-                        if prodlot_id:
-                            prodlot_id = prodlot_id[0]                    
+                    if data.use_exist:
+                        prodlot_id = line.prodlot_id.id
                     if not prodlot_id:
-                        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-                        prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix' : line.name}, 
-                                                 {'product_id': data.product_id.id})                    
+                        prodlot_id = prodlot_obj.create(cr, uid, {
+                            'name': line.name,
+                            'product_id': inv_line.product_id.id},
+                        context=context)
                     line_obj.write(cr, uid, [current_line], {'prod_lot_id': prodlot_id})
                     prodlot = prodlot_obj.browse(cr, uid, prodlot_id)                    
                     
@@ -100,7 +101,6 @@ class stock_inventory_line_split(osv.osv_memory):
                     if quantity_rest > 0:                        
                         update_val['product_qty'] = quantity_rest                                            
                         line_obj.write(cr, uid, [inv_line.id], update_val)
-
                     
         return new_line
 stock_inventory_line_split()

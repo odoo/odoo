@@ -7,9 +7,9 @@
             <field name="model">report.workcenter.load</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Work Ccenters load">
-                    <field name="name" select="1"/>
-                    <field name="workcenter_id" select="1"/>
+                <tree string="Work Centers load">
+                    <field name="name"/>
+                    <field name="workcenter_id"/>
                     <field name="cycle"/>
                     <field name="hour"/>
                 </tree>
@@ -22,26 +22,23 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Work Center load" type="bar">
-                    <field name="name"/>
+                    <field group="True" name="name"/>
                     <field name="cycle" operator="+"/>
                     <field name="hour" operator="+"/>
                     <field group="True" name="workcenter_id"/>
                 </graph>
             </field>
         </record>
-
-
-        <record id="view_workcenter_load_form" model="ir.ui.view">
-            <field name="name">report.workcenter.load.form</field>
+        
+        <record id="view_workcenter_load_search" model="ir.ui.view">
+            <field name="name">report.workcenter.load.search</field>
             <field name="model">report.workcenter.load</field>
-            <field name="type">form</field>
+            <field name="type">search</field>
             <field name="arch" type="xml">
-                <form string="Work Center load" type="bar">
-                    <field name="name" select="1"/>
-                    <field name="workcenter_id" select="1"/>
-                    <field name="cycle"/>
-                    <field name="hour"/>
-                </form>
+                <search string="Work Center load">
+                    <field name="name"/>
+                    <field name="workcenter_id" widget="selection"/>
+                </search>
             </field>
         </record>
         <record id="action_report_workcenter_load_tree" model="ir.actions.act_window">
@@ -49,12 +46,11 @@
             <field name="res_model">report.workcenter.load</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_workcenter_load_search"/>
+            <field name="help">Work Center Loads gives you a projection of work center loads over a specified period. It is expressed in number of hours and machine related cycles.</field>
         </record>
         <menuitem id="next_id_77" name="Reporting"
             parent="base.menu_mrp_root" sequence="49"/>
-        <menuitem action="action_report_workcenter_load_tree"
-            id="menu_report_workcenter_load" parent="next_id_77"
-            groups="base.group_extended"/>
 
         <!-- stock.move compared to internal location src/dest -->
 
@@ -100,10 +96,8 @@
             <field name="res_model">report.mrp.inout</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="help">Weekly Stock Value Variation enables you to track the stock value evolution linked to manufacturing activities, receptions of products and delivery orders.</field>
         </record>
-        <menuitem action="action_report_in_out_picking_tree" id="menu_report_in_out_picking" parent="next_id_77"/>
-
-
 
     </data>
 </openerp>

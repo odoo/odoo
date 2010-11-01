@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Sales Management',
     'version': '1.0',
@@ -39,10 +38,16 @@
     * Delivery methods:
         - all at once, multi-parcel
         - delivery costs
+    * Dashboard for salesman that includes:
+    * Your open quotations
+    * Top 10 sales of the month
+    * Cases statistics
+    * Graph of sales by product
+    * Graph of cases of the month
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['product', 'stock', 'procurement', 'process'],
+    'depends': ['stock', 'procurement', 'board'],
     'init_xml': [],
     'update_xml': [
         'wizard/sale_make_invoice_advance.xml',
@@ -55,20 +60,27 @@
         'sale_sequence.xml',
         'sale_data.xml',
         'sale_view.xml',
+        'sale_installer.xml',
         'report/sale_report_view.xml',
         'sale_report.xml',
         'stock_view.xml',
-#        'process/sale_process.xml',
+        'board_sale_view.xml',
+        'process/sale_process.xml',
     ],
     'demo_xml': ['sale_demo.xml'],
     'test': [
-             'test/shipping_manual_sale_order.yml',
-             'test/prepaid_sale_order.yml',
-             'test/advance_invoice.yml',
-             'test/so_make_line_invoice.yml',
-             'test/so_make_invoice.yml',
-             'test/sale_procurement.yml',
-            ],
+        'test/data_test.yml',
+        'test/manual_order_policy.yml',
+        'test/prepaid_order_policy.yml',
+        'test/picking_order_policy.yml',
+        'test/postpaid_order_policy.yml',
+        'test/advance_invoice.yml',
+        'test/so_make_line_invoice.yml',
+        'test/sale_procurement.yml',
+        'test/invoice_on_ordered_qty.yml',
+        'test/invoice_on_shipped_qty.yml',
+        'test/sale_report.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0058103601429',

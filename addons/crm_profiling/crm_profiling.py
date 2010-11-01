@@ -33,17 +33,17 @@ def _get_answers(cr, uid, ids):
     query = """
     select distinct(answer)
     from profile_question_yes_rel
-    where profile=ANY(%s)"""
+    where profile IN %s"""
 
-    cr.execute(query, (ids,))
+    cr.execute(query, (tuple(ids),))
     ans_yes = [x[0] for x in cr.fetchall()]
 
     query = """
     select distinct(answer)
     from profile_question_no_rel
-    where profile=ANY(%s)"""
+    where profile IN %s"""
 
-    cr.execute(query, (ids,))
+    cr.execute(query, (tuple(ids),))
     ans_no = [x[0] for x in cr.fetchall()]
 
     return [ans_yes, ans_no]
@@ -61,7 +61,7 @@ def _get_parents(cr, uid, ids):
      select distinct(parent_id)
      from crm_segmentation
      where parent_id is not null
-     and id=ANY(%s)""",(ids,))
+     and id IN %s""",(tuple(ids),))
 
     parent_ids = [x[0] for x in cr.fetchall()]
 

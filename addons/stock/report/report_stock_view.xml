@@ -2,104 +2,6 @@
 <openerp>
     <data>
 
-         <record id="view_stock_report_prodlots_filter" model="ir.ui.view">
-            <field name="name">stock.report.prodlots.filter</field>
-            <field name="model">stock.report.prodlots</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Location">
-                    <group col="10" colspan="4">
-                        <filter icon="terp-go-home" name="internal_locations" string="Internal Locations" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations"/>
-                        <filter icon="terp-go-home" string="Customer Locations" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
-                        <filter icon="terp-go-home" string="Supplier Locations" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
-                        <separator orientation="vertical"/>
-                        <field name="location_id"/>
-                        <field name="product_id"/>
-                    </group>
-                    <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="10">
-                        <filter string="Location" icon="terp-go-home" domain="[]"  context="{'group_by':'location_id'}"/>
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-
-        <record id="stock_report_prodlots_form" model="ir.ui.view">
-            <field name="name">stock.report.prodlots.view</field>
-            <field name="model">stock.report.prodlots</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Stock by Lots">
-                    <field name="location_id"/>
-                    <field name="product_id"/>
-                    <field name="prodlot_id" groups="base.group_extended"/>
-                    <field name="name"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="stock_report_prodlots_tree" model="ir.ui.view">
-            <field name="name">stock.report.prodlots.view</field>
-            <field name="model">stock.report.prodlots</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Stock by Lots">
-                    <field name="location_id"/>
-                    <field name="product_id"/>
-                    <field name="prodlot_id" groups="base.group_extended"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="stock_report_prodlots_graph" model="ir.ui.view">
-            <field name="name">stock.report.prodlots.view</field>
-            <field name="model">stock.report.prodlots</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Stock by Lots" type="bar">
-                    <field name="product_id"/>
-                    <field name="name"/>
-                </graph>
-            </field>
-        </record>
-
-
-        <record id="action_stock_report_prodlots_form" model="ir.actions.act_window">
-            <field name="name">Inventory by Location</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">stock.report.prodlots</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'full':'1','search_default_internal_locations':1}</field>
-            <field name="search_view_id" ref="view_stock_report_prodlots_filter" />
-        </record>
-        <record id="stock_report_tracklots_tree" model="ir.ui.view">
-            <field name="name">stock.report.tracklots.view</field>
-            <field name="model">stock.report.tracklots</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Stock by Lots">
-                    <field name="location_id"/>
-                    <field name="product_id"/>
-                    <field name="tracking_id"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <menuitem
-            id="next_id_61"
-            name="Reporting"
-            parent="stock.menu_stock_root" sequence="5"/>
-
-<!--        <menuitem-->
-<!--            id="next_id_62"-->
-<!--            name="Traceability"-->
-<!--            parent="next_id_61"/>-->
-
         <act_window
             context="{'product_id': active_id}"
             id="act_stock_product_location_open"
@@ -109,28 +11,6 @@
             groups="base.group_extended"/>
 
         <act_window
-            domain="[('location_id', 'child_of', [active_id])]"
-            id="act_stock_location_2_stock_report_prodlots"
-            name="Stock by Lots"
-            res_model="stock.report.prodlots"
-            src_model="stock.location"
-            />
-
-        <act_window
-            domain="[('product_id','=',active_id)]"
-            id="act_product_product_2_stock_report_prodlots"
-            name="Stock by Lots"
-            res_model="stock.report.prodlots"
-            src_model="product.product"
-            groups="base.group_extended"/>
-
-        <act_window
-            domain="[('prodlot_id', '=', active_id)]"
-            id="act_stock_production_lot_2_stock_report_prodlots"
-            name="Stock" res_model="stock.report.prodlots"
-            src_model="stock.production.lot"/>
-
-		<act_window
             domain="[('tracking_id', '=', active_id)]"
             id="act_stock_tracking_lot_2_stock_report_tracklots"
             name="Stock" res_model="stock.report.tracklots"
@@ -169,7 +49,6 @@
             </field>
         </record>
 
-
         <record model="ir.ui.view" id="report_stock_lines_date_form">
             <field name="name">report.stock.lines.date.form</field>
             <field name="model">report.stock.lines.date</field>
@@ -183,11 +62,12 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_line_date">
-            <field name="name">Dates of Latest Inventories by Product</field>
+            <field name="name">Last Product Inventories</field>
             <field name="res_model">report.stock.lines.date</field>
             <field name="view_type">form</field>
              <field name="context">{'search_default_stockable':1}</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Display the last inventories done on your products and easily sort them with specific filtering criteria. If you do frequent and partial inventories, you need this report in order to ensure that the stock of each product is controlled at least once a year.</field>
         </record>
 
         <menuitem parent="next_id_61" action="action_stock_line_date" id="menu_report_stock_line_date" sequence="2"/>
@@ -204,36 +84,6 @@
                 </graph>
             </field>
         </record>
-
-        <record id="view_location_tree_3" model="ir.ui.view">
-            <field name="name">stock.location.tree</field>
-            <field name="model">stock.location</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal';black:usage not in ('view','internal')">
-                    <field name="complete_name"/>
-                    <field name="usage"/>
-                    <field name="stock_real_value" />
-                    <field name="stock_virtual_value" />
-                </tree>
-            </field>
-        </record>
-
-        <record id="action_location_tree_3" model="ir.actions.act_window">
-            <field name="name">Inventory Valuation</field>
-            <field name="res_model">stock.location</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="view_id" ref="view_location_tree_3"/>
-        </record>
-        <menuitem action="action_location_tree_3" id="menu_action_location_tree_3" parent="next_id_61" sequence="1"/>
-
-        <menuitem
-            action="action_stock_report_prodlots_form"
-            id="menu_stock_report_prodlots"
-            parent="next_id_61" sequence="10"/>
-
-
 
     </data>
 </openerp>
