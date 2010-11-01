@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-06-23 17:09+0000\n"
+"PO-Revision-Date: 2010-10-30 19:17+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:33+0000\n"
+"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -41,7 +41,7 @@ msgstr "Seleccione el modo de pago a aplicar."
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupar por..."
 
 #. module: account_payment
 #: constraint:ir.actions.act_window:0
@@ -62,6 +62,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"Cuando se hace una orden, el estado es 'Borrador'.\n"
+" Una vez se confirma el banco, el estado es \"Confirmada\".\n"
+" Cuando la orden se paga, el estado es 'Realizada'."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -99,7 +102,7 @@ msgstr "Asientos"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr ""
+msgstr "Cuenta utilizada"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -121,7 +124,7 @@ msgstr "_Añadir a la orden de pago"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "Extracto generar pago"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -191,7 +194,7 @@ msgstr "Líneas de pago"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Execution Type"
-msgstr ""
+msgstr "Tipo ejecución"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -275,7 +278,7 @@ msgstr "Cuenta de destino"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "Buscar órdenes de pago"
 
 #. module: account_payment
 #: constraint:ir.ui.view:0
@@ -315,7 +318,7 @@ msgstr "Gestión de pagos"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Línea extracto bancario"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -330,12 +333,12 @@ msgstr "Monto a pagar"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -345,12 +348,12 @@ msgstr "Dirección de la empresa principal"
 #. module: account_payment
 #: field:payment.mode,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Compañía"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "Contabilidad extracto generar pago"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -360,7 +363,7 @@ msgstr "Modo de pago"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "Fecha valor"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -383,7 +386,7 @@ msgstr "Línea de pago"
 #. module: account_payment
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "¡Error! No puede crear menús recursivos."
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -404,7 +407,7 @@ msgstr "Dirección del cliente que ordena."
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
+msgstr "Generar extracto:"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -431,7 +434,7 @@ msgstr "Líneas de pago"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Registros diario"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -445,7 +448,7 @@ msgstr ""
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search"
-msgstr ""
+msgstr "Buscar"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -455,7 +458,7 @@ msgstr "Fecha de pago"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -465,7 +468,7 @@ msgstr "Fecha de creación"
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "ADD"
-msgstr ""
+msgstr "Añadir"
 
 #. module: account_payment
 #: view:account.bank.statement:0
@@ -490,12 +493,12 @@ msgstr "El cliente que ordena"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "Contabilidad realizar pago"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Ref. factura"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -527,7 +530,7 @@ msgstr "Realizado"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Factura"
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -590,7 +593,7 @@ msgstr "Cuenta bancaria destino"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "¿Está seguro que quiere realizar el pago?"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -623,7 +626,7 @@ msgstr "Pago"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "Orden de pago / Pago"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -647,7 +650,7 @@ msgstr "Nombre"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Cuenta bancaria"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -658,7 +661,7 @@ msgstr "Información del asiento"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "pago.orden.crear"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -673,13 +676,13 @@ msgstr "Total"
 #. module: account_payment
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "¡No están soportadas las reglas en objetos osv_memory!"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Realizar pago"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
@@ -690,7 +693,7 @@ msgstr "Empresa"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr ""
+msgstr "Generar pago"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
