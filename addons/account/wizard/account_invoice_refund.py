@@ -202,8 +202,8 @@ class account_invoice_refund(osv.osv_memory):
                 xml_id = 'action_invoice_tree3'
             else:
                 xml_id = 'action_invoice_tree4'
-            result = mod_obj._get_id(cr, uid, 'account', xml_id)
-            id = mod_obj.read(cr, uid, result, ['res_id'], context=context)['res_id']
+            result = mod_obj.get_object_reference(cr, uid, 'account', xml_id)
+            id = result and result[1] or False
             result = act_obj.read(cr, uid, id, context=context)
             invoice_domain = eval(result['domain'])
             invoice_domain.append(('id', 'in', created_inv))

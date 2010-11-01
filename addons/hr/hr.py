@@ -19,12 +19,7 @@
 #
 ##############################################################################
 
-import os
-
 from osv import fields, osv
-import tools
-from tools.translate import _
-import addons
 
 import addons
 
@@ -183,7 +178,7 @@ class hr_employee(osv.osv):
         return {'value': {'work_email' : work_email}}
 
     def _get_photo(self, cr, uid, context=None):
-	photo_path = addons.get_module_resource('hr','image','photo.png')
+        photo_path = addons.get_module_resource('hr','image','photo.png')
         return open(photo_path, 'rb').read().encode('base64')
 
     _defaults = {

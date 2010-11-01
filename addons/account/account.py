@@ -25,6 +25,7 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 import netsvc
+import pooler
 from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
@@ -1641,12 +1642,19 @@ class account_tax(osv.osv):
             return result in the context
             Ex: result=round(price_unit*0.21,4)
     """
+
+    def get_precision_tax():
+        def change_digit_tax(cr):
+            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, 'Account')
+            return (16, res+2)
+        return change_digit_tax
+
     _name = 'account.tax'
     _description = 'Tax'
     _columns = {
         'name': fields.char('Tax Name', size=64, required=True, translate=True, help="This name will be displayed on reports"),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."),
-        'amount': fields.float('Amount', required=True, digits_compute=dp.get_precision('Account'), help="For taxes of type percentage, enter % ratio between 0-1."),
+        'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For taxes of type percentage, enter % ratio between 0-1."),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the tax without removing it."),
         'type': fields.selection( [('percent','Percentage'), ('fixed','Fixed Amount'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True,
             help="The computation method for the tax amount."),

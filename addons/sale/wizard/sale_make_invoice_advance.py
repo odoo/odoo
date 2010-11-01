@@ -135,7 +135,8 @@ sale_advance_payment_inv()
 class sale_open_invoice(osv.osv_memory):
     _name = "sale.open.invoice"
     _description = "Sale Open Invoice"
-    def open_invoice(self, cr, uid, ids, context):
+
+    def open_invoice(self, cr, uid, ids, context=None):
 
         """
              To open invoice.
@@ -147,14 +148,15 @@ class sale_open_invoice(osv.osv_memory):
              @return:
 
         """
-
+        if context is None:
+            context = {}
         mod_obj = self.pool.get('ir.model.data')
         for advance_pay in self.browse(cr, uid, ids):
-            result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-            form_id = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
-            form_res = mod_obj.browse(cr, uid, form_id, context=context).res_id
-            tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
-            tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
+            form_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+            form_id = form_res and form_res[1] or False
+            tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
+            tree_id = tree_res and tree_res[1] or False
+
         return {
             'name': _('Advance Invoice'),
             'view_type': 'form',
@@ -162,7 +164,7 @@ class sale_open_invoice(osv.osv_memory):
             'res_model': 'account.invoice',
             'res_id': int(context['invoice_id'][0]),
             'view_id': False,
-            'views': [(form_res, 'form'), (tree_res, 'tree')],
+            'views': [(form_id, 'form'), (tree_id, 'tree')],
             'context': "{'type': 'out_invoice'}",
             'type': 'ir.actions.act_window',
          }
