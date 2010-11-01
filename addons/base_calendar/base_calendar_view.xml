@@ -108,7 +108,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invitations">
-                   <filter icon="terp-camera_test" name="toreview" string="To Review"
+                   <filter icon="terp-gtk-jump-to-ltr" name="toreview" string="To Review"
                        domain="[('state','=', 'needs-action')]"
                        separator="1" help="Invitations To Review" />
                    <filter icon="terp-check" string="Accepted"
@@ -130,7 +130,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Responsible" icon="terp-personal" domain="[]"
                             context="{'group_by':'user_id'}" />
-                        <filter string="Contact" icon="terp-partner" domain="[]"
+                        <filter string="Contact" icon="terp-personal" domain="[]"
                             context="{'group_by':'partner_address_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Type" icon="terp-stock_symbol-selection" help="Invitation Type"
@@ -229,7 +229,7 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1" string="Summary"
                             colspan="4" required="1" />
-                        <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
+                        <field name="allday" colspan="2" on_change="onchange_dates(date,False,False,allday)" />
                         <newline/>
                         <field name="date" string="Start Date" required="1" select="1"
                             on_change="onchange_dates(date,duration,False,allday)" />
