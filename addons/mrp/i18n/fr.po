@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-27 08:29+0000\n"
+"PO-Revision-Date: 2010-10-29 09:18+0000\n"
 "Last-Translator: TeMPO <openerp@tempo-consulting.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-28 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:10+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -33,7 +33,7 @@ msgstr "UdM du produit"
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Work Centers"
-msgstr ""
+msgstr "Postes de charge"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -43,22 +43,22 @@ msgstr "Nombre de Cycles"
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of operations this workcenter can do."
-msgstr ""
+msgstr "Nombre d'opérations simultanées du poste de charge"
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
-msgstr ""
+msgstr "Emplacement des composants"
 
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr ""
+msgstr "Occupation du poste de charge"
 
 #. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Centers load"
-msgstr ""
+msgstr "Occupation du poste de charge"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -87,6 +87,8 @@ msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
 msgstr ""
+"Les règles de stock mini permettent au système de créer automatiquement des "
+"approvisionnements dès que les minima sont atteints"
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -94,12 +96,14 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the bills of "
 "material without removing it."
 msgstr ""
+"Si la coche Active est validée, la nomenclature n'est pas visible sans pour "
+"autant la supprimer"
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
 #: field:mrp.production.order,picking_id:0
 msgid "Picking list"
-msgstr ""
+msgstr "Liste de colisage"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -111,7 +115,7 @@ msgstr "Coût horaire"
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Cost Price per Uom"
-msgstr ""
+msgstr "Coût unitaire"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -122,7 +126,7 @@ msgstr "Rebuts"
 #: view:mrp.production.order:0
 #: field:mrp.production.order,day:0
 msgid "Day"
-msgstr ""
+msgstr "Jour"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -212,7 +216,7 @@ msgstr ""
 #: view:mrp.production.order:0
 #: field:mrp.production.order,state:0
 msgid "State"
-msgstr ""
+msgstr "Etat"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
@@ -244,7 +248,7 @@ msgstr "Qté de Produit"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
 msgid "For purchased material"
-msgstr ""
+msgstr "Pour un produit acheté"
 
 #. module: mrp
 #: field:mrp.bom.revision,indice:0
@@ -265,7 +269,7 @@ msgstr "Compte analyt. du cycle"
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Work Cost"
-msgstr ""
+msgstr "Coût"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -275,7 +279,7 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0
 msgid "Procurement of services"
-msgstr ""
+msgstr "Approvisionnement des Services"
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -290,12 +294,12 @@ msgstr "Emplacement de destination"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "title"
-msgstr ""
+msgstr "Titre"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
 msgid "Master Data"
-msgstr ""
+msgstr "Données de base"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -345,7 +349,7 @@ msgstr "Référence vers une position dans un plan externe."
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "August"
-msgstr ""
+msgstr "Août"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_order
@@ -470,7 +474,7 @@ msgstr "Structure de la Nomenclature des Matériaux"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
-msgstr ""
+msgstr "le produit est de type Service"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -506,7 +510,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
 msgid "Nbr of cycles"
-msgstr ""
+msgstr "Nombre de cycles"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_orderrfq0
