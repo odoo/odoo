@@ -113,7 +113,7 @@ class account_analytic_line(osv.osv):
         if True:
             flag = False
             # Compute based on pricetype
-            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context)
+            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context=context)
             pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
             if journal_id:
                 journal = analytic_journal_obj.browse(cr, uid, journal_id)
