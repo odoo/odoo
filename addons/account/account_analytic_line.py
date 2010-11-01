@@ -73,7 +73,7 @@ class account_analytic_line(osv.osv):
             context={}
         if not journal_id:
             j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=','purchase')])
-            j_id = j_ids and j_ids[0] or False
+            journal_id = j_ids and j_ids[0] or False
         if not journal_id or not prod_id:
             return {}
         product_obj = self.pool.get('product.product')
@@ -113,7 +113,7 @@ class account_analytic_line(osv.osv):
         if True:
             flag = False
             # Compute based on pricetype
-            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context)
+            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context=context)
             pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
             if journal_id:
                 journal = analytic_journal_obj.browse(cr, uid, journal_id)
