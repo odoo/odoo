@@ -301,7 +301,7 @@
 
 	</section>
 
-    <blockTable colWidths="66.0,35.0,166.0,90.0,60.0,280.0,148.0,69.0,72.0,64.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="66.0,35.0,166.0,90.0,60.0,245.0,148.0,80.0,80.0,80.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
        <tr>
           <td><para style="P2">Date</para></td>
           <td><para style="date">JNRL</para></td>
@@ -320,10 +320,10 @@
 
 		<para>[[ repeatIn(get_children_accounts(a), 'o') ]]</para>
 
-		<blockTable colWidths="66.0,35.0,166.0,90.0,60.0,280.0,148.0,69.0,72.0,64.0" style="tbl_content">[[data['form']['amount_currency'] == False or removeParentNode('blockTable')]]
+		<blockTable colWidths="66.0,35.0,166.0,90.0,60.0,245.0,148.0,80.0,80.0,80.0" style="tbl_content">[[data['form']['amount_currency'] == False or removeParentNode('blockTable')]]
         	<tr>
          		<td>
-	      			<blockTable colWidths="405.0,435.0,69.0,72.0,63.0" style="Table5">
+	      			<blockTable colWidths="405.0,399.0,80.0,80.0,80.0" style="Table5">
 						<tr>
 			 	 			<td><para style="Standard"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para></td>
 			  				<td><para style="Standard"></para></td>
