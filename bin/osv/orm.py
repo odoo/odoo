@@ -2494,13 +2494,6 @@ class orm(orm_template):
                         self.__schema.debug("Create table '%s': relation between '%s' and '%s'",
                                             f._rel, self._table, ref)
                 else:
-                    #cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
-                    #           "FROM pg_class c,pg_attribute a,pg_type t " \
-                    #           "WHERE c.relname=%s " \
-                    #           "AND a.attname=%s " \
-                    #           "AND c.oid=a.attrelid " \
-                    #           "AND a.atttypid=t.oid", (self._table, k))
-                    #res = cr.dictfetchall()
                     res = col_data.get(k, [])
                     res = res and [res] or []
                     if not res and hasattr(f, 'oldname'):
