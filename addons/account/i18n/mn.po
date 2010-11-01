@@ -28,6 +28,13 @@ msgid "Account Tax Code"
 msgstr "Татварын дансны код"
 
 #. module: account
+#: field:account.partner.balance,result_selection:0
+#: field:account.aged.trial.balance,result_selection:0
+#: field:account.partner.ledger,result_selection:0
+msgid "Partner's"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree9
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree9
 msgid "Unpaid Supplier Invoices"
@@ -242,13 +249,6 @@ msgstr "Давтан гүйлгээнүүд"
 #: xsl:account.transfer:0
 msgid "Amount"
 msgstr "Дүн"
-
-#. module: account
-#: field:account.partner.balance,result_selection:0
-#: field:account.aged.trial.balance,result_selection:0
-#: field:account.partner.ledger,result_selection:0
-msgid "Partner's"
-msgstr ""
 
 #. module: account
 #: field:account.partner.balance,display_partner:0
@@ -1911,25 +1911,6 @@ msgid "Print"
 msgstr "Хэвлэх"
 
 #. module: account
-#: wizard_field:account.account.balance.report,checktype,date_from:0
-#: field:account.config.wizard,date1:0
-#: field:account.fiscalyear,date_start:0
-#: field:account.subscription,date_start:0
-#: field:account.common.report,date_from:0
-#: field:account.report.general.ledger,date_from:0
-#: field:account.balance.report,date_from:0
-#: field:account.pl.report,date_from:0
-#: field:account.bs.report,date_from:0
-#: field:account.print.journal,date_from:0
-#: field:account.general.journal,date_from:0
-#: field:account.central.journal,date_from:0
-#: field:account.partner.balance,date_from:0
-#: field:account.partner.ledger,date_from:0
-#: field:account.aged.trial.balance,date_from:0 
-msgid "Start Date"
-msgstr "Эхлэх огноо"
-
-#. module: account
 #: model:account.journal,name:account.refund_expenses_journal
 msgid "x Expenses Credit Notes Journal"
 msgstr "Зардлыг кредитийн журналд тэмдэглэх"
@@ -2007,6 +1988,7 @@ msgid "The partner reference of this invoice."
 msgstr "Уг нэхэмжлэлийг тухайн харилцагч хэрхэн нэрлэн дугаарлах."
 
 #. module: account
+#: wizard_field:account.general.ledger.report,checktype,sortbydate:0
 #: field:account.report.general.ledger,sortby:0
 msgid "Sort By:"
 msgstr "Эрэмбэлэх"
@@ -3886,6 +3868,27 @@ msgid "Account Configure Wizard "
 msgstr "Данс тохиргооны хэсэг "
 
 #. module: account
+#: field:account.config.wizard,date1:0
+#: field:account.fiscalyear,date_start:0
+#: field:account.subscription,date_start:0
+#: field:account.config.wizard,date1:0
+#: field:account.fiscalyear,date_start:0
+#: field:account.subscription,date_start:0
+#: field:account.common.report,date_from:0
+#: field:account.report.general.ledger,date_from:0
+#: field:account.balance.report,date_from:0
+#: field:account.pl.report,date_from:0
+#: field:account.bs.report,date_from:0
+#: field:account.print.journal,date_from:0
+#: field:account.general.journal,date_from:0
+#: field:account.central.journal,date_from:0
+#: field:account.partner.balance,date_from:0
+#: field:account.partner.ledger,date_from:0
+#: field:account.aged.trial.balance,date_from:0
+msgid "Start Date"
+msgstr "Эхлэх огноо"
+
+#. module: account
 #: field:account.aged.trial.balance,period_length:0 
 msgid "Period length(days)"
 msgstr ""
@@ -4613,7 +4616,6 @@ msgstr ""
 #: view:account.vat.declaration:0
 msgid "Periods"
 msgstr "Мөчлөг"
-
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_open_closed_fiscalyear
@@ -6326,7 +6328,6 @@ msgstr ""
 #: field:account.vat.declaration,based_on:0
 msgid "Based on"
 msgstr ""
-
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
