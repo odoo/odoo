@@ -7,15 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-08-03 03:48+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: document_ics
+#: help:document.ics.crm.wizard,claims:0
+msgid ""
+"Manages the supplier and customers claims,including your corrective or "
+"preventive actions."
+msgstr ""
+
+#. module: document_ics
+#: field:document.directory.content,object_id:0
+msgid "Object"
+msgstr "Objekti"
 
 #. module: document_ics
 #: constraint:ir.model:0
@@ -29,9 +41,10 @@ msgid "uid"
 msgstr "tunnus"
 
 #. module: document_ics
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Virhe! Et voi luoda rekursiivisia kansioita."
+#: help:document.ics.crm.wizard,fund:0
+msgid ""
+"This may help associations in their fund raising process and tracking."
+msgstr "Tämä saattaa auttaa yhteisöjä varainhankinnassa ja sen seurannassa."
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,jobs:0
@@ -39,24 +52,24 @@ msgid "Jobs Hiring Process"
 msgstr "Rekrytointiprosessi"
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "Configure Calendars for CRM Sections"
-msgstr ""
-
-#. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
 msgid "Helpdesk"
 msgstr "Helpdesk"
 
 #. module: document_ics
-#: field:document.directory.ics.fields,field_id:0
-msgid "Open ERP Field"
+#: selection:document.directory.ics.fields,fn:0
+msgid "Interval in hours"
 msgstr ""
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "Next"
-msgstr "Seuraava"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "osallistuja"
+
+#. module: document_ics
+#: constraint:crm.case.section:0
+msgid "Error ! You cannot create recursive Sales team."
+msgstr ""
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
@@ -74,9 +87,9 @@ msgid "Shared Calendar Meetings"
 msgstr "Kalenterin jaetut tapaamiset"
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "url"
-msgstr "URL"
+#: help:document.ics.crm.wizard,helpdesk:0
+msgid "Manages an Helpdesk service."
+msgstr "Hallinnoi Helpdesk-palvelua."
 
 #. module: document_ics
 #: constraint:ir.actions.act_window:0
@@ -84,37 +97,31 @@ msgid "Invalid model name in the action definition."
 msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
 
 #. module: document_ics
-#: help:document.ics.crm.wizard,bugs:0
-msgid "Used by companies to track bugs and support requests on softwares"
-msgstr ""
-"Yritykset käyttävät ohjelmointivirheiden ja ohjelmien tukipyyntöjen "
-"jäljittämiseen"
-
-#. module: document_ics
-#: model:ir.actions.todo,note:document_ics.config_wizard_step_case_section_menu
-msgid ""
-"This Configuration step use to create Calendars in document for all Case "
-"Sections"
-msgstr ""
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtend"
 msgstr ""
 
 #. module: document_ics
-#: help:document.ics.crm.wizard,jobs:0
-msgid ""
-"Help you to organise the jobs hiring process: evaluation, meetings, email "
-"integration..."
+#: model:ir.model,name:document_ics.model_crm_meeting
+msgid "Meeting"
 msgstr ""
-"Auttaa sinua organisoimaan rekrytoinnin: arvioinnit, tapaamiset, sähköposti-"
-"integraation jne."
+
+#. module: document_ics
+#: help:document.ics.crm.wizard,lead:0
+msgid ""
+"Allows you to track and manage leads which are pre-sales requests or "
+"contacts, the very first contact with a customer request."
+msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "description"
 msgstr "kuvaus"
+
+#. module: document_ics
+#: field:document.directory.ics.fields,fn:0
+msgid "Function"
+msgstr ""
 
 #. module: document_ics
 #: model:ir.actions.act_window,name:document_ics.action_view_document_ics_config_directories
@@ -127,15 +134,21 @@ msgid "Tracks identified business opportunities for your sales pipeline."
 msgstr "Jäljittää tunnistetut liiketoimintamahdollisuudet myyntikanavalle."
 
 #. module: document_ics
-#: help:document.ics.crm.wizard,fund:0
-msgid ""
-"This may help associations in their fund raising process and tracking."
-msgstr "Tämä saattaa auttaa yhteisöjä varainhankinnassa ja sen seurannassa."
+#: field:document.ics.crm.wizard,progress:0
+msgid "Configuration Progress"
+msgstr ""
 
 #. module: document_ics
-#: help:document.ics.crm.wizard,helpdesk:0
-msgid "Manages an Helpdesk service."
-msgstr "Hallinnoi Helpdesk-palvelua."
+#: help:document.ics.crm.wizard,jobs:0
+msgid ""
+"Helps you to organise the jobs hiring process: evaluation, meetings, email "
+"integration..."
+msgstr ""
+
+#. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "title"
+msgstr ""
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,fund:0
@@ -143,14 +156,14 @@ msgid "Fund Raising Operations"
 msgstr "Varojenkeräystoiminnot"
 
 #. module: document_ics
-#: field:document.directory.content,ics_object_id:0
-msgid "Object"
-msgstr "Objekti"
+#: model:ir.model,name:document_ics.model_document_directory_content
+msgid "Directory Content"
+msgstr ""
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive sections."
-msgstr "Virhe! Et voi luoda rekursiivisia osioita."
+#: model:ir.model,name:document_ics.model_document_directory_ics_fields
+msgid "Document Directory ICS Fields"
+msgstr ""
 
 #. module: document_ics
 #: model:ir.module.module,shortdesc:document_ics.module_meta_information
@@ -158,9 +171,16 @@ msgid "Support for iCal based on Document Management System"
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "location"
-msgstr "sijainti"
+#: help:document.ics.crm.wizard,phonecall:0
+msgid ""
+"Helps you to encode the result of a phone call or to plan a list of phone "
+"calls to process."
+msgstr ""
+
+#. module: document_ics
+#: field:document.directory.ics.fields,field_id:0
+msgid "OpenERP Field"
+msgstr ""
 
 #. module: document_ics
 #: view:document.directory:0
@@ -173,9 +193,14 @@ msgid "ICS Value"
 msgstr "ICS-arvo"
 
 #. module: document_ics
-#: model:ir.module.module,description:document_ics.module_meta_information
-msgid "Allows to synchronise calendars with others applications."
-msgstr "Sallii kalenterien synkronoinnin muiden sovellusten kanssa."
+#: selection:document.directory.ics.fields,fn:0
+msgid "Expression as constant"
+msgstr ""
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "location"
+msgstr "sijainti"
 
 #. module: document_ics
 #: constraint:ir.ui.view:0
@@ -183,16 +208,14 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Virheellinen XML näkymäarkkitehtuurille!"
 
 #. module: document_ics
-#: help:document.ics.crm.wizard,lead:0
-msgid ""
-"Allows you to track and manage prospects which are pre-sales requests or "
-"contacts, the very first contact with a customer request."
-msgstr ""
-
-#. module: document_ics
 #: field:document.ics.crm.wizard,name:0
 msgid "Name"
 msgstr "Nimi"
+
+#. module: document_ics
+#: help:document.directory.ics.fields,fn:0
+msgid "Alternate method                 of calculating the value"
+msgstr ""
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,meeting:0
@@ -200,18 +223,9 @@ msgid "Manages the calendar of meetings of the users."
 msgstr "Hallinnoi käyttäjien tapaamiskalenteria"
 
 #. module: document_ics
-#: field:document.directory.content,ics_domain:0
-msgid "Domain"
-msgstr "Toimialue"
-
-#. module: document_ics
-#: help:document.ics.crm.wizard,claims:0
-msgid ""
-"Manages the supplier and customers claims, including your corrective or "
-"preventive actions."
+#: help:document.ics.crm.wizard,bugs:0
+msgid "Used by companies to track bugs and support requests on software"
 msgstr ""
-"Hallinnoi toimittajien ja asiakkaiden reklamaatioita, sisältäen sinun "
-"korjaavat tai estävät toiminnot."
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -224,11 +238,6 @@ msgid "ICS Mapping"
 msgstr ""
 
 #. module: document_ics
-#: view:crm.case:0
-msgid "Duration(In Hour)"
-msgstr "Kesto tunneissa"
-
-#. module: document_ics
 #: field:document.ics.crm.wizard,document_ics:0
 msgid "Shared Calendar"
 msgstr "Jaettu kalenteri"
@@ -239,21 +248,14 @@ msgid "Claims"
 msgstr "Vaateet"
 
 #. module: document_ics
-#: help:document.ics.crm.wizard,phonecall:0
-msgid ""
-"Help you to encode the result of a phone call or to planify a list of phone "
-"calls to process."
-msgstr ""
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtstart"
 msgstr ""
 
 #. module: document_ics
-#: field:document.ics.crm.wizard,phonecall:0
-msgid "Phone Calls"
-msgstr "Puhelut"
+#: field:document.directory.ics.fields,expr:0
+msgid "Expression"
+msgstr ""
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,bugs:0
@@ -266,13 +268,38 @@ msgid "categories"
 msgstr "luokat"
 
 #. module: document_ics
-#: field:document.ics.crm.wizard,lead:0
-msgid "Prospect"
+#: selection:document.directory.ics.fields,fn:0
+msgid "Use the field"
 msgstr ""
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "Create Pre-Configured Calendars"
+#: field:document.directory.content,ics_domain:0
+msgid "Domain"
+msgstr "Toimialue"
+
+#. module: document_ics
+#: field:document.directory.content,fname_field:0
+msgid "Filename field"
+msgstr ""
+
+#. module: document_ics
+#: field:document.directory.content,obj_iterate:0
+msgid "Iterate object"
+msgstr ""
+
+#. module: document_ics
+#: field:crm.meeting,code:0
+msgid "Calendar Code"
+msgstr ""
+
+#. module: document_ics
+#: model:ir.module.module,description:document_ics.module_meta_information
+msgid "Allows to synchronise calendars with others applications."
+msgstr "Sallii kalenterien synkronoinnin muiden sovellusten kanssa."
+
+#. module: document_ics
+#: field:document.ics.crm.wizard,config_logo:0
+msgid "Image"
 msgstr ""
 
 #. module: document_ics
@@ -281,8 +308,10 @@ msgid "created"
 msgstr "luotu"
 
 #. module: document_ics
-#: field:crm.case,code:0
-msgid "Calendar Code"
+#: help:document.directory.content,obj_iterate:0
+msgid ""
+"If set, a separate                         instance will be created for each "
+"record of Object"
 msgstr ""
 
 #. module: document_ics
@@ -291,19 +320,24 @@ msgid "summary"
 msgstr "yhteenveto"
 
 #. module: document_ics
+#: field:document.ics.crm.wizard,lead:0
+msgid "Leads"
+msgstr ""
+
+#. module: document_ics
 #: model:ir.model,name:document_ics.model_document_ics_crm_wizard
 msgid "document.ics.crm.wizard"
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "osallistuja"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr ""
 
 #. module: document_ics
-#: model:ir.model,name:document_ics.model_document_directory_ics_fields
-msgid "document.directory.ics.fields"
-msgstr ""
+#: field:document.ics.crm.wizard,phonecall:0
+msgid "Phone Calls"
+msgstr "Puhelut"
 
 #. module: document_ics
 #: field:document.directory.content,ics_field_ids:0
@@ -311,9 +345,9 @@ msgid "Fields Mapping"
 msgstr ""
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "Cancel"
-msgstr "Peruuta"
+#: selection:document.directory.ics.fields,name:0
+msgid "url"
+msgstr "URL"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,opportunity:0
@@ -324,3 +358,44 @@ msgstr "Liiketoimintamahdollisuudet"
 #: selection:document.directory.ics.fields,name:0
 msgid "dtstamp"
 msgstr ""
+
+#. module: document_ics
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
+msgstr ""
+
+#~ msgid "Next"
+#~ msgstr "Seuraava"
+
+#~ msgid "Used by companies to track bugs and support requests on softwares"
+#~ msgstr ""
+#~ "Yritykset käyttävät ohjelmointivirheiden ja ohjelmien tukipyyntöjen "
+#~ "jäljittämiseen"
+
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Virhe! Et voi luoda rekursiivisia kansioita."
+
+#~ msgid ""
+#~ "Help you to organise the jobs hiring process: evaluation, meetings, email "
+#~ "integration..."
+#~ msgstr ""
+#~ "Auttaa sinua organisoimaan rekrytoinnin: arvioinnit, tapaamiset, sähköposti-"
+#~ "integraation jne."
+
+#~ msgid "Error ! You cannot create recursive sections."
+#~ msgstr "Virhe! Et voi luoda rekursiivisia osioita."
+
+#~ msgid "Duration(In Hour)"
+#~ msgstr "Kesto tunneissa"
+
+#~ msgid ""
+#~ "Manages the supplier and customers claims, including your corrective or "
+#~ "preventive actions."
+#~ msgstr ""
+#~ "Hallinnoi toimittajien ja asiakkaiden reklamaatioita, sisältäen sinun "
+#~ "korjaavat tai estävät toiminnot."
+
+#~ msgid "Cancel"
+#~ msgstr "Peruuta"

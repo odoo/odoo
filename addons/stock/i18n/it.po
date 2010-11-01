@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-10-28 20:35+0000\n"
+"PO-Revision-Date: 2010-10-31 13:16+0000\n"
 "Last-Translator: Lorenzo Battistini <lorenzo.battistini@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-29 05:27+0000\n"
+"X-Launchpad-Export-Date: 2010-11-01 05:10+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -107,7 +107,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Inventory Control"
-msgstr ""
+msgstr "Controllo inventario"
 
 #. module: stock
 #: help:stock.production.lot,ref:0
@@ -125,7 +125,7 @@ msgstr "STOCK_ZOOM_100"
 #: model:ir.actions.report.xml,name:stock.report_picking_list
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr ""
+msgstr "Documento di trasporto"
 
 #. module: stock
 #: view:board.board:0
@@ -221,7 +221,7 @@ msgstr ""
 #: view:stock.picking:0
 #: field:stock.picking,origin:0
 msgid "Origin"
-msgstr ""
+msgstr "Origine"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
@@ -393,7 +393,7 @@ msgstr "Disponibile"
 #: view:stock.picking:0
 #: field:stock.picking,min_date:0
 msgid "Expected Date"
-msgstr ""
+msgstr "Data prevista"
 
 #. module: stock
 #: view:board.board:0
@@ -463,7 +463,7 @@ msgstr "Tipo di luogo"
 #: help:report.stock.move,type:0
 #: help:stock.picking,type:0
 msgid "Shipping type specify, goods coming in or going out."
-msgstr ""
+msgstr "Specifica il tipo di spedizione, beni in entrata o in uscita"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -675,7 +675,7 @@ msgstr "Destinatario"
 #: model:ir.actions.act_window,name:stock.action_location_tree
 #: model:ir.ui.menu,name:stock.menu_action_location_tree
 msgid "Location Structure"
-msgstr ""
+msgstr "Struttura punti di stoccaggio"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -790,7 +790,7 @@ msgstr "STOCK_CUT"
 #. module: stock
 #: help:stock.picking,date:0
 msgid "Date of Order"
-msgstr ""
+msgstr "Data dell'ordine"
 
 #. module: stock
 #: selection:product.product,valuation:0
@@ -842,7 +842,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 #: view:stock.picking:0
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Spedizioni in entrata"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1037,7 +1037,7 @@ msgstr "Luogo di Produzione"
 #. module: stock
 #: help:stock.picking,address_id:0
 msgid "Address of partner"
-msgstr ""
+msgstr "Indirizzo del partner"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_tinyshop0
@@ -1106,7 +1106,7 @@ msgstr "STOCK_UNDELETE"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Delivery Order"
-msgstr ""
+msgstr "Ordine di consegna"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1264,7 +1264,7 @@ msgstr ""
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Packing List:"
-msgstr "Lista Prelievo:"
+msgstr "Lista Imballaggi:"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1333,7 +1333,7 @@ msgstr ""
 #: view:stock.picking:0
 #: view:stock.split.into:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Annulla"
 
 #. module: stock
 #: view:stock.move:0
@@ -1348,7 +1348,7 @@ msgstr "Panoramica del calendario"
 #. module: stock
 #: view:stock.picking:0
 msgid "Additional Info"
-msgstr ""
+msgstr "Informazioni aggiuntive"
 
 #. module: stock
 #: report:stock.inventory.move:0
@@ -1537,7 +1537,7 @@ msgstr ""
 #: view:stock.picking:0
 #: field:stock.picking,date:0
 msgid "Order Date"
-msgstr ""
+msgstr "Data ordine"
 
 #. module: stock
 #: field:stock.location,location_id:0
@@ -1555,6 +1555,16 @@ msgid ""
 "* Done: has been processed, can't be modified or cancelled anymore\n"
 "* Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"* Bozza: non ancora confermato e non sarà schedulato finché non sarà "
+"confermato\n"
+"* Confermato: ancora in attesa della disponibilità dei prodotti\n"
+"* Disponibile: prodotti tenuti da parte, semplicemente in attesa di "
+"conferma\n"
+"* In attesa: in attesa che un altro movimento venga processato prima di "
+"diventare automaticamente disponibile (ad es. nei flussi 'Produrre su "
+"ordine')\n"
+"* Completato: è stato processato, non può più essere modificato o annullato\n"
+"* Annullato: è stato annullato, non può più essere confermato"
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -1633,6 +1643,8 @@ msgid ""
 "If this picking was split this field links to the picking that contains the "
 "other part that has been processed already."
 msgstr ""
+"Se questo documento è stato diviso, questo campo è collegato al documento "
+"che contiene la parte dell'ordine che è già stata processata."
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
@@ -1688,7 +1700,7 @@ msgstr "Spedizione Merci"
 #. module: stock
 #: view:stock.picking:0
 msgid "Cancel Availability"
-msgstr "Cancella Disponibilità"
+msgstr "Annulla Disponibilità"
 
 #. module: stock
 #: help:stock.move,date_expected:0
@@ -1997,7 +2009,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not from Picking"
-msgstr ""
+msgstr "Non da DDT"
 
 #. module: stock
 #: field:stock.warehouse,partner_address_id:0
@@ -2388,7 +2400,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 msgid "Physical Inventories"
-msgstr ""
+msgstr "Inventari fisici"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2492,7 +2504,7 @@ msgstr "terp-stock"
 #. module: stock
 #: help:stock.picking,min_date:0
 msgid "Expected date for the picking to be processed"
-msgstr ""
+msgstr "Data attesa per l'elaborazione del prelievo"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -2727,14 +2739,14 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_pdct_in
 #: view:stock.move:0
 msgid "Receive Products"
-msgstr ""
+msgstr "Prodotti in entrata"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_out_picking_move
 #: model:ir.actions.act_window,name:stock.action_partial_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_out
 msgid "Deliver Products"
-msgstr ""
+msgstr "Prodotti in uscita"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2760,7 +2772,7 @@ msgstr ""
 #. module: stock
 #: help:stock.picking,date_done:0
 msgid "Date of Completion"
-msgstr ""
+msgstr "Data di completamento"
 
 #. module: stock
 #: help:stock.tracking,active:0
@@ -3087,6 +3099,8 @@ msgstr "Data Chiusura"
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
+"Inserire un Partner nel documento di trasporto se si vuole generare la "
+"fattura."
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -3247,7 +3261,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking,address_id:0
 msgid "Address"
-msgstr ""
+msgstr "Indirizzo"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -3385,7 +3399,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "All at once"
-msgstr "Contemporaneamente"
+msgstr "Tutto in una volta"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -3524,7 +3538,7 @@ msgstr "Vuoi incorporare inventari?"
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Annullato"
 
 #. module: stock
 #: field:stock.location,chained_location_type:0
@@ -3535,6 +3549,8 @@ msgstr "Tipo Punto di Stoccaggio Collegato"
 #: help:stock.picking,move_type:0
 msgid "It specifies goods to be delivered all at once or by direct delivery"
 msgstr ""
+"Specifica se i beni debbano essere consegnati tutti in una volta o tramite "
+"consegna diretta"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:0
@@ -3665,7 +3681,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr ""
+msgstr "Back Order di"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:0
@@ -3780,7 +3796,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Additional info"
-msgstr ""
+msgstr "Informazioni aggiuntive"
 
 #. module: stock
 #: view:stock.move:0
@@ -3815,7 +3831,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,auto_validate:0
 msgid "Auto Validate"
-msgstr "Auto-Convalida"
+msgstr "Convalida automatica"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -3857,7 +3873,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
 msgid "Products Moves"
-msgstr ""
+msgstr "Movimenti prodotti"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -3887,7 +3903,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Picking"
-msgstr ""
+msgstr "Prelievo automatico"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
@@ -3970,7 +3986,7 @@ msgstr ""
 #. module: stock
 #: help:stock.picking,origin:0
 msgid "Reference of the document that produced this picking."
-msgstr ""
+msgstr "Riferimento al documento che ha generato questo prelievo"
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
@@ -4297,7 +4313,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree
 #: view:stock.picking:0
 msgid "Outgoing Deliveries"
-msgstr ""
+msgstr "Consegne in uscita"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
