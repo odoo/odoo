@@ -38,7 +38,7 @@ class stock_location_path(osv.osv):
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not from Picking")], "Invoice Status",
+            ("none", "Not Applicable")], "Invoice Status",
             required=True,),
         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
         'auto': fields.selection(
@@ -77,7 +77,7 @@ class product_pulled_flow(osv.osv):
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not from Picking")], "Invoice Status",
+            ("none", "Not Applicable")], "Invoice Status",
             required=True,),
     }
     _defaults = {

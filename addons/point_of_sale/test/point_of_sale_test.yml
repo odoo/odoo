@@ -3,42 +3,42 @@
 
 -
   I  configure all details for the Customer, Salesman and Product, Account.
-- 
+-
   I create View Account Type.
-- 
+-
   !record {model: account.account.type, id: account_account_type_view0}:
     close_method: none
     code: View
     name: View
     sign: 1
-- 
+-
   I create Income Account Type.
-- 
+-
   !record {model: account.account.type, id: account_account_type_income0}:
     close_method: unreconciled
     code: Income
     name: Income
     sign: 1
-- 
+-
   I create Expense Account Type.
-- 
+-
   !record {model: account.account.type, id: account_account_type_expense0}:
     close_method: unreconciled
     code: Expense
     name: Expense
     sign: 1
-- 
+-
   I create Cash Account Type.
-- 
+-
   !record {model: account.account.type, id: account_account_type_cash0}:
     close_method: balance
     code: Cash
     name: Cash
     sign: 1
-- 
+-
   I create Minimal Chart Account.
-- 
-  !record {model: account.account, id: account_account_minimalchart0}:
+-
+  !record {model: account.account, id: account_pos_account_minimalchart}:
     code: '0'
     company_id: base.main_company
     currency_mode: current
@@ -47,188 +47,188 @@
     parent_right: 12
     type: view
     user_type: account_account_type_view0
-- 
+-
    I create Payable Account.
-- 
-  !record {model: account.account, id: account_account_payable1}:
+-
+  !record {model: account.account, id: account_pos_account_payable}:
     code: AP
     company_id: base.main_company
     currency_mode: current
     name: Payable
-    parent_id: account_account_minimalchart0
+    parent_id: account_pos_account_minimalchart
     parent_left: 2
     parent_right: 3
     reconcile: true
     type: payable
     user_type: account_account_type_expense0
-- 
+-
    I create Receivable Account.
-- 
-  !record {model: account.account, id: account_account_receivable0}:
+-
+  !record {model: account.account, id: account_pos_account_receivable}:
     code: AR
     company_id: base.main_company
     currency_mode: current
     name: Receivable
-    parent_id: account_account_minimalchart0
+    parent_id: account_pos_account_minimalchart
     parent_left: 4
     parent_right: 5
     reconcile: true
     type: receivable
     user_type: account_account_type_income0
-- 
+-
   I create Cash Account.
-- 
-  !record {model: account.account, id: account_account_cash0}:
+-
+  !record {model: account.account, id: account_pos_account_cash}:
     code: C
     company_id: base.main_company
     currency_mode: current
     name: Cash
-    parent_id: account_account_minimalchart0
+    parent_id: account_pos_account_minimalchart
     parent_left: 6
     parent_right: 7
     type: other
     user_type: account_account_type_cash0
-- 
+-
   I create Purchases Account.
-- 
-  !record {model: account.account, id: account_account_purchases0}:
+-
+  !record {model: account.account, id: account_pos_account_purchases}:
     code: P
     company_id: base.main_company
     currency_mode: current
     name: Purchases
-    parent_id: account_account_minimalchart0
+    parent_id: account_pos_account_minimalchart
     parent_left: 8
     parent_right: 9
     type: other
     user_type: account_account_type_expense0
-- 
+-
   I create Sales Account.
-- 
-  !record {model: account.account, id: account_account_sales0}:
+-
+  !record {model: account.account, id: account_pos_account_sales}:
     code: Sale
     company_id: base.main_company
     currency_mode: current
     name: Sales
-    parent_id: account_account_minimalchart0
+    parent_id: account_pos_account_minimalchart
     parent_left: 10
     parent_right: 11
     type: other
     user_type: account_account_type_income0
-- 
+-
   I create Purchase Journal.
-- 
-  !record {model: account.journal, id: account_journal_purchasejournal0}:
+-
+  !record {model: account.journal, id: account_pos_account_journal_purchasejournal}:
     code: PUJ
     company_id: base.main_company
-    default_credit_account_id: account_account_purchases0
-    default_debit_account_id: account_account_purchases0
+    default_credit_account_id: account_pos_account_purchases
+    default_debit_account_id: account_pos_account_purchases
     name: Purchase Journal
     sequence_id: account.sequence_purchase_journal
     type: purchase
     view_id: account.account_journal_view
-- 
+-
   I create Sale Journal.
-- 
-  !record {model: account.journal, id: account_journal_salejournal0}:
+-
+  !record {model: account.journal, id: account_pos_account_journal_salejournal}:
     code: SAJ
     company_id: base.main_company
-    default_credit_account_id: account_account_sales0
-    default_debit_account_id: account_account_sales0
+    default_credit_account_id: account_pos_account_sales
+    default_debit_account_id: account_pos_account_sales
     name: Sale Journal
     sequence_id: account.sequence_sale_journal
     type: sale
     view_id: account.account_journal_view
-- 
+-
   I create Bank Journal.
-- 
-  !record {model: account.journal, id: account_journal_bankjournal0}:
+-
+  !record {model: account.journal, id: account_pos_account_journal_bankjournal}:
     code: BNK
     company_id: base.main_company
-    default_credit_account_id: account_account_cash0
-    default_debit_account_id: account_account_cash0
+    default_credit_account_id: account_pos_account_cash
+    default_debit_account_id: account_pos_account_cash
     name: Bank Journal
     sequence_id: account.sequence_journal
     type: cash
     view_id: account.account_journal_bank_view
-- 
+-
   I create property for account payable.
-- 
+-
   !record {model: ir.property, id: ir_property_propertyaccountexpensecateg0}:
     company_id: base.main_company
     fields_id: account.field_res_partner_property_account_payable
     name: property_account_expense_categ
     value_reference: account.account,5
-- 
+-
   I create property for account receivable.
-- 
+-
   !record {model: ir.property, id: ir_property_propertyaccountincomecateg0}:
     company_id: base.main_company
     fields_id: account.field_res_partner_property_account_receivable
     name: property_account_income_categ
     value_reference: account.account,6
-- 
+-
   I create Partner category Customers.
-- 
+-
   !record {model: res.partner.category, id: res_partner_category_customers0}:
     name: Customers
 -
   I create partner
-- 
+-
   !record {model: res.partner, id: res_partner_cleartrail0}:
     category_id:
       - res_partner_category_customers0
     name: Cleartrail
-- 
+-
   I create partner address.
-- 
+-
   !record {model: res.partner.address, id: res_partner_address_1}:
     partner_id: res_partner_cleartrail0
     street: onam plaza, 14 B palasia A B Road
     type: contact
-- 
+-
   I create partner  invoice address.
-- 
+-
   !record {model: res.partner.address, id: res_partner_address_2}:
     partner_id: res_partner_cleartrail0
     type: invoice
-- 
+-
   I create partner delivery address.
-- 
+-
   !record {model: res.partner.address, id: res_partner_address_3}:
     partner_id: res_partner_cleartrail0
     street: sangam house 15 B palasia, A B Road
     type: delivery
 -
-  I create product category.    
-- 
+  I create product category.
+-
   !record {model: product.category, id: product_category_allproductssellable0}:
     name: Mobile Products Sellable
 -
    I create partner.
-- 
+-
   !record {model: res.partner, id: res_partner_microlinktechnologies0}:
     address:
       - street: Kailash Vaibhav, Parksite
     name: Micro Link Technologies
-    property_account_payable: account_account_payable1
-    property_account_receivable: account_account_receivable0   
-    supplier: true        
+    property_account_payable: account_pos_account_payable
+    property_account_receivable: account_pos_account_receivable
+    supplier: true
 -
   I create partner address .
-- 
+-
   !record {model: res.partner.address, id: res_partner_address_0}:
     country_id: base.in
     partner_id: res_partner_microlinktechnologies0
     street: Ash House, Ash Road
     title: base.res_partner_title_miss
-- 
+-
   I create product category .
-- 
+-
   !record {model: product.category, id: product_category_services0}:
     name: Mobile Services
-- 
+-
   I create product template .
-- 
+-
   !record {model: product.template, id: product_template_lgviewtysmart0}:
     categ_id: product_category_allproductssellable0
     cost_method: standard
@@ -241,9 +241,9 @@
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
--    
+-
   I create product  LG Viewty Smart.
-- 
+-
   !record {model: product.product, id: product_product_lgviewtysmart0}:
     categ_id: product_category_allproductssellable0
     cost_method: standard
@@ -251,22 +251,22 @@
     mes_type: fixed
     name: LG Viewty Smart
     procure_method: make_to_order
-    property_account_expense: account_account_payable1
-    property_account_income: account_account_receivable0
+    property_account_expense: account_pos_account_payable
+    property_account_income: account_pos_account_receivable
     seller_delay: '1'
     standard_price: 160.0
     supply_method: produce
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
--  
-  I create product category .        
+-
+  I create product category .
 -
   !record {model: product.category, id: product_category_computer0}:
     name: Computer
-- 
+-
   I create product  HP Pavilion Desktop PCs
-- 
+-
   !record {model: product.product, id: product_product_hppaviliondesktoppcs0}:
     categ_id: product_category_computer0
     cost_method: standard
@@ -282,9 +282,9 @@
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
-    property_account_expense: account_account_payable1
-    property_account_income: account_account_receivable0
--  
+    property_account_expense: account_pos_account_payable
+    property_account_income: account_pos_account_receivable
+-
   I create New Order by adding the details of Salesman and  "Product" as LG Viewty Smart Quantity as 10.
 -
   !record {model: pos.order, id: pos_order_pos0}:

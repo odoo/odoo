@@ -86,7 +86,7 @@ class project(osv.osv):
         cr.execute('''SELECT
                 project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
             FROM
-                project_task 
+                project_task
             WHERE
                 project_id in %s AND
                 state<>'cancelled'
@@ -475,7 +475,7 @@ class task(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, _('Error ! You cannot create recursive tasks.'), ['parent_ids'])
+        (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids'])
     ]
     #
     # Override view according to the company definition
@@ -483,7 +483,10 @@ class task(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
-        obj_tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
+
+        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
+        # this should be safe (no context passed to avoid side-effects)
+        obj_tm = users_obj.browse(cr, 1, uid).company_id.project_time_mode_id
         tm = obj_tm and obj_tm.name or 'Hours'
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
