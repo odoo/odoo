@@ -486,7 +486,7 @@ class orm_template(object):
                                 vals['relation'], bool(vals['view_load']),
                                 vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], vals['model'], vals['name']
                             ))
-                        continue
+                        break
         cr.commit()
 
     def _auto_init(self, cr, context={}):
@@ -2394,7 +2394,6 @@ class orm(orm_template):
                 cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
                 cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'", "''")))
                 create = True
-
                 self.__schema.debug("Table '%s': created", self._table)
 
             cr.commit()
@@ -2447,13 +2446,22 @@ class orm(orm_template):
             # iterate on the "object columns"
             todo_update_store = []
             update_custom_fields = context.get('update_custom_fields', False)
+
+            cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
+               "FROM pg_class c,pg_attribute a,pg_type t " \
+               "WHERE c.relname=%s " \
+               "AND c.oid=a.attrelid " \
+               "AND a.atttypid=t.oid", (self._table,))
+            col_data = dict(map(lambda x: (x['attname'], x),cr.dictfetchall()))
+
+
             for k in self._columns:
                 if k in ('id', 'write_uid', 'write_date', 'create_uid', 'create_date'):
                     continue
-                    #raise _('Can not define a column %s. Reserved keyword !') % (k,)
                 #Not Updating Custom fields
                 if k.startswith('x_') and not update_custom_fields:
                     continue
+
                 f = self._columns[k]
 
                 if isinstance(f, fields.one2many):
@@ -2486,13 +2494,15 @@ class orm(orm_template):
                         self.__schema.debug("Create table '%s': relation between '%s' and '%s'",
                                             f._rel, self._table, ref)
                 else:
-                    cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
-                               "FROM pg_class c,pg_attribute a,pg_type t " \
-                               "WHERE c.relname=%s " \
-                               "AND a.attname=%s " \
-                               "AND c.oid=a.attrelid " \
-                               "AND a.atttypid=t.oid", (self._table, k))
-                    res = cr.dictfetchall()
+                    #cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
+                    #           "FROM pg_class c,pg_attribute a,pg_type t " \
+                    #           "WHERE c.relname=%s " \
+                    #           "AND a.attname=%s " \
+                    #           "AND c.oid=a.attrelid " \
+                    #           "AND a.atttypid=t.oid", (self._table, k))
+                    #res = cr.dictfetchall()
+                    res = col_data.get(k, [])
+                    res = res and [res] or []
                     if not res and hasattr(f, 'oldname'):
                         cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
                             "FROM pg_class c,pg_attribute a,pg_type t " \
