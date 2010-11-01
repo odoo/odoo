@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-27 18:11+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"PO-Revision-Date: 2010-10-29 09:12+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-28 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -517,6 +517,7 @@ msgstr ""
 msgid ""
 "If not checked, media is currently offline and its contents not available"
 msgstr ""
+"Indien niet aangevinkt, is medium offline en de inhoud niet beschikbaar"
 
 #. module: document
 #: view:document.directory:0
@@ -553,11 +554,14 @@ msgid ""
 "name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
+"Vink dit veld aan als u wilt dat de naam van het bestand de recordnaam "
+"bevat.\n"
+"In dat geval moet de map een resource zijn."
 
 #. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
-msgstr "Inclusief naam record"
+msgstr "Naam record invoegen"
 
 #. module: document
 #: view:ir.attachment:0
@@ -567,12 +571,12 @@ msgstr "Bijlage"
 #. module: document
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Fout ! U kunt geen recursief menu maken"
 
 #. module: document
 #: field:document.storage,online:0
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -592,13 +596,13 @@ msgstr "Beveiliging"
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
-msgstr ""
+msgstr "Augustus"
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -615,13 +619,13 @@ msgstr "Groepen"
 #. module: document
 #: field:document.directory.content.type,active:0
 msgid "Active"
-msgstr ""
+msgstr "Actief"
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: document
 #: view:ir.attachment:0
@@ -638,12 +642,12 @@ msgstr "Definitie"
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: document
 #: view:document.directory:0
 msgid "Seq."
-msgstr "Reeks"
+msgstr "Volgnr."
 
 #. module: document
 #: selection:document.storage,type:0
@@ -653,12 +657,12 @@ msgstr "Database"
 #. module: document
 #: help:document.configuration,project:0
 msgid "Auto directory configuration for Projects."
-msgstr ""
+msgstr "Auto map configuratie voor projecten."
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Related to"
-msgstr ""
+msgstr "Gerelateerd aan"
 
 #. module: document
 #: model:ir.module.module,shortdesc:document.module_meta_information
@@ -673,22 +677,22 @@ msgstr "Gekoppeld aan"
 #. module: document
 #: model:ir.ui.menu,name:document.menu_reports_document
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_user_graph
 msgid "Files By Users"
-msgstr "Bestanden per gebruikers"
+msgstr "Bestanden per gebruiker"
 
 #. module: document
 #: field:document.storage,readonly:0
 msgid "Read Only"
-msgstr ""
+msgstr "Alleen lezen"
 
 #. module: document
 #: field:document.directory.dctx,expr:0
 msgid "Expression"
-msgstr ""
+msgstr "Expressie"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -702,7 +706,7 @@ msgid ""
 "If you put an object here, this directory template will appear bellow all of "
 "these objects. Don't put a parent directory if you select a parent model."
 msgstr ""
-"Als u hier een object plaats, zal dit mapsjabloon onderaan al deze objecten "
+"Als u hier een object plaatst, zal dit mapsjabloon onderaan al deze objecten "
 "verschijnen. Plaats geen bovenliggende map als u een bovenliggend model "
 "kiest."
 
@@ -717,12 +721,12 @@ msgstr "Bestanden per maand"
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: document
 #: field:document.directory.content,prefix:0
 msgid "Prefix"
-msgstr ""
+msgstr "Voorvoegsel"
 
 #. module: document
 #: field:report.document.wall,last:0
@@ -737,12 +741,12 @@ msgstr "Bestandsnaam"
 #. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
-msgstr "Bron ID"
+msgstr "Resource ID"
 
 #. module: document
 #: selection:document.storage,type:0
 msgid "External file storage"
-msgstr ""
+msgstr "Externe opslag"
 
 #. module: document
 #: constraint:ir.model:0
@@ -761,7 +765,7 @@ msgstr "Wall of Shame"
 #. module: document
 #: help:document.storage,path:0
 msgid "For file storage, the root path of the storage"
-msgstr ""
+msgstr "Voor bestandsopslag, het hoofdpad van de opslag"
 
 #. module: document
 #: model:ir.model,name:document.model_report_files_partner
@@ -771,17 +775,17 @@ msgstr "Details bestanden per relatie"
 #. module: document
 #: field:document.directory.dctx,field:0
 msgid "Field"
-msgstr ""
+msgstr "Veld"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "Map dynamische context"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
 msgid "Parent Model"
-msgstr "Hoofdmodel"
+msgstr "Bovenliggend model"
 
 #. module: document
 #: view:report.document.user:0
@@ -805,7 +809,7 @@ msgstr "Overzichten"
 #. module: document
 #: field:document.configuration,product:0
 msgid "Product"
-msgstr ""
+msgstr "Product"
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -816,12 +820,12 @@ msgstr "Boomstructuur"
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "May"
-msgstr ""
+msgstr "Mei"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
 msgid "All Users files"
-msgstr "Alls gebruikersbestanden"
+msgstr "Alle gebruikersbestanden"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_wall
@@ -832,27 +836,28 @@ msgstr "Gebruikers die de laatste maand geen documenten hebben toegevoegd"
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
 msgstr ""
+"Voor elke hier gemaakte invoer verschijnen virtuele bestanden in deze map."
 
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"
 
 #. module: document
 #: view:board.board:0
 msgid "New Files"
-msgstr ""
+msgstr "Nieuwe bestanden"
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "January"
-msgstr ""
+msgstr "Januari"
 
 #. module: document
 #: view:document.directory:0
 msgid "Static"
-msgstr ""
+msgstr "Statisch"
 
 #. module: document
 #: view:report.files.partner:0
@@ -865,6 +870,8 @@ msgid ""
 "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
 "what is typed here."
 msgstr ""
+"De naam van het veld. Merk op dat het voorvoegsel \"dctx_\" aan het begin "
+"wordt gezet van de tekst die hier wordt ingevuld."
 
 #. module: document
 #: view:report.document.user:0
@@ -880,7 +887,7 @@ msgstr "Notities"
 #: help:document.configuration,sale_order:0
 msgid ""
 "Auto directory configuration for Sale Orders and Quotation with report."
-msgstr ""
+msgstr "Auto map configuratie voor verkooporders en offerte met overzicht."
 
 #. module: document
 #: help:document.directory,type:0
@@ -891,18 +898,23 @@ msgid ""
 "resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
 msgstr ""
+"Elke map kan of het soort statisch zijn of worden gekoppeld aan een andere "
+"resource. Een statische map is, zoals bij het operating systeem, de "
+"klassieke map die een set bestanden kan bevatten. De mappen die zijn "
+"gekoppeld aan een resource bevatten automatisch submappen voor alle resource "
+"soorten die in de bovenliggende map zijn gedefinieerd."
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "February"
-msgstr ""
+msgstr "Februari"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager1
 #: model:ir.ui.menu,name:document.menu_reports_document_manager1
 msgid "Statistics by User"
-msgstr ""
+msgstr "Statistieken per gebruiker"
 
 #. module: document
 #: field:document.directory,name:0
@@ -913,18 +925,18 @@ msgstr "Naam"
 #. module: document
 #: view:document.directory:0
 msgid "Fields"
-msgstr ""
+msgstr "Velden"
 
 #. module: document
 #: help:document.storage,readonly:0
 msgid "If set, media is for reading only"
-msgstr ""
+msgstr "Indien ingesteld is medium alleen lezen"
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: document
 #: field:report.document.user,nbr:0
@@ -938,6 +950,7 @@ msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
 msgstr ""
+"Alleen leden van deze groepen hebben toegang tot deze map en haar bestanden."
 
 #. module: document
 #: view:document.directory:0
@@ -945,16 +958,18 @@ msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
 msgstr ""
+"Deze groepen gelden echter NIET voor onderliggende mappen, die hun eigen "
+"groepen moeten definiëren."
 
 #. module: document
 #: field:document.directory.content.type,mimetype:0
 msgid "Mime Type"
-msgstr ""
+msgstr "Mime Type"
 
 #. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
-msgstr "Reeks"
+msgstr "Volgorde"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -970,13 +985,13 @@ msgstr "Bestandsnaam moet uniek zijn!"
 #. module: document
 #: selection:document.storage,type:0
 msgid "Internal File storage"
-msgstr ""
+msgstr "Interne opslag"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
-msgstr ""
+msgstr "Mapstructuur"
 
 #. module: document
 #: view:board.board:0
@@ -989,19 +1004,19 @@ msgstr "Bestanden per soort bron"
 #: field:report.document.user,name:0
 #: field:report.files.partner,name:0
 msgid "Year"
-msgstr ""
+msgstr "Jaar"
 
 #. module: document
 #: view:document.storage:0
 #: model:ir.model,name:document.model_document_storage
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
-msgstr ""
+msgstr "Opslagmedium"
 
 #. module: document
 #: view:document.storage:0
 msgid "Search Document storage"
-msgstr ""
+msgstr "Zoek documentopslag"
 
 #. module: document
 #: field:document.directory.content,extension:0
