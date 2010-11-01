@@ -438,8 +438,6 @@ def TestConnection(btnProcessor,*args):
         win32ui.MessageBox("No database found on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return
 
-
-
     uname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
     pwd = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[2])
 
@@ -765,9 +763,6 @@ def SearchObjectsForText(btnProcessor,*args):
         return
 
     search_txt = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
-    if not search_txt:
-        win32ui.MessageBox("Enter text to search for", "Push to OpenERP", flag_info)
-        return
     # Get titles from list
     obj_titles=[]
     for ch in hwndChk_list:
@@ -845,6 +840,9 @@ def CreateContact(btnProcessor,*args):
            'state_id':ustr(state),
            'country_id':ustr(country)
        }
+    if res.get('name').strip == '' or res.get('email').strip == '':
+        win32ui.MessageBox("Contact name or Email id is Missing\nPlease fill those information", "Create Contact", flag_error)
+        return
     try:
         id = NewConn.CreateContact(str(res))
         if not partner:
@@ -1106,6 +1104,8 @@ def GetDefaultEmail(txtProcessor,*args):
     new_con_state = ""
     if country_ref == None:
         country_ref = ""
+
+
     if not b:
         return
     #Acquiring control of the text box
@@ -1314,6 +1314,17 @@ def SetPartnerNameColumn(listProcessor,*args):
     lvc.text = "Partner Name"
     lvc.cx = 275
     win32gui.SendMessage(hwndList, commctrl.LVM_INSERTCOLUMN, 0, lvc.toparam())
+
+    partners = list(NewConn.GetPartners(''))
+    win32gui.SendMessage(hwndList, commctrl.LVM_DELETEALLITEMS)
+    if not partners:
+        win32gui.SetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0],"<enter text to search>")
+        win32ui.MessageBox("No Partner found with name {0}.".format(search_partner),"Search Partner",flag_error)
+    for partner in partners[::-1]:
+        num_items = win32gui.SendMessage(hwndList, commctrl.LVM_GETITEMCOUNT)
+        item = LVITEM(text=partner[1],iItem = num_items)
+        win32gui.SendMessage(hwndList, commctrl.LVM_INSERTITEM, 0, item.toparam())
+
     listProcessor.init_done = True
 
 def SelectPartnerFromList(btnProcessor,*args):
@@ -1354,9 +1365,6 @@ def SearchPartnerList(btnProcessor,*args):
         return
     try :
         search_partner = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
-        if not search_partner:
-            win32ui.MessageBox("Please enter Partner name to search for.", "Search Partner", flag_excl)
-            return
         #Searching the contact.
         hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
         partners = list(NewConn.GetPartners(search_partner))
@@ -1364,7 +1372,7 @@ def SearchPartnerList(btnProcessor,*args):
         if not partners:
             win32gui.SetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0],"<enter text to search>")
             win32ui.MessageBox("No Partner found with name {0}.".format(search_partner),"Search Partner",flag_error)
-        for partner in partners:
+        for partner in partners[::-1]:
             num_items = win32gui.SendMessage(hwndList, commctrl.LVM_GETITEMCOUNT)
             item = LVITEM(text=partner[1],iItem = num_items)
             win32gui.SendMessage(hwndList, commctrl.LVM_INSERTITEM, 0, item.toparam())
@@ -1396,12 +1404,18 @@ def OpenPartnerForm(txtProcessor,*args):
     partner_text = ""
     try:
     	partner_text = ustr(mail.SenderName).encode('iso-8859-1')
+        sender_mail = ustr(mail.SenderEmailAddress).encode('iso-8859-1')
+
     except Exception,e:
     	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< Error in reading email.>")
     	pass
-    vals = NewConn.SearchPartner(partner_text)
+    vals = NewConn.SearchPartner(sender_mail)
+    if vals == True:
+        win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< Their is contact related to "+str(partner_text)+"  email address, but no partner is linked to contact>")
+        txtProcessor.init_done=True
+        return
     if vals == None:
-    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< No Partner with named "+str(partner_text)+" found.>")
+    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< No Partner found linked to "+str(partner_text)+"  email address.>")
     	txtProcessor.init_done=True
     	return
     global web_server
@@ -1442,6 +1456,7 @@ def SerachOpenDocuemnt(txtProcessor,*args):
         txtProcessor.init_done=True
         return
     linktodoc = ""
+
     message_id = None
     try:
         outlook = win32com.client.Dispatch("Outlook.Application")
@@ -1484,9 +1499,6 @@ def SearchCountry(btnProcessor, *args):
         return
     try :
         search_country = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
-        if not search_country:
-            win32ui.MessageBox("Please enter country name to search for.", "Search Country", flag_excl)
-            return
         #Searching the contact.
         hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
         countries = list(NewConn.GetCountry(search_country))
@@ -1520,6 +1532,17 @@ def SetCountryList(listProcessor,*args):
     lvc.text = "Country Name"
     lvc.cx = 275
     win32gui.SendMessage(hwndList, commctrl.LVM_INSERTCOLUMN, 0, lvc.toparam())
+
+    countries = list(NewConn.GetCountry(''))
+    win32gui.SendMessage(hwndList, commctrl.LVM_DELETEALLITEMS)
+    if not countries:
+        win32gui.SetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0],"<enter text to search>")
+        win32ui.MessageBox("No country found with name {0}.".format(search_country),"Search Country",flag_error)
+    for country in countries:
+        num_items = win32gui.SendMessage(hwndList, commctrl.LVM_GETITEMCOUNT)
+        item = LVITEM(text=country[1],iItem = num_items)
+        win32gui.SendMessage(hwndList, commctrl.LVM_INSERTITEM, 0, item.toparam())
+
     listProcessor.init_done = True
 
 def SelectCountryFromList(btnProcessor,*args):
@@ -1566,9 +1589,6 @@ def SearchState(btnProcessor, *args):
         global new_con_country
         global search_country
         search_state = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
-        if not search_state:
-            win32ui.MessageBox("Please enter state name to search for.", "Search Fed.State", flag_excl)
-            return
         #Searching the contact.
         hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
         states = list(NewConn.GetStates(search_state, search_country))
@@ -1601,6 +1621,18 @@ def SetStateList(listProcessor,*args):
     lvc.text = "Fed.State Name"
     lvc.cx = 275
     win32gui.SendMessage(hwndList, commctrl.LVM_INSERTCOLUMN, 0, lvc.toparam())
+
+    global new_con_country
+    global search_country
+    states = list(NewConn.GetStates('', search_country))
+    win32gui.SendMessage(hwndList, commctrl.LVM_DELETEALLITEMS)
+    if not states:
+        win32gui.SetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0],"<enter text to search>")
+        win32ui.MessageBox("No state found with name {0}.".format(search_state),"Search Fed.State",flag_error)
+    for state in states:
+        num_items = win32gui.SendMessage(hwndList, commctrl.LVM_GETITEMCOUNT)
+        item = LVITEM(text=state[1],iItem = num_items)
+        win32gui.SendMessage(hwndList, commctrl.LVM_INSERTITEM, 0, item.toparam())
     listProcessor.init_done = True
 
 def SelectStateFromList(btnProcessor,*args):

@@ -183,8 +183,8 @@ class hr_employee(osv.osv):
         return {'value': {'work_email' : work_email}}
 
     def _get_photo(self, cr, uid, context=None):
-        return open(addons.get_module_resource('hr','image','photo.png'),
-                    'rb').read().encode('base64')
+	photo_path = addons.get_module_resource('hr','image','photo.png')
+        return open(photo_path, 'rb').read().encode('base64')
 
     _defaults = {
         'active': 1,

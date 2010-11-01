@@ -57,6 +57,7 @@ class account_cash_statement(osv.osv):
         res = False
         uids = []
         statement = self.browse(cr, uid, statement_id, context=context)
+        if (not statement.journal_id.journal_users) and uid == 1: return True
         for user in statement.journal_id.journal_users:
             uids.append(user.id)
         if uid in uids:
