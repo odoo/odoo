@@ -146,13 +146,6 @@ class crm_opportunity(osv.osv):
             return {'value':{}}
 
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
-        self.history(cr, uid, ids, _('Stage'), details=stage.name)
-        for case in self.browse(cr, uid, ids):
-            if case.type == 'lead':
-                message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
-            elif case.type == 'opportunity':
-                message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
-            self.log(cr, uid, case.id, message)
 
         if not stage.on_change:
             return {'value':{}}
