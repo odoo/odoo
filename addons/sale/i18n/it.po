@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 11:27+0000\n"
+"PO-Revision-Date: 2010-10-31 13:22+0000\n"
 "Last-Translator: Lorenzo Battistini <lorenzo.battistini@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-11-01 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -71,6 +71,8 @@ msgstr "Pagamento prima della consegna"
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sale order request."
 msgstr ""
+"Riferimento al documento che ha generato questa richiesta di ordine di "
+"vendita."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:0
@@ -133,6 +135,11 @@ msgid ""
 "the product is a service, shipped quantities means hours spent on the "
 "associated tasks."
 msgstr ""
+"L'ordine di vendita genererà automaticamente la bozza della fattura. "
+"Quantità ordinate e consegnate potrebbero non essere uguali. Bisogna "
+"scegliere se si vuole che la fattura venga basata sulle quantità ordinate o "
+"su quelle spedite. Se il prodotto è un servizio, le quantità spedite "
+"corrispondono alle ore impiegate nell'attività associata."
 
 #. module: sale
 #: view:sale.report:0
@@ -193,17 +200,17 @@ msgstr "Rif. Ordine"
 #. module: sale
 #: view:sale.order:0
 msgid "Other Information"
-msgstr ""
+msgstr "Altre informazioni"
 
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sale order is created"
-msgstr ""
+msgstr "Data in cui l'ordine di vendita è stato creato"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Dates"
-msgstr ""
+msgstr "Date"
 
 #. module: sale
 #: constraint:product.template:0
@@ -276,7 +283,7 @@ msgstr "Approvvigionamento corretto"
 #. module: sale
 #: view:sale.order:0
 msgid "Conditions"
-msgstr ""
+msgstr "Condizioni"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -328,7 +335,7 @@ msgstr ""
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Preventivi"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
@@ -449,7 +456,7 @@ msgstr "Fattura corretta"
 #. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount"
-msgstr ""
+msgstr "L'importo totale"
 
 #. module: sale
 #: constraint:product.product:0
@@ -459,7 +466,7 @@ msgstr "Errore: codice EAN non valido"
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sale order"
-msgstr ""
+msgstr "Indirizzo di fatturazione per l'ordine di vendita corrente"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -484,7 +491,7 @@ msgstr "Ordine di consegna"
 #. module: sale
 #: field:sale.order,date_confirm:0
 msgid "Confirmation Date"
-msgstr ""
+msgstr "Data di conferma"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -625,6 +632,17 @@ msgid ""
 "  - The 'Invoice from the picking' choice is used to create an invoice "
 "during the picking process."
 msgstr ""
+"La politica di spedizione è utilizzata per sincronizzare lo operazioni di "
+"fatturazione e consegna.\n"
+"  - La scelta 'Pagamento prima della consegna' dapprima genererà la fattura "
+"e poi, dopo il pagamento di questa fattura, genererà il prelievo.\n"
+"  - 'Spedizione e fatturazione manuale' genererà direttamente l'ordine di "
+"prelievo e attenderà che l'utente clicchi manualmente sul bottone “Fattura” "
+"per generare la bozza di fattura.\n"
+"  - 'Fattura su ordine a consegna effettuata' genererà la bozza di fattura "
+"basata sull'ordine di vendita dopo che tutta la merce è stata prelevata.\n"
+"  - 'Fattura alla consegna' è utilizzato per creare una fattura durante il "
+"processo di prelievo."
 
 #. module: sale
 #: field:sale.order,pricelist_id:0
@@ -642,7 +660,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr ""
+msgstr "Indica che una fattura è stata pagata"
 
 #. module: sale
 #: constraint:ir.ui.view:0
@@ -652,7 +670,7 @@ msgstr "XML non valido per Visualizzazione Architettura!"
 #. module: sale
 #: view:sale.order:0
 msgid "Order Date"
-msgstr ""
+msgstr "Data dell'ordine"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -669,7 +687,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,amount_tax:0
 msgid "The tax amount"
-msgstr ""
+msgstr "L'importo delle tasse"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -744,7 +762,7 @@ msgstr "Eccezione"
 #. module: sale
 #: field:sale.order,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Data creazione"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -780,6 +798,7 @@ msgstr "Riferimento"
 msgid ""
 "The name and address of the contact who requested the order or quotation."
 msgstr ""
+"Il nome e l'indirizzo del contatto che ha richiesto l'ordine o il preventivo"
 
 #. module: sale
 #: help:res.company,security_lead:0
@@ -812,7 +831,7 @@ msgstr "Annulla"
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist version for current sale order"
-msgstr ""
+msgstr "Versione di listino per l'ordine di vendita corrente"
 
 #. module: sale
 #: field:sale.installer,sale_order_dates:0
@@ -856,6 +875,8 @@ msgid ""
 "Incoterm which stands for 'International Commercial terms' implies its a "
 "series of sales terms which are used in the commercial transaction"
 msgstr ""
+"Incoterm, che sta per 'Termini commerciali internazionali', implica una "
+"serie di termini di vendita che vengono usati nelle transazioni commerciali"
 
 #. module: sale
 #: field:sale.order,partner_order_id:0
@@ -1001,7 +1022,7 @@ msgstr "Consegne da fatturare"
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
-msgstr "In attesa di programmazione"
+msgstr "In attesa di pianificazione"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1022,18 +1043,18 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice from Delivery"
-msgstr ""
+msgstr "Fattura alla consegna"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Order date"
-msgstr ""
+msgstr "Data dell'ordine"
 
 #. module: sale
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this invoice"
-msgstr "Questa è la lista di Bolle generate per questa Fattura"
+msgstr "Questa è la lista di DDT generati per questa Fattura"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
@@ -1082,7 +1103,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,order_policy:0
 msgid "Shipping Policy"
-msgstr "Politiche di Spedizione"
+msgstr "Politica di Spedizione"
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_move
@@ -1105,6 +1126,12 @@ msgid ""
 "The 'Waiting Schedule' state is set when the invoice is confirmed but "
 "waiting for the scheduler to run on the date 'Ordered Date'."
 msgstr ""
+"Lo stato del preventivo o dell'ordine di vendita. \n"
+"Lo stato di eccezione viene automaticamente impostato quando avviene "
+"un'operazione di annullamento nella validazione della fattura o nel processo "
+"di prelievo. \n"
+"Lo stato 'In attesa di pianificazione' viene impostato quando la fattura è "
+"confermata ma si è in attesa che il pianificatore esegua nella 'Data ordine'"
 
 #. module: sale
 #: help:sale.order.line,state:0
@@ -1154,7 +1181,7 @@ msgstr "Fattura basata su Ordini di Vendita"
 #. module: sale
 #: model:ir.model,name:sale.model_stock_picking
 msgid "Picking List"
-msgstr "Bolla di prelievo"
+msgstr "Documento di trasporto"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
@@ -1268,7 +1295,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
 msgid "Old Quotations"
-msgstr ""
+msgstr "Vecchi preventivi"
 
 #. module: sale
 #: field:sale.order,invoiced:0
@@ -1318,7 +1345,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Related Invoices"
-msgstr ""
+msgstr "Fatture collegate"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
@@ -1368,7 +1395,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
-msgstr "Bolla di prelievo & Ordine di consegna"
+msgstr "DDT & Ordine di consegna"
 
 #. module: sale
 #: constraint:ir.model:0
@@ -1386,7 +1413,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,picking_policy:0
 msgid "Picking Policy"
-msgstr ""
+msgstr "Politica di prelievo"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
@@ -1420,7 +1447,7 @@ msgstr "Fatturazione"
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sale order is confirmed"
-msgstr ""
+msgstr "Data in cui l'ordine di vendita è stato confermato"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
@@ -1435,7 +1462,7 @@ msgstr "sale.config.picking_policy"
 #. module: sale
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
-msgstr "fattura su"
+msgstr "Fattura su"
 
 #. module: sale
 #: report:sale.order:0
@@ -1478,7 +1505,7 @@ msgstr "Ordine"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sale order"
-msgstr ""
+msgstr "Indirizzo di spedizione per l'ordine di vendita corrente"
 
 #. module: sale
 #: view:sale.order:0
@@ -1515,6 +1542,8 @@ msgid ""
 "It indicates that the sale order has been delivered. This field is updated "
 "only after the scheduler have been launched !"
 msgstr ""
+"Indica che l'ordine di vendita è stato consegnato. Questo campo viene "
+"aggiornato solamente dopo che il pianificatore è stato lanciato !"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1546,7 +1575,7 @@ msgstr ""
 #. module: sale
 #: field:sale.make.invoice,invoice_date:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Data fattura"
 
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
@@ -1619,7 +1648,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Ordine di vendita"
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
@@ -1705,14 +1734,14 @@ msgid ""
 "soon as possible when one product is available or you wait that all products "
 "are available.."
 msgstr ""
-"La politica di consegna è utilizzata per stabilire se si vuole consegnare il "
-"prodotto non appena questo sia disponibile oppure aspettare che tutti i "
+"La politica di spedizione è utilizzata per stabilire se si vuole consegnare "
+"il prodotto non appena questo sia disponibile oppure aspettare che tutti i "
 "prodotti siano disponibili.."
 
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
-msgstr ""
+msgstr "Documento di origine"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -1739,7 +1768,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr ""
+msgstr "L'importo senza tasse"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1806,7 +1835,7 @@ msgstr "Vendite Prodotto"
 #. module: sale
 #: field:sale.order,date_order:0
 msgid "Ordered Date"
-msgstr ""
+msgstr "Data ordine"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_form
@@ -1923,7 +1952,7 @@ msgstr "Chiudi"
 #. module: sale
 #: field:sale.order,shipped:0
 msgid "Delivered"
-msgstr ""
+msgstr "Consegnato"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -2012,7 +2041,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,picking_policy:0
 msgid "Picking Default Policy"
-msgstr "Politica di consegna di default"
+msgstr "Politica di prelievo di default"
 
 #. module: sale
 #: report:sale.order:0
