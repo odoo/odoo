@@ -1439,11 +1439,6 @@ msgid "Display History"
 msgstr ""
 
 #. module: account
-#: wizard_field:account.third_party_ledger.report,init,date1:0
-msgid "Start date"
-msgstr ""
-
-#. module: account
 #: wizard_field:account.account.balance.report,checktype,display_account:0
 #: wizard_field:account.general.ledger.report,checktype,display_account:0
 #: field:account.common.report,display_account:0
@@ -1894,6 +1889,11 @@ msgstr "છાપો"
 #: field:account.central.journal,date_from:0
 #: field:account.partner.balance,date_from:0
 #: field:account.partner.ledger,date_from:0
+#: field:account.config.wizard,date1:0
+#: field:account.fiscalyear,date_start:0
+#: field:account.subscription,date_start:0
+#: field:account.aged.trial.balance,date_from:0
+#: wizard_field:account.third_party_ledger.report,init,date1:0
 msgid "Start date"
 msgstr ""
 
@@ -3821,14 +3821,6 @@ msgid "Account Configure Wizard "
 msgstr ""
 
 #. module: account
-#: field:account.config.wizard,date1:0
-#: field:account.fiscalyear,date_start:0
-#: field:account.subscription,date_start:0
-#: field:account.aged.trial.balance,date_from:0
-msgid "Start Date"
-msgstr ""
-
-#. module: account
 #: field:account.aged.trial.balance,period_length:0 
 msgid "Period length(days)"
 msgstr ""
@@ -4228,6 +4220,17 @@ msgstr "પુર્ણ થયુ"
 #: model:ir.actions.act_window,name:account.action_account_period_form
 #: model:ir.ui.menu,name:account.menu_action_account_period_form
 #: model:ir.ui.menu,name:account.next_id_23
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
+#: view:account.vat.declaration:0
 msgid "Periods"
 msgstr ""
 
@@ -4512,21 +4515,6 @@ msgstr ""
 #: view:account.partner.balance:0
 #: view:account.partner.ledger:0
 msgid "Dates"
-msgstr ""
-
-#. module: account
-#: view:account.common.report:0
-#: view:account.report.general.ledger:0
-#: view:account.balance.report:0
-#: view:account.pl.report:0
-#: view:account.bs.report:0
-#: view:account.print.journal:0
-#: view:account.general.journal:0
-#: view:account.central.journal:0
-#: view:account.partner.balance:0
-#: view:account.partner.ledger:0
-#: view:account.vat.declaration:0
-msgid "Periods"
 msgstr ""
 
 #. module: account
