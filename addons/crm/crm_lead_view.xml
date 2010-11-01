@@ -57,7 +57,8 @@
                     <newline />
                     <field name="section_id" widget="selection" />
                     <field name="user_id" />
-                    <field name="stage_id" domain="[('object_id.model', '=', 'crm.lead'), ('section_ids', '=', section_id)]"/>
+                    <field name="stage_id" domain="[('object_id.model', '=', 'crm.lead'), ('section_ids', '=', section_id)]" 
+                           on_change="onchange_stage_id(stage_id)"/>
                     <group col="2" colspan="1">
                         <button name="stage_previous" string=""
                             states="open,pending,draft" type="object"

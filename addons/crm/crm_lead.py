@@ -286,11 +286,19 @@ class crm_lead(crm_case, osv.osv):
         stage = super(crm_lead, self).stage_next(cr, uid, ids, context)
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            self.onchange_stage_id(cr, uid, ids, stage)
             if stage_obj.on_change:
                 data = {'probability': stage_obj.probability}
                 self.write(cr, uid, ids, data)
         return stage
-
+    
+    def stage_previous(self, cr, uid, ids, context=None):
+        stage = super(crm_lead, self).stage_previous(cr, uid, ids, context)
+        if stage:
+            for case in self.browse(cr, uid, ids):
+                self.onchange_stage_id(cr, uid, [case.id], case.stage_id.id)
+        return stage
+    
     def message_new(self, cr, uid, msg, context):
         """
         Automatically calls when new email message arrives
