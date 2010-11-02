@@ -287,7 +287,7 @@ class crm_lead(crm_case, osv.osv):
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
             self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
-            for case in self.browse(cr, uid, ids):
+            for case in self.browse(cr, uid, ids, context=context):
                 if case.type == 'lead':
                     message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
                 elif case.type == 'opportunity':
@@ -303,7 +303,7 @@ class crm_lead(crm_case, osv.osv):
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
             self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
-            for case in self.browse(cr, uid, ids):
+            for case in self.browse(cr, uid, ids, context=context):
                 if case.type == 'lead':
                     message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
                 elif case.type == 'opportunity':
