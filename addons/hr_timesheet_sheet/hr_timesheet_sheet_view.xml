@@ -53,6 +53,7 @@
                         <field name="department_id" groups="base.group_extended"/>
                         <newline/>
                         <field name="employee_id"/>
+                        <field name="user_id" invisible="1"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
                     </group>
@@ -67,7 +68,7 @@
                                 <button icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
                             </group>
 
-                            <field colspan="3" context="name=date_current,user_id=user_id" height="100" name="attendances_ids" nolabel="1">
+                            <field colspan="3" context="{'name':date_current,'user_id':user_id}" height="100" name="attendances_ids" nolabel="1">
                                 <tree string="Attendances" editable="bottom">
                                     <field name="name"/>
                                     <field name="action"/>
@@ -80,7 +81,7 @@
                             </group>
                             <field name="state_attendance"/>
                             <field name="total_attendance_day" widget="float_time"/>
-                            <field colspan="4" context="date=date_current,user_id=user_id" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
+                            <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet">
                                     <field invisible="1" name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
@@ -185,9 +186,6 @@
 
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
              sequence="2"/>
-
-        <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="base.menu_project_management_time_tracking"
-            sequence="5"/>
 
         <!--
             Company inheritancy

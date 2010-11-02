@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-10-26 17:49+0000\n"
-"Last-Translator: OpenERP Romania <Unknown>\n"
+"PO-Revision-Date: 2010-10-27 08:03+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-27 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:25+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -25,6 +25,18 @@ msgstr "Nume intern"
 #: view:account.tax.code:0
 msgid "Account Tax Code"
 msgstr "Cod cont taxa"
+
+#. module: account
+#: field:account.partner.balance,result_selection:0
+#: field:account.aged.trial.balance,result_selection:0
+#: field:account.partner.ledger,result_selection:0
+msgid "Partner's"
+msgstr ""
+
+#. module: account
+#: field:account.partner.balance,display_partner:0
+msgid "Display Partners"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree9
@@ -533,6 +545,16 @@ msgstr "Compensare plătită"
 
 #. module: account
 #: wizard_field:account.chart,init,target_move:0
+#: field:account.common.report,target_move:0
+#: field:account.report.general.ledger,target_move:0
+#: field:account.balance.report,target_move:0
+#: field:account.pl.report,target_move:0
+#: field:account.bs.report,target_move:0
+#: field:account.print.journal,target_move:0
+#: field:account.general.journal,target_move:0
+#: field:account.central.journal,target_move:0
+#: field:account.partner.balance,target_move:0
+#: field:account.partner.ledger,target_move:0
 msgid "Target Moves"
 msgstr "Miscări ţintă"
 
@@ -1041,6 +1063,7 @@ msgstr "UM"
 
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,page_split:0
+#: field:account.partner.ledger,page_split:0
 msgid "One Partner Per Page"
 msgstr "Un partener pe pagină"
 
@@ -1466,8 +1489,13 @@ msgstr "        Data de început"
 #. module: account
 #: wizard_field:account.account.balance.report,checktype,display_account:0
 #: wizard_field:account.general.ledger.report,checktype,display_account:0
-msgid "Display accounts "
-msgstr "Afişează conturile "
+#: field:account.common.report,display_account:0
+#: field:account.report.general.ledger,display_account:0
+#: field:account.balance.report,display_account:0
+#: field:account.pl.report,display_account:0
+#: field:account.bs.report,display_account:0
+msgid "Display accounts"
+msgstr "Afişează conturile"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_reconcile_line
@@ -1683,6 +1711,16 @@ msgstr "Sold de început"
 #: view:account.journal.period:0
 #: model:ir.actions.act_window,name:account.action_account_journal_period_tree
 #: model:ir.ui.menu,name:account.menu_action_account_journal_period_tree
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
 msgid "Journals"
 msgstr "Jurnale"
 
@@ -1872,6 +1910,17 @@ msgstr "an"
 #: wizard_button:account.partner.balance.report,init,report:0
 #: wizard_button:account.print.journal.report,init,print:0
 #: wizard_button:account.third_party_ledger.report,init,checkreport:0
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.partner.balance:0
+#: view:account.aged.trial.balance:0
+#: view:account.partner.ledger:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
 msgid "Print"
 msgstr "Tipărire"
 
@@ -1959,8 +2008,14 @@ msgstr "Referinţă partener de pe această factură."
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,sortbydate:0
+#: field:account.report.general.ledger,sortby:0
 msgid "Sort by:"
 msgstr "Ordonare după:"
+
+#. module: account
+#: field:account.vat.declaration,chart_tax_id:0
+msgid "Chart of Tax"
+msgstr ""
 
 #. module: account
 #: field:account.move,to_check:0
@@ -2527,6 +2582,10 @@ msgstr "Suma în moneda jurnalului"
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,landscape:0
+#: field:account.common.report,landscape:0
+#: field:account.report.general.ledger,landscape:0
+#: field:account.pl.report,landscape:0
+#: field:account.bs.report,landscape:0
 msgid "Landscape Mode"
 msgstr "Mod vedere"
 
@@ -2582,8 +2641,36 @@ msgstr "Creare factură pe baza conturilor analitice"
 #: wizard_button:account_use_models,init_form,end:0
 #: view:wizard.company.setup:0
 #: view:wizard.multi.charts.accounts:0
+#: view:account.period.close:0
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.partner.balance:0
+#: view:account.aged.trial.balance:0
+#: view:account.partner.ledger:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.vat.declaration:0
 msgid "Cancel"
 msgstr "Renunțare"
+
+#. module: account
+#: field:account.common.report,chart_account_id:0
+#: field:account.report.general.ledger,chart_account_id:0
+#: field:account.balance.report,chart_account_id:0
+#: field:account.pl.report,chart_account_id:0
+#: field:account.bs.report,chart_account_id:0
+#: field:account.print.journal,chart_account_id:0
+#: field:account.general.journal,chart_account_id:0
+#: field:account.central.journal,chart_account_id:0
+#: field:account.partner.balance,chart_account_id:0
+#: field:account.aged.trial.balance,chart_account_id:0
+#: field:account.partner.ledger,chart_account_id:0
+msgid "Chart of account"
+msgstr ""
 
 #. module: account
 #: field:account.account.type,name:0
@@ -2817,6 +2904,7 @@ msgstr "Compensare tranzacţii"
 
 #. module: account
 #: wizard_field:account.aged.trial.balance,init,direction_selection:0
+#: field:account.aged.trial.balance,direction_selection:0
 msgid "Analysis Direction"
 msgstr "Direcţia analizei"
 
@@ -3571,6 +3659,18 @@ msgstr "Descendenţi reuniţi"
 #: wizard_field:account.general.ledger.report,checktype,fiscalyear:0
 #: wizard_field:account.partner.balance.report,init,fiscalyear:0
 #: wizard_field:account.third_party_ledger.report,init,fiscalyear:0
+#: field:account.common.report,fiscalyear_id:0
+#: field:account.report.general.ledger,fiscalyear_id:0
+#: field:account.balance.report,fiscalyear_id:0
+#: field:account.pl.report,fiscalyear_id:0
+#: field:account.bs.report,fiscalyear_id:0
+#: field:account.print.journal,fiscalyear_id:0
+#: field:account.general.journal,fiscalyear_id:0
+#: field:account.central.journal,fiscalyear_id:0
+#: field:account.partner.balance,fiscalyear_id:0
+#: field:account.aged.trial.balance,fiscalyear_id:0
+#: field:account.partner.ledger,fiscalyear_id:0
+#: field:account.vat.declaration,fiscalyear_id:0
 msgid "Fiscal year"
 msgstr "An fiscal"
 
@@ -3613,6 +3713,11 @@ msgstr "Model înregistrare"
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,amount_currency:0
+#: field:account.report.general.ledger,amount_currency:0
+#: field:account.print.journal,amount_currency:0
+#: field:account.general.journal,amount_currency:0
+#: field:account.central.journal,amount_currency:0
+#: field:account.partner.ledger,amount_currency:0
 msgid "With Currency"
 msgstr "Cu moneda"
 
@@ -3792,8 +3897,27 @@ msgstr "Utilitar configurare conturi "
 #: field:account.config.wizard,date1:0
 #: field:account.fiscalyear,date_start:0
 #: field:account.subscription,date_start:0
+#: field:account.config.wizard,date1:0
+#: field:account.fiscalyear,date_start:0
+#: field:account.subscription,date_start:0
+#: field:account.common.report,date_from:0
+#: field:account.report.general.ledger,date_from:0
+#: field:account.balance.report,date_from:0
+#: field:account.pl.report,date_from:0
+#: field:account.bs.report,date_from:0
+#: field:account.print.journal,date_from:0
+#: field:account.general.journal,date_from:0
+#: field:account.central.journal,date_from:0
+#: field:account.partner.balance,date_from:0
+#: field:account.partner.ledger,date_from:0
+#: field:account.aged.trial.balance,date_from:0
 msgid "Start Date"
 msgstr "Dată de început"
+
+#. module: account
+#: field:account.aged.trial.balance,period_length:0 
+msgid "Period length(days)"
+msgstr ""
 
 #. module: account
 #: wizard_view:account.general.ledger.report,account_selection:0
@@ -4131,8 +4255,9 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,reconcil:0
-msgid "       Include Reconciled Entries"
-msgstr "       Include înregistrările compensate"
+#: field:account.partner.ledger,reconcil:0
+msgid "Include Reconciled Entries"
+msgstr "Include înregistrările compensate"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -4212,6 +4337,17 @@ msgstr "Gata"
 #: model:ir.actions.act_window,name:account.action_account_period_form
 #: model:ir.ui.menu,name:account.menu_action_account_period_form
 #: model:ir.ui.menu,name:account.next_id_23
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
+#: view:account.vat.declaration:0
 msgid "Periods"
 msgstr "Perioade"
 
@@ -4377,8 +4513,24 @@ msgstr "Ştergere linii"
 #: wizard_field:account.general.ledger.report,checktype,soldeinit:0
 #: wizard_field:account.partner.balance.report,init,soldeinit:0
 #: wizard_field:account.third_party_ledger.report,init,soldeinit:0
+#: field:account.report.general.ledger,initial_balance:0
+#: field:account.partner.ledger,initial_balance:0
 msgid "Include initial balances"
 msgstr "Include soldurile iniţiale"
+
+#. module: account
+#: field:account.common.report,filter:0
+#: field:account.report.general.ledger,filter:0
+#: field:account.balance.report,filter:0
+#: field:account.pl.report,filter:0
+#: field:account.bs.report,filter:0
+#: field:account.print.journal,filter:0
+#: field:account.general.journal,filter:0
+#: field:account.central.journal,filter:0
+#: field:account.partner.balance,filter:0
+#: field:account.partner.ledger,filter:0
+msgid "Filter by"
+msgstr ""
 
 #. module: account
 #: view:account.account.template:0
@@ -4431,8 +4583,62 @@ msgstr "Note de credit"
 #. module: account
 #: field:account.config.wizard,date2:0
 #: field:account.fiscalyear,date_stop:0
+#: field:account.common.report,date_to:0
+#: field:account.report.general.ledger,date_to:0
+#: field:account.balance.report,date_to:0
+#: field:account.pl.report,date_to:0
+#: field:account.bs.report,date_to:0
+#: field:account.print.journal,date_to:0
+#: field:account.general.journal,date_to:0
+#: field:account.central.journal,date_to:0
+#: field:account.partner.balance,date_to:0
+#: field:account.partner.ledger,date_to:0
 msgid "End Date"
 msgstr "Dată de sfârșit"
+
+#. module: account
+#: field:account.common.report,period_from:0
+#: field:account.report.general.ledger,period_from:0
+#: field:account.balance.report,period_from:0
+#: field:account.pl.report,period_from:0
+#: field:account.bs.report,period_from:0
+#: field:account.print.journal,period_from:0
+#: field:account.general.journal,period_from:0
+#: field:account.central.journal,period_from:0
+#: field:account.partner.balance,period_from:0
+#: field:account.partner.ledger,period_from:0
+#: field:account.vat.declaration,period_from:0
+msgid "Start period"
+msgstr ""
+
+#. module: account
+#: field:account.common.report,period_to:0
+#: field:account.report.general.ledger,period_to:0
+#: field:account.balance.report,period_to:0
+#: field:account.pl.report,period_to:0
+#: field:account.bs.report,period_to:0
+#: field:account.print.journal,period_to:0
+#: field:account.general.journal,period_to:0
+#: field:account.central.journal,period_to:0
+#: field:account.partner.balance,period_to:0
+#: field:account.partner.ledger,period_to:0
+#: field:account.vat.declaration,period_to:0
+msgid "End period"
+msgstr ""
+
+#. module: account
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
+msgid "Dates"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_open_closed_fiscalyear
@@ -5840,6 +6046,7 @@ msgstr "account.sequence.fiscalyear"
 
 #. module: account
 #: wizard_field:account.print.journal.report,init,sort_selection:0
+#: field:account.print.journal,sort_selection:0
 msgid "Entries Sorted By"
 msgstr "Înregistrări sortate după"
 
@@ -6043,8 +6250,23 @@ msgstr "Denumire coloană"
 #: wizard_view:account.general.ledger.report,checktype:0
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
 msgid "Filters"
 msgstr "Filtre"
+
+#. module: account
+#: field:account.vat.declaration,based_on:0
+msgid "Based on"
+msgstr ""
 
 #. module: account
 #: wizard_button:account.wizard_paid_open,init,yes:0

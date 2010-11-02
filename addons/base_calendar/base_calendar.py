@@ -916,7 +916,7 @@ class calendar_event(osv.osv):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
     def onchange_allday(self, cr, uid, ids, allday, context=None):
-        """Sets duration as 24 Hours if event is selcted for all day
+        """Sets duration as 24 Hours if event is selected for all day
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -1629,6 +1629,14 @@ true, it will allow you to hide the event alarm information without removing it.
 
         if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
+
+        updated_vals = self.onchange_dates(cr, uid, [],
+            vals.get('date', False),
+            vals.get('duration', False),
+            vals.get('date_deadline', False),
+            vals.get('allday', False),
+            context=context)
+        vals.update(updated_vals.get('value', {}))
 
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')

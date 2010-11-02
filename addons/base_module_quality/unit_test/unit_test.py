@@ -24,7 +24,7 @@ import os
 from osv import fields, osv
 from tools.translate import _
 import pooler
-from tools import config
+import addons
 from base_module_quality import base_module_quality
 
 class quality_test(base_module_quality.abstract_quality_check):
@@ -45,7 +45,7 @@ This test checks the Unit Test(PyUnit) Cases of the module. Note that 'unit_test
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
-        test_file = config['addons_path'] +'/' + module_name +'/unit_test/test.py'
+        test_file = addons.get_module_resource(module_name) + '/unit_test/test.py'
         if not os.path.isfile(test_file):
             self.result += _("Module does not have 'unit_test/test.py' file")
             return None
