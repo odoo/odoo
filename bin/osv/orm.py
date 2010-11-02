@@ -486,7 +486,7 @@ class orm_template(object):
                                 vals['relation'], bool(vals['view_load']),
                                 vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], vals['model'], vals['name']
                             ))
-                        continue
+                        break
         cr.commit()
 
     def _auto_init(self, cr, context={}):
@@ -1286,7 +1286,6 @@ class orm_template(object):
                     'fields': xfields
                 }
                 attrs = {'views': views}
-                view = False
                 fields = views.get('field', False) and views['field'].get('fields', False)
             if node.get('name'):
                 attrs = {}
@@ -2212,7 +2211,6 @@ class orm(orm_template):
 
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
-        sum = {}
         flist = ''
         group_by = groupby
         if groupby:
@@ -2233,10 +2231,10 @@ class orm(orm_template):
                 or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
         for f in fields_pre:
             if f not in ['id', 'sequence']:
-                operator = fget[f].get('group_operator', 'sum')
+                group_operator = fget[f].get('group_operator', 'sum')
                 if flist:
                     flist += ','
-                flist += operator+'('+f+') as '+f
+                flist += group_operator+'('+f+') as '+f
 
         gb = groupby and (' GROUP BY '+groupby) or ''
 
@@ -2396,7 +2394,6 @@ class orm(orm_template):
                 cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
                 cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'", "''")))
                 create = True
-
                 self.__schema.debug("Table '%s': created", self._table)
 
             cr.commit()
@@ -2449,13 +2446,22 @@ class orm(orm_template):
             # iterate on the "object columns"
             todo_update_store = []
             update_custom_fields = context.get('update_custom_fields', False)
+
+            cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
+               "FROM pg_class c,pg_attribute a,pg_type t " \
+               "WHERE c.relname=%s " \
+               "AND c.oid=a.attrelid " \
+               "AND a.atttypid=t.oid", (self._table,))
+            col_data = dict(map(lambda x: (x['attname'], x),cr.dictfetchall()))
+
+
             for k in self._columns:
                 if k in ('id', 'write_uid', 'write_date', 'create_uid', 'create_date'):
                     continue
-                    #raise _('Can not define a column %s. Reserved keyword !') % (k,)
                 #Not Updating Custom fields
                 if k.startswith('x_') and not update_custom_fields:
                     continue
+
                 f = self._columns[k]
 
                 if isinstance(f, fields.one2many):
@@ -2488,13 +2494,8 @@ class orm(orm_template):
                         self.__schema.debug("Create table '%s': relation between '%s' and '%s'",
                                             f._rel, self._table, ref)
                 else:
-                    cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
-                               "FROM pg_class c,pg_attribute a,pg_type t " \
-                               "WHERE c.relname=%s " \
-                               "AND a.attname=%s " \
-                               "AND c.oid=a.attrelid " \
-                               "AND a.atttypid=t.oid", (self._table, k))
-                    res = cr.dictfetchall()
+                    res = col_data.get(k, [])
+                    res = res and [res] or []
                     if not res and hasattr(f, 'oldname'):
                         cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
                             "FROM pg_class c,pg_attribute a,pg_type t " \
@@ -2971,26 +2972,6 @@ class orm(orm_template):
             for key, v in r.items():
                 if v is None:
                     r[key] = False
-                if key in self._columns:
-                    column = self._columns[key]
-                elif key in self._inherit_fields:
-                    column = self._inherit_fields[key][2]
-                else:
-                    continue
-# TODO: removed this, it's too slow
-#                if v and column._type == 'reference':
-#                    model_name, ref_id = v.split(',', 1)
-#                    model = self.pool.get(model_name)
-#                    if not model:
-#                        reset = True
-#                    else:
-#                        cr.execute('SELECT count(1) FROM "%s" WHERE id=%%s' % (model._table,), (ref_id,))
-#                        reset = not cr.fetchone()[0]
-#                    if reset:
-#                        if column._classic_write:
-#                            query = 'UPDATE "%s" SET "%s"=NULL WHERE id=%%s' % (self._table, key)
-#                            cr.execute(query, (r['id'],))
-#                        r[key] = False
 
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
@@ -3041,7 +3022,8 @@ class orm(orm_template):
                     cr.execute(query, [tuple(sub_ids)] + rule_params)
                     if cr.rowcount != len(sub_ids):
                         raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
+                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: read, Document type: %s).')
+                                         % (self._description,))
                 else:
                     cr.execute(query, (tuple(sub_ids),))
                 res.extend(cr.dictfetchall())
@@ -3213,17 +3195,21 @@ class orm(orm_template):
             return
         if not (context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access):
             return
-        def key(oid):
-            return "%s,%s" % (self._name, oid)
-        santa = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
-        for i in range(0, len(ids), cr.IN_MAX):
-            sub_ids = tools.flatten(((oid, context[self.CONCURRENCY_CHECK_FIELD][key(oid)])
-                                     for oid in ids[i:i+cr.IN_MAX]
-                                     if key(oid) in context[self.CONCURRENCY_CHECK_FIELD]))
-            if not sub_ids: continue
-            cr.execute("SELECT 1 FROM %s WHERE %s" % (self._table, " OR ".join([santa]*(len(sub_ids)/2))), sub_ids)
-            if cr.fetchone():
-                raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
+        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
+        for sub_ids in cr.split_for_in_conditions(ids):
+            ids_to_check = []
+            for id in sub_ids:
+                id_ref = "%s,%s" % (self._name, id)
+                update_date = context[self.CONCURRENCY_CHECK_FIELD].pop(id_ref, None)
+                if update_date:
+                    ids_to_check.extend([id, update_date])
+            if not ids_to_check:
+                continue
+            cr.execute("SELECT id FROM %s WHERE %s" % (self._table, " OR ".join([check_clause]*(len(ids_to_check)/2))), tuple(ids_to_check))
+            res = cr.fetchone()
+            if res:
+                # mention the first one only to keep the error message readable
+                raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """Verifies that the operation given by ``operation`` is allowed for the user
@@ -3242,8 +3228,8 @@ class orm(orm_template):
                            [sub_ids] + where_params)
                 if cr.rowcount != len(sub_ids):
                     raise except_orm(_('AccessError'),
-                                     _('Operation prohibited by access rules (Operation: %s, Document type: %s).')
-                                     % (operation, self._name))
+                                     _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
+                                     % (operation, self._description))
 
     def unlink(self, cr, uid, ids, context=None):
         """
@@ -3454,6 +3440,9 @@ class orm(orm_template):
             for sub_ids in cr.split_for_in_conditions(ids):
                 cr.execute('update ' + self._table + ' set ' + ','.join(upd0) + ' ' \
                            'where id IN %s', upd1 + [sub_ids])
+                if cr.rowcount != len(sub_ids):
+                    raise except_orm(_('AccessError'),
+                                     _('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
             if totranslate:
                 # TODO: optimize
