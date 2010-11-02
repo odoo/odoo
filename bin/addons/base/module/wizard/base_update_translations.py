@@ -52,6 +52,10 @@ class base_update_translations(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(base_update_translations, self).default_get(cr, uid, fields, context=context)
+        
+        if context.get('active_model') != "res.lang":
+            return res
+        
         record_id = context and context.get('active_id', False) or False
         if record_id:
             lang = self.pool.get('res.lang').browse(cr, uid, record_id).code

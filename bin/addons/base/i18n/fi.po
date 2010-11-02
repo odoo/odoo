@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-03-24 05:45+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-10-13 07:43+0000\n"
+"Last-Translator: Anup (OpenERP) <ach@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-10-14 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -256,11 +256,6 @@ msgstr "%y - Vuosiluku ilman vuosisatoja desimaalilukuna [00,99]."
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_GOTO_FIRST"
 msgstr "STOCK_GOTO_FIRST"
-
-#. module: base
-#: help:ir.rule.group,rules:0
-msgid "The rule is satisfied if at least one test is True"
-msgstr "Sääntö toteutuu jos vähintään yksi testeistä on \"tosi\""
 
 #. module: base
 #: selection:ir.report.custom.fields,operation:0
@@ -816,11 +811,6 @@ msgid "Website"
 msgstr "Web-sivusto"
 
 #. module: base
-#: field:ir.rule.group,rules:0
-msgid "Tests"
-msgstr "Testit"
-
-#. module: base
 #: view:ir.module.repository:0
 msgid "Repository"
 msgstr "Sijoituspaikka"
@@ -1356,7 +1346,6 @@ msgstr "Päivitettyjen moduulien määrä"
 #: field:ir.actions.todo,groups_id:0
 #: field:ir.actions.wizard,groups_id:0
 #: field:ir.model.fields,groups:0
-#: field:ir.rule.group,groups:0
 #: field:ir.ui.menu,groups_id:0
 #: model:ir.ui.menu,name:base.menu_action_res_groups
 #: view:res.groups:0
@@ -1413,7 +1402,7 @@ msgid ""
 msgstr ""
 "Syötä kenttä tai lauseke joka palauttaa listan. Esim. valitse myyntitilaus "
 "objektista ja voit luoda silmukan myyntitilauksen rivistä. Lauseke = "
-"\"object.order_line\"."
+"`object.order_line`."
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -1460,11 +1449,6 @@ msgstr "Madagaskar"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
-
-#. module: base
-#: help:ir.rule.group,global:0
-msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr "Tee säännöstä yleinen, muuten se pitää laittaa ryhmään"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -2182,11 +2166,6 @@ msgid "Countries"
 msgstr "Maat"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "Record rules"
-msgstr "Tietuesäännöt"
-
-#. module: base
 #: field:res.partner,vat:0
 msgid "VAT"
 msgstr "ALV"
@@ -2820,11 +2799,6 @@ msgid "Benin"
 msgstr "Benin"
 
 #. module: base
-#: view:ir.rule.group:0
-msgid "The rule is satisfied if all test are True (AND)"
-msgstr "Sääntö täyttyy jos kaikki testit ovat tosia"
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CONNECT"
 msgstr "STOCK_CONNECT"
@@ -3148,7 +3122,6 @@ msgstr "Kazakstan"
 #: field:ir.module.repository,name:0
 #: field:ir.property,name:0
 #: field:ir.report.custom.fields,name:0
-#: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
 #: field:res.bank,name:0
@@ -3266,10 +3239,10 @@ msgstr "Ryhmittele"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid ""
-"\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+"'%s' contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
-"\"%s\" sisältää liikaa pisteitä. XML ids eivät saa sisältää pisteitä ! Näitä "
+"'%s' sisältää liikaa pisteitä. XML ids eivät saa sisältää pisteitä ! Näitä "
 "käytetään viittaamaan toisten moodulien tietoihin kuten module.reference_id "
 "kerrotaan"
 
@@ -3819,11 +3792,6 @@ msgid "ir.translation"
 msgstr "ir.translation"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule_group
-msgid "ir.rule.group"
-msgstr "ir.rule.group"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
 #: model:ir.ui.menu,name:base.menu_module_tree_install
 msgid "Installed modules"
@@ -4149,12 +4117,6 @@ msgstr "A4"
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
 msgstr ""
-
-#. module: base
-#: view:ir.rule.group:0
-msgid "Multiple rules on same objects are joined using operator OR"
-msgstr ""
-"Monta sääntöä samalle objektille liitetään käyttämällä operaattoria TAI"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
@@ -4784,11 +4746,6 @@ msgid "Reunion (French)"
 msgstr "Réunion (Ranska)"
 
 #. module: base
-#: field:ir.rule.group,global:0
-msgid "Global"
-msgstr "Yleinen"
-
-#. module: base
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr "Tšekki"
@@ -5036,7 +4993,6 @@ msgstr "Komponenttien toimittajat"
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.actions.todo,users_id:0
 #: field:ir.default,uid:0
-#: field:ir.rule.group,users:0
 #: model:ir.ui.menu,name:base.menu_action_res_users
 #: model:ir.ui.menu,name:base.menu_users
 #: view:res.groups:0
@@ -6167,7 +6123,6 @@ msgstr ""
 #: field:ir.model.data,model:0
 #: field:ir.model.grid,model:0
 #: field:ir.report.custom,model_id:0
-#: field:ir.rule.group,model_id:0
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
@@ -7802,11 +7757,9 @@ msgid ""
 "106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
 "Erottimen formaatin tulisi olla muotoa [,n] jossa n > 0 ja -1 lopettaa "
-"erottelun.\r\n"
-"Esimerkiksi luku 106500 (tuhaterottimena on käytetty pilkkua):\r\n"
-"[3,2,-1] esittää sen muodossa 1,06,500;\r\n"
-"[1,2,-1] esittää sen muodossa 106,50,0;\r\n"
-"[3] esittää sen muodossa 106,500."
+"erottelun. Esimerkiksi luku 106500 (tuhaterottimena on käytetty "
+"pilkkua):[3,2,-1] esittää sen muodossa 1,06,500;[1,2,-1] esittää sen "
+"muodossa 106,50,0;[3] esittää sen muodossa 106,500."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form_new
@@ -8183,6 +8136,32 @@ msgstr ""
 #: code:addons/osv/osv.py:0
 #, python-format
 msgid "Integrity Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "User Error"
+msgstr "Käyttäjä virhe"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "Base Language 'en_US' can not be deleted !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is User's Preferred Language !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot delete the language which is Active !\n"
+"Please de-activate the language first."
 msgstr ""
 
 #~ msgid "Attached Model"

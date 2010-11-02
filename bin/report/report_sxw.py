@@ -19,24 +19,18 @@
 #
 ##############################################################################
 from lxml import etree
-import traceback, sys
 import StringIO
 import cStringIO
 import base64
-import copy
-import locale
 from datetime import datetime
 import os
 import re
 import time
 from interface import report_rml
 import preprocess
-import ir
-import netsvc
-import osv
+import logging
 import pooler
 import tools
-import warnings
 import zipfile
 import common
 from osv.fields import float as float_class, function as function_class
@@ -319,7 +313,7 @@ class rml_parse(object):
                 if not self._transl_regex.match(piece_list[pn]):
                     source_string = piece_list[pn].replace('\n', ' ').strip()
                     if len(source_string):
-                        translated_string = transl_obj._get_source(self.cr, self.uid, self.name, 'rml', lang, source_string)
+                        translated_string = transl_obj._get_source(self.cr, self.uid, self.name, ('report', 'rml'), lang, source_string)
                         if translated_string:
                             piece_list[pn] = piece_list[pn].replace(source_string, translated_string)
             text = ''.join(piece_list)
@@ -439,8 +433,8 @@ class report_sxw(report_rml, preprocess.report):
                 result = self.create_single_pdf(cr, uid, [obj.id], data, report_xml, context)
                 if not result:
                     return False
-                try:
-                    if aname:
+                if aname:
+                    try:
                         name = aname+'.'+result[1]
                         pool.get('ir.attachment').create(cr, uid, {
                             'name': aname,
@@ -450,11 +444,9 @@ class report_sxw(report_rml, preprocess.report):
                             'res_id': obj.id,
                             }, context=context
                         )
-                        cr.commit()
-                except Exception,e:
-                     import traceback, sys
-                     tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-                     netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,str(e))
+                    except Exception:
+                        #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
+                        logging.getLogger('report').error('Could not create saved report attachment', exc_info=True)
                 results.append(result)
             if results:
                 if results[0][1]=='pdf':

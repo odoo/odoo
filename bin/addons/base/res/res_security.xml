@@ -12,12 +12,13 @@
 
 
     <!-- Record Rule For Company -->
-    
+
     <record id="res_company_rule" model="ir.rule">
         <field name="name">company rule</field>
         <field model="ir.model" name="model_id" ref="model_res_company"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|',('user_ids','=',user.id),('parent_id','=',user.company_id.id)]</field>
+        <!-- TODO: review this <field name="domain_force">['|', ('child_ids', 'child_of', [user.company_id.id]), ('parent_id', 'child_of', [user.company_id.id])]</field> -->
+        <field name="domain_force">[]</field>
     </record>
 
     <!-- Record Rule For User -->
@@ -25,7 +26,7 @@
         <field name="name">user rule</field>
         <field model="ir.model" name="model_id" ref="model_res_users"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',user.company_id.id),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
 

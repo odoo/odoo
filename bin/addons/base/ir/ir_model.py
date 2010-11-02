@@ -209,7 +209,7 @@ class ir_model_fields(osv.osv):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 
             if vals.get('relation',False) and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
-                 raise except_orm(_('Error'), _("Model %s Does not Exist !" % vals['relation']))
+                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
@@ -235,11 +235,9 @@ class ir_model_access(osv.osv):
     }
 
     def check_groups(self, cr, uid, group):
-        res = False
         grouparr  = group.split('.')
         if not grouparr:
             return False
-
         cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN (select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))
         return bool(cr.fetchone())
 
@@ -428,13 +426,11 @@ class ir_model_data(osv.osv):
         return id
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
-        warning = True
         model_obj = self.pool.get(model)
         if not context:
             context = {}
         if xml_id and ('.' in xml_id):
-            assert len(xml_id.split('.'))==2, _('"%s" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id') % (xml_id)
-            warning = False
+            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
             module, xml_id = xml_id.split('.')
         if (not xml_id) and (not self.doinit):
             return False
@@ -521,7 +517,6 @@ class ir_model_data(osv.osv):
         return True
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
-        obj = self.pool.get('ir.values')
         if type(models[0])==type([]) or type(models[0])==type(()):
             model,res_id = models[0]
         else:
@@ -559,7 +554,7 @@ class ir_model_data(osv.osv):
                 if model=='workflow.activity':
                     cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                     wkf_todo.extend(cr.fetchall())
-                    cr.execute("update wkf_transition set condition='True', role_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
+                    cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
                     cr.execute("delete from wkf_transition where act_to=%s", (res_id,))
 
         for model,id in wkf_todo:

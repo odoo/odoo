@@ -35,6 +35,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.country</field>
             <field name="view_type">form</field>
+            <field name="help">Display and manage the list of all countries that can be assigned to your partner records. You can create or delete countries to make sure the ones you are working on will be maintained.</field>
         </record>
 
         <menuitem id="menu_localisation" name="Localisation" parent="menu_config_address_book" sequence="1"/>
@@ -77,6 +78,7 @@
             <field name="res_model">res.country.state</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_country_state_tree"/>
+            <field name="help">If you are working on the American market, you can manage the different federal states you are working on from here. Each state is attached to one country.</field>
         </record>
 
           <menuitem action="action_country_state" id="menu_country_state_partner" parent="menu_localisation" sequence="1"/>

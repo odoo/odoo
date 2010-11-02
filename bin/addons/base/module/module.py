@@ -232,7 +232,7 @@ class module(osv.osv):
                 raise Exception('Unable to find %r in path' % (binary,))
 
 
-    def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=100):
+    def state_update(self, cr, uid, ids, newstate, states_to_update, context=None, level=100):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
         demo = False
@@ -240,19 +240,25 @@ class module(osv.osv):
             mdemo = False
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
-                    raise orm.except_orm(_('Error'), _("You try to install the module '%s' that depends on the module:'%s'.\nBut this module is not available in your system.") % (module.name, dep.name,))
+                    raise orm.except_orm(_('Error'), _("You try to install module '%s' that depends on module '%s'.\nBut the latter module is not available in your system.") % (module.name, dep.name,))
                 ids2 = self.search(cr, uid, [('name','=',dep.name)])
                 if dep.state != newstate:
                     mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level-1,) or mdemo
                 else:
                     od = self.browse(cr, uid, ids2)[0]
                     mdemo = od.demo or mdemo
-            
+
             terp = self.get_module_info(module.name)
             try:
                 self._check_external_dependencies(terp)
             except Exception, e:
-                raise orm.except_orm(_('Error'), _('Unable %s the module "%s" because an external dependencie is not met: %s' % (newstate, module.name, e.args[0])))
+                if newstate == 'to install':
+                    msg = _('Unable to install module "%s" because an external dependency is not met: %s')
+                elif newstate == 'to upgrade':
+                    msg = _('Unable to upgrade module "%s" because an external dependency is not met: %s')
+                else:
+                    msg = _('Unable to process module "%s" because an external dependency is not met: %s')
+                raise orm.except_orm(_('Error'), msg % (module.name, e.args[0]))
             if not module.dependencies_id:
                 mdemo = module.demo
             if module.state in states_to_update:
@@ -435,7 +441,7 @@ class module(osv.osv):
             categs = categs[1:]
         self.write(cr, uid, [id], {'category_id': p_id})
 
-    def update_translations(self, cr, uid, ids, filter_lang=None):
+    def update_translations(self, cr, uid, ids, filter_lang=None, context={}):
         logger = netsvc.Logger()
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
@@ -462,7 +468,7 @@ class module(osv.osv):
                     iso_lang = iso_lang.split('_')[0]
                 if os.path.exists(f):
                     logger.notifyChannel("i18n", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, iso_lang))
-                    tools.trans_load(cr.dbname, f, lang, verbose=False)
+                    tools.trans_load(cr.dbname, f, lang, verbose=False, context=context)
 
     def check(self, cr, uid, ids, context=None):
         logger = logging.getLogger('init')

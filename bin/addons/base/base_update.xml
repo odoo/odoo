@@ -79,7 +79,8 @@
                     <notebook colspan="4">
                         <page string="Current Activity">
                             <field name="company_id" widget="selection" readonly="0"
-                                    context="{'user_id': self, 'user_preference': 1}" groups="base.group_multi_company"/>
+                                    context="{'user_id': self, 'user_preference': 1}" groups="base.group_multi_company"
+                                    on_change="on_change_company_id(company_id)" />
                             <field name="view" readonly="0"/>
                             <label string="" colspan="2"/>
                             <separator string="Default Filters" colspan="4"/>
@@ -93,7 +94,7 @@
                             <field name="context_tz" completion="1" readonly="0"/>
                             <field name="menu_tips" colspan="2" readonly="0"/>
                             <separator string="Email &amp; Signature" colspan="4"/>
-                            <group colspan="4"><field name="user_email" widget="email"/></group>
+                            <group colspan="4"><field name="user_email" widget="email" readonly="0"/></group>
                             <field colspan="4" name="signature" readonly="0" nolabel="1"/>
                           </page>
                     </notebook>
@@ -118,7 +119,6 @@
                                 <separator string="Contact" colspan="2"/>
                                 <field name="company_id" required="1"
                                     context="{'user_id': self, 'user_preference': 1}"
-                                    on_change="on_change_company_id(company_id)"
                                     groups="base.group_multi_company"
                                     />
                                 <field name="address_id"/>
@@ -144,12 +144,9 @@
                                 <field colspan="2" name="signature" nolabel="1"/>
                             </group>
                             <group colspan="2" col="2" expand="1">
-                                <separator string="Access Rights (groups)" colspan="2"/>
+                                <separator string="Groups" colspan="2"/>
                                 <field colspan="2" nolabel="1" name="groups_id"/>
                             </group>
-                        </page>
-                        <page string="Roles">
-                            <field colspan="4" nolabel="1" name="roles_id"/>
                         </page>
                         <page string="Companies" groups="base.group_multi_company">
                             <field colspan="4" nolabel="1" name="company_ids" select="1"/>
@@ -322,7 +319,7 @@
                 </form>
                 <xpath expr="//label[@string='description']"
                      position="attributes">
-                <attribute name="string">OpenERP allows you to select between a simplified and extended interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface. You can always switch later from the user preferences.</attribute>
+                <attribute name="string">If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences.</attribute>
               </xpath>
               <xpath expr='//separator[@string="title"]' position='attributes'>
                     <attribute name='string'>Configure Your Interface</attribute>
@@ -359,6 +356,7 @@
         </record>
         <record id="config_wizard_simple_view" model="ir.actions.todo">
             <field name="action_id" ref="action_config_simple_view_form"/>
+            <field name="restart">always</field>
             <field name="sequence">1</field>
         </record>
     </data>
