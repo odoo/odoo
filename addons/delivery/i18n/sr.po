@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-15 09:04+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-11-01 17:26+0000\n"
+"Last-Translator: zmmaj <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-11-02 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
-msgstr ""
+msgstr "Ref Zahteva"
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
@@ -35,18 +35,18 @@ msgstr "Odredište"
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr ""
+msgstr "Neto Tezina"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No price available !"
-msgstr ""
+msgstr "Cena NIje dostupna !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "Linija Isporuke"
 
 #. module: delivery
 #: constraint:ir.actions.act_window:0
@@ -73,7 +73,7 @@ msgstr "Linija Mreze"
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr ""
+msgstr "Zahtev Isporuke"
 
 #. module: delivery
 #: view:res.partner:0
@@ -83,12 +83,12 @@ msgstr "Svojstva Dostave"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr ""
+msgstr "Izbor za fakturisanje"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
+msgstr "Daje redosled sekvenci pri prikazu linija liste isporuke"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -99,12 +99,12 @@ msgstr "Zemlje"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "Zahtev za Dostavu :"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sale Order"
-msgstr ""
+msgstr "Zahtev Prodaje"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -131,27 +131,30 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Ako je aktivno polje postavljeno na ISTINA, omogucava da sakrijes liniju "
+"dostave bez uklanjanja iste,"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Premesti skladiste"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
+"ni jedna linija iz zahteva se ne poklapa sa izabranim linijama dostave"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Ref Pracenje prevoznika"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
 msgid "Net Weight"
-msgstr ""
+msgstr "Netto Tezina"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -166,7 +169,7 @@ msgstr "Definicija mreže"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Otkazi"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -176,27 +179,27 @@ msgstr "Operator"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: delivery
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Greska ! Ne mozes kreirati rekursivni Meni."
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "Fakturisano za"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Izborna Lista"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
-msgstr ""
+msgstr "Uradi Ispodruku"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
@@ -208,12 +211,18 @@ msgid ""
 "\n"
 "     "
 msgstr ""
+"Omogucava ti da dodas metode dostave u prodajnim zahtevima i izboru.\n"
+"     Mozes definisati svoju posebnu dostavu i linije dostave za razne cene.\n"
+"     Kada keiras fakture po izbornoj listi, OPenERP moze da doda i izracuna "
+"dostavnu liniju.\n"
+"\n"
+"     "
 
 #. module: delivery
 #: code:addons/delivery/stock.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Upozorenje"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -239,7 +248,7 @@ msgstr ""
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Date"
-msgstr ""
+msgstr "Datum Zahteva"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -249,12 +258,12 @@ msgstr "Naziv Mreže"
 #. module: delivery
 #: view:stock.move:0
 msgid "Weights"
-msgstr ""
+msgstr "Tezine"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "Broj Paketa"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -274,7 +283,7 @@ msgstr "Način dostave"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "Nema dostupnih linija"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -292,7 +301,7 @@ msgstr ""
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "Order not in draft state !"
-msgstr ""
+msgstr "Zahtev nije u 'U pripremi' !"
 
 #. module: delivery
 #: constraint:res.partner:0
@@ -302,7 +311,7 @@ msgstr "Greška ! Ne možete da kreirate rekurivne povezane članove."
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr ""
+msgstr "Serija"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -318,7 +327,7 @@ msgstr "Aktivan"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Shipping Date"
-msgstr ""
+msgstr "Datum prevoza"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
@@ -344,7 +353,7 @@ msgstr "Promjenljiva"
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "Metod dostave ce se koristiti kada fakturises iz izborne liste."
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -354,7 +363,7 @@ msgstr "Maksimalna Vrednost"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Quantity"
-msgstr ""
+msgstr "Kolicina"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
@@ -366,6 +375,8 @@ msgstr "Pst.Br Polaska"
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Kompletiraj ovo polje ako planiras da fakturises prevoz baziran na izbornoj "
+"listi."
 
 #. module: delivery
 #: constraint:ir.model:0
@@ -387,7 +398,7 @@ msgstr "Prodaja & Nabavka"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "Create Deliveries"
-msgstr ""
+msgstr "Kreiraj Dostavu"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_cost
@@ -398,7 +409,7 @@ msgstr "Troškovi Dostave"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -417,7 +428,7 @@ msgstr "Cena"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "Nijedna linija ne odgovara ovom prevozniku"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -439,7 +450,7 @@ msgstr "="
 #: code:addons/delivery/stock.py:0
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "Prevoznik %s (id: %d) nema liniju dostave!"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -452,6 +463,8 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Ako je aktivno polje postavljeno na ISTINA, omogucava ti da sakrijes "
+"prevoznika dostave bez uklanjanja istog."
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -466,7 +479,7 @@ msgstr "Prevoznik"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Apply"
-msgstr ""
+msgstr "_Prihvati"
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -478,6 +491,7 @@ msgstr "ID"
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
+"Stanje Zahteva treba biti na ' U Pripremi' da bi dodao linije dostave."
 
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information
