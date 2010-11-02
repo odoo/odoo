@@ -123,7 +123,7 @@ class project_scrum_sprint(osv.osv):
     }
     _defaults = {
         'state': 'draft',
-        'date_start' : time.strftime('%Y-%m-%d'),
+        'date_start' : lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
