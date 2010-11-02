@@ -643,8 +643,8 @@ class purchase_order_line(osv.osv):
         if not  partner_id:
             raise osv.except_osv(_('No Partner!'), _('You have to select a partner in the purchase form !\nPlease set one partner before choosing a product.'))
         if not product:
-            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
-                'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
+            return {'value': {'price_unit': 0.0, 'name': '', 'product_qty': 1.0, 'date_planned': False, 
+                'notes': '', 'product_uom' : False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid, product)
         lang=False
         if partner_id:
@@ -681,7 +681,7 @@ class purchase_order_line(osv.osv):
         res = {'value': {'price_unit': price, 'name': name or prod_name,
             'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
             'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
-            'product_qty': qty,
+            'product_qty': qty or 1.0,
             'product_uom': uom}}
         domain = {}
 
