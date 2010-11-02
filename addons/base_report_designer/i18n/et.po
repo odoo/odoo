@@ -6,50 +6,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2009-11-09 16:47+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_designer
-#: wizard_field:base_report_designer.modify,init,text:0
-msgid "Introduction"
-msgstr "Sissejuhatus"
+#: model:ir.model,name:base_report_designer.model_base_report_sxw
+msgid "base.report.sxw"
+msgstr ""
 
 #. module: base_report_designer
-#: wizard_view:base_report_designer.modify,send_form:0
-msgid "Upload your modified report"
-msgstr "Lae oma muudetud aruanne"
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,get_form_result,send_form:0
-msgid "Upload the modified report"
-msgstr "Lae üles muudetud aruanne"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form_result:0
-msgid "The .SXW report"
-msgstr ".SXW aruanne"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,send_form_result:0
-msgid "Report modified"
-msgstr "Muudetud aruanne"
-
-#. module: base_report_designer
-#: wizard_button:base_report_designer.modify,init,get_form:0
-msgid "Modify a report"
-msgstr "Muuda aruannet"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,send_form_result:0
-msgid "Your report has been modified."
-msgstr "Su aruanne on muudetud."
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: base_report_designer
 #: model:ir.module.module,shortdesc:base_report_designer.module_meta_information
@@ -57,92 +38,223 @@ msgid "Report designer interface module"
 msgstr "Aruande disaniliidese moodul"
 
 #. module: base_report_designer
-#: wizard_field:base_report_designer.modify,get_form,report_id:0
-#: wizard_field:base_report_designer.modify,get_form_result,report_id:0
-#: wizard_field:base_report_designer.modify,send_form,report_id:0
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.file.sxw:0
+msgid "The .SXW report"
+msgstr ".SXW aruanne"
+
+#. module: base_report_designer
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
+
+#. module: base_report_designer
+#: model:ir.model,name:base_report_designer.model_base_report_designer_installer
+msgid "base_report_designer.installer"
+msgstr ""
+
+#. module: base_report_designer
+#: field:base_report_designer.installer,description:0
+msgid "Description"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base_report_designer.installer:0
+msgid "_Close"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.rml.save:0
+msgid "The RML report"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base_report_designer.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base_report_designer.installer:0
+msgid "title"
+msgstr ""
+
+#. module: base_report_designer
+#: field:base.report.file.sxw,report_id:0
+#: field:base.report.sxw,report_id:0
 msgid "Report"
 msgstr "Aruanne"
 
 #. module: base_report_designer
-#: model:ir.ui.menu,name:base_report_designer.menu_wizard_report_designer_modify
+#: model:ir.model,name:base_report_designer.model_base_report_rml_save
+msgid "base.report.rml.save"
+msgstr ""
+
+#. module: base_report_designer
+#: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
 msgid "Report Designer"
 msgstr "Aruande koostaja"
 
 #. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form:0
-#: wizard_view:base_report_designer.modify,get_form_result:0
-#: wizard_view:base_report_designer.modify,send_form:0
+#: view:base.report.file.sxw:0
+msgid ""
+"This is the template of your requested report.\n"
+"Save it as a .SXW file and open it with OpenOffice.\n"
+"Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
+"Once it is modified, re-upload it in OpenERP using this wizard."
+msgstr ""
+
+#. module: base_report_designer
+#: field:base_report_designer.installer,name:0
+msgid "File name"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.file.sxw:0
+#: view:base.report.sxw:0
 msgid "Get a report"
 msgstr "Saa aruanne"
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,get_form,get_form_result:0
+#: view:base.report.file.sxw:0
+msgid "Upload the modified report"
+msgstr "Lae üles muudetud aruanne"
+
+#. module: base_report_designer
+#: model:ir.actions.act_window,name:base_report_designer.action_report_designer_wizard
+msgid "OpenERP Report Designer"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.sxw:0
 msgid "Continue"
 msgstr "Jätka"
 
 #. module: base_report_designer
-#: wizard_field:base_report_designer.modify,get_form_result,file_sxw:0
-#: wizard_field:base_report_designer.modify,send_form,file_sxw:0
+#: field:base.report.rml.save,file_rml:0
+msgid "Save As"
+msgstr ""
+
+#. module: base_report_designer
+#: help:base_report_designer.installer,plugin_file:0
+msgid ""
+"OpenObject Report Designer plug-in file. Save as this file and install this "
+"plug-in in OpenOffice."
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.rml.save:0
+msgid "Save RML FIle"
+msgstr ""
+
+#. module: base_report_designer
+#: field:base.report.file.sxw,file_sxw:0
+#: field:base.report.file.sxw,file_sxw_upload:0
 msgid "Your .SXW file"
 msgstr "Sinu .SXW fail"
 
 #. module: base_report_designer
-#: wizard_view:base_report_designer.modify,init:0
-msgid "Report designer"
-msgstr "Aruande koostaja"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form_result:0
-msgid ""
-"This is the template of your requested report. Save it as a .SXW file and "
-"open it with OpenOffice. Don't forget to install the Tiny OpenOffice package "
-"to modify it. Once it is modified, re-upload it in Open ERP using this "
-"wizard."
+#: view:base_report_designer.installer:0
+msgid "Installation and Configuration Steps"
 msgstr ""
-"See on sinu poolt päritud mall. Salvesta see .SXW failina ja ava OpenOffice-"
-"ga. Ära unusta paigaldada Tiny OpenOffice paketti, et seda muuta. Pärast "
-"muutmist taaslae see Open ERP-i kasutades seda nõustajat."
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,send_form,send_form_result:0
-msgid "Update the report"
-msgstr "Uuenda aruannet"
+#: field:base_report_designer.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
 
 #. module: base_report_designer
-#: selection:base_report_designer.modify,init,operation:0
-msgid "Create a new report"
-msgstr "Loo uus aruanne"
+#: view:base_report_designer.installer:0
+msgid "Skip"
+msgstr ""
 
 #. module: base_report_designer
-#: selection:base_report_designer.modify,init,operation:0
-#: model:ir.actions.wizard,name:base_report_designer.wizard_report_designer_modify
-msgid "Modify an existing report"
-msgstr "Muuda olemasolevat aruannet"
+#: field:base_report_designer.installer,config_logo:0
+msgid "Image"
+msgstr ""
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,get_form,end:0
-#: wizard_button:base_report_designer.modify,init,end:0
+#: model:ir.actions.act_window,name:base_report_designer.action_view_base_report_sxw
+msgid "Base Report sxw"
+msgstr ""
+
+#. module: base_report_designer
+#: model:ir.model,name:base_report_designer.model_base_report_file_sxw
+msgid "base.report.file.sxw"
+msgstr ""
+
+#. module: base_report_designer
+#: field:base_report_designer.installer,plugin_file:0
+msgid "OpenObject Report Designer Plug-in"
+msgstr ""
+
+#. module: base_report_designer
+#: model:ir.actions.act_window,name:base_report_designer.action_report_designer_installer
+msgid "OpenERP Report Designer Installation"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.file.sxw:0
+#: view:base.report.rml.save:0
+#: view:base.report.sxw:0
 msgid "Cancel"
 msgstr "Tühista"
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,get_form_result,end:0
-#: wizard_button:base_report_designer.modify,send_form,end:0
-#: wizard_button:base_report_designer.modify,send_form_result,end:0
-msgid "Close"
-msgstr "Sulge"
+#: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr ""
 
 #. module: base_report_designer
-#: wizard_field:base_report_designer.modify,init,operation:0
-msgid "Operation"
-msgstr "Operatsioon"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,init:0
-msgid "Report designer introduction"
-msgstr "Aruande kavandaja tutvustus"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form:0
+#: view:base.report.sxw:0
 msgid "Select your report"
 msgstr "Vali oma aruanne"
+
+#~ msgid "Introduction"
+#~ msgstr "Sissejuhatus"
+
+#~ msgid "Upload your modified report"
+#~ msgstr "Lae oma muudetud aruanne"
+
+#~ msgid "Report modified"
+#~ msgstr "Muudetud aruanne"
+
+#~ msgid "Modify a report"
+#~ msgstr "Muuda aruannet"
+
+#~ msgid "Your report has been modified."
+#~ msgstr "Su aruanne on muudetud."
+
+#~ msgid "Report designer"
+#~ msgstr "Aruande koostaja"
+
+#~ msgid ""
+#~ "This is the template of your requested report. Save it as a .SXW file and "
+#~ "open it with OpenOffice. Don't forget to install the Tiny OpenOffice package "
+#~ "to modify it. Once it is modified, re-upload it in Open ERP using this "
+#~ "wizard."
+#~ msgstr ""
+#~ "See on sinu poolt päritud mall. Salvesta see .SXW failina ja ava OpenOffice-"
+#~ "ga. Ära unusta paigaldada Tiny OpenOffice paketti, et seda muuta. Pärast "
+#~ "muutmist taaslae see Open ERP-i kasutades seda nõustajat."
+
+#~ msgid "Update the report"
+#~ msgstr "Uuenda aruannet"
+
+#~ msgid "Create a new report"
+#~ msgstr "Loo uus aruanne"
+
+#~ msgid "Modify an existing report"
+#~ msgstr "Muuda olemasolevat aruannet"
+
+#~ msgid "Close"
+#~ msgstr "Sulge"
+
+#~ msgid "Report designer introduction"
+#~ msgstr "Aruande kavandaja tutvustus"
+
+#~ msgid "Operation"
+#~ msgstr "Operatsioon"

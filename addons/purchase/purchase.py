@@ -186,8 +186,8 @@ class purchase_order(osv.osv):
         'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Picking')], 'Invoicing Control', required=True,
             help="From Order: a draft invoice will be pre-generated based on the purchase order. The accountant " \
                 "will just have to validate this invoice for control.\n" \
-                "From Picking: you manually have to generate the invoices based on the receptions.\n" \
-                "Manual: no invoice will be pre-generated. The accountant will have to encode manually."
+                "From Picking: a draft invoice will be pre-generated based on validated receptions.\n" \
+                "Manual: allows you to generate suppliers invoices by chosing in the uninvoiced lines of all manual purchase orders."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Expected Date', type='date', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Purchase Price'), string='Untaxed Amount',
@@ -271,7 +271,6 @@ class purchase_order(osv.osv):
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context={}):
-        product = []
         todo = []
         for po in self.browse(cr, uid, ids):
             if not po.order_line:
@@ -281,7 +280,7 @@ class purchase_order(osv.osv):
                     todo.append(line.id)
             message = _("Purchase order '%s' is confirmed.") % (po.name,)
             self.log(cr, uid, po.id, message)
-        current_name = self.name_get(cr, uid, ids)[0][1]
+#        current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         message = _('confirm Order') + " ' " + po.name
         self.log(cr,uid,po,message)
@@ -371,7 +370,7 @@ class purchase_order(osv.osv):
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'origin': o.name,
                 'invoice_line': il,
-                'fiscal_position': o.partner_id.property_account_position.id,
+                'fiscal_position': o.fiscal_position.id or o.partner_id.property_account_position.id,
                 'payment_term': o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
                 'company_id': o.company_id.id,
             }
@@ -600,7 +599,7 @@ class purchase_order_line(osv.osv):
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
-        'date_planned': fields.date('Scheduled date', required=True),
+        'date_planned': fields.date('Scheduled Date', required=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
@@ -619,7 +618,7 @@ class purchase_order_line(osv.osv):
                                        \n* The \'Cancelled\' state is set automatically when user cancel purchase order.'),
         'invoice_lines': fields.many2many('account.invoice.line', 'purchase_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
-        'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner"),
+        'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
         'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date")
 
     }

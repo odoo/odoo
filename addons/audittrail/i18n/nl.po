@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 00:49+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-10-28 08:46+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
@@ -29,9 +29,9 @@ msgstr ""
 "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: audittrail
-#: field:audittrail.log.line,log_id:0
-msgid "Log"
-msgstr "Log"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ongeldige modelnaam in de definitie van de actie."
 
 #. module: audittrail
 #: selection:audittrail.rule,state:0
@@ -39,17 +39,13 @@ msgid "Subscribed"
 msgstr "Geabonneerd"
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value : "
-msgstr "Oude waarde: "
+#: model:ir.model,name:audittrail.model_audittrail_rule
+msgid "Audittrail Rule"
+msgstr "Audittrail-regel"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Create"
-msgstr "Maak"
-
-#. module: audittrail
-#: wizard_view:audittrail.view.log,init:0
+#: view:audittrail.view.log:0
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
 msgid "Audit Logs"
 msgstr "Audit logs"
 
@@ -69,19 +65,23 @@ msgid "Old Value"
 msgstr "Oude waarde"
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: audittrail
-#: model:ir.actions.wizard,name:audittrail.wizard_audittrail_log
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
 msgid "View log"
 msgstr "Bekijk log"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log_line
-msgid "audittrail.log.line"
-msgstr "audittrail.log.line"
+#: help:audittrail.rule,log_read:0
+msgid ""
+"Select this if you want to keep track of read/open on any record of the "
+"object of this rule"
+msgstr ""
+"Selecteer of u de het lezen/openen van elk record van dit object in deze "
+"regel bij wilt houden"
 
 #. module: audittrail
 #: field:audittrail.log,method:0
@@ -89,14 +89,14 @@ msgid "Method"
 msgstr "Methode"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,from:0
+#: field:audittrail.view.log,from:0
 msgid "Log From"
 msgstr "Log van"
 
 #. module: audittrail
-#: field:audittrail.log.line,log:0
-msgid "Log ID"
-msgstr "Log ID"
+#: field:audittrail.log.line,log_id:0
+msgid "Log"
+msgstr "Log"
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
@@ -104,14 +104,24 @@ msgid "Resource Id"
 msgstr "Bron ID"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Write"
-msgstr "Schrijven"
+#: help:audittrail.rule,user_id:0
+msgid "if  User is not added then it will applicable for all users"
+msgstr ""
+"Als gebruiker niet is toegevoegd, is het van toepassing op alle gebruikers"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail
-msgid "Audittrails"
-msgstr "Audittrails"
+#: help:audittrail.rule,log_workflow:0
+msgid ""
+"Select this if you want to keep track of workflow on any record of the "
+"object of this rule"
+msgstr ""
+"Selecteer dit als u de workflow van elk record van het object van deze regel "
+"wilt bijhouden"
+
+#. module: audittrail
+#: field:audittrail.rule,user_id:0
+msgid "Users"
+msgstr "Gebruikers"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -119,14 +129,14 @@ msgid "Log Lines"
 msgstr "Logregels"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
-msgstr "Abonneren"
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree_sub
+msgid "Subscribed Rules"
+msgstr "Geabonneerde regels"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Read"
-msgstr "Lezen"
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
+msgid "Rules"
+msgstr "Regels"
 
 #. module: audittrail
 #: field:audittrail.log,object_id:0
@@ -140,7 +150,7 @@ msgid "AuditTrail Rule"
 msgstr "AuditTrail-regel"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,to:0
+#: field:audittrail.view.log,to:0
 msgid "Log To"
 msgstr "Log naar"
 
@@ -150,17 +160,19 @@ msgid "New Value Text: "
 msgstr "Nieuwe waarde tekst: "
 
 #. module: audittrail
-#: model:ir.module.module,description:audittrail.module_meta_information
-msgid ""
-"Allows the administrator to track every user operations on all objects of "
-"the system.\n"
-"    Subscribe Rules for read, write, create and delete on objects and check "
-"logs"
-msgstr ""
-"Staat toe dat de beheerder alle gebeurtenissen op het systeem kan zien en "
-"volgen\n"
-"    Beschrijf regels voor lezen, schrijven, maken en verwijderen van "
-"objecten en controleer logbestanden"
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
+msgid "Audit Rules"
+msgstr "Audit-regels"
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Old Value : "
+msgstr "Oude waarde: "
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Resource Name"
+msgstr "Resourcenaam"
 
 #. module: audittrail
 #: field:audittrail.log,timestamp:0
@@ -168,9 +180,28 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: audittrail
-#: field:audittrail.log,user_id:0
-msgid "User"
-msgstr "Gebruiker"
+#: help:audittrail.rule,log_write:0
+msgid ""
+"Select this if you want to keep track of modification on any record of the "
+"object of this rule"
+msgstr ""
+"Selecteer dit als u de wijzigingen van elk record van het object van deze "
+"regel wilt bijhouden"
+
+#. module: audittrail
+#: field:audittrail.log.line,log:0
+msgid "Log ID"
+msgstr "Log ID"
+
+#. module: audittrail
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
+msgstr "Log toevoegingen"
+
+#. module: audittrail
+#: help:audittrail.rule,object_id:0
+msgid "Select object for which you want to generate log."
+msgstr "Selecteer object waar u de log voor wilt genereren."
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -178,14 +209,25 @@ msgid "Old Value Text : "
 msgstr "Oude waarde tekst: "
 
 #. module: audittrail
+#: field:audittrail.rule,log_workflow:0
+msgid "Log Workflow"
+msgstr "Log workflow"
+
+#. module: audittrail
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Ongeldige XML voor weergave!"
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
-msgstr "Naam"
+#: field:audittrail.rule,log_read:0
+msgid "Log Reads"
+msgstr "Log lezen"
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
+msgstr "Wijzig audittrail afhankelijkheden -- Zet regel op CONCEPT"
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
@@ -193,9 +235,18 @@ msgid "Log lines"
 msgstr "Log regels"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr "Geabonneerde regels"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid ""
+"'%s' Model does not exist...\" %(model))\n"
+"        model = model_pool.browse(cr, uid, model_id)\n"
+"\n"
+"        if method in ('create"
+msgstr ""
+"'%s' Model bestaat niet...\" %(model))\n"
+"        model = model_pool.browse(cr, uid, model_id)\n"
+"\n"
+"        if method in ('create"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
@@ -208,9 +259,29 @@ msgid "AuditTrail Rules"
 msgstr "AuditTrail-regels"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_rule
-msgid "audittrail.rule"
-msgstr "audittrail.rule"
+#: help:audittrail.rule,log_unlink:0
+msgid ""
+"Select this if you want to keep track of deletion on any record of the "
+"object of this rule"
+msgstr ""
+"Selecteer als u verwijderen van elk record van het object van deze regel "
+"wilt bijhouden"
+
+#. module: audittrail
+#: field:audittrail.log,user_id:0
+msgid "User"
+msgstr "Gebruiker"
+
+#. module: audittrail
+#: field:audittrail.rule,action_id:0
+msgid "Action ID"
+msgstr "Actie ID"
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Users (if User is not added then it will applicable for all users)"
+msgstr ""
+"Gebruikers (als gebruiker niet toegevoegd dan geldt het voor alle gebruikers)"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -218,14 +289,15 @@ msgid "UnSubscribe"
 msgstr "Uitschrijven"
 
 #. module: audittrail
-#: field:audittrail.rule,log_write:0
-msgid "Log writes"
-msgstr "Log schrijfacties"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
+msgstr "WAARSCHUWING: audittrail is geen onderdeel van de pool"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log
-msgid "audittrail.log"
-msgstr "audittrail.log"
+#: field:audittrail.rule,log_unlink:0
+msgid "Log Deletes"
+msgstr "Log verwijderen"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
@@ -233,12 +305,58 @@ msgid "Field Description"
 msgstr "Omschrijving veld"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Delete"
-msgstr "Verwijderen"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid ""
+"'%s' field does not exist in '%s' model\" %(field_name, model.model))\n"
+"\n"
+"        field = field_pool.read(cr, uid, field_id)\n"
+"        relation_model = field['relation']\n"
+"        relation_model_pool = relation_model and pool.get(relation_model) or "
+"False\n"
+"\n"
+"        if field['ttype'] == 'many2one':\n"
+"            res = False\n"
+"            relation_id = False\n"
+"            if values and type(values) == tuple:\n"
+"                relation_id = values[0]\n"
+"                if relation_id and relation_model_pool:\n"
+"                    relation_model_object = relation_model_pool.read(cr, "
+"uid, relation_id, [relation_model_pool._rec_name])\n"
+"                    res = "
+"relation_model_object[relation_model_pool._rec_name]\n"
+"            return res\n"
+"\n"
+"        elif field['ttype'] in ('many2many','one2many"
+msgstr ""
+"'%s' veld bestaat niet in '%s' model\" %(field_name, model.model))\n"
+"\n"
+"        field = field_pool.read(cr, uid, field_id)\n"
+"        relation_model = field['relation']\n"
+"        relation_model_pool = relation_model and pool.get(relation_model) or "
+"False\n"
+"\n"
+"        if field['ttype'] == 'many2one':\n"
+"            res = False\n"
+"            relation_id = False\n"
+"            if values and type(values) == tuple:\n"
+"                relation_id = values[0]\n"
+"                if relation_id and relation_model_pool:\n"
+"                    relation_model_object = relation_model_pool.read(cr, "
+"uid, relation_id, [relation_model_pool._rec_name])\n"
+"                    res = "
+"relation_model_object[relation_model_pool._rec_name]\n"
+"            return res\n"
+"\n"
+"        elif field['ttype'] in ('many2many','one2many"
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,open:0
+#: field:audittrail.rule,log_write:0
+msgid "Log Writes"
+msgstr "Log schrijven"
+
+#. module: audittrail
+#: view:audittrail.view.log:0
 msgid "Open Logs"
 msgstr "Logs openen"
 
@@ -253,11 +371,6 @@ msgid "Rule Name"
 msgstr "Naam regel"
 
 #. module: audittrail
-#: field:audittrail.rule,log_read:0
-msgid "Log reads"
-msgstr "Log leesacties"
-
-#. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Logs"
 msgstr "Logs"
@@ -268,14 +381,9 @@ msgid "New Value"
 msgstr "Nieuwe waarde"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_log_tree2
-msgid "View Logs"
-msgstr "Bekijk logs"
-
-#. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log creates"
-msgstr "Log aanmaakacties"
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "Log Line"
+msgstr "Log regel"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -283,9 +391,21 @@ msgid "AuditTrail Logs"
 msgstr "AuditTrails-logs"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
-msgid "Rules"
-msgstr "Regels"
+#: view:audittrail.rule:0
+msgid "Subscribe"
+msgstr "Abonneren"
+
+#. module: audittrail
+#: model:ir.model,name:audittrail.model_audittrail_log
+msgid "Audittrail Log"
+msgstr "Audittrail Log"
+
+#. module: audittrail
+#: help:audittrail.rule,log_action:0
+msgid ""
+"Select this if you want to keep track of actions on the object of this rule"
+msgstr ""
+"Selecteer als u de acties op het object van deze regel wilt bijhouden"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -293,21 +413,185 @@ msgid "New Value : "
 msgstr "Nieuwe waarde: "
 
 #. module: audittrail
-#: field:audittrail.rule,user_id:0
-msgid "Users"
-msgstr "Gebruikers"
-
-#. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
 msgid "Old value Text"
 msgstr "Oude waarde tekst"
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,end:0
+#: view:audittrail.view.log:0
 msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: audittrail
-#: field:audittrail.rule,log_unlink:0
-msgid "Log deletes"
-msgstr "Log verwijderacties"
+#: model:ir.model,name:audittrail.model_audittrail_view_log
+msgid "View Log"
+msgstr "Log bekijken"
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid ""
+"'%s' field does not exist in '%s' model\" %(line['name'], model.model))\n"
+"\n"
+"            field = field_pool.read(cr, uid, field_id)\n"
+"            old_value = 'old_value' in line and  line['old_value'] or ''\n"
+"            new_value = 'new_value' in line and  line['new_value'] or ''\n"
+"            old_value_text = 'old_value_text' in line and  "
+"line['old_value_text'] or ''\n"
+"            new_value_text = 'new_value_text' in line and  "
+"line['new_value_text'] or ''\n"
+"\n"
+"            if old_value_text == new_value_text:\n"
+"                continue\n"
+"            if field['ttype'] == 'many2one':\n"
+"                if type(old_value) == tuple:\n"
+"                    old_value = old_value[0]\n"
+"                if type(new_value) == tuple:\n"
+"                    new_value = new_value[0]\n"
+"            vals = {\n"
+"                    \"log_id\": log_id,\n"
+"                    \"field_id\": field_id,\n"
+"                    \"old_value\": old_value,\n"
+"                    \"new_value\": new_value,\n"
+"                    \"old_value_text\": old_value_text,\n"
+"                    \"new_value_text\": new_value_text,\n"
+"                    \"field_description\": field['field_description']\n"
+"                    }\n"
+"            line_id = log_line_pool.create(cr, uid, vals)\n"
+"        #End Loop\n"
+"        return True\n"
+"\n"
+"\n"
+"    def log_fct(self, db, uid, model, method, fct_src, *args):\n"
+"        \"\"\"\n"
+"        Logging function: This function is performs logging oprations "
+"according to method\n"
+"        @param db: the current database\n"
+"        @param uid: the current user’s ID for security checks,\n"
+"        @param object: Object who's values are being changed\n"
+"        @param method: method to log: create, read, write, unlink\n"
+"        @param fct_src: execute method of Object proxy\n"
+"\n"
+"        @return: Returns result as per method of Object proxy\n"
+"        \"\"\"\n"
+"        res2 = args\n"
+"        pool = pooler.get_pool(db)\n"
+"        cr = pooler.get_db(db).cursor()\n"
+"        resource_pool = pool.get(model)\n"
+"        log_pool = pool.get('audittrail.log"
+msgstr ""
+"'%s' veld bestaat niet in '%s' model\" %(line['name'], model.model))\n"
+"\n"
+"            field = field_pool.read(cr, uid, field_id)\n"
+"            old_value = 'old_value' in line and  line['old_value'] or ''\n"
+"            new_value = 'new_value' in line and  line['new_value'] or ''\n"
+"            old_value_text = 'old_value_text' in line and  "
+"line['old_value_text'] or ''\n"
+"            new_value_text = 'new_value_text' in line and  "
+"line['new_value_text'] or ''\n"
+"\n"
+"            if old_value_text == new_value_text:\n"
+"                continue\n"
+"            if field['ttype'] == 'many2one':\n"
+"                if type(old_value) == tuple:\n"
+"                    old_value = old_value[0]\n"
+"                if type(new_value) == tuple:\n"
+"                    new_value = new_value[0]\n"
+"            vals = {\n"
+"                    \"log_id\": log_id,\n"
+"                    \"field_id\": field_id,\n"
+"                    \"old_value\": old_value,\n"
+"                    \"new_value\": new_value,\n"
+"                    \"old_value_text\": old_value_text,\n"
+"                    \"new_value_text\": new_value_text,\n"
+"                    \"field_description\": field['field_description']\n"
+"                    }\n"
+"            line_id = log_line_pool.create(cr, uid, vals)\n"
+"        #End Loop\n"
+"        return True\n"
+"\n"
+"\n"
+"    def log_fct(self, db, uid, model, method, fct_src, *args):\n"
+"        \"\"\"\n"
+"        Logging function: This function is performs logging oprations "
+"according to method\n"
+"        @param db: the current database\n"
+"        @param uid: the current user’s ID for security checks,\n"
+"        @param object: Object who's values are being changed\n"
+"        @param method: method to log: create, read, write, unlink\n"
+"        @param fct_src: execute method of Object proxy\n"
+"\n"
+"        @return: Returns result as per method of Object proxy\n"
+"        \"\"\"\n"
+"        res2 = args\n"
+"        pool = pooler.get_pool(db)\n"
+"        cr = pooler.get_db(db).cursor()\n"
+"        resource_pool = pool.get(model)\n"
+"        log_pool = pool.get('audittrail.log"
+
+#. module: audittrail
+#: field:audittrail.rule,log_action:0
+msgid "Log Action"
+msgstr "Log actie"
+
+#. module: audittrail
+#: help:audittrail.rule,log_create:0
+msgid ""
+"Select this if you want to keep track of creation on any record of the "
+"object of this rule"
+msgstr ""
+"Selecteer als u het maken van elk record in het object van deze regel wilt "
+"bijhouden"
+
+#~ msgid "audittrail.log.line"
+#~ msgstr "audittrail.log.line"
+
+#~ msgid "Name"
+#~ msgstr "Naam"
+
+#~ msgid "audittrail.rule"
+#~ msgstr "audittrail.rule"
+
+#~ msgid "Delete"
+#~ msgstr "Verwijderen"
+
+#~ msgid "audittrail.log"
+#~ msgstr "audittrail.log"
+
+#~ msgid "Log writes"
+#~ msgstr "Log schrijfacties"
+
+#~ msgid "Log reads"
+#~ msgstr "Log leesacties"
+
+#~ msgid "Log creates"
+#~ msgstr "Log aanmaakacties"
+
+#~ msgid "Log deletes"
+#~ msgstr "Log verwijderacties"
+
+#~ msgid "Write"
+#~ msgstr "Schrijven"
+
+#~ msgid "Audittrails"
+#~ msgstr "Audittrails"
+
+#~ msgid "Read"
+#~ msgstr "Lezen"
+
+#~ msgid "Create"
+#~ msgstr "Maak"
+
+#~ msgid ""
+#~ "Allows the administrator to track every user operations on all objects of "
+#~ "the system.\n"
+#~ "    Subscribe Rules for read, write, create and delete on objects and check "
+#~ "logs"
+#~ msgstr ""
+#~ "Staat toe dat de beheerder alle gebeurtenissen op het systeem kan zien en "
+#~ "volgen\n"
+#~ "    Beschrijf regels voor lezen, schrijven, maken en verwijderen van "
+#~ "objecten en controleer logbestanden"
+
+#~ msgid "View Logs"
+#~ msgstr "Bekijk logs"

@@ -7,50 +7,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2009-09-08 15:49+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_designer
-#: wizard_field:base_report_designer.modify,init,text:0
-msgid "Introduction"
-msgstr "소개"
+#: model:ir.model,name:base_report_designer.model_base_report_sxw
+msgid "base.report.sxw"
+msgstr ""
 
 #. module: base_report_designer
-#: wizard_view:base_report_designer.modify,send_form:0
-msgid "Upload your modified report"
-msgstr "수정된 리포트를 업로드"
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,get_form_result,send_form:0
-msgid "Upload the modified report"
-msgstr "수정된 리포트들 업로드"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form_result:0
-msgid "The .SXW report"
-msgstr ".SWX 리포트"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,send_form_result:0
-msgid "Report modified"
-msgstr "리포트가 수정됨"
-
-#. module: base_report_designer
-#: wizard_button:base_report_designer.modify,init,get_form:0
-msgid "Modify a report"
-msgstr "리포트 수정"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,send_form_result:0
-msgid "Your report has been modified."
-msgstr "리포트가 수정됨"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: base_report_designer
 #: model:ir.module.module,shortdesc:base_report_designer.module_meta_information
@@ -58,99 +39,230 @@ msgid "Report designer interface module"
 msgstr "리포트 디자이너 인터페이스 모듈"
 
 #. module: base_report_designer
-#: wizard_field:base_report_designer.modify,get_form,report_id:0
-#: wizard_field:base_report_designer.modify,get_form_result,report_id:0
-#: wizard_field:base_report_designer.modify,send_form,report_id:0
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.file.sxw:0
+msgid "The .SXW report"
+msgstr ".SWX 리포트"
+
+#. module: base_report_designer
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
+
+#. module: base_report_designer
+#: model:ir.model,name:base_report_designer.model_base_report_designer_installer
+msgid "base_report_designer.installer"
+msgstr ""
+
+#. module: base_report_designer
+#: field:base_report_designer.installer,description:0
+msgid "Description"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base_report_designer.installer:0
+msgid "_Close"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.rml.save:0
+msgid "The RML report"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base_report_designer.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base_report_designer.installer:0
+msgid "title"
+msgstr ""
+
+#. module: base_report_designer
+#: field:base.report.file.sxw,report_id:0
+#: field:base.report.sxw,report_id:0
 msgid "Report"
 msgstr "리포트"
 
 #. module: base_report_designer
-#: model:ir.ui.menu,name:base_report_designer.menu_wizard_report_designer_modify
+#: model:ir.model,name:base_report_designer.model_base_report_rml_save
+msgid "base.report.rml.save"
+msgstr ""
+
+#. module: base_report_designer
+#: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
 msgid "Report Designer"
 msgstr "리포트 디자이너"
 
 #. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form:0
-#: wizard_view:base_report_designer.modify,get_form_result:0
-#: wizard_view:base_report_designer.modify,send_form:0
+#: view:base.report.file.sxw:0
+msgid ""
+"This is the template of your requested report.\n"
+"Save it as a .SXW file and open it with OpenOffice.\n"
+"Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
+"Once it is modified, re-upload it in OpenERP using this wizard."
+msgstr ""
+
+#. module: base_report_designer
+#: field:base_report_designer.installer,name:0
+msgid "File name"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.file.sxw:0
+#: view:base.report.sxw:0
 msgid "Get a report"
 msgstr "리포트 가졍기"
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,get_form,get_form_result:0
+#: view:base.report.file.sxw:0
+msgid "Upload the modified report"
+msgstr "수정된 리포트들 업로드"
+
+#. module: base_report_designer
+#: model:ir.actions.act_window,name:base_report_designer.action_report_designer_wizard
+msgid "OpenERP Report Designer"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.sxw:0
 msgid "Continue"
 msgstr "계속"
 
 #. module: base_report_designer
-#: wizard_field:base_report_designer.modify,get_form_result,file_sxw:0
-#: wizard_field:base_report_designer.modify,send_form,file_sxw:0
+#: field:base.report.rml.save,file_rml:0
+msgid "Save As"
+msgstr ""
+
+#. module: base_report_designer
+#: help:base_report_designer.installer,plugin_file:0
+msgid ""
+"OpenObject Report Designer plug-in file. Save as this file and install this "
+"plug-in in OpenOffice."
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.rml.save:0
+msgid "Save RML FIle"
+msgstr ""
+
+#. module: base_report_designer
+#: field:base.report.file.sxw,file_sxw:0
+#: field:base.report.file.sxw,file_sxw_upload:0
 msgid "Your .SXW file"
 msgstr "귀하의 .SXW 파일"
 
 #. module: base_report_designer
-#: wizard_view:base_report_designer.modify,init:0
-msgid "Report designer"
-msgstr "리포트 디자이너"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form_result:0
-msgid ""
-"This is the template of your requested report. Save it as a .SXW file and "
-"open it with OpenOffice. Don't forget to install the Tiny OpenOffice package "
-"to modify it. Once it is modified, re-upload it in Open ERP using this "
-"wizard."
+#: view:base_report_designer.installer:0
+msgid "Installation and Configuration Steps"
 msgstr ""
-"이것은 귀하가 요청한 리포트의 템플릿입니다. .SXW 파일로 저장하고, 오픈오피스로 여십시오. 이것을 수정하려면 오픈오피스 패키지를 "
-"설치해야 하며, 수정 뒤에는 이 위저드를 이용하여 시스템에 업로드하십시오."
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,send_form,send_form_result:0
-msgid "Update the report"
-msgstr "리포트 갱신"
+#: field:base_report_designer.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
 
 #. module: base_report_designer
-#: selection:base_report_designer.modify,init,operation:0
-msgid "Create a new report"
-msgstr "새 리포트 만들기"
+#: view:base_report_designer.installer:0
+msgid "Skip"
+msgstr ""
 
 #. module: base_report_designer
-#: selection:base_report_designer.modify,init,operation:0
-#: model:ir.actions.wizard,name:base_report_designer.wizard_report_designer_modify
-msgid "Modify an existing report"
-msgstr "기존 리포트 수정"
+#: field:base_report_designer.installer,config_logo:0
+msgid "Image"
+msgstr ""
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,get_form,end:0
-#: wizard_button:base_report_designer.modify,init,end:0
+#: model:ir.actions.act_window,name:base_report_designer.action_view_base_report_sxw
+msgid "Base Report sxw"
+msgstr ""
+
+#. module: base_report_designer
+#: model:ir.model,name:base_report_designer.model_base_report_file_sxw
+msgid "base.report.file.sxw"
+msgstr ""
+
+#. module: base_report_designer
+#: field:base_report_designer.installer,plugin_file:0
+msgid "OpenObject Report Designer Plug-in"
+msgstr ""
+
+#. module: base_report_designer
+#: model:ir.actions.act_window,name:base_report_designer.action_report_designer_installer
+msgid "OpenERP Report Designer Installation"
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.file.sxw:0
+#: view:base.report.rml.save:0
+#: view:base.report.sxw:0
 msgid "Cancel"
 msgstr "취소"
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,get_form_result,end:0
-#: wizard_button:base_report_designer.modify,send_form,end:0
-#: wizard_button:base_report_designer.modify,send_form_result,end:0
-msgid "Close"
-msgstr "닫기"
+#: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr ""
 
 #. module: base_report_designer
-#: wizard_field:base_report_designer.modify,init,operation:0
-msgid "Operation"
-msgstr "오퍼레이션"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,init:0
-msgid "Report designer introduction"
-msgstr "리포트 디자이너 소개"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form:0
+#: view:base.report.sxw:0
 msgid "Select your report"
 msgstr "리포트 선택"
+
+#~ msgid "Your report has been modified."
+#~ msgstr "리포트가 수정됨"
 
 #, python-format
 #~ msgid "Report does not contain the sxw content!"
 #~ msgstr "리포트가 SXW 컨텐트를 포함하지 않습니다 !"
 
+#~ msgid "Report modified"
+#~ msgstr "리포트가 수정됨"
+
+#~ msgid "Modify a report"
+#~ msgstr "리포트 수정"
+
+#~ msgid "Upload your modified report"
+#~ msgstr "수정된 리포트를 업로드"
+
+#~ msgid "Introduction"
+#~ msgstr "소개"
+
+#~ msgid ""
+#~ "This is the template of your requested report. Save it as a .SXW file and "
+#~ "open it with OpenOffice. Don't forget to install the Tiny OpenOffice package "
+#~ "to modify it. Once it is modified, re-upload it in Open ERP using this "
+#~ "wizard."
+#~ msgstr ""
+#~ "이것은 귀하가 요청한 리포트의 템플릿입니다. .SXW 파일로 저장하고, 오픈오피스로 여십시오. 이것을 수정하려면 오픈오피스 패키지를 "
+#~ "설치해야 하며, 수정 뒤에는 이 위저드를 이용하여 시스템에 업로드하십시오."
+
+#~ msgid "Modify an existing report"
+#~ msgstr "기존 리포트 수정"
+
 #, python-format
 #~ msgid "Error"
 #~ msgstr "에러"
+
+#~ msgid "Create a new report"
+#~ msgstr "새 리포트 만들기"
+
+#~ msgid "Report designer"
+#~ msgstr "리포트 디자이너"
+
+#~ msgid "Update the report"
+#~ msgstr "리포트 갱신"
+
+#~ msgid "Operation"
+#~ msgstr "오퍼레이션"
+
+#~ msgid "Close"
+#~ msgstr "닫기"
+
+#~ msgid "Report designer introduction"
+#~ msgstr "리포트 디자이너 소개"

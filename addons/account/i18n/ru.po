@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-10-26 13:21+0000\n"
+"PO-Revision-Date: 2010-10-31 08:09+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-27 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-11-01 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -620,6 +620,8 @@ msgid ""
 "The sequence field is used to order the resources from lower sequences to "
 "higher ones"
 msgstr ""
+"Поле \"последовательность\" используется для сортировки. От младшего к "
+"старшему."
 
 #. module: account
 #: wizard_view:account.analytic.account.chart,init:0
@@ -1014,7 +1016,7 @@ msgstr "Финансы  и бухгалтерия"
 #. module: account
 #: rml:account.invoice:0
 msgid "Net Total:"
-msgstr "Итог нетто"
+msgstr "Чистый итог:"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -1508,7 +1510,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form
 msgid "account.analytic.line.extended"
-msgstr ""
+msgstr "account.analytic.line.extended"
 
 #. module: account
 #: field:account.journal,refund_journal:0
@@ -1949,7 +1951,7 @@ msgstr "Кол-во дней"
 #. module: account
 #: help:account.invoice,reference:0
 msgid "The partner reference of this invoice."
-msgstr ""
+msgstr "Ссылка на партнера в этом счете"
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,sortbydate:0
@@ -2089,7 +2091,7 @@ msgstr "Параметры"
 #. module: account
 #: model:process.process,name:account.process_process_invoiceprocess0
 msgid "Customer Invoice Process"
-msgstr ""
+msgstr "Процесс выставления счета заказчику"
 
 #. module: account
 #: rml:account.invoice:0
@@ -2353,7 +2355,7 @@ msgstr "Тип налога"
 #. module: account
 #: model:process.transition,name:account.process_transition_statemententries0
 msgid "Statement Entries"
-msgstr ""
+msgstr "Записи заявления"
 
 #. module: account
 #: field:account.analytic.line,user_id:0
@@ -2513,7 +2515,7 @@ msgstr "Сумма в валюте журнала"
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,landscape:0
 msgid "Landscape Mode"
-msgstr ""
+msgstr "Режим: пейзаж"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_analyticinvoice0
@@ -2969,7 +2971,7 @@ msgstr ""
 #: model:process.transition,note:account.process_transition_paymentorderbank0
 #: model:process.transition,note:account.process_transition_paymentorderreconcilation0
 msgid "Reconcilation of entries from payment order."
-msgstr ""
+msgstr "Сверка проводок из платежного поручения"
 
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
@@ -3022,7 +3024,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree10
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree10
 msgid "Draft Customer Refunds"
-msgstr ""
+msgstr "Черновик возврата денег заказчику"
 
 #. module: account
 #: field:account.journal.column,readonly:0
@@ -3052,7 +3054,7 @@ msgstr "Документ"
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr ""
+msgstr "Перемещение этой проводки."
 
 #. module: account
 #: field:account.invoice.line,uos_id:0
@@ -3096,7 +3098,7 @@ msgstr "Журнал аналитики"
 #. module: account
 #: rml:account.general.ledger:0
 msgid "Entry Label"
-msgstr ""
+msgstr "Метка проводки"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -3332,12 +3334,12 @@ msgstr ""
 #: field:account.tax.code,notprintable:0
 #: field:account.tax.code.template,notprintable:0
 msgid "Not Printable in Invoice"
-msgstr ""
+msgstr "Не печатаемое в счете"
 
 #. module: account
 #: field:account.move.line,move_id:0
 msgid "Move"
-msgstr ""
+msgstr "Перемещение"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_src_id:0
@@ -3364,7 +3366,7 @@ msgstr "В ожидании"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Bank Information"
-msgstr ""
+msgstr "Банковская информация"
 
 #. module: account
 #: rml:account.invoice:0
@@ -3377,7 +3379,7 @@ msgstr "Факс :"
 #: model:ir.actions.wizard,name:account.wizard_partner_balance_report
 #: model:ir.ui.menu,name:account.menu_partner_balance
 msgid "Partner Balance"
-msgstr ""
+msgstr "Баланс партнера"
 
 #. module: account
 #: rml:account.third_party_ledger:0
@@ -3502,7 +3504,7 @@ msgstr "Владелец банковского счета"
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
 msgid "Filter on Periods"
-msgstr ""
+msgstr "Фильтр по периодам"
 
 #. module: account
 #: field:res.partner,property_account_receivable:0
@@ -3512,13 +3514,13 @@ msgstr "Счет к получению"
 #. module: account
 #: wizard_button:account.invoice.pay,addendum,reconcile:0
 msgid "Pay and reconcile"
-msgstr ""
+msgstr "Оплатить и сверить"
 
 #. module: account
 #: rml:account.central.journal:0
 #: model:ir.actions.report.xml,name:account.account_central_journal
 msgid "Central Journal"
-msgstr ""
+msgstr "Центральный журнал"
 
 #. module: account
 #: rml:account.third_party_ledger:0
@@ -3570,7 +3572,7 @@ msgstr "Напечатан"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4_new
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4_new
 msgid "New Supplier Refund"
-msgstr ""
+msgstr "Возврат новому поставщику"
 
 #. module: account
 #: view:account.model:0
@@ -3580,7 +3582,7 @@ msgstr "Модель проводки"
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,amount_currency:0
 msgid "With Currency"
-msgstr ""
+msgstr "С валютой"
 
 #. module: account
 #: view:account.account:0
@@ -3634,6 +3636,7 @@ msgid ""
 "This payment term will be used instead of the default one for the current "
 "partner"
 msgstr ""
+"Это условие оплаты будет использовано, вместо условий оплаты по умолчанию."
 
 #. module: account
 #: wizard_field:account.invoice.pay,addendum,comment:0
@@ -3644,7 +3647,7 @@ msgstr "Название проводки"
 #. module: account
 #: help:account.invoice,account_id:0
 msgid "The partner account used for this invoice."
-msgstr ""
+msgstr "Бух. счет партнера будет использоваться для этого счета."
 
 #. module: account
 #: help:account.tax.code,notprintable:0
@@ -4097,7 +4100,7 @@ msgstr "Лимит оплаты"
 #: wizard_field:account.partner.balance.report,init,state:0
 #: wizard_field:account.third_party_ledger.report,init,state:0
 msgid "Date/Period Filter"
-msgstr ""
+msgstr "Фильтр даты/периода"
 
 #. module: account
 #: rml:account.analytic.account.journal:0

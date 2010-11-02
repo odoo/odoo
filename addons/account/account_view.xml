@@ -33,8 +33,8 @@
                     <separator colspan="4" string="States"/>
                     <group>
                         <field name="state" select="1" readonly="1"/>
-                        <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="gtk-dnd"/>
-                        <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="gtk-dnd"/>
+                        <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="terp-document-new"/>
+                        <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="terp-document-new"/>
                     </group>
                 </form>
             </field>
@@ -129,7 +129,7 @@
             <field name="arch" type="xml">
                 <search string="Search Period">
                     <group>
-                        <filter string="To Close" name="draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="To Close" name="draft" domain="[('state','=','draft')]" icon="terp-dialog-close"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="code"/>
@@ -207,10 +207,10 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Parent Account" icon="terp-folder-green" domain="" context="{'group_by':'parent_id'}"/>
+                        <filter string="Parent Account" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Account Type" icon="terp-folder-blue" domain="" context="{'group_by':'user_type'}"/>
-                        <filter string="Internal Type" icon="terp-folder-yellow" domain="" context="{'group_by':'type'}"/>
+                        <filter string="Account Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'user_type'}"/>
+                        <filter string="Internal Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>
@@ -393,7 +393,7 @@
                     <group expand="0" string="Group By...">
                     <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
                     <separator orientation="vertical"/>
-                    <filter string="Type" context="{'group_by':'type'}" icon="terp-stock_effects-object-colorize"/>
+                    <filter string="Type" context="{'group_by':'type'}" icon="terp-stock_symbol-selection"/>
                     </group>
                 </tree>
             </field>
@@ -1161,8 +1161,15 @@
                         <field name="period_id" context="{'period_id':self, 'search_default_period_id':self}"/>
                     </group>
                     <newline/>
+                    <group expand="0" string="Extended Filters...">
+                        <field name="ref" select="1" string="Reference"/>
+                        <field name="name" select="1"/>
+                        <field name="narration" select="1"/>
+                        <field name="balance" string="Debit/Credit" select='1'/>
+                    </group>
+                    <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
-                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Account"  icon="terp-folder-green" context="{'group_by':'account_id'}"/>
@@ -1170,12 +1177,6 @@
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended options...">
-                        <field name="ref" select="1" string="Reference"/>
-                        <field name="name" select="1"/>
-                        <field name="narration" select="1"/>
-                        <field name="balance" string="Debit/Credit" select='1'/>
-                    </group>
                 </search>
             </field>
         </record>
@@ -1401,7 +1402,7 @@
                         <filter icon="terp-document-new" string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-stock_zoom" string="To Review" domain="[('to_check','=',True)]" groups="base.group_extended" help="Journal Entries to Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('to_check','=',True)]" groups="base.group_extended" help="Journal Entries to Review"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="ref"/>
@@ -1419,7 +1420,7 @@
                         <field name="period_id" widget="selection" context="{'period_id':self}"/>
                     </group>
                     <group expand="0" string="Group By..." colspan="12" col="10">
-                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -2138,7 +2139,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Internal Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Internal Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Account Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'user_type'}"/>
                    </group>
                 </search>
@@ -2197,7 +2198,7 @@
                       <newline/>
                       <group expand="0" string="Group By...">
                         <filter string="Root Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'account_root_id'}"/>
-                        <filter string="Bank Account" icon="terp-folder-blue" domain="[]" context="{'group_by':'bank_account_view_id'}"/>
+                        <filter string="Bank Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'bank_account_view_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Receivable Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_receivable'}"/>
                         <filter string="Payable Account" icon="terp-purchase" domain="[]" context="{'group_by':'property_account_payable'}"/>
