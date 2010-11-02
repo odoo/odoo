@@ -71,8 +71,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_email_server_tree"/>
-            <field name="context">{'type':'pop'}</field>
-            <field name="domain">[('type','=','pop')]</field>
+            <field name="context">{'server_type':'pop'}</field>
+            <field name="domain">[('server_type','=','pop')]</field>
         </record>
 
         <menuitem 
@@ -93,8 +93,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_email_server_tree"/>
-            <field name="context">{'type':'imap'}</field>
-            <field name="domain">[('type','=','imap')]</field>
+            <field name="context">{'server_type':'imap'}</field>
+            <field name="domain">[('server_type','=','imap')]</field>
         </record>
         
         <menuitem 
@@ -128,8 +128,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="mailgate_message_tree_view"/>
-            <field name="context">{'type':'imap'}</field>
-            <field name="domain">[('type','=','imap')]</field>
+            <field name="context">{'server_type':'imap'}</field>
+            <field name="domain">[('server_type','=','imap')]</field>
         </record>
         
         <menuitem 
@@ -143,8 +143,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="mailgate_message_tree_view"/>
-            <field name="context">{'type':'pop'}</field>
-            <field name="domain">[('type','=','pop')]</field>
+            <field name="context">{'server_type':'pop'}</field>
+            <field name="domain">[('server_type','=','pop')]</field>
         </record>
         
         <menuitem 
