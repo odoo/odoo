@@ -140,7 +140,7 @@
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="9.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="date" fontName="Helvetica-Bold" fontSize="9.0" leading="10" spaceBefore="0.0" spaceAfter="6.0" alignment="CENTER"/>
+    <paraStyle name="date" leftIndent="6.0" fontName="Helvetica-Bold" fontSize="9.0" leading="10" spaceBefore="6.0" spaceAfter="0.0" alignment="LEFT"/>
     <paraStyle name="P2_content" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="9.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P3_center" fontName="Helvetica-Bold" fontSize="9.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -178,6 +178,38 @@
   <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+  <blockTable colWidths="66.0,35.0,120.0,90.0,60.0,200.0,180.0,73.0,73.0,73.0,85.00" style="tbl_header">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
+       <tr>
+          <td><para style="date">Date</para></td>
+          <td><para style="P2">JNRL</para></td>
+          <td><para style="P2">Partner</para></td>
+          <td><para style="P2">Ref</para></td>
+          <td><para style="P2">Move</para></td>
+          <td><para style="P3">Entry Label</para></td>
+          <td><para style="P3_center">Counterpart</para></td>
+          <td><para style="P4">Debit</para></td>
+          <td><para style="P4">Credit</para></td>
+          <td><para style="P4">Balance</para></td>
+          <td><para style="P4">Currency</para></td>
+       </tr>
+    </blockTable>
+    <blockTable colWidths="66.0,35.0,166.0,90.0,60.0,245.0,148.0,80.0,80.0,80.0" style="tbl_header">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+       <tr>
+          <td><para style="date">Date</para></td>
+          <td><para style="P2">JNRL</para></td>
+          <td><para style="P2">Partner</para></td>
+          <td><para style="P2">Ref</para></td>
+          <td><para style="P2">Move</para></td>
+          <td><para style="P3">Entry Label</para></td>
+          <td><para style="P3_center">Counterpart</para></td>
+          <td><para style="P4">Debit</para></td>
+          <td><para style="P4">Credit</para></td>
+          <td><para style="P4">Balance</para></td>
+       </tr>
+	</blockTable>
+  </pto_header>
     <blockTable colWidths="539.0" style="Table_Company_Name">
       <tr>
         <td>
@@ -303,8 +335,8 @@
 
     <blockTable colWidths="66.0,35.0,166.0,90.0,60.0,245.0,148.0,80.0,80.0,80.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
        <tr>
-          <td><para style="P2">Date</para></td>
-          <td><para style="date">JNRL</para></td>
+          <td><para style="date">Date</para></td>
+          <td><para style="P2">JNRL</para></td>
           <td><para style="P2">Partner</para></td>
           <td><para style="P2">Ref</para></td>
           <td><para style="P2">Move</para></td>
@@ -362,5 +394,6 @@
 	<para style="terp_default_8">
       <font color="white"> </font>
     </para>
+    </pto>
  </story>
 </document>
