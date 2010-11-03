@@ -1460,4 +1460,56 @@ class nodefd_content(StringIO, node_descriptor):
             cr.close()
         StringIO.close(self)
 
+class nodefd_static(StringIO, node_descriptor):
+    """ A descriptor to nodes with static data.
+    """
+    def __init__(self, parent, cr, mode, ctx=None):
+        node_descriptor.__init__(self, parent)
+        self._context=ctx
+        self._size = 0L
+
+        if mode in ('r', 'r+'):
+            data = parent.get_data(cr)
+            if data:
+                self._size = len(data)
+                parent.content_length = len(data)
+            StringIO.__init__(self, data)
+        elif mode in ('w', 'w+'):
+            StringIO.__init__(self, None)
+            # at write, we start at 0 (= overwrite), but have the original
+            # data available, in case of a seek()
+        elif mode == 'a':
+            StringIO.__init__(self, None)
+        else:
+            logging.getLogger('document.nodes').error("Incorrect mode %s specified", mode)
+            raise IOError(errno.EINVAL, "Invalid file mode")
+        self.mode = mode
+
+    def size(self):
+        return self._size
+
+    def close(self):
+        # we now open a *separate* cursor, to update the data.
+        # FIXME: this may be improved, for concurrency handling
+        if self.mode == 'r':
+            StringIO.close(self)
+            return
+
+        par = self._get_parent()
+        uid = par.context.uid
+        cr = pooler.get_db(par.context.dbname).cursor()
+        try:
+            if self.mode in ('w', 'w+', 'r+'):
+                data = self.getvalue()
+                par.set_data(cr, data)
+            elif self.mode == 'a':
+                raise NotImplementedError
+            cr.commit()
+        except Exception:
+            logging.getLogger('document.nodes').exception('Cannot update db content #%d for close:', par.cnt_id)
+            raise
+        finally:
+            cr.close()
+        StringIO.close(self)
+
 #eof
