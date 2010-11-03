@@ -615,6 +615,8 @@ class account_journal(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
+    _order = 'code'
+
     def write(self, cr, uid, ids, vals, context=None):
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
@@ -1584,7 +1586,6 @@ class account_tax_code(osv.osv):
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
-
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []
@@ -1627,7 +1628,7 @@ class account_tax_code(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
-    _order = 'code,name'
+    _order = 'code'
 account_tax_code()
 
 class account_tax(osv.osv):
@@ -2708,9 +2709,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         if obj_multi.seq_journal:
             seq_id_sale = obj_sequence.search(cr, uid, [('name','=','Sale Journal')])[0]
             seq_id_purchase = obj_sequence.search(cr, uid, [('name','=','Purchase Journal')])[0]
+            seq_id_sale_refund = obj_sequence.search(cr, uid, [('name','=','Sales Refund Journal')])
+            if seq_id_sale_refund:
+                seq_id_sale_refund = seq_id_sale_refund[0]
+            seq_id_purchase_refund = obj_sequence.search(cr, uid, [('name','=','Purchase Refund Journal')])
+            if seq_id_purchase_refund:
+                seq_id_purchase_refund = seq_id_purchase_refund[0]
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
+            seq_id_sale_refund = seq_id
+            seq_id_purchase_refund = seq_id
 
         vals_journal['view_id'] = view_id
 
@@ -2748,6 +2757,60 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
 
         obj_journal.create(cr,uid,vals_journal)
+
+        # Creating Journals Sales Refund and Purchase Refund
+        vals_journal = {}
+        data_id = obj_data.search(cr, uid, [('model', '=', 'account.journal.view'), ('name', '=', 'account_sp_refund_journal_view')], context=context)
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
+        view_id = data.res_id
+
+        #Sales Refund Journal
+        vals_journal = {
+            'view_id': view_id,
+            'name': _('Sales Refund Journal'),
+            'type': 'sale_refund',
+            'refund_journal': True,
+            'code': _('SCNJ'),
+            'sequence_id': seq_id_sale_refund,
+            'analytic_journal_id': analitical_journal_sale,
+            'company_id': company_id
+        }
+
+        if obj_multi.chart_template_id.property_account_receivable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+
+
+#        if obj_multi.property_account_receivable:
+#            vals_journal.update({
+#                'default_credit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id],
+#                'default_debit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+#            })
+        obj_journal.create(cr, uid, vals_journal, context=context)
+
+        # Purchase Refund Journal
+        vals_journal = {
+            'view_id': view_id,
+            'name': _('Purchase Refund Journal'),
+            'type': 'purchase_refund',
+            'refund_journal': True,
+            'code': _('ECNJ'),
+            'sequence_id': seq_id_purchase_refund,
+            'analytic_journal_id': analitical_journal_purchase,
+            'company_id': company_id
+        }
+
+        if obj_multi.chart_template_id.property_account_payable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
+
+
+#        if obj_multi.property_account_payable:
+#            vals_journal.update({
+#                'default_credit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id],
+#                'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id]
+#            })
+        obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Bank Journals
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
