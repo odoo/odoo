@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-10-27 14:03+0000\n"
+"PO-Revision-Date: 2010-11-01 11:04+0000\n"
 "Last-Translator: Lorenzo Battistini <lorenzo.battistini@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-28 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-11-02 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -118,7 +118,7 @@ msgstr "Mastro"
 #. module: account
 #: selection:account.move,type:0
 msgid "Journal Voucher"
-msgstr "Giornale Ricevute"
+msgstr "Movimento contabile"
 
 #. module: account
 #: field:account.invoice,residual:0
@@ -274,7 +274,7 @@ msgid ""
 "journal."
 msgstr ""
 "Imposta la vista da utilizzare quando si inseriscono o si consultano le "
-"registrazioni in questo Giornale. La vista dice a Open ERP quali campi "
+"registrazioni in questo registro. La vista dice a Open ERP quali campi "
 "dovranno essere visibili, richiesti o di sola lettura e in quale ordine. "
 "Puoi creare la tua vista personale per velocizzare l'inserimento dei dati in "
 "ogni giornale."
@@ -379,7 +379,7 @@ msgstr "Calcolo su tasse figlie"
 #: rml:account.general.journal:0
 #: field:account.journal,name:0
 msgid "Journal Name"
-msgstr "Nome Libro Giornale"
+msgstr "Nome registro"
 
 #. module: account
 #: view:account.payment.term:0
@@ -416,7 +416,7 @@ msgstr "Riconciliazione dei pagamenti"
 #. module: account
 #: model:account.journal,name:account.expenses_journal
 msgid "Journal de frais"
-msgstr "Giornale Acquisti"
+msgstr "Registro acquisti"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
@@ -758,7 +758,7 @@ msgstr ""
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
-msgstr "Voci di Giornale di Fine Anno"
+msgstr "Voci di registro di fine anno"
 
 #. module: account
 #: view:product.product:0
@@ -832,7 +832,7 @@ msgstr "Righe Movimentate"
 #: model:ir.actions.act_window,name:account.report_account_analytic_journal_tree
 #: model:ir.ui.menu,name:account.report_account_analytic_journal_print
 msgid "Account cost and revenue by journal"
-msgstr "Bilancio costi e ricavi da Libro Giornale"
+msgstr "Bilancio costi e ricavi per registro"
 
 #. module: account
 #: help:account.account.template,user_type:0
@@ -870,7 +870,7 @@ msgstr "Conti analitici"
 #: model:ir.actions.wizard,name:account.wizard_print_journal
 #: model:ir.ui.menu,name:account.menu_print_journal
 msgid "Print Journal"
-msgstr "Stampa libro Giornale"
+msgstr "Stampa registro"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
@@ -968,7 +968,7 @@ msgstr "Importo codice base"
 #. module: account
 #: help:account.journal,user_id:0
 msgid "The user responsible for this journal"
-msgstr "L'utente responsabile per questo giornale"
+msgstr "L'utente responsabile per questo registro"
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -1088,12 +1088,12 @@ msgstr "Sequenza principale"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_tree
 #: model:ir.ui.menu,name:account.account_analytic_journal_print
 msgid "Print Analytic Journals"
-msgstr "Stampa Analitica Libri Giornale"
+msgstr "Stampa registri analitici"
 
 #. module: account
 #: rml:account.tax.code.entries:0
 msgid "Voucher Nb"
-msgstr "N. buono"
+msgstr "N. ricevuta contabile"
 
 #. module: account
 #: help:account.payment.term.line,sequence:0
@@ -1232,6 +1232,11 @@ msgid ""
 "software system you may have to use the rate at date. Incoming transactions "
 "always use the rate at date."
 msgstr ""
+"Questo permetterà di selezionare come viene calcolato l'attuale tasso di "
+"valuta per le transazioni in uscita. In molti paesi il metodo legale è la "
+"\"media\" ma solo pochi sistemi sono in grado di gestirlo. Come conseguenza, "
+"nell'importazione da altri sistemi, verrà richiesto il tasso alla data.Le "
+"transazioni in entrata usano sempre il tasso alla data."
 
 #. module: account
 #: field:account.account,company_currency_id:0
@@ -1437,7 +1442,7 @@ msgstr "Tipi di conto"
 #: wizard_field:populate_statement_from_inv,init,journal_id:0
 #: field:report.hr.timesheet.invoice.journal,journal_id:0
 msgid "Journal"
-msgstr "Libro Giornale"
+msgstr "Registro"
 
 #. module: account
 #: field:account.account,child_id:0
@@ -1502,7 +1507,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_wizard_company_setup
 msgid "wizard.company.setup"
-msgstr ""
+msgstr "wizard.company.setup"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form
@@ -1512,7 +1517,7 @@ msgstr "account.analytic.line.extended"
 #. module: account
 #: field:account.journal,refund_journal:0
 msgid "Refund Journal"
-msgstr "Giornale dei Fondi"
+msgstr "Registro rimborsi"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income
@@ -1544,7 +1549,7 @@ msgstr "Positivo"
 #: model:ir.actions.wizard,name:account.wizard_general_journal
 #: model:ir.ui.menu,name:account.menu_general_journal
 msgid "Print General Journal"
-msgstr "Stampa del Giornale Generale"
+msgstr "Stampa Registro Generale"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
@@ -1583,7 +1588,7 @@ msgstr "Apri per la riconciliazione"
 #. module: account
 #: model:account.journal,name:account.bilan_journal
 msgid "Journal d'ouverture"
-msgstr "Giornale d'apertura"
+msgstr "Registro d'apertura"
 
 #. module: account
 #: selection:account.tax,tax_group:0
@@ -1618,7 +1623,7 @@ msgstr "Rif. Partner"
 #: selection:account.partner.balance.report,init,result_selection:0
 #: selection:account.third_party_ledger.report,init,result_selection:0
 msgid "Receivable and Payable Accounts"
-msgstr "Conti di incasso e pagamento"
+msgstr "Conti di credito e debito"
 
 #. module: account
 #: view:account.subscription:0
@@ -1676,7 +1681,7 @@ msgstr "Bilancio di apertura"
 #: model:ir.actions.act_window,name:account.action_account_journal_period_tree
 #: model:ir.ui.menu,name:account.menu_action_account_journal_period_tree
 msgid "Journals"
-msgstr "Libro Giornale"
+msgstr "Registri"
 
 #. module: account
 #: rml:account.analytic.account.quantity_cost_ledger:0
@@ -1784,7 +1789,7 @@ msgstr "Riconciliazione di registrazioni da fattura/e e pagamento/i"
 #: model:ir.actions.wizard,name:account.wizard_central_journal
 #: model:ir.ui.menu,name:account.menu_central_journal
 msgid "Print Central Journal"
-msgstr "Stampa Libro Giornale principale"
+msgstr "Stampa registro principale"
 
 #. module: account
 #: wizard_field:account.aged.trial.balance,init,period_length:0
@@ -2008,7 +2013,7 @@ msgstr "          Data inizio"
 #. module: account
 #: wizard_view:account.analytic.account.journal.report,init:0
 msgid "Analytic Journal Report"
-msgstr "Report Giornale Analitico"
+msgstr "Report Registro Analitico"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
@@ -2066,6 +2071,8 @@ msgid ""
 "Unique number of the invoice, computed automatically when the invoice is "
 "created."
 msgstr ""
+"Numero univoco della fattura, calcolato automaticamente quando la fattura è "
+"creata."
 
 #. module: account
 #: rml:account.invoice:0
@@ -2380,7 +2387,7 @@ msgstr ""
 #. module: account
 #: rml:account.journal.period.print:0
 msgid "Voucher No"
-msgstr "Buono Numero"
+msgstr "Numero ricevuta contabile"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_automatic_reconcile
@@ -2425,7 +2432,7 @@ msgstr ""
 #. module: account
 #: rml:account.central.journal:0
 msgid "Journal Code"
-msgstr "Codifica Giornale"
+msgstr "Codice registro"
 
 #. module: account
 #: help:account.tax,applicable_type:0
@@ -2738,7 +2745,7 @@ msgstr ""
 #. module: account
 #: wizard_view:account.move.validate,init:0
 msgid "Select Period and Journal for Validation"
-msgstr "Seleziona periodo e Libro Giornale per la validazione"
+msgstr "Seleziona periodo e registro per la validazione"
 
 #. module: account
 #: field:account.invoice,number:0
@@ -2837,7 +2844,7 @@ msgstr ""
 #: field:account.journal.view,name:0
 #: model:ir.model,name:account.model_account_journal_view
 msgid "Journal View"
-msgstr "Vista Giornale"
+msgstr "Vista registro"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -3014,7 +3021,7 @@ msgstr "Codice tassa"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Analytic Journal -"
-msgstr "Giornale Analitico -"
+msgstr "Registro Analitico -"
 
 #. module: account
 #: rml:account.analytic.account.analytic.check:0
@@ -3099,7 +3106,7 @@ msgstr "Cancella fattura selezionata"
 #: model:ir.actions.report.xml,name:account.analytic_journal_print
 #: model:ir.actions.wizard,name:account.account_analytic_account_journal_report
 msgid "Analytic Journal"
-msgstr "Libro Giornale analitico"
+msgstr "Registro analitico"
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -3134,7 +3141,7 @@ msgstr "Riferimento al documento che ha prodotto questa fattura."
 #: selection:account.account.template,type:0
 #: selection:account.aged.trial.balance,init,result_selection:0
 msgid "Payable"
-msgstr "Pagabile"
+msgstr "Debito"
 
 #. module: account
 #: rml:account.invoice:0
@@ -3469,7 +3476,7 @@ msgid ""
 "All draft account entries in this journal and period will be validated. It "
 "means you won't be able to modify their accouting fields."
 msgstr ""
-"Saranno validate il periodo e tutte le voci bozza di questo Libro Giornale. "
+"Saranno validate il periodo e tutte le voci bozza di questo registro. "
 "Pertanto non si potranno più modificare i relativi campi."
 
 #. module: account
@@ -3604,7 +3611,7 @@ msgstr "Abbonamento"
 #. module: account
 #: field:account.analytic.journal,code:0
 msgid "Journal code"
-msgstr "Codice Libro Giornale"
+msgstr "Codice registro"
 
 #. module: account
 #: wizard_button:account.fiscalyear.close,init,close:0
@@ -3874,7 +3881,7 @@ msgstr "Colonne"
 #. module: account
 #: selection:account.general.ledger.report,checktype,sortbydate:0
 msgid "Movement"
-msgstr ""
+msgstr "Movimento"
 
 #. module: account
 #: help:account.period,special:0
@@ -3897,7 +3904,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 msgid "Financial Journals"
-msgstr "Libri Giornale finanziari"
+msgstr "Registri finanziari"
 
 #. module: account
 #: selection:account.account.balance.report,checktype,state:0
@@ -3994,7 +4001,7 @@ msgstr "Pagamento in contanti"
 #. module: account
 #: field:account.chart.template,property_account_payable:0
 msgid "Payable Account"
-msgstr ""
+msgstr "Conto di debito"
 
 #. module: account
 #: field:account.account,currency_id:0
@@ -4133,13 +4140,13 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_currency:0
 msgid "The currency of the journal"
-msgstr "La valuta del Libro Giornale"
+msgstr "La valuta del registro"
 
 #. module: account
 #: view:account.journal.column:0
 #: model:ir.model,name:account.model_account_journal_column
 msgid "Journal Column"
-msgstr "Colonna Libro Giornale"
+msgstr "Colonna registro"
 
 #. module: account
 #: selection:account.fiscalyear,state:0
@@ -4590,7 +4597,7 @@ msgid ""
 "taxes and journals according to the selected template"
 msgstr ""
 "Questa operazione automaticamente configurerà il piano dei conti, i "
-"riferimenti bancari, le tasse e i giornali seguendo il modello selezionato."
+"riferimenti bancari, le tasse ed i registri seguendo il modello selezionato."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4624,7 +4631,7 @@ msgstr "Tassa compresa nel prezzo"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_tree2
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Entries by Journal"
-msgstr "Voci analitiche divise per Giornale"
+msgstr "Voci analitiche divise per registro"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
@@ -4677,7 +4684,7 @@ msgstr ""
 #. module: account
 #: field:account.analytic.journal,name:0
 msgid "Journal name"
-msgstr "Nome Libro Giornale"
+msgstr "Nome registro"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoiceimport0
@@ -5041,7 +5048,7 @@ msgstr "Importo totale"
 #. module: account
 #: view:account.journal:0
 msgid "Account Journal"
-msgstr ""
+msgstr "Registro contabile"
 
 #. module: account
 #: view:account.subscription.line:0
@@ -5272,7 +5279,7 @@ msgstr "Filtro per data"
 #. module: account
 #: wizard_view:populate_statement_from_inv,init:0
 msgid "Choose Journal and Payment Date"
-msgstr "Scegli Giornale e data di pagamento"
+msgstr "Scegli registro e data di pagamento"
 
 #. module: account
 #: selection:account.analytic.account,state:0
@@ -5455,7 +5462,7 @@ msgstr "Registrazione Contabile"
 #: rml:account.general.journal:0
 #: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
-msgstr ""
+msgstr "Registro generale"
 
 #. module: account
 #: field:account.account,balance:0
@@ -5491,7 +5498,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journal Definition"
-msgstr "Definizione dei giornali analitici"
+msgstr "Definizione dei registri analitici"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -5599,7 +5606,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 msgid "Entries of Open Analytic Journals"
-msgstr "Registrazioni dei giornali analitici aperti"
+msgstr "Voci dei registri analitici aperti"
 
 #. module: account
 #: view:account.invoice.tax:0
@@ -5746,7 +5753,7 @@ msgstr "Righe fattura"
 #. module: account
 #: selection:account.bank.statement.line,type:0
 msgid "Customer"
-msgstr ""
+msgstr "Cliente"
 
 #. module: account
 #: field:account.subscription,period_type:0
@@ -5771,7 +5778,7 @@ msgstr "Registrazioni ordinate per"
 #. module: account
 #: rml:account.journal.period.print:0
 msgid "Print Journal -"
-msgstr ""
+msgstr "Stampa registro -"
 
 #. module: account
 #: field:account.bank.accounts.wizard,bank_account_id:0
@@ -6139,7 +6146,7 @@ msgstr ""
 #: rml:account.account.balance.landscape:0
 #: rml:account.balance.account.balance:0
 msgid "Total :"
-msgstr ""
+msgstr "Totale :"
 
 #. module: account
 #: wizard_field:account.balance.account.balance.report,init,format_perc:0
@@ -6149,7 +6156,7 @@ msgstr ""
 #. module: account
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Select Period"
-msgstr ""
+msgstr "Selezionare periodo"
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,init:0
@@ -6164,7 +6171,7 @@ msgstr ""
 #. module: account
 #: wizard_field:account.balance.account.balance.report,init,account_choice:0
 msgid "Show Accounts"
-msgstr ""
+msgstr "Mostra conti"
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -6180,12 +6187,12 @@ msgstr ""
 #: rml:account.account.balance.landscape:0
 #: rml:account.balance.account.balance:0
 msgid "Year :"
-msgstr ""
+msgstr "Anno :"
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "You can select maximum 3 years. Please check again."
-msgstr ""
+msgstr "E' possibile selezionare al massimo 3 anni. Ricontrollare."
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -6199,6 +6206,7 @@ msgstr ""
 msgid ""
 "You might have done following mistakes. Please correct them and try again."
 msgstr ""
+"Hai fatto i seguenti errori. Per favore, correggete a provare di nuovo."
 
 #. module: account
 #: help:account.balance.account.balance.report,init,select_account:0
@@ -6273,7 +6281,7 @@ msgstr "Crediti passati fino ad oggi"
 #. module: account
 #: model:ir.model,name:report_account.model_report_account_receivable
 msgid "Receivable accounts"
-msgstr ""
+msgstr "Conti di credito"
 
 #. module: account
 #: field:temp.range,name:0
