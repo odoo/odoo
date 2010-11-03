@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-11-24 13:11+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-09-09 07:22+0000\n"
 "Last-Translator: bamuhrez <bamuhrez@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_coda
-#: field:account.coda,journal_id:0
-#: wizard_field:account.coda_import,init,journal_id:0
+#: help:account.coda,journal_id:0
+#: field:account.coda.import,journal_id:0
 msgid "Bank Journal"
 msgstr "سجل البنك"
 
@@ -30,18 +30,13 @@ msgid ""
 msgstr ""
 
 #. module: account_coda
-#: wizard_field:account.coda_import,extraction,note:0
-msgid "Log"
-msgstr "سجل"
-
-#. module: account_coda
-#: wizard_button:account.coda_import,extraction,open:0
-msgid "_Open Statement"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: account_coda
-#: model:ir.module.module,shortdesc:account_coda.module_meta_information
-msgid "Account CODA"
+#: model:ir.model,name:account_coda.model_account_coda_import
+msgid "Account Coda Import"
 msgstr ""
 
 #. module: account_coda
@@ -50,18 +45,23 @@ msgid "Coda file"
 msgstr ""
 
 #. module: account_coda
-#: wizard_view:account.coda_import,init:0
-msgid "Clic on 'New' to select your file :"
+#: view:account.coda:0
+msgid "Group By..."
 msgstr ""
 
 #. module: account_coda
-#: model:ir.actions.wizard,name:account_coda.wizard_account_coda_import
-msgid "Import Coda File"
+#: field:account.coda.import,awaiting_account:0
+msgid "Default Account for Unrecognized Movement"
 msgstr ""
 
 #. module: account_coda
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: help:account.coda,date:0
+msgid "Import Date"
+msgstr ""
+
+#. module: account_coda
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: account_coda
@@ -70,39 +70,62 @@ msgid "Import log"
 msgstr ""
 
 #. module: account_coda
-#: wizard_field:account.coda_import,init,def_receivable:0
-msgid "Default receivable Account"
-msgstr ""
-
-#. module: account_coda
-#: model:ir.module.module,description:account_coda.module_meta_information
-msgid ""
-"Module provides functionality to import\n"
-"    bank statements from .csv file.\n"
-"    Import coda file wizard is used to import bank statements."
-msgstr ""
-
-#. module: account_coda
-#: wizard_button:account.coda_import,extraction,end:0
-msgid "_Close"
-msgstr "إ_غلاق"
-
-#. module: account_coda
-#: field:account.coda,statement_id:0
-msgid "Generated Bank Statement"
+#: view:account.coda.import:0
+msgid "Import"
 msgstr ""
 
 #. module: account_coda
 #: view:account.coda:0
-#: model:ir.actions.act_window,name:account_coda.act_account_payment_account_bank_statement
-#: model:ir.actions.act_window,name:account_coda.action_account_coda
 msgid "Coda import"
 msgstr ""
 
 #. module: account_coda
+#: view:account.coda:0
+#: field:account.coda.import,note:0
+msgid "Log"
+msgstr "سجل"
+
+#. module: account_coda
+#: help:account.coda.import,awaiting_account:0
+msgid ""
+"Set here the default account that will be used, if the partner is found but "
+"does not have the bank account, or if he is domiciled"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda:0
+#: field:account.coda,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: account_coda
+#: help:account.coda.import,def_payable:0
+msgid ""
+"Set here the payable account that will be used, by default, if the partner "
+"is not found"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda:0
+msgid "Search Coda"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda:0
 #: field:account.coda,user_id:0
 msgid "User"
 msgstr "المستخدم"
+
+#. module: account_coda
+#: view:account.coda:0
+#: field:account.coda,date:0
+msgid "Date"
+msgstr ""
+
+#. module: account_coda
+#: model:ir.ui.menu,name:account_coda.menu_account_coda_statement
+msgid "Coda Import Logs"
+msgstr ""
 
 #. module: account_coda
 #: constraint:ir.ui.view:0
@@ -115,29 +138,44 @@ msgid "coda for an Account"
 msgstr ""
 
 #. module: account_coda
-#: wizard_field:account.coda_import,init,def_payable:0
+#: field:account.coda.import,def_payable:0
 msgid "Default Payable Account"
 msgstr ""
 
 #. module: account_coda
-#: model:ir.ui.menu,name:account_coda.menu_account_coda
-msgid "Coda Statements"
+#: help:account.coda,name:0
+msgid "Store the detail of bank statements"
 msgstr ""
 
 #. module: account_coda
-#: model:ir.ui.menu,name:account_coda.menu_account_coda_wizard
+#: view:account.coda.import:0
+msgid "Cancel"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda.import:0
+msgid "Open Statements"
+msgstr ""
+
+#. module: account_coda
+#: model:ir.ui.menu,name:account_coda.menu_account_coda_import
 msgid "Import Coda Statements"
 msgstr ""
 
 #. module: account_coda
-#: wizard_button:account.coda_import,init,extraction:0
-msgid "_Ok"
-msgstr "_موافق"
+#: view:account.coda.import:0
+#: model:ir.actions.act_window,name:account_coda.action_account_coda_import
+msgid "Import Coda Statement"
+msgstr ""
 
 #. module: account_coda
-#: wizard_view:account.coda_import,extraction:0
-#: wizard_view:account.coda_import,init:0
-msgid "Import Coda Statement"
+#: view:account.coda:0
+msgid "Statements"
+msgstr ""
+
+#. module: account_coda
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: account_coda
@@ -146,21 +184,93 @@ msgid "Coda"
 msgstr ""
 
 #. module: account_coda
-#: wizard_view:account.coda_import,extraction:0
+#: view:account.coda.import:0
 msgid "Results :"
 msgstr "النتائج:"
 
 #. module: account_coda
-#: wizard_field:account.coda_import,init,coda:0
+#: view:account.coda.import:0
+msgid "Result of Imported Coda Statements"
+msgstr ""
+
+#. module: account_coda
+#: help:account.coda.import,def_receivable:0
+msgid ""
+"Set here the receivable account that will be used, by default, if the "
+"partner is not found"
+msgstr ""
+
+#. module: account_coda
+#: field:account.coda.import,coda:0
+#: model:ir.actions.act_window,name:account_coda.act_account_payment_account_bank_statement
 msgid "Coda File"
 msgstr ""
 
 #. module: account_coda
-#: field:account.coda,date:0
-msgid "Import Date"
+#: model:ir.model,name:account_coda.model_account_bank_statement
+msgid "Bank Statement"
 msgstr ""
 
 #. module: account_coda
-#: wizard_view:account.coda_import,init:0
-msgid "Select your bank journal :"
+#: model:ir.actions.act_window,name:account_coda.action_account_coda
+msgid "Coda Logs"
 msgstr ""
+
+#. module: account_coda
+#: code:addons/account_coda/wizard/account_coda_import.py:0
+#, python-format
+msgid "Result"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda.import:0
+msgid "Click on 'New' to select your file :"
+msgstr ""
+
+#. module: account_coda
+#: field:account.coda.import,def_receivable:0
+msgid "Default Receivable Account"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda.import:0
+msgid "Close"
+msgstr ""
+
+#. module: account_coda
+#: field:account.coda,statement_ids:0
+msgid "Generated Bank Statements"
+msgstr ""
+
+#. module: account_coda
+#: model:ir.module.module,shortdesc:account_coda.module_meta_information
+msgid "Account CODA - import bank statements from coda file"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda.import:0
+msgid "Configure Your Journal and Account :"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda:0
+msgid "Coda Import"
+msgstr ""
+
+#. module: account_coda
+#: code:addons/account_coda/wizard/account_coda_import.py:0
+#, python-format
+msgid "The bank account %s is not defined for the partner %s.\n"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda:0
+#: field:account.coda,journal_id:0
+msgid "Journal"
+msgstr ""
+
+#~ msgid "_Close"
+#~ msgstr "إ_غلاق"
+
+#~ msgid "_Ok"
+#~ msgstr "_موافق"

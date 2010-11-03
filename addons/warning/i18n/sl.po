@@ -6,20 +6,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:47+0000\n"
 "PO-Revision-Date: 2009-11-17 10:55+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:15+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
+#: model:ir.model,name:warning.model_purchase_order_line
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Postavka nabavnega naloga"
+
+#. module: warning
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -32,6 +39,12 @@ msgid "Message for Purchase Order Line"
 msgstr "Sporočilo za vrstico nakupnega naročila"
 
 #. module: warning
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Picking List"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
 #: field:product.product,sale_line_warn:0
 msgid "Sale Order Line"
 msgstr "Postavka prodajnega naloga"
@@ -42,12 +55,18 @@ msgid "Warning when Purchasing this Product"
 msgstr "Opozorilo pri nakupu tega produkta"
 
 #. module: warning
+#: model:ir.model,name:warning.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: warning
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
 msgstr "Opozorila"
 
 #. module: warning
+#: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
@@ -77,6 +96,7 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Neveljaven XML za arhitekturo pogleda."
 
 #. module: warning
+#: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
 msgstr "Račun"
@@ -92,6 +112,7 @@ msgid "Warning when Selling this Product"
 msgstr "Opozorilo pri prodaji tega produkta"
 
 #. module: warning
+#: model:ir.model,name:warning.model_sale_order
 #: field:res.partner,sale_warn:0
 msgid "Sale Order"
 msgstr "Prodajni nalog"
@@ -102,6 +123,7 @@ msgid "Stock Picking"
 msgstr "Izbira zaloge"
 
 #. module: warning
+#: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Nabavni nalog"
@@ -117,12 +139,14 @@ msgid "Message for Purchase Order"
 msgstr "Sporočilo za nakupno sporočilo"
 
 #. module: warning
+#: code:addons/warning/warning.py:0
 #: help:product.product,purchase_line_warn:0
 #: help:product.product,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
 #: help:res.partner,picking_warn:0
 #: help:res.partner,purchase_warn:0
 #: help:res.partner,sale_warn:0
+#, python-format
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -153,6 +177,12 @@ msgid "Warning on the Purchase Order"
 msgstr "Opozorilo na nakupnem nalogu"
 
 #. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr ""
+
+#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Sale Order"
 msgstr "Opozorilo na prodajnem nalogu"
@@ -171,3 +201,8 @@ msgstr "Opozorilo"
 #: field:res.partner,picking_warn_msg:0
 msgid "Message for Stock Picking"
 msgstr "Sporočilo za izbiro zaloge"
+
+#. module: warning
+#: model:ir.model,name:warning.model_res_partner
+msgid "Partner"
+msgstr ""
