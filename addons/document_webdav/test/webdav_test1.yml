@@ -56,4 +56,4 @@
         dc = te.DAVClient()
         dc.get_creds(self, cr, uid)
         tdp = addons.get_module_resource('document_webdav', 'test_davclient.py')
-        res = dc.gd_get(path=cr.dbname+'/Documents/test_davclient.py', compare=tdp)
+        res = dc.gd_get(path=cr.dbname+'/Documents/test_davclient.py', crange=(4,508), compare=tdp)

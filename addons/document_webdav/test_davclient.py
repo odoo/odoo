@@ -654,7 +654,9 @@ class DAVClient(object):
             hdrs['Range'] = 'bytes='+ (','.join(rs))
         s, m, d = self._http_request(self.davpath + path, method='GET', hdrs=hdrs)
         assert s in (200, 206), "Bad status: %s" % s
-        ctype = m.getheader('Content-Type').split(';',1)[0]
+        ctype = m.getheader('Content-Type')
+        if ctype and ';' in ctype:
+            ctype = ctype.split(';',1)[0]
         if mime:
             assert ctype == mime, m.getheader('Content-Type')
         rrange = None
@@ -668,6 +670,11 @@ class DAVClient(object):
             fd = open(compare, 'rb')
             d2 = fd.read()
             fd.close()
+            if crange:
+                if len(crange) > 1:
+                    raise NotImplementedError
+                r = crange[0]
+                d2 = d2[r[0]:r[1]+1]
             assert d2 == d, "Data does not match"
         return ctype, rrange, d
 
