@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-02 07:22+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-10-28 08:38+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
+msgid "Questions List"
+msgstr "Vragenlijst"
 
 #. module: crm_profiling
 #: constraint:ir.model:0
@@ -22,6 +27,11 @@ msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#. module: crm_profiling
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -41,14 +51,14 @@ msgid "Child Profiles"
 msgstr "Deelprofielen"
 
 #. module: crm_profiling
-#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
-msgid "crm_profiling management"
-msgstr "crm_profiling beheer"
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
+msgstr "Relatiesegmenten"
 
 #. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -57,11 +67,22 @@ msgid "Answer"
 msgstr "Antwoord"
 
 #. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_crm_segmentation
+msgid "Partner Segmentation"
+msgstr "Relatie segmentering"
+
+#. module: crm_profiling
 #: view:res.partner:0
 msgid "Profiling"
 msgstr "Profielschetsen"
 
 #. module: crm_profiling
+#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
+msgid "Crm Profiling management - To Perform Segmentation within Partners"
+msgstr "CRM profilering - om relaties te segmenteren"
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
 #: field:crm_profiling.questionnaire,description:0
 msgid "Description"
 msgstr "Omschrijving"
@@ -101,11 +122,14 @@ msgid "Questionnaires"
 msgstr "Vragenlijsten"
 
 #. module: crm_profiling
-#: field:crm_profiling.questionnaire,name:0
-#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
-#: wizard_view:open_questionnaire,init:0
-msgid "Questionnaire"
-msgstr "Vragenlijst"
+#: help:crm.segmentation,profiling_active:0
+msgid ""
+"Check                             this box if you want to use this tab as "
+"part of the                              segmentation rule. If not checked, "
+"the criteria beneath will be ignored"
+msgstr ""
+"Vink aan als u deze tab wilt gebruiken als deel van de segmenteringsregel. "
+"Als niet aangevinkt, worden de onderstaande criteria genegeerd"
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
@@ -129,15 +153,6 @@ msgid "Included Answers"
 msgstr "Ingesloten antwoorden"
 
 #. module: crm_profiling
-#: help:crm.segmentation,profiling_active:0
-msgid ""
-"Check this box if you want to use this tab as part of the segmentation rule. "
-"If not checked, the criteria beneath will be ignored"
-msgstr ""
-"Vink dit aan als u dit tablad wilt gebruiken als onderdeel van de "
-"segmentatieregel. Onaangevinkt worden onderstaande criteria genegeerd."
-
-#. module: crm_profiling
 #: view:crm_profiling.question:0
 #: field:crm_profiling.questionnaire,questions_ids:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questions
@@ -157,9 +172,18 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: crm_profiling
-#: view:crm.segmentation:0
-msgid "Partner Segmentations"
-msgstr "Relatiesegmenten"
+#: model:ir.model,name:crm_profiling.model_res_partner
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: crm_profiling
+#: code:addons/crm_profiling/crm_profiling.py:0
+#: field:crm_profiling.questionnaire,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
+#: wizard_view:open_questionnaire,init:0
+#, python-format
+msgid "Questionnaire"
+msgstr "Vragenlijst"
 
 #. module: crm_profiling
 #: model:ir.actions.wizard,name:crm_profiling.wizard_open_questionnaire
@@ -170,3 +194,13 @@ msgstr "Een vragenlijst gebruiken"
 #: wizard_button:open_questionnaire,open,compute:0
 msgid "Save Data"
 msgstr "Gegevens opslaan"
+
+#~ msgid "crm_profiling management"
+#~ msgstr "crm_profiling beheer"
+
+#~ msgid ""
+#~ "Check this box if you want to use this tab as part of the segmentation rule. "
+#~ "If not checked, the criteria beneath will be ignored"
+#~ msgstr ""
+#~ "Vink dit aan als u dit tablad wilt gebruiken als onderdeel van de "
+#~ "segmentatieregel. Onaangevinkt worden onderstaande criteria genegeerd."

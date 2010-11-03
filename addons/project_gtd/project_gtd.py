@@ -123,7 +123,7 @@ class project_task(osv.osv):
             </group>
             </search> '''
         if search_extended:
-            res['arch'] = res['arch'].replace('</search>',search_extended)
+            res['arch'] = unicode(res['arch'], 'utf8').replace('</search>', search_extended)
             attrs_sel = self.pool.get('project.gtd.context').name_search(cr, uid, '', [], context=context)
             context_id_info = self.pool.get('project.task').fields_get(cr, uid, ['context_id'])
             context_id_info['context_id']['selection'] = attrs_sel

@@ -50,8 +50,8 @@ class pos_box_out(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Description', size=32, required=True),
-        'journal_id': fields.selection(pos_box_entries.get_journal, 'Register', required=True),
-        'product_id': fields.selection(_get_expense_product, 'Operation', required=True),
+        'journal_id': fields.selection(pos_box_entries.get_journal, "Cash Register", required=True),
+        'product_id': fields.selection(_get_expense_product, "Operation", required=True),
         'amount': fields.float('Amount', digits=(16, 2)),
         'ref': fields.char('Ref', size=32),
     }

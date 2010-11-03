@@ -141,7 +141,7 @@ class stock_partial_picking(osv.osv_memory):
                 <button icon='gtk-cancel' special="cancel"
                     string="_Cancel" />
                 <button name="do_partial" string="_Validate"
-                    colspan="1" type="object" icon="gtk-apply" />
+                    colspan="1" type="object" icon="gtk-go-forward" />
             </group>
         </form>"""
         result['arch'] = _moves_arch_lst

@@ -21,7 +21,7 @@
 
 from osv import fields
 from osv import osv
-from tools import config
+import addons
 
 import base64
 
@@ -32,7 +32,7 @@ class outlook_installer(osv.osv_memory):
     def default_get(self, cr, uid, fields, context={}):
         data = super(outlook_installer, self).default_get(cr, uid, fields, context)
         data['doc_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_outlook.html'
-        file = open(config['addons_path'] + "/outlook/plugin/openerp-outlook-plugin.zip", 'r')
+        file = open(addons.get_module_resource('outlook','plugin','openerp-outlook-plugin.zip'), 'r')
         data['plugin_file'] = base64.encodestring(file.read())
         return data
 
