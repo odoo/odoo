@@ -21,7 +21,7 @@
 
 import time
 from document_webdav import nodes
-from document.nodes import _str2time
+from document.nodes import _str2time, nodefd_static
 import logging
 import StringIO
 from orm_utils import get_last_modified
@@ -381,6 +381,9 @@ class node_calendar(nodes.node_class):
             res.append(child._get_caldav_calendar_data(cr))
         return res
 
+    def open_data(self, cr, mode):
+        return nodefd_static(self, cr, mode)
+
     def _get_caldav_calendar_description(self, cr):
         uid = self.context.uid
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
@@ -458,14 +461,10 @@ class res_node_calendar(nodes.node_class):
         self.model = res_model
         self.res_id = res_id
 
-    def open(self, cr, mode=False):
-        if self.type in ('collection','database'):
-            return False
-        s = StringIO.StringIO(self.get_data(cr))
-        s.name = self
-        return s
+    def open_data(self, cr, mode):
+        return nodefd_static(self, cr, mode)
 
-    def get_data(self, cr, fil_obj = None):
+    def get_data(self, cr, fil_obj=None):
         uid = self.context.uid
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
         context = self.context.context.copy()
