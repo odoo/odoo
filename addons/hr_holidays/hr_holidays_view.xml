@@ -24,7 +24,7 @@
                                 domain="[('employee_id.user_id','=', uid)]"
                                 help="My Leaves" />
                         </field>
-                        <field name="department_id" widget="selection">
+                        <field name="department_id" widget="selection" default="context.get('department_id', False)" >
                             <filter icon="terp-personal+" help="My Department Holidays"
                                 domain="[('department_id.manager_id','=',uid)]" />
                         </field>
