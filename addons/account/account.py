@@ -615,6 +615,8 @@ class account_journal(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
+    _order = 'code'
+
     def write(self, cr, uid, ids, vals, context=None):
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
@@ -1584,7 +1586,6 @@ class account_tax_code(osv.osv):
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
-
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []
@@ -1627,7 +1628,7 @@ class account_tax_code(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
-    _order = 'code,name'
+    _order = 'code'
 account_tax_code()
 
 class account_tax(osv.osv):
