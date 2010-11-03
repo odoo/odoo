@@ -667,7 +667,7 @@ class document_storage(osv.osv):
             if ktype == 'file':
                 try:
                     os.unlink(fname)
-                except Exception, e:
+                except Exception:
                     self._doclog.warning("Could not remove file %s, please remove manually.", fname, exc_info=True)
             else:
                 self._doclog.warning("Unknown unlink key %s" % ktype)

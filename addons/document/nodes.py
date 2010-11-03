@@ -1496,7 +1496,7 @@ class nodefd_static(StringIO, node_descriptor):
             return
 
         par = self._get_parent()
-        uid = par.context.uid
+        # uid = par.context.uid
         cr = pooler.get_db(par.context.dbname).cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
