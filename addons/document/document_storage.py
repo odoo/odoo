@@ -181,7 +181,8 @@ class nodefd_db(StringIO, nodes.node_descriptor):
             cr = ira_browse._cr # reuse the cursor of the browse object, just now
             cr.execute('SELECT db_datas FROM ir_attachment WHERE id = %s',(ira_browse.id,))
             data = cr.fetchone()[0]
-            self._size = len(data)
+            if data:
+                self._size = len(data)
             StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
             StringIO.__init__(self, None)
@@ -260,7 +261,8 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
         
         if mode in ('r', 'r+'):
             data = base64.decodestring(ira_browse.db_datas)
-            self._size = len(data)
+            if data:
+                self._size = len(data)
             StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
             StringIO.__init__(self, None)

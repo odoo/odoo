@@ -181,6 +181,14 @@ class node_descriptor(object):
     def __len__(self):
         return self.size()
 
+    def __nonzero__(self):
+        """ Ensure that a node_descriptor will never equal False
+        
+            Since we do define __len__ and __iter__ for us, we must avoid
+            being regarded as non-true objects.
+        """
+        return True
+
     def next(self, str):
         raise NotImplementedError
 
