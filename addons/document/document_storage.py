@@ -48,7 +48,7 @@ DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config.get(
 We have to consider 3 cases of data /retrieval/:
  Given (context,path) we need to access the file (aka. node).
  given (directory, context), we need one of its children (for listings, views)
- given (ir.attachment, context), we needs its data and metadata (node).
+ given (ir.attachment, context), we need its data and metadata (node).
 
 For data /storage/ we have the cases:
  Have (ir.attachment, context), we modify the file (save, update, rename etc).
@@ -100,9 +100,16 @@ class nodefd_file(nodes.node_descriptor):
         if mode.endswith('b'):
             mode = mode[:-1]
         self.mode = mode
+        self._size = os.stat(path).st_size
         
-        for attr in ('closed', 'read', 'write', 'seek', 'tell'):
+        for attr in ('closed', 'read', 'write', 'seek', 'tell', 'next'):
             setattr(self,attr, getattr(self.__file, attr))
+
+    def size(self):
+        return self._size
+        
+    def __iter__(self):
+        return self
 
     def close(self):
         # TODO: locking in init, close()
@@ -165,6 +172,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
     """
     def __init__(self, parent, ira_browse, mode):
         nodes.node_descriptor.__init__(self, parent)
+        self._size = 0L
         if mode.endswith('b'):
             mode = mode[:-1]
         
@@ -172,6 +180,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
             cr = ira_browse._cr # reuse the cursor of the browse object, just now
             cr.execute('SELECT db_datas FROM ir_attachment WHERE id = %s',(ira_browse.id,))
             data = cr.fetchone()[0]
+            self._size = len(data)
             StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
             StringIO.__init__(self, None)
@@ -183,6 +192,9 @@ class nodefd_db(StringIO, nodes.node_descriptor):
             logging.getLogger('document.storage').error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
+
+    def size(self):
+        return self._size
 
     def close(self):
         # we now open a *separate* cursor, to update the data.
@@ -241,11 +253,14 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
     """
     def __init__(self, parent, ira_browse, mode):
         nodes.node_descriptor.__init__(self, parent)
+        self._size = 0L
         if mode.endswith('b'):
             mode = mode[:-1]
         
         if mode in ('r', 'r+'):
-            StringIO.__init__(self, base64.decodestring(ira_browse.db_datas))
+            data = base64.decodestring(ira_browse.db_datas)
+            self._size = len(data)
+            StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
             StringIO.__init__(self, None)
             # at write, we start at 0 (= overwrite), but have the original
@@ -256,6 +271,9 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
             logging.getLogger('document.storage').error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
+
+    def size(self):
+        return self._size
 
     def close(self):
         # we now open a *separate* cursor, to update the data.

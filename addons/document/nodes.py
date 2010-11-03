@@ -175,6 +175,15 @@ class node_descriptor(object):
     def write(self, str):
         raise NotImplementedError
 
+    def size(self):
+        raise NotImplementedError
+
+    def __len__(self):
+        return self.size()
+
+    def next(self, str):
+        raise NotImplementedError
+
 class node_class(object):
     """ this is a superclass for our inodes
         It is an API for all code that wants to access the document files.
@@ -1403,11 +1412,13 @@ class nodefd_content(StringIO, node_descriptor):
     def __init__(self, parent, cr, mode, ctx):
         node_descriptor.__init__(self, parent)
         self._context=ctx
+        self._size = 0L
 
         if mode in ('r', 'r+'):
             cntobj = parent.context._dirobj.pool.get('document.directory.content')
             data = cntobj.process_read(cr, parent.context.uid, parent, ctx)
             if data:
+                self._size = len(data)
                 parent.content_length = len(data)
             StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
@@ -1420,6 +1431,9 @@ class nodefd_content(StringIO, node_descriptor):
             logging.getLogger('document.content').error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
+
+    def size(self):
+        return self._size
 
     def close(self):
         # we now open a *separate* cursor, to update the data.
