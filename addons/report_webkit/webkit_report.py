@@ -40,7 +40,7 @@ import netsvc
 import pooler
 from report_helper import WebKitHelper
 from report.report_sxw import *
-from tools.config import config
+import addons
 from tools.translate import _
 from osv.osv import except_osv
 
@@ -231,7 +231,7 @@ class WebKitParser(report_sxw):
         template =  False
 
         if report_xml.report_file :
-            path = os.path.join(config['addons_path'], report_xml.report_file)
+            path = addons.get_module_resource(report_xml.report_file)
             if os.path.exists(path) :
                 template = file(path).read()
         if not template and report_xml.report_webkit_data :

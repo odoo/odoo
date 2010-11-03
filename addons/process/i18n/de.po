@@ -6,17 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-08-03 08:48+0000\n"
 "Last-Translator: Ferdinand-chricar <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
+#: model:ir.model,name:process.model_process_node
 #: view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
@@ -36,23 +37,33 @@ msgid "Invalid model name in the action definition."
 msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
-#: view:process.transition:0
-msgid "Roles from Workflow"
-msgstr "Regeln aus Workflow"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr ""
 
 #. module: process
-#: field:process.node,menu_id:0
-msgid "Related Menu"
-msgstr "Bezug zu Menü"
+#: field:process.node,help_url:0
+msgid "Help URL"
+msgstr "Dokumentation URL"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: help:process.process,active:0
+msgid ""
+"If the active field is set to true, it will allow you to hide the process "
+"without removing it."
+msgstr ""
+
+#. module: process
 #: field:process.transition,action_ids:0
 msgid "Buttons"
 msgstr "Buttons"
+
+#. module: process
+#: view:process.node:0
+#: view:process.process:0
+msgid "Group By..."
+msgstr ""
 
 #. module: process
 #: selection:process.node,kind:0
@@ -61,19 +72,16 @@ msgstr "Status"
 
 #. module: process
 #: view:process.node:0
-#: view:process.process:0
-#: view:process.transition:0
-msgid "Details"
-msgstr "Details"
+msgid "Kind Of Node"
+msgstr ""
 
 #. module: process
-#: field:process.node,help_url:0
-msgid "Help URL"
-msgstr "Dokumentation URL"
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.model,name:process.model_process_node
 #: model:ir.ui.menu,name:process.menu_process_node_form
 #: view:process.node:0
 #: view:process.process:0
@@ -92,6 +100,11 @@ msgstr "Knoten"
 #: view:process.process:0
 msgid "Conditions"
 msgstr "Bedingungen"
+
+#. module: process
+#: view:process.transition:0
+msgid "Search Process Transition"
+msgstr ""
 
 #. module: process
 #: field:process.condition,node_id:0
@@ -115,7 +128,9 @@ msgstr "Prozessverbindung Aktionen"
 
 #. module: process
 #: field:process.condition,model_id:0
+#: view:process.node:0
 #: field:process.node,model_id:0
+#: view:process.process:0
 #: field:process.process,model_id:0
 msgid "Object"
 msgstr "Objekt"
@@ -126,6 +141,7 @@ msgid "Source Node"
 msgstr "Quellknoten"
 
 #. module: process
+#: view:process.transition:0
 #: field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
 msgstr "Vorgangsketten"
@@ -136,14 +152,13 @@ msgid "Action ID"
 msgstr "Verkettungsaktion ID"
 
 #. module: process
+#: model:ir.model,name:process.model_process_transition
 #: view:process.transition:0
 msgid "Process Transition"
 msgstr "Vorgangsverkettung"
 
 #. module: process
 #: model:ir.model,name:process.model_process_condition
-#: view:process.node:0
-#: view:process.process:0
 msgid "Condition"
 msgstr "Bedingung"
 
@@ -167,41 +182,28 @@ msgid "Name"
 msgstr "Bezeichnung"
 
 #. module: process
-#: field:process.transition,role_ids:0
-msgid "Roles"
-msgstr "Rollen"
-
-#. module: process
 #: field:process.node,transition_in:0
 msgid "Starting Transitions"
 msgstr "Anfang Kette"
 
 #. module: process
+#: view:process.node:0
 #: field:process.node,note:0
+#: view:process.process:0
 #: field:process.process,note:0
 #: view:process.transition:0
 msgid "Notes"
 msgstr "Bemerkungen"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
 #: field:process.transition.action,transition_id:0
 msgid "Transition"
 msgstr "Übersetzung"
 
 #. module: process
-#: view:process.node:0
 #: view:process.process:0
-#: view:process.transition:0
-msgid "Roles Required"
-msgstr "zu beachtende Regel"
-
-#. module: process
-#: view:process.node:0
-#: view:process.process:0
-msgid "Extra Information"
-msgstr "Extra Information"
+msgid "Search Process"
+msgstr ""
 
 #. module: process
 #: selection:process.node,kind:0
@@ -213,6 +215,21 @@ msgstr "Sub Workflow"
 #: field:process.process,active:0
 msgid "Active"
 msgstr "Aktiv"
+
+#. module: process
+#: view:process.transition:0
+msgid "Associated Groups"
+msgstr ""
+
+#. module: process
+#: field:process.node,menu_id:0
+msgid "Related Menu"
+msgstr "Bezug zu Menü"
+
+#. module: process
+#: field:process.node,model_states:0
+msgid "States Expression"
+msgstr "Status Merkmale"
 
 #. module: process
 #: selection:process.transition.action,state:0
@@ -230,6 +247,17 @@ msgid "Expression"
 msgstr "Trigger Ausdrücke"
 
 #. module: process
+#: field:process.transition,group_ids:0
+msgid "Required Groups"
+msgstr ""
+
+#. module: process
+#: view:process.node:0
+#: view:process.process:0
+msgid "Incoming Transitions"
+msgstr ""
+
+#. module: process
 #: field:process.transition.action,state:0
 msgid "Type"
 msgstr "Typ"
@@ -240,34 +268,42 @@ msgid "Ending Transitions"
 msgstr "Ende Kette"
 
 #. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
 #: model:ir.model,name:process.model_process_process
-#: model:ir.ui.menu,name:process.menu_process_form
 #: field:process.node,process_id:0
 #: view:process.process:0
 msgid "Process"
 msgstr "Prozesse"
 
 #. module: process
-#: model:ir.module.module,shortdesc:process.module_meta_information
-msgid "Enterprise Process"
-msgstr "Unternehmens Prozess"
+#: view:process.node:0
+msgid "Search ProcessNode"
+msgstr ""
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
+msgid "Other Conditions"
+msgstr ""
+
+#. module: process
+#: model:ir.module.module,shortdesc:process.module_meta_information
+#: model:ir.ui.menu,name:process.menu_process
+msgid "Enterprise Process"
+msgstr "Unternehmens Prozess"
+
+#. module: process
 #: view:process.transition:0
 msgid "Actions"
 msgstr "Aktionen"
 
 #. module: process
-#: field:process.node,model_states:0
-msgid "States Expression"
-msgstr "Status Merkmale"
+#: view:process.node:0
+#: view:process.process:0
+msgid "Properties"
+msgstr ""
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
-#: model:ir.model,name:process.model_process_transition
 #: model:ir.ui.menu,name:process.menu_process_transition_form
 msgid "Process Transitions"
 msgstr "Prozessverbindungen"
@@ -289,11 +325,6 @@ msgid "Outgoing Transitions"
 msgstr "Ausgehende Verbindung"
 
 #. module: process
-#: model:ir.ui.menu,name:process.menu_process
-msgid "Enterprise Processes"
-msgstr "Betriebliche Geschäftsprozesse"
-
-#. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Transitions"
@@ -303,3 +334,21 @@ msgstr "Verbindungen"
 #: selection:process.transition.action,state:0
 msgid "Object Method"
 msgstr "Objekt Methode"
+
+#~ msgid "Roles from Workflow"
+#~ msgstr "Regeln aus Workflow"
+
+#~ msgid "Details"
+#~ msgstr "Details"
+
+#~ msgid "Roles"
+#~ msgstr "Rollen"
+
+#~ msgid "Roles Required"
+#~ msgstr "zu beachtende Regel"
+
+#~ msgid "Extra Information"
+#~ msgstr "Extra Information"
+
+#~ msgid "Enterprise Processes"
+#~ msgstr "Betriebliche Geschäftsprozesse"

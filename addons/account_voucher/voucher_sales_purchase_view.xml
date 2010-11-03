@@ -11,7 +11,7 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -22,20 +22,20 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-                   <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="10">
-                        <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    </group>
                     <newline/>
-                    <group expand="0" string="Extended options..." col='8' colspan='4'>
+                    <group expand="0" string="Extended Filters..." col='8' colspan='4'>
                         <field name="reference"/>
                         <field name="name"/>
                         <field name="narration"/>
                         <field name="amount"/>
                    </group>
+                   <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="10">
+                        <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -50,7 +50,7 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -61,20 +61,20 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-                   <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="10">
-                        <filter string="Customer" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    </group>
                     <newline/>
-                    <group expand="0" string="Extended options..." col='8' colspan='4'>
+                    <group expand="0" string="Extended Filters..." col='8' colspan='4'>
                         <field name="reference"/>
                         <field name="name"/>
                         <field name="narration"/>
                         <field name="amount"/>
                    </group>
+                   <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="10">
+                        <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -153,9 +153,9 @@
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
                         <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
-                        <group  colspan="2" attrs="{'invisible':[('pay_now','!=','pay_now')]}">
-			    <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay" attrs="{'invisible':[('state','!=','posted')]}"/>
-			</group>
+                        <group attrs="{'invisible':[('state','!=','posted')]}">
+                           <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay" attrs="{'invisible':[('pay_now','!=','pay_now')]}"/>
+                        </group>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
@@ -259,9 +259,9 @@
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
-                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                         <button icon="terp-dolar_ok!" name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':[('pay_now','!=','pay_now'), ('state','!=','posted')]}"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>

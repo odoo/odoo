@@ -73,11 +73,11 @@
                            domain="[('state','not in', ('draft','cancel'))]"
                            help = "Open and Paid Invoices"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-sale" string="Customer"
+                    <filter icon="terp-personal" string="Customer"
                             name="customer"
                             domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"
                             help="Customer Invoices And Refunds"/>
-                    <filter icon="terp-purchase"
+                    <filter icon="terp-personal"
                             string="supplier"
                             separator="1"
                             domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"

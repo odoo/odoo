@@ -20,7 +20,7 @@
 ##############################################################################
 
 import report
-import account
+import account_reporting
 import wizard
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

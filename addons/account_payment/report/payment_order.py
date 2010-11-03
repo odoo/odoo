@@ -20,13 +20,13 @@
 ##############################################################################
 
 import time
-import datetime
+
 import pooler
 from report import report_sxw
 
 class payment_order(report_sxw.rml_parse):
 
-    def __init__(self, cr, uid, name, context):
+    def __init__(self, cr, uid, name, context=None):
         super(payment_order, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
             'time': time,
@@ -36,8 +36,8 @@ class payment_order(report_sxw.rml_parse):
             'get_amount_total_in_currency': self._get_amount_total_in_currency,
             'get_amount_total': self._get_amount_total,
             'get_account_name': self._get_account_name,
-
         })
+
     def _get_invoice_name(self, invoice_id):
         if invoice_id:
             pool = pooler.get_pool(self.cr.dbname)

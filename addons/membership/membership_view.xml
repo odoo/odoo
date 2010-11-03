@@ -20,14 +20,14 @@
                    <field name="name"/>
                    <field name="categ_id" widget="selection" operator="child_of"/>
                    <newline/>
+                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
+                   </group>
+                   <newline/>
                    <group  expand='0' string='Group by...' groups="base.group_extended">
                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
                        <separator orientation="vertical"/>
                        <filter string='Date From' icon="terp-go-month" domain="[]" context="{'group_by' : 'membership_date_from'}" />
-                   </group>
-                   <newline/>
-                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
                    </group>
                 </search>
             </field>
@@ -71,7 +71,7 @@
                         <separator string="Categorization" colspan="2"/>
                         <field name="list_price" string="Membership Fee"/>
                         <field name="type" />
-                        <field name="property_account_income"/>
+                        <field name="property_account_income" domain="[('type', '!=', 'view')]"/>
                         <field name="categ_id"/>
                         <separator string="Sale Taxes" colspan="2"/>
                         <newline/>

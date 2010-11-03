@@ -7,20 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-06-30 15:09+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-09-29 10:30+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product lifetime"
-msgstr "Trajnost proizvoda"
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Production lot"
+msgstr ""
+
+#. module: product_expiry
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_from_product_template
@@ -45,15 +51,35 @@ msgstr ""
 "Pogreška: Predefinirana JM i prodajna JM moraju pripadati istoj kategoriji."
 
 #. module: product_expiry
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neispravan XML za arhitekturu View-a"
+#: field:product.product,life_time:0
+msgid "Product Life Time"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,use_time:0
+msgid "Product Use Time"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
+msgid "The date signifying an alert to notify about the production lot."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr ""
 
 #. module: product_expiry
 #: help:stock.production.lot,life_date:0
 msgid "The date the lot may become dangerous and should not be consumed."
 msgstr ""
 "Datum kada serija proizvoda postaje opasna i ne smije se konzumirati."
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product Removal Time"
+msgstr ""
 
 #. module: product_expiry
 #: field:stock.production.lot,removal_date:0
@@ -100,6 +126,13 @@ msgid "Error: UOS must be in a different category than the UOM"
 msgstr "Pogreška: UOS mora biti u različitoj kategoriji od JM"
 
 #. module: product_expiry
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which, needs an alert to notify about the "
+"production lot."
+msgstr ""
+
+#. module: product_expiry
 #: field:stock.production.lot,life_date:0
 msgid "End of Life Date"
 msgstr "Istek roka trajanja"
@@ -127,20 +160,9 @@ msgstr ""
 "Broj dana prije  nego što bi trebalo maknuti produkcijsku seriju proizvoda."
 
 #. module: product_expiry
-#: field:product.product,use_time:0
-#: field:stock.production.lot,dlc:0
-msgid "Product usetime"
-msgstr "Trajanje proizvoda"
-
-#. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
-msgstr "Datum alarma"
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product removal time"
-msgstr "Vrijeme uklanjanja proizvoda"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Neispravan XML za arhitekturu View-a"
 
 #. module: product_expiry
 #: help:product.product,use_time:0
@@ -172,5 +194,20 @@ msgstr "Datum kada bi trebalo maknuti seriju proizvoda."
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
-msgid "Product alert time"
-msgstr "Vrijeme alarma proizvoda"
+msgid "Product Alert Time"
+msgstr ""
+
+#~ msgid "Product lifetime"
+#~ msgstr "Trajnost proizvoda"
+
+#~ msgid "Product usetime"
+#~ msgstr "Trajanje proizvoda"
+
+#~ msgid "Alert Date"
+#~ msgstr "Datum alarma"
+
+#~ msgid "Product removal time"
+#~ msgstr "Vrijeme uklanjanja proizvoda"
+
+#~ msgid "Product alert time"
+#~ msgstr "Vrijeme alarma proizvoda"

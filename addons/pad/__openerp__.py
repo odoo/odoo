@@ -11,7 +11,7 @@ company customize which Pad installation should be used to link to new pads
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base'],
-    'update_xml': [
+    'data': [
         'company_pad.xml'
     ],
     'installable': True,

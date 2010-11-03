@@ -7,28 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-06-18 10:59+0000\n"
-"PO-Revision-Date: 2010-10-15 08:47+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-10-26 08:24+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-16 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
 msgstr "Podređeni Nalozi"
-
-#. module: analytic
-#: help:account.analytic.line,amount_currency:0
-msgid ""
-"The amount expressed in the related account currency if not equal to the "
-"company one."
-msgstr ""
-"Vrednost izrazena u datom iznosu valute ako nije jednaka valuti preduzeca"
 
 #. module: analytic
 #: constraint:ir.model:0
@@ -40,17 +32,12 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account Name"
-msgstr "Naziv računa"
+msgstr "Naziv Naloga"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
 msgstr "Specificira koju kolicinu iznosa da broji"
-
-#. module: analytic
-#: help:account.analytic.line,currency_id:0
-msgid "The related account currency if not equal to the company one."
-msgstr "Dati iznos valute ako nije jednaka valuti preduzeca"
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -87,40 +74,6 @@ msgid "Debit"
 msgstr "Duguje"
 
 #. module: analytic
-#: help:account.analytic.account,state:0
-msgid ""
-"* When an account is created its in 'Draft' state.                           "
-"       \n"
-"* If any associated partner is there, it can be in 'Open' state.             "
-"                     \n"
-"* If any pending balance is there it can be in 'Pending'.                    "
-"               \n"
-"* And finally when all the transactions are over, it can be in 'Close' "
-"state.                                   \n"
-"* The project can be in either if the states 'Template' and 'Running'.\n"
-" If it is template then we can make projects based on the template projects. "
-"If its in 'Running' state it is a normal project.                            "
-"     \n"
-" If it is to be reviewed then the state is 'Pending'.\n"
-" When the project is completed the state is set to 'Done'."
-msgstr ""
-"*Kada je neka faktura kreirana a nalazi se u ' U Toku'.                      "
-"                                                    \n"
-"*Ako je bilo koji asocirani partner tamo, on mora biti u stanju ' Otvoren'.  "
-"                                                                     \n"
-"*Ako je bilo koji Saldo u stanju 'U izvrsenju' on mora i biti tamo.          "
-"                                                                             "
-"\n"
-"*I , na kraju kada su sve transakcije gotove, mora se naci u stanju ' "
-"Zatvoreno'.                                                                  "
-"             \n"
-" Ako je ovo shema(obrazac) onda mi mozemo napraviri projekat baziran na "
-"istom. Ako je u stanju ' U izvrsenju' to je normalnan\n"
-"projekat.\n"
-" Ako zelimo da ga pregledamo, stanje mora biti ' U Toku'.\n"
-" Kada je projekat zavrsen stanje je postavljeno na ' Zavrseno'."
-
-#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
 msgstr "Vrsta konta"
@@ -147,12 +100,9 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price."
-msgstr ""
-"Izracunato mnozenjem kolicine i cene dobijene iz Proizvodove cene kostanja"
+#: selection:account.analytic.account,type:0
+msgid "Normal"
+msgstr "Normalan"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -182,14 +132,23 @@ msgstr "Datum"
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
-#: field:account.analytic.line,currency_id:0
 msgid "Account currency"
 msgstr "Valuta Naloga"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "View"
-msgstr "Pregled"
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Izracunato mnozenjem kolicine i cene date u proizvodovom cenovniku. Uvek "
+"prikazano u osnovnoj valuti preduzeca."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -222,15 +181,13 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Date Start"
-msgstr "Početni datum"
-
-#. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
-msgstr "Količina"
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account."
+msgstr ""
+"Ukoliko izaberete PREGLED, to znaci da ne zelite da kreirate sadrzaj "
+"dnevnika, koristeci taj nalog."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -238,14 +195,14 @@ msgid "Date End"
 msgstr "Završni datum"
 
 #. module: analytic
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
+msgstr "Pravila nisu podrzana od strane osv_memory objekata !"
+
+#. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Account Code"
 msgstr "Sifra Naloga"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Normal"
-msgstr "Normalan"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -260,19 +217,19 @@ msgid "Analytic Account"
 msgstr "Analitički konto"
 
 #. module: analytic
-#: field:account.analytic.account,company_currency_id:0
-msgid "Currency"
-msgstr "Valuta"
-
-#. module: analytic
-#: field:account.analytic.line,amount_currency:0
-msgid "Amount currency"
-msgstr "Iznos valute"
+#: selection:account.analytic.account,type:0
+msgid "View"
+msgstr "Pregled"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
-msgid "Associated Partner"
-msgstr "Povezani partner"
+msgid "Partner"
+msgstr "Partner"
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
+msgstr "Početni datum"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -283,3 +240,59 @@ msgstr "Otvori"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Analitičke stavke"
+
+#~ msgid ""
+#~ "The amount expressed in the related account currency if not equal to the "
+#~ "company one."
+#~ msgstr ""
+#~ "Vrednost izrazena u datom iznosu valute ako nije jednaka valuti preduzeca"
+
+#~ msgid "The related account currency if not equal to the company one."
+#~ msgstr "Dati iznos valute ako nije jednaka valuti preduzeca"
+
+#~ msgid ""
+#~ "* When an account is created its in 'Draft' state.                           "
+#~ "       \n"
+#~ "* If any associated partner is there, it can be in 'Open' state.             "
+#~ "                     \n"
+#~ "* If any pending balance is there it can be in 'Pending'.                    "
+#~ "               \n"
+#~ "* And finally when all the transactions are over, it can be in 'Close' "
+#~ "state.                                   \n"
+#~ "* The project can be in either if the states 'Template' and 'Running'.\n"
+#~ " If it is template then we can make projects based on the template projects. "
+#~ "If its in 'Running' state it is a normal project.                            "
+#~ "     \n"
+#~ " If it is to be reviewed then the state is 'Pending'.\n"
+#~ " When the project is completed the state is set to 'Done'."
+#~ msgstr ""
+#~ "*Kada je neka faktura kreirana a nalazi se u ' U Toku'.                      "
+#~ "                                                    \n"
+#~ "*Ako je bilo koji asocirani partner tamo, on mora biti u stanju ' Otvoren'.  "
+#~ "                                                                     \n"
+#~ "*Ako je bilo koji Saldo u stanju 'U izvrsenju' on mora i biti tamo.          "
+#~ "                                                                             "
+#~ "\n"
+#~ "*I , na kraju kada su sve transakcije gotove, mora se naci u stanju ' "
+#~ "Zatvoreno'.                                                                  "
+#~ "             \n"
+#~ " Ako je ovo shema(obrazac) onda mi mozemo napraviri projekat baziran na "
+#~ "istom. Ako je u stanju ' U izvrsenju' to je normalnan\n"
+#~ "projekat.\n"
+#~ " Ako zelimo da ga pregledamo, stanje mora biti ' U Toku'.\n"
+#~ " Kada je projekat zavrsen stanje je postavljeno na ' Zavrseno'."
+
+#~ msgid ""
+#~ "Calculated by multiplying the quantity and the price given in the Product's "
+#~ "cost price."
+#~ msgstr ""
+#~ "Izracunato mnozenjem kolicine i cene dobijene iz Proizvodove cene kostanja"
+
+#~ msgid "Currency"
+#~ msgstr "Valuta"
+
+#~ msgid "Associated Partner"
+#~ msgstr "Povezani partner"
+
+#~ msgid "Amount currency"
+#~ msgstr "Iznos valute"
