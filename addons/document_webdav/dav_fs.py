@@ -20,19 +20,16 @@
 ##############################################################################
 import pooler
 
-import base64
-import sys
 import os
 import time
 import errno
-from string import joinfields, split, lower
 
 import netsvc
 import urlparse
 
-from DAV.constants import COLLECTION, OBJECT
-from DAV.errors import *
-from DAV.iface import *
+from DAV.constants import COLLECTION  #, OBJECT
+from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
+from DAV.iface import dav_interface
 import urllib
 
 from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
@@ -685,8 +682,7 @@ class openerp_dav_handler(dav_interface):
             node = False
         
         objname = uri2[-1]
-        ext = objname.find('.') >0 and objname.split('.')[1] or False
-
+        
         ret = None
         if not node:
             dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
@@ -769,7 +765,7 @@ class openerp_dav_handler(dav_interface):
         """
         if uri[-1]=='/':uri=uri[:-1]
         res=delone(self,uri)
-        parent='/'.join(uri.split('/')[:-1])
+        # parent='/'.join(uri.split('/')[:-1])
         return res
 
     def deltree(self, uri):
@@ -781,7 +777,7 @@ class openerp_dav_handler(dav_interface):
         """
         if uri[-1]=='/':uri=uri[:-1]
         res=deltree(self, uri)
-        parent='/'.join(uri.split('/')[:-1])
+        # parent='/'.join(uri.split('/')[:-1])
         return res
 
 
