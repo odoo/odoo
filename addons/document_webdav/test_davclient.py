@@ -32,11 +32,6 @@
 # code taken from the 'http-client.py' script:
 # http://git.hellug.gr/?p=xrg/openerp;a=history;f=tests/http-client.py;hb=refs/heads/xrg-60
 
-import imp
-import sys
-import os
-import glob
-import subprocess
 import re
 import gzip
 import logging
@@ -44,7 +39,10 @@ import xml.dom.minidom
 
 import httplib
 
-# from xmlrpclib import Transport 
+from tools import config
+from xmlrpclib import Transport, ProtocolError
+import StringIO
+import base64
 
 log = logging.getLogger('http-client')
 
@@ -320,16 +318,41 @@ class HTTPSConnection(httplib.HTTPSConnection):
                 
                 return cert
 
-def http_request(host, path, user=None, method='GET', hdrs=None, body=None, dbg=2):
+
+class DAVClient(object):
+    """An instance of a WebDAV client, connected to the OpenERP server
+    """
+    
+    def __init__(self, user=None, passwd=None, dbg=0, use_ssl=False):
+        if use_ssl:
+            self.host = config.get_misc('httpsd', 'interface', False)
+            self.port = config.get_misc('httpsd', 'port', 8071)
+            if not self.host:
+                self.host = config.get('xmlrpcs_interface')
+                self.port = config.get('xmlrpcs_port')
+        else:
+            self.host = config.get_misc('httpd', 'interface')
+            self.port = config.get_misc('httpd', 'port', 8069)
+            if not self.host:
+                self.host = config.get('xmlrpc_interface')
+                self.port = config.get('xmlrpc_port') or self.port
+        if self.host == '0.0.0.0' or not self.host:
+            self.host = '127.0.0.1'
+        self.port = int(self.port)
+        if not config.get_misc('webdav','enable',True):
+            raise Exception("WebDAV is disabled, cannot continue")
+        self.davpath = '/' + config.get_misc('webdav','vdir','webdav')
+        self.user = user
+        self.passwd = passwd
+        self.dbg = dbg
+
+    def _http_request(self, path, method='GET', hdrs=None, body=None):
         if not hdrs:
             hdrs = {}
-        passwd=None
-        if user:
-            import getpass
-            passwd = getpass.getpass("Password for %s@%s: " %(user,host))
         import base64
-        log.debug("Getting %s http://%s/%s", method, host , path)
-        conn = httplib.HTTPConnection(host)
+        dbg = self.dbg
+        log.debug("Getting %s http://%s:%d/%s", method, self.host, self.port, path)
+        conn = httplib.HTTPConnection(self.host, port=self.port)
         conn.set_debuglevel(dbg)
         if not path:
             path = "/index.html"
@@ -340,17 +363,17 @@ def http_request(host, path, user=None, method='GET', hdrs=None, body=None, dbg=
                 r1 = conn.getresponse()
         except httplib.BadStatusLine, bsl:
                 log.warning("Bad status line: %s", bsl.line)
-                return
+                raise Exception('Bad status line')
         if r1.status == 401: # and r1.headers:
                 if 'www-authenticate' in r1.msg:
                         (atype,realm) = r1.msg.getheader('www-authenticate').split(' ',1)
                         data1 = r1.read()
-                        if not user:
+                        if not self.user:
                                 raise Exception('Must auth, have no user/pass!')
                         log.debug("Ver: %s, closed: %s, will close: %s", r1.version,r1.isclosed(), r1.will_close)
                         log.debug("Want to do auth %s for realm %s", atype, realm)
                         if atype == 'Basic' :
-                                auths = base64.encodestring(user + ':' + passwd)
+                                auths = base64.encodestring(self.user + ':' + self.passwd)
                                 if auths[-1] == "\n":
                                         auths = auths[:-1]
                                 hdrs['Authorization']= 'Basic '+ auths 
@@ -365,8 +388,7 @@ def http_request(host, path, user=None, method='GET', hdrs=None, body=None, dbg=
 
         log.debug("Reponse: %s %s",r1.status, r1.reason)
         data1 = r1.read()
-        did_print = False
-        log.debug("Body:\n%s\nEnd of body\n", data1)
+        log.debug("Body:\n%s\nEnd of body", data1)
         try:
             ctype = r1.msg.getheader('content-type')
             if ctype and ';' in ctype:
@@ -374,8 +396,51 @@ def http_request(host, path, user=None, method='GET', hdrs=None, body=None, dbg=
             if ctype == 'text/xml':
                 doc = xml.dom.minidom.parseString(data1)
                 log.debug("XML Body:\n %s", doc.toprettyxml(indent="\t"))
-                did_print = True
-        except Exception, e:
+        except Exception:
             log.warning("could not print xml", exc_info=True)
             pass
         conn.close()
+        return r1.status, r1.msg, data1
+
+    def _assert_headers(self, expect, msg):
+        """ Assert that the headers in msg contain the expect values
+        """
+        for k, v in expect.items():
+            hval = msg.getheader(k)
+            if not hval:
+                raise AssertionError("Header %s not defined in http response" % k)
+            if isinstance(v, (list, tuple)):
+                delim = ','
+                hits = map(str.strip, hval.split(delim))
+                mvits= []
+                for vit in v:
+                    if vit not in hits:
+                        mvits.append(vit)
+                if mvits:
+                    raise AssertionError("HTTP header \"%s\" is missing: %s" %(k, ', '.join(mvits)))
+            else:
+                if hval.strip() != v.strip():
+                    raise AssertionError("HTTP header \"%s: %s\"" % (k, hval))
+
+                
+
+    def gd_options(self, path='*', expect=None):
+        """ Test the http options functionality
+            If a dictionary is defined in expect, those options are
+            asserted.
+        """
+        if path != '*':
+            path = self.davpath + path
+        hdrs = { 'Content-Length': 0
+                }
+        s, m, d = self._http_request(path, method='OPTIONS', hdrs=hdrs)
+        assert s == 200, "Status: %r" % s
+        assert 'OPTIONS' in m.getheader('Allow')
+        log.debug('Options: %r', m.getheader('Allow'))
+        
+        if expect:
+            self._assert_headers(expect, m)
+        
+
+
+#eof
