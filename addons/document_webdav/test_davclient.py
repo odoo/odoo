@@ -346,6 +346,22 @@ class DAVClient(object):
         self.passwd = passwd
         self.dbg = dbg
 
+    def get_creds(self, obj, cr, uid):
+        """Read back the user credentials from cr, uid
+        
+        @param obj is any orm object, in order to use its pool
+        @param uid is the numeric id, which we will try to reverse resolve
+        
+        note: this is a hackish way to get the credentials. It is expected
+        to break if "base_crypt" is used.
+        """
+        ruob = obj.pool.get('res.users')
+        res = ruob.read(cr, 1, [uid,], ['login', 'password'])
+        assert res, "uid %s not found" % uid
+        self.user = res[0]['login']
+        self.passwd = res[0]['password']
+        return True
+
     def _http_request(self, path, method='GET', hdrs=None, body=None):
         if not hdrs:
             hdrs = {}
@@ -421,8 +437,6 @@ class DAVClient(object):
             else:
                 if hval.strip() != v.strip():
                     raise AssertionError("HTTP header \"%s: %s\"" % (k, hval))
-
-                
 
     def gd_options(self, path='*', expect=None):
         """ Test the http options functionality

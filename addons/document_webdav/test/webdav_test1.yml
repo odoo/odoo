@@ -8,5 +8,6 @@
         reload(te) # reload..
         dc = te.DAVClient()
         dc.gd_options()
+        dc.get_creds(self, cr, uid)
         dc.gd_options(path=cr.dbname, expect={'DAV': ['1',]})
 -
