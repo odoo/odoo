@@ -26,6 +26,7 @@ import tools
 import base64
 import errno
 import logging
+import shutil
 from StringIO import StringIO
 import psycopg2
 
@@ -470,11 +471,11 @@ class document_storage(osv.osv):
 
         elif boo.type == 'realstore':
             path, npath = self.__prepare_realpath(cr, file_node, ira, boo.path,
-                            do_create = (mode[1] in ('w','a'))  )
+                            do_create = (mode[0] in ('w','a'))  )
             fpath = os.path.join(path, npath[-1])
-            if (not os.path.exists(fpath)) and mode[1] == 'r':
+            if (not os.path.exists(fpath)) and mode[0] == 'r':
                 raise IOError("File not found: %s" % fpath)
-            elif mode[1] in ('w', 'a') and not ira.store_fname:
+            elif mode[0] in ('w', 'a') and not ira.store_fname:
                 store_fname = os.path.join(*npath)
                 cr.execute('UPDATE ir_attachment SET store_fname = %s WHERE id = %s',
                                 (store_fname, ira.id))
@@ -747,26 +748,34 @@ class document_storage(osv.osv):
             # nothing to do for a rename, allow to change the db field
             return { 'parent_id': ndir_bro.id }
         elif sbro.type == 'realstore':
-            raise NotImplementedError("Cannot move in realstore, yet") # TODO
-            fname = fil_bo.store_fname
+            ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
+
+            path, opath = self.__prepare_realpath(cr, file_node, ira, sbro.path, do_create=False)
+            fname = ira.store_fname
+
             if not fname:
-                return ValueError("Tried to rename a non-stored file")
-            path = sbro.path
-            oldpath = os.path.join(path, fname)
+                self._doclog.warning("Trying to rename a non-stored file")
+            if fname != os.path.join(*opath):
+                self._doclog.warning("inconsistency in realstore: %s != %s" , fname, repr(opath))
+
+            oldpath = os.path.join(path, opath[-1])
             
-            for ch in ('*', '|', "\\", '/', ':', '"', '<', '>', '?', '..'):
-                if ch in new_name:
-                    raise ValueError("Invalid char %s in name %s" %(ch, new_name))
-                
-            file_node.fix_ppath(cr, ira)
-            npath = file_node.full_path() or []
-            dpath = [path,]
-            dpath.extend(npath[:-1])
-            dpath.append(new_name)
-            newpath = os.path.join(*dpath)
-            # print "old, new paths:", oldpath, newpath
-            os.rename(oldpath, newpath)
-            return { 'name': new_name, 'datas_fname': new_name, 'store_fname': new_name }
+            npath = [sbro.path,] + (ndir_bro.get_full_path() or [])
+            npath = filter(lambda x: x is not None, npath)
+            newdir = os.path.join(*npath)
+            if not os.path.isdir(newdir):
+                self._doclog.debug("Must create dir %s", newdir)
+                os.makedirs(newdir)
+            npath.append(opath[-1])
+            newpath = os.path.join(*npath)
+            
+            self._doclog.debug("Going to move %s from %s to %s", opath[-1], oldpath, newpath)
+            shutil.move(oldpath, newpath)
+            
+            store_path = npath[1:] + [opath[-1],]
+            store_fname = os.path.join(*store_path)
+            
+            return { 'store_fname': store_fname }
         else:
             raise TypeError("No %s storage" % sbro.type)
 
