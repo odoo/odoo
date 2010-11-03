@@ -141,7 +141,7 @@ class account_bank_statement(osv.osv):
             res[statement_id] = (currency_id, currency_names[currency_id])
         return res
 
-    _order = "date desc"
+    _order = "date desc ,id desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
