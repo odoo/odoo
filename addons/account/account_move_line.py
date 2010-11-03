@@ -528,10 +528,18 @@ class account_move_line(osv.osv):
                 return False
         return True
 
+    def _check_partner_id(self, cr, uid, ids):
+        lines = self.browse(cr, uid, ids)
+        for l in lines:
+            if l.account_id.type in ('receivable', 'payable') and not l.partner_id:
+                return False
+        return True
+
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
-        (_check_company_id,'Company must be same for its related account and period.',['company_id'] ),
+        (_check_company_id, 'Company must be same for its related account and period.',['company_id'] ),
+        (_check_partner_id, 'You can not create move line on receivable/payable account without partner', ['account_id'] )
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -928,6 +936,9 @@ class account_move_line(osv.osv):
 
             elif field == 'date':
                 attrs.append('on_change="onchange_date(date)"')
+
+            elif field == 'analytic_account_id':
+                attrs.append('''groups="analytic.group_analytic_accounting"''') # Currently it is not working due to framework problem may be ..
 
             if field in ('amount_currency', 'currency_id'):
                 attrs.append('on_change="onchange_currency(account_id, amount_currency, currency_id, date, journal_id)"')

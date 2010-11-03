@@ -614,8 +614,21 @@ class account_journal(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+    _sql_constraints = [
+        ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
+        ('name_company_uniq', 'unique (name, company_id)', 'The name of the journal must be unique per company !'),
+    ]
 
     _order = 'code'
+
+    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
+        journal = self.browse(cr, uid, id, context=context)
+        if not default:
+            default = {}
+        default = default.copy()
+        default['code'] = (journal['code'] or '') + '(copy)'
+        default['name'] = (journal['name'] or '') + '(copy)'
+        return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'company_id' in vals:
