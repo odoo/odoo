@@ -180,18 +180,21 @@ class sale_order(osv.osv):
                 if arg[2]:
                     clause += 'AND inv.state = \'paid\''
                 else:
-                    clause += 'AND inv.state <> \'paid\''
+                    clause += 'AND inv.state != \'cancel\' AND sale.state != \'cancel\'  AND inv.state <> \'paid\'  AND rel.order_id = sale.id '
+#                    clause += 'AND inv.state <> \'paid\''
                     no_invoiced = True
+
         cursor.execute('SELECT rel.order_id ' \
-                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv ' \
+                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv, sale_order AS sale ' \
                 'WHERE rel.invoice_id = inv.id ' + clause)
+
         res = cursor.fetchall()
         if no_invoiced:
             cursor.execute('SELECT sale.id ' \
                     'FROM sale_order AS sale ' \
                     'WHERE sale.id NOT IN ' \
                         '(SELECT rel.order_id ' \
-                        'FROM sale_order_invoice_rel AS rel)')
+                        'FROM sale_order_invoice_rel AS rel) and sale.state != \'cancel\'')
             res.extend(cursor.fetchall())
         if not res:
             return [('id', '=', 0)]
