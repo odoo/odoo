@@ -929,6 +929,9 @@ class account_move_line(osv.osv):
             elif field == 'date':
                 attrs.append('on_change="onchange_date(date)"')
 
+            elif field == 'analytic_account_id':
+                attrs.append('''groups="analytic.group_analytic_accounting"''')
+
             if field in ('amount_currency', 'currency_id'):
                 attrs.append('on_change="onchange_currency(account_id, amount_currency, currency_id, date, journal_id)"')
                 attrs.append('''attrs="{'readonly': [('state', '=', 'valid')]}"''')
