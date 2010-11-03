@@ -24,13 +24,48 @@ from osv import fields, osv
 from tools.translate import _
 
 class stock_invoice_onshipping(osv.osv_memory):
+
+    def _get_journal_id(self, cr,uid,ids, context=None):
+        if context is None:
+            context = {}
+
+        if ids['active_model'] == "stock.picking":
+            pick_obj = self.pool.get('stock.picking').browse(cr,uid,ids['active_id'])
+            acct_obj = self.pool.get('account.journal')
+            vals=[]
+            if pick_obj.type == 'in':
+               value = acct_obj.search(cr, uid, [('type', 'in',('sale','sale_refund') )])
+               for jr_type in acct_obj.browse(cr, uid, value, context=context):
+                   t1 = jr_type.id,jr_type.name
+                   vals.append(t1)
+
+            elif pick_obj.type == 'out':
+               value = acct_obj.search(cr, uid, [('type', 'in',('purchase','purchase_refund') )])
+               for jr_type in acct_obj.browse(cr, uid, value, context=context):
+                   t1 = jr_type.id,jr_type.name
+                   vals.append(t1)
+            else:
+               value = acct_obj.search(cr, uid, [('type', 'in',('cash','bank','general','situation') )])
+               for jr_type in acct_obj.browse(cr, uid, value, context=context):
+                   t1 = jr_type.id,jr_type.name
+                   vals.append(t1)
+            return vals
+        else:
+            return True
+        return vals
+
+
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
+
+
     _columns = {
-        'journal_id': fields.many2one('account.journal', 'Destination Journal', required=True),
+#        'journal_id': fields.many2one('account.journal', 'Destination Journal', required=True,selection=_get_journal_id),
+        'journal_id': fields.selection(_get_journal_id, 'Destination Journal',required=True),
         'group': fields.boolean("Group by partner"),
         'invoice_date': fields.date('Invoiced date'),
     }
+
 
     def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
