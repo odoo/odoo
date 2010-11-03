@@ -2959,17 +2959,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):
-    _name='account.bank.accounts.wizard'
+    _name = 'account.bank.accounts.wizard'
 
     _columns = {
-        'acc_name':fields.char('Account Name.', size=64, required=True),
-        'bank_account_id':fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
-        'currency_id':fields.many2one('res.currency', 'Currency'),
-        'account_type':fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
+        'acc_name': fields.char('Account Name.', size=64, required=True),
+        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
+        'currency_id': fields.many2one('res.currency', 'Currency'),
+        'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
     }
     _defaults = {
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
-        }
+    }
 
 account_bank_accounts_wizard()
 
