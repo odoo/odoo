@@ -32,7 +32,7 @@
                     <field name="categ_id" widget="selection"
                         string="Meeting Type" groups="base.group_extended"
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
-                    <field name="allday" on_change="onchange_allday(allday)" />
+                    <field name="allday" on_change="onchange_dates(date,False,False,allday)" />
                     <newline/>
                     <field name="date" string="Start Date" required="1"
                         on_change="onchange_dates(date,duration,False,allday)" />
@@ -321,7 +321,7 @@
                            <field name="user_id" select="1"/>
                        </group>
                         <newline/>
-                        <group expand="0" string="Extended Options...">
+                        <group expand="0" string="Extended Filters...">
                            <field name="class" select="1" string="Privacy"/>
                            <field name="show_as" string="Show time as" select="1"/>
                         </group>

@@ -245,7 +245,7 @@ class pos_order(osv.osv):
         'date_validation': fields.function(_get_date_payment, method=True, string='Validation Date', type='date', store=True),
         'date_payment': fields.function(_get_date_payment2, method=True, string='Payment Date', type='date', store=True),
         'date_validity': fields.date('Validity Date', required=True),
-        'user_id': fields.many2one('res.users', 'Connected Salesman', help="Person who uses the the register. It could be a reliever, a student or an interim employee."),
+        'user_id': fields.many2one('res.users', 'Connected Salesman', help="Person who uses the the cash register. It could be a reliever, a student or an interim employee."),
         'user_salesman_id': fields.many2one('res.users', 'Cashier', required=True, help="User who is logged into the system."),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
         'amount_tax': fields.function(_amount_all, method=True, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),

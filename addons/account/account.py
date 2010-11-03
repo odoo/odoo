@@ -80,17 +80,8 @@ class account_payment_term(osv.osv):
             if amt:
                 next_date = (datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days))
                 if line.days2 < 0:
-                    nyear = next_date.strftime("%Y")
-                    nmonth = str(int(next_date.strftime("%m"))% 12+1)
-                    nday = "1"
-
-                    ndate = "%s-%s-%s" % (nyear, nmonth, nday)
-                    nseconds = time.mktime(time.strptime(ndate, '%Y-%m-%d'))
-                    next_month = datetime.fromtimestamp(nseconds)
-
-                    delta = timedelta(seconds=1)
-                    next_date = next_month - delta
-                    next_date = next_date + relativedelta(days=line.days2)
+                    next_first_date = next_date + relativedelta(day=1,months=1) #Getting 1st of next month
+                    next_date = next_first_date + relativedelta(days=line.days2)
                 if line.days2 > 0:
                     next_date += relativedelta(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
