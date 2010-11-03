@@ -37,3 +37,23 @@
         res = dc.gd_lsl(path=cr.dbname+'/Documents/')
         for lin in res:
             print "%(type)s\t%(uid)s\t%(gid)s\t%(size)s\t%(mtime)s\t%(name)s" % lin
+-
+    I will put a file to the server
+-
+    !python {model: ir.attachment}: |
+        from document_webdav import test_davclient as te
+        import addons
+        dc = te.DAVClient()
+        dc.get_creds(self, cr, uid)
+        tdp = addons.get_module_resource('document_webdav', 'test_davclient.py')
+        res = dc.gd_put(path=cr.dbname+'/Documents/test_davclient.py', srcpath=tdp)
+-
+    I will try to get the file from the root
+-
+    !python {model: ir.attachment}: |
+        from document_webdav import test_davclient as te
+        import addons
+        dc = te.DAVClient()
+        dc.get_creds(self, cr, uid)
+        tdp = addons.get_module_resource('document_webdav', 'test_davclient.py')
+        res = dc.gd_get(path=cr.dbname+'/Documents/test_davclient.py', compare=tdp)

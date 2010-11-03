@@ -252,6 +252,8 @@ class addAuthTransport:
                 if 'www-authenticate' in resp.msg:
                     (atype,realm) = resp.msg.getheader('www-authenticate').split(' ',1)
                     data1 = resp.read()
+                    if data1:
+                        log.warning("Why have data on a 401 auth. message?")
                     if realm.startswith('realm="') and realm.endswith('"'):
                         realm = realm[7:-1]
                     log.debug("Resp: %r %r", resp.version,resp.isclosed(), resp.will_close)
@@ -421,17 +423,18 @@ class DAVClient(object):
 
         log.debug("Reponse: %s %s",r1.status, r1.reason)
         data1 = r1.read()
-        log.debug("Body:\n%s\nEnd of body", data1)
-        try:
-            ctype = r1.msg.getheader('content-type')
-            if ctype and ';' in ctype:
-                ctype, encoding = ctype.split(';',1)
-            if ctype == 'text/xml':
-                doc = xml.dom.minidom.parseString(data1)
-                log.debug("XML Body:\n %s", doc.toprettyxml(indent="\t"))
-        except Exception:
-            log.warning("could not print xml", exc_info=True)
-            pass
+        if method != 'GET':
+            log.debug("Body:\n%s\nEnd of body", data1)
+            try:
+                ctype = r1.msg.getheader('content-type')
+                if ctype and ';' in ctype:
+                    ctype, encoding = ctype.split(';',1)
+                if ctype == 'text/xml':
+                    doc = xml.dom.minidom.parseString(data1)
+                    log.debug("XML Body:\n %s", doc.toprettyxml(indent="\t"))
+            except Exception:
+                log.warning("could not print xml", exc_info=True)
+                pass
         conn.close()
         return r1.status, r1.msg, data1
 
@@ -635,5 +638,59 @@ class DAVClient(object):
             res.append(lsline)
             
         return res
+
+    def gd_get(self, path, crange=None, mime=None, compare=None):
+        """ HTTP GET for path, supporting Partial ranges
+        """
+        hdrs = { 'Accept': mime or '*/*', }
+        if crange:
+            if isinstance(crange, tuple):
+                crange = [crange,]
+            if not isinstance(crange, list):
+                raise TypeError("Range must be a tuple or list of tuples")
+            rs = []
+            for r in crange:
+                rs.append('%d-%d' % r)
+            hdrs['Range'] = 'bytes='+ (','.join(rs))
+        s, m, d = self._http_request(self.davpath + path, method='GET', hdrs=hdrs)
+        assert s in (200, 206), "Bad status: %s" % s
+        ctype = m.getheader('Content-Type').split(';',1)[0]
+        if mime:
+            assert ctype == mime, m.getheader('Content-Type')
+        rrange = None
+        rrh = m.getheader('Content-Range')
+        if rrh:
+            assert rrh.startswith('bytes '), rrh
+            rrh=rrh[6:].split('/',1)[0]
+            rrange = map(int, rrh.split('-',1))
+        if compare:
+            # we need to compare the returned data with that of compare
+            fd = open(compare, 'rb')
+            d2 = fd.read()
+            fd.close()
+            assert d2 == d, "Data does not match"
+        return ctype, rrange, d
+
+    def gd_put(self, path, body=None, srcpath=None, mime=None, noclobber=False, ):
+        """ HTTP PUT 
+            @param noclobber will prevent overwritting a resource (If-None-Match)
+            @param mime will set the content-type
+        """
+        hdrs = { }
+        if not (body or srcpath):
+            raise ValueError("PUT must have something to send")
+        if (not body) and srcpath:
+            fd = open(srcpath, 'rb')
+            body = fd.read()
+            fd.close()
+        if mime:
+            hdrs['Content-Type'] = mime
+        if noclobber:
+            hdrs['If-None-Match'] = '*'
+        s, m, d = self._http_request(self.davpath + path, method='PUT', 
+                            hdrs=hdrs, body=body)
+        assert s == (201), "Bad status: %s" % s
+        etag = m.getheader('ETag')
+        return etag or True
 
 #eof
