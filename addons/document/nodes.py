@@ -491,9 +491,15 @@ def _uid2unixperms(perms, has_owner):
     """ Convert the uidperms and the owner flag to full unix bits
     """
     res = 0
-    res |= (perms & 0x07) << 6
-    res |= (perms & 0x05) << 3
-    if not has_owner:
+    if has_owner:
+        res |= (perms & 0x07) << 6
+        res |= (perms & 0x05) << 3
+    elif perms & 0x02:
+        res |= (perms & 0x07) << 6
+        res |= (perms & 0x07) << 3
+    else:
+        res |= (perms & 0x07) << 6
+        res |= (perms & 0x05) << 3
         res |= 0x05
     return res
 
