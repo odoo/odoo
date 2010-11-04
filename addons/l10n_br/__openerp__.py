@@ -25,7 +25,8 @@
     'website' : 'http://openerpbrasil.org',
     'version' : '0.6',
     'depends' : [
-		'account_chart',
+		'account', 
+		'account_chart', 
 		],
     'init_xml': [
 		],
@@ -33,7 +34,7 @@
         'data/account.account.type.csv',
         'data/account.tax.code.template.csv',
         'data/account.account.template.csv',
-        'data/l10n_br_chart_template.xml',
+        'data/l10n_br_account_chart_template.xml',
         'data/account_tax_template.xml',
     ],
     'installable': True
