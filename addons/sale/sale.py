@@ -174,8 +174,8 @@ class sale_order(osv.osv):
         if not len(args):
             return []
         clause = ''
-        no_invoiced = False
         sale_clause = ''
+        no_invoiced = False
         for arg in args:
             if arg[1] == '=':
                 if arg[2]:
