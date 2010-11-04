@@ -879,7 +879,7 @@ class sale_order_line(osv.osv):
                     \n* The \'Done\' state is set when the sale order line has been picked. \
                     \n* The \'Cancelled\' state is set when a user cancel the sale order related.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
-        'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='Salesman'),
+        'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesman'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft': [('readonly', False)]}),
     }
     _order = 'sequence, id desc'
@@ -931,9 +931,10 @@ class sale_order_line(osv.osv):
                                         'for this product: "%s" (id:%d)') % \
                                         (line.product_id.name, line.product_id.id,))
                 else:
-                    a = self.pool.get('ir.property').get(cr, uid,
+                    prop = self.pool.get('ir.property').get(cr, uid,
                             'property_account_income_categ', 'product.category',
-                            context=context).id
+                            context=context)
+                    a = prop and prop.id or False
                 uosqty = _get_line_qty(line)
                 uos_id = _get_line_uom(line)
                 pu = 0.0

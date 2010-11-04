@@ -80,17 +80,8 @@ class account_payment_term(osv.osv):
             if amt:
                 next_date = (datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days))
                 if line.days2 < 0:
-                    nyear = next_date.strftime("%Y")
-                    nmonth = str(int(next_date.strftime("%m"))% 12+1)
-                    nday = "1"
-
-                    ndate = "%s-%s-%s" % (nyear, nmonth, nday)
-                    nseconds = time.mktime(time.strptime(ndate, '%Y-%m-%d'))
-                    next_month = datetime.fromtimestamp(nseconds)
-
-                    delta = timedelta(seconds=1)
-                    next_date = next_month - delta
-                    next_date = next_date + relativedelta(days=line.days2)
+                    next_first_date = next_date + relativedelta(day=1,months=1) #Getting 1st of next month
+                    next_date = next_first_date + relativedelta(days=line.days2)
                 if line.days2 > 0:
                     next_date += relativedelta(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
@@ -2542,8 +2533,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts', required=True),
         'code_digits':fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'seq_journal':fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
-        "sale_tax": fields.many2one("account.tax.template", "Sale Tax"),
-        "purchase_tax": fields.many2one("account.tax.template", "Purchase Tax"),
+        "sale_tax": fields.many2one("account.tax.template", "Default Sale Tax"),
+        "purchase_tax": fields.many2one("account.tax.template", "Default Purchase Tax"),
     }
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = {}
@@ -2551,12 +2542,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         res['value']["sale_tax"] = False
         res['value']["purchase_tax"] = False
         if chart_template_id:
-            ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
-                                          , "=", chart_template_id)], order="sequence")
-            if len(ids) > 0:
-                id=ids[0]
-                res['value']["sale_tax"] = id
-                res['value']["purchase_tax"] = id
+            sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
+            purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
+            res['value']["sale_tax"] = sale_tax_ids and sale_tax_ids[0] or False
+            res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
         return res
 
     def _get_chart(self, cr, uid, context={}):

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-18 06:50+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-10-12 07:44+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-13 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: resource
@@ -58,6 +58,7 @@ msgstr "Afwezigheid resource"
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
 #: view:resource.calendar.leaves:0
+#: view:resource.resource:0
 msgid "Working Time"
 msgstr "Gewerkte tijd"
 
@@ -72,7 +73,6 @@ msgid "Thursday"
 msgstr "Donderdag"
 
 #. module: resource
-#: view:resource.calendar:0
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Group By..."
@@ -149,6 +149,11 @@ msgid "Starting date"
 msgstr "Startdatum"
 
 #. module: resource
+#: view:resource.calendar.leaves:0
+msgid "Reason"
+msgstr ""
+
+#. module: resource
 #: view:resource.resource:0
 #: field:resource.resource,user_id:0
 msgid "User"
@@ -186,33 +191,10 @@ msgstr "Resource"
 #: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
-#: view:resource.calendar.leaves:0
 #: field:resource.calendar.leaves,name:0
 #: field:resource.resource,name:0
 msgid "Name"
 msgstr "Naam"
-
-#. module: resource
-#: model:ir.module.module,description:resource.module_meta_information
-msgid ""
-"\n"
-"    Module for resource management\n"
-"     A resource represent something that can be scheduled\n"
-"     (a developer on a task or a workcenter on manufacturing orders).\n"
-"     This module manages a resource calendar associated to every resource.\n"
-"     It also manages the leaves of every resource.\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"    Module voor resource beheer\n"
-"     Een resource vertegenwoordigt iets dat kan worden gepland\n"
-"     (een ontwikkelaar op een taak, een bewerkingsplaats op "
-"productieorders).\n"
-"     Deze module beheert een resource agenda gekoppeld aan elke resource.\n"
-"     Het beheert ook de afwezigheid van elke resource.\n"
-"\n"
-"    "
 
 #. module: resource
 #: help:resource.resource,active:0
@@ -305,9 +287,14 @@ msgid "Resource Leaves"
 msgstr "Afwezigheid resource"
 
 #. module: resource
-#: view:resource.calendar:0
-msgid "Manager"
-msgstr "Manager"
+#: view:resource.resource:0
+msgid "General Information"
+msgstr ""
+
+#. module: resource
+#: view:resource.resource:0
+msgid "Inactive"
+msgstr ""
 
 #. module: resource
 #: code:addons/resource/faces/resource.py:0
@@ -336,6 +323,35 @@ msgid "Start Date"
 msgstr "Startdatum"
 
 #. module: resource
+#: code:addons/resource/resource.py:0
+#, python-format
+msgid " (copy)"
+msgstr ""
+
+#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Zaterdag"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Module for resource management\n"
+#~ "     A resource represent something that can be scheduled\n"
+#~ "     (a developer on a task or a workcenter on manufacturing orders).\n"
+#~ "     This module manages a resource calendar associated to every resource.\n"
+#~ "     It also manages the leaves of every resource.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Module voor resource beheer\n"
+#~ "     Een resource vertegenwoordigt iets dat kan worden gepland\n"
+#~ "     (een ontwikkelaar op een taak, een bewerkingsplaats op "
+#~ "productieorders).\n"
+#~ "     Deze module beheert een resource agenda gekoppeld aan elke resource.\n"
+#~ "     Het beheert ook de afwezigheid van elke resource.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid "Manager"
+#~ msgstr "Manager"

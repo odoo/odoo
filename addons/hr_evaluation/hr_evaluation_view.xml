@@ -187,10 +187,10 @@
                             icon="gtk-cancel"/>
                     <button name="button_plan_in_progress" string="Start Evaluation" states="draft" type="object"
                             icon="gtk-execute"/>
-                    <button name="button_final_validation" string="Validate Evaluation" states="wait" type="object"
-                            icon="gtk-execute"/>
                     <button name="button_done" string="Done" states="progress" type="object"
                             icon="gtk-jump-to"/>
+                    <button name="button_final_validation" string="Validate Evaluation" states="wait" type="object"
+                            icon="gtk-go-forward"/>
                     </group>
               </form>
             </field>
@@ -383,7 +383,7 @@
         <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests"
             action="action_hr_evaluation_interview_tree"/>
         <menuitem name="Evaluation Reminders" parent="menu_eval_hr" id="menu_eval_send_mail"
-           action="action_hr_evaluation_send_mail" sequence="45"/>
+           action="action_hr_evaluation_send_mail" sequence="45" groups="base.group_hr_manager"/>
 
       <!-- Evaluation Interviews Button on Employee Form -->
       <act_window 

@@ -21,9 +21,9 @@
 ##############################################################################
 
 import time
+
 import rml_parse
 from report import report_sxw
-import re
 
 def _get_country(record):
     if record.partner_id \

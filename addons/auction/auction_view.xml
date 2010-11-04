@@ -28,7 +28,7 @@
             <form string="Artists">
                 <separator string="Author/Artist" colspan="4"/>
                 <group colspan="4" col="6">
-                    <field name="name" colspan="4" string="Name"/>
+                    <field name="name" colspan="4" string="Name" select="1"/>
                     <newline/>
                     <field name="pseudo"/>
                     <field name="birth_death_dates"/>
@@ -278,6 +278,7 @@
                 <field name="bord_vnd_id"/>
                 <field name="lot_num"/>
                 <field name="auction_id"/>
+                <field name="lot_type"/>
                 <field name="state" select="1"/>
                 <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
                 <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
@@ -436,7 +437,7 @@
                      string="Draft"  help="New Object"
                      name="draft"
                      domain="[('state','=', 'draft')]"/>
-                 <filter icon="terp-dolar_ok!"
+                 <filter icon="terp-dolar"
                      string="Sold"  help="Buy object"
                      domain="[('state','=','sold')]"/>
                  <separator orientation="vertical"/>

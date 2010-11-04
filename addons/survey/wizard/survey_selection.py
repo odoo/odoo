@@ -27,7 +27,7 @@ from tools.translate import _
 class survey_name_wiz(osv.osv_memory):
     _name = 'survey.name.wiz'
 
-    def default_get(self, cr, uid, fields, context={}):
+    def default_get(self, cr, uid, fields, context=None):
         """
         Set the default value in survey_id field. if open this wizard in survey form then set the default value in survey_id = active survey id.
 
@@ -38,7 +38,7 @@ class survey_name_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for created survey statistics report
         """
-        if not context:
+        if context is None:
             context = {}
         data = super(survey_name_wiz, self).default_get(cr, uid, fields, context)
         if context.has_key('survey_id'):
@@ -75,7 +75,7 @@ class survey_name_wiz(osv.osv_memory):
                             u_list.append(use.id)
                         if uid in u_list:
                             result.append((sur.id, sur.title))
-                return result     
+                return result
         for sur in surv_obj.browse(cr, uid, surv_obj.search(cr, uid, [])):
             if sur.state == 'open':
                 res = False
