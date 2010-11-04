@@ -813,7 +813,6 @@ class _rml_flowable(object):
         return process_story(node_story)
 
 
-
 class EndFrameFlowable(ActionFlowable):
     def __init__(self,resume=0):
         ActionFlowable.__init__(self,('frameEnd',resume))

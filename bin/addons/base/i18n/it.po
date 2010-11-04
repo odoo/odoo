@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-01 16:46+0000\n"
-"Last-Translator: Lorenzo Battistini <lorenzo.battistini@domsense.com>\n"
+"PO-Revision-Date: 2010-11-02 19:15+0000\n"
+"Last-Translator: Giammario Pisano <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-02 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-03 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -1115,7 +1115,7 @@ msgstr "Nazione"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Float"
-msgstr ""
+msgstr "Float"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1406,6 +1406,16 @@ msgid ""
 "ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.ge"
 "t('select_level','0"
 msgstr ""
+"Model %s Does not Exist !\" % vals['relation']))\n"
+"\n"
+"            if self.pool.get(vals['model']):\n"
+"                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
+"                #Added context to _auto_init for special treatment to custom "
+"field for select_level\n"
+"                ctx = context.copy()\n"
+"                "
+"ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.ge"
+"t('select_level','0"
 
 #. module: base
 #: view:ir.ui.view:0
@@ -1452,7 +1462,7 @@ msgstr "Crea / Scrivi / Copia"
 #. module: base
 #: view:base.language.export:0
 msgid "https://help.launchpad.net/Translations"
-msgstr ""
+msgstr "https://help.launchpad.net/Translations"
 
 #. module: base
 #: field:ir.actions.act_window,view_mode:0
@@ -1556,6 +1566,8 @@ msgid ""
 "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
 msgstr ""
+"Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
+"GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2052,7 +2064,7 @@ msgstr ""
 #: field:res.config.users,config_logo:0
 #: field:res.config.view,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Immagine"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2069,7 +2081,7 @@ msgstr "Austria"
 #: selection:base.module.import,state:0
 #: selection:base.module.update,state:0
 msgid "done"
-msgstr ""
+msgstr "Fatto"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -2082,7 +2094,7 @@ msgstr "Calendario"
 #. module: base
 #: field:res.partner.address,partner_id:0
 msgid "Partner Name"
-msgstr ""
+msgstr "Nome Partner"
 
 #. module: base
 #: field:workflow.activity,signal_send:0
@@ -2092,7 +2104,7 @@ msgstr "Signal (subflow.*)"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "HR sector"
-msgstr ""
+msgstr "Settore Risorse Umane"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -2114,7 +2126,7 @@ msgstr "STOCK_JUSTIFY_CENTER"
 #: selection:res.config.view,view:0
 #: selection:res.users,view:0
 msgid "Extended"
-msgstr ""
+msgstr "Esteso"
 
 #. module: base
 #: field:res.company,rml_footer1:0
@@ -2170,6 +2182,10 @@ msgid ""
 "Please double-check that the file encoding is set to UTF-8 (sometimes called "
 "Unicode) when the translator exports it."
 msgstr ""
+"Ricontrolla che la codifica del file sia impostata su UTF-8 (anche chiamato "
+"Unicode) quando il convertitore effettua l'esportazione.\r\n"
+"Please double-check that the file encoding is set to UTF-8 (sometimes called "
+"Unicode) when the translator exports it."
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_activity
@@ -2189,7 +2205,7 @@ msgstr "Uruguay"
 #. module: base
 #: field:ir.rule,perm_write:0
 msgid "Apply For Write"
-msgstr ""
+msgstr "Applica per scrivere le modifche"
 
 #. module: base
 #: field:ir.sequence,prefix:0
@@ -2224,7 +2240,7 @@ msgstr "Sig."
 #. module: base
 #: view:base.module.import:0
 msgid "Select module package to import (.zip file):"
-msgstr ""
+msgstr "Seleziona il pacchetto per il modulo da importare (.zip file):"
 
 #. module: base
 #: field:ir.default,ref_id:0
@@ -2354,7 +2370,7 @@ msgstr "Da destra a sinistra"
 #: model:ir.model,name:base.model_ir_filters
 #: model:ir.ui.menu,name:base.menu_ir_filters
 msgid "Filters"
-msgstr ""
+msgstr "Filtri"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -2374,6 +2390,7 @@ msgstr "Qualifica"
 #: help:ir.property,res_id:0
 msgid "If not set, acts as a default value for new resources"
 msgstr ""
+"Se non impostato, sarà usato come valore di default per le nuove risorse"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
