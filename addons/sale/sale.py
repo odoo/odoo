@@ -286,7 +286,7 @@ class sale_order(osv.osv):
     }
     _defaults = {
         'picking_policy': 'direct',
-        'date_order': time.strftime('%Y-%m-%d'),
+        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
         'order_policy': 'manual',
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
