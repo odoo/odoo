@@ -835,7 +835,7 @@ class account_move_line(osv.osv):
     def _update_check(self, cr, uid, ids, context={}):
         done = {}
         for line in self.browse(cr, uid, ids, context):
-            if line.move_id.state<>'draft':
+            if line.move_id.state<>'draft' and (not line.journal_id.entry_posted):
                 raise osv.except_osv(_('Error !'), _('You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields !'))
             if line.reconcile_id:
                 raise osv.except_osv(_('Error !'), _('You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields !'))
