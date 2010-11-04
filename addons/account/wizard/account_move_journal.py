@@ -162,7 +162,6 @@ class account_move_journal(osv.osv_memory):
 
         result = data_pool.get_object_reference(cr, uid, 'account', 'view_account_move_line_filter')
         res_id = result and result[1] or False
-
         return {
             'name': name,
             'view_type': 'form',
