@@ -260,8 +260,6 @@ class binary(_column):
             # content if it's needed at some point.
             # TODO: after 6.0 we should consider returning a dict with size and content instead of
             #       having an implicit convention for the value
-            import pdb
-            pdb.set_trace()
             if val and context.get('bin_size_%s' % name, context.get('bin_size')):
                 res[i] = tools.human_size(long(val))
             else:
