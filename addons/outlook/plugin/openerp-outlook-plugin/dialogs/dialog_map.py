@@ -984,26 +984,6 @@ def setCheckList(groupProcessor,*args):
            for obj in objs:
              if obj[1] in ins_objs:
                 groupProcessor.init_done = True
-                #Add image
-                hwndImg = win32gui.CreateWindowEx(0, "STATIC","",
-                                            win32con.SS_CENTERIMAGE | win32con.SS_REALSIZEIMAGE | win32con.SS_BITMAP | win32con.WS_CHILD | win32con.WS_VISIBLE,
-                                            left,top+3,13,13,
-                                            groupProcessor.window.hwnd,
-                                            id,
-                                            0,
-                                            None
-                                            );
-                image_path = os.path.join(groupProcessor.window.manager.application_directory, "dialogs\\resources\\openerp_logo1.bmp")
-                if obj[2]:
-                    image_path = obj[2]
-                try:
-                    hicon = win32gui.LoadImage(0, image_path, win32con.IMAGE_BITMAP, 40, 40, load_bmp_flags)
-                except Exception,e:
-                    msg="Problem loading the image \n\n" + getMessage(e)
-                    hicon = None
-                    win32ui.MessageBox(msg, "Load Image", flag_error)
-
-                win32gui.SendMessage(hwndImg, win32con.STM_SETIMAGE, win32con.IMAGE_BITMAP, hicon);
                 #Add Checkbox
                 left+= 17
                 hwndChk = win32gui.CreateWindowEx(
@@ -1019,7 +999,6 @@ def setCheckList(groupProcessor,*args):
                 id+=1
                 id1+=1
                 left+=17
-                win32gui.UpdateWindow(hwndImg)
                 left+=140
                 if cnt > 1:
                     left = 20
