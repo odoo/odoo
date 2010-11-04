@@ -38,6 +38,10 @@ import re
 from itertools import islice
 import threading
 from which import which
+try:
+    from html2text import html2text
+except ImportError:
+    html2text = None
 
 import smtplib
 from email.MIMEText import MIMEText
@@ -532,7 +536,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     # Add dynamic X Header
     for key, value in x_headers.iteritems():
         msg['%s' % key] = str(value)
-
+        
+    if html2text and subtype == 'html':
+        text = html2text(body.decode('utf-8')).encode('utf-8')
+        msg.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
+        
     if attach:
         msg.attach(email_text)
         for (fname,fcontent) in attach:
