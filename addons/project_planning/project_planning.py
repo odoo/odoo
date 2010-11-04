@@ -138,8 +138,8 @@ class report_account_analytic_planning(osv.osv):
         'total_free': fields.function(_get_total_free, method=True, string='Total Free'),
     }
     _defaults = {
-        'date_from': time.strftime('%Y-%m-01'),
-        'date_to': (datetime.now()+relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
+        'date_from': lambda *a: time.strftime('%Y-%m-01'),
+        'date_to': lambda *a: (datetime.now()+relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
         'user_id': lambda self, cr, uid, c: uid,
         'state': 'draft',
         'business_days': 20,

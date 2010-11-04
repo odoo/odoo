@@ -32,6 +32,7 @@ class project_task(osv.osv):
         # force inherit from project.project_task so that 
         # calendar.todo.active is masked oute
         'active': base_project_task._columns['active'],
+        'date_deadline': base_project_task._columns['date_deadline'],
         'write_date': fields.datetime('Write Date'),
         'create_date': fields.datetime('Create Date', readonly=True),
         'attendee_ids': fields.many2many('calendar.attendee', \

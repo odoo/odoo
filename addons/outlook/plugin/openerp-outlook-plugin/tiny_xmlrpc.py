@@ -43,7 +43,7 @@ def execute(connector, method, *args):
         if e.args[0] == 111:
             if wait_count > wait_limit:
                 print "Server is taking too long to start, it has exceeded the maximum limit of %d seconds."%(wait_limit)
-                # clean() Commented...
+                clean()
                 sys.exit(1)
             print 'Please wait %d sec to start server....'%(waittime)
             wait_count += 1
@@ -232,7 +232,10 @@ class XMLRpcConn(object):
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         ids=[]
         obj_list=[]
-        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','search',[('name','ilike',ustr(search_partner))])
+        domain = []
+        if not search_partner.strip() == '':
+            domain.append(('name','ilike',ustr(search_partner)))
+        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','search',domain)
         if ids:
             ids.sort()
             obj_list.append((-999, ustr('')))
@@ -349,14 +352,21 @@ class XMLRpcConn(object):
         state = res['state_id']
         country = res['country_id']
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-        partner_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner', 'search', [('name','=',ustr(partner))])
-        res.update({'partner_id' : partner_id[0]})
+        if not partner.strip() == '':
+            partner_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner', 'search', [('name','=',ustr(partner))])
+            res.update({'partner_id' : partner_id[0]})
+        else:
+            res.pop('partner_id')
         if not state == "":
             country_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country', 'search', [('name','=',ustr(country))])
             res.update({'country_id' : country_id[0]})
+        else:
+            res.pop('country_id')
         if not country == "":
             state_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country.state', 'search', [('name','=',ustr(state))])
             res.update({'state_id' : state_id[0]})
+        else:
+            res.pop('state_id')
         id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner.address','create',res)
         return id
 
@@ -440,13 +450,20 @@ class XMLRpcConn(object):
             country_list.append((obj['id'], ustr(obj['name'])))
         return country_list
 
-    def SearchPartner(self, partner = ""):
+    def SearchPartner(self, mail_id = ""):
         import win32ui
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-        partner_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner', 'search', [('name','=',ustr(partner))])
-        if not partner_id:
+        address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'search', [('email','=',ustr(mail_id))])
+        if not address:
         	return None
-        return partner_id[0]
+        else:
+            add_rec = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'read', address[0])
+            partner = add_rec.get('partner_id',False)
+            if partner:
+                return partner[0]
+            else:
+                return True
+            return partner_id[0]
 
     def SearchEmailResources(self, message_id):
         import win32ui
@@ -468,7 +485,10 @@ class XMLRpcConn(object):
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         ids=[]
         obj_list=[]
-        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country','search',[('name','ilike',ustr(country_search))])
+        domain = []
+        if not country_search.strip() == '':
+            domain.append(('name','ilike',ustr(country_search)))
+        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country','search',domain)
         if ids:
             ids.sort()
             for id in ids:
@@ -483,11 +503,16 @@ class XMLRpcConn(object):
         ids = []
         c_id = []
         obj_list = []
+        domain = []
+        if not state_search.strip() == '':
+            domain.append(('name','ilike',ustr(state_search)))
+
         if country == None:
-            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',[('name','ilike',ustr(state_search))])
+            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',domain)
         if not country == None:
             c_id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country','search',[('name','=',ustr(country))])
-            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',[('name','ilike',ustr(state_search)),('country_id','=',c_id[0])])
+            domain.append(('country_id','=',c_id[0]))
+            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',domain)
         if ids:
             ids.sort()
             for id in ids:

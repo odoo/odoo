@@ -109,7 +109,7 @@ class project_task(osv.osv):
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
             search_extended ='''<newline/><group col="%d" expand="%d" string="%s">''' % (len(tt)+7,1,_('Getting Things Done'))
             search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" help="Undefined Timebox" string="%s"/>''' % (_('Inbox'),)
-            search_extended += '''<filter context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" string="%s"/>''' % (_('GTD'),)
+            search_extended += '''<filter context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" help="Getting things done" string="%s"/>''' % (_('GTD'),)
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:
                 if time.icon:
@@ -123,7 +123,7 @@ class project_task(osv.osv):
             </group>
             </search> '''
         if search_extended:
-            res['arch'] = res['arch'].replace('</search>',search_extended)
+            res['arch'] = unicode(res['arch'], 'utf8').replace('</search>', search_extended)
             attrs_sel = self.pool.get('project.gtd.context').name_search(cr, uid, '', [], context=context)
             context_id_info = self.pool.get('project.task').fields_get(cr, uid, ['context_id'])
             context_id_info['context_id']['selection'] = attrs_sel
