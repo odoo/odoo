@@ -9,7 +9,7 @@
             res_model="crm.phonecall"
             src_model="crm.lead"
             view_mode="tree,calendar,form"
-            context="{'default_duration': 1.0 ,'default_opportunity_id': active_id}"
+            context="{'default_duration': 1.0 ,'default_opportunity_id': active_id,'default_partner_phone':phone}"
             domain="[('opportunity_id', '=', active_id)]"
             view_type="form"/>
 
