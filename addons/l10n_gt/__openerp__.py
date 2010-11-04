@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2010 Soluciones Tecnologócias Prisma S.A. All Rights Reserved.
+# Copyright (c) 2009-2010 Soluciones Tecnologócias Prisma S.A. All Rights Reserved.
 # José Rodrigo Fernández Menegazzo, Soluciones Tecnologócias Prisma S.A.
 # (http://www.solucionesprisma.com)
 #
@@ -21,35 +21,31 @@
 ##############################################################################
 
 #
-# This module provides a minimal Guatemalan chart of accounts for building upon further
-# Open ERP's default currency and accounts are remapped to this chart
+# This module provides a minimal Guatemalan chart of accounts that can be use
+# to build upon a more complex one.  It also includes a chart of taxes and
+# the Quetzal currency.
 #
 # This module is based on the UK minimal chart of accounts:
 # Copyright (c) 2004-2009 Seath Solutions Ltd. All Rights Reserved.
 # Geoff Gardiner, Seath Solutions Ltd (http://www.seathsolutions.com/)
 #
-# This module works for Open ERP 4.1.0 (and, assumed, onwards).
-# This module does not work for Open ERP 4.0.2 and before.
-#
-# Cash tax accounting can be accommodated with further processing in Open ERP
-#
-# Status 2.0 - tested on Open ERP 5.0.6
+# This module works with OpenERP 6.0
 #
 
 {
-    'name': 'Guatemala - minimal',
-    'version': '2.0',
+    'name': 'Guatemala - Plan contable general',
+    'version': '3.0',
     'category': 'Localisation/Account Charts',
-    'description': """This is the base module to manage a minimal accounting chart for Guatemala in Open ERP.""",
+    'description': """Agrega una nomenclatura contable para Guatemala. También icluye impuestos y la moneda del Quetzal. -- Adds accounting chart for Guatemala.  It also includes taxes and the Quetzal currency""",
     'author': 'José Rodrigo Fernández Menegazzo',
     'website': 'http://solucionesprisma.com/',
-    'depends': ['base', 'base_vat', 'account', 'account_chart'],
+    'depends': ['base', 'account', 'account_chart'],
     'init_xml': [],
     'update_xml': [
         'account_types.xml',
         'account_chart.xml',
         'account_tax.xml',
-        'l10n_gt_wizard.xml'
+        'l10n_gt_base.xml',
     ],
     'demo_xml': [],
     'installable': True,

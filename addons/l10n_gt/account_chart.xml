@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-
-    <data>
+    <data noupdate="1">
 
         <!-- Plantilla -->
 
@@ -51,8 +50,8 @@
             <field name="code">1.1.01.01</field>
             <field name="name">Caja Chica</field>
             <field ref="cta1101" name="parent_id"/>
-            <field name="type">other</field>
-            <field name="user_type" ref="cuenta_activo"/>
+            <field name="type">liquidity</field>
+            <field name="user_type" ref="cuenta_efectivo"/>
         </record>
 
         <record id="cta1102" model="account.account.template">
@@ -112,7 +111,7 @@
             <field name="name">IVA por Cobrar</field>
             <field ref="cta1103" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="cuenta_impuestos"/>
+            <field name="user_type" ref="cuenta_activo"/>
         </record>
 
         <record id="cta110302" model="account.account.template">
@@ -120,7 +119,7 @@
             <field name="name">Retenciones de IVA recibidas</field>
             <field ref="cta1103" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="cuenta_impuestos"/>
+            <field name="user_type" ref="cuenta_activo"/>
         </record>
 
         <record id="cta1104" model="account.account.template">
@@ -289,7 +288,7 @@
             <field name="name">IVA por Pagar</field>
             <field ref="cta2102" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="cuenta_impuestos"/>
+            <field name="user_type" ref="cuenta_pasivo"/>
         </record>
 
         <record id="cta2103" model="account.account.template">
@@ -305,7 +304,7 @@
             <field name="name">Impuestos</field>
             <field ref="cta2103" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="cuenta_impuestos"/>
+            <field name="user_type" ref="cuenta_pasivo"/>
         </record>
 
         <record id="cta22" model="account.account.template">
@@ -329,7 +328,7 @@
             <field name="name">Provisión para Indemnizaciones</field>
             <field ref="cta2201" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="cuenta_activo"/>
+            <field name="user_type" ref="cuenta_pasivo"/>
         </record>
 
         <record id="cta23" model="account.account.template">
@@ -353,7 +352,7 @@
             <field name="name">Anticipos</field>
             <field ref="cta2301" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="cuenta_activo"/>
+            <field name="user_type" ref="cuenta_pasivo"/>
         </record>
 
         <record id="cta3" model="account.account.template">
@@ -390,9 +389,9 @@
 
         <record id="cta310102" model="account.account.template">
             <field name="code">3.1.01.02</field>
-            <field name="name">other</field>
+            <field name="name">Reservas</field>
             <field ref="cta3101" name="parent_id"/>
-            <field name="type">view</field>
+            <field name="type">other</field>
             <field name="user_type" ref="cuenta_capital"/>
         </record>
 
@@ -640,7 +639,7 @@
 
         <record id="cta710102" model="account.account.template">
             <field name="code">7.1.01.02</field>
-            <field name="name">Otros Productos Financieros</field>
+            <field name="name">Intereses</field>
             <field ref="cta7101" name="parent_id"/>
             <field name="type">other</field>
             <field name="user_type" ref="cuenta_gastos"/>

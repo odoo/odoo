@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2010 Soluciones Tecnologócias Prisma S.A. All Rights Reserved.
+# Copyright (c) 2009-2010 Soluciones Tecnologócias Prisma S.A. All Rights Reserved.
 # José Rodrigo Fernández Menegazzo, Soluciones Tecnologócias Prisma S.A.
 # (http://www.solucionesprisma.com)
 #
@@ -20,6 +20,5 @@
 #
 ##############################################################################
 
-import partner
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
