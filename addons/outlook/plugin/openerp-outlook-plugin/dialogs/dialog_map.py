@@ -409,14 +409,6 @@ class DialogCommand(ButtonProcessor):
         dd = self.window.manager.dialog_parser.dialogs[self.idd]
         return "Displays the %s dialog" % dd.caption
 
-def ReloadAllControls(btnProcessor,*args):
-    server = NewConn.getitem('_server')
-    port = NewConn.getitem('_port')
-    btnProcessor.window.LoadAllControls()
-    if str(NewConn.getitem('_running')) == 'False':
-        win32ui.MessageBox("No server running on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
-    return
-
 def TestConnection(btnProcessor,*args):
     server = NewConn.getitem('_server')
     port = NewConn.getitem('_port')
@@ -1686,7 +1678,6 @@ dialog_map = {
                     (TextProcessor,             "ID_SERVER_PORT ID_USERNAME ID_PASSWORD IDET_WED_SERVER", SetAllText, ()),
                     (CommandButtonProcessor,    "ID_BUT_TESTCONNECTION ID_DB_DROPDOWNLIST ID_USERNAME \
                                                 ID_PASSWORD", TestConnection, ()),
-                    (CommandButtonProcessor,    "IDC_RELOAD", ReloadAllControls, ()),
                     (DialogCommand,             "IDC_BUT_SET_SERVER_PORT", "IDD_SERVER_PORT_DIALOG"),
                     (DialogCommand,            "ID_SET_WEB_CONNECTION", "IDD_WEB_SERVER_PORT_DIALOG" ),
                 	(CommandButtonProcessor,	"IDPB_WEB_CONNECTION IDET_WED_SERVER",  ConnectWebServer, ()),
