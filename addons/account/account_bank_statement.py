@@ -225,13 +225,10 @@ class account_bank_statement(osv.osv):
 
                 if move.account_id and move.account_id.currency_id and move.account_id.currency_id.id <> company_currency_id:
                     val['currency_id'] = move.account_id.currency_id.id
-                    if company_currency_id==move.account_id.currency_id.id:
-                        amount_cur = move.amount
-                    else:
-                        amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                                move.account_id.currency_id.id, amount, context=context,
-                                account=acc_cur)
-                    val['amount_currency'] = amount_cur
+                    amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
+                            move.account_id.currency_id.id, amount, context=context,
+                            account=acc_cur)
+                    val['amount_currency'] = -amount_cur
 
                 torec.append(account_move_line_obj.create(cr, uid, val , context=context))
 
