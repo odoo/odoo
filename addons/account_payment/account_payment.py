@@ -100,7 +100,7 @@ class payment_order(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'state': 'draft',
         'date_prefered': 'due',
-        'date_created': time.strftime('%Y-%m-%d'),
+        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
         'reference': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'payment.order'),
     }
 

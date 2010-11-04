@@ -64,7 +64,7 @@ class account_followup_print(osv.osv_memory):
     }
 
     _defaults = {
-         'date': time.strftime('%Y-%m-%d'),
+         'date': lambda *a: time.strftime('%Y-%m-%d'),
          'followup_id': _get_followup,
     }
 account_followup_print()

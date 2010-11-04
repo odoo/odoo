@@ -50,7 +50,7 @@ class account_invoice_refund(osv.osv_memory):
         return journal and journal[0] or False
 
     _defaults = {
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'journal_id': _get_journal,
         'filter_refund': 'modify',
     }
