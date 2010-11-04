@@ -36,7 +36,6 @@ GNU Public Licence.
 #----------------------------------------------------------
 import logging
 import os
-import pwd
 import signal
 import sys
 import threading
