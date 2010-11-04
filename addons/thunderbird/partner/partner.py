@@ -299,11 +299,8 @@ class thunderbird_partner(osv.osv_memory):
             name_get.append('error')
             name_get.append(er_val)
         return name_get
-
-
-
     def list_alldocument(self,cr,user,vals):
-        obj_list= [('crm.lead','Lead'),('project.issue','Project Issue'), ('hr.applicant','HR Recruitment')]
+        obj_list= [('crm.lead','CRM Lead'),('project.issue','Project Issue'), ('hr.applicant','HR Applicant')]
         object=[]
         model_obj = self.pool.get('ir.model')
         for obj in obj_list:
