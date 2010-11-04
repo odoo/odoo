@@ -305,7 +305,7 @@ class pos_order(osv.osv):
         'state': 'draft',
         'price_type': 'tax_excluded',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.order'),
-        'date_order': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_validity': lambda *a: (datetime.today() + relativedelta(months=+6)).strftime('%Y-%m-%d'),
         'nb_print': 0,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
