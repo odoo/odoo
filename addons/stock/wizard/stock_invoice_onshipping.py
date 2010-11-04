@@ -25,20 +25,27 @@ from tools.translate import _
 
 class stock_invoice_onshipping(osv.osv_memory):
 
-    def _get_journal_id(self, cr,uid,ids, context=None):
+    def _get_journal_id(self, cr, uid, context=None):
         if context is None:
             context = {}
-        if ids['active_model'] == "stock.picking":
-            pick_obj = self.pool.get('stock.picking').browse(cr,uid,ids['active_id'])
-            acct_obj = self.pool.get('account.journal')
-            vals=[]
-            if pick_obj.type == 'out':
+
+        model = context.get('active_model')
+        if not model or model != 'stock.picking':
+            return []
+
+        model_pool = self.pool.get(model)
+        acct_obj = self.pool.get('account.journal')
+        res_ids = context and context.get('active_ids', [])
+        vals=[]
+        pick_types = list(set(map(lambda x: x.type, model_pool.browse(cr, uid, res_ids, context=context))))
+        for type in pick_types:
+            if type == 'out':
                value = acct_obj.search(cr, uid, [('type', 'in',('sale','sale_refund') )])
                for jr_type in acct_obj.browse(cr, uid, value, context=context):
                    t1 = jr_type.id,jr_type.name
                    vals.append(t1)
 
-            elif pick_obj.type == 'in':
+            elif type == 'in':
                value = acct_obj.search(cr, uid, [('type', 'in',('purchase','purchase_refund') )])
                for jr_type in acct_obj.browse(cr, uid, value, context=context):
                    t1 = jr_type.id,jr_type.name
@@ -48,9 +55,6 @@ class stock_invoice_onshipping(osv.osv_memory):
                for jr_type in acct_obj.browse(cr, uid, value, context=context):
                    t1 = jr_type.id,jr_type.name
                    vals.append(t1)
-            return vals
-        else:
-            return True
         return vals
 
 
