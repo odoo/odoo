@@ -9,22 +9,22 @@
             <field name="arch" type="xml">
                 <form string="Import module">
                     <group col="8">
-                        <group colspan="3">
+                        <group colspan="3" col="1">
                             <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
                             <newline/>
-                            <label colspan="4" width="220" string="This wizard helps you add a new language to you OpenERP system. After loading a new language it becomes available as default interface language for users and partners."/>
-                            <label colspan="4" width="220"/>
-                            <label colspan="4" width="220" string="Please be patient, this operation may take a few minutes (depending on the number of modules currently installed)..."/>
+                            <label width="220" string="This wizard helps you add a new language to you OpenERP system. After loading a new language it becomes available as default interface language for users and partners."/>
+                            <label width="220"/>
+                            <label width="220" string="Please be patient, this operation may take a few minutes (depending on the number of modules currently installed)..."/>
                             <field name="state" invisible="1"/>
                         </group>
-                        <separator orientation="vertical" rowspan="15"/>
+                        <separator orientation="vertical" rowspan="5"/>
                         <group colspan="4">
                             <separator string="Module Import" colspan="4"/>
-                            <group states="init" colspan="4" col="4">
+                            <group states="init" col="4">
                                 <label string="Select module package to import (.zip file):" colspan="4"/>
                                 <field name="module_file" colspan="4"/>
                             </group>
-                            <group states="done" colspan="4" col="4">
+                            <group states="done" col="4">
                                 <label string="Module file successfully imported!" colspan="4"/>
                             </group>
                         </group>
