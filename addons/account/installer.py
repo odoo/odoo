@@ -86,8 +86,8 @@ class account_installer(osv.osv_memory):
         return 'configurable'
 
     _defaults = {
-        'date_start': time.strftime('%Y-01-01'),
-        'date_stop': time.strftime('%Y-12-31'),
+        'date_start': lambda *a: time.strftime('%Y-01-01'),
+        'date_stop': lambda *a: time.strftime('%Y-12-31'),
         'period': 'month',
         'sale_tax': 0.0,
         'purchase_tax': 0.0,

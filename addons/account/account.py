@@ -1124,7 +1124,7 @@ class account_move(osv.osv):
         'name': '/',
         'state': 'draft',
         'period_id': _get_period,
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
@@ -2157,7 +2157,7 @@ class account_subscription(osv.osv):
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }
     _defaults = {
-        'date_start': time.strftime('%Y-%m-%d'),
+        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'period_type': 'month',
         'period_total': 12,
         'period_nbr': 1,
