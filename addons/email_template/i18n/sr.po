@@ -8,45 +8,45 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-16 09:14+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-11-02 15:21+0000\n"
+"Last-Translator: zmmaj <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-11-03 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
 msgid "Permanently delete emails after sending"
-msgstr ""
+msgstr "zauvek izbrisi Emailove nakon slanja"
 
 #. module: email_template
 #: view:email_template.account:0
 msgid "Email Account Configuration"
-msgstr "Konfiguracija Email-a"
+msgstr "Email AutoPodesavanja"
 
 #. module: email_template
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #, python-format
 msgid "Emails for multiple items saved in outbox."
-msgstr "Emailovi sa vise stavki sacuvanih u outbox-u"
+msgstr "Emailovi za visestruke stavke sacuvane u OutBox-u"
 
 #. module: email_template
 #: view:email_template.mailbox:0
 msgid "Personal Emails"
-msgstr ""
+msgstr "Licni Emailovi"
 
 #. module: email_template
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
+msgstr "Neispravno ime modela u definiciji akcijue."
 
 #. module: email_template
 #: view:email.template:0
 msgid "Email Content  "
-msgstr ""
+msgstr "Sadrzaj Emaila  "
 
 #. module: email_template
 #: view:email_template.send.wizard:0
@@ -82,7 +82,7 @@ msgstr "Sadrzaj"
 #: code:addons/email_template/email_template.py:0
 #, python-format
 msgid "Deletion of Record failed"
-msgstr "Brisanje zapisa nije uspleo"
+msgstr "Brisanje zapisa nije uspelo"
 
 #. module: email_template
 #: help:email_template.account,company:0
@@ -124,7 +124,7 @@ msgstr "Referenca Servera Email-a"
 #: code:addons/email_template/email_template_account.py:0
 #, python-format
 msgid "Reason: %s"
-msgstr ""
+msgstr "Razlog: %s"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -138,11 +138,13 @@ msgid ""
 "Carbon Copy address(es), comma-separated. Placeholders can be used here. "
 "e.g. ${object.email_cc}"
 msgstr ""
+"Carbon umnozi adresu(e), razdvojene zarezom. PlaceHolderi se ovde mogu "
+"koristiti npr. ${object.email_cc}"
 
 #. module: email_template
 #: view:email.template:0
 msgid "Account"
-msgstr ""
+msgstr "Nalog"
 
 #. module: email_template
 #: field:email.template,table_html:0
@@ -156,6 +158,8 @@ msgid ""
 "Email, unless it is already specified in the From Email, e.g: John Doe "
 "<john@doe.com>"
 msgstr ""
+"Opis se koristi kao ime pošiljatelja uz uvslov iz e-pošte, ako to već "
+"navedeno u iz e-pošte, npr: Marko Markovic <marko@markovic.com>"
 
 #. module: email_template
 #: field:email.template,from_account:0
@@ -174,6 +178,7 @@ msgid ""
 "Add here all attachments of the current document you want to include in the "
 "Email."
 msgstr ""
+"Dodaj ovde sve dodatke datog dokumenta ukoliko ih zelis pridruziti Emailu"
 
 #. module: email_template
 #: help:email.template,lang:0
@@ -240,7 +245,7 @@ msgstr "U redu"
 #. module: email_template
 #: field:email_template.account,auto_delete:0
 msgid "Auto Delete"
-msgstr ""
+msgstr "Automatsko Brisanje"
 
 #. module: email_template
 #: selection:email_template.account,send_pref:0
@@ -299,7 +304,7 @@ msgstr "Sadrzaj ( text)"
 #. module: email_template
 #: view:email_template.mailbox:0
 msgid "Company Emails"
-msgstr ""
+msgstr "Emailovi Preduzeca"
 
 #. module: email_template
 #: view:email_template.send.wizard:0
@@ -318,6 +323,8 @@ msgid ""
 "The address recipients should reply to, if different from the From address. "
 "Placeholders can be used here."
 msgstr ""
+"Adresa primaoca na koja treba odgovoriti ukoliko su drugacije( razlicite) iz "
+"dela adrese  OD. Rezervisana mesta se mogu ovde koristiti."
 
 #. module: email_template
 #: field:email.template,def_subject:0
@@ -330,7 +337,7 @@ msgstr "Tema"
 #. module: email_template
 #: view:email_template.mailbox:0
 msgid "My Emails"
-msgstr ""
+msgstr "Moji Emailovi"
 
 #. module: email_template
 #: field:email_template.mailbox,email_from:0
@@ -340,7 +347,7 @@ msgstr "Od"
 #. module: email_template
 #: field:email.template,file_name:0
 msgid "Report Filename"
-msgstr ""
+msgstr "Izvestaj ImenaFajla"
 
 #. module: email_template
 #: selection:email_template.mailbox,state:0
@@ -363,6 +370,8 @@ msgid ""
 "Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
 "here. e.g. ${object.email_bcc}"
 msgstr ""
+"Iskopiraj adrese , zarezom razdvojene. Rezervisana mesta se mogu ovde "
+"koristiti npr ${object.email_bcc}"
 
 #. module: email_template
 #: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
@@ -378,7 +387,7 @@ msgstr "Sadrzaj ( Samo TEKST-WEB Klijent)"
 #: field:email_template.account,state:0
 #: view:email_template.mailbox:0
 msgid "State"
-msgstr ""
+msgstr "Stanje"
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -388,13 +397,13 @@ msgstr "Dugme čarobnjaka"
 #. module: email_template
 #: help:email_template.account,email_id:0
 msgid "eg: 'john@doe.com' or 'John Doe <john@doe.com>'"
-msgstr ""
+msgstr "npr 'marko@markovic.com'  ili  'Marko Markovic <marko@markovic.com>'"
 
 #. module: email_template
 #: view:email.template:0
 #: field:email.template,object_name:0
 msgid "Resource"
-msgstr ""
+msgstr "Resurs"
 
 #. module: email_template
 #: code:addons/email_template/email_template_account.py:0
@@ -452,6 +461,9 @@ msgid ""
 "The address recipients should reply to, if different from the From address. "
 "Placeholders can be used here. e.g. ${object.email_reply_to}"
 msgstr ""
+"Adresa primatelja na koju bi trebalo odgovoriti ukoliko se reazlikuje od IZ "
+"dea adrese. Rezervisana mesta( placeholders) se mogu koristiti ovde npr "
+"${object.email_reply_to}"
 
 #. module: email_template
 #: help:email.template,ref_ir_value:0
@@ -459,6 +471,8 @@ msgid ""
 "Button in the side bar of the form view of this Resource that will invoke "
 "the Window Action"
 msgstr ""
+"Dugme Pregled Obrasca(Form View) koje se nalazi na baru sa strane  i koje ce "
+"pozvati odredjenu akciju prozora."
 
 #. module: email_template
 #: field:email_template.mailbox,account_id:0
@@ -558,6 +572,9 @@ msgid ""
 "emails so you can identify replies and link them back to the corresponding "
 "resource record. This is useful for CRM leads for example"
 msgstr ""
+"Omoguci ovo ukoliko zelis da ukljucis specijalni marker za pracenje u "
+"izlaznim Emailovima, tako da mozes da identifikujes odgovore i zatim ih "
+"linkujes nazad odgovarajucem snimljenom zapisu."
 
 #. module: email_template
 #: view:email.template:0
@@ -577,7 +594,7 @@ msgstr "Sub-model"
 #. module: email_template
 #: view:email.template:0
 msgid "Options"
-msgstr ""
+msgstr "Opcije"
 
 #. module: email_template
 #: view:email_template.send.wizard:0
@@ -628,7 +645,7 @@ msgstr "Napomena: Ovo je Raw HTML."
 #. module: email_template
 #: view:email.template:0
 msgid "Group by..."
-msgstr ""
+msgstr "Grupisano po..."
 
 #. module: email_template
 #: selection:email_template.send.wizard,state:0
@@ -682,7 +699,7 @@ msgstr "Ne"
 #. module: email_template
 #: field:email_template.account,smtpport:0
 msgid "SMTP Port"
-msgstr ""
+msgstr "SMTP Port"
 
 #. module: email_template
 #: field:email_template.mailbox,mail_type:0
@@ -816,7 +833,7 @@ msgstr "Korisnik"
 #. module: email_template
 #: view:email.template:0
 msgid "Advanced Options"
-msgstr ""
+msgstr "Napredne Opcije"
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -901,7 +918,7 @@ msgstr "Slanje POruke (%s)"
 #. module: email_template
 #: help:email.template,def_subject:0
 msgid "The subject of email. Placeholders can be used here."
-msgstr ""
+msgstr "Napredne Opcije"
 
 #. module: email_template
 #: field:email_template.send.wizard,report:0
@@ -1022,6 +1039,8 @@ msgid ""
 "Name of the generated report file. Placeholders can be used in the filename. "
 "eg: 2009_SO003.pdf"
 msgstr ""
+"Ime generisanog Izvestaja. Rezervisana ( Placeholders) mesta se mogu  "
+"koristiti imenu fajla npr: 2009_SO003.pdf"
 
 #. module: email_template
 #: field:email_template.mailbox,folder:0
@@ -1037,7 +1056,7 @@ msgstr "Smeće"
 #. module: email_template
 #: help:email_template.mailbox,date_mail:0
 msgid "Date on which Email Sent or Received"
-msgstr ""
+msgstr "Datum kda je Email poslat ili primljen"
 
 #. module: email_template
 #: help:email_template.account,smtpuname:0
@@ -1078,7 +1097,7 @@ msgstr "Kreiraj akciju"
 #. module: email_template
 #: help:email_template.account,smtpserver:0
 msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
-msgstr ""
+msgstr "Upisi ime izlaznog Servera, npr: smtp:yourdomain.com"
 
 #. module: email_template
 #: help:email.template,sub_object:0
@@ -1096,6 +1115,9 @@ msgid ""
 "that this overrides the Resource tracking option! Placeholders can be used "
 "here."
 msgstr ""
+"Specificiraj ID-Eporuke za SMTP zaglavlje koje ce se koristiti u odlaznim "
+"emailovima. MOlim upamtite da ce to da izbrise opciju pracenja Resursa! "
+"Rezervisana mesta( placeholders) se mogu ovde koristiti."
 
 #. module: email_template
 #: field:email.template,def_to:0
@@ -1134,7 +1156,7 @@ msgstr "Poslato"
 #. module: email_template
 #: help:email.template,ref_ir_act_window:0
 msgid "Action that will open this email template on Resource records"
-msgstr ""
+msgstr "Akcija koja ce otvoriti ovaj Email u zapisima Resursa"
 
 #. module: email_template
 #: field:email_template.account,smtppass:0
@@ -1177,7 +1199,7 @@ msgstr "Ime"
 #. module: email_template
 #: field:email.template,track_campaign_item:0
 msgid "Resource Tracking"
-msgstr ""
+msgstr "Pracenje Resursa"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_preview
@@ -1195,6 +1217,8 @@ msgid ""
 "The Recipient of email. Placeholders can be used here. e.g. "
 "${object.email_to}"
 msgstr ""
+"Primalac Emaila. Rezervisana mesta (placeholders) se mogu ovde koristiti "
+"npr. ${object.email_to}"
 
 #. module: email_template
 #: view:email.template:0
@@ -1285,7 +1309,7 @@ msgstr "Nalozi Preduzeca"
 #. module: email_template
 #: help:email_template.account,smtpport:0
 msgid "Enter port number, eg: 25 or 587"
-msgstr ""
+msgstr "Upisi broj porta, npr 25 ili 587"
 
 #. module: email_template
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
