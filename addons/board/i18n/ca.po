@@ -6,30 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 08:00+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-10-30 10:57+0000\n"
 "Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-10-31 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:board.model_board_menu_create
+msgid "Menu Create"
 msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
 
 #. module: board
-#: model:ir.model,name:board.model_board_board
-msgid "board.board"
-msgstr "board.board"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Nom de model no vàlid en la definició de l'acció."
 
 #. module: board
+#: view:board.note:0
 #: field:board.note,user_id:0
 msgid "Author"
 msgstr "Autor"
@@ -40,25 +38,57 @@ msgid "Dashboard main module"
 msgstr "Mòdul principal per a taulells"
 
 #. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "User Error!"
+msgstr "Error d'usuari!"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.open_board_administration_form
+#: model:ir.ui.menu,name:board.menu_board_admin
+msgid "Administration Dashboard"
+msgstr ""
+
+#. module: board
 #: view:board.note:0
 #: field:board.note,note:0
+#: model:ir.model,name:board.model_board_note
 msgid "Note"
 msgstr "Nota"
 
 #. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "Amplada"
+#: view:board.note:0
+msgid "Group By..."
+msgstr ""
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de model no vàlid en la definició de l'acció."
+#: model:ir.model,name:board.model_board_board
+msgid "Board"
+msgstr ""
+
+#. module: board
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
 
 #. module: board
 #: field:board.board.line,name:0
 msgid "Title"
 msgstr "Títol"
+
+#. module: board
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+"especial!"
+
+#. module: board
+#: model:ir.model,name:board.model_board_note_type
+msgid "NOte Type"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
@@ -73,9 +103,21 @@ msgid "Publish a note"
 msgstr "Publica una nota"
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:board.menu.create:0
 msgid "Menu Information"
 msgstr "Informació del menú"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+#: view:res.users:0
+msgid "Latest Connections"
+msgstr ""
+
+#. module: board
+#: field:board.note,type:0
+msgid "Note type"
+msgstr "Tipus de nota"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -83,27 +125,19 @@ msgid "Action Views"
 msgstr "Vistes d'accions"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note
-msgid "board.note"
-msgstr "board.note"
-
-#. module: board
+#: view:board.note:0
 #: field:board.note,date:0
 msgid "Date"
 msgstr "Data"
 
 #. module: board
-#: model:ir.ui.menu,name:board.next_id_50
-msgid "Configuration"
-msgstr "Configuració"
-
-#. module: board
+#: view:board.note:0
 #: field:board.note.type,name:0
 msgid "Note Type"
 msgstr "Tipus de nota"
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:board.menu.create:0
 msgid "Create Menu For Dashboard"
 msgstr "Crea menú per taullell"
 
@@ -113,7 +147,12 @@ msgid "Invalid XML for View Architecture!"
 msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_parent_id:0
+#: model:ir.model,name:board.model_board_board_line
+msgid "Board Line"
+msgstr ""
+
+#. module: board
+#: field:board.menu.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Menú pare"
 
@@ -123,14 +162,24 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "board.note.type"
-msgstr "board.note.type"
+#: help:board.board.line,sequence:0
+msgid ""
+"Gives the sequence order                         when displaying a list of "
+"board lines."
+msgstr ""
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Per favor inseriu vista(s) del taulell!"
 
 #. module: board
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
+#: model:ir.ui.menu,name:board.admin_menu_dasboard
+#: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "Taullell"
 
@@ -150,14 +199,15 @@ msgid "Open Dashboard"
 msgstr "Obre taullell"
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_name:0
+#: field:board.menu.create,menu_name:0
 msgid "Menu Name"
 msgstr "Nom menú"
 
 #. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr "Tipus de nota"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_latest_activities_tree
+msgid "Latest Activities"
+msgstr ""
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -175,20 +225,20 @@ msgid "Right"
 msgstr "Dreta"
 
 #. module: board
+#: field:board.board.line,width:0
+msgid "Width"
+msgstr "Amplada"
+
+#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr "Seqüència"
 
 #. module: board
 #: view:board.board:0
-#: wizard_button:board.board.menu.create,init,create_menu:0
+#: view:board.menu.create:0
 msgid "Create Menu"
 msgstr "Crea menú"
-
-#. module: board
-#: model:ir.ui.menu,name:board.dashboard_menu
-msgid "Dashboards"
-msgstr "Taulells"
 
 #. module: board
 #: field:board.board.line,height:0
@@ -196,12 +246,12 @@ msgid "Height"
 msgstr "Altura"
 
 #. module: board
-#: model:ir.actions.wizard,name:board.wizard_board_create_menu
+#: model:ir.actions.act_window,name:board.action_board_menu_create
 msgid "Create Board Menu"
 msgstr "Crea menú del taullell"
 
 #. module: board
-#: wizard_button:board.board.menu.create,init,end:0
+#: view:board.menu.create:0
 msgid "Cancel"
 msgstr "Cancel·la"
 
@@ -211,11 +261,25 @@ msgid "Dashboard View"
 msgstr "Vista taullell"
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "board.board.line"
-msgstr "board.board.line"
-
-#. module: board
+#: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "Assumpte"
+
+#~ msgid "board.board"
+#~ msgstr "board.board"
+
+#~ msgid "board.note"
+#~ msgstr "board.note"
+
+#~ msgid "Configuration"
+#~ msgstr "Configuració"
+
+#~ msgid "board.note.type"
+#~ msgstr "board.note.type"
+
+#~ msgid "Dashboards"
+#~ msgstr "Taulells"
+
+#~ msgid "board.board.line"
+#~ msgstr "board.board.line"

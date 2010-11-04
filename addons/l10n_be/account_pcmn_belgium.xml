@@ -6725,6 +6725,7 @@
             <field name="name">TVA 21% Services</field>
             <field name="description">V-NAT-S 21</field>
             <field eval="0.21" name="amount"/>
+            <field eval="0" name="sequence"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable21"/>
             <field name="account_paid_id" ref="vat_payable21"/>
@@ -6899,6 +6900,7 @@
             <field name="name">Services Divers Déductibles 21%</field>
             <field name="description">A-NAT-S 21</field>
             <field eval="1.00" name="amount"/>
+            <field eval="0" name="sequence"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
             <field name="type_tax_use">purchase</field>

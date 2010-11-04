@@ -49,11 +49,8 @@
             <field name="help">If you have more than one shops reselling your company products, you can create and manage them from here. Whenever you will record a new quotation or sale order, it has to be linked to a shop. The shop also defines the warehouse from which the products will be delivered for each particular sale.</field>
         </record>
 
-        <menuitem id="menu_config_sale"
-            parent="base.menu_base_config"
-            name="Sales" groups="base.group_extended"/>
         <menuitem action="action_shop_form" id="menu_action_shop_form"
-            parent="menu_config_sale" sequence="0" />
+            parent="base.menu_sale_config_sales" sequence="0" />
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -82,6 +79,7 @@
             <field name="name">sale.order.tree</field>
             <field name="model">sale.order</field>
             <field name="type">tree</field>
+            <field name="priority">2</field>
             <field name="arch" type="xml">
                 <tree string="Sales Orders" colors="grey:state=='done'">
                     <field name="name"/>
@@ -106,10 +104,10 @@
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
-                        <field name="shipped"/>
-                        <field name="client_order_ref"/>
-                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection"/>
                         <field name="invoiced"/>
+                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection"/>
+                        <field name="client_order_ref"/>
+                        <field name="shipped"/>
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
@@ -206,9 +204,9 @@
                             <group col="13" colspan="4">
                                 <field name="state"/>
                                 <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
-                                <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="gtk-apply"/>
-                                <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-ok"/>
-                                <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-apply"/>
+                                <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
+                                <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
+                                <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
                                 <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
                                 <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
@@ -425,7 +423,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-gtk-go-back-rtl" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1" help="Sale Order Lines ready to be invoiced"/>
+                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1" help="Sale Order Lines ready to be invoiced"/>
                     <separator orientation="vertical"/>
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
@@ -436,7 +434,7 @@
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'order_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'salesman_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
@@ -450,12 +448,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Uninvoiced Lines">
-                    <filter icon="terp-check" string="To Do"
+                    <filter icon="terp-gtk-go-back-rtl" string="To Do"
                         domain="[('state','=','confirmed')]"
                         name="sale order"
                         help="Confirmed sale order lines, not yet delivered"
                         />
-                    <filter icon="terp-check" string="Done"
+                    <filter icon="terp-dialog-close" string="Done"
                         domain="[('state','=','done')]"
                         name="sale_order_done"
                         help="Sale order lines done"
