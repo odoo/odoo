@@ -28,18 +28,17 @@ class stock_invoice_onshipping(osv.osv_memory):
     def _get_journal_id(self, cr,uid,ids, context=None):
         if context is None:
             context = {}
-
         if ids['active_model'] == "stock.picking":
             pick_obj = self.pool.get('stock.picking').browse(cr,uid,ids['active_id'])
             acct_obj = self.pool.get('account.journal')
             vals=[]
-            if pick_obj.type == 'in':
+            if pick_obj.type == 'out':
                value = acct_obj.search(cr, uid, [('type', 'in',('sale','sale_refund') )])
                for jr_type in acct_obj.browse(cr, uid, value, context=context):
                    t1 = jr_type.id,jr_type.name
                    vals.append(t1)
 
-            elif pick_obj.type == 'out':
+            elif pick_obj.type == 'in':
                value = acct_obj.search(cr, uid, [('type', 'in',('purchase','purchase_refund') )])
                for jr_type in acct_obj.browse(cr, uid, value, context=context):
                    t1 = jr_type.id,jr_type.name

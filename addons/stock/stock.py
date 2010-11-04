@@ -2231,7 +2231,7 @@ class stock_move(osv.osv):
                 quantity_rest = quantity
                 uos_qty_rest =  uos_qty
                 if move.product_id.track_production and location_id:
-                    res += self.split_lines(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
+                    res += self.action_split(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
                 else:
                     res += [move.id]
                     update_val = {
