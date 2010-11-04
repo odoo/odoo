@@ -32,6 +32,7 @@ from config import config
 import zipfile
 import release
 import socket
+import subprocess
 
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
@@ -132,28 +133,25 @@ def exec_pg_command(name, *args):
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
     args2 = (os.path.basename(prog),) + args
-    return os.spawnv(os.P_WAIT, prog, args2)
+    return subprocess.call(args2, executable=prog)
 
 def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    if os.name == "nt":
-        cmd = '"' + prog + '" ' + ' '.join(args)
-    else:
-        cmd = prog + ' ' + ' '.join(args)
-    return os.popen2(cmd, 'b')
+
+    pop = subprocess.Popen(args, executable=prog, shell=True, bufsize= -1,
+                           stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+    return (pop.stdin, pop.stdout)
 
 def exec_command_pipe(name, *args):
     prog = find_in_path(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    if os.name == "nt":
-        cmd = '"'+prog+'" '+' '.join(args)
-    else:
-        cmd = prog+' '+' '.join(args)
-    return os.popen2(cmd, 'b')
 
+    pop = subprocess.Popen(args, executable=prog, shell=True, bufsize= -1,
+                           stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+    return (pop.stdin, pop.stdout)
 #----------------------------------------------------------
 # File paths
 #----------------------------------------------------------
