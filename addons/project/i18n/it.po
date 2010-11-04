@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 16:06+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-11-02 07:27+0000\n"
+"Last-Translator: Lorenzo Battistini <lorenzo.battistini@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-11-03 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/project/project.py:0
 #, python-format
 msgid "The task '%s' has been delegated to %s."
-msgstr ""
+msgstr "L'attività '%s' è stata affidata a %s."
 
 #. module: project
 #: constraint:res.users:0
@@ -40,7 +40,7 @@ msgstr ""
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
-msgstr ""
+msgstr "Inserire qui le ore che restano per chiudere l'attività"
 
 #. module: project
 #: view:project.task:0
@@ -99,7 +99,7 @@ msgstr ""
 #: code:addons/project/wizard/project_task_close.py:0
 #, python-format
 msgid "Task '%s' Closed"
-msgstr ""
+msgstr "Attività '%s' chiusa"
 
 #. module: project
 #: constraint:project.project:0
@@ -190,7 +190,7 @@ msgstr ""
 #. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "Nome fase"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
@@ -206,7 +206,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Change Stage"
-msgstr ""
+msgstr "Cambia fase"
 
 #. module: project
 #: view:project.project:0
@@ -262,7 +262,7 @@ msgstr "Attività"
 #. module: project
 #: view:project.project:0
 msgid "Members"
-msgstr ""
+msgstr "Membri"
 
 #. module: project
 #: help:project.task,planned_hours:0
@@ -293,12 +293,12 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Invoice Address"
-msgstr ""
+msgstr "Indirizzo fatturazione"
 
 #. module: project
 #: field:report.project.task.user,name:0
 msgid "Task Summary"
-msgstr ""
+msgstr "Descrizione attività"
 
 #. module: project
 #: field:project.task,active:0
@@ -316,12 +316,14 @@ msgid ""
 "Helps generate invoices based on time spent on tasks, if activated on the "
 "project."
 msgstr ""
+"Aiuta a generare fatture in base al tempo impiegato nelle attività, se "
+"attivato nel progetto."
 
 #. module: project
 #: view:project.task:0
 #: field:project.task,parent_ids:0
 msgid "Parent Tasks"
-msgstr ""
+msgstr "Attività genitore"
 
 #. module: project
 #: view:project.project:0
@@ -421,6 +423,8 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the project "
 "without removing it."
 msgstr ""
+"Se viene selezionato il campo attivo, sarà possibile nascondere il progetto "
+"senza rimuoverlo."
 
 #. module: project
 #: field:project.task,work_ids:0
@@ -593,7 +597,7 @@ msgstr "Calcolaro come: Tempo impiegato + Tempo rimanente."
 #. module: project
 #: help:project.task.close,partner_email:0
 msgid "Email Address of Customer"
-msgstr ""
+msgstr "Indirizzo email del cliente"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -675,6 +679,8 @@ msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Totale delle ore pianificate di tutte le attività di questo progetto e dei "
+"suoi progetti figli"
 
 #. module: project
 #: field:project.task.delegate,name:0
@@ -723,12 +729,12 @@ msgstr "Progetti"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,type_id:0
 msgid "Stage"
-msgstr ""
+msgstr "Fase"
 
 #. module: project
 #: field:report.project.task.user,user_id:0
 msgid "Assigned To"
-msgstr ""
+msgstr "Assegnato a"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -851,7 +857,7 @@ msgstr "Attività"
 #. module: project
 #: view:project.project:0
 msgid "Parent"
-msgstr ""
+msgstr "Genitore"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
@@ -908,7 +914,7 @@ msgstr "Attività di Progetto"
 #: model:ir.model,name:project.model_project_task_type
 #: view:project.task.type:0
 msgid "Task Stage"
-msgstr ""
+msgstr "Fase attività"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -938,12 +944,12 @@ msgstr ""
 #: view:project.project:0
 #: view:project.task:0
 msgid "Start Date"
-msgstr ""
+msgstr "Data inizio"
 
 #. module: project
 #: help:project.project,priority:0
 msgid "Gives the sequence order when displaying a list of task"
-msgstr ""
+msgstr "Stabilisce l'ordine in cui visualizzare una lista di attività"
 
 #. module: project
 #: field:project.project,warn_customer:0
@@ -958,7 +964,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Billing"
-msgstr ""
+msgstr "Fatturazione"
 
 #. module: project
 #: view:project.task:0
@@ -1065,7 +1071,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_task_types_view
 msgid "Stages"
-msgstr ""
+msgstr "Fasi"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1112,7 +1118,7 @@ msgstr "Dashboard Progetto"
 #. module: project
 #: view:project.project:0
 msgid "Parent Project"
-msgstr "Progetto Padre"
+msgstr "Progetto genitore"
 
 #. module: project
 #: field:project.project,active:0
@@ -1137,7 +1143,7 @@ msgstr ""
 #. module: project
 #: field:project.task.close,partner_email:0
 msgid "Customer Email"
-msgstr ""
+msgstr "Email del cliente"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -1392,7 +1398,7 @@ msgstr ""
 #: code:addons/project/wizard/project_task_close.py:0
 #, python-format
 msgid "Please specify the email address of Customer."
-msgstr ""
+msgstr "Specificare l'indirizzo email del cliente"
 
 #. module: project
 #: view:project.task:0
@@ -1462,6 +1468,8 @@ msgid ""
 "Sum of spent hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Totale delle ore impiegate per tutte le attività di questo progetto e dei "
+"suoi progetti figli"
 
 #. module: project
 #: help:project.task,delay_hours:0
@@ -1514,7 +1522,7 @@ msgstr "Titolo della tua Attività"
 #. module: project
 #: view:project.project:0
 msgid "Scheduling"
-msgstr ""
+msgstr "Pianificazione"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1584,6 +1592,8 @@ msgid ""
 "Sum of total hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Somma delle ore totali di tutte le attività di questo progetto e dei suoi "
+"progetti figli"
 
 #. module: project
 #: help:project.task.close,manager_email:0
@@ -1593,13 +1603,13 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Customer"
-msgstr ""
+msgstr "Cliente"
 
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
 msgid "End Date"
-msgstr ""
+msgstr "Data fine"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1699,7 +1709,7 @@ msgstr "Ore Totali"
 #. module: project
 #: help:project.project,sequence:0
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
+msgstr "Stabilisce l'ordine in cui visualizzare una lista di progetti"
 
 #. module: project
 #: field:project.task,id:0
@@ -1809,7 +1819,7 @@ msgstr ""
 #: view:project.project:0
 #: field:project.project,type_ids:0
 msgid "Tasks Stages"
-msgstr ""
+msgstr "Fasi attività"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
