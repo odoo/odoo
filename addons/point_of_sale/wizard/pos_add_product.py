@@ -78,19 +78,17 @@ class add_product(osv.osv_memory):
         order_obj= self.pool.get('pos.order')
         obj = order_obj.browse(cr, uid, record_id, context=context)
         order_obj.write(cr, uid, [record_id], {'state': 'done'}, context=context)
-        if obj.amount_total != obj.amount_paid:
-            return {
-                'name': _('Make Payment'),
-                'context': context and context.get('active_id', False),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'pos.make.payment',
-                'view_id': False,
+        return {
+            'name': _('Make Payment'),
+            'context': context and context.get('active_id', False),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'pos.make.payment',
+            'view_id': False,
                 'target': 'new',
-                'views': False,
-                'type': 'ir.actions.act_window',
-            }
-        return {}
+            'views': False,
+            'type': 'ir.actions.act_window',
+        }
 
 add_product()
 
