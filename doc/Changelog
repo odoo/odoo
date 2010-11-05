@@ -1,3 +1,201 @@
+2010-11-04: 5.0.15
+==================
+Bugfixes
+--------
+
+* Not linked to a bug report:
+
+  * base: The shortcut of the partner is translatable
+  * XSL Report : title of xsl reports should support accented characters
+  * correct safe_eval call in ir.servers.action
+  * Import : multiple O2M import corrected
+  * fields.property fnct_read corrected
+  * do not bind SIGUSR1
+  * netsvc.Agent: be nice
+  * netsvc.Agent: remove tasks from __tasks_by_db
+  * the cron sleep 60 seconds
+  * base : INR code and name corrected
+  * _read_flat method corrected
+  * cron: avoid multiple cron
+  * Custom field may not be found on the first go
+  * Safe_eval : Added the support of round
+
+* https://launchpad.net/bugs/632388
+  * read : if referenced record is not found,read should bypass
+
+* https://launchpad.net/bugs/630088
+  * Safe_eval : Allowed the use of filter.
+
+* https://launchpad.net/bugs/633896
+  * Safe_eval : Added the support of set(),JUMP_FORWARD,POP_BLOCK,SETUP_LOOP
+
+* https://launchpad.net/bugs/662493
+  * Slicing functionality support added to safe_eval()
+
+* https://launchpad.net/bugs/601901
+  * Currency :  better handling of context
+
+* https://launchpad.net/bugs/628193
+  * Base : Currency rates assigned to Currencies
+
+* https://launchpad.net/bugs/551703
+  * base : index added on ir.propery fields
+
+* https://launchpad.net/bugs/613721
+  * ir.translation: ensure consistent return type for _get_source()
+  * orm: properly handle unicode values returned by ir.translation
+
+* https://launchpad.net/bugs/544437
+  * ir_translation Indexes Corrected using hash indexes
+
+* https://launchpad.net/bugs/640493
+
+* https://launchpad.net/bugs/651999
+  * Expression : Corrected operator handling for domains containing Many2one fields
+
+* https://launchpad.net/bugs/392114
+  * correct config loading
+
+* https://launchpad.net/bugs/644473
+  * Export : Corrections for exportation of relational fields
+
+* https://launchpad.net/bugs/645998
+  * base : Partner Addresses Menu now being translated
+
+* https://launchpad.net/bugs/603708
+  * Fields : correction on get() of O2M
+
+* https://launchpad.net/bugs/519299
+  * correct config loading
+
+* https://launchpad.net/bugs/634607
+  * Search on property field should not crash,it should go for fnct_search() instead (normal fields.function flow)
+
+* https://launchpad.net/bugs/631810
+  * safe_eval() : Added support of len()
+
+* https://launchpad.net/bugs/645813
+  * custom report correction acc. to  Safe_eval
+
+* https://launchpad.net/bugs/659021
+  * Speed improvement : Call of write() should go when there is vals
+
+
+Improvements
+------------
+
+* dumpthreads on sigquit if py2.5 or bettter
+* netsvc.Agent: spawned task threads should not be marked as daemon
+* netsvc.Agent: Agent.runner thread should be marked daemon to be terminated at server exit (harmlessly)
+* SIGQUIT dumps thread stacks instead of quitting the program (like on the jvm)
+* server catch SIGUSR1 and print threads stacks
+* use a single thread for crons
+* netsvc.Agent: correct docstrings
+* netsvc.Agent: add doctrings
+* netsvc.Agent: use better variable names
+* use a single thread for cron
+
+
+:: Addons ::
+--------------------
+
+Bugfixes
+--------
+
+* Not linked to a bug report:
+
+  * Account_followup : Fixed report when partner has no address
+  * document: fix server shutdown
+  * Account : Correction on closing fiscalyear:journal should be centralizaed and the boolean of skip draft state should be False
+  * Account : Typo fix
+  * Account/stock : Better context-handling at tax computation to avoid wrong context-passing
+  * Account : Added web-client compatibility for field journal_ids on wizard
+  * document: correct context use
+  * mrp_repair : Bad domain on repair.fee corrected
+  * auction : Signature of _type_get() fixed.
+
+* https://launchpad.net/bugs/644364
+  * Account : Multi-currency handled
+
+* https://launchpad.net/bugs/635225
+  * Point_of_sale : Jourtnal reference should be passed while creating invoice from pos order
+
+* https://launchpad.net/bugs/35220
+  * stock :invoice_onshipping wizard take the correct type of invoice
+
+* https://launchpad.net/bugs/638385
+  * Stock : Cancelled move lines should not be allowed for Invoice creation
+
+* https://launchpad.net/bugs/609865
+  * account : Translations corrected
+
+* https://launchpad.net/bugs/591662
+
+* https://launchpad.net/bugs/629687
+  * Project : Recustive creation of tasks should not be allowed
+
+* https://launchpad.net/bugs/599078
+  * Account_invoice_layout : Registered xml record for missing report of invoice layout with message
+
+* https://launchpad.net/bugs/540946
+  * HR_Holidays : Corrections on Negative holiday request
+
+* https://launchpad.net/bugs/574348
+  * Merged Borja's branch for correction on Invoice correctd workflow action of sale order
+  * sale: "Invoice Corrected" did not set the order lines as invoiced.
+
+* https://launchpad.net/bugs/635348
+  * auction : signature of methods corrected.
+
+* https://launchpad.net/bugs/642095
+  * CRM : Report for Business opportunities corrected
+
+* https://launchpad.net/bugs/637893
+  * SALE/MRP : sale related fields shifted to SALE from MRP
+
+* https://launchpad.net/bugs/655705
+  * Project : Duplication of task should set remaining hours=planned hours
+
+* https://launchpad.net/bugs/635175
+  * Account :  Wizard fails to detect whether partial or total reconcile must be used
+
+* https://launchpad.net/bugs/666154
+  * Account : Correction on Residual amount calculation on payment by bank statement
+
+* https://launchpad.net/bugs/613063
+  * Sale : Progressbar for picking should show accurate result in cases of partial/complete pickings
+
+* https://launchpad.net/bugs/620404
+  * account : Account Balance Report structure corrected
+
+* https://launchpad.net/bugs/530822
+  * base_contact : Contact Job's Search Corrected
+
+* https://launchpad.net/bugs/646551
+  * mrp_repair : Bad reference to a many2one field corrected while creating invoice from repair
+
+* https://launchpad.net/bugs/599087
+  * Account : Automatic reonciliation now sorts move lines by maturity date
+
+* https://launchpad.net/bugs/645930
+  * Stock : Cancellation of picking should not be broken if it has no moves
+
+* https://launchpad.net/bugs/530984
+  * Mrp_operations : copy of stock_move overridden in order to block wrong duplication of procurements and stock moves
+
+* https://launchpad.net/bugs/649030
+  * Account_invoice_layout : Payment term with notes displayed on Invoice report
+
+* https://launchpad.net/bugs/599008
+  * audittrail: avoid deadlock when installing module making references to ir.model (like document)
+
+
+Improvements
+------------
+
+* sale: Small optimization of the previous "Invoice Corrected" fix.
+
+
 2010-09-03: 5.0.14
 ==================
 
