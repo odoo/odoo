@@ -26,7 +26,7 @@ from tools.translate import _
 class crm_lead2opportunity(osv.osv_memory):
     _name = 'crm.lead2opportunity'
     _description = 'Lead To Opportunity'
-    
+
     def action_cancel(self, cr, uid, ids, context=None):
         """
         Closes Lead To Opportunity form
@@ -38,7 +38,7 @@ class crm_lead2opportunity(osv.osv_memory):
 
         """
         return {'type': 'ir.actions.act_window_close'}
-    
+
     def action_apply(self, cr, uid, ids, context=None):
         """
         This converts lead to opportunity and opens Opportunity view
@@ -71,11 +71,11 @@ class crm_lead2opportunity(osv.osv_memory):
 
         for this in self.browse(cr, uid, ids, context=context):
             vals ={
-                'planned_revenue': this.planned_revenue, 
+                'planned_revenue': this.planned_revenue,
                 'probability': this.probability,
-                'name': this.name, 
-                'partner_id': this.partner_id.id, 
-                'user_id': (this.partner_id.user_id and this.partner_id.user_id.id) or (lead.user_id and lead.user_id.id), 
+                'name': this.name,
+                'partner_id': this.partner_id.id,
+                'user_id': (this.partner_id.user_id and this.partner_id.user_id.id) or (lead.user_id and lead.user_id.id),
                 'type': 'opportunity'
             }
             lead_obj.write(cr, uid, lead.id, vals, context=context)
@@ -86,26 +86,26 @@ class crm_lead2opportunity(osv.osv_memory):
             message = _('Lead ') + " '" + lead.name + "' "+ _("is converted to Opportunity.")
             self.log(cr, uid, lead.id, message)
         value = {
-            'name': _('Opportunity'), 
-            'view_type': 'form', 
-            'view_mode': 'form,tree', 
-            'res_model': 'crm.lead', 
-            'domain': [('type', '=', 'opportunity')], 
-            'res_id': int(lead.id), 
-            'view_id': False, 
-            'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')], 
-            'type': 'ir.actions.act_window', 
+            'name': _('Opportunity'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'crm.lead',
+            'domain': [('type', '=', 'opportunity')],
+            'res_id': int(lead.id),
+            'view_id': False,
+            'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
+            'type': 'ir.actions.act_window',
             'search_view_id': res['res_id']
         }
         return value
 
     _columns = {
-        'name' : fields.char('Opportunity', size=64, required=True, select=1), 
-        'probability': fields.float('Success Rate (%)'), 
-        'planned_revenue': fields.float('Expected Revenue'), 
-        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'name' : fields.char('Opportunity', size=64, required=True, select=1),
+        'probability': fields.float('Success Rate (%)'),
+        'planned_revenue': fields.float('Expected Revenue'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
     }
-    
+
     def view_init(self, cr, uid, fields, context=None):
         """
         This function checks for precondition before wizard executes
@@ -154,8 +154,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
     _inherit = 'crm.lead2partner'
 
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner'), 
-        'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner'), ('no','Do not create a partner')], 'Action'), 
+        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner'), ('no','Do not create a partner')], 'Action'),
     }
 
     def make_partner(self, cr, uid, ids, context=None):
@@ -171,7 +171,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         """
         if not context:
             context = {}
-        
+
         partner_ids = self._create_partner(cr, uid, ids, context)
         value = {}
         data_obj = self.pool.get('ir.model.data')
@@ -179,18 +179,18 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         view_id = False
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-        
+
         context.update({'partner_id': partner_ids})
-        value = {            
-            'name': _('Create Opportunity'), 
-            'view_type': 'form', 
-            'view_mode': 'form,tree', 
-            'res_model': 'crm.lead2opportunity.action', 
-            'view_id': False, 
-            'context': context, 
-            'views': [(view_id, 'form')], 
-            'type': 'ir.actions.act_window', 
-            'target': 'new', 
+        value = {
+            'name': _('Create Opportunity'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'crm.lead2opportunity.action',
+            'view_id': False,
+            'context': context,
+            'views': [(view_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
         }
         return value
 
@@ -213,19 +213,19 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
 
         context.update({'partner_id': False})
-        value = {            
-            'name': _('Create Opportunity'), 
-            'view_type': 'form', 
-            'view_mode': 'form,tree', 
-            'res_model': 'crm.lead2opportunity', 
-            'view_id': False, 
-            'context': context, 
-            'views': [(view_id, 'form')], 
-            'type': 'ir.actions.act_window', 
-            'target': 'new', 
+        value = {
+            'name': _('Create Opportunity'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'crm.lead2opportunity',
+            'view_id': False,
+            'context': context,
+            'views': [(view_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
         }
         return value
-    
+
 
     def view_init(self, cr, uid, fields, context=None):
         """
@@ -278,30 +278,30 @@ class crm_lead2opportunity_action(osv.osv_memory):
                 if data_id:
                     view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
                 value = {
-                        'name': _('Create Opportunity'), 
-                        'view_type': 'form', 
-                        'view_mode': 'form,tree', 
-                        'res_model': 'crm.lead2opportunity', 
-                        'view_id': False, 
-                        'context': context, 
-                        'views': [(view_id, 'form')], 
-                        'type': 'ir.actions.act_window', 
-                        'target': 'new', 
+                        'name': _('Create Opportunity'),
+                        'view_type': 'form',
+                        'view_mode': 'form,tree',
+                        'res_model': 'crm.lead2opportunity',
+                        'view_id': False,
+                        'context': context,
+                        'views': [(view_id, 'form')],
+                        'type': 'ir.actions.act_window',
+                        'target': 'new',
                     }
             elif this.name == 'merge':
                 data_id = data_obj._get_id(cr, uid, 'crm', 'merge_opportunity_form')
                 if data_id:
                     view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
                 value = {
-                        'name': _('Merge with Existing Opportunity'), 
-                        'view_type': 'form', 
-                        'view_mode': 'form,tree', 
-                        'res_model': 'crm.merge.opportunity', 
-                        'view_id': False, 
-                        'context': context, 
-                        'views': [(view_id, 'form')], 
-                        'type': 'ir.actions.act_window', 
-                        'target': 'new', 
+                        'name': _('Merge with Existing Opportunity'),
+                        'view_type': 'form',
+                        'view_mode': 'form,tree',
+                        'res_model': 'crm.merge.opportunity',
+                        'view_id': False,
+                        'context': context,
+                        'views': [(view_id, 'form')],
+                        'type': 'ir.actions.act_window',
+                        'target': 'new',
                     }
         return value
 
