@@ -486,7 +486,7 @@ class orm_template(object):
                                 vals['relation'], bool(vals['view_load']),
                                 vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], vals['model'], vals['name']
                             ))
-                        continue
+                        break
         cr.commit()
 
     def _auto_init(self, cr, context={}):
@@ -1012,6 +1012,27 @@ class orm_template(object):
         return (done, 0, 0, 0)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        """
+        Read records with given ids with the given fields
+
+        :param cr: database cursor
+        :param user: current user id
+        :param ids: id or list of the ids of the records to read
+        :param fields: optional list of field names to return (default: all fields would be returned)
+        :type fields: list (example ['field_name_1', ...])
+        :param context: optional context dictionary - it may contains keys for specifying certain options
+                        like ``context_lang``, ``context_tz`` to alter the results of the call.
+                        A special ``bin_size`` boolean flag may also be passed in the context to request the
+                        value of all fields.binary columns to be returned as the size of the binary instead of its
+                        contents. This can also be selectively overriden by passing a field-specific flag
+                        in the form ``bin_size_XXX: True/False`` where ``XXX`` is the name of the field.
+                        Note: The ``bin_size_XXX`` form is new in OpenERP v6.0.
+        :return: list of dictionaries((dictionary per record asked)) with requested field values
+        :rtype: [{‘name_of_the_field’: value, ...}, ...]
+        :raise AccessError: * if user has no read rights on the requested object
+                            * if user tries to bypass access rules for read on the requested object
+
+        """
         raise NotImplementedError(_('The read method is not implemented on this object !'))
 
     def get_invalid_fields(self, cr, uid):
@@ -1049,8 +1070,15 @@ class orm_template(object):
 
         :param fields_list: list of fields to get the default values for (example ['field1', 'field2',])
         :type fields_list: list
-        :param context: usual context dictionary - it may contains keys in the form ``default_XXX``,
-                        where XXX is a field name to set or override a default value.
+        :param context: optional context dictionary - it may contains keys for specifying certain options
+                        like ``context_lang`` (language) or ``context_tz`` (timezone) to alter the results of the call.
+                        It may contain keys in the form ``default_XXX`` (where XXX is a field name), to set
+                        or override a default value for a field.
+                        A special ``bin_size`` boolean flag may also be passed in the context to request the
+                        value of all fields.binary columns to be returned as the size of the binary instead of its
+                        contents. This can also be selectively overriden by passing a field-specific flag
+                        in the form ``bin_size_XXX: True/False`` where ``XXX`` is the name of the field.
+                        Note: The ``bin_size_XXX`` form is new in OpenERP v6.0.
         :return: dictionary of the default values (set on the object model class, through user preferences, or in the context)
         """
         # trigger view init hook
@@ -2394,7 +2422,6 @@ class orm(orm_template):
                 cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
                 cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'", "''")))
                 create = True
-
                 self.__schema.debug("Table '%s': created", self._table)
 
             cr.commit()
@@ -2447,13 +2474,22 @@ class orm(orm_template):
             # iterate on the "object columns"
             todo_update_store = []
             update_custom_fields = context.get('update_custom_fields', False)
+
+            cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
+               "FROM pg_class c,pg_attribute a,pg_type t " \
+               "WHERE c.relname=%s " \
+               "AND c.oid=a.attrelid " \
+               "AND a.atttypid=t.oid", (self._table,))
+            col_data = dict(map(lambda x: (x['attname'], x),cr.dictfetchall()))
+
+
             for k in self._columns:
                 if k in ('id', 'write_uid', 'write_date', 'create_uid', 'create_date'):
                     continue
-                    #raise _('Can not define a column %s. Reserved keyword !') % (k,)
                 #Not Updating Custom fields
                 if k.startswith('x_') and not update_custom_fields:
                     continue
+
                 f = self._columns[k]
 
                 if isinstance(f, fields.one2many):
@@ -2486,13 +2522,8 @@ class orm(orm_template):
                         self.__schema.debug("Create table '%s': relation between '%s' and '%s'",
                                             f._rel, self._table, ref)
                 else:
-                    cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
-                               "FROM pg_class c,pg_attribute a,pg_type t " \
-                               "WHERE c.relname=%s " \
-                               "AND a.attname=%s " \
-                               "AND c.oid=a.attrelid " \
-                               "AND a.atttypid=t.oid", (self._table, k))
-                    res = cr.dictfetchall()
+                    res = col_data.get(k, [])
+                    res = res and [res] or []
                     if not res and hasattr(f, 'oldname'):
                         cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
                             "FROM pg_class c,pg_attribute a,pg_type t " \
@@ -2938,21 +2969,6 @@ class orm(orm_template):
         return super(orm, self).fields_get(cr, user, fields, context, write_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        """
-        Read records with given ids with the given fields
-
-        :param cr: database cursor
-        :param user: current user id
-        :param ids: id or list of the ids of the records to read
-        :param fields: optional list of field names to return (default: all fields would be returned)
-        :type fields: list (example ['field_name_1', ...])
-        :param context: (optional) context arguments, like lang, time zone
-        :return: list of dictionaries((dictionary per record asked)) with requested field values
-        :rtype: [{‘name_of_the_field’: value, ...}, ...]
-        :raise AccessError: * if user has no read rights on the requested object
-                            * if user tries to bypass access rules for read on the requested object
-
-        """
         if not context:
             context = {}
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
@@ -3019,7 +3035,8 @@ class orm(orm_template):
                     cr.execute(query, [tuple(sub_ids)] + rule_params)
                     if cr.rowcount != len(sub_ids):
                         raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
+                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: read, Document type: %s).')
+                                         % (self._description,))
                 else:
                     cr.execute(query, (tuple(sub_ids),))
                 res.extend(cr.dictfetchall())
@@ -3224,8 +3241,8 @@ class orm(orm_template):
                            [sub_ids] + where_params)
                 if cr.rowcount != len(sub_ids):
                     raise except_orm(_('AccessError'),
-                                     _('Operation prohibited by access rules (Operation: %s, Document type: %s).')
-                                     % (operation, self._name))
+                                     _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
+                                     % (operation, self._description))
 
     def unlink(self, cr, uid, ids, context=None):
         """
@@ -3436,6 +3453,9 @@ class orm(orm_template):
             for sub_ids in cr.split_for_in_conditions(ids):
                 cr.execute('update ' + self._table + ' set ' + ','.join(upd0) + ' ' \
                            'where id IN %s', upd1 + [sub_ids])
+                if cr.rowcount != len(sub_ids):
+                    raise except_orm(_('AccessError'),
+                                     _('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
             if totranslate:
                 # TODO: optimize

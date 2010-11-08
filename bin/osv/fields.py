@@ -254,7 +254,13 @@ class binary(_column):
                 if v['id'] == i:
                     val = v[name]
                     break
-            if context.get('bin_size', False) and val:
+
+            # If client is requesting only the size of the field, we return it instead
+            # of the content. Presumably a separate request will be done to read the actual
+            # content if it's needed at some point.
+            # TODO: after 6.0 we should consider returning a dict with size and content instead of
+            #       having an implicit convention for the value
+            if val and context.get('bin_size_%s' % name, context.get('bin_size')):
                 res[i] = tools.human_size(long(val))
             else:
                 res[i] = val

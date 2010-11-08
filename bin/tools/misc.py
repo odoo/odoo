@@ -24,22 +24,17 @@
 Miscelleanous tools used by OpenERP.
 """
 
-import os, time, sys
 import inspect
-from datetime import datetime
-
-from config import config
-
-import zipfile
-import release
-import socket
 import logging
+import os
 import re
-from itertools import islice
-import threading
-from which import which
-
 import smtplib
+import socket
+import sys
+import threading
+import time
+import zipfile
+from datetime import datetime
 from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
@@ -47,14 +42,15 @@ from email.Header import Header
 from email.Utils import formatdate, COMMASPACE
 from email.Utils import formatdate, COMMASPACE
 from email import Encoders
-import netsvc
-
+from itertools import islice, izip
+from which import which
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
 else:
     from threading import local
 
-from itertools import izip
+import netsvc
+from config import config
 
 _logger = logging.getLogger('tools')
 
@@ -204,18 +200,18 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         subdir2 = (subdir2 != 'addons' or None) and subdir2
 
         for adp in adps:
-          try:
-            if subdir2:
-                fn = os.path.join(adp, subdir2, name)
-            else:
-                fn = os.path.join(adp, name)
-            fn = os.path.normpath(fn)
-            fo = file_open(fn, mode=mode, subdir=None, pathinfo=pathinfo)
-            if pathinfo:
-                return fo, fn
-            return fo
-          except IOError, e:
-            pass
+            try:
+                if subdir2:
+                    fn = os.path.join(adp, subdir2, name)
+                else:
+                    fn = os.path.join(adp, name)
+                fn = os.path.normpath(fn)
+                fo = file_open(fn, mode=mode, subdir=None, pathinfo=pathinfo)
+                if pathinfo:
+                    return fo, fn
+                return fo
+            except IOError:
+                pass
 
     if subdir:
         name = os.path.join(rtp, subdir, name)
@@ -248,7 +244,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
                 if pathinfo:
                     return fo, name
                 return fo
-            except:
+            except Exception:
                 name2 = os.path.normpath(os.path.join(head + '.zip', zipname))
                 pass
     for i in (name2, name):
@@ -349,7 +345,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     html = ustr(html)
 
-    from lxml.etree import Element, tostring
+    from lxml.etree import tostring
     try:
         from lxml.html.soupparser import fromstring
         kwargs = {}
@@ -370,7 +366,6 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     url_index = []
     i = 0
     for link in tree.findall('.//a'):
-        title = link.text
         url = link.get('href')
         if url:
             i += 1
@@ -464,11 +459,11 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
                 s.quit()
                 if debug:
                     smtplib.stderr = oldstderr
-            except:
+            except Exception:
                 # ignored, just a consequence of the previous exception
                 pass
 
-    except Exception, e:
+    except Exception:
         _logger.error('could not deliver email', exc_info=True)
         return False
 
@@ -497,18 +492,14 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
                          "address or having configured one")
 
     if not email_from: email_from = config.get('email_from', False)
+    email_from = ustr(email_from).encode('utf-8')
 
     if not email_cc: email_cc = []
     if not email_bcc: email_bcc = []
     if not body: body = u''
-    try: email_body = body.encode('utf-8')
-    except (UnicodeEncodeError, UnicodeDecodeError):
-        email_body = body
 
-    try:
-        email_text = MIMEText(email_body.encode('utf8') or '',_subtype=subtype,_charset='utf-8')
-    except:
-        email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
+    email_body = ustr(body).encode('utf-8')
+    email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
 
     if attach: msg = MIMEMultipart()
     else: msg = email_text
@@ -553,7 +544,7 @@ def sms_send(user, password, api_id, text, to):
     url = "http://api.urlsms.com/SendSMS.aspx"
     #url = "http://196.7.150.220/http/sendmsg"
     params = urllib.urlencode({'UserID': user, 'Password': password, 'SenderID': api_id, 'MsgText': text, 'RecipientMobileNo':to})
-    f = urllib.urlopen(url+"?"+params)
+    urllib.urlopen(url+"?"+params)
     # FIXME: Use the logger if there is an error
     return True
 
@@ -890,7 +881,7 @@ def exception_to_unicode(e):
         return "\n".join((ustr(a) for a in e.args))
     try:
         return ustr(e)
-    except:
+    except Exception:
         return u"Unknown message"
 
 
@@ -1062,7 +1053,6 @@ def logged(f):
 
     @wraps(f)
     def wrapper(*args, **kwargs):
-        import netsvc
         from pprint import pformat
 
         vector = ['Call -> function: %r' % f]
@@ -1124,9 +1114,7 @@ def debug(what):
             --log-level=debug
 
     """
-    import netsvc
     from inspect import stack
-    import re
     from pprint import pformat
     st = stack()[1]
     param = re.split("debug *\((.+)\)", st[4][0].strip())[1].strip()
@@ -1176,9 +1164,6 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 ])
 
 def extract_zip_file(zip_file, outdirectory):
-    import zipfile
-    import os
-
     zf = zipfile.ZipFile(zip_file, 'r')
     out = outdirectory
     for path in zf.namelist():
@@ -1201,7 +1186,6 @@ def detect_ip_addr():
     """
     def _detect_ip_addr():
         from array import array
-        import socket
         from struct import pack, unpack
 
         try:
@@ -1242,7 +1226,7 @@ def detect_ip_addr():
 
     try:
         ip_addr = _detect_ip_addr()
-    except:
+    except Exception:
         ip_addr = 'localhost'
     return ip_addr
 
@@ -1279,11 +1263,9 @@ def detect_server_timezone():
        Defaults to UTC if no working timezone can be found.
        @return: the timezone identifier as expected by pytz.timezone.
     """
-    import time
-    import netsvc
     try:
         import pytz
-    except:
+    except Exception:
         netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
             "Python pytz module is not available. Timezone will be set to UTC by default.")
         return 'UTC'
@@ -1300,7 +1282,7 @@ def detect_server_timezone():
         try:
             f = open("/etc/timezone")
             tz_value = f.read(128).strip()
-        except:
+        except Exception:
             pass
         finally:
             f.close()
@@ -1417,7 +1399,7 @@ class upload_data_thread(threading.Thread):
             fp = urllib.urlopen('http://www.openerp.com/scripts/survey.php', args)
             fp.read()
             fp.close()
-        except:
+        except Exception:
             pass
 
 def upload_data(email, data, type='SURVEY'):

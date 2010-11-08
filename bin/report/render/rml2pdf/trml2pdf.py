@@ -645,7 +645,30 @@ class _rml_flowable(object):
     def _textual_image(self, node):
         return base64.decodestring(node.text)
 
+    def _pto(self, node):
+        sub_story = []
+        pto_header = None
+        pto_trailer = None
+        for node in utils._child_get(node, self):
+            if node.tag == etree.Comment:
+                node.text = ''
+                continue
+            elif node.tag=='pto_header':
+                pto_header = self.render(node)
+            elif node.tag=='pto_trailer':
+                pto_trailer = self.render(node)
+            else:
+                flow = self._flowable(node)
+                if flow:
+                    if isinstance(flow,list):
+                        sub_story = sub_story + flow
+                    else:
+                        sub_story.append(flow)
+        return platypus.flowables.PTOContainer(sub_story, trailer=pto_trailer, header=pto_header)
+
     def _flowable(self, node, extra_style=None):
+        if node.tag=='pto':
+            return self._pto(node)
         if node.tag=='para':
             style = self.styles.para_style_get(node)
             if extra_style:
