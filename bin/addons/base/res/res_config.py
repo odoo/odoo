@@ -84,11 +84,6 @@ class res_config_configurable(osv.osv_memory):
     def _set_previous_todo(self, cr, uid, state, context=None):
         """ lookup the previous (which is still the next at this point)
         ir.actions.todo, set it to whatever state was provided.
-
-        Raises
-        `LookupError`: if we couldn't find *any* previous todo
-        `ValueError`: if no state is provided
-        anything ir_actions_todo.write can throw
         """
         # this is ultra brittle, but apart from storing the todo id
         # into the res.config view, I'm not sure how to get the
