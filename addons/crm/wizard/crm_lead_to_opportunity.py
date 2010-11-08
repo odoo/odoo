@@ -79,7 +79,7 @@ class crm_lead2opportunity(osv.osv_memory):
                 'user_id': (this.partner_id.user_id and this.partner_id.user_id.id) or (lead.user_id and lead.user_id.id),
                 'type': 'opportunity'
             }
-            lead_obj.write(cr, uid, lead.id, vals, context=context)
+            lead.write(vals, context=context)
             lead_obj.history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
             if lead.partner_id:
                 msg_ids = [ x.id for x in lead.message_ids]
