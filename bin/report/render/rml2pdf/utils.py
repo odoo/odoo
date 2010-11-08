@@ -36,15 +36,14 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import re
-import reportlab
-from lxml import etree
 import copy
 import locale
-import traceback, sys
+import logging
+import re
+import reportlab
+
 import tools
 from tools.safe_eval import safe_eval as eval
-import logging
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
@@ -117,20 +116,21 @@ def _process_text(self, txt):
         sps = _regex.split(txt)
         while sps:
             # This is a simple text to translate
-            result += unicode(self.localcontext.get('translate', lambda x:x)(sps.pop(0)))
+            to_translate = tools.ustr(sps.pop(0))
+            result += tools.ustr(self.localcontext.get('translate', lambda x:x)(to_translate))
             if sps:
                 try:
+                    txt = None
                     expr = sps.pop(0)
-                    txt = eval(expr,self.localcontext)
-                    if txt and (isinstance(txt, unicode) or isinstance(txt, str)):
-                        txt = unicode(txt)
-                except Exception,e:
-                    tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-                if type(txt)==type('') or type(txt)==type(u''):
-                    txt2 = str2xml(txt)
-                    result += unicode(txt2)
+                    txt = eval(expr, self.localcontext)
+                    if txt and isinstance(txt, basestring):
+                        txt = tools.ustr(txt)
+                except Exception:
+                    pass
+                if isinstance(txt, basestring):
+                    result += str2xml(txt)
                 elif (txt is not None) and (txt is not False):
-                    result += unicode(txt)
+                    result += txt
         return result
 
 def text_get(node):
