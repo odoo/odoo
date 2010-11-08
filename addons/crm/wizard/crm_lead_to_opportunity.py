@@ -50,25 +50,25 @@ class crm_lead2opportunity(osv.osv_memory):
         if not record_id:
             return {}
 
-        lead_obj = self.pool.get('crm.lead')
-        data_obj = self.pool.get('ir.model.data')
+        leads = self.pool.get('crm.lead')
+        models_data = self.pool.get('ir.model.data')
 
         # Get Opportunity views
-        result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
-        opportunity_view_search = data_obj.browse(
-            cr, uid, result, context=context)
-        opportunity_view_form = data_obj._get_id(
+        result = models_data._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
+        opportunity_view_search = models_data.browse(
+            cr, uid, result, context=context).res_id
+        opportunity_view_form = models_data._get_id(
             cr, uid, 'crm', 'crm_case_form_view_oppor')
-        opportunity_view_tree = data_obj._get_id(
+        opportunity_view_tree = models_data._get_id(
             cr, uid, 'crm', 'crm_case_tree_view_oppor')
         if opportunity_view_form:
-            opportunity_view_form = data_obj.browse(
+            opportunity_view_form = models_data.browse(
                 cr, uid, opportunity_view_form, context=context).res_id
         if opportunity_view_tree:
-            opportunity_view_tree = data_obj.browse(
+            opportunity_view_tree = models_data.browse(
                 cr, uid, opportunity_view_tree, context=context).res_id
 
-        lead = lead_obj.browse(cr, uid, record_id, context=context)
+        lead = leads.browse(cr, uid, record_id, context=context)
 
         for this in self.browse(cr, uid, ids, context=context):
             vals ={
@@ -80,7 +80,7 @@ class crm_lead2opportunity(osv.osv_memory):
                 'type': 'opportunity'
             }
             lead.write(vals, context=context)
-            lead_obj.history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
+            leads.history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
             if lead.partner_id:
                 msg_ids = [ x.id for x in lead.message_ids]
                 self.pool.get('mailgate.message').write(cr, uid, msg_ids, {'partner_id': lead.partner_id.id}, context=context)
@@ -99,7 +99,7 @@ class crm_lead2opportunity(osv.osv_memory):
                       (opportunity_view_tree, 'tree'),
                       (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
-            'search_view_id': opportunity_view_search.res_id
+            'search_view_id': opportunity_view_search
         }
 
     _columns = {
