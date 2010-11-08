@@ -67,10 +67,10 @@ class res_config_configurable(osv.osv_memory):
         self.__logger.info('getting next %s', todos)
         active_todos = todos.search(cr, uid, [('state','=','open')],
                                     limit=1)
-        dont_skip_todo = True
         if active_todos:
             todo_obj = todos.browse(cr, uid, active_todos[0], context=None)
             todo_groups = map(lambda x:x.id, todo_obj.groups_id)
+            dont_skip_todo = True
             if todo_groups:
                 cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN %s",(uid, tuple(todo_groups),))
                 dont_skip_todo = bool(cr.fetchone())
