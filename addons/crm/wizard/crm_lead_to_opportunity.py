@@ -55,13 +55,18 @@ class crm_lead2opportunity(osv.osv_memory):
 
         # Get Opportunity views
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
-        res = data_obj.read(cr, uid, result, ['res_id'])
-        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_oppor')
-        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_oppor')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        opportunity_view_search = data_obj.browse(
+            cr, uid, result, context=context)
+        opportunity_view_form = data_obj._get_id(
+            cr, uid, 'crm', 'crm_case_form_view_oppor')
+        opportunity_view_tree = data_obj._get_id(
+            cr, uid, 'crm', 'crm_case_tree_view_oppor')
+        if opportunity_view_form:
+            opportunity_view_form = data_obj.browse(
+                cr, uid, opportunity_view_form, context=context).res_id
+        if opportunity_view_tree:
+            opportunity_view_tree = data_obj.browse(
+                cr, uid, opportunity_view_tree, context=context).res_id
 
         lead = lead_obj.browse(cr, uid, record_id, context=context)
 
@@ -81,6 +86,7 @@ class crm_lead2opportunity(osv.osv_memory):
                 self.pool.get('mailgate.message').write(cr, uid, msg_ids, {'partner_id': lead.partner_id.id}, context=context)
             message = _('Lead ') + " '" + lead.name + "' "+ _("is converted to Opportunity.")
             self.log(cr, uid, lead.id, message)
+
         return {
             'name': _('Opportunity'),
             'view_type': 'form',
@@ -89,9 +95,11 @@ class crm_lead2opportunity(osv.osv_memory):
             'domain': [('type', '=', 'opportunity')],
             'res_id': int(lead.id),
             'view_id': False,
-            'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
+            'views': [(opportunity_view_form, 'form'),
+                      (opportunity_view_tree, 'tree'),
+                      (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id']
+            'search_view_id': opportunity_view_search.res_id
         }
 
     _columns = {
