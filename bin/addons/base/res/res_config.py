@@ -97,8 +97,6 @@ class res_config_configurable(osv.osv_memory):
         if not previous_todo:
             self.__logger.warn(_("Couldn't find previous ir.actions.todo"))
             return
-        if not state:
-            raise ValueError(_("Can't set an ir.actions.todo's state to an empty value."))
         previous_todo.write({'state':state})
 
     def _next(self, cr, uid, context=None):
@@ -169,10 +167,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        try:
-            self._set_previous_todo(cr, uid, state='done', context=context)
-        except Exception, e:
-            raise osv.except_osv(_('Error'), e.message)
+        self._set_previous_todo(cr, uid, state='done', context=context)
         next = self.execute(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
@@ -185,10 +180,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        try:
-            self._set_previous_todo(cr, uid, state='skip', context=context)
-        except Exception, e:
-            raise osv.except_osv(_('Error'), e.message)
+        self._set_previous_todo(cr, uid, state='skip', context=context)
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
@@ -204,10 +196,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        try:
-            self._set_previous_todo(cr, uid, state='cancel', context=context)
-        except Exception, e:
-            raise osv.except_osv(_('Error'), e.message)
+        self._set_previous_todo(cr, uid, state='cancel', context=context)
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
