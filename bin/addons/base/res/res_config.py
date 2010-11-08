@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+import logging
 from operator import attrgetter
 
 from osv import osv, fields
@@ -37,6 +37,7 @@ class res_config_configurable(osv.osv_memory):
     _name = 'res.config'
     _inherit = 'ir.wizard.screen'
     logger = netsvc.Logger()
+    __logger = logging.getLogger(_name)
 
     def get_current_progress(self, cr, uid, context=None):
         '''Return a description the current progress of configuration:
@@ -63,8 +64,7 @@ class res_config_configurable(osv.osv_memory):
 
     def _next_action(self, cr, uid, context=None):
         todos = self.pool.get('ir.actions.todo')
-        self.logger.notifyChannel('actions', netsvc.LOG_INFO,
-                                  'getting next %s' % todos)
+        self.__logger.info('getting next %s', todos)
         active_todos = todos.search(cr, uid, [('state','=','open')],
                                     limit=1)
         dont_skip_todo = True
@@ -103,11 +103,9 @@ class res_config_configurable(osv.osv_memory):
         previous_todo.write({'state':state})
 
     def _next(self, cr, uid, context=None):
-        self.logger.notifyChannel('actions', netsvc.LOG_INFO,
-                                  'getting next operation')
+        self.__logger.info('getting next operation')
         next = self._next_action(cr, uid)
-        self.logger.notifyChannel('actions', netsvc.LOG_INFO,
-                                  'next action is %s' % next)
+        self.__logger.info('next action is %s', next)
         if next:
             action = next.action_id
             return {
@@ -118,9 +116,7 @@ class res_config_configurable(osv.osv_memory):
                 'type': action.type,
                 'target': action.target,
             }
-        self.logger.notifyChannel(
-            'actions', netsvc.LOG_INFO,
-            'all configuration actions have been executed')
+        self.__logger.info('all configuration actions have been executed')
 
         current_user_menu = self.pool.get('res.users')\
             .browse(cr, uid, uid).menu_id
@@ -313,6 +309,7 @@ class res_config_installer(osv.osv_memory):
     """
     _name = 'res.config.installer'
     _inherit = 'res.config'
+    __logger = logging.getLogger(_name)
 
     _install_if = {}
 
@@ -408,9 +405,7 @@ class res_config_installer(osv.osv_memory):
         modules = self.pool.get('ir.module.module')
         to_install = list(self.modules_to_install(
             cr, uid, ids, context=context))
-        self.logger.notifyChannel(
-            'installer', netsvc.LOG_INFO,
-            'Selecting addons %s to install'%to_install)
+        self.__logger.info('Selecting addons %s to install', to_install)
         modules.state_update(
             cr, uid,
             modules.search(cr, uid, [('name','in',to_install)]),
@@ -432,6 +427,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
     '''
     _name='ir.actions.configuration.wizard'
     _inherit = 'res.config'
+    __logger = logging.getLogger(_name)
 
     def _next_action_note(self, cr, uid, ids, context=None):
         next = self._next_action(cr, uid)
@@ -451,8 +447,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
         }
 
     def execute(self, cr, uid, ids, context=None):
-        self.logger.notifyChannel(
-            'configuration', netsvc.LOG_WARNING, DEPRECATION_MESSAGE)
+        self.__logger.warn(DEPRECATION_MESSAGE)
 
 ir_actions_configuration_wizard()
 
