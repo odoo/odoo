@@ -95,7 +95,8 @@ class res_config_configurable(osv.osv_memory):
         # "previous" todo
         previous_todo = self._next_action(cr, uid, context=context)
         if not previous_todo:
-            raise LookupError(_("Couldn't find previous ir.actions.todo"))
+            self.__logger.warn(_("Couldn't find previous ir.actions.todo"))
+            return
         if not state:
             raise ValueError(_("Can't set an ir.actions.todo's state to an empty value."))
         previous_todo.write({'state':state})
