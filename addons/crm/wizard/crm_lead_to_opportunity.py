@@ -54,7 +54,8 @@ class crm_lead2opportunity(osv.osv_memory):
         models_data = self.pool.get('ir.model.data')
 
         # Get Opportunity views
-        result = models_data._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
+        result = models_data._get_id(
+            cr, uid, 'crm', 'view_crm_case_opportunities_filter')
         opportunity_view_search = models_data.browse(
             cr, uid, result, context=context).res_id
         opportunity_view_form = models_data._get_id(
@@ -83,9 +84,11 @@ class crm_lead2opportunity(osv.osv_memory):
             leads.history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
             if lead.partner_id:
                 msg_ids = [ x.id for x in lead.message_ids]
-                self.pool.get('mailgate.message').write(cr, uid, msg_ids, {'partner_id': lead.partner_id.id}, context=context)
-            message = _('Lead ') + " '" + lead.name + "' "+ _("is converted to Opportunity.")
-            self.log(cr, uid, lead.id, message)
+                self.pool.get('mailgate.message').write(cr, uid, msg_ids, {
+                    'partner_id': lead.partner_id.id
+                }, context=context)
+            self.log(cr, uid, lead.id,
+                _("Lead '%s' has been converted to an opportunity.") % lead.name)
 
         return {
             'name': _('Opportunity'),
