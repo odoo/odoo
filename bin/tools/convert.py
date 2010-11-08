@@ -33,6 +33,7 @@ import netsvc
 
 from config import config
 import logging
+import tools
 
 import sys
 import pickle
@@ -858,7 +859,9 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         except:
             logger = netsvc.Logger()
             logger.notifyChannel("init", netsvc.LOG_ERROR, "Cannot import the line: %s" % line)
-    pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate,filename=fname_partial)
+    result = pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate,filename=fname_partial)
+    if result[0] == -1:
+        tools.debug(result)
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
         data[fname_partial] = 0
