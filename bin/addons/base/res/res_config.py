@@ -90,8 +90,6 @@ class res_config_configurable(osv.osv_memory):
         `ValueError`: if no state is provided
         anything ir_actions_todo.write can throw
         """
-        if context is None:
-            context = {}
         # this is ultra brittle, but apart from storing the todo id
         # into the res.config view, I'm not sure how to get the
         # "previous" todo
