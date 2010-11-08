@@ -42,15 +42,11 @@ class crm_lead2opportunity(osv.osv_memory):
     def action_apply(self, cr, uid, ids, context=None):
         """
         This converts lead to opportunity and opens Opportunity view
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Opportunity IDs
-        @param context: A standard dictionary for contextual values
+        @param ids: ids of the leads to convert to opportunities
 
-        @return : Dictionary value for created Opportunity form
+        @return : View dictionary opening the Opportunity form view
         """
-        record_id = context and context.get('active_id', False) or False
+        record_id = context and context.get('active_id') or False
         if not record_id:
             return {}
 
@@ -85,7 +81,7 @@ class crm_lead2opportunity(osv.osv_memory):
                 self.pool.get('mailgate.message').write(cr, uid, msg_ids, {'partner_id': lead.partner_id.id}, context=context)
             message = _('Lead ') + " '" + lead.name + "' "+ _("is converted to Opportunity.")
             self.log(cr, uid, lead.id, message)
-        value = {
+        return {
             'name': _('Opportunity'),
             'view_type': 'form',
             'view_mode': 'form,tree',
@@ -97,7 +93,6 @@ class crm_lead2opportunity(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'search_view_id': res['res_id']
         }
-        return value
 
     _columns = {
         'name' : fields.char('Opportunity', size=64, required=True, select=1),
