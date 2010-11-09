@@ -114,25 +114,19 @@ class ir_values(osv.osv):
             else:
                 res_id=False
             if replace:
+                search_criteria = [
+                    ('key', '=', key),
+                    ('key2', '=', key2),
+                    ('model', '=', model),
+                    ('res_id', '=', res_id),
+                    ('user_id', '=', preserve_user and uid)
+                ]
                 if key in ('meta', 'default'):
-                    ids = self.search(cr, uid, [
-                        ('key', '=', key),
-                        ('key2', '=', key2),
-                        ('name', '=', name),
-                        ('model', '=', model),
-                        ('res_id', '=', res_id),
-                        ('user_id', '=', preserve_user and uid)
-                        ])
+                    search_criteria.append(('name', '=', name))
                 else:
-                    ids = self.search(cr, uid, [
-                        ('key', '=', key),
-                        ('key2', '=', key2),
-                        ('value', '=', value),
-                        ('model', '=', model),
-                        ('res_id', '=', res_id),
-                        ('user_id', '=', preserve_user and uid)
-                        ])
-                self.unlink(cr, uid, ids)
+                    search_criteria.append(('value', '=', value))
+
+                self.unlink(cr, uid, self.search(cr, uid, search_criteria))
             vals = {
                 'name': name,
                 'value': value,
