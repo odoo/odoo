@@ -24,22 +24,23 @@
 Miscelleanous tools used by OpenERP.
 """
 
-import os, time, sys
 import inspect
-
-from config import config
-
-import zipfile
-import release
+from itertools import izip
+import os
 import socket
 import subprocess
+import sys
 
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
 else:
     from threading import local
 
-from itertools import izip
+import time
+import zipfile
+
+from config import config
+import release
 
 # initialize a database with base/base.sql
 def init_db(cr):
@@ -198,7 +199,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
             if pathinfo:
                 return fo, fn
             return fo
-        except IOError, e:
+        except IOError:
             pass
 
     if subdir:
@@ -310,7 +311,6 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     from email.MIMEMultipart import MIMEMultipart
     from email.Header import Header
     from email.Utils import formatdate, COMMASPACE
-    from email.Utils import formatdate, COMMASPACE
     from email import Encoders
     import netsvc
 
@@ -373,7 +373,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             Encoders.encode_base64(part)
             part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
             msg.attach(part)
-    
+
     class WriteToLogger(object):
         def __init__(self):
             self.logger = netsvc.Logger()
@@ -384,14 +384,14 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     try:
         oldstderr = smtplib.stderr
         s = smtplib.SMTP()
-        
+
         try:
             # in case of debug, the messages are printed to stderr.
             if debug:
                 smtplib.stderr = WriteToLogger()
 
             s.set_debuglevel(int(bool(debug)))  # 0 or 1
-            
+
             s.connect(config['smtp_server'], config['smtp_port'])
             if ssl:
                 s.ehlo()
@@ -401,8 +401,8 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             if config['smtp_user'] or config['smtp_password']:
                 s.login(config['smtp_user'], config['smtp_password'])
 
-            s.sendmail(email_from, 
-                       flatten([email_to, email_cc, email_bcc]), 
+            s.sendmail(email_from,
+                       flatten([email_to, email_cc, email_bcc]),
                        msg.as_string()
                       )
 
@@ -414,7 +414,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     except Exception, e:
         netsvc.Logger().notifyChannel('email_send', netsvc.LOG_ERROR, e)
         return False
-    
+
     return True
 
 #----------------------------------------------------------
@@ -426,7 +426,7 @@ def sms_send(user, password, api_id, text, to):
     url = "http://api.urlsms.com/SendSMS.aspx"
     #url = "http://196.7.150.220/http/sendmsg"
     params = urllib.urlencode({'UserID': user, 'Password': password, 'SenderID': api_id, 'MsgText': text, 'RecipientMobileNo':to})
-    f = urllib.urlopen(url+"?"+params)
+    urllib.urlopen(url+"?"+params)
     # FIXME: Use the logger if there is an error
     return True
 
@@ -571,14 +571,15 @@ def is_hashable(h):
     except TypeError:
         return False
 
+
 class cache(object):
     """
     Use it as a decorator of the function you plan to cache
     Timeout: 0 = no timeout, otherwise in seconds
     """
-    
+
     __caches = []
-    
+
     def __init__(self, timeout=None, skiparg=2, multi=None):
         assert skiparg >= 2 # at least self and cr
         if timeout is None:
@@ -589,15 +590,15 @@ class cache(object):
         self.multi = multi
         self.lasttime = time.time()
         self.cache = {}
-        self.fun = None 
+        self.fun = None
         cache.__caches.append(self)
 
-    
+
     def _generate_keys(self, dbname, kwargs2):
         """
         Generate keys depending of the arguments and the self.mutli value
         """
-        
+
         def to_tuple(d):
             pairs = d.items()
             pairs.sort(key=lambda (k,v): k)
@@ -614,19 +615,19 @@ class cache(object):
             key = (('dbname', dbname),) + to_tuple(kwargs2)
             yield key, None
         else:
-            multis = kwargs2[self.multi][:]    
+            multis = kwargs2[self.multi][:]
             for id in multis:
                 kwargs2[self.multi] = (id,)
                 key = (('dbname', dbname),) + to_tuple(kwargs2)
                 yield key, id
-    
+
     def _unify_args(self, *args, **kwargs):
         # Update named arguments with positional argument values (without self and cr)
         kwargs2 = self.fun_default_values.copy()
         kwargs2.update(kwargs)
         kwargs2.update(dict(zip(self.fun_arg_names, args[self.skiparg-2:])))
         return kwargs2
-    
+
     def clear(self, dbname, *args, **kwargs):
         """clear the cache for database dbname
             if *args and **kwargs are both empty, clear all the keys related to this database
@@ -636,10 +637,10 @@ class cache(object):
         else:
             kwargs2 = self._unify_args(*args, **kwargs)
             keys_to_del = [key for key, _ in self._generate_keys(dbname, kwargs2) if key in self.cache.keys()]
-        
+
         for key in keys_to_del:
             self.cache.pop(key)
-    
+
     @classmethod
     def clean_caches_for_db(cls, dbname):
         for c in cls.__caches:
@@ -655,7 +656,7 @@ class cache(object):
         self.fun_default_values = {}
         if argspec[3]:
             self.fun_default_values = dict(zip(self.fun_arg_names[-len(argspec[3]):], argspec[3]))
-        
+
         def cached_result(self2, cr, *args, **kwargs):
             if time.time()-int(self.timeout) > self.lasttime:
                 self.lasttime = time.time()
@@ -673,11 +674,11 @@ class cache(object):
                     result[id] = self.cache[key][0]
                 else:
                     notincache[id] = key
-            
+
             if notincache:
                 if self.multi:
                     kwargs2[self.multi] = notincache.keys()
-                
+
                 result2 = fn(self2, cr, *args[:self.skiparg-2], **kwargs2)
                 if not self.multi:
                     key = notincache[None]
@@ -688,7 +689,7 @@ class cache(object):
                         key = notincache[id]
                         self.cache[key] = (result2[id], time.time())
                     result.update(result2)
-                        
+
             if not self.multi:
                 return result[None]
             return result
@@ -763,17 +764,17 @@ if not hasattr(__builtin__, 'all'):
             if not element:
                return False
         return True
-        
+
     __builtin__.all = all
     del all
-    
+
 if not hasattr(__builtin__, 'any'):
     def any(iterable):
         for element in iterable:
             if element:
                return True
         return False
-        
+
     __builtin__.any = any
     del any
 
@@ -884,7 +885,7 @@ def human_size(sz):
 
 def logged(f):
     from tools.func import wraps
-    
+
     @wraps(f)
     def wrapper(*args, **kwargs):
         import netsvc
@@ -959,7 +960,7 @@ def debug(what):
         >>> func_foo(42)
 
         This will output on the logger:
-        
+
             [Wed Dec 25 00:00:00 2008] DEBUG:func_foo:baz = 42
             [Wed Dec 25 00:00:00 2008] DEBUG:func_foo:qnx = (42, 42)
 
