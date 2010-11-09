@@ -101,7 +101,7 @@ class ir_values(osv.osv):
             cr.execute('CREATE INDEX ir_values_key_model_key2_index ON ir_values (key, model, key2)')
 
     def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
-        if type(value)==type(u''):
+        if isinstance(value, unicode):
             value = value.encode('utf8')
         if not isobject:
             value = pickle.dumps(value)
@@ -109,7 +109,7 @@ class ir_values(osv.osv):
             meta = pickle.dumps(meta)
         ids_res = []
         for model in models:
-            if type(model)==type([]) or type(model)==type(()):
+            if isinstance(model, (list, tuple)):
                 model,res_id = model
             else:
                 res_id=False
