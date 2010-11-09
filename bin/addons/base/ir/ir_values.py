@@ -24,6 +24,11 @@ from osv.orm import except_orm
 import pickle
 from tools.translate import _
 
+EXCLUDED_FIELDS = set((
+    'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
+    'report_sxw_content_data', 'report_rml_content_data', 'search_view',
+    'search_view_id'))
+
 class ir_values(osv.osv):
     _name = 'ir.values'
 
@@ -192,17 +197,13 @@ class ir_values(osv.osv):
             keys.append(x[1])
             if x[3]:
                 model,id = x[2].split(',')
-                fields = self.pool.get(model).fields_get_keys(cr, uid)
-                pos = 0
                 # FIXME: It might be a good idea to opt-in that kind of stuff
                 # FIXME: instead of arbitrarily removing random fields
-                while pos<len(fields):
-                    if fields[pos] in ('report_sxw_content', 'report_rml_content',
-                        'report_sxw', 'report_rml', 'report_sxw_content_data',
-                        'report_rml_content_data', 'search_view', 'search_view_id'):
-                        del fields[pos]
-                    else:
-                        pos+=1
+                fields = [
+                    field
+                    for field in self.pool.get(model).fields_get_keys(cr, uid)
+                    if field not in EXCLUDED_FIELDS]
+
                 try:
                     datas = self.pool.get(model).read(cr, uid, [int(id)], fields, context)
                 except except_orm, e:
