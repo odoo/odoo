@@ -149,8 +149,8 @@ class ir_values(osv.osv):
     def get(self, cr, uid, key, key2, models, meta=False, context={}, res_id_req=False, without_user=True, key2_req=True):
         result = []
         for m in models:
-            if type(m)==type([]) or type(m)==type(()):
-                m,res_id = m
+            if isinstance(m, (list, tuple)):
+                m, res_id = m
             else:
                 res_id=False
 
@@ -223,7 +223,7 @@ class ir_values(osv.osv):
         res = filter(bool, map(lambda x: _result_get(x, keys), list(result)))
         res2 = res[:]
         for r in res:
-            if type(r[2])==type({}) and 'type' in r[2]:
+            if isinstance(r[2], dict) and 'type' in r[2]:
                 if r[2]['type'] in ('ir.actions.report.xml','ir.actions.act_window','ir.actions.wizard'):
                     groups = r[2].get('groups_id')
                     if groups:
