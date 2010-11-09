@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-__all__ = ['partial', 'wraps', 'update_wrapper']
+__all__ = ['partial', 'wraps', 'update_wrapper', 'synchronized']
 
 try:
     from functools import partial, wraps, update_wrapper
@@ -76,4 +76,20 @@ except ImportError:
         """
         return partial(update_wrapper, wrapped=wrapped,
                        assigned=assigned, updated=updated)
+
+
+
+def synchronized(lock_attr='_lock'):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            lock = getattr(self, lock_attr)
+            try:
+                lock.acquire()
+                return func(self, *args, **kwargs)
+            finally:
+                lock.release()
+        return wrapper
+    return decorator
+
 

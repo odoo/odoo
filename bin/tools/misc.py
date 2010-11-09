@@ -40,6 +40,7 @@ import time
 import zipfile
 
 from config import config
+from lru import LRU
 import release
 
 # initialize a database with base/base.sql
@@ -580,7 +581,7 @@ class cache(object):
 
     __caches = []
 
-    def __init__(self, timeout=None, skiparg=2, multi=None):
+    def __init__(self, timeout=None, skiparg=2, multi=None, size=8192):
         assert skiparg >= 2 # at least self and cr
         if timeout is None:
             self.timeout = config['cache_timeout']
@@ -589,7 +590,7 @@ class cache(object):
         self.skiparg = skiparg
         self.multi = multi
         self.lasttime = time.time()
-        self.cache = {}
+        self.cache = LRU(size)
         self.fun = None
         cache.__caches.append(self)
 
