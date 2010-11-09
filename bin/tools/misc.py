@@ -40,7 +40,6 @@ from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
 from email.Header import Header
 from email.Utils import formatdate, COMMASPACE
-from email.Utils import formatdate, COMMASPACE
 from email import Encoders
 from itertools import islice, izip
 from which import which
@@ -432,7 +431,7 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
             from mailbox import Maildir
             maildir_path = smtp_server[8:]
             mdir = Maildir(maildir_path,factory=None, create = True)
-            mdir.add(msg.as_string(True))
+            mdir.add(message.as_string(True))
             return True
 
         oldstderr = smtplib.stderr
@@ -1408,7 +1407,7 @@ def upload_data(email, data, type='SURVEY'):
     return True
 
 
-# port of python 2.6's attrgetter with support for dotted notation 
+# port of python 2.6's attrgetter with support for dotted notation
 def resolve_attr(obj, attr):
     for name in attr.split("."):
         obj = getattr(obj, name)
