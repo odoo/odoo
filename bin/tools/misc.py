@@ -50,6 +50,7 @@ else:
 
 import netsvc
 from config import config
+from lru import LRU
 
 _logger = logging.getLogger('tools')
 
@@ -696,7 +697,7 @@ class cache(object):
 
     __caches = []
 
-    def __init__(self, timeout=None, skiparg=2, multi=None):
+    def __init__(self, timeout=None, skiparg=2, multi=None, size=8192):
         assert skiparg >= 2 # at least self and cr
         if timeout is None:
             self.timeout = config['cache_timeout']
@@ -705,7 +706,7 @@ class cache(object):
         self.skiparg = skiparg
         self.multi = multi
         self.lasttime = time.time()
-        self.cache = {}
+        self.cache = LRU(size)      # TODO take size from config
         self.fun = None
         cache.__caches.append(self)
 
