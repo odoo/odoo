@@ -130,7 +130,7 @@ def _process_text(self, txt):
                 if isinstance(txt, basestring):
                     result += str2xml(txt)
                 elif (txt is not None) and (txt is not False):
-                    result += txt
+                    result += unicode(txt)
         return result
 
 def text_get(node):
