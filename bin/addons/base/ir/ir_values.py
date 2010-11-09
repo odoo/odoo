@@ -159,9 +159,8 @@ class ir_values(osv.osv):
             if key2:
                 where.append('key2=%s')
                 params.append(key2[:200])
-            else:
-                if key2_req and not meta:
-                    where.append('key2 is null')
+            elif key2_req and not meta:
+                where.append('key2 is null')
             if res_id_req and (models[-1][0]==m):
                 if res_id:
                     where.append('res_id=%s')
@@ -193,7 +192,6 @@ class ir_values(osv.osv):
             keys.append(x[1])
             if x[3]:
                 model,id = x[2].split(',')
-                id = int(id)
                 fields = self.pool.get(model).fields_get_keys(cr, uid)
                 pos = 0
                 # FIXME: It might be a good idea to opt-in that kind of stuff
@@ -206,37 +204,29 @@ class ir_values(osv.osv):
                     else:
                         pos+=1
                 try:
-                    datas = self.pool.get(model).read(cr, uid, [id], fields, context)
+                    datas = self.pool.get(model).read(cr, uid, [int(id)], fields, context)
                 except except_orm, e:
                     return False
-                datas= datas and datas[0] or None
+                datas = datas and datas[0]
                 if not datas:
-                    #ir_del(cr, uid, x[0])
                     return False
             else:
-                datas = pickle.loads(str(x[2].encode('utf-8')))
+                datas = pickle.loads(x[2].encode('utf-8'))
             if meta:
-                meta2 = pickle.loads(x[4])
-                return (x[0],x[1],datas,meta2)
-            return (x[0],x[1],datas)
+                return (x[0], x[1], datas, pickle.loads(x[4]))
+            return (x[0], x[1], datas)
         keys = []
-        res = filter(bool, map(lambda x: _result_get(x, keys), list(result)))
+        res = filter(None, map(lambda x: _result_get(x, keys), result))
         res2 = res[:]
         for r in res:
-            if isinstance(r[2], dict) and 'type' in r[2]:
-                if r[2]['type'] in ('ir.actions.report.xml','ir.actions.act_window','ir.actions.wizard'):
-                    groups = r[2].get('groups_id')
-                    if groups:
-                            cr.execute('SELECT COUNT(1) FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',(tuple(groups), uid))
-                            cnt = cr.fetchone()[0]
-                            if not cnt:
-                                res2.remove(r)
-                            if r[1] == 'Menuitem' and not res2:
-                                raise osv.except_osv('Error !','You do not have the permission to perform this operation !!!')
+            if isinstance(r[2], dict) and r[2].get('type') in ('ir.actions.report.xml','ir.actions.act_window','ir.actions.wizard'):
+                groups = r[2].get('groups_id')
+                if groups:
+                    cr.execute('SELECT COUNT(1) FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',(tuple(groups), uid))
+                    cnt = cr.fetchone()[0]
+                    if not cnt:
+                        res2.remove(r)
+                    if r[1] == 'Menuitem' and not res2:
+                        raise osv.except_osv('Error !','You do not have the permission to perform this operation !!!')
         return res2
 ir_values()
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
