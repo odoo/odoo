@@ -423,8 +423,6 @@ account_bank_statement()
 class account_bank_statement_line(osv.osv):
 
     def onchange_type(self, cr, uid, line_id, partner_id, type, context=None):
-        res_users_obj = self.pool.get('res.users')
-        res_currency_obj = self.pool.get('res.currency')
         res = {'value': {}}
         obj_partner = self.pool.get('res.partner')
         if context is None:
