@@ -20,8 +20,6 @@
         </field>
     </record>
 
-
-
     <!-- Idea Category Form View -->
     <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="28"/>
         <record model="ir.ui.view" id="view_idea_category_form">
@@ -50,6 +48,7 @@
             <field name="arch" type="xml">
                 <tree string="Category of ideas">
                     <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
