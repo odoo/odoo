@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 09:14+0000\n"
-"Last-Translator: Panagiotis Kranidiotis <kranidiotis@vatica.org>\n"
+"PO-Revision-Date: 2010-11-09 17:55+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-11-10 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -44,11 +44,12 @@ msgstr ""
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
 msgstr ""
+"Πρόσθεσε εδώ το υπόλοιπο ωρών που απαιτήτε για το κλείσιμο της εργασίας"
 
 #. module: project
 #: view:project.task:0
 msgid "Deadlines"
-msgstr ""
+msgstr "Προθεσμίες"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -60,7 +61,7 @@ msgstr "Μη Επιτρεπτή Λειτουργία!"
 #: code:addons/project/wizard/project_task_delegate.py:0
 #, python-format
 msgid "CHECK: "
-msgstr ""
+msgstr "ΕΛΕΓΧΟΣ: "
 
 #. module: project
 #: field:project.installer,project_issue:0
@@ -108,11 +109,13 @@ msgstr ""
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
+"Λάθος:Η ημερομηνία έναρξης του έργου θα πρέπει να είναι μικρότερη από την "
+"ημερομηνία λήξης"
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluation Task"
-msgstr ""
+msgstr "Επαναξιολόγηση εργασίας"
 
 #. module: project
 #: field:project.project,members:0
@@ -127,7 +130,7 @@ msgstr "Εργασίες ανά αρμόδιο"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "March"
-msgstr ""
+msgstr "Μάρτιος"
 
 #. module: project
 #: view:project.task:0
@@ -158,7 +161,7 @@ msgstr "Εργασίες μου"
 #: constraint:project.task:0
 #, python-format
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Λάθος! Δεν μπορείς να δημιουργήσεις επαναλαμβανόμενες εργασίες"
 
 #. module: project
 #: field:project.task,company_id:0
@@ -166,7 +169,7 @@ msgstr ""
 #: view:report.project.task.user:0
 #: field:report.project.task.user,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Εταιρία"
 
 #. module: project
 #: field:project.installer,project_scrum:0
@@ -176,12 +179,12 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_planned_total_hours_graph
 msgid "Projects: Planned Vs Total hours"
-msgstr ""
+msgstr "Έργα:Προγραμματισμένες Vs Συνολικές Ώρες"
 
 #. module: project
 #: view:project.task.close:0
 msgid "Warn Message"
-msgstr ""
+msgstr "Προειδοποιητικό Μύνημα"
 
 #. module: project
 #: help:project.project,members:0
@@ -238,7 +241,7 @@ msgstr ""
 #: field:report.project.task.user,day:0
 #: field:task.by.days,day:0
 msgid "Day"
-msgstr ""
+msgstr "Ημέρα"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -249,7 +252,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_task_close
 msgid "Project Close Task"
-msgstr ""
+msgstr "Εργασία Κλεισίματος Έργου"
 
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
@@ -266,7 +269,7 @@ msgstr "Εργασία"
 #. module: project
 #: view:project.project:0
 msgid "Members"
-msgstr ""
+msgstr "Μέλη"
 
 #. module: project
 #: help:project.task,planned_hours:0
@@ -297,12 +300,12 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Invoice Address"
-msgstr ""
+msgstr "Διεύθυνση Τιμολογίου"
 
 #. module: project
 #: field:report.project.task.user,name:0
 msgid "Task Summary"
-msgstr ""
+msgstr "Σύνοψη Εργασίας"
 
 #. module: project
 #: field:project.task,active:0
@@ -378,7 +381,7 @@ msgstr "Η Εργασία Ολοκληρώθηκε"
 #: field:project.task,date_end:0
 #: field:report.project.task.user,date_end:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Ημερομηνία Λήξης"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -395,7 +398,7 @@ msgstr "Αναθέτει εργασίες στον άλλο χρήστη."
 #: view:project.task:0
 #: view:report.project.task.user:0
 msgid "Group By..."
-msgstr ""
+msgstr "Ομοδοποίηση Με ..."
 
 #. module: project
 #: help:project.task,effective_hours:0
@@ -422,6 +425,8 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the project "
 "without removing it."
 msgstr ""
+"Εάν το πεδίο είναι ενεργό, θα επειτραπεί να γίνει το έργο κρυφό χωρίς να "
+"διαγραφεί."
 
 #. module: project
 #: field:project.task,work_ids:0
@@ -462,7 +467,7 @@ msgstr "Προθεσμία"
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Ακυρο"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -499,22 +504,22 @@ msgstr ""
 #: view:report.project.task.user:0
 #: field:report.project.task.user,nbr:0
 msgid "# of tasks"
-msgstr ""
+msgstr "#  εργασιών"
 
 #. module: project
 #: view:project.task:0
 msgid "Previous"
-msgstr ""
+msgstr "Προηγούμενη"
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluate Task"
-msgstr ""
+msgstr "Επαναξιολόγηση Εργασίας"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_testing
 msgid "Testing"
-msgstr ""
+msgstr "Έλεγχος"
 
 #. module: project
 #: view:project.project:0
@@ -529,7 +534,7 @@ msgstr ""
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
 msgid "Specification"
-msgstr ""
+msgstr "Προδιαγραφή"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_my_project
@@ -544,7 +549,7 @@ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 #. module: project
 #: view:project.task:0
 msgid "Next"
-msgstr ""
+msgstr "Επόμενη"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
@@ -555,7 +560,7 @@ msgstr "Από Πρόχειρο θα μετατραπεί σε ανοικτό."
 #: view:report.project.task.user:0
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
-msgstr ""
+msgstr "# Ημερών"
 
 #. module: project
 #: help:project.task,active:0
@@ -574,7 +579,7 @@ msgstr "Ποσοστό κλεισμένων εργασιών σε σχέση μ�
 #: view:project.task.delegate:0
 #: field:project.task.delegate,new_task_description:0
 msgid "New Task Description"
-msgstr ""
+msgstr "Νέα Περιγραφή Εργασίας"
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
@@ -584,7 +589,7 @@ msgstr "Εργασία"
 #. module: project
 #: view:project.installer:0
 msgid "Methodologies"
-msgstr ""
+msgstr "Μεθοδολογίες"
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -594,7 +599,7 @@ msgstr "Υπολογισμένο ως εξής: Χρόνος που Αναλώθ
 #. module: project
 #: help:project.task.close,partner_email:0
 msgid "Email Address of Customer"
-msgstr ""
+msgstr "Email Πελάτη"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -610,7 +615,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Reevaluate"
-msgstr ""
+msgstr "Επαναξιολόγηση"
 
 #. module: project
 #: code:addons/project/project.py:0

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+	<!-- Fiscal Position Templates -->
+
+	<record id="fiscal_position_template_1_en" model="account.fiscal.position.template">
+		<field name="name">Provincial Regime</field>
+		<field name="chart_template_id" ref="ca_en_chart_template_en"/>
+	</record>
+
+	<record id="fiscal_position_template_2_en" model="account.fiscal.position.template">
+		<field name="name">Harmonized Provinces Regime</field>
+		<field name="chart_template_id" ref="ca_en_chart_template_en"/>
+	</record>
+
+	<record id="fiscal_position_template_3_en" model="account.fiscal.position.template">
+		<field name="name">Non-Harmonized Provinces Regime</field>
+		<field name="chart_template_id" ref="ca_en_chart_template_en"/>
+	</record>
+
+	<record id="fiscal_position_template_4_en" model="account.fiscal.position.template">
+		<field name="name">International Regime</field>
+		<field name="chart_template_id" ref="ca_en_chart_template_en"/>
+	</record>
+
+
+	<!-- Fiscal Position Tax Templates -->
+
+	<record id="fiscal_position_tax_template_1_en" model="account.fiscal.position.tax.template">
+		<field name="position_id" ref="fiscal_position_template_1_en"  />
+		<field name="tax_src_id" ref="pst_en" />
+		<field name="tax_dest_id" ref="notax_en" />
+	</record>
+
+	<record id="fiscal_position_tax_template_2_en" model="account.fiscal.position.tax.template">
+		<field name="position_id" ref="fiscal_position_template_2_en"  />
+		<field name="tax_src_id" ref="hst_en" />
+		<field name="tax_dest_id" ref="notax_en" />
+	</record>
+	<record id="fiscal_position_tax_template_3_en" model="account.fiscal.position.tax.template">
+		<field name="position_id" ref="fiscal_position_template_3_en"  />
+		<field name="tax_src_id" ref="gst_en" />
+		<field name="tax_dest_id" ref="notax_en" />
+	</record>
+	<record id="fiscal_position_tax_template_4_en" model="account.fiscal.position.tax.template">
+		<field name="position_id" ref="fiscal_position_template_4_en"  />
+		<field name="tax_src_id" ref="notax_en" />
+		<field name="tax_dest_id" ref="notax_en" />
+	</record>
+
+	<!-- Fiscal Position Account Templates -->
+
+	<record id="fiscal_position_account_template_1_en" model="account.fiscal.position.account.template">
+		<field name="position_id" ref="fiscal_position_template_1_en"  />
+		<field name="account_src_id" ref="chart411110_en" />
+		<field name="account_dest_id" ref="chart411210_en" />
+	</record>
+
+	<record id="fiscal_position_account_template_2_en" model="account.fiscal.position.account.template">
+		<field name="position_id" ref="fiscal_position_template_2_en"  />
+		<field name="account_src_id" ref="chart411120_en" />
+		<field name="account_dest_id" ref="chart411220_en" />
+	</record>
+
+	<record id="fiscal_position_account_template_3_en" model="account.fiscal.position.account.template">
+		<field name="position_id" ref="fiscal_position_template_3_en"  />
+		<field name="account_src_id" ref="chart411130_en" />
+		<field name="account_dest_id" ref="chart411230_en" />
+	</record>
+
+	<record id="fiscal_position_account_template_4_en" model="account.fiscal.position.account.template">
+		<field name="position_id" ref="fiscal_position_template_4_en"  />
+		<field name="account_src_id" ref="chart411140_en" />
+		<field name="account_dest_id" ref="chart411240_en" />
+	</record>
+
+</data>
+</openerp>    

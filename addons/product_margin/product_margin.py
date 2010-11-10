@@ -83,13 +83,13 @@ class product_product(osv.osv):
                     res[val.id]['purchase_gap'] = res[val.id]['normal_cost']-res[val.id]['total_cost']
 
             if 'total_margin' in field_names:
-                res[val.id]['total_margin'] = val.turnover - val.standard_price
+                res[val.id]['total_margin'] = res[val.id].get('turnover', val.turnover) - res[val.id].get('total_cost', val.standard_price)
             if 'expected_margin' in field_names:
-                res[val.id]['expected_margin'] = val.sale_expected - val.normal_cost
+                res[val.id]['expected_margin'] = res[val.id].get('sale_expected',val.sale_expected) - res[val.id].get('normal_cost',val.normal_cost)
             if 'total_margin_rate' in field_names:
-                res[val.id]['total_margin_rate'] = val.turnover and val.total_margin * 100 / val.turnover or 0.0
+                res[val.id]['total_margin_rate'] = res[val.id].get('turnover', val.turnover) and res[val.id]['total_margin'] * 100 / res[val.id].get('turnover', val.turnover) or 0.0
             if 'expected_margin_rate' in field_names:
-                res[val.id]['expected_margin_rate'] = val.sale_expected and val.expected_margin * 100 / val.sale_expected or 0.0
+                res[val.id]['expected_margin_rate'] = res[val.id].get('sale_expected',val.sale_expected) and res[val.id]['expected_margin'] * 100 /  res[val.id].get('sale_expected',val.sale_expected) or 0.0
         return res
 
     _columns = {
