@@ -562,11 +562,11 @@ class event_registration(osv.osv):
                     subject = _('Auto Confirmation: [%s] %s') %(regestration.id, regestration.name)
                     body = regestration.event_id.mail_confirm
             if subject or body:
-                tools.email_send(src, email_to, subject, body, email_cc = email_cc, openobject_id = regestration.id)
+                tools.email_send(src, email_to, subject, body, email_cc=email_cc, openobject_id=regestration.id)
                 self.history(cr, uid, [regestration], subject, history = True, \
-                        email = email_to, details = body, \
-                        subject = subject, email_from = src, \
-                        email_cc = ', '.join(email_cc))
+                        email=email_to, details=body, \
+                        subjec=subject, email_from=src, \
+                        email_cc=', '.join(email_cc))
 
         return True
 
