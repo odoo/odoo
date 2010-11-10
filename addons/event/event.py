@@ -370,6 +370,18 @@ class event_registration(osv.osv):
         self.history(cr, uid, [reg], _('Invoiced'))
         return inv_id
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        """ Copy record of Given id
+        @param id: Id of Registration record.
+        @param context: A standard dictionary for contextual values
+        """
+        if not default:
+            default = {}
+        default.update({
+            'invoice_id': False,
+        })
+        return super(event_registration, self).copy(cr, uid, id, default=default, context=context)
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, date_inv = False, context=None):
         """ Action of Create Invoice """
         res = False
