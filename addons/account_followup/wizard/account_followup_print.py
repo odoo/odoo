@@ -64,7 +64,7 @@ class account_followup_print(osv.osv_memory):
     }
 
     _defaults = {
-         'date': time.strftime('%Y-%m-%d'),
+         'date': lambda *a: time.strftime('%Y-%m-%d'),
          'followup_id': _get_followup,
     }
 account_followup_print()
@@ -97,7 +97,7 @@ class account_followup_stat_by_partner(osv.osv):
                     max(l.followup_date) AS date_followup,
                     max(l.followup_line_id) AS max_followup_id,
                     sum(l.debit - l.credit) AS balance,
-                    l.company_id  company_id
+                    l.company_id as company_id
                 FROM
                     account_move_line l
                     LEFT JOIN account_account a ON (l.account_id = a.id)

@@ -57,7 +57,6 @@
   <!-- Define a payment mode -->
   <record model="payment.mode" id="payment_mode_dta">
 	<field name="name">DTA</field>
-	<field name="type" ref="payment_type_dta"/>
 	<field name="bank_id" ref="main_bank"/>
 	<field name="journal" model="account.journal" search="[('type','=','cash')]"/>
   </record>

@@ -173,7 +173,7 @@ class account_bank_statement(osv.osv):
 
     _defaults = {
         'name': "/",
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
         'balance_start': _default_balance_start,
         'journal_id': _default_journal_id,
@@ -271,13 +271,10 @@ class account_bank_statement(osv.osv):
 
         if st_line.account_id and st_line.account_id.currency_id and st_line.account_id.currency_id.id <> company_currency_id:
             val['currency_id'] = st_line.account_id.currency_id.id
-            if company_currency_id==st_line.account_id.currency_id.id:
-                amount_cur = st_line.amount
-            else:
-                amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                        st_line.account_id.currency_id.id, amount, context=context,
-                        account=acc_cur)
-            val['amount_currency'] = amount_cur
+            amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
+                    st_line.account_id.currency_id.id, amount, context=context,
+                    account=acc_cur)
+            val['amount_currency'] = -amount_cur
 
         move_line_id = account_move_line_obj.create(cr, uid, val, context=context)
         torec.append(move_line_id)
@@ -473,7 +470,7 @@ class account_bank_statement_line(osv.osv):
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'type': 'general',
     }
 
