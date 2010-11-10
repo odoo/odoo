@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Sequence Numbering',
+    'name': 'Entries Sequence Numbering',
     'version': '1.1',
     'category': 'Generic Modules/Accounting',
     'description': """
@@ -36,4 +36,5 @@
     'active': False,
     'certificate': '',
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
