@@ -176,11 +176,11 @@ class report_custom(report_rml):
 
                 xml += "<lines style='lines'>" + xml_tmp + '</lines>'
                 xml += """<lines style='sub_total'> <row>
-                    <col> """ + _('Cost ') + _('of ') + str(number) +' '+ product.uom_id.name + """: </col>
+                    <col> """ + _('Component ') + _('Cost ') + _('of ') + str(number) +' '+ product.uom_id.name + """: </col>
                     <col/>
                     <col t='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
-                    <col t='yes'>"""+ rml_obj.formatLang(total, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
+                    <col t='yes'></col>
                     </row></lines>'"""
 
                 total2 = 0
@@ -204,7 +204,7 @@ class report_custom(report_rml):
                     <col/>
                     <col t='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd+total2, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
-                    <col t='yes'>"""+ rml_obj.formatLang(total+total2, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
+                    <col t='yes'></col>
                     </row></lines>'"""
 
         xml = '<?xml version="1.0" ?><report>' + config_start + config_stop + xml + '</report>'
