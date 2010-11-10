@@ -33,7 +33,7 @@ without flatten, one could further edit the resulting form.
 with flatten, everything is turned into text.
 """
 
-from future import with_statement
+from __future__ import with_statement
 
 import os
 import tempfile
