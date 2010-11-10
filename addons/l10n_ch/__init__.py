@@ -32,11 +32,10 @@
 ##############################################################################
 
 
+import wizard
 import invoice
 import company
 import partner
-import company
-import wizard
 import payment
 import report
 import bank
