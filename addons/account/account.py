@@ -585,12 +585,12 @@ class account_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=16, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
-                                 " Select 'General' to be used at the time of stock input/output."\
-                                 " Select 'Situation' to be used at the time of making vouchers."),
+                                 " Select 'General' for miscellaneous operations."\
+                                 " Select 'Opening/Closing Situation' to be used at the time of new fiscal year creation or end of year entries generation."),
         'refund_journal': fields.boolean('Refund Journal', help='Fill this if the journal is to be used for refunds of invoices.'),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
@@ -2533,8 +2533,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts', required=True),
         'code_digits':fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'seq_journal':fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
-        "sale_tax": fields.many2one("account.tax.template", "Sale Tax"),
-        "purchase_tax": fields.many2one("account.tax.template", "Purchase Tax"),
+        "sale_tax": fields.many2one("account.tax.template", "Default Sale Tax"),
+        "purchase_tax": fields.many2one("account.tax.template", "Default Purchase Tax"),
     }
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = {}
@@ -2542,12 +2542,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         res['value']["sale_tax"] = False
         res['value']["purchase_tax"] = False
         if chart_template_id:
-            ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
-                                          , "=", chart_template_id)], order="sequence")
-            if len(ids) > 0:
-                id=ids[0]
-                res['value']["sale_tax"] = id
-                res['value']["purchase_tax"] = id
+            sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
+            purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
+            res['value']["sale_tax"] = sale_tax_ids and sale_tax_ids[0] or False
+            res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
         return res
 
     def _get_chart(self, cr, uid, context={}):

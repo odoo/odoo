@@ -107,7 +107,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
                 if item['code'] == '71-72':
                     item['code']='71'
                 if item['code'] in list_of_tags:
-                    data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(abs(int(item['sum_period']*100))) +  '</D'+str(int(item['code'])) +'>'
+                    data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(abs(int(round(item['sum_period']*100)))) +  '</D'+str(int(item['code'])) +'>'
 
         data_of_file += '\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)
