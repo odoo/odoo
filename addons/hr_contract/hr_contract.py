@@ -111,7 +111,7 @@ class hr_contract(osv.osv):
         'notes': fields.text('Notes'),
     }
     _defaults = {
-        'date_start': time.strftime("%Y-%m-%d"),
+        'date_start': lambda *a: time.strftime("%Y-%m-%d"),
     }
 
 hr_contract()

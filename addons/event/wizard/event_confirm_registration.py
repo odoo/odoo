@@ -27,7 +27,7 @@ class event_confirm_registration(osv.osv_memory):
     Confirm Event Registration
     """
     _name = "event.confirm.registration"
-    _description = "Event Registraion"
+    _description = "Confirmation for Event Registration"
 
     _columns = {
         'msg': fields.text('Message', readonly=True),

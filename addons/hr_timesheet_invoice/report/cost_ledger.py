@@ -128,14 +128,14 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 
     def _sum_debit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
-        if not len(ids):
+        if not ids:
             return 0.0
         self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount>0", (ids,date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
-        if not len(ids):
+        if not ids:
             return 0.0
         ids = map(lambda x: x.id, accounts)
         self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount<0", (ids, date1, date2))
@@ -148,7 +148,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 
     def _sum_qty(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
-        if not len(ids):
+        if not ids:
             return 0.0
         ids = map(lambda x: x.id, accounts)
         self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s", (ids,date1, date2))
@@ -156,7 +156,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 
     def _sum_revenue(self, accounts):
         ids = map(lambda x: x.id, accounts)
-        if not len(ids):
+        if not ids:
             return 0.0
         res = 0.0
         for id in ids:
