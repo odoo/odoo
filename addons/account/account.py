@@ -2533,8 +2533,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts', required=True),
         'code_digits':fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'seq_journal':fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
-        "sale_tax": fields.many2one("account.tax.template", "Sale Tax"),
-        "purchase_tax": fields.many2one("account.tax.template", "Purchase Tax"),
+        "sale_tax": fields.many2one("account.tax.template", "Default Sale Tax"),
+        "purchase_tax": fields.many2one("account.tax.template", "Default Purchase Tax"),
     }
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = {}
@@ -2542,12 +2542,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         res['value']["sale_tax"] = False
         res['value']["purchase_tax"] = False
         if chart_template_id:
-            ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
-                                          , "=", chart_template_id)], order="sequence")
-            if len(ids) > 0:
-                id=ids[0]
-                res['value']["sale_tax"] = id
-                res['value']["purchase_tax"] = id
+            sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
+            purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
+            res['value']["sale_tax"] = sale_tax_ids and sale_tax_ids[0] or False
+            res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
         return res
 
     def _get_chart(self, cr, uid, context={}):
