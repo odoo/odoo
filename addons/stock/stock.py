@@ -69,7 +69,7 @@ class stock_location(osv.osv):
     _description = "Location"
     _parent_name = "location_id"
     _parent_store = True
-    _parent_order = 'id'
+    _parent_order = 'name'
     _order = 'parent_left'
 
     def name_get(self, cr, uid, ids, context=None):
@@ -356,7 +356,7 @@ class stock_location(osv.osv):
         Attempt to find a quantity ``product_qty`` (in the product's default uom or the uom passed in ``context``) of product ``product_id``
         in locations with id ``ids`` and their child locations. If ``lock`` is True, the stock.move lines
         of product with id ``product_id`` in the searched location will be write-locked using Postgres's
-        "FOR UPDATE NOWAIT" option until the transaction is committed or rolled back, to prevent reservin 
+        "FOR UPDATE NOWAIT" option until the transaction is committed or rolled back, to prevent reservin
         twice the same products.
         If ``lock`` is True and the lock cannot be obtained (because another transaction has locked some of
         the same stock.move lines), a log line will be output and False will be returned, as if there was
@@ -501,14 +501,14 @@ class stock_tracking(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         raise osv.except_osv(_('Error'), _('You can not remove a lot line !'))
-    
+
     def action_traceability(self, cr, uid, ids, context={}):
         """ It traces the information of a product
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected 
-        @param context: A standard dictionary 
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
         @return: A dictionary of values
         """
         value={}
@@ -636,7 +636,7 @@ class stock_picking(osv.osv):
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not from Picking")], "Invoice Control",
+            ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
     }
@@ -682,7 +682,7 @@ class stock_picking(osv.osv):
             picking_obj = self.browse(cr, uid, [res], context)[0]
             for move in picking_obj.move_lines:
                 move_obj.write(cr, uid, [move.id], {'tracking_id': False,'prodlot_id':False})
-        return res 
+        return res
 
     def onchange_partner_in(self, cr, uid, context=None, partner_id=None):
         return {}
@@ -1087,14 +1087,14 @@ class stock_picking(osv.osv):
                 if move.state not in ('cancel',):
                     return False
         return True
-   
+
     def allow_cancel(self, cr, uid, ids, context={}):
         for pick in self.browse(cr, uid, ids, context=context):
             if not pick.move_lines:
                 return True
             for move in pick.move_lines:
                 if move.state == 'done':
-                    raise osv.except_osv(_('Error'), _('You cannot cancel picking because stock move is in done state !'))                    
+                    raise osv.except_osv(_('Error'), _('You cannot cancel picking because stock move is in done state !'))
         return True
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
@@ -1182,7 +1182,7 @@ class stock_picking(osv.osv):
 
                         # Record the values that were chosen in the wizard, so they can be
                         # used for inventory valuation if real-time valuation is enabled.
-                        move_obj.write(cr, uid, [move.id], 
+                        move_obj.write(cr, uid, [move.id],
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency})
 
@@ -1355,7 +1355,7 @@ class stock_production_lot(osv.osv):
         'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL [INT_REF]"),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'date': fields.datetime('Creation Date', required=True),
-        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select=True, 
+        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select=True,
             help="Current quantity of products with this Production Lot Number available in company warehouses",
             digits_compute=dp.get_precision('Product UoM')),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
@@ -1368,15 +1368,15 @@ class stock_production_lot(osv.osv):
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, ref)', _('The combination of serial number and internal reference must be unique !')),
+        ('name_ref_uniq', 'unique (name, ref)', 'The combination of serial number and internal reference must be unique !'),
     ]
     def action_traceability(self, cr, uid, ids, context={}):
         """ It traces the information of a product
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected 
-        @param context: A standard dictionary 
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
         @return: A dictionary of values
         """
         value=self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
@@ -1510,7 +1510,7 @@ class stock_move(osv.osv):
         if context.get('move_line', []):
             if context['move_line'][0]:
                 if isinstance(context['move_line'][0], (tuple, list)):
-                    return context['move_line'][0][2] and context['move_line'][0][2].get('location_dest_id',False) 
+                    return context['move_line'][0][2] and context['move_line'][0][2].get('location_dest_id',False)
                 else:
                     move_list = self.pool.get('stock.move').read(cr, uid, context['move_line'][0], ['location_dest_id'])
                     return move_list and move_list['location_dest_id'][0] or False
@@ -1871,7 +1871,7 @@ class stock_move(osv.osv):
         """
         Return the accounts and journal to use to post Journal Entries for the real-time
         valuation of the move.
-        
+
         :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
         :raise: osv.except_osv() is any mandatory account or journal is not defined.
         """
@@ -1911,13 +1911,13 @@ class stock_move(osv.osv):
         default_uom = move.product_id.uom_id.id
         qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
 
-        # if product is set to average price and a specific value was entered in the picking wizard, 
+        # if product is set to average price and a specific value was entered in the picking wizard,
         # we use it
         if move.product_id.cost_method == 'average' and move.price_unit:
             reference_amount = qty * move.price_unit
             reference_currency_id = move.price_currency_id.id or reference_currency_id
 
-        # Otherwise we default to the company's valuation price type, considering that the values of the 
+        # Otherwise we default to the company's valuation price type, considering that the values of the
         # valuation field are expressed in the default currency of the move's company.
         else:
             if context is None:
@@ -1959,7 +1959,7 @@ class stock_move(osv.osv):
 
             move_obj = self.pool.get('account.move')
             for j_id, move_lines in account_moves:
-                move_obj.create(cr, uid, 
+                move_obj.create(cr, uid,
                         {'name': move.name,
                          'journal_id': j_id,
                          'line_id': move_lines,
@@ -2016,10 +2016,10 @@ class stock_move(osv.osv):
 
     def _create_account_move_line(self, cr, uid, move, src_account_id, dest_account_id, reference_amount, reference_currency_id, context=None):
         """
-        Generate the account.move.line values to post to track the stock valuation difference due to the 
+        Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given stock move.
         """
-        # prepare default values considering that the destination accounts have the reference_currency_id as their main currency 
+        # prepare default values considering that the destination accounts have the reference_currency_id as their main currency
         partner_id = (move.picking_id.address_id and move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id) or False
         debit_line_vals = {
                     'name': move.name,
@@ -2043,7 +2043,7 @@ class stock_move(osv.osv):
         }
 
         # if we are posting to accounts in a different currency, provide correct values in both currencies correctly
-        # when compatible with the optional secondary currency on the account. 
+        # when compatible with the optional secondary currency on the account.
         # Financial Accounts only accept amounts in secondary currencies if there's no secondary currency on the account
         # or if it's the same as that of the secondary amount being posted.
         account_obj = self.pool.get('account.account')
@@ -2311,7 +2311,7 @@ class stock_move(osv.osv):
 
                     # Record the values that were chosen in the wizard, so they can be
                     # used for inventory valuation if real-time valuation is enabled.
-                    self.write(cr, uid, [move.id], 
+                    self.write(cr, uid, [move.id],
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency,
                                 })
@@ -2384,7 +2384,7 @@ class stock_inventory(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c)
     }
-    
+
     def _inventory_line_hook(self, cr, uid, inventory_line, move_vals):
         """ Creates a stock move from an inventory line
         @param inventory_line:

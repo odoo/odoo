@@ -67,7 +67,7 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
         lots_obj = self.pool.get('auction.lots')
         for rec in lots_obj.browse(cr, uid, ids, context):
             if (len(ids)==1) and (not rec.ach_uid and not rec.ach_login):
-                raise osv.except_osv('Error', 'No buyer is set for this lot.')
+                raise osv.except_osv(_('Error'), _('No buyer is set for this lot.'))
             if not rec.ach_uid and rec.ach_login:
                 return {'ach_login': rec.ach_login}
         return {}
