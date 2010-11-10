@@ -1868,5 +1868,20 @@
 
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
                 parent="next_id_11" groups="base.group_extended" sequence="20"/>
+
+
+
+        <record model="ir.cron" id="cronjob_osv_memory_autovacuum">
+            <field name='name'>AutoVacuum osv_memory objects</field>
+            <field name='interval_number'>30</field>
+            <field name='interval_type'>minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="doall" eval="False" />
+            <field name="model">osv_memory.autovacuum</field>
+            <field name="function">power_on</field>
+            <field name="args">()</field>
+        </record>
+
     </data>
 </openerp>
