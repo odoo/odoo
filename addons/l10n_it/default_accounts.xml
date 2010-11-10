@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE openerp SYSTEM "openerp-xmldata.dtd">
+<openerp>
+<data noupdate="1">
+
+<!-- 
+     Piano dei conti per una ditta di servizi, by Servabit.srl 
+     (http://www.servabit.it)
+ 
+     Qui vengono definiti, tramite "properties" i conti di default
+     da associare a partners ed a prodotti.   
+     ( from account/demo/account_minimal.xml, modified ) 
+
+     I workflow delle fatture utilizzano questi conti per generare
+     in automatico voci in contabilita' in partita doppia.
+     
+--> 
+
+        <!-- Partners income and expense accounts, default parameters-->
+
+        <!-- Partners receivable default account :C06/001 Crediti vs/ clienti Italia id="chartS_C06_001" --> 
+
+        <record forcecreate="True" id="account.property_account_receivable" model="ir.property">
+            <field name="name">property_account_receivable</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_receivable')]"/>
+            <field eval="'account.account,'+str(chartS_C06_001)" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- Partners payable default account : C14/005 Debiti vs/ fornitori italia  id="chartS_C14_005" --> 
+
+        <record forcecreate="True" id="account.property_account_payable" model="ir.property">
+            <field name="name">property_account_payable</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_payable')]"/>
+            <field eval="'account.account,'+str(chartS_C14_005)" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+       <!-- Posizione fiscale partner ...  per rimappature di accounts ... : non definita -->
+
+        <record forcecreate="True" id="account.property_account_position" model="ir.property">
+            <field name="name">property_account_position</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_position')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+
+
+        <!--
+		Product template income and expense accounts, default parameters
+	-->
+  
+
+        <record id="account.property_account_expense_prd" model="ir.property">
+            <field name="name">property_account_expense</field>
+            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_account_expense')]"/>
+            <field name="value"      eval="False" />
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="account.property_account_income_prd" model="ir.property">
+            <field name="name">property_account_income</field>
+            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_account_income')]"/>
+            <field name="value"      eval="False" />
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!--  Acquisti: products default account:  C03/020 Altri beni vari id="chartS_C03_030" --> 
+
+        <!-- questo va specificato per tutte le singole categorie di prodotto, associando
+             gli account opportuni al campo: property_account_income_categ property_account_expense_categ -->
+      
+        <record id="account.property_account_expense_categ" model="ir.property">
+            <field name="name">property_account_expense_categ</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_expense_categ')]"/>
+            <field eval="'account.account,'+str(ref('chartS_C03_030'))" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- Vendite: Service product default account:  C71/001 Ricavi delle vendite e prestazioni Italia id="chartS_C71_001" --> 
+
+        <record id="account.property_account_income_categ" model="ir.property">
+            <field name="name">property_account_income_categ</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_income_categ')]"/>
+            <field eval="'account.account,'+str(ref('chartS_C71_001'))" model="account.account" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+
+  
+        <!-- 
+	      Come prodotti si definisce un generica categoria per i servizi 
+	-->
+        
+        <record id="cat0" model="product.category">
+            <field name="parent_id" ref="null"/>
+            <field name="name">Tutti i prodotti</field>
+        </record>
+ 
+        <record id="cat_services" model="product.category">
+            <field name="parent_id" ref="cat0"/>
+            <field name="name">Servizi e prestazioni</field>
+        </record>
+      
+               <!--  e anche una generica categoria per gli acquisti -->      
+
+        <record id="cat_acquisti" model="product.category">
+            <field name="parent_id" ref="cat0"/>
+            <field name="name">Acquisti</field>
+        </record>
+
+        <!-- vorrei dare valore ad un campo field.property, ma NON Si puo' fare in questo modo  --> 
+ 
+        <record id="product_category_consumable" model="product.category">
+            <field name="parent_id" ref="cat_acquisti"/>
+            <field name="name">Consumable</field>
+            <!-- vorrei dare valore ad un campo field.property, ma NON Si puo' fare in questo modo -->   
+            <!-- <field name="property_account_income_categ" ref="chartS_C51_003" />--> 
+        </record>
+       
+
+
+
+</data>
+</openerp>
