@@ -22,7 +22,6 @@
 from osv import osv
 from openerp_sxw2rml import sxw2rml
 from StringIO import StringIO
-from report import interface
 import base64
 import pooler
 import tools
@@ -57,7 +56,7 @@ class report_xml(osv.osv):
             'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())), 
         })
         db = pooler.get_db_only(cr.dbname)
-        interface.register_all(db)
+        self.pool.get('ir.actions.report.xml').register_all(cr = db.cursor())
         return True
 
     def report_get(self, cr, uid, report_id, context={}):
