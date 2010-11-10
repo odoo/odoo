@@ -162,6 +162,10 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
+        if self.reconcil:
+            RECONCILE_TAG = " "
+        else:
+            RECONCILE_TAG = "AND l.reconcile_id IS NULL"
 
         self.cr.execute(
             "SELECT COALESCE(SUM(l.debit),0.0), COALESCE(SUM(l.credit),0.0), COALESCE(sum(debit-credit), 0.0) " \
@@ -171,7 +175,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             "AND m.id = l.move_id " \
             "AND m.state IN %s "
             "AND account_id IN %s" \
-            "AND reconcile_id IS NULL  " \
+            " " + RECONCILE_TAG + " "\
             "AND " + self.init_query + "  ",
             (partner.id, tuple(move_state), tuple(self.account_ids)))
         return self.cr.fetchall()

@@ -25,8 +25,6 @@
 #
 
 from osv import fields, osv
-from tools.translate import _
-import time
 from datetime import date, datetime
 
 class event_project(osv.osv_memory):
@@ -44,28 +42,30 @@ class event_project(osv.osv_memory):
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End'),
      }
-
-    def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
-        """
-        event_obj=self.pool.get('event.event')
-        project_obj = self.pool.get('project.project')
+    
+    def _get_date_start(self, cr, uid, context=None):
+        event_obj = self.pool.get('event.event')
+        if context is None:
+            context = {}
         event = event_obj.browse(cr, uid, context.get('active_id', False))
-        res = super(event_project, self).default_get(cr, uid, fields, context=context)
-        if 'date_start' in fields:
-            res.update({'date_start': time.strftime('%Y-%m-%d')})
-        if 'date' in fields:
-            res.update({'date': datetime.strptime(event.date_end, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")})
-
+        res = datetime.strptime(event.date_begin, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
         return res
-
+    
+    def _get_date_end(self, cr, uid, context=None):
+        event_obj = self.pool.get('event.event')
+        if context is None:
+            context = {}
+        event = event_obj.browse(cr, uid, context.get('active_id', False))
+        res = datetime.strptime(event.date_end, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
+        return res
+        
+    _defaults = {
+        'date_start': _get_date_start,
+        'date': _get_date_end
+    }
+    
     def create_duplicate(self, cr, uid, ids, context):
-        event_obj=self.pool.get('event.event')
+        event_obj = self.pool.get('event.event')
         project_obj = self.pool.get('project.project')
         event = event_obj.browse(cr, uid, context.get('active_id', False))
         for current in self.browse(cr, uid, ids):
@@ -79,4 +79,5 @@ class event_project(osv.osv_memory):
         return {}
 
 event_project()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

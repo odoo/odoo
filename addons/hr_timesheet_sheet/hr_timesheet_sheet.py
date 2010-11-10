@@ -20,12 +20,12 @@
 ##############################################################################
 
 import time
-import netsvc
-
-from osv import fields, osv
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
+from osv import fields, osv
 from tools.translate import _
+import netsvc
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):

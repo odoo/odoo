@@ -22,7 +22,7 @@
 import tools
 from osv import fields,osv
 
-class report_pos_order(osv.osv):
+class pos_order_report(osv.osv):
     _name = "report.pos.order"
     _description = "Point of Sale Orders Statistics"
     _auto = False
@@ -54,6 +54,7 @@ class report_pos_order(osv.osv):
         'date_payment': fields.date('Payment Date', required=True),
     }
     _order = 'date desc'
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_pos_order')
         cr.execute("""
@@ -89,7 +90,9 @@ class report_pos_order(osv.osv):
                     to_char(s.date_order, 'YYYY-MM-DD'), s.partner_id,s.state,
                     s.user_id,s.shop_id,s.company_id,s.sale_journal,l.product_id,s.date_validation,
                     s.date_payment
-                having 
+                having
                     sum(l.qty * u.factor) != 0)""")
 
-report_pos_order()
+pos_order_report()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

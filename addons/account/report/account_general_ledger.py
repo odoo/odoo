@@ -161,7 +161,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         counterpart_res = self.cr.dictfetchall()
         counterpart_accounts = {}
         for i in counterpart_res:
-            counterpart_accounts[i['move_id']]=i['counterpart']
+            counterpart_accounts[i['move_id']] = i['counterpart']
         del counterpart_res
 
         # Then select all account_move_line of this account
@@ -192,6 +192,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                 SELECT 0 AS lid, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
                 '' AS move_name, '' AS mmove_id,
                 '' AS currency_code,
+                NULL AS currency_id,
                 '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,
                 '' AS partner_name
                 FROM account_move_line l
@@ -202,7 +203,6 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                 JOIN account_journal j on (l.journal_id=j.id)
                 WHERE %s AND m.state IN %s AND l.account_id = %%s
             """ %(self.init_query, tuple(move_state))
-
             self.cr.execute(sql, (account.id,))
             res_init = self.cr.dictfetchall()
         res = res_init + res_lines

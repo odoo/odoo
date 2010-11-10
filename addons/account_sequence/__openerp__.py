@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,10 +15,26 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import account_report_bs
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+{
+    'name': 'Entries Sequence Numbering',
+    'version': '1.1',
+    'category': 'Generic Modules/Accounting',
+    'description': """
+    This module maintains internal sequence number for accounting entries.
+    """,
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'depends': ['account'],
+    'init_xml': [],
+    'update_xml': ['account_sequence_data.xml','account_sequence.xml'],
+    'demo_xml': ['account_sequence_minimal.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
