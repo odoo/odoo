@@ -32,7 +32,7 @@ class payment_mode(osv.osv):
         'bank_id': fields.many2one('res.partner.bank', "Bank account",
             required=True,help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
-            domain=[('type', '=', 'cash')], help='Cash Journal for the Payment Mode'),
+            domain=[('type', 'in', ('bank','cash'))], help='Bank or Cash Journal for the Payment Mode'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
@@ -100,7 +100,7 @@ class payment_order(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'state': 'draft',
         'date_prefered': 'due',
-        'date_created': time.strftime('%Y-%m-%d'),
+        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
         'reference': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'payment.order'),
     }
 

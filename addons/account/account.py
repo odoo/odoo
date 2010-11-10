@@ -586,12 +586,12 @@ class account_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=16, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
-                                 " Select 'General' to be used at the time of stock input/output."\
-                                 " Select 'Situation' to be used at the time of making vouchers."),
+                                 " Select 'General' for miscellaneous operations."\
+                                 " Select 'Opening/Closing Situation' to be used at the time of new fiscal year creation or end of year entries generation."),
         'refund_journal': fields.boolean('Refund Journal', help='Fill this if the journal is to be used for refunds of invoices.'),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
@@ -1124,7 +1124,7 @@ class account_move(osv.osv):
         'name': '/',
         'state': 'draft',
         'period_id': _get_period,
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
@@ -2157,7 +2157,7 @@ class account_subscription(osv.osv):
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }
     _defaults = {
-        'date_start': time.strftime('%Y-%m-%d'),
+        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'period_type': 'month',
         'period_total': 12,
         'period_nbr': 1,
@@ -2959,17 +2959,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):
-    _name='account.bank.accounts.wizard'
+    _name = 'account.bank.accounts.wizard'
 
     _columns = {
-        'acc_name':fields.char('Account Name.', size=64, required=True),
-        'bank_account_id':fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
-        'currency_id':fields.many2one('res.currency', 'Currency'),
-        'account_type':fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
+        'acc_name': fields.char('Account Name.', size=64, required=True),
+        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
+        'currency_id': fields.many2one('res.currency', 'Currency'),
+        'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
     }
     _defaults = {
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
-        }
+    }
 
 account_bank_accounts_wizard()
 

@@ -38,23 +38,14 @@ Swiss localisation :
  - BVR management (number generation, report, etc..)
  - Import account move from the bank file (like v11 etc..)
  - Simplify the way you handle the bank statement for reconciliation
-
-You can also add with this module one of the following account plan:
- - l10n_ch_c2c_pcg
-
-
+ - Swiws account chart that add also tax template definition
 
 ------------------------------------------------------------------------
 
 Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp. Cette nouvelle version
-comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement)
-et l'import du relevé de compte depuis la banque de manière automatisée.
+comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement),
+l'import du relevé de compte depuis la banque de manière automatisée, le plan de compte Swiws.
 De plus, nous avons intégré la définition de toutes les banques Suisses(adresse, swift et clearing).
-
-Par ailleurs, conjointement à ce module, nous proposons 1 plan comptables issus de l'USAM :
-
-
- - l10n_ch_c2c_pcg
 
 --------------------------------------------------------------------------
 TODO :
@@ -68,7 +59,7 @@ TODO :
 """,
     "version" : "5.1",
     "author" : "Camptocamp SA",
-    "category" : "Localisation/Europe",
+    "category" : "Localisation/Account Charts",
     "website": "http://www.camptocamp.com",
 
     "depends" : [
@@ -76,10 +67,14 @@ TODO :
         "base_iban",
         "account_payment",
         "account_voucher",
+        "account",
+        "account_chart",
     ],
     "init_xml" : [
         "dta_data.xml",
         "vaudtax_data.xml",
+        'account.xml',
+        'vat.xml',
     ],
     "demo_xml" : [
         "demo/vaudtax_data_demo.xml",
@@ -92,8 +87,8 @@ TODO :
         "company_view.xml",
         "account_invoice.xml",
         "bank_view.xml",
-        "account_journal_view.xml",
-        "security/ir.model.access.csv",
+        'wizard.xml',
+        'security/ir.model.access.csv',
     ],
     'test' : [
         'test/l10n_ch_report.yml',

@@ -32,8 +32,8 @@ class pos_details(osv.osv_memory):
         'date_end': fields.date('Date End', required=True)
     }
     _defaults = {
-        'date_start': time.strftime('%Y-%m-%d'),
-        'date_end': time.strftime('%Y-%m-%d'),
+        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_end': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def print_report(self, cr, uid, ids, context=None):

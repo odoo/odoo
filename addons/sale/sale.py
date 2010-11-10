@@ -174,16 +174,19 @@ class sale_order(osv.osv):
         if not len(args):
             return []
         clause = ''
+        sale_clause = ''
         no_invoiced = False
         for arg in args:
             if arg[1] == '=':
                 if arg[2]:
                     clause += 'AND inv.state = \'paid\''
                 else:
-                    clause += 'AND inv.state <> \'paid\''
+                    clause += 'AND inv.state != \'cancel\' AND sale.state != \'cancel\'  AND inv.state <> \'paid\'  AND rel.order_id = sale.id '
+                    sale_clause = ',  sale_order AS sale '
                     no_invoiced = True
+
         cursor.execute('SELECT rel.order_id ' \
-                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv ' \
+                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv '+ sale_clause + \
                 'WHERE rel.invoice_id = inv.id ' + clause)
         res = cursor.fetchall()
         if no_invoiced:
@@ -191,7 +194,7 @@ class sale_order(osv.osv):
                     'FROM sale_order AS sale ' \
                     'WHERE sale.id NOT IN ' \
                         '(SELECT rel.order_id ' \
-                        'FROM sale_order_invoice_rel AS rel)')
+                        'FROM sale_order_invoice_rel AS rel) and sale.state != \'cancel\'')
             res.extend(cursor.fetchall())
         if not res:
             return [('id', '=', 0)]
@@ -283,7 +286,7 @@ class sale_order(osv.osv):
     }
     _defaults = {
         'picking_policy': 'direct',
-        'date_order': time.strftime('%Y-%m-%d'),
+        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
         'order_policy': 'manual',
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
@@ -851,7 +854,7 @@ class sale_order_line(osv.osv):
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'name': fields.char('Description', size=256, required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale order lines."),
-        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
+        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
@@ -879,7 +882,7 @@ class sale_order_line(osv.osv):
                     \n* The \'Done\' state is set when the sale order line has been picked. \
                     \n* The \'Cancelled\' state is set when a user cancel the sale order related.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
-        'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='Salesman'),
+        'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesman'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft': [('readonly', False)]}),
     }
     _order = 'sequence, id desc'

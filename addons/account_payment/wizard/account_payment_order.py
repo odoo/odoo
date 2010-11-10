@@ -42,7 +42,7 @@ class payment_order_create(osv.osv_memory):
         'entries': fields.many2many('account.move.line', 'line_pay_rel', 'pay_id', 'line_id', 'Entries')
     }
     _defaults = {
-         'duedate': time.strftime('%Y-%m-%d'),
+         'duedate': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
