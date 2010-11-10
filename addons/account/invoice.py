@@ -1063,7 +1063,7 @@ class account_invoice(osv.osv):
                 'out_refund': 'OR: ',
                 'in_refund': 'SR: ',
                 }
-        return [(r['id'], types[r['type']]+(r['number'] or '')+' '+(r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
+        return [(r['id'], (r['number']) or types[r['type']]+(r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
