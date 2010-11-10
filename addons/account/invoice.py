@@ -823,9 +823,9 @@ class account_invoice(osv.osv):
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id)
             # check if taxes are all computed
-
-            context.update({'lang': inv.partner_id.lang})
-            compute_taxes = ait_obj.compute(cr, uid, inv.id, context=context)
+            ctx = context.copy()
+            ctx.update({'lang': inv.partner_id.lang})
+            compute_taxes = ait_obj.compute(cr, uid, inv.id, context=ctx)
             self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
