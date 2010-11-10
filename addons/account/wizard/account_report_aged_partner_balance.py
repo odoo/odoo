@@ -40,12 +40,11 @@ class account_aged_trial_balance(osv.osv_memory):
     }
     _defaults = {
         'period_length': 30,
-        'date_from': time.strftime('%Y-%m-%d'),
+        'date_from': lambda *a: time.strftime('%Y-%m-%d'),
         'direction_selection': 'past',
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        mod_obj = self.pool.get('ir.model.data')
         res = super(account_aged_trial_balance, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         doc = etree.XML(res['arch'])
         nodes = doc.xpath("//field[@name='journal_ids']")
