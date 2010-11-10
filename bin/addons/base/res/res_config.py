@@ -113,8 +113,9 @@ class res_config_configurable(osv.osv_memory):
         current_user_menu = self.pool.get('res.users')\
             .browse(cr, uid, uid).menu_id
         # return the action associated with the menu
-        return {'menu_reload':True, 'type': 'object'}
-        
+        return self.pool.get(current_user_menu.type)\
+            .read(cr, uid, current_user_menu.id)
+
     def start(self, cr, uid, ids, context=None):
         ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
         for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
