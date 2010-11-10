@@ -56,7 +56,6 @@ class account_followup_stat(osv.osv):
                 context=context, count=count)
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
-            todel=[]
             for arg in domain:
                 if arg[0] == 'period_id' and arg[2] == 'current_year':
                     current_year = self.pool.get('account.fiscalyear').find(cr, uid)
@@ -91,7 +90,7 @@ class account_followup_stat(osv.osv):
                     l.reconcile_id is NULL AND
                     l.partner_id IS NOT NULL
                 GROUP BY
-                    l.id, l.partner_id, l.company_id, l.blocked, l.period_id 
+                    l.id, l.partner_id, l.company_id, l.blocked, l.period_id
             )""")
 account_followup_stat()
 

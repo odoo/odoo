@@ -24,29 +24,30 @@ from osv import osv, fields
 
 class account_move(osv.osv):
     _inherit = 'account.move'
-    
+
     _columns = {
         'internal_sequence_number': fields.char('Internal Sequence Number', size=64, readonly=True),
     }
-    
+
     def post(self, cr, uid, ids, context=None):
         obj_sequence = self.pool.get('ir.sequence')
-        res = super(account_move, self).post(cr, uid, ids, context)
+        res = super(account_move, self).post(cr, uid, ids, context=context)
+        seq_no = False
         for line in self.browse(cr, uid, ids):
             if line.journal_id.internal_sequence:
-                c = {'fiscalyear_id': line.period_id.fiscalyear_id.id}
-                seq_no = obj_sequence.get_id(cr, uid, line.journal_id.internal_sequence.id, context=c)
+                seq_no = obj_sequence.get_id(cr, uid, line.journal_id.internal_sequence.id, context=context)
             if seq_no:
-                self.write(cr, uid, [line.id], {'internal_sequence_number':seq_no})
+                self.write(cr, uid, [line.id], {'internal_sequence_number': seq_no})
         return res
-    
+
 account_move()
 
 class account_journal(osv.osv):
     _inherit = "account.journal"
-    
+
     _columns = {
         'internal_sequence': fields.many2one('ir.sequence', 'Internal Sequence'),
     }
 account_journal()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

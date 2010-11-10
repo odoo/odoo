@@ -46,26 +46,6 @@ class account_bank_statement(osv.osv):
                 account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': seq}, context=context)
         return res
 
-    def button_import_invoice(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        context.update({'statement_id': ids[0]})
-
-        return {
-            'name': _('Import Invoice'),
-            'context': context,
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'account.statement.from.invoice',
-            'views': [(resource_id,'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'nodestroy': True
-        }
-
     def _default_journal_id(self, cr, uid, context={}):
         journal_pool = self.pool.get('account.journal')
         journal_type = context.get('journal_type', False)
@@ -423,8 +403,6 @@ account_bank_statement()
 class account_bank_statement_line(osv.osv):
 
     def onchange_type(self, cr, uid, line_id, partner_id, type, context=None):
-        res_users_obj = self.pool.get('res.users')
-        res_currency_obj = self.pool.get('res.currency')
         res = {'value': {}}
         obj_partner = self.pool.get('res.partner')
         if context is None:

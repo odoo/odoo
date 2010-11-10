@@ -81,7 +81,7 @@ class event_make_invoice(osv.osv_memory):
         tree_res = tree_id and tree_id[1] or False
         return {
             'domain': "[('id', 'in', %s)]" % res,
-            'name': 'Customer Invoices',
+            'name': _('Customer Invoices'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
