@@ -110,6 +110,9 @@ class stock_invoice_onshipping(osv.osv_memory):
             context = {}
         result = []
         picking_obj = self.pool.get('stock.picking')
+        invoice_obj = self.pool.get('account.invoice')
+        invoice_line_obj = self.pool.get('account.invoice.line')
+
         onshipdata_obj = self.read(cr, uid, ids[0], ['journal_id', 'group', 'invoice_date'])
         if context.get('new_picking', False):
             onshipdata_obj['id'] = onshipdata_obj.new_picking
@@ -119,14 +122,23 @@ class stock_invoice_onshipping(osv.osv_memory):
         journal_id = onshipdata_obj['journal_id']
         context['journal_type'] =self.pool.get('account.journal').browse(cr, uid, journal_id).type
         invoice_ids = []
-        for picking in picking_obj.browse(cr, uid, context.get('active_ids', []), context=context):
-            if picking.invoice_state == '2binvoiced':
-                res = picking_obj.action_invoice_create(cr, uid, [picking.id],
-                      journal_id = onshipdata_obj['journal_id'],
-                      group=onshipdata_obj['group'],
-                      type=self._get_type(picking),
-                      context=context)
-                invoice_ids.extend(res.values())
+        active_ids=context.get('active_ids', [])
+        picking = picking_obj.browse(cr, uid,active_ids, context=context)[0]
+
+        if onshipdata_obj['group']:
+            res = picking_obj.action_invoice_create(cr, uid,active_ids,
+                  journal_id = onshipdata_obj['journal_id'],
+                  group=onshipdata_obj['group'],
+                  type=self._get_type(picking),
+                  context=context)
+            invoice_ids.extend(res.values())
+        else:
+            res = picking_obj.action_invoice_create(cr, uid,active_ids,
+                  journal_id = onshipdata_obj['journal_id'],
+                  group=onshipdata_obj['group'],
+                  type=self._get_type(picking),
+                  context=context)
+            invoice_ids.extend(res.values())
 
         if not invoice_ids:
             raise osv.except_osv(_('Error'), _('No invoice were created'))
