@@ -414,7 +414,12 @@ property or property parameter."),
         event = cal.add('vevent')
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
-        event.add('dtend').value = ics_datetime(event_obj.date_deadline)
+        if not event_obj.date_deadline[10:]:
+            short = True
+        else:
+            short = False
+            
+        event.add('dtend').value = ics_datetime(event_obj.date_deadline, short)
         event.add('summary').value = event_obj.name
         if  event_obj.description:
             event.add('description').value = event_obj.description
@@ -454,16 +459,16 @@ property or property parameter."),
             if interval == 'minutes':
                 delta = timedelta(minutes=duration)
             trigger.value = delta
-
             # Compute other details
             valarm.add('DESCRIPTION').value = alarm_data['name'] or 'OpenERP'
-
+                
         for attendee in event_obj.attendee_ids:
             attendee_add = event.add('attendee')
             attendee_add.params['CUTYPE'] = [str(attendee.cutype)]
             attendee_add.params['ROLE'] = [str(attendee.role)]
             attendee_add.params['RSVP'] = [str(attendee.rsvp)]
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
+            
         res = cal.serialize()
         return res
 

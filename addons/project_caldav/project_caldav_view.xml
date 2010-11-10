@@ -13,7 +13,7 @@
                         <button string="Assign Task"
                             name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
                             icon="terp-partner" type="action"
-                            context="{'model' : 'project.task'}" colspan="2"/>
+                            context="{'model' : 'project.task', 'attendee_field':'attendee_ids'}" colspan="2"/>
                             <field name="attendee_ids" colspan="4"
                             nolabel="1" widget="one2many" mode="tree,form">
                             <tree string="Assignees details" editable="top">
