@@ -299,10 +299,10 @@ class purchase_order(osv.osv):
                     managers.append(manager.id)
             for manager_id in managers:
                 request.create(cr, uid,{
-                       'name' : "Purchase amount over the limit",
+                       'name' : _("Purchase amount over the limit"),
                        'act_from' : uid,
                        'act_to' : manager_id,
-                       'body': 'Somebody has just confirmed a purchase with an amount over the defined limit',
+                       'body': _('Somebody has just confirmed a purchase with an amount over the defined limit'),
                        'ref_partner_id': po.partner_id.id,
                        'ref_doc1': 'purchase.order,%d' % (po.id,),
                 })

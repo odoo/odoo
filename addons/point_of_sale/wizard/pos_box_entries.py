@@ -116,7 +116,7 @@ class pos_box_entries(osv.osv_memory):
                                 }, context=context)
 
             vals['statement_id'] = statement_id
-            valss['journal_id'] = data['journal_id']
+            vals['journal_id'] = data['journal_id']
             if acc_id:
                 vals['account_id'] = acc_id.id
             vals['amount'] = data['amount'] or 0.0

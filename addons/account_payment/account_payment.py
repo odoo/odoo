@@ -32,7 +32,7 @@ class payment_mode(osv.osv):
         'bank_id': fields.many2one('res.partner.bank', "Bank account",
             required=True,help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
-            domain=[('type', '=', 'cash')], help='Cash Journal for the Payment Mode'),
+            domain=[('type', 'in', ('bank','cash'))], help='Bank or Cash Journal for the Payment Mode'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
