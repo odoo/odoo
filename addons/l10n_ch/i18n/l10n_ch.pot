@@ -153,11 +153,6 @@ msgid "the currenty edited account journal"
 msgstr ""
 
 #. module: l10n_ch
-#: view:account.journal.todo:0
-msgid "Next"
-msgstr ""
-
-#. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
 msgid "Supplier Invoice"
 msgstr ""
@@ -186,6 +181,7 @@ msgstr ""
 
 #. module: l10n_ch
 #: model:ir.actions.act_window,name:l10n_ch.action_config_journal
+#: model:ir.actions.act_window,name:l10n_ch.action_config_tax
 msgid "Configure Journal"
 msgstr ""
 
@@ -399,6 +395,7 @@ msgstr ""
 #. module: l10n_ch
 #: view:account.journal.todo:0
 #: wizard_button:l10n_ch.bvr_import,init,end:0
+#: view:account.tax.template.todo:0
 msgid "Cancel"
 msgstr ""
 
@@ -527,11 +524,6 @@ msgid "Total"
 msgstr ""
 
 #. module: l10n_ch
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: l10n_ch
 #: field:account.tax.template.todo,account_paid_id:0
 msgid "Refund Tax Account"
 msgstr ""
@@ -554,17 +546,13 @@ msgstr ""
 
 #. module: l10n_ch
 #: view:account.tax.template.todo:0
+#: view:account.journal.todo:0
 msgid "Next"
 msgstr ""
 
 #. module: l10n_ch
 #: field:account.tax.template.todo,name:0
 msgid "Tax to set"
-msgstr ""
-
-#. module: l10n_ch
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: l10n_ch
@@ -638,11 +626,6 @@ msgid "Bilan : Debiteurs"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.actions.act_window,name:l10n_ch.action_config_tax
-msgid "Configure Journal"
-msgstr ""
-
-#. module: l10n_ch
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
 msgstr ""
@@ -655,11 +638,6 @@ msgstr ""
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_cash
 msgid "Bilan : Liquidites et titres"
-msgstr ""
-
-#. module: l10n_ch
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: l10n_ch
@@ -751,11 +729,6 @@ msgstr ""
 #: model:ir.actions.todo,note:l10n_ch.config_call_account_template_l10n_ch
 msgid "Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
 "                This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
-msgstr ""
-
-#. module: l10n_ch
-#: view:account.tax.template.todo:0
-msgid "Cancel"
 msgstr ""
 
 #. module: l10n_ch
