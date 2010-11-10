@@ -28,6 +28,7 @@
     "depends" : ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
     "init_xml" : [],
     "update_xml" : [
+        'decimal_precision.xml',
         'account_types_en.xml',
         'account_chart_en.xml',
         'account_tax_code_en.xml',
