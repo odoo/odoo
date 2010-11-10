@@ -267,7 +267,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="388.0,55.0,77.0" style="Table2">
+    <blockTable colWidths="388.0,56.0,77.0" style="Table2">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -278,7 +278,7 @@
           <para style="terp_tblheader_Details_Centre">Total</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(get_qtytotal(picking.move_lines), digits=get_digits(dp='Product UoM')) ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(get_qtytotal(picking.move_lines)['quantity'], digits=get_digits(dp='Product UoM')) ]] [[ get_qtytotal(picking.move_lines)['uom'] ]]</para>
         </td>
       </tr>
     </blockTable>
