@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		
+
 		<!--
 		Resource: res.country.state
 		Update states
@@ -41,7 +41,7 @@
 			<field name="name">Limón</field>
 			<field model="res.country" name="country_id" ref="base.cr"/>
 		</record>
-		
+
 		<!--
 		Resource: res.currency.rate
 		Delete default rates
@@ -49,7 +49,7 @@
 		<delete model="res.currency.rate" search="[('currency_id','=','CRC')]"/>
 		<delete model="res.currency.rate" search="[('currency_id','=','EUR')]"/>
 		<delete model="res.currency.rate" search="[('currency_id','=','USD')]"/>
-		
+
 		<!--
 		Resource: res.currency
 		Updates currencies and rates
@@ -113,7 +113,7 @@
 			<field name="code">CRC</field>
 			<field name="rounding">0.01</field>
 			<field name="accuracy">4</field>
-			<field name="symbol_prefix">¢ </field>
+			<field name="symbol">¢</field>
 		</record>
 		<record id="rateUSD" model="res.currency.rate">
 			<field name="rate">1.0</field>
@@ -130,7 +130,7 @@
 			<field name="currency_id" ref="base.EUR"/>
 			<field eval="time.strftime('%Y-01-01')" name="name"/>
 		</record>
-		
+
 		<!--
 		Resource: res.partner.title
 		Update partner titles
