@@ -28,6 +28,7 @@ from datetime import timedelta
 import netsvc
 from osv import fields, osv
 from tools.translate import _
+import decimal_precision as dp
 
 def prev_bounds(cdate=False):
     when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
@@ -877,12 +878,12 @@ class hr_payslip(osv.osv):
                 slip_line_obj.write(cr, uid, [line.id], {'total':amount}, context=context)
 
             record = {
-                'allounce':round(allow),
-                'deduction':round(deduct),
-                'grows':round(rs.basic + allow),
-                'net':round(rs.basic + allow - deduct),
+                'allounce':allow,
+                'deduction':deduct,
+                'grows':rs.basic + allow,
+                'net':rs.basic + allow - deduct,
                 'other_pay':others,
-                'total_pay':round(rs.basic + allow - deduct)
+                'total_pay':rs.basic + allow - deduct
             }
             res[rs.id] = record
         return res
@@ -903,15 +904,15 @@ class hr_payslip(osv.osv):
             ('done','Paid Salary'),
             ('cancel','Reject'),
         ],'State', select=True, readonly=True),
-        'basic_before_leaves': fields.float('Basic Salary', readonly=True,  digits=(16, 2)),
-        'leaves': fields.float('Leave Deductions', readonly=True,  digits=(16, 2)),
-        'basic': fields.float('Net Basic', readonly=True,  digits=(16, 2)),
-        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 2)),
-        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, 2)),
-        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits=(16, 2)),
-        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits=(16, 2)),
-        'other_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Others', digits=(16, 2)),
-        'total_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Total Payment', digits=(16, 2)),
+        'basic_before_leaves': fields.float('Basic Salary', readonly=True,  digits_compute=dp.get_precision('Account')),
+        'leaves': fields.float('Leave Deductions', readonly=True,  digits_compute=dp.get_precision('Account')),
+        'basic': fields.float('Net Basic', readonly=True,  digits_compute=dp.get_precision('Account')),
+        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', digits_compute=dp.get_precision('Account')),
+        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits_compute=dp.get_precision('Account')),
+        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits_compute=dp.get_precision('Account')),
+        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits_compute=dp.get_precision('Account')),
+        'other_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Others', digits_compute=dp.get_precision('Account')),
+        'total_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Total Payment', digits_compute=dp.get_precision('Account')),
         'line_ids':fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id':fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'holiday_days': fields.float('No of Leaves', readonly=True),
@@ -1366,7 +1367,7 @@ class hr_payslip_line(osv.osv):
             ('func','Function Value'),
         ],'Amount Type', select=True, required=True),
         'amount': fields.float('Amount / Percentage', digits=(16, 4)),
-        'total': fields.float('Sub Total', readonly=True, digits=(16, 4)),
+        'total': fields.float('Sub Total', readonly=True, digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
         'sequence': fields.integer('Sequence'),
         'note':fields.text('Description'),

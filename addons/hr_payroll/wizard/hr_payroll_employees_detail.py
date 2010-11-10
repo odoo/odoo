@@ -43,8 +43,8 @@ class hr_payroll_employees_detail(osv.osv_memory):
 
    _defaults = {
 #        'fiscalyear_id':_get_fiscalyear,
-        'date_from':time.strftime('%Y-01-01'),
-        'date_to':time.strftime('%Y-%m-%d'),
+        'date_from': lambda *a: time.strftime('%Y-01-01'),
+        'date_to': lambda *a: time.strftime('%Y-%m-%d'),
 
     }
 

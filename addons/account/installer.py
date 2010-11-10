@@ -86,8 +86,8 @@ class account_installer(osv.osv_memory):
         return 'configurable'
 
     _defaults = {
-        'date_start': time.strftime('%Y-01-01'),
-        'date_stop': time.strftime('%Y-12-31'),
+        'date_start': lambda *a: time.strftime('%Y-01-01'),
+        'date_stop': lambda *a: time.strftime('%Y-12-31'),
         'period': 'month',
         'sale_tax': 0.0,
         'purchase_tax': 0.0,
@@ -263,6 +263,7 @@ class account_installer(osv.osv_memory):
                     'name': _('Bank Journal '),
                     'code': 'account.journal',
                     'prefix': 'BNK/%(year)s/',
+                    'company_id': company_id.id,
                     'padding': 5
                 }
                 seq_id = obj_sequence.create(cr, uid, vals_seq, context=context)
@@ -275,6 +276,7 @@ class account_installer(osv.osv_memory):
                     'code': _('BNK'),
                     'sequence_id': seq_id,
                     'type': 'bank',
+                    'company_id': company_id.id,
                     'analytic_journal_id': analitical_journal_bank
                 }
                 if vals.get('currency_id', False):
@@ -327,6 +329,7 @@ class account_installer(osv.osv_memory):
                         'code': _(vals_bnk['name'][:3]).upper(),
                         'sequence_id': seq_id,
                         'type': 'cash',
+                        'company_id': company_id.id
                     }
                     if vals.get('currency_id', False):
                         vals_journal.update({
@@ -366,28 +369,32 @@ class account_installer(osv.osv_memory):
                 'name': 'Sale Journal',
                 'code': 'account.journal',
                 'prefix': 'SAJ/%(year)s/',
-                'padding': 3
+                'padding': 3,
+                'company_id': company_id.id
             }
             seq_id_sale = obj_sequence.create(cr, uid, seq_sale, context=context)
             seq_purchase = {
                 'name': 'Purchase Journal',
                 'code': 'account.journal',
                 'prefix': 'EXJ/%(year)s/',
-                'padding': 3
+                'padding': 3,
+                'company_id': company_id.id
             }
             seq_id_purchase = obj_sequence.create(cr, uid, seq_purchase, context=context)
             seq_refund_sale = {
                 'name': 'Sales Refund Journal',
                 'code': 'account.journal',
                 'prefix': 'SCNJ/%(year)s/',
-                'padding': 3
+                'padding': 3,
+                'company_id': company_id.id
             }
             seq_id_sale_refund = obj_sequence.create(cr, uid, seq_refund_sale, context=context)
             seq_refund_purchase = {
                 'name': 'Purchase Refund Journal',
                 'code': 'account.journal',
                 'prefix': 'ECNJ/%(year)s/',
-                'padding': 3
+                'padding': 3,
+                'company_id': company_id.id
             }
             seq_id_purchase_refund = obj_sequence.create(cr, uid, seq_refund_purchase, context=context)
         else:
@@ -407,7 +414,8 @@ class account_installer(osv.osv_memory):
             'type': 'sale',
             'code': _('SAJ'),
             'sequence_id': seq_id_sale,
-            'analytic_journal_id': analitical_journal_sale
+            'analytic_journal_id': analitical_journal_sale,
+            'company_id': company_id.id
         })
 
         if obj_multi.property_account_receivable:
@@ -426,7 +434,8 @@ class account_installer(osv.osv_memory):
             'type': 'purchase',
             'code': _('EXJ'),
             'sequence_id': seq_id_purchase,
-            'analytic_journal_id': analitical_journal_purchase
+            'analytic_journal_id': analitical_journal_purchase,
+            'company_id': company_id.id
         })
 
         if obj_multi.property_account_payable:
@@ -450,7 +459,8 @@ class account_installer(osv.osv_memory):
             'refund_journal': True,
             'code': _('SCNJ'),
             'sequence_id': seq_id_sale_refund,
-            'analytic_journal_id': analitical_journal_sale
+            'analytic_journal_id': analitical_journal_sale,
+            'company_id': company_id.id
         }
         if obj_multi.property_account_receivable:
             vals_journal.update({
@@ -468,7 +478,8 @@ class account_installer(osv.osv_memory):
             'refund_journal': True,
             'code': _('ECNJ'),
             'sequence_id': seq_id_purchase_refund,
-            'analytic_journal_id': analitical_journal_purchase
+            'analytic_journal_id': analitical_journal_purchase,
+            'company_id': company_id.id
         }
 
         if obj_multi.property_account_payable:

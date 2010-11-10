@@ -90,7 +90,7 @@ class hr_expense_expense(osv.osv):
             \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
     }
     _defaults = {
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
         'employee_id': _employee_get,
         'user_id': lambda cr, uid, id, c={}: id,
@@ -241,9 +241,9 @@ class hr_expense_line(osv.osv):
         }
     _defaults = {
         'unit_quantity': 1,
-        'date_value': time.strftime('%Y-%m-%d'),
+        'date_value': lambda *a: time.strftime('%Y-%m-%d'),
     }
-    _order = "sequence"
+    _order = "sequence, date_value desc"
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
         if context is None:
