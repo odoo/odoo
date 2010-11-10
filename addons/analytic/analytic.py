@@ -149,7 +149,7 @@ class account_analytic_account(osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
         'contact_id': lambda self, cr, uid, ctx: ctx.get('contact_id', False),
-        'date_start': time.strftime('%Y-%m-%d')
+        'date_start': lambda *a: time.strftime('%Y-%m-%d')
     }
 
     def check_recursion(self, cr, uid, ids, parent=None):
@@ -212,7 +212,7 @@ class account_analytic_line(osv.osv):
 
     }
     _defaults = {
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
         'amount': 0.00
     }

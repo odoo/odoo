@@ -32,16 +32,16 @@ class rml_parse(report_sxw.rml_parse):
         self.localcontext.update({
             'comma_me': self.comma_me,
             'format_date': self._get_and_change_date_format_for_swiss,
-            'strip_name' : self._strip_name,
-            'explode_name' : self._explode_name,
+            'strip_name': self._strip_name,
+            'explode_name': self._explode_name,
         })
 
     def comma_me(self,amount):
         if not amount:
             amount = 0.0
-        if  type(amount) is float :
+        if  type(amount) is float:
             amount = str('%.2f'%amount)
-        else :
+        else:
             amount = str(amount)
         if (amount == '0'):
              return ' '
@@ -144,10 +144,10 @@ class rml_parse(report_sxw.rml_parse):
         head_dom = etree.XML(rml_head)
         for tag in head_dom:
             found = rml_dom.find('.//'+tag.tag)
-            if found is not None and len(found):
+            if found is not None and found:
                 if tag.get('position'):
                     found.append(tag)
-                else :
+                else:
                     found.getparent().replace(found,tag)
         return True
 

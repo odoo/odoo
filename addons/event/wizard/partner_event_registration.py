@@ -19,12 +19,9 @@
 #
 ##############################################################################
 
-import netsvc
-import tools
 from osv import fields, osv
 from tools.translate import _
 from decimal_precision import decimal_precision as dp
-
 
 class partner_event_registration(osv.osv_memory):
     """  event Registration """
@@ -67,16 +64,15 @@ class partner_event_registration(osv.osv_memory):
                         contact_id = contact.contact_id.id
                         email = contact.email
 
-        result = mod_obj._get_id(cr, uid, 'event', 'view_registration_search')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
+        result = mod_obj.get_object_reference(cr, uid, 'event', 'view_registration_search')
+        res = result and result[1] or False
 
         # Select the view
-        id2 = mod_obj._get_id(cr, uid, 'event', 'view_event_registration_form')
-        id3 = mod_obj._get_id(cr, uid, 'event', 'view_event_registration_tree')
-        if id2:
-            id2 = mod_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = mod_obj.browse(cr, uid, id3, context=context).res_id
+
+        id2 = mod_obj.get_object_reference(cr, uid, 'event', 'view_event_registration_form')
+        id2 = id2 and id2[1] or False
+        id3 = mod_obj.get_object_reference(cr, uid, 'event', 'view_event_registration_tree')
+        id3 = id3 and id3[1] or False
 
         for current in self.browse(cr, uid, ids, context=context):
             for partner in res_obj.browse(cr, uid, record_ids, context=context):
@@ -101,7 +97,7 @@ class partner_event_registration(osv.osv_memory):
                 'res_id': new_case,
                 'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
                 'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id']
+                'search_view_id': res
         }
         return value
 
@@ -150,4 +146,3 @@ class partner_event_registration(osv.osv_memory):
 partner_event_registration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

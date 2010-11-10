@@ -226,6 +226,291 @@
         <field name="company_id" ref="res_company_oerp_in"/>
         </record>
 
+
+<!-- Journals -->
+<!--Journals for OpenERP IN-->
+         <record id="sales_journal_multi_in" model="account.journal">
+            <field name="name">Sales Journal - (OpenERP IN)</field>
+            <field name="code">SAJ-OpenERP IN</field>
+            <field name="type">sale</field>
+            <field name="view_id" ref="account.account_sp_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_sale_journal"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="refund_sales_journal_multi_in" model="account.journal">
+            <field name="name">Sales Credit Note Journal - (OpenERP IN)</field>
+            <field name="code">SCNJ-OpenERP IN</field>
+            <field name="type">sale_refund</field>
+            <field eval="True" name="refund_journal"/>
+            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="expenses_journal_multi_in" model="account.journal">
+            <field name="name">Expenses Journal - (OpenERP IN)</field>
+            <field name="code">EXJ-OpenERP IN</field>
+            <field name="type">purchase</field>
+            <field name="view_id" ref="account.account_sp_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_purchase_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="refund_expenses_journal_multi_in" model="account.journal">
+            <field name="name">Expenses Credit Notes Journal - (OpenERP IN)</field>
+            <field name="code">ECNJ-OpenERP IN</field>
+            <field name="type">purchase_refund</field>
+            <field eval="True" name="refund_journal"/>
+            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="bank_journal_multi_in" model="account.journal">
+            <field name="name">Bank Journal - (OpenERP IN)</field>
+            <field name="code">BNK-OpenERP IN</field>
+            <field name="type">bank</field>
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="sequence_id" ref="account.sequence_bank_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="check_journal_multi_in" model="account.journal">
+            <field name="name">Checks Journal - (OpenERP IN)</field>
+            <field name="code">CHK-OpenERP IN</field>
+            <field name="type">bank</field>
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="sequence_id" ref="account.sequence_check_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="cash_journal_multi_in" model="account.journal">
+            <field name="name">Cash Journal - (OpenERP IN)</field>
+            <field name="code">CSH-OpenERP IN</field>
+            <field name="type">cash</field>
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="sequence_id" ref="account.sequence_cash_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+<!-- Journals for OpenERP US-->
+        <record id="sales_journal_multi_us" model="account.journal">
+            <field name="name">Sales Journal - (OpenERP US)</field>
+            <field name="code">SAJ-OpenERP US</field>
+            <field name="type">sale</field>
+            <field name="view_id" ref="account.account_sp_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_sale_journal"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="refund_sales_journal_multi_us" model="account.journal">
+            <field name="name">Sales Credit Note Journal - (OpenERP US)</field>
+            <field name="code">SCNJ-OpenERP US</field>
+            <field name="type">sale_refund</field>
+            <field eval="True" name="refund_journal"/>
+            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="expenses_journal_multi_us" model="account.journal">
+            <field name="name">Expenses Journal - (OpenERP US)</field>
+            <field name="code">EXJ-OpenERP US</field>
+            <field name="type">purchase</field>
+            <field name="view_id" ref="account.account_sp_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_purchase_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="refund_expenses_journal_multi_us" model="account.journal">
+            <field name="name">Expenses Credit Notes Journal - (OpenERP US)</field>
+            <field name="code">ECNJ-OpenERP US</field>
+            <field name="type">purchase_refund</field>
+            <field eval="True" name="refund_journal"/>
+            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="bank_journal_multi_us" model="account.journal">
+            <field name="name">Bank Journal - (OpenERP US)</field>
+            <field name="code">BNK-OpenERP US</field>
+            <field name="type">bank</field>
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="sequence_id" ref="account.sequence_bank_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="check_journal_multi_us" model="account.journal">
+            <field name="name">Checks Journal - (OpenERP US)</field>
+            <field name="code">CHK-OpenERP US</field>
+            <field name="type">bank</field>
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="sequence_id" ref="account.sequence_check_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="cash_journal_multi_us" model="account.journal">
+            <field name="name">Cash Journal - (OpenERP US)</field>
+            <field name="code">CSH-OpenERP US</field>
+            <field name="type">cash</field>
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="sequence_id" ref="account.sequence_cash_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+<!-- Journals for OpenERP BE-->
+
+        <record id="sales_journal_multi_be" model="account.journal">
+            <field name="name">Sales Journal - (OpenERP BE)</field>
+            <field name="code">SAJ-OpenERP BE</field>
+            <field name="type">sale</field>
+            <field name="view_id" ref="account.account_sp_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_sale_journal"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="refund_sales_journal_multi_be" model="account.journal">
+            <field name="name">Sales Credit Note Journal - (OpenERP BE)</field>
+            <field name="code">SCNJ-OpenERP BE</field>
+            <field name="type">sale_refund</field>
+            <field eval="True" name="refund_journal"/>
+            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="expenses_journal_multi_be" model="account.journal">
+            <field name="name">Expenses Journal - (OpenERP BE)</field>
+            <field name="code">EXJ-OpenERP BE</field>
+            <field name="type">purchase</field>
+            <field name="view_id" ref="account.account_sp_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_purchase_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="refund_expenses_journal_multi_be" model="account.journal">
+            <field name="name">Expenses Credit Notes Journal - (OpenERP BE)</field>
+            <field name="code">ECNJ-OpenERP BE</field>
+            <field name="type">purchase_refund</field>
+            <field eval="True" name="refund_journal"/>
+            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="bank_journal_multi_be" model="account.journal">
+            <field name="name">Bank Journal - (OpenERP BE)</field>
+            <field name="code">BNK-OpenERP BE</field>
+            <field name="type">bank</field>
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="sequence_id" ref="account.sequence_bank_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="check_journal_multi_be" model="account.journal">
+            <field name="name">Checks Journal - (OpenERP BE)</field>
+            <field name="code">CHK-OpenERP BE</field>
+            <field name="type">bank</field>
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="sequence_id" ref="account.sequence_check_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="cash_journal_multi_be" model="account.journal">
+            <field name="name">Cash Journal - (OpenERP BE)</field>
+            <field name="code">CSH-OpenERP BE</field>
+            <field name="type">cash</field>
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="sequence_id" ref="account.sequence_cash_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
 <!--        Project        -->
 
         <record id="project.project_project_9" model="project.project">
@@ -381,56 +666,56 @@
                  <field name="company_id" ref="res_company_oerp_be"/>
         </record>
     </data>
-	<data noupdate="1">
-		<record id="multi_company_default_productopenerpus0" model="multi_company.default">
-			<field name="name">Product OpenERP US</field>
-			<field eval="1" name="sequence"/>
-			<field name="company_id" ref="multi_company.res_company_oerp_us"/>
-			<field name="object_id" ref="product.model_product_template"/>
-			<field name="company_dest_id" ref="multi_company.res_company_oerp_editor"/>
-			<field name="expression">True</field>
-		</record>
-	</data>
-	<data noupdate="1">
-		<record id="multi_company_default_productopenerpbe0" model="multi_company.default">
-			<field name="name">Product OpenERP BE</field>
-			<field eval="1" name="sequence"/>
-			<field name="company_id" ref="multi_company.res_company_oerp_be"/>
-			<field name="object_id" ref="product.model_product_template"/>
-			<field name="company_dest_id" ref="multi_company.res_company_oerp_editor"/>
-			<field name="expression">True</field>
-		</record>
-	</data>
-	<data noupdate="1">
-		<record id="multi_company_default_productopenerpin0" model="multi_company.default">
-			<field name="name">Product OpenERP IN</field>
-			<field eval="1" name="sequence"/>
-			<field name="company_id" ref="multi_company.res_company_oerp_in"/>
-			<field name="object_id" ref="product.model_product_template"/>
-			<field name="company_dest_id" ref="multi_company.res_company_oerp_editor"/>
-			<field name="expression">True</field>
-		</record>
-	</data>
-	<data noupdate="1">
-		<record id="multi_company_default_partneropenerpeditor0" model="multi_company.default">
-			<field name="name">Partner OpenERP Editor</field>
-			<field eval="1" name="sequence"/>
-			<field name="company_id" ref="multi_company.res_company_oerp_editor"/>
-			<field name="object_id" ref="base.model_res_partner"/>
-			<field name="company_dest_id" ref="base.main_company"/>
-			<field name="expression">True</field>
-		</record>
-	</data>
-	<data noupdate="1">
-		<record id="multi_company_default_partnerodoo0" model="multi_company.default">
-			<field name="name">Partner Odoo</field>
-			<field eval="1" name="sequence"/>
-			<field name="company_id" ref="multi_company.res_company_odoo"/>
-			<field name="object_id" ref="base.model_res_partner"/>
-			<field name="company_dest_id" ref="base.main_company"/>
-			<field name="expression">True</field>
-		</record>
-	</data>
+  <data noupdate="1">
+    <record id="multi_company_default_productopenerpus0" model="multi_company.default">
+      <field name="name">Product OpenERP US</field>
+      <field eval="1" name="sequence"/>
+      <field name="company_id" ref="multi_company.res_company_oerp_us"/>
+      <field name="object_id" ref="product.model_product_template"/>
+      <field name="company_dest_id" ref="multi_company.res_company_oerp_editor"/>
+      <field name="expression">True</field>
+    </record>
+  </data>
+  <data noupdate="1">
+    <record id="multi_company_default_productopenerpbe0" model="multi_company.default">
+      <field name="name">Product OpenERP BE</field>
+      <field eval="1" name="sequence"/>
+      <field name="company_id" ref="multi_company.res_company_oerp_be"/>
+      <field name="object_id" ref="product.model_product_template"/>
+      <field name="company_dest_id" ref="multi_company.res_company_oerp_editor"/>
+      <field name="expression">True</field>
+    </record>
+  </data>
+  <data noupdate="1">
+    <record id="multi_company_default_productopenerpin0" model="multi_company.default">
+      <field name="name">Product OpenERP IN</field>
+      <field eval="1" name="sequence"/>
+      <field name="company_id" ref="multi_company.res_company_oerp_in"/>
+      <field name="object_id" ref="product.model_product_template"/>
+      <field name="company_dest_id" ref="multi_company.res_company_oerp_editor"/>
+      <field name="expression">True</field>
+    </record>
+  </data>
+  <data noupdate="1">
+    <record id="multi_company_default_partneropenerpeditor0" model="multi_company.default">
+      <field name="name">Partner OpenERP Editor</field>
+      <field eval="1" name="sequence"/>
+      <field name="company_id" ref="multi_company.res_company_oerp_editor"/>
+      <field name="object_id" ref="base.model_res_partner"/>
+      <field name="company_dest_id" ref="base.main_company"/>
+      <field name="expression">True</field>
+    </record>
+  </data>
+  <data noupdate="1">
+    <record id="multi_company_default_partnerodoo0" model="multi_company.default">
+      <field name="name">Partner Odoo</field>
+      <field eval="1" name="sequence"/>
+      <field name="company_id" ref="multi_company.res_company_odoo"/>
+      <field name="object_id" ref="base.model_res_partner"/>
+      <field name="company_dest_id" ref="base.main_company"/>
+      <field name="expression">True</field>
+    </record>
+  </data>
 
 </openerp>
 

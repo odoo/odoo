@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record id="view_account_move_form_inherit" model="ir.ui.view">
+       <field name="name">account.move.form.inherit</field>
+       <field name="model">account.move</field>
+       <field name="type">form</field>
+       <field name="inherit_id" ref="account.view_move_form"/>
+       <field name="arch" type="xml">
+            <field name="to_check" position="after">
+                <field name="internal_sequence_number"/>
+            </field>
+       </field>
+    </record>
+    
+    <record id="view_account_journal_form_inherit" model="ir.ui.view">
+       <field name="name">account.journal.form.inherit</field>
+       <field name="model">account.journal</field>
+       <field name="type">form</field>
+       <field name="inherit_id" ref="account.view_account_journal_form"/>
+       <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="internal_sequence"/>
+            </field>
+       </field>
+    </record>
+
+    </data>
+</openerp>
