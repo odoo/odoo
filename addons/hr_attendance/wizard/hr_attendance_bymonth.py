@@ -31,8 +31,8 @@ class hr_attendance_bymonth(osv.osv_memory):
         'year': fields.integer('Year', required=True)
     }
     _defaults = {
-         'month': time.gmtime()[1],
-         'year': time.gmtime()[0],
+         'month': lambda *a: time.gmtime()[1],
+         'year': lambda *a: time.gmtime()[0],
     }
 
     def print_report(self, cr, uid, ids, context=None):
