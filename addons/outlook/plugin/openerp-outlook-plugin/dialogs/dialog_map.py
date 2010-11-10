@@ -692,6 +692,7 @@ def CreateCase(btnProcessor,*args):
                 flag=flag_error
             if f:
                 win32ui.MessageBox(msg, "Create Document", flag)
+                win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.other_ids[2])
                 return
             else:
                 win32ui.MessageBox("Error While creating document.\n Document can not be created.", "Create Document", flag_error)
@@ -1717,7 +1718,7 @@ dialog_map = {
                     (DialogCommand,             "ID_CREATE_CONTACT ID_SEARCH_TEXT", "IDD_NEW_CONTACT_DIALOG", set_search_text, ()),
                     (CloseButtonProcessor,      "IDCANCEL"),
                     (CommandButtonProcessor,    "ID_MAKE_ATTACHMENT IDC_NAME_LIST IDD_SYNC", MakeAttachment, ()),
-                    (CommandButtonProcessor,    "ID_CREATE_CASE ID_ATT_METHOD_DROPDOWNLIST IDC_NAME_LIST", CreateCase, ()),
+                    (CommandButtonProcessor,    "ID_CREATE_CASE ID_ATT_METHOD_DROPDOWNLIST IDC_NAME_LIST IDD_SYNC", CreateCase, ()),
                     (ListBoxProcessor,          "IDC_NAME_LIST", SetNameColumn, ())
                 ),
 
