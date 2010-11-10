@@ -31,7 +31,7 @@ class subscription_document(osv.osv):
     _description = "Subscription Document"
     _columns = {
         'name': fields.char('Name', size=60, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the subscription document without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the subscription document without removing it."),
         'model': fields.many2one('ir.model', 'Object', required=True),
         'field_ids': fields.one2many('subscription.document.fields', 'document_id', 'Fields')
     }

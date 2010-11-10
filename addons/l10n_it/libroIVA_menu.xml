@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE terp SYSTEM "openerp-view.dtd"> 
+<openerp>
+	<data> 
+			<!-- ********************
+				MENU REPORT
+				******************** -->                                
+			<!--<menuitem name="Report" 
+				id="menu_report_primanota" 
+				sequence="60" 
+				parent="saperi4_servabit.menu_contabilita_root" 
+			/>-->
+			
+			<!-- ********************
+				MENU REPORT
+				******************** -->                                
+			<!--<menuitem name="Report flussi economici aziendali" 
+				id="menu_report_primanota_anno" 
+				sequence="10" 
+				parent="menu_report_primanota" 
+				action="saperi4_primanota_report.primanotas_report_year_list_action"
+			/>-->
+			
+			<!-- ****************************
+				MENU REPORT LIBRI IVA
+				**************************** -->                                
+			<menuitem name="Registri IVA" 
+				id="menu_report_l10n_chart_it_servabit_libroIVA" 
+				sequence="20" 
+				parent="account.menu_finance_reporting" 
+				action="l10n_chart_it_servabit_report_libroIVA_action"
+			/>
+	</data>
+</openerp> 
