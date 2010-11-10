@@ -174,7 +174,7 @@
             <para style="terp_default_9">[ [[ p.product_id.code ]] ] [[ p.product_id.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(p.product_qty) ]] [[ p.product_uom.name ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(p.product_qty ,digits=get_digits(dp='Product UoM')) ]] [[ p.product_uom.name ]]</para>
           </td>
         </tr>
       </blockTable>
