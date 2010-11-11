@@ -1495,7 +1495,7 @@ msgstr ""
 
 #. module: account
 #: view:validate.account.move:0
-msgid "Validate Journal Entries of a Journal"
+msgid "Post Journal Entries of a Journal"
 msgstr ""
 
 #. module: account
@@ -1713,7 +1713,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_validate_account_move_line
 #: model:ir.ui.menu,name:account.menu_validate_account_moves
 #: view:validate.account.move.lines:0
-msgid "Validate Journal Entries"
+msgid "Post Journal Entries"
 msgstr ""
 
 #. module: account
@@ -6283,10 +6283,7 @@ msgstr ""
 #. module: account
 #: code:addons/account/account_cash_statement.py:0
 #, python-format
-msgid "User %s does not have rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))\n"
-"\n"
-"        if statement.name and statement.name == '/':\n"
-"            number = self.pool.get('ir.sequence"
+msgid "User \"%s\" does not have rights to access \"%s\" journal !"
 msgstr ""
 
 #. module: account
@@ -6307,11 +6304,6 @@ msgstr ""
 #: field:account.tax.code,code:0
 #: field:account.tax.code.template,code:0
 msgid "Case Code"
-msgstr ""
-
-#. module: account
-#: view:validate.account.move.lines:0
-msgid "Post Journal Entries"
 msgstr ""
 
 #. module: account
@@ -8782,3 +8774,9 @@ msgstr ""
 msgid "You cannot remove an account which has account entries!. "
 msgstr ""
 
+#. module: account
+#: model:ir.actions.act_window,name:action_account_balance_menu
+#: model:ir.actions.report.xml,name:account.account_account_balance	
+#: model:ir.ui.menu,name:account.menu_general_Balance_report
+msgid "Trial Balance"
+msgstr ""

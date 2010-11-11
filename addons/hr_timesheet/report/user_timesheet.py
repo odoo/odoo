@@ -44,6 +44,12 @@ class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, data, context):
 
+        # Get the user id from the selected employee record
+        emp_id = data['form']['employee_id']
+        emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+        user_id = emp_obj.browse(cr, uid, emp_id).user_id.id
+        empl_name = emp_obj.browse(cr, uid, emp_id).name
+ 
         # Computing the dates (start of month: som, and end of month: eom)
         som = datetime.date(data['form']['year'], data['form']['month'], 1)
         eom = som + datetime.timedelta(lengthmonth(som.year, som.month))
@@ -63,7 +69,7 @@ class report_custom(report_rml):
             "and product_uom_id = unit.id "\
             "and line.user_id=%s and line.date >= %s and line.date < %s "
             "order by line.date",
-            (uid, som.strftime('%Y-%m-%d'), eom.strftime('%Y-%m-%d')))
+            (user_id, som.strftime('%Y-%m-%d'), eom.strftime('%Y-%m-%d')))
 
         # Sum attendence by account, then by day
         accounts = {}
@@ -84,7 +90,7 @@ class report_custom(report_rml):
         <date>%s</date>
         <company>%s</company>
         </header>
-        ''' %  (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+        ''' %  (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,user_id).company_id.name)
 
         account_xml = []
         for account, telems in accounts.iteritems():
@@ -96,10 +102,6 @@ class report_custom(report_rml):
             account_xml.append('\n'.join([xml % (day, amount) for day, amount in telems.iteritems()]))
             account_xml.append('</account>')
 
-        # Computing the employee
-        cr.execute("select name from res_users where id=%s", (str(uid)))
-        emp = cr.fetchone()[0]
-
         # Computing the xml
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
@@ -107,7 +109,7 @@ class report_custom(report_rml):
         <employee>%s</employee>
         %s
         </report>
-        ''' % (header_xml,toxml(emp), '\n'.join(date_xml) + '\n'.join(account_xml))
+        ''' % (header_xml,toxml(empl_name), '\n'.join(date_xml) + '\n'.join(account_xml))
         return xml
 
 report_custom('report.hr.analytical.timesheet', 'hr.employee', '', 'addons/hr_timesheet/report/user_timesheet.xsl')
