@@ -37,11 +37,11 @@ def execute(connector, method, *args):
     global wait_count
     res = False
     try:
-    	res = getattr(connector,method)(*args)
+        res = getattr(connector,method)(*args)
     except socket.error,e:
         if e.args[0] == 111:
             if wait_count > wait_limit:
-            	print "Server is taking too long to start, it has exceeded the maximum limit of %d seconds."%(wait_limit)
+               print "Server is taking too long to start, it has exceeded the maximum limit of %d seconds."%(wait_limit)
             clean()
             sys.exit(1)
             print 'Please wait %d sec to start server....'%(waittime)
@@ -49,7 +49,7 @@ def execute(connector, method, *args):
             time.sleep(waittime)
             res = execute(connector, method, *args)
         else:
-        	return res
+            return res
     wait_count = 0
     return res
 
@@ -57,18 +57,18 @@ class XMLRpcConn(object):
     __name__ = 'XMLRpcConn'
     _com_interfaces_ = ['_IDTExtensibility2']
     _public_methods_ = ['GetDBList', 'login', 'GetAllObjects', 'GetObjList', 'InsertObj', 'DeleteObject', 'GetCSList', \
-    					'ArchiveToOpenERP', 'IsCRMInstalled', 'GetPartners', 'GetObjectItems', \
-    					'CreateCase', 'MakeAttachment', 'CreateContact', 'CreatePartner', 'getitem', 'setitem', \
-    					'SearchPartnerDetail', 'WritePartnerValues', 'GetAllState', 'GetAllCountry', 'SearchPartner', 'SearchEmailResources', \
-    					'GetCountry', 'GetStates', 'FindCountryForState','CreateEmailAttachment']
+    'ArchiveToOpenERP', 'IsCRMInstalled', 'GetPartners', 'GetObjectItems', \
+    'CreateCase', 'MakeAttachment', 'CreateContact', 'CreatePartner', 'getitem', 'setitem', \
+    'SearchPartnerDetail', 'WritePartnerValues', 'GetAllState', 'GetAllCountry', 'SearchPartner', 'SearchEmailResources', \
+    'GetCountry', 'GetStates', 'FindCountryForState','CreateEmailAttachment']
     _reg_clsctx_ = pythoncom.CLSCTX_INPROC_SERVER
     _reg_clsid_ = "{C6399AFD-763A-400F-8191-7F9D0503CAE2}"
     _reg_progid_ = "Python.OpenERP.XMLRpcConn"
     _reg_policy_spec_ = "win32com.server.policy.EventHandlerPolicy"
     def __init__(self,server='localhost',port=8069,uri='http://localhost:8069'):
-    	self._server=server
-    	self._port=port
-    	self._uri=uri
+        self._server=server
+        self._port=port
+        self._uri=uri
     	self._obj_list=[]
     	self._dbname=''
     	self._uname='admin'
@@ -136,12 +136,10 @@ class XMLRpcConn(object):
     def ArchiveToOpenERP(self, recs, mail):
     	import  win32con
     	conn = xmlrpclib.ServerProxy(self._uri + '/xmlrpc/object')
-    	import eml
     	flag = False
     	new_msg =  ext_msg =""
     	message_id = referances  = None
     	try:
-    		outlook = win32com.client.Dispatch("Outlook.Application")
     		session = win32com.client.Dispatch("MAPI.session")
     		session.Logon('Outlook')
     		objMessage = session.GetMessage(mail.EntryID, mail.Parent.StoreID)
@@ -203,7 +201,6 @@ class XMLRpcConn(object):
     		if attachments:
     			result = self.MakeAttachment([rec], mail)
     		attachment_ids = result.get(model, {}).get(res_id, [])
-    		ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','history',model, res_id, msg, attachment_ids)
     		new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
     		flag = True
 
@@ -273,8 +270,7 @@ class XMLRpcConn(object):
     	try:
     		conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
     		email=eml.generateEML(mail)
-    		message_id = referances  = None
-    		outlook = win32com.client.Dispatch("Outlook.Application")
+    		message_id   = None
     		session = win32com.client.Dispatch("MAPI.session")
     		session.Logon('Outlook')
     		objMessage = session.GetMessage(mail.EntryID, mail.Parent.StoreID)
@@ -375,7 +371,6 @@ class XMLRpcConn(object):
 
     def SearchPartnerDetail(self, search_email_id):
     	res_vals = []
-    	address = {}
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
     	address_id = execute(conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'search', [('email','ilike',ustr(search_email_id))])
     	if not address_id :
@@ -450,13 +445,9 @@ class XMLRpcConn(object):
     		partner = add_rec.get('partner_id',False)
     		if partner:
     			return partner[0]
-    		else:
-    			return True
-    		return partner_id[0]
+        return True
 
     def SearchEmailResources(self, message_id):
-    	import eml
-
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
     	res_vals = []
     	mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message', 'search', [('message_id','=',message_id)])

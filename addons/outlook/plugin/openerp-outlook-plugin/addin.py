@@ -38,7 +38,7 @@ sys.path.append(os.path.abspath(__file__))                     #outlook/addin
 import manager
 from win32com.client import CastTo
 import win32ui
-from tiny_xmlrpc import *
+from tiny_xmlrpc import XMLRpcConn
 
 import locale
 locale.setlocale(locale.LC_NUMERIC, "C")
