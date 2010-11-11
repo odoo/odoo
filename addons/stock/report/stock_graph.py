@@ -92,6 +92,9 @@ class stock_graph(object):
 
         interval = max((val_max-val_min)/15, 86400)
         x_axis = axis.X(format=lambda x:'/a60{}'+time.strftime('%Y-%m-%d',time.gmtime(x)), tic_interval=interval, label=None)
+        # For add the report header on the top of the report.
+        tb = text_box.T(loc=(300, 500), text="/hL/15/bStock Level Forecast", line_style=None)
+        tb.draw()
         ar = area.T(size = (620,435), x_range=(val_min,val_max+1), y_axis = axis.Y(format="%d", label="Virtual Stock (Unit)"), x_axis=x_axis)
         for plot in plots:
             ar.add_plot(plot)
