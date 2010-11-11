@@ -149,7 +149,7 @@ class report_custom(report_rml):
                     <col para='yes'>-</col>
                     </row></lines>"""
                 xml += """<lines style='total'> <row>
-                    <col> """ + _('Total Cost ') + _('of ') + str(number) +' '+ product.uom_id.name + """: </col>
+                    <col> """ + _('Total Cost of ') + str(number) +' '+ product.uom_id.name + """: </col>
                     <col/>
                     <col f='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
@@ -176,7 +176,7 @@ class report_custom(report_rml):
 
                 xml += "<lines style='lines'>" + xml_tmp + '</lines>'
                 xml += """<lines style='sub_total'> <row>
-                    <col> """ + _('Component ') + _('Cost ') + _('of ') + str(number) +' '+ product.uom_id.name + """: </col>
+                    <col> """ + _('Component Cost of ')  + str(number) +' '+ product.uom_id.name + """: </col>
                     <col/>
                     <col t='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
@@ -193,14 +193,14 @@ class report_custom(report_rml):
                     xml += workcenter_header
                     xml += "<lines style='lines'>" + xml_tmp + '</lines>'
                     xml += """<lines style='sub_total'> <row>
-                    <col> """ + _('Work Cost ') + _('of ') + str(number) +' '+ product.uom_id.name +""": </col>
+                    <col> """ + _('Work Cost of ') + str(number) +' '+ product.uom_id.name +""": </col>
                     <col/>
                     <col/>
                     <col/>
                     <col t='yes'>"""+ rml_obj.formatLang(total2, digits=purchase_price_digits) +' '+ company_currency.symbol +"""</col>
                     </row></lines>'"""
                 xml += """<lines style='total'> <row>
-                    <col> """ + _('Total Cost ') + _('of ') + str(number) +' '+ product.uom_id.name + """: </col>
+                    <col> """ + _('Total Cost of ') + str(number) +' '+ product.uom_id.name + """: </col>
                     <col/>
                     <col t='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd+total2, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
