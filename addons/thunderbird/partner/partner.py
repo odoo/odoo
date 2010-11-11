@@ -171,18 +171,18 @@ class thunderbird_partner(osv.osv_memory):
                 ls = ['*', '/', '\\', '<', '>', ':', '?', '"', '|', '\t', '\n',':','~']
                 sub = msg.get('subject','NO-SUBJECT').replace(' ','')
                 if sub.strip() == '':
-                	sub = 'NO SBUJECT'
+                   sub = 'NO SBUJECT'
                 fn = sub
                 for c in ls:
-                	fn = fn.replace(c,'')
+                   fn = fn.replace(c,'')
                 if len(fn) > 64:
-                	l = 64 - len(fn)
-                	f = fn.split('-')
-                	fn = '-'.join(f[1:])
-                	if len(fn) > 64:
-                		l = 64 - len(fn)
-                		f = fn.split('.')
-                		fn = f[0][0:l] + '.' + f[-1]
+                   l = 64 - len(fn)
+                   f = fn.split('-')
+                   fn = '-'.join(f[1:])
+                   if len(fn) > 64:
+                      l = 64 - len(fn)
+                      f = fn.split('.')
+                      fn = f[0][0:l] + '.' + f[-1]
                 fn = fn[:-4]+'.txt'
                 res['res_model'] = model
                 res['name'] = msg.get('subject','NO-SUBJECT')
