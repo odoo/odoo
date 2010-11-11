@@ -74,7 +74,6 @@ class report_tasks(report_int):
             entr1 = pychart.legend.Entry(label="guideline", line_style=line_style.red)
             entr2 = pychart.legend.Entry(label="burndownchart",line_style=line_style.green)
             legend = pychart.legend.T(nr_rows=2, inter_row_sep=5)
-#            print dir(legend)
             legend.draw(ar,[entr1,entr2],canv)
 
             ar.draw(canv)
