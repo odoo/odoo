@@ -20,10 +20,8 @@
 ##############################################################################
 
 import time
-import ir
 
 import pooler
-from osv import osv
 from report import report_sxw
 
 class report_rappel(report_sxw.rml_parse):

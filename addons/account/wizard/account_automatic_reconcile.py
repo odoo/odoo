@@ -49,8 +49,8 @@ class account_automatic_reconcile(osv.osv_memory):
         return context.get('unreconciled', 0)
 
     _defaults = {
-        'date1': time.strftime('%Y-01-01'),
-        'date2': time.strftime('%Y-%m-%d'),
+        'date1': lambda *a: time.strftime('%Y-01-01'),
+        'date2': lambda *a: time.strftime('%Y-%m-%d'),
         'reconciled': _get_reconciled,
         'unreconciled': _get_unreconciled,
         'power': 2

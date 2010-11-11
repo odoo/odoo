@@ -358,7 +358,7 @@ class account_invoice(osv.osv):
         if context is None:
             context = {}
         mob_obj = self.pool.get('ir.model.data')
-        res = mob_obj.get_object_reference(cr, uid, 'account', 'invoice_form') or False
+        res = mob_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         view_id = res and res[1] or False
         context.update({'view_id': view_id})
         return context
@@ -571,7 +571,7 @@ class account_invoice(osv.osv):
             if journal_ids:
                 val['journal_id'] = journal_ids[0]
             else:
-                raise osv.except_osv(_('Configuration Error !'), _('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.' % (journal_type)))
+                raise osv.except_osv(_('Configuration Error !'), (_('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.') % (journal_type)))
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
             journal_ids = obj_journal.search(cr, uid, [])

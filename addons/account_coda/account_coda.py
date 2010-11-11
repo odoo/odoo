@@ -37,7 +37,7 @@ class account_coda(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True)
     }
     _defaults = {
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.coda', context=c),
     }

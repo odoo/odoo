@@ -236,3 +236,4 @@ class report_sales_by_margin_pos_month(osv.osv):
         """)
 report_sales_by_margin_pos_month()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

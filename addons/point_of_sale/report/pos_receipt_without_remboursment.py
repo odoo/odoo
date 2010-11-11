@@ -23,7 +23,6 @@ import time
 from report import report_sxw
 import pooler
 
-
 class order(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
@@ -77,4 +76,3 @@ class order(report_sxw.rml_parse):
 report_sxw.report_sxw('report.pos.receipt.without.remboursment', 'pos.order', 'addons/point_of_sale/report/pos_receipt_without_remboursment.rml', parser=order, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
