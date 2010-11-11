@@ -233,15 +233,13 @@ class account_cash_statement(osv.osv):
     }
     _defaults = {
         'state': 'draft',
-        'date': time.strftime("%Y-%m-%d %H:%M:%S"),
+        'date': lambda *a: time.strftime("%Y-%m-%d %H:%M:%S"),
         'user_id': lambda self, cr, uid, context=None: uid,
         'starting_details_ids': _get_cash_open_box_lines,
         'ending_details_ids': _get_default_cash_close_box_lines
      }
 
     def create(self, cr, uid, vals, context=None):
-        if 'journal_id' not in vals:
-            raise osv.except_osv(_('Error'), _('You cannot create a bank or cash register without a journal!'))
         sql = [
                 ('journal_id', '=', vals.get('journal_id', False)),
                 ('state', '=', 'open')
@@ -329,7 +327,7 @@ class account_cash_statement(osv.osv):
         for statement in statement_pool.browse(cr, uid, ids, context=context):
             vals = {}
             if not self._user_allow(cr, uid, statement.id, context=context):
-                raise osv.except_osv(_('Error !'), _('User %s does not have rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
+                raise osv.except_osv(_('Error !'), (_('User %s does not have rights to access %s journal !') % (statement.user_id.name, statement.journal_id.name)))
 
             if statement.name and statement.name == '/':
                 number = self.pool.get('ir.sequence').get(cr, uid, 'account.cash.statement')

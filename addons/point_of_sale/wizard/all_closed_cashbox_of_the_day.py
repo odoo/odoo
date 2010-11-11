@@ -35,13 +35,11 @@ class all_closed_cashbox_of_the_day(osv.osv_memory):
              @return : retrun report
         """
         datas = {'ids': context.get('active_ids', [])}
-        res =  {}
-        datas['form'] = res
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'all.closed.cashbox.of.the.day',
             'datas': datas,
-       }
+        }
 
 all_closed_cashbox_of_the_day()
 

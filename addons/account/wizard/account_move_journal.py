@@ -160,9 +160,8 @@ class account_move_journal(osv.osv_memory):
             period = period_pool.browse(cr, uid, ids[0], context=context)
             name = (period.journal_id.code or '') + ':' + (period.period_id.code or '')
 
-        result = data_pool._get_id(cr, uid, 'account', 'view_account_move_line_filter')
-        res_id = data_pool.browse(cr, uid, result, context=context).res_id
-
+        result = data_pool.get_object_reference(cr, uid, 'account', 'view_account_move_line_filter')
+        res_id = result and result[1] or False
         return {
             'name': name,
             'view_type': 'form',
