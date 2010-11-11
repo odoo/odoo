@@ -24,7 +24,7 @@ import decimal_precision as dp
 
 import math
 from _common import rounding
-import re  
+import re
 from tools.translate import _
 
 def is_pair(x):
@@ -106,9 +106,14 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[-1], uoms[0]
         return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit)
 
-    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context={}):
+    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context=None):
+        if context is None:
+            context = {}
         if from_unit.category_id.id <> to_unit.category_id.id:
-            return qty
+            if context.get('raise-exception', True):
+                raise osv.except_osv(_('Error !'), _('Conversion from Product UoM m to Default UoM PCE is not possible as they both belong to different Category!.'))
+            else:
+                return qty
         amount = qty / from_unit.factor
         if to_unit:
             amount = rounding(amount * to_unit.factor, to_unit.rounding)
