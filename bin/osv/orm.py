@@ -2008,7 +2008,7 @@ class orm(orm_template):
         
         for record in store_fncts:
             if record[0] == self._name and (self._columns.get(record[1],False) or self._inherit_fields.get(record[1],False)):
-                if (not isinstance(self._columns[record[1]],fields.function)) or (record[1] in self._inherit_fields and not isinstance(self._inherit_fields[[record[1]]][2],fields.function)):
+                if (not isinstance(self._columns[record[1]],fields.function)) or (record[1] in self._inherit_fields and not isinstance(self._inherit_fields[record[1]][2],fields.function)):
                     remove_stores.append(record)
 
         for stores in remove_stores:
