@@ -45,12 +45,6 @@ class sale_shop(osv.osv):
 
 sale_shop()
 
-def _incoterm_get(self, cr, uid, context=None):
-    if context is None:
-        context = {}
-    cr.execute('select code, code||\', \'||name from stock_incoterms where active')
-    return cr.fetchall()
-
 class sale_order(osv.osv):
     _name = "sale.order"
     _description = "Sale Order"
@@ -233,7 +227,7 @@ class sale_order(osv.osv):
         'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="The name and address of the contact who requested the order or quotation."),
         'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Shipping address for current sale order"),
 
-        'incoterm': fields.selection(_incoterm_get, 'Incoterm', size=3, help="Incoterm which stands for 'International Commercial terms' implies its a series of sales terms which are used in the commercial transaction"),
+        'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="Incoterm which stands for 'International Commercial terms' implies its a series of sales terms which are used in the commercial transaction"),
         'picking_policy': fields.selection([('direct', 'Partial Delivery'), ('one', 'Complete Delivery')],
             'Picking Policy', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
