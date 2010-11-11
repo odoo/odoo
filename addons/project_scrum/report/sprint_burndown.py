@@ -40,6 +40,7 @@ class report_tasks(report_int):
 
         canv = canvas.init(fname=io, format='pdf')
         canv.set_author("OpenERP")
+        canv.set_title("Burndown Chart")
         pool = pooler.get_pool(cr.dbname)
         sprint_pool = pool.get('project.scrum.sprint')
         task_pool = pool.get('project.task')
@@ -73,6 +74,7 @@ class report_tasks(report_int):
             entr1 = pychart.legend.Entry(label="guideline", line_style=line_style.red)
             entr2 = pychart.legend.Entry(label="burndownchart",line_style=line_style.green)
             legend = pychart.legend.T(nr_rows=2, inter_row_sep=5)
+#            print dir(legend)
             legend.draw(ar,[entr1,entr2],canv)
 
             ar.draw(canv)
