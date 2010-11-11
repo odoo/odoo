@@ -41,9 +41,7 @@ def _employee_get(obj, cr, uid, context=None):
     if context is None:
         context = {}
     ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
-    if ids:
-        return ids[0]
-    return False
+    return ids and ids[0] or False
 
 class hr_attendance(osv.osv):
     _name = "hr.attendance"
@@ -65,7 +63,7 @@ class hr_attendance(osv.osv):
         'day': fields.function(_day_compute, method=True, type='char', string='Day', store=True, select=1, size=32),
     }
     _defaults = {
-        'name': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), #Don't remove the lambda, if you remove it then the current time will not change
+        'name': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), #please don't remove the lambda, if you remove it then the current time will not change
         'employee_id': _employee_get,
     }
 
@@ -136,7 +134,7 @@ class hr_employee(osv.osv):
         warning_sign = 'sign'
         res = {}
 
-        #Special case when button calls this method :type=context
+        #Special case when button calls this method: type=context
         if isinstance(type, dict):
             type = type.get('type','action')
         if type == 'sign_in':

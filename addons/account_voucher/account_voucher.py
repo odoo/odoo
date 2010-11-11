@@ -115,14 +115,22 @@ class account_voucher(osv.osv):
         return [(r['id'], (str("%.2f" % r['amount']) or '')) for r in self.read(cr, uid, ids, ['amount'], context, load='_classic_write')]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        mod_obj = self.pool.get('ir.model.data')
         if not view_id and context.get('invoice_type', False):
-            mod_obj = self.pool.get('ir.model.data')
-            if context.get('invoice_type') in ('out_invoice', 'out_refund'):
-                result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
+            if context.get('invoice_type', False) in ('out_invoice', 'out_refund'):
+                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
             else:
-                result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_payment_form')
-            result = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
+                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
+            result = result and result[1] or False
             view_id = result
+        if not view_id and context.get('line_type', False):
+            if context.get('line_type', False) == 'customer':
+                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
+            else:
+                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
+            result = result and result[1] or False
+            view_id = result
+
         res = super(account_voucher, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         doc = etree.XML(res['arch'])
         nodes = doc.xpath("//field[@name='partner_id']")
@@ -194,7 +202,7 @@ class account_voucher(osv.osv):
         'state': 'draft',
         'pay_now': 'pay_later',
         'name': '',
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
         'tax_id': _get_tax,
     }
@@ -404,7 +412,7 @@ class account_voucher(osv.osv):
             account_type = 'receivable'
 
         if not context.get('move_line_ids', False):
-            ids = move_line_pool.search(cr, uid, [('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
+            ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
         else:
             ids = context['move_line_ids']
         ids.reverse()
@@ -501,8 +509,6 @@ class account_voucher(osv.osv):
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
         return True
-        
-        
 
     def action_cancel_draft(self, cr, uid, ids, context={}):
         wf_service = netsvc.LocalService("workflow")

@@ -33,7 +33,7 @@ def lengthmonth(year, month):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
-def emp_create_xml(cr, id, som, eom):
+def emp_create_xml(cr, id, som, eom, emp):
     # Computing the attendence by analytical account
     cr.execute(
         "select line.date, (unit_amount * unit.factor) as amount "\
@@ -57,10 +57,6 @@ def emp_create_xml(cr, id, som, eom):
     </time-element>
     '''
     time_xml = ([xml % (day, amount) for day, amount in month.iteritems()])
-
-    # Computing the employee
-    cr.execute("select name from resource_resource where id=%s", (id,))
-    emp = cr.fetchone()[0]
 
     # Computing the xml
     xml = '''
@@ -94,8 +90,9 @@ class report_custom(report_rml):
         emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')        
         for id in data['form']['employee_ids']:
             user = emp_obj.browse(cr, uid, id).user_id.id
+            empl_name = emp_obj.browse(cr, uid, id).name
             if user:
-                emp_xml += emp_create_xml(cr, id, som, eom)
+                emp_xml += emp_create_xml(cr, user, som, eom, empl_name)
         # Computing the xml
         #Without this, report don't show non-ascii characters (TO CHECK)
         date_xml = '\n'.join(date_xml)
