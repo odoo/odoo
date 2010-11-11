@@ -93,14 +93,13 @@ class payment_order_create(osv.osv_memory):
         return {}
 
     def search_entries(self, cr, uid, ids, context=None):
-        order_obj = self.pool.get('payment.order')
         line_obj = self.pool.get('account.move.line')
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         search_due_date = data['duedate']
-#        payment = order_obj.browse(cr, uid, context['active_id'], context=context)
+#        payment = self.pool.get('payment.order').browse(cr, uid, context['active_id'], context=context)
 
         # Search for move line to pay:
         domain = [('reconcile_id', '=', False), ('account_id.type', '=', 'payable'), ('amount_to_pay', '>', 0)]
