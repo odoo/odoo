@@ -173,7 +173,7 @@ class thunderbird_partner(osv.osv_memory):
                 res={}
                 obj_attch = self.pool.get('ir.attachment')
                 ls = ['*', '/', '\\', '<', '>', ':', '?', '"', '|', '\t', '\n',':','~']
-                sub = (email.Subject).replace(' ','')
+                sub = msg.get('subject','NO-SUBJECT').replace(' ','')
                 if sub.strip() == '':
                 	sub = 'NO SBUJECT'
                 fn = sub
