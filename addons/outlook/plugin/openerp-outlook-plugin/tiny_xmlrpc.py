@@ -32,7 +32,6 @@ import win32ui
 waittime = 10
 wait_count = 0
 wait_limit = 12
-
 def execute(connector, method, *args):
     global wait_count
     res = False
@@ -168,41 +167,42 @@ class XMLRpcConn(object):
     		return
     	attachments=mail.Attachments
     	for rec in recs: #[('res.partner', 3, 'Agrolait')]
-    		model = rec[0]
-    		res_id = rec[1]
-    		#Check if mailgate installed
-    		object_id = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=','mailgate.message')])
-    		if not object_id:
-    			win32ui.MessageBox("Mailgate is not installed on your configured database '%s' !!\n\nPlease install it to archive the mail."%(self._dbname),"Mailgate not installed",win32con.MB_ICONERROR)
-    			return
-    		object_ids = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=',model)])
-    		object_name  = execute( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','read',object_ids,['name'])[0]['name']
-    		#Reading the Object ir.model Name
-    		ext_ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'mailgate.message','search',[('message_id','=',message_id),('model','=',model),('res_id','=',res_id)])
-    		if ext_ids:
-    			name = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,model,'read',res_id,['name'])['name']
-    			ext_msg += """This mail is already archived to {0} '{1}'.\n""".format(object_name,name)
-    			flag = True
-    			continue
-    		msg = {
-    			'subject':mail.Subject,
-    			'date':str(mail.ReceivedTime),
-    			'body':mail.Body,
-    			'cc':mail.CC,
-    			'from':mail.SenderEmailAddress,
-    			'to':mail.To,
-    			'message-id':message_id,
-    			'references':ustr(referances),
-    		}
-    		obj_list= ['crm.lead','project.issue','hr.applicant','res.partner']
-    		if rec[0] not in obj_list:
-    			ids = self.CreateEmailAttachment(rec,mail)
-    		result = {}
-    		if attachments:
-    			result = self.MakeAttachment([rec], mail)
-    		attachment_ids = result.get(model, {}).get(res_id, [])
-    		new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
-    		flag = True
+            model = rec[0]
+            res_id = rec[1]
+            #Check if mailgate installed
+            object_id = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=','mailgate.message')])
+            if not object_id:
+            	win32ui.MessageBox("Mailgate is not installed on your configured database '%s' !!\n\nPlease install it to archive the mail."%(self._dbname),"Mailgate not installed",win32con.MB_ICONERROR)
+            	return
+            object_ids = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=',model)])
+            object_name  = execute( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','read',object_ids,['name'])[0]['name']
+            #Reading the Object ir.model Name
+            ext_ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'mailgate.message','search',[('message_id','=',message_id),('model','=',model),('res_id','=',res_id)])
+            if ext_ids:
+            	name = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,model,'read',res_id,['name'])['name']
+            	ext_msg += """This mail is already archived to {0} '{1}'.\n""".format(object_name,name)
+            	flag = True
+            	continue
+            msg = {
+            	'subject':mail.Subject,
+            	'date':str(mail.ReceivedTime),
+            	'body':mail.Body,
+            	'cc':mail.CC,
+            	'from':mail.SenderEmailAddress,
+            	'to':mail.To,
+            	'message-id':message_id,
+            	'references':ustr(referances),
+            }
+            obj_list= ['crm.lead','project.issue','hr.applicant','res.partner']
+            if rec[0] not in obj_list:
+                ids = self.CreateEmailAttachment(rec,mail)
+            result = {}
+            if attachments:
+            	result = self.MakeAttachment([rec], mail)
+            attachment_ids = result.get(model, {}).get(res_id, [])
+            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','history',model, res_id, msg, attachment_ids)
+            new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
+            flag = True
 
     	if flag:
     		t = """Mail archived Successfully with attachments.\n"""+ext_msg
@@ -497,6 +497,7 @@ class XMLRpcConn(object):
     			obj_list.append((object['id'], ustr(object['name'])))
     		obj_list.sort(lambda x, y: cmp(x[1],y[1]))
     	return obj_list
+
     def FindCountryForState(self, state_search=''):
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
     	ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',[('name','=',ustr(state_search))])
@@ -505,20 +506,15 @@ class XMLRpcConn(object):
     	object = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','read',ids)[0]
     	country = object['country_id'][1]
     	return country
-    def CreateEmailAttachment(self, rec, email):
+
+    def CreateEmailAttachment(self, rec, mail):
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-        att_folder_path = os.path.abspath(os.path.dirname("%temp%\\"))
-        if not os.path.exists(att_folder_path):
-        	os.makedirs(att_folder_path)
         obj = rec[0]
         obj_id = rec[1]
-        res={}
+        res = {}
         res['res_model'] = obj
         ls = ['*', '/', '\\', '<', '>', ':', '?', '"', '|', '\t', '\n',':','~']
-        sub = (email.Subject).replace(' ','')
-        if sub.strip() == '':
-        	sub = 'NO SBUJECT'
-        fn = sub
+        fn = (mail.Subject).replace(' ','')
         for c in ls:
         	fn = fn.replace(c,'')
         if len(fn) > 64:
@@ -529,14 +525,15 @@ class XMLRpcConn(object):
         		l = 64 - len(fn)
         		f = fn.split('.')
         		fn = f[0][0:l] + '.' + f[-1]
-        fn = fn+'.txt'
-        f=open(fn,"w")
-        f.writelines(ustr(email.Body).encode('iso-8859-1'))
+        fn = fn[:-4]+'.txt'
+        f = open(fn,"w")
+        body = mail.Body.encode("utf-8")
+        f.writelines(body)
         f.close()
-        f=open(fn,"r")
+        f=open(fn,"rb")
         content = "".join(f.readlines()).encode('base64')
         f.close()
-        res['name'] = ustr(sub)
+        res['name'] = ustr((mail.Subject).replace(' ',''))
         res['datas_fname'] = ustr(fn)
         res['datas'] = content
         res['res_id'] = obj_id
