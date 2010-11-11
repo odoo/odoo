@@ -131,11 +131,9 @@ class report_custom(report_int):
         else:
             y_label = "Load (Hours)"
 
-
         # For add the report header on the top of the report.
         tb = text_box.T(loc=(300, 500), text="/hL/15/bWork Centers Load", line_style=None)
         tb.draw()
-
         ar = area.T(legend = legend.T(),
                     x_grid_style = line_style.gray70_dash1,
                     x_axis = axis.X(label="Periods", format="/a90/hC%s"),
