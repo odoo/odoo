@@ -93,7 +93,6 @@ class payment_order_create(osv.osv_memory):
         return {}
 
     def search_entries(self, cr, uid, ids, context=None):
-        order_obj = self.pool.get('payment.order')
         line_obj = self.pool.get('account.move.line')
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
