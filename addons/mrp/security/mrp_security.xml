@@ -8,6 +8,15 @@
     <record id="group_mrp_user" model="res.groups">
         <field name="name">Manufacturing / User</field>
     </record>
+    
+    <record id="base.user_demo" model="res.users">
+        <field eval="[(4, ref('group_mrp_user'))]" name="groups_id"/>
+    </record>
+    
+    
+    <record id="base.user_demo" model="res.users">
+        <field eval="[(4, ref('group_mrp_user'))]" name="groups_id"/>
+    </record>
 
 
     <!-- restrict access to menu -->

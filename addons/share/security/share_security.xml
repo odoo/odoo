@@ -4,5 +4,10 @@
         <record id="group_share_user" model="res.groups">
             <field name="name">Sharing / User</field>
         </record>
+        
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_share_user'))]" name="groups_id"/>
+        </record>
+    
     </data>
 </openerp>
