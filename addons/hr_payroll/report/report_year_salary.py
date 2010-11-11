@@ -34,10 +34,10 @@ class year_salary_report(rml_parse.rml_parse):
         super(year_salary_report, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'time': time,
-            'get_employee' : self.get_employee,
-            'get_periods'  : self.get_periods,
-            'get_months_tol' : self.get_months_tol,
-            'get_total' : self.get_total,
+            'get_employee': self.get_employee,
+            'get_periods': self.get_periods,
+            'get_months_tol': self.get_months_tol,
+            'get_total': self.get_total,
         })
 
         self.mnths =[]
