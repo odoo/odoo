@@ -22,8 +22,6 @@
 import time
 
 from osv import osv, fields
-from tools.translate import _
-
 
 class pos_details(osv.osv_memory):
     _name = 'pos.details'
@@ -34,8 +32,8 @@ class pos_details(osv.osv_memory):
         'date_end': fields.date('Date End', required=True)
     }
     _defaults = {
-        'date_start': time.strftime('%Y-%m-%d'),
-        'date_end': time.strftime('%Y-%m-%d'),
+        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_end': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def print_report(self, cr, uid, ids, context=None):
@@ -57,7 +55,7 @@ class pos_details(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'pos.details',
             'datas': datas,
-       }
+        }
 
 pos_details()
 

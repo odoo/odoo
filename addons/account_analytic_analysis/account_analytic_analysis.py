@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
-from osv.orm import intersect
+from osv.orm import intersect, except_orm
 import tools.sql
 from tools.translate import _
 from decimal_precision import decimal_precision as dp
