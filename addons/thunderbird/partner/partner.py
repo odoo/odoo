@@ -19,12 +19,8 @@
 #
 ##############################################################################
 
-import time
-import ir
-from osv import osv,fields
+from osv import osv
 import base64
-import netsvc
-from tools.translate import _
 import email
 import tools
 import binascii
