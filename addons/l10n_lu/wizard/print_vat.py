@@ -11,6 +11,9 @@ from tools.translate import _
 from report.render import render
 from report.interface import report_int
 import addons
+import tempfile
+import os
+
 class external_pdf(render):
 
     def __init__(self, pdf):
@@ -46,11 +49,19 @@ class report_custom(report_int):
             result['info_address'] = partner.address[0].street
             result['info_address2'] = (partner.address[0].zip or '') + ' ' + (partner.address[0].city or '')
         try:
-            tools.pdf_utils.fill_pdf(addons.get_module_resource('l10n_lu','wizard', '2008_DECL_F_M10.pdf'), '/tmp/output.pdf', result)
-            self.obj = external_pdf(file('/tmp/output.pdf').read())
+            tmp_file = tempfile.mkstemp(".pdf")[1]
+            try:
+                tools.pdf_utils.fill_pdf(addons.get_module_resource('l10n_lu','wizard', '2008_DECL_F_M10.pdf'), tmp_file, result)
+                with open(tmp_file, "r") as ofile:
+                    self.obj = external_pdf(ofile.read())
+            finally:
+                try:
+                    os.remove(tmp_file)
+                except:
+                    pass # nothing to do
             self.obj.render()
             return (self.obj.pdf, 'pdf')
-        except Exception, e:
+        except Exception:
             raise osv.except_osv(_('pdf not created !'), _('Please check if package pdftk is installed!'))
 
 report_custom('report.l10n_lu.tax.report.print')

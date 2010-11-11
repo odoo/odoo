@@ -571,7 +571,7 @@ class account_invoice(osv.osv):
             if journal_ids:
                 val['journal_id'] = journal_ids[0]
             else:
-                raise osv.except_osv(_('Configuration Error !'), _('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.' % (journal_type)))
+                raise osv.except_osv(_('Configuration Error !'), (_('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.') % (journal_type)))
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
             journal_ids = obj_journal.search(cr, uid, [])
@@ -823,9 +823,9 @@ class account_invoice(osv.osv):
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id)
             # check if taxes are all computed
-
-            context.update({'lang': inv.partner_id.lang})
-            compute_taxes = ait_obj.compute(cr, uid, inv.id, context=context)
+            ctx = context.copy()
+            ctx.update({'lang': inv.partner_id.lang})
+            compute_taxes = ait_obj.compute(cr, uid, inv.id, context=ctx)
             self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
@@ -1063,7 +1063,7 @@ class account_invoice(osv.osv):
                 'out_refund': 'OR: ',
                 'in_refund': 'SR: ',
                 }
-        return [(r['id'], types[r['type']]+(r['number'] or '')+' '+(r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
+        return [(r['id'], (r['number']) or types[r['type']] + (r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -1072,9 +1072,9 @@ class account_invoice(osv.osv):
             context = {}
         ids = []
         if name:
-            ids = self.search(cr, user, [('number','=',name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('number','=',name)] + args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
 
     def _refund_cleanup_lines(self, cr, uid, lines):

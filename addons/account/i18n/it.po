@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-11-04 04:13+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"PO-Revision-Date: 2010-11-05 08:21+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-11-06 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -31,6 +31,21 @@ msgstr ""
 #. module: account
 #: field:account.partner.balance,display_partner:0
 msgid "Display Partners"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_account_pl_report
+msgid "Profit And Loss"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_account_bs_report
+msgid "Balance Sheet"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_general_Balance_report
+msgid  "Trial Balance"
 msgstr ""
 
 #. module: account
@@ -3589,6 +3604,7 @@ msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency "
 "entry."
 msgstr ""
+"L'importo espresso in un'altra valuta opzionale, se c'è una voce multivaluta."
 
 #. module: account
 #: field:account.tax,parent_id:0
@@ -3616,7 +3632,7 @@ msgstr "Titolare conto bancario"
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
 msgid "Filter on Periods"
-msgstr ""
+msgstr "Filtro su: Periodi"
 
 #. module: account
 #: field:res.partner,property_account_receivable:0
@@ -3669,7 +3685,7 @@ msgstr "Anno fiscale"
 #. module: account
 #: rml:account.overdue:0
 msgid "Balance :"
-msgstr ""
+msgstr "Saldo:"
 
 #. module: account
 #: selection:account.account.balance.report,checktype,display_account:0
@@ -3874,12 +3890,12 @@ msgstr ""
 #. module: account
 #: selection:account.print.journal.report,init,sort_selection:0
 msgid "By date"
-msgstr ""
+msgstr "Per data"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_config_wizard_form
 msgid "Account Configure Wizard "
-msgstr ""
+msgstr "Wizard configurazione conto "
 
 #. module: account
 #: field:account.config.wizard,date1:0
@@ -4506,7 +4522,7 @@ msgstr "Tipo interno"
 #. module: account
 #: selection:account.automatic.reconcile,init,power:0
 msgid "9"
-msgstr ""
+msgstr "9"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_running
@@ -5162,7 +5178,7 @@ msgstr "Tutti i Mesi"
 #. module: account
 #: wizard_field:account.invoice.refund,init,date:0
 msgid "Operation date"
-msgstr ""
+msgstr "Data operazione"
 
 #. module: account
 #: field:account.invoice,invoice_line:0
@@ -5685,7 +5701,7 @@ msgstr "Registro generale"
 #: rml:account.third_party_ledger:0
 #: rml:account.third_party_ledger_other:0
 msgid "Balance"
-msgstr ""
+msgstr "Saldo"
 
 #. module: account
 #: rml:account.invoice:0
@@ -5719,6 +5735,8 @@ msgid ""
 "Invalid period ! Some periods overlap or the date period is not in the scope "
 "of the fiscal year. "
 msgstr ""
+"Periodo non valido! Alcuni periodi si sovrappongono oppure la data non è "
+"nell'ambito dell'anno fiscale. "
 
 #. module: account
 #: help:account.journal,invoice_sequence_id:0
@@ -5847,7 +5865,7 @@ msgstr "Inizio Periodo"
 #. module: account
 #: model:ir.ui.menu,name:account.account_template_folder
 msgid "Templates"
-msgstr ""
+msgstr "Modelli"
 
 #. module: account
 #: wizard_button:account.vat.declaration,init,report:0
@@ -5923,7 +5941,7 @@ msgstr ""
 #. module: account
 #: selection:account.automatic.reconcile,init,power:0
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #. module: account
 #: field:product.category,property_account_income_categ:0
@@ -6217,7 +6235,7 @@ msgstr ""
 #. module: account
 #: view:board.board:0
 msgid "Draft invoices"
-msgstr ""
+msgstr "Fatture bozza"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_board_account
@@ -6275,7 +6293,7 @@ msgstr ""
 #. module: account
 #: selection:account.balance.account.balance.report,init,account_choice:0
 msgid "All accounts"
-msgstr ""
+msgstr "Tutti i conti"
 
 #. module: account
 #: wizard_field:account.balance.account.balance.report,init,period_manner:0

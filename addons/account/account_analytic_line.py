@@ -78,12 +78,9 @@ class account_analytic_line(osv.osv):
             return {}
         product_obj = self.pool.get('product.product')
         analytic_journal_obj =self.pool.get('account.analytic.journal')
-#        company_obj = self.pool.get('res.company')
         product_price_type_obj = self.pool.get('product.price.type')
         j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
         prod = product_obj.browse(cr, uid, prod_id)
-#        if not company_id:
-#            company_id = j_id.company_id.id
         result = 0.0
 
         if j_id.type <> 'sale':
@@ -95,7 +92,6 @@ class account_analytic_line(osv.osv):
                         _('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d)') % \
                                 (prod.name, prod.id,))
-#            amount_unit = prod.price_get('standard_price', context)[prod.id]
         else:
             a = prod.product_tmpl_id.property_account_income.id
             if not a:
@@ -105,36 +101,31 @@ class account_analytic_line(osv.osv):
                         _('There is no income account defined ' \
                                 'for this product: "%s" (id:%d)') % \
                                 (prod.name, prod_id,))
-#            amount_unit = prod.price_get('list_price', context)[prod_id]
 
-#        if not company_id:
-#            company_id = company_obj._company_default_get(cr, uid, 'account.analytic.line', context=context)
-#            # so what? do we need company_id?
-        if True:
-            flag = False
-            # Compute based on pricetype
-            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context=context)
-            pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
-            if journal_id:
-                journal = analytic_journal_obj.browse(cr, uid, journal_id)
-                if journal.type == 'sale':
-                    product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context)
-                    if product_price_type_ids:
-                        pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
-            # Take the company currency as the reference one
-            if pricetype.field == 'list_price':
-                flag = True
-            ctx = context.copy()
-            if unit:
-                # price_get() will respect a 'uom' in its context, in order
-                # to return a default price for those units
-                ctx['uom'] = unit
-            amount_unit = prod.price_get(pricetype.field, context=ctx)[prod.id]
-            prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-            amount = amount_unit * quantity or 1.0
-            result = round(amount, prec)
-            if not flag:
-                result *= -1
+        flag = False
+        # Compute based on pricetype
+        product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context=context)
+        pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
+        if journal_id:
+            journal = analytic_journal_obj.browse(cr, uid, journal_id)
+            if journal.type == 'sale':
+                product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context)
+                if product_price_type_ids:
+                    pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
+        # Take the company currency as the reference one
+        if pricetype.field == 'list_price':
+            flag = True
+        ctx = context.copy()
+        if unit:
+            # price_get() will respect a 'uom' in its context, in order
+            # to return a default price for those units
+            ctx['uom'] = unit
+        amount_unit = prod.price_get(pricetype.field, context=ctx)[prod.id]
+        prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+        amount = amount_unit * quantity or 1.0
+        result = round(amount, prec)
+        if not flag:
+            result *= -1
 
         return {'value': {
             'amount': result,

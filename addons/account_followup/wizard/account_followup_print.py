@@ -97,7 +97,7 @@ class account_followup_stat_by_partner(osv.osv):
                     max(l.followup_date) AS date_followup,
                     max(l.followup_line_id) AS max_followup_id,
                     sum(l.debit - l.credit) AS balance,
-                    l.company_id  company_id
+                    l.company_id as company_id
                 FROM
                     account_move_line l
                     LEFT JOIN account_account a ON (l.account_id = a.id)
@@ -107,7 +107,7 @@ class account_followup_stat_by_partner(osv.osv):
                     l.reconcile_id is NULL AND
                     l.partner_id IS NOT NULL
                     GROUP BY
-                    l.partner_id, l.company_id 
+                    l.partner_id, l.company_id
             )""")
 account_followup_stat_by_partner()
 
@@ -212,10 +212,8 @@ class account_followup_print_all(osv.osv_memory):
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         if data['email_conf']:
-            mail_notsent = ''
             msg_sent = ''
             msg_unsent = ''
-            count = 0
             data_user = user_obj.browse(cr, uid, uid)
             move_lines = line_obj.browse(cr, uid, data['partner_ids'])
             partners = []
