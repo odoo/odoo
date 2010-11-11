@@ -541,9 +541,11 @@ class document_storage(osv.osv):
             try:
                 store_fname = self.__get_random_fname(path)
                 fname = os.path.join(path, store_fname)
-                fp = file(fname, 'wb')
-                fp.write(data)
-                fp.close()
+                fp = open(fname, 'wb')
+                try:
+                    fp.write(data)
+                finally:    
+                    fp.close()
                 self._doclog.debug( "Saved data to %s" % fname)
                 filesize = len(data) # os.stat(fname).st_size
                 
@@ -568,9 +570,11 @@ class document_storage(osv.osv):
             try:
                 path, npath = self.__prepare_realpath(cr, file_node, ira, boo.path, do_create=True)
                 fname = os.path.join(path, npath[-1])
-                fp = file(fname,'wb')
-                fp.write(data)
-                fp.close()
+                fp = open(fname,'wb')
+                try:
+                    fp.write(data)
+                finally:    
+                    fp.close()
                 self._doclog.debug("Saved data to %s", fname)
                 filesize = len(data) # os.stat(fname).st_size
                 store_fname = os.path.join(*npath)
