@@ -200,10 +200,12 @@ class idea_idea(osv.osv):
         @return: Returns an id of the new record
         """
         visibility = False
+
         if vals.get('category_id', False):
             category_pool = self.pool.get('idea.category')
             category = category_pool.browse(cr, user, vals.get('category_id'), context)
             visibility = category.visibility
+
         vals.update({
             'visibility':visibility
         })
@@ -250,15 +252,7 @@ class idea_idea(osv.osv):
         if vals.get('my_vote', False):
             if vals.get('state', state) != 'open':
                 raise osv.except_osv(_("Warning !"), _("Draft/Accepted/Cancelled ideas Could not be voted"))
-        
-        visibility = False
-        if vals.get('category_id', False):
-            category_pool = self.pool.get('idea.category')
-            category = category_pool.browse(cr, user, vals.get('category_id'), context)
-            visibility = category.visibility
-        vals.update({
-            'visibility':visibility
-        })
+
         res = super(idea_idea, self).write(cr, user, ids, vals, context)
         return res
 

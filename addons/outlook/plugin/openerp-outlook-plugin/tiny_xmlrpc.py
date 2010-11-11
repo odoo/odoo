@@ -23,13 +23,11 @@ import xmlrpclib
 import sys
 import socket
 import os
-import pythoncom
 import time
 from manager import ustr
-import email
-from win32com.mapi import mapi, mapiutil, mapitags
+from win32com.mapi import mapitags
 import pythoncom
-import win32com
+import win32com 
 import win32ui
 waittime = 10
 wait_count = 0
@@ -136,11 +134,11 @@ class XMLRpcConn(object):
     			break
 
     def ArchiveToOpenERP(self, recs, mail):
-    	import win32ui, win32con
+    	import  win32con
     	conn = xmlrpclib.ServerProxy(self._uri + '/xmlrpc/object')
     	import eml
     	flag = False
-    	new_msg = files = ext_msg =""
+    	new_msg =  ext_msg =""
     	message_id = referances  = None
     	try:
     		outlook = win32com.client.Dispatch("Outlook.Application")
@@ -170,7 +168,6 @@ class XMLRpcConn(object):
     	except Exception,e:
     		win32ui.MessageBox(str(e),"Archive To OpenERP")
     		return
-    	new_mail=eml.generateEML(mail)
     	attachments=mail.Attachments
     	for rec in recs: #[('res.partner', 3, 'Agrolait')]
     		model = rec[0]
@@ -229,7 +226,6 @@ class XMLRpcConn(object):
     	return obj_list
 
     def GetPartners(self, search_partner=''):
-    	import win32ui
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
     	ids=[]
     	obj_list=[]
@@ -247,7 +243,6 @@ class XMLRpcConn(object):
     	return obj_list
 
     def GetObjectItems(self, search_list=[], search_text=''):
-    	import win32ui
     	res = []
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
     	for obj in search_list:
@@ -272,7 +267,6 @@ class XMLRpcConn(object):
     	return res
 
     def CreateCase(self, section, mail, partner_ids, with_attachments=True):
-    	import win32ui
     	import eml
     	flag = False
     	id = -1
@@ -380,7 +374,6 @@ class XMLRpcConn(object):
     	return id
 
     def SearchPartnerDetail(self, search_email_id):
-    	import win32ui
     	res_vals = []
     	address = {}
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
@@ -393,7 +386,6 @@ class XMLRpcConn(object):
     	return res_vals
 
     def WritePartnerValues(self, new_vals):
-    	import win32ui
     	flag = -1
     	new_dict = dict(new_vals)
     	email=new_dict['email']
@@ -429,7 +421,6 @@ class XMLRpcConn(object):
     	return flag
 
     def GetAllState(self):
-    	import win32ui
     	state_list = []
     	state_ids = []
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
@@ -440,7 +431,6 @@ class XMLRpcConn(object):
     	return state_list
 
     def GetAllCountry(self):
-    	import win32ui
     	country_list = []
     	country_ids = []
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
@@ -451,7 +441,6 @@ class XMLRpcConn(object):
     	return country_list
 
     def SearchPartner(self, mail_id = ""):
-    	import win32ui
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
     	address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'search', [('email','=',ustr(mail_id))])
     	if not address:
@@ -466,11 +455,9 @@ class XMLRpcConn(object):
     		return partner_id[0]
 
     def SearchEmailResources(self, message_id):
-    	import win32ui
     	import eml
 
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-    	sub = ""
     	res_vals = []
     	mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message', 'search', [('message_id','=',message_id)])
     	if not mail_id:
@@ -498,7 +485,6 @@ class XMLRpcConn(object):
     	return obj_list
 
     def GetStates(self, state_search='', country=None):
-    	import win32ui
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
     	ids = []
     	c_id = []
@@ -521,8 +507,6 @@ class XMLRpcConn(object):
     		obj_list.sort(lambda x, y: cmp(x[1],y[1]))
     	return obj_list
     def FindCountryForState(self, state_search=''):
-    	import win32ui
-    	res_vals = []
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
     	ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.country.state','search',[('name','=',ustr(state_search))])
     	if not ids:
@@ -531,7 +515,6 @@ class XMLRpcConn(object):
     	country = object['country_id'][1]
     	return country
     def CreateEmailAttachment(self, rec, email):
-    	result = {}
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         att_folder_path = os.path.abspath(os.path.dirname("%temp%\\"))
         if not os.path.exists(att_folder_path):
@@ -556,14 +539,12 @@ class XMLRpcConn(object):
         		f = fn.split('.')
         		fn = f[0][0:l] + '.' + f[-1]
         fn = fn+'.txt'
-        att_path = os.path.join(att_folder_path,fn)
         f=open(fn,"w")
         f.writelines(ustr(email.Body).encode('iso-8859-1'))
         f.close()
         f=open(fn,"r")
         content = "".join(f.readlines()).encode('base64')
         f.close()
-        att_path = os.path.join(att_folder_path,fn)
         res['name'] = ustr(sub)
         res['datas_fname'] = ustr(fn)
         res['datas'] = content
