@@ -1063,7 +1063,7 @@ class account_invoice(osv.osv):
                 'out_refund': 'OR: ',
                 'in_refund': 'SR: ',
                 }
-        return [(r['id'], (r['number']) or types[r['type']]+(r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
+        return [(r['id'], (r['number']) or types[r['type']] + (r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -1072,9 +1072,9 @@ class account_invoice(osv.osv):
             context = {}
         ids = []
         if name:
-            ids = self.search(cr, user, [('number','=',name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('number','=',name)] + args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
 
     def _refund_cleanup_lines(self, cr, uid, lines):
