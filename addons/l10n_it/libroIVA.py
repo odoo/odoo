@@ -21,10 +21,10 @@
 ##############################################################################
 
 
-# ##################################################################################
-# Questa vista SQL viene usata solo per far scegliere l'anno di pianificazione all'utente
-# Viene infatti costruita una vista XML di tipo tree che contiene solo i diversi anni per i quali stata fatta almeno una pianificazione
-# ##################################################################################
+###################################################################################
+#    Questa vista SQL viene usata solo per far scegliere l'anno di pianificazione all'utente
+#    Viene infatti costruita una vista XML di tipo tree che contiene solo i diversi anni per i quali stata fatta almeno una pianificazione
+###################################################################################
 
 from osv import fields, osv
 
