@@ -22,7 +22,6 @@
 import time
 
 from osv import fields, osv
-from tools.translate import _
 
 class hr_payroll_employees_detail(osv.osv_memory):
 
