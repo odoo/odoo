@@ -22,7 +22,6 @@
 import time
 
 from osv import fields, osv
-from tools import config
 import decimal_precision as dp
 from tools.translate import _
 
@@ -454,6 +453,7 @@ class product_template(osv.osv):
     _columns = {
         'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price')),
     }
+
 product_template()
 
 class Product(osv.osv):
@@ -513,8 +513,8 @@ class account_invoice_line(osv.osv):
         """
         if not context:
             context={}
-        res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
         member_line_obj = self.pool.get('membership.membership_line')
+        res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoice_id.type == 'out_invoice':
                 ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line', '=', line.id)], context=context)
@@ -524,15 +524,15 @@ class account_invoice_line(osv.osv):
                     date_to = line.product_id.membership_date_to
                     if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                         date_from = line.invoice_id.date_invoice
-                    line_id = member_line_obj.create(cr, uid, {
-                        'partner': line.invoice_id.partner_id.id,
-                        'membership_id': line.product_id.id,
-                        'member_price': line.price_unit,
-                        'date': time.strftime('%Y-%m-%d'),
-                        'date_from': date_from,
-                        'date_to': date_to,
-                        'account_invoice_line': line.id,
-                        }, context=context)
+                    member_line_obj.create(cr, uid, {
+                                    'partner': line.invoice_id.partner_id.id,
+                                    'membership_id': line.product_id.id,
+                                    'member_price': line.price_unit,
+                                    'date': time.strftime('%Y-%m-%d'),
+                                    'date_from': date_from,
+                                    'date_to': date_to,
+                                    'account_invoice_line': line.id,
+                                    }, context=context)
                 if line.product_id and not line.product_id.membership and ml_ids:
                     # Product line has changed to a non membership product
                     member_line_obj.unlink(cr, uid, ml_ids, context=context)
@@ -552,9 +552,9 @@ class account_invoice_line(osv.osv):
     def create(self, cr, uid, vals, context=None):
         """Overrides orm create method
         """
+        member_line_obj = self.pool.get('membership.membership_line')
         result = super(account_invoice_line, self).create(cr, uid, vals, context=context)
         line = self.browse(cr, uid, result, context=context)
-        member_line_obj = self.pool.get('membership.membership_line')
         if line.invoice_id.type == 'out_invoice':
             ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line', '=', line.id)], context=context)
             if line.product_id and line.product_id.membership and not ml_ids:
@@ -563,7 +563,7 @@ class account_invoice_line(osv.osv):
                 date_to = line.product_id.membership_date_to
                 if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                     date_from = line.invoice_id.date_invoice
-                line_id = member_line_obj.create(cr, uid, {
+                member_line_obj.create(cr, uid, {
                             'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
                             'membership_id': line.product_id.id,
                             'member_price': line.price_unit,
