@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem id="base.menu_mail_gateway" name="Email"
+        <menuitem id="base.menu_mail_gateway" name="Emails"
             parent="base.menu_base_config" sequence="1" />
 
         <record model="ir.ui.view" id="view_mailgate_message_form">
@@ -93,7 +93,7 @@
 
 
         <record id="action_view_mail_message" model="ir.actions.act_window">
-            <field name="name">Message</field>
+            <field name="name">Messages</field>
             <field name="res_model">mailgate.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -213,7 +213,7 @@
        src_model="mailgate.message"
        domain="[('res_id', '=', res_id),('res_model','=',model)]"/>
 
-           <menuitem id="menu_email_gateway_form"
+           <menuitem id="base.menu_email_gateway_form"
                parent="base.menu_mail_gateway" action="action_view_mail_message" />
 
     </data>

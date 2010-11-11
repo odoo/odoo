@@ -54,8 +54,8 @@ class account_tax_chart(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
-        result = mod_obj._get_id(cr, uid, 'account', 'action_tax_code_tree')
-        id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_tax_code_tree')
+        id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
         if data['period_id']:
             fiscalyear_id = period_obj.read(cr, uid, [data['period_id']], context=context)[0]['fiscalyear_id'][0]

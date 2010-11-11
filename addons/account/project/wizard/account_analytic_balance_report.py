@@ -33,8 +33,8 @@ class account_analytic_balance(osv.osv_memory):
     }
 
     _defaults = {
-        'date1':time.strftime('%Y-01-01'),
-        'date2':time.strftime('%Y-%m-%d')
+        'date1': lambda *a: time.strftime('%Y-01-01'),
+        'date2': lambda *a: time.strftime('%Y-%m-%d')
     }
 
     def check_report(self, cr, uid, ids, context=None):

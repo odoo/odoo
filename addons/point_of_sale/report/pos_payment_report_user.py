@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from report import report_sxw
 
@@ -44,6 +45,7 @@ class pos_payment_report_user(report_sxw.rml_parse):
         self.cr.execute (sql, (tuple(ids), ))
         data=self.cr.dictfetchall()
         return data
+
     def __pos_payment_user__total__(self, form):
         res=[]
         ids = form['user_id']
@@ -57,21 +59,6 @@ class pos_payment_report_user(report_sxw.rml_parse):
 
         return res
 
-
 report_sxw.report_sxw('report.pos.payment.report.user', 'pos.order', 'addons/point_of_sale/report/pos_payment_report_user.rml', parser=pos_payment_report_user,header='internal')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

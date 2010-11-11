@@ -58,10 +58,11 @@ class email_server(osv.osv):
         'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly', False)]}),
         'note': fields.text('Description'),
         'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]", 
-                                    help="A Email Server Action. It will be run whenever an e-mail is fetched from server."),
+                                    help="An Email Server Action. It will be run whenever an e-mail is fetched from server."),
         'object_id': fields.many2one('ir.model', "Model", required=True, help="OpenObject Model. Generates a record of this model."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"),
         'user_id':fields.many2one('res.users', 'User', required=False),
+        'message_ids': fields.one2many('mailgate.message', 'server_id', 'Messages', readonly=True),
     }
     _defaults = {
         'state': lambda *a: "draft",
