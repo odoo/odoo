@@ -79,7 +79,7 @@ class report_custom(report_int):
                 year = i/52
                 week = i%52
                 d = date(year, 1, 1)
-                
+
                 dates[i] = {
                     'name' :"Week #%d" % week,
                     'start':(d + timedelta(days=-d.weekday(), weeks=week)).strftime('%Y-%m-%d'),
@@ -124,11 +124,13 @@ class report_custom(report_int):
             x_index.append((dates[date]['name'], date))
         pdf_string = StringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
+        can.set_title("Work Centers Load")
         chart_object.set_defaults(line_plot.T, line_style=None)
         if datas['form']['measure_unit'] == 'cycles':
             y_label = "Load (Cycles)"
         else:
             y_label = "Load (Hours)"
+
         ar = area.T(legend = legend.T(),
                     x_grid_style = line_style.gray70_dash1,
                     x_axis = axis.X(label="Periods", format="/a90/hC%s"),
