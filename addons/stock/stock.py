@@ -1375,7 +1375,7 @@ class stock_production_lot(osv.osv):
         'name': fields.char('Serial Number', size=64, required=True, help="Unique serial number, will be displayed as: PREFIX/SERIAL [INT_REF]"),
         'ref': fields.char('Internal Reference', size=256, help="Internal reference number in case it differs from the manufacturer's serial number"),
         'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL [INT_REF]"),
-        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
         'date': fields.datetime('Creation Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select=True,
             help="Current quantity of products with this Production Lot Number available in company warehouses",

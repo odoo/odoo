@@ -138,7 +138,7 @@
     pick_ids = [x.id for x in pur_id1.picking_ids]
     id = self.create(cr, uid, {'invoice_date': '2010-05-11', 'journal_id': ref('account.expenses_journal')},
       {'active_ids': pick_ids})
-    self.create_invoice(cr, uid, [id], {"active_ids": pick_ids})
+    self.create_invoice(cr, uid, [id], {"active_ids": pick_ids, "active_id": pick_ids[0]})
 -
   I check that an invoice_id field of Delivery&Invoices gets bind with the value.
 -
