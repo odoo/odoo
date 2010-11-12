@@ -132,7 +132,7 @@ class browse_record(object):
         context : dictionary with an optional context
         '''
         if fields_process is None:
-            domain = {}
+            fields_process = {}
         if context is None:
             context = {}
         self._list_class = list_class or browse_record_list
