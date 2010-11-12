@@ -15,7 +15,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_user_connection_tree">
-            <field name="name">Latest Connections</field>
+            <field name="name">User Connections</field>
             <field name="res_model">res.users</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -139,8 +139,8 @@
                 <form string="Administration Dashboard">
                     <hpaned position="100">
                         <child1>
-                            <action name="%(action_latest_activities_tree)d" string="Latest Activities" sequence="1"/>
-                            <action width="510" name="%(action_user_connection_tree)d" string="Latest Connections" />
+                            <action width="510" name="%(action_user_connection_tree)d" string="User Connections" />
+                            <action width="510" name="%(action_latest_activities_tree)d" string="Latest Activities" />
                         </child1>
                         <child2>
                             <action  name="%(board_monthly_res_log_report_action)d" string="Monthly Activity per Document"/>
