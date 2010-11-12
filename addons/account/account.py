@@ -20,11 +20,12 @@
 ##############################################################################
 
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 import netsvc
+import pooler
 from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
@@ -585,12 +586,12 @@ class account_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=16, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
-                                 " Select 'General' to be used at the time of stock input/output."\
-                                 " Select 'Situation' to be used at the time of making vouchers."),
+                                 " Select 'General' for miscellaneous operations."\
+                                 " Select 'Opening/Closing Situation' to be used at the time of new fiscal year creation or end of year entries generation."),
         'refund_journal': fields.boolean('Refund Journal', help='Fill this if the journal is to be used for refunds of invoices.'),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
@@ -613,6 +614,21 @@ class account_journal(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+    _sql_constraints = [
+        ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
+        ('name_company_uniq', 'unique (name, company_id)', 'The name of the journal must be unique per company !'),
+    ]
+
+    _order = 'code'
+
+    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
+        journal = self.browse(cr, uid, id, context=context)
+        if not default:
+            default = {}
+        default = default.copy()
+        default['code'] = (journal['code'] or '') + '(copy)'
+        default['name'] = (journal['name'] or '') + '(copy)'
+        return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'company_id' in vals:
@@ -1108,7 +1124,7 @@ class account_move(osv.osv):
         'name': '/',
         'state': 'draft',
         'period_id': _get_period,
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
@@ -1583,7 +1599,6 @@ class account_tax_code(osv.osv):
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
-
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []
@@ -1626,7 +1641,7 @@ class account_tax_code(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
-    _order = 'code,name'
+    _order = 'code'
 account_tax_code()
 
 class account_tax(osv.osv):
@@ -1641,12 +1656,19 @@ class account_tax(osv.osv):
             return result in the context
             Ex: result=round(price_unit*0.21,4)
     """
+
+    def get_precision_tax():
+        def change_digit_tax(cr):
+            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, 'Account')
+            return (16, res+2)
+        return change_digit_tax
+
     _name = 'account.tax'
     _description = 'Tax'
     _columns = {
         'name': fields.char('Tax Name', size=64, required=True, translate=True, help="This name will be displayed on reports"),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."),
-        'amount': fields.float('Amount', required=True, digits_compute=dp.get_precision('Account'), help="For taxes of type percentage, enter % ratio between 0-1."),
+        'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For taxes of type percentage, enter % ratio between 0-1."),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the tax without removing it."),
         'type': fields.selection( [('percent','Percentage'), ('fixed','Fixed Amount'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True,
             help="The computation method for the tax amount."),
@@ -2135,7 +2157,7 @@ class account_subscription(osv.osv):
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }
     _defaults = {
-        'date_start': time.strftime('%Y-%m-%d'),
+        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'period_type': 'month',
         'period_total': 12,
         'period_nbr': 1,
@@ -2700,9 +2722,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         if obj_multi.seq_journal:
             seq_id_sale = obj_sequence.search(cr, uid, [('name','=','Sale Journal')])[0]
             seq_id_purchase = obj_sequence.search(cr, uid, [('name','=','Purchase Journal')])[0]
+            seq_id_sale_refund = obj_sequence.search(cr, uid, [('name','=','Sales Refund Journal')])
+            if seq_id_sale_refund:
+                seq_id_sale_refund = seq_id_sale_refund[0]
+            seq_id_purchase_refund = obj_sequence.search(cr, uid, [('name','=','Purchase Refund Journal')])
+            if seq_id_purchase_refund:
+                seq_id_purchase_refund = seq_id_purchase_refund[0]
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
+            seq_id_sale_refund = seq_id
+            seq_id_purchase_refund = seq_id
 
         vals_journal['view_id'] = view_id
 
@@ -2740,6 +2770,60 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
 
         obj_journal.create(cr,uid,vals_journal)
+
+        # Creating Journals Sales Refund and Purchase Refund
+        vals_journal = {}
+        data_id = obj_data.search(cr, uid, [('model', '=', 'account.journal.view'), ('name', '=', 'account_sp_refund_journal_view')], context=context)
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
+        view_id = data.res_id
+
+        #Sales Refund Journal
+        vals_journal = {
+            'view_id': view_id,
+            'name': _('Sales Refund Journal'),
+            'type': 'sale_refund',
+            'refund_journal': True,
+            'code': _('SCNJ'),
+            'sequence_id': seq_id_sale_refund,
+            'analytic_journal_id': analitical_journal_sale,
+            'company_id': company_id
+        }
+
+        if obj_multi.chart_template_id.property_account_receivable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+
+
+#        if obj_multi.property_account_receivable:
+#            vals_journal.update({
+#                'default_credit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id],
+#                'default_debit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+#            })
+        obj_journal.create(cr, uid, vals_journal, context=context)
+
+        # Purchase Refund Journal
+        vals_journal = {
+            'view_id': view_id,
+            'name': _('Purchase Refund Journal'),
+            'type': 'purchase_refund',
+            'refund_journal': True,
+            'code': _('ECNJ'),
+            'sequence_id': seq_id_purchase_refund,
+            'analytic_journal_id': analitical_journal_purchase,
+            'company_id': company_id
+        }
+
+        if obj_multi.chart_template_id.property_account_payable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
+
+
+#        if obj_multi.property_account_payable:
+#            vals_journal.update({
+#                'default_credit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id],
+#                'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id]
+#            })
+        obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Bank Journals
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
@@ -2875,17 +2959,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):
-    _name='account.bank.accounts.wizard'
+    _name = 'account.bank.accounts.wizard'
 
     _columns = {
-        'acc_name':fields.char('Account Name.', size=64, required=True),
-        'bank_account_id':fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
-        'currency_id':fields.many2one('res.currency', 'Currency'),
-        'account_type':fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
+        'acc_name': fields.char('Account Name.', size=64, required=True),
+        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
+        'currency_id': fields.many2one('res.currency', 'Currency'),
+        'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
     }
     _defaults = {
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
-        }
+    }
 
 account_bank_accounts_wizard()
 

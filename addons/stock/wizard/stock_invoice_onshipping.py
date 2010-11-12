@@ -145,7 +145,7 @@ class stock_invoice_onshipping(osv.osv_memory):
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,invoice_ids))+"])]",
-            'name' : _('New picking invoices'),
+            'name' : _('Invoices'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',

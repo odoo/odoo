@@ -115,14 +115,22 @@ class account_voucher(osv.osv):
         return [(r['id'], (str("%.2f" % r['amount']) or '')) for r in self.read(cr, uid, ids, ['amount'], context, load='_classic_write')]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        mod_obj = self.pool.get('ir.model.data')
         if not view_id and context.get('invoice_type', False):
-            mod_obj = self.pool.get('ir.model.data')
-            if context.get('invoice_type') in ('out_invoice', 'out_refund'):
-                result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
+            if context.get('invoice_type', False) in ('out_invoice', 'out_refund'):
+                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
             else:
-                result = mod_obj._get_id(cr, uid, 'account_voucher', 'view_vendor_payment_form')
-            result = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
+                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
+            result = result and result[1] or False
             view_id = result
+        if not view_id and context.get('line_type', False):
+            if context.get('line_type', False) == 'customer':
+                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
+            else:
+                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
+            result = result and result[1] or False
+            view_id = result
+
         res = super(account_voucher, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         doc = etree.XML(res['arch'])
         nodes = doc.xpath("//field[@name='partner_id']")
@@ -194,7 +202,7 @@ class account_voucher(osv.osv):
         'state': 'draft',
         'pay_now': 'pay_later',
         'name': '',
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
         'tax_id': _get_tax,
     }
@@ -404,7 +412,7 @@ class account_voucher(osv.osv):
             account_type = 'receivable'
 
         if not context.get('move_line_ids', False):
-            ids = move_line_pool.search(cr, uid, [('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
+            ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
         else:
             ids = context['move_line_ids']
         ids.reverse()
@@ -501,8 +509,6 @@ class account_voucher(osv.osv):
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
         return True
-        
-        
 
     def action_cancel_draft(self, cr, uid, ids, context={}):
         wf_service = netsvc.LocalService("workflow")
@@ -577,8 +583,6 @@ class account_voucher(osv.osv):
         tax_obj = self.pool.get('account.tax')
         seq_obj = self.pool.get('ir.sequence')
         for inv in self.browse(cr, uid, ids):
-            if not inv.line_ids:
-                raise osv.except_osv(_('No Lines !'), _('Please create some lines'))
             if inv.move_id:
                 continue
             if inv.number:
@@ -604,21 +608,22 @@ class account_voucher(osv.osv):
 
             #create the first line manually
             company_currency = inv.journal_id.company_id.currency_id.id
+            current_currency = inv.currency_id.id
             debit = 0.0
             credit = 0.0
             # TODO: is there any other alternative then the voucher type ??
             # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
             if inv.type in ('purchase', 'payment'):
-                credit = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.amount)
+                credit = currency_pool.compute(cr, uid, current_currency, company_currency, inv.amount)
             elif inv.type in ('sale', 'receipt'):
-                debit = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.amount)
+                debit = currency_pool.compute(cr, uid, current_currency, company_currency, inv.amount)
             if debit < 0:
                 credit = -debit
                 debit = 0.0
             if credit < 0:
                 debit = -credit
                 credit = 0.0
-
+            sign = debit - credit < 0 and -1 or 1
             move_line = {
                 'name': inv.name or '/',
                 'debit': debit,
@@ -628,8 +633,8 @@ class account_voucher(osv.osv):
                 'journal_id': inv.journal_id.id,
                 'period_id': inv.period_id.id,
                 'partner_id': inv.partner_id.id,
-                'currency_id': inv.currency_id.id,
-                'amount_currency': inv.amount,
+                'currency_id': company_currency <> current_currency and  current_currency or False,
+                'amount_currency': company_currency <> current_currency and sign * inv.amount or 0.0,
                 'date': inv.date,
                 'date_maturity': inv.date_due
             }
@@ -647,7 +652,7 @@ class account_voucher(osv.osv):
             for line in inv.line_ids:
                 if not line.amount:
                     continue
-                amount = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, line.amount)
+                amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.amount)
                 move_line = {
                     'journal_id': inv.journal_id.id,
                     'period_id': inv.period_id.id,
@@ -655,8 +660,7 @@ class account_voucher(osv.osv):
                     'account_id': line.account_id.id,
                     'move_id': move_id,
                     'partner_id': inv.partner_id.id,
-                    'currency_id': inv.currency_id.id,
-                    'amount_currency': line.amount,
+                    'currency_id': company_currency <> current_currency and current_currency or False,
                     'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                     'quantity': 1,
                     'credit': 0.0,
@@ -685,6 +689,8 @@ class account_voucher(osv.osv):
                     tax_data = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
                     if not (tax_data.base_code_id and tax_data.tax_code_id):
                         raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
+                sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
+                move_line['amount_currency'] = company_currency <> current_currency and sign * line.amount or 0.0
                 master_line = move_line_pool.create(cr, uid, move_line)
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
@@ -700,6 +706,8 @@ class account_voucher(osv.osv):
                     'date': inv.date,
                     'credit': diff > 0 and diff or 0.0,
                     'debit': diff < 0 and -diff or 0.0,
+                    'amount_currency': company_currency <> current_currency and currency_pool.compute(cr, uid, company_currency, current_currency, diff * -1) or 0.0,
+                    'currency_id': company_currency <> current_currency and current_currency or False,
                 }
                 account_id = False
                 if inv.type in ('sale', 'receipt'):
@@ -844,8 +852,6 @@ class account_voucher_line(osv.osv):
             elif context.get('type') == 'receipt':
                 account_id = partner.property_account_receivable.id
 
-        if (not account_id) and 'account_id' in fields_list:
-            raise osv.except_osv(_('Invalid Error !'), _('Please change partner and try again !'))
         values.update({
             'account_id':account_id,
             'type':ttype

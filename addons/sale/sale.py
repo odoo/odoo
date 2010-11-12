@@ -45,12 +45,6 @@ class sale_shop(osv.osv):
 
 sale_shop()
 
-def _incoterm_get(self, cr, uid, context=None):
-    if context is None:
-        context = {}
-    cr.execute('select code, code||\', \'||name from stock_incoterms where active')
-    return cr.fetchall()
-
 class sale_order(osv.osv):
     _name = "sale.order"
     _description = "Sale Order"
@@ -174,16 +168,19 @@ class sale_order(osv.osv):
         if not len(args):
             return []
         clause = ''
+        sale_clause = ''
         no_invoiced = False
         for arg in args:
             if arg[1] == '=':
                 if arg[2]:
                     clause += 'AND inv.state = \'paid\''
                 else:
-                    clause += 'AND inv.state <> \'paid\''
+                    clause += 'AND inv.state != \'cancel\' AND sale.state != \'cancel\'  AND inv.state <> \'paid\'  AND rel.order_id = sale.id '
+                    sale_clause = ',  sale_order AS sale '
                     no_invoiced = True
+
         cursor.execute('SELECT rel.order_id ' \
-                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv ' \
+                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv '+ sale_clause + \
                 'WHERE rel.invoice_id = inv.id ' + clause)
         res = cursor.fetchall()
         if no_invoiced:
@@ -191,7 +188,7 @@ class sale_order(osv.osv):
                     'FROM sale_order AS sale ' \
                     'WHERE sale.id NOT IN ' \
                         '(SELECT rel.order_id ' \
-                        'FROM sale_order_invoice_rel AS rel)')
+                        'FROM sale_order_invoice_rel AS rel) and sale.state != \'cancel\'')
             res.extend(cursor.fetchall())
         if not res:
             return [('id', '=', 0)]
@@ -230,7 +227,7 @@ class sale_order(osv.osv):
         'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="The name and address of the contact who requested the order or quotation."),
         'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Shipping address for current sale order"),
 
-        'incoterm': fields.selection(_incoterm_get, 'Incoterm', size=3, help="Incoterm which stands for 'International Commercial terms' implies its a series of sales terms which are used in the commercial transaction"),
+        'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="Incoterm which stands for 'International Commercial terms' implies its a series of sales terms which are used in the commercial transaction"),
         'picking_policy': fields.selection([('direct', 'Partial Delivery'), ('one', 'Complete Delivery')],
             'Picking Policy', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
@@ -283,7 +280,7 @@ class sale_order(osv.osv):
     }
     _defaults = {
         'picking_policy': 'direct',
-        'date_order': time.strftime('%Y-%m-%d'),
+        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
         'order_policy': 'manual',
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
@@ -469,13 +466,14 @@ class sale_order(osv.osv):
                 inv_ids1.add(record.id)
         inv_ids = list(inv_ids1.difference(inv_ids))
 
-        result = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
-        result = {
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res_id = res and res[1] or False,
+
+        return {
             'name': 'Customer Invoices',
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': [res['res_id']],
+            'view_id': [res_id],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
@@ -483,7 +481,6 @@ class sale_order(osv.osv):
             'target': 'current',
             'res_id': inv_ids and inv_ids[0] or False,
         }
-        return result
 
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
@@ -851,7 +848,7 @@ class sale_order_line(osv.osv):
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'name': fields.char('Description', size=256, required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale order lines."),
-        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
+        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
@@ -1220,8 +1217,8 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
             if o.step == 'one':
                 md = self.pool.get('ir.model.data')
-                location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
-                location_id = md.browse(cr, uid, location_id, context=context).res_id
+                location_id = md.get_object_reference(cr, uid, 'stock', 'stock_location_output')
+                location_id = location_id and location_id[1] or False
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
 
 sale_config_picking_policy()
