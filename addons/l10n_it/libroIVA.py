@@ -21,10 +21,10 @@
 ##############################################################################
 
 
-# ##################################################################################
-# Questa vista SQL viene usata solo per far scegliere l'anno di pianificazione all'utente
-# Viene infatti costruita una vista XML di tipo tree che contiene solo i diversi anni per i quali stata fatta almeno una pianificazione
-# ##################################################################################
+###################################################################################
+#    Questa vista SQL viene usata solo per far scegliere l'anno di pianificazione all'utente
+#    Viene infatti costruita una vista XML di tipo tree che contiene solo i diversi anni per i quali stata fatta almeno una pianificazione
+###################################################################################
 
 from osv import fields, osv
 
@@ -37,15 +37,12 @@ class l10n_chart_it_servabit_report_libroIVA (osv.osv):
 
     _columns = {
         'name': fields.char('Fiscal year',size=64),
-	'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
     def init (self, cr) :
         cr.execute("""DROP VIEW IF EXISTS account_report_libroiva""")
-	cr.execute("""
-		CREATE VIEW account_report_libroiva AS (
-			SELECT  id, name, company_id FROM account_fiscalyear
-        )""")
+        cr.execute("""CREATE VIEW account_report_libroiva AS (SELECT id, name, company_id FROM account_fiscalyear)""")
 l10n_chart_it_servabit_report_libroIVA()
 
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
