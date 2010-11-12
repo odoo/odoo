@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 09:02+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-11-11 18:05+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-11-12 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -40,7 +40,7 @@ msgstr "Kies de toe te passen betalingswijze"
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Groepeer op..."
 
 #. module: account_payment
 #: constraint:ir.actions.act_window:0
@@ -61,6 +61,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"Wanneer een opdracht is geplaatst is de status 'Concept'.\n"
+" Als de bank heeft bevestigd wordt de status 'Bevestigd'.\n"
+" Als de betaling is gedaan wordt de status 'Klaar'."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -98,7 +101,7 @@ msgstr "Boekingen"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr ""
+msgstr "Gebruikte rekening"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -274,7 +277,7 @@ msgstr "Rekeningnummer bestemming"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "Betalingsopdrachten zoeken"
 
 #. module: account_payment
 #: constraint:ir.ui.view:0
@@ -314,7 +317,7 @@ msgstr "Betalingsbeheer"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Bankafschriftregel"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -329,12 +332,12 @@ msgstr "Bedrag te betalen"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -344,7 +347,7 @@ msgstr "Adres van de hoofdrelatie"
 #. module: account_payment
 #: field:payment.mode,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Bedrijf"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -382,7 +385,7 @@ msgstr "Betaalregel"
 #. module: account_payment
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -442,7 +445,7 @@ msgstr "Deze regel wordt de informatie van de klant gerefereerd."
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search"
-msgstr ""
+msgstr "Zoeken"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -452,7 +455,7 @@ msgstr "Betaaldatum"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Total:"
-msgstr ""
+msgstr "Totaal:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -492,7 +495,7 @@ msgstr ""
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Factuur ref"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -524,7 +527,7 @@ msgstr "Gereed"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Factuur"
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -586,7 +589,7 @@ msgstr "Rekeningnummer bestemming"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "Weet u zeker dat u wilt betalen?"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -619,7 +622,7 @@ msgstr "Betaling"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "Betaalopdracht / Betaling"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -644,7 +647,7 @@ msgstr "Naam"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankrekening"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -655,7 +658,7 @@ msgstr "Boekingsinformatie"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "payment.order.create"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -670,13 +673,13 @@ msgstr "Totaal"
 #. module: account_payment
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Betaling maken"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
@@ -687,7 +690,7 @@ msgstr "Relatie"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr ""
+msgstr "Betaling vullen"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
