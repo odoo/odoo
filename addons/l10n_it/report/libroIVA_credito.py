@@ -33,9 +33,7 @@ class l10n_chart_it_servabit_report_libroIVA_credito(report_sxw.rml_parse):
         # Selezione tutte le fatture emesse nel periodo
         self.cr.execute("""
                         SELECT id FROM account_invoice
-                        WHERE 	(state='open' OR state='paid') AND
-                                period_id="""+str(period.id)+"""
-                                AND (type='out_invoice' OR type='out_refund')
+                        WHERE (state='open' OR state='paid') AND period_id="""+str(period.id)+""" AND (type='out_invoice' OR type='out_refund')
         				""")
         ids=self.cr.fetchall()
         #print 'IDS = ',
