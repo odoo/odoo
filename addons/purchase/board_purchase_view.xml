@@ -33,8 +33,8 @@
             <field name="arch" type="xml">
                 <tree string="Monthly Purchase by Category">
                     <field name="month"/>
-                    <field name="price_total"/>
                     <field name="category_id"/>
+                    <field name="price_total"/>
                 </tree>
             </field>
         </record>
@@ -55,6 +55,7 @@
 	        <field name="res_model">purchase.report</field>
 	        <field name="view_type">form</field>
 	        <field name="view_mode">graph,tree</field>
+		<field name="context">{'group_by':['month','category_id'],'group_by_no_leaf':1}</field>
 	        <field name="view_id" ref="view_purchase_order_monthly_categ_graph"></field>
 	    </record>
 	    <record id="open_view_purchase_order_monthly_categ_tree" model="ir.actions.act_window.view">
@@ -97,6 +98,7 @@
 	        <field name="res_model">purchase.report</field>
 	        <field name="view_type">form</field>
 	        <field name="view_mode">graph,tree</field>
+		<field name="context">{'group_by':['partner_id'],'group_by_no_leaf':1}</field>
 	        <field name="view_id" ref="view_negotiation_by_supplier_graph"/>
 	    </record>
 	    <record id="open_view_negotiation_by_supplier_tree" model="ir.actions.act_window.view">

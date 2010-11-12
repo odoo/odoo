@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="General Ledger" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="General Ledger.pdf">
+  <template pageSize="(595.0,842.0)" title="General Ledger" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
       <pageGraphics>
@@ -177,6 +177,34 @@
   <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+  <blockTable colWidths="66.0,44.0,80.0,60.0,92.5,66.5,64.5,71.5" style="tbl_header">[[data['form']['amount_currency'] == False or removeParentNode('blockTable')]]
+        <tr>
+          <td><para style="date">Date</para></td>
+          <td><para style="P3b">Partner</para></td>
+          <td><para style="P3b">Ref</para></td>
+          <td><para style="P3b">Move</para></td>
+          <td><para style="P3b">Entry Label</para></td>
+          <td><para style="P9b">Debit</para></td>
+          <td><para style="P9b">Credit</para></td>
+          <td><para style="P9b">Balance</para></td>
+        </tr>
+     </blockTable>
+     <blockTable colWidths="70.0,40.0,60.0,55.0,89.0,58.0,58.0,58.0,58.0" style="tbl_header">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+        <tr>
+          <td><para style="date">Date</para></td>
+          <td><para style="P3b">Partner</para></td>
+          <td><para style="P3b">Ref</para></td>
+          <td><para style="P3b">Move</para></td>
+          <td><para style="P3b">Entry Label</para></td>
+          <td><para style="P9b">Debit</para></td>
+          <td><para style="P9b">Credit</para></td>
+          <td><para style="P9b">Balance</para></td>
+          <td><para style="P9b">Currency</para></td>
+        </tr>
+     </blockTable>
+  </pto_header>
     <blockTable colWidths="539.0" style="Table_Company_Name">
       <tr>
         <td>
@@ -334,9 +362,10 @@
        <td><para style="P4">[[ formatLang(line['debit']) ]]</para></td>
        <td><para style="P4">[[ formatLang(line['credit']) ]]</para></td>
        <td><para style="P4">[[ formatLang(line['progress']) ]] [[ company.currency_id.symbol ]]</para></td>
-       <td><para style="P4"><font>[[ (line['currency_id']==None or line['amount_currency']==None) and removeParentNode('font') ]] [[  formatLang(line['amount_currency'])]] [[  line['currency_code'] or '']]</font></para></td>
+	   <td><para style="P4"><font>[[ (line.has_key('currency_id') and line['currency_id']==None or line['amount_currency']==None) and removeParentNode('font') ]] [[  formatLang(line['amount_currency'])]] [[  line['currency_code'] or '']]</font></para></td>
      </tr>
   </blockTable>
   </section>
+  </pto>
   </story>
 </document>
