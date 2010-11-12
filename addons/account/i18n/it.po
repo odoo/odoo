@@ -7,46 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-11-05 08:21+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-11-11 19:48+0000\n"
+"Last-Translator: Lorenzo Battistini <lorenzo.battistini@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-06 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-11-12 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
 #: field:account.tax.template,description:0
 msgid "Internal Name"
 msgstr "Nome Interno"
-
-#. module: account
-#: field:account.partner.balance,result_selection:0
-#: field:account.aged.trial.balance,result_selection:0
-#: field:account.partner.ledger,result_selection:0
-msgid "Partner's"
-msgstr ""
-
-#. module: account
-#: field:account.partner.balance,display_partner:0
-msgid "Display Partners"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.menu,name:account.menu_account_pl_report
-msgid "Profit And Loss"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.menu,name:account.menu_account_bs_report
-msgid "Balance Sheet"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.menu,name:account.menu_general_Balance_report
-msgid  "Trial Balance"
-msgstr ""
 
 #. module: account
 #: view:account.tax.code:0
@@ -301,7 +274,7 @@ msgid ""
 "journal."
 msgstr ""
 "Imposta la vista da utilizzare quando si inseriscono o si consultano le "
-"registrazioni in questo registro. La vista dice a Open ERP quali campi "
+"registrazioni in questo libro giornale. La vista dice a Open ERP quali campi "
 "dovranno essere visibili, richiesti o di sola lettura e in quale ordine. "
 "Puoi creare la tua vista personale per velocizzare l'inserimento dei dati in "
 "ogni giornale."
@@ -406,7 +379,7 @@ msgstr "Calcolo su tasse figlie"
 #: rml:account.general.journal:0
 #: field:account.journal,name:0
 msgid "Journal Name"
-msgstr "Nome registro"
+msgstr "Nome libro giornale"
 
 #. module: account
 #: view:account.payment.term:0
@@ -443,7 +416,7 @@ msgstr "Riconciliazione dei pagamenti"
 #. module: account
 #: model:account.journal,name:account.expenses_journal
 msgid "Journal de frais"
-msgstr "Registro acquisti"
+msgstr "Libro giornale acquisti"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
@@ -561,16 +534,6 @@ msgstr "Pagamento Riconciliato"
 
 #. module: account
 #: wizard_field:account.chart,init,target_move:0
-#: field:account.common.report,target_move:0
-#: field:account.report.general.ledger,target_move:0
-#: field:account.balance.report,target_move:0
-#: field:account.pl.report,target_move:0
-#: field:account.bs.report,target_move:0
-#: field:account.print.journal,target_move:0
-#: field:account.general.journal,target_move:0
-#: field:account.central.journal,target_move:0
-#: field:account.partner.balance,target_move:0
-#: field:account.partner.ledger,target_move:0
 msgid "Target Moves"
 msgstr "Registrazioni:"
 
@@ -795,7 +758,7 @@ msgstr ""
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
-msgstr "Voci di registro di fine anno"
+msgstr "Voci di giornale di fine anno"
 
 #. module: account
 #: view:product.product:0
@@ -869,7 +832,7 @@ msgstr "Righe Movimentate"
 #: model:ir.actions.act_window,name:account.report_account_analytic_journal_tree
 #: model:ir.ui.menu,name:account.report_account_analytic_journal_print
 msgid "Account cost and revenue by journal"
-msgstr "Bilancio costi e ricavi per registro"
+msgstr "Bilancio costi e ricavi per libro giornale"
 
 #. module: account
 #: help:account.account.template,user_type:0
@@ -907,7 +870,7 @@ msgstr "Conti analitici"
 #: model:ir.actions.wizard,name:account.wizard_print_journal
 #: model:ir.ui.menu,name:account.menu_print_journal
 msgid "Print Journal"
-msgstr "Stampa registro"
+msgstr "Stampa libro giornale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
@@ -1005,7 +968,7 @@ msgstr "Importo codice base"
 #. module: account
 #: help:account.journal,user_id:0
 msgid "The user responsible for this journal"
-msgstr "L'utente responsabile per questo registro"
+msgstr "L'utente responsabile per questo libro giornale"
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -1079,7 +1042,6 @@ msgstr "Unità di Misura"
 
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,page_split:0
-#: field:account.partner.ledger,page_split:0
 msgid "One Partner Per Page"
 msgstr "Un partner per pagina"
 
@@ -1126,7 +1088,7 @@ msgstr "Sequenza principale"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_tree
 #: model:ir.ui.menu,name:account.account_analytic_journal_print
 msgid "Print Analytic Journals"
-msgstr "Stampa registri analitici"
+msgstr "Stampa libri giornali analitici"
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -1480,7 +1442,7 @@ msgstr "Tipi di conto"
 #: wizard_field:populate_statement_from_inv,init,journal_id:0
 #: field:report.hr.timesheet.invoice.journal,journal_id:0
 msgid "Journal"
-msgstr "Registro"
+msgstr "Libro giornale"
 
 #. module: account
 #: field:account.account,child_id:0
@@ -1494,13 +1456,14 @@ msgid "Display History"
 msgstr "Mostra lo storico"
 
 #. module: account
+#: wizard_field:account.third_party_ledger.report,init,date1:0
+msgid "        Start date"
+msgstr "        Data d'inizio"
+
+#. module: account
 #: wizard_field:account.account.balance.report,checktype,display_account:0
 #: wizard_field:account.general.ledger.report,checktype,display_account:0
-#: field:account.report.general.ledger,display_account:0
-#: field:account.balance.report,display_account:0
-#: field:account.pl.report,display_account:0
-#: field:account.bs.report,display_account:0
-msgid "Display accounts"
+msgid "Display accounts "
 msgstr "Mostra conti "
 
 #. module: account
@@ -1554,7 +1517,7 @@ msgstr "account.analytic.line.extended"
 #. module: account
 #: field:account.journal,refund_journal:0
 msgid "Refund Journal"
-msgstr "Registro rimborsi"
+msgstr "Libro giornale rimborsi"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income
@@ -1586,7 +1549,7 @@ msgstr "Positivo"
 #: model:ir.actions.wizard,name:account.wizard_general_journal
 #: model:ir.ui.menu,name:account.menu_general_journal
 msgid "Print General Journal"
-msgstr "Stampa Registro Generale"
+msgstr "Stampa Libro giornale Generale"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
@@ -1625,7 +1588,7 @@ msgstr "Apri per la riconciliazione"
 #. module: account
 #: model:account.journal,name:account.bilan_journal
 msgid "Journal d'ouverture"
-msgstr "Registro d'apertura"
+msgstr "Libro giornale d'apertura"
 
 #. module: account
 #: selection:account.tax,tax_group:0
@@ -1717,18 +1680,8 @@ msgstr "Bilancio di apertura"
 #: view:account.journal.period:0
 #: model:ir.actions.act_window,name:account.action_account_journal_period_tree
 #: model:ir.ui.menu,name:account.menu_action_account_journal_period_tree
-#: view:account.common.report:0
-#: view:account.report.general.ledger:0
-#: view:account.balance.report:0
-#: view:account.pl.report:0
-#: view:account.bs.report:0
-#: view:account.print.journal:0
-#: view:account.general.journal:0
-#: view:account.central.journal:0
-#: view:account.partner.balance:0
-#: view:account.partner.ledger:0
 msgid "Journals"
-msgstr "Registri"
+msgstr "Libri giornali"
 
 #. module: account
 #: rml:account.analytic.account.quantity_cost_ledger:0
@@ -1836,7 +1789,7 @@ msgstr "Riconciliazione di registrazioni da fattura/e e pagamento/i"
 #: model:ir.actions.wizard,name:account.wizard_central_journal
 #: model:ir.ui.menu,name:account.menu_central_journal
 msgid "Print Central Journal"
-msgstr "Stampa registro principale"
+msgstr "Stampa libro giornale principale"
 
 #. module: account
 #: wizard_field:account.aged.trial.balance,init,period_length:0
@@ -1916,35 +1869,11 @@ msgstr "anno"
 #: wizard_button:account.partner.balance.report,init,report:0
 #: wizard_button:account.print.journal.report,init,print:0
 #: wizard_button:account.third_party_ledger.report,init,checkreport:0
-#: view:account.common.report:0
-#: view:account.report.general.ledger:0
-#: view:account.balance.report:0
-#: view:account.pl.report:0
-#: view:account.bs.report:0
-#: view:account.partner.balance:0
-#: view:account.aged.trial.balance:0
-#: view:account.partner.ledger:0
-#: view:account.print.journal:0
-#: view:account.general.journal:0
-#: view:account.central.journal:0
 msgid "Print"
 msgstr "Stampa"
 
 #. module: account
 #: wizard_field:account.account.balance.report,checktype,date_from:0
-#: field:account.config.wizard,date1:0
-#: field:account.fiscalyear,date_start:0
-#: field:account.subscription,date_start:0
-#: field:account.common.report,date_from:0
-#: field:account.report.general.ledger,date_from:0
-#: field:account.balance.report,date_from:0
-#: field:account.pl.report,date_from:0
-#: field:account.bs.report,date_from:0
-#: field:account.print.journal,date_from:0
-#: field:account.general.journal,date_from:0
-#: field:account.central.journal,date_from:0
-#: field:account.partner.balance,date_from:0
-#: field:account.partner.ledger,date_from:0
 msgid "Start date"
 msgstr "Data inizio"
 
@@ -2026,14 +1955,9 @@ msgid "The partner reference of this invoice."
 msgstr "Il partner di riferimento per questa fattura."
 
 #. module: account
-#: field:account.report.general.ledger,sortby:0
+#: wizard_field:account.general.ledger.report,checktype,sortbydate:0
 msgid "Sort by:"
 msgstr "Ordina per:"
-
-#. module: account
-#: field:account.vat.declaration,chart_tax_id:0
-msgid "Chart of Tax"
-msgstr ""
 
 #. module: account
 #: field:account.move,to_check:0
@@ -2089,7 +2013,7 @@ msgstr "          Data inizio"
 #. module: account
 #: wizard_view:account.analytic.account.journal.report,init:0
 msgid "Analytic Journal Report"
-msgstr "Report Registro Analitico"
+msgstr "Report Libro giornale Analitico"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
@@ -2508,7 +2432,7 @@ msgstr ""
 #. module: account
 #: rml:account.central.journal:0
 msgid "Journal Code"
-msgstr "Codice registro"
+msgstr "Codice libro giornale"
 
 #. module: account
 #: help:account.tax,applicable_type:0
@@ -2599,10 +2523,6 @@ msgstr "L'importo in valuta del Libro Giornale"
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,landscape:0
-#: field:account.common.report,landscape:0
-#: field:account.report.general.ledger,landscape:0
-#: field:account.pl.report,landscape:0
-#: field:account.bs.report,landscape:0
 msgid "Landscape Mode"
 msgstr "Modalità Orizzontale"
 
@@ -2658,41 +2578,8 @@ msgstr "Dai conti analitici, Crea fattura."
 #: wizard_button:account_use_models,init_form,end:0
 #: view:wizard.company.setup:0
 #: view:wizard.multi.charts.accounts:0
-#: view:account.period.close:0
-#: view:account.common.report:0
-#: view:account.report.general.ledger:0
-#: view:account.balance.report:0
-#: view:account.pl.report:0
-#: view:account.bs.report:0
-#: view:account.partner.balance:0
-#: view:account.aged.trial.balance:0
-#: view:account.partner.ledger:0
-#: view:account.print.journal:0
-#: view:account.general.journal:0
-#: view:account.central.journal:0
-#: view:account.vat.declaration:0
 msgid "Cancel"
 msgstr "Annulla"
-
-#. module: account
-#: view:account.vat.declaration:0
-msgid "Print Tax Statement"
-msgstr ""
-
-#. module: account
-#: field:account.common.report,chart_account_id:0
-#: field:account.report.general.ledger,chart_account_id:0
-#: field:account.balance.report,chart_account_id:0
-#: field:account.pl.report,chart_account_id:0
-#: field:account.bs.report,chart_account_id:0
-#: field:account.print.journal,chart_account_id:0
-#: field:account.general.journal,chart_account_id:0
-#: field:account.central.journal,chart_account_id:0
-#: field:account.partner.balance,chart_account_id:0
-#: field:account.aged.trial.balance,chart_account_id:0
-#: field:account.partner.ledger,chart_account_id:0
-msgid "Chart of account"
-msgstr ""
 
 #. module: account
 #: field:account.account.type,name:0
@@ -2858,7 +2745,7 @@ msgstr ""
 #. module: account
 #: wizard_view:account.move.validate,init:0
 msgid "Select Period and Journal for Validation"
-msgstr "Seleziona periodo e registro per la validazione"
+msgstr "Seleziona periodo e libro giornale per la validazione"
 
 #. module: account
 #: field:account.invoice,number:0
@@ -2920,7 +2807,7 @@ msgid "Reconciliation transactions"
 msgstr ""
 
 #. module: account
-#: field:account.aged.trial.balance,direction_selection:0
+#: wizard_field:account.aged.trial.balance,init,direction_selection:0
 msgid "Analysis Direction"
 msgstr "Analisi della direzione"
 
@@ -2957,7 +2844,7 @@ msgstr ""
 #: field:account.journal.view,name:0
 #: model:ir.model,name:account.model_account_journal_view
 msgid "Journal View"
-msgstr "Vista registro"
+msgstr "Vista libro giornale"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -3134,7 +3021,7 @@ msgstr "Codice tassa"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Analytic Journal -"
-msgstr "Registro Analitico -"
+msgstr "Libro giornale Analitico -"
 
 #. module: account
 #: rml:account.analytic.account.analytic.check:0
@@ -3219,7 +3106,7 @@ msgstr "Cancella fattura selezionata"
 #: model:ir.actions.report.xml,name:account.analytic_journal_print
 #: model:ir.actions.wizard,name:account.account_analytic_account_journal_report
 msgid "Analytic Journal"
-msgstr "Registro analitico"
+msgstr "Libro giornale analitico"
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -3589,7 +3476,7 @@ msgid ""
 "All draft account entries in this journal and period will be validated. It "
 "means you won't be able to modify their accouting fields."
 msgstr ""
-"Saranno validate il periodo e tutte le voci bozza di questo registro. "
+"Saranno validate il periodo e tutte le voci bozza di questo libro giornale. "
 "Pertanto non si potranno più modificare i relativi campi."
 
 #. module: account
@@ -3667,18 +3554,6 @@ msgstr ""
 #: wizard_field:account.general.ledger.report,checktype,fiscalyear:0
 #: wizard_field:account.partner.balance.report,init,fiscalyear:0
 #: wizard_field:account.third_party_ledger.report,init,fiscalyear:0
-#: field:account.common.report,fiscalyear_id:0
-#: field:account.report.general.ledger,fiscalyear_id:0
-#: field:account.balance.report,fiscalyear_id:0
-#: field:account.pl.report,fiscalyear_id:0
-#: field:account.bs.report,fiscalyear_id:0
-#: field:account.print.journal,fiscalyear_id:0
-#: field:account.general.journal,fiscalyear_id:0
-#: field:account.central.journal,fiscalyear_id:0
-#: field:account.partner.balance,fiscalyear_id:0
-#: field:account.aged.trial.balance,fiscalyear_id:0
-#: field:account.partner.ledger,fiscalyear_id:0
-#: field:account.vat.declaration,fiscalyear_id:0
 msgid "Fiscal year"
 msgstr "Anno fiscale"
 
@@ -3721,11 +3596,6 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,amount_currency:0
-#: field:account.report.general.ledger,amount_currency:0
-#: field:account.print.journal,amount_currency:0
-#: field:account.general.journal,amount_currency:0
-#: field:account.central.journal,amount_currency:0
-#: field:account.partner.ledger,amount_currency:0
 msgid "With Currency"
 msgstr ""
 
@@ -3742,7 +3612,7 @@ msgstr "Abbonamento"
 #. module: account
 #: field:account.analytic.journal,code:0
 msgid "Journal code"
-msgstr "Codice registro"
+msgstr "Codice libro giornale"
 
 #. module: account
 #: wizard_button:account.fiscalyear.close,init,close:0
@@ -3901,14 +3771,8 @@ msgstr "Wizard configurazione conto "
 #: field:account.config.wizard,date1:0
 #: field:account.fiscalyear,date_start:0
 #: field:account.subscription,date_start:0
-#: field:account.aged.trial.balance,date_from:0
 msgid "Start Date"
 msgstr "Data di inizio"
-
-#. module: account
-#: field:account.aged.trial.balance,period_length:0 
-msgid "Period length(days)"
-msgstr ""
 
 #. module: account
 #: wizard_view:account.general.ledger.report,account_selection:0
@@ -4041,7 +3905,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 msgid "Financial Journals"
-msgstr "Registri finanziari"
+msgstr "Libri giornali finanziari"
 
 #. module: account
 #: selection:account.account.balance.report,checktype,state:0
@@ -4227,9 +4091,8 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,reconcil:0
-#: field:account.partner.ledger,reconcil:0
-msgid "Include Reconciled Entries"
-msgstr "Include registrazioni riconciliate"
+msgid "       Include Reconciled Entries"
+msgstr "       Include registrazioni riconciliate"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -4278,13 +4141,13 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_currency:0
 msgid "The currency of the journal"
-msgstr "La valuta del registro"
+msgstr "La valuta del libro giornale"
 
 #. module: account
 #: view:account.journal.column:0
 #: model:ir.model,name:account.model_account_journal_column
 msgid "Journal Column"
-msgstr "Colonna registro"
+msgstr "Colonna libro giornale"
 
 #. module: account
 #: selection:account.fiscalyear,state:0
@@ -4307,17 +4170,6 @@ msgstr "Fatto"
 #: model:ir.actions.act_window,name:account.action_account_period_form
 #: model:ir.ui.menu,name:account.menu_action_account_period_form
 #: model:ir.ui.menu,name:account.next_id_23
-#: view:account.common.report:0
-#: view:account.report.general.ledger:0
-#: view:account.balance.report:0
-#: view:account.pl.report:0
-#: view:account.bs.report:0
-#: view:account.print.journal:0
-#: view:account.general.journal:0
-#: view:account.central.journal:0
-#: view:account.partner.balance:0
-#: view:account.partner.ledger:0
-#: view:account.vat.declaration:0
 msgid "Periods"
 msgstr "Periodi"
 
@@ -4479,23 +4331,7 @@ msgstr "Elimina righe"
 #: wizard_field:account.general.ledger.report,checktype,soldeinit:0
 #: wizard_field:account.partner.balance.report,init,soldeinit:0
 #: wizard_field:account.third_party_ledger.report,init,soldeinit:0
-#: field:account.report.general.ledger,initial_balance:0
-#: field:account.partner.ledger,initial_balance:0
 msgid "Include initial balances"
-msgstr ""
-
-#. module: account
-#: field:account.common.report,filter:0
-#: field:account.report.general.ledger,filter:0
-#: field:account.balance.report,filter:0
-#: field:account.pl.report,filter:0
-#: field:account.bs.report,filter:0
-#: field:account.print.journal,filter:0
-#: field:account.general.journal,filter:0
-#: field:account.central.journal,filter:0
-#: field:account.partner.balance,filter:0
-#: field:account.partner.ledger,filter:0
-msgid "Filter by"
 msgstr ""
 
 #. module: account
@@ -4549,62 +4385,8 @@ msgstr ""
 #. module: account
 #: field:account.config.wizard,date2:0
 #: field:account.fiscalyear,date_stop:0
-#: field:account.common.report,date_to:0
-#: field:account.report.general.ledger,date_to:0
-#: field:account.balance.report,date_to:0
-#: field:account.pl.report,date_to:0
-#: field:account.bs.report,date_to:0
-#: field:account.print.journal,date_to:0
-#: field:account.general.journal,date_to:0
-#: field:account.central.journal,date_to:0
-#: field:account.partner.balance,date_to:0
-#: field:account.partner.ledger,date_to:0
 msgid "End Date"
 msgstr "Data fine"
-
-#. module: account
-#: field:account.common.report,period_from:0
-#: field:account.report.general.ledger,period_from:0
-#: field:account.balance.report,period_from:0
-#: field:account.pl.report,period_from:0
-#: field:account.bs.report,period_from:0
-#: field:account.print.journal,period_from:0
-#: field:account.general.journal,period_from:0
-#: field:account.central.journal,period_from:0
-#: field:account.partner.balance,period_from:0
-#: field:account.partner.ledger,period_from:0
-#: field:account.vat.declaration,period_from:0
-msgid "Start period"
-msgstr ""
-
-#. module: account
-#: field:account.common.report,period_to:0
-#: field:account.report.general.ledger,period_to:0
-#: field:account.balance.report,period_to:0
-#: field:account.pl.report,period_to:0
-#: field:account.bs.report,period_to:0
-#: field:account.print.journal,period_to:0
-#: field:account.general.journal,period_to:0
-#: field:account.central.journal,period_to:0
-#: field:account.partner.balance,period_to:0
-#: field:account.partner.ledger,period_to:0
-#: field:account.vat.declaration,period_to:0
-msgid "End period"
-msgstr ""
-
-#. module: account
-#: view:account.common.report:0
-#: view:account.report.general.ledger:0
-#: view:account.balance.report:0
-#: view:account.pl.report:0
-#: view:account.bs.report:0
-#: view:account.print.journal:0
-#: view:account.general.journal:0
-#: view:account.central.journal:0
-#: view:account.partner.balance:0
-#: view:account.partner.ledger:0
-msgid "Dates"
-msgstr ""
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_open_closed_fiscalyear
@@ -4816,7 +4598,8 @@ msgid ""
 "taxes and journals according to the selected template"
 msgstr ""
 "Questa operazione automaticamente configurerà il piano dei conti, i "
-"riferimenti bancari, le tasse ed i registri seguendo il modello selezionato."
+"riferimenti bancari, le tasse ed i libri giornali seguendo il modello "
+"selezionato."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4850,7 +4633,7 @@ msgstr "Tassa compresa nel prezzo"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_tree2
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Entries by Journal"
-msgstr "Voci analitiche divise per registro"
+msgstr "Voci analitiche divise per libro giornale"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
@@ -4903,7 +4686,7 @@ msgstr ""
 #. module: account
 #: field:account.analytic.journal,name:0
 msgid "Journal name"
-msgstr "Nome registro"
+msgstr "Nome libro giornale"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoiceimport0
@@ -5267,7 +5050,7 @@ msgstr "Importo totale"
 #. module: account
 #: view:account.journal:0
 msgid "Account Journal"
-msgstr "Registro contabile"
+msgstr "Libro giornale contabile"
 
 #. module: account
 #: view:account.subscription.line:0
@@ -5498,7 +5281,7 @@ msgstr "Filtro per data"
 #. module: account
 #: wizard_view:populate_statement_from_inv,init:0
 msgid "Choose Journal and Payment Date"
-msgstr "Scegli registro e data di pagamento"
+msgstr "Scegli libro giornale e data di pagamento"
 
 #. module: account
 #: selection:account.analytic.account,state:0
@@ -5681,7 +5464,7 @@ msgstr "Registrazione Contabile"
 #: rml:account.general.journal:0
 #: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
-msgstr "Registro generale"
+msgstr "Libro giornale generale"
 
 #. module: account
 #: field:account.account,balance:0
@@ -5717,7 +5500,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journal Definition"
-msgstr "Definizione dei registri analitici"
+msgstr "Definizione dei libri giornali analitici"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -5827,7 +5610,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 msgid "Entries of Open Analytic Journals"
-msgstr "Voci dei registri analitici aperti"
+msgstr "Voci dei libri giornali analitici aperti"
 
 #. module: account
 #: view:account.invoice.tax:0
@@ -5993,14 +5776,13 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.print.journal.report,init,sort_selection:0
-#: field:account.print.journal,sort_selection:0
 msgid "Entries Sorted By"
 msgstr "Registrazioni ordinate per"
 
 #. module: account
 #: rml:account.journal.period.print:0
 msgid "Print Journal -"
-msgstr "Stampa registro -"
+msgstr "Stampa libro giornale -"
 
 #. module: account
 #: field:account.bank.accounts.wizard,bank_account_id:0
@@ -6193,23 +5975,8 @@ msgstr "Nome colonna"
 #: wizard_view:account.general.ledger.report,checktype:0
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
-#: view:account.common.report:0
-#: view:account.report.general.ledger:0
-#: view:account.balance.report:0
-#: view:account.pl.report:0
-#: view:account.bs.report:0
-#: view:account.print.journal:0
-#: view:account.general.journal:0
-#: view:account.central.journal:0
-#: view:account.partner.balance:0
-#: view:account.partner.ledger:0
 msgid "Filters"
 msgstr "Filtri"
-
-#. module: account
-#: field:account.vat.declaration,based_on:0
-msgid "Based on"
-msgstr ""
 
 #. module: account
 #: wizard_button:account.wizard_paid_open,init,yes:0
@@ -6650,3 +6417,9 @@ msgstr "Importo non tassato"
 #, python-format
 #~ msgid "Entry is already reconciled"
 #~ msgstr "La registrazione è già stata riconciliata"
+
+#~ msgid "Display accounts"
+#~ msgstr "Mostra conti"
+
+#~ msgid "Include Reconciled Entries"
+#~ msgstr "Include registrazioni riconciliate"
