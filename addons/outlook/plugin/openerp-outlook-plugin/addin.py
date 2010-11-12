@@ -24,45 +24,33 @@
 ##############################################################################
 
 from win32com import universal
-from win32com.server.exception import COMException
 from win32com.client import gencache, DispatchWithEvents
-import winerror
 import pythoncom
 from win32com.client import constants
 import sys
 import os
 from win32com.client import Dispatch
 import win32con
-
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))    #outlook
 sys.path.append(os.path.abspath(__file__))                     #outlook/addin
-
 import manager
 from win32com.client import CastTo
 import win32ui
-from tiny_xmlrpc import *
-
+from tiny_xmlrpc import XMLRpcConn
 import locale
 locale.setlocale(locale.LC_NUMERIC, "C")
-
 # Support for COM objects we use.
 gencache.EnsureModule('{00062FFF-0000-0000-C000-000000000046}', 0, 9, 0, bForDemand=True) # Outlook 9
 gencache.EnsureModule('{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}', 0, 2, 1, bForDemand=True) # Office 9
-
 # The TLB defiining the interfaces we implement
 universal.RegisterInterfaces('{AC0714F2-3D04-11D1-AE7D-00A0C90F26F4}', 0, 1, 0, ["_IDTExtensibility2"])
-
 global NewConn
-
 # Retrieves registered XMLRPC connection
 def GetConn():
     d=Dispatch("Python.OpenERP.XMLRpcConn")
-    mngr = manager.GetManager()
     return d
-
 class Configuration:
     def OnClick(self, button, cancel):
-        import win32ui
         try:
             mngr = manager.GetManager()
             mngr.ShowManager()
@@ -91,8 +79,6 @@ class ViewPartners:
 #
 class OpenPartner:
 	def OnClick(self, button, cancel):
-		import win32ui
-		from manager import ustr
 		mngr = manager.GetManager()
 		data=mngr.LoadConfig()
 		outlook = Dispatch("Outlook.Application")
@@ -192,7 +178,6 @@ class OutlookAddin:
             item.Enabled = True
 
             # Adding Menu in Menu Bar to the Web Menu of the Outlook
-            toolbaradvance = bars.Item("Advanced")
             toolbarweb = bars.Item("Web")
 
             item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
@@ -286,7 +271,6 @@ def RegisterXMLConn(klass):
     _winreg.SetValueEx(subkey, "FriendlyName", 0, _winreg.REG_SZ, klass._reg_progid_)
 
 if __name__ == '__main__':
-
     import win32com.server.register
     NewConn=XMLRpcConn()
     win32com.server.register.UseCommandLine(OutlookAddin)
