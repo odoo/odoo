@@ -22,7 +22,6 @@
 import string
 
 from osv import osv, fields
-from tools.func import partial
 from tools.translate import _
 
 _ref_vat = {

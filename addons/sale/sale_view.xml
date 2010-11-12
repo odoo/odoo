@@ -84,6 +84,7 @@
                 <tree string="Sales Orders" colors="grey:state=='done'">
                     <field name="name"/>
                     <field name="date_order"/>
+                    <field name="client_order_ref" groups="base.group_extended"/>
                     <field name="partner_id"/>
                     <field name="user_id" />
                     <field name="picked_rate" widget="progressbar"/>
@@ -219,7 +220,7 @@
                         <page string="Other Information">
                             <group colspan="2" col="2" groups="base.group_extended" name="logistic">
                                 <separator string="Logistic" colspan="2"/>
-                                <field name="incoterm"/>
+                                <field name="incoterm" widget="selection"/>
                                 <field name="picking_policy" required="True"/>
                                 <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
                                 <field name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
