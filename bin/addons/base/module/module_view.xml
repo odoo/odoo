@@ -40,20 +40,21 @@
                 <search string="Search modules">
                     <group col='10' colspan='4'>
                         <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
-                        <filter icon="terp-dialog-close" string="Uninstalled" domain="[('state', 'in', ['uninstalled', 'uninstallable'])]"/>
+                        <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable'])]"/>
                         <filter icon="terp-gtk-jump-to-ltr" string="To be upgraded" domain="[('state','in', ['to upgrade', 'to remove', 'to install'])]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-camera_test" string="Certified" domain="[('certificate','&lt;&gt;', False)]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="category_id"/>
+                        <field name="description"/>
+                        <field name="dependencies_id"/>
                         <field name="state"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
-                        <filter string="Category" icon="terp-personal" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
                         <separator orientation="vertical"/>
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                </search>
@@ -67,7 +68,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('category_id','=',active_id)]</field>
-
         </record>
         <record id="ir_action_module_category" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
@@ -89,19 +89,26 @@
                     <field name="name" select="1"/>
                     <field name="certificate" />
                     <field colspan="4" name="shortdesc" select="2"/>
+                    <field name="category_id"/>
+                    <field name="demo" readonly="1"/>
                     <notebook colspan="4">
                         <page string="Module">
-                            <field colspan="4" name="description" select="2"/>
-                            <field name="installed_version"/>
-                            <field name="latest_version"/>
-                            <field name="author" select="2"/>
-                            <field name="website" select="2" widget="url"/>
-                            <field name="maintainer" attrs="{'invisible': [('maintainer', '=', False)]}"/>
-                            <field name="url" widget="url"/>
-                            <field name="contributors" widget="char" attrs="{'invisible': [('contributors', '=', False)]}"/>
-                            <field name="published_version"/>
-                            <field name="license"/>
-                            <field name="demo" readonly="1"/>
+                            <group colspan="4" col="4">
+                                <group colspan="2" col="2">
+                                    <separator string="Author" colspan="2"/>
+                                    <field name="author" select="2"/>
+                                    <field name="license"/>
+                                    <field name="website" select="2" widget="url" string="Author Website"/>
+                                </group>
+                                <group colspan="2" col="2">
+                                    <separator string="Version" colspan="2"/>
+                                    <field name="installed_version"/>
+                                    <field name="latest_version"/>
+                                    <field name="published_version"/>
+                                </group>
+                            </group>
+                            <separator string="Description" colspan="4"/>
+                            <field colspan="4" name="description" select="2" nolabel="1"/>
                             <newline/>
                             <field name="state" readonly="1" select="1"/>
                             <group col="6" colspan="2">
@@ -115,14 +122,6 @@
                         </page>
                         <page string="Dependencies">
                             <field colspan="4" name="dependencies_id" nolabel="1">
-                                <tree string="Dependencies">
-                                    <field name="name"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Web Dependencies">
-                            <field colspan="4" name="web_dependencies_id" nolabel="1">
                                 <tree string="Dependencies">
                                     <field name="name"/>
                                     <field name="state"/>
@@ -148,14 +147,15 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state=='to upgrade' or state=='to install';red:state=='uninstalled';grey:state=='uninstallable';black:state=='installed'" string="Modules">
                     <field name="name"/>
+                    <field name="category_id"/>
                     <field name="shortdesc"/>
                     <field name="author"/>
                     <field name="installed_version"/>
                     <field name="latest_version"/>
                     <field name="state"/>
-                    <button name="button_install" states="uninstalled" string="Schedule for Installation" icon="terp-gtk-jump-to-ltr" type="object" help="Schedule for Installation"/>
+                    <button name="button_install" states="uninstalled" string="Schedule for Installation" icon="terp-gtk-jump-to-ltr" type="object"/>
                     <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
-                    <button name="button_upgrade" states="installed" string="Schedule Upgrade" icon="terp-gtk-go-back-rtl" type="object" help="Schedule Upgrade"/>
+                    <button name="button_upgrade" states="installed" string="Schedule Upgrade" icon="terp-gtk-go-back-rtl" type="object"/>
                     <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object"/>
                     <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
                     <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object"/>
@@ -168,7 +168,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain"/>
-             <field name="search_view_id" ref="view_module_filter"/>
+            <field name="search_view_id" ref="view_module_filter"/>
+            <field name="help">List all certified modules available to configure your OpenERP. Modules that are installed are flagged as such. You can search for a specific module using the name or the description of the module. You do not need to install modules one by one, you can install many at the same time by clicking on the schedule button in this list. Then, apply the schedule upgrade from Action menu once for all the ones you have scheduled for installation.</field>
         </record>
         <menuitem action="open_module_tree" id="menu_module_tree" parent="base.menu_management"/>
 

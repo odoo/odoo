@@ -26,17 +26,18 @@ from tools.safe_eval import safe_eval as eval
 import tools
 import netsvc
 import os
+import logging
 
 def _check_xml(self, cr, uid, ids, context={}):
+    logger = logging.getLogger('init')
     for view in self.browse(cr, uid, ids, context):
         eview = etree.fromstring(view.arch.encode('utf8'))
         frng = tools.file_open(os.path.join('base','rng','view.rng'))
         relaxng_doc = etree.parse(frng)
         relaxng = etree.RelaxNG(relaxng_doc)
         if not relaxng.validate(eview):
-            logger = netsvc.Logger()
-            logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view does not fit the required schema !')
-            logger.notifyChannel('init', netsvc.LOG_ERROR, tools.ustr(relaxng.error_log.last_error))
+            for error in relaxng.error_log:
+                logger.error(tools.ustr(error))
             return False
     return True
 
@@ -54,7 +55,7 @@ class view(osv.osv):
     _columns = {
         'name': fields.char('View Name',size=64,  required=True),
         'model': fields.char('Object', size=64, required=True),
-        'priority': fields.integer('Priority', required=True),
+        'priority': fields.integer('Sequence', required=True),
         'type': fields.selection((
             ('tree','Tree'),
             ('form','Form'),
@@ -68,7 +69,7 @@ class view(osv.osv):
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade'),
         'field_parent': fields.char('Child Field',size=64),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="XML ID",
-                                  method=True),
+                                  method=True, help="ID of the view defined in xml file"),
     }
     _defaults = {
         'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
@@ -181,7 +182,11 @@ class view(osv.osv):
         for node in nodes_name:
             results[str(node[0])] = result[node[0]]
             results[str(node[0])]['name'] = node[1]
-        return {'nodes': results, 'transitions': tres, 'label' : labels, 'blank_nodes': blank_nodes}
+        return {'nodes': results,
+                'transitions': tres,
+                'label' : labels,
+                'blank_nodes': blank_nodes,
+                'node_parent_field': _Model_Field,}
 view()
 
 class view_sc(osv.osv):
@@ -204,9 +209,9 @@ class view_sc(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
     }
     _sql_constraints = [
-        ('shortcut_unique', 'unique(res_id, user_id)', 'Shortcut for this menu already exists!'),
+        ('shortcut_unique', 'unique(res_id, resource, user_id)', 'Shortcut for this menu already exists!'),
     ]
-        
+
 view_sc()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -27,26 +27,29 @@ from tools.misc import currency
 from tools.translate import _
 
 class res_currency(osv.osv):
-    def _current_rate(self, cr, uid, ids, name, arg, context={}):
-        res={}
+    def _current_rate(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        res = {}
         if 'date' in context:
-            date=context['date']
+            date = context['date']
         else:
-            date=time.strftime('%Y-%m-%d')
-        date= date or time.strftime('%Y-%m-%d')
+            date = time.strftime('%Y-%m-%d')
+        date = date or time.strftime('%Y-%m-%d')
         for id in ids:
             cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s ORDER BY name desc LIMIT 1" ,(id, date))
             if cr.rowcount:
-                id, rate=cr.fetchall()[0]
-                res[id]=rate
+                id, rate = cr.fetchall()[0]
+                res[id] = rate
             else:
-                res[id]=0
+                res[id] = 0
         return res
     _name = "res.currency"
     _description = "Currency"
     _columns = {
         'name': fields.char('Currency', size=32, required=True),
         'code': fields.char('Code', size=3),
+        'symbol': fields.char('Symbol', size=3),
         'rate': fields.function(_current_rate, method=True, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
@@ -70,9 +73,9 @@ class res_currency(osv.osv):
             if r.__contains__('rate_ids'):
                 rates=r['rate_ids']
                 if rates:
-                    currency_rate_obj=self.pool.get('res.currency.rate')
-                    currency_date=currency_rate_obj.read(cr,user,rates[0],['name'])['name']
-                    r['date']=currency_date
+                    currency_rate_obj=  self.pool.get('res.currency.rate')
+                    currency_date = currency_rate_obj.read(cr,user,rates[0],['name'])['name']
+                    r['date'] = currency_date
         return res
 
     def round(self, cr, uid, currency, amount):
@@ -86,7 +89,9 @@ class res_currency(osv.osv):
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding
 
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}, account=None, account_invert=False):
+    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=None, account=None, account_invert=False):
+        if context is None:
+            context = {}
         if not from_currency_id:
             from_currency_id = to_currency_id
         if not to_currency_id:

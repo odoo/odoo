@@ -105,8 +105,8 @@ class ir_attachment(osv.osv):
         'datas': fields.binary('Data'),
         'datas_fname': fields.char('Filename',size=256),
         'description': fields.text('Description'),
-        'res_name': fields.function(_name_get_resname, type='char', 
-                string='Resource Name', method=True),
+        'res_name': fields.function(_name_get_resname, type='char', size=128,
+                string='Resource Name', method=True, store=True),
         'res_model': fields.char('Resource Object',size=64, readonly=True,
                 help="The database object this attachment will be attached to"),
         'res_id': fields.integer('Resource ID', readonly=True,
@@ -117,11 +117,13 @@ class ir_attachment(osv.osv):
                 'Type', help="Binary File or external URL", required=True),
 
         'create_date': fields.datetime('Date Created', readonly=True),
-        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
+        'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
     
     _defaults = {
         'type': 'binary',
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
     }
 
     def _auto_init(self, cr, context=None):

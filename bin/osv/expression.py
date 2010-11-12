@@ -115,6 +115,7 @@ class expression(object):
             if self._is_operator(e) or e == self.__DUMMY_LEAF:
                 continue
             left, operator, right = e
+            operator = operator.lower()
             working_table = table
             main_table = table
             fargs = left.split('.', 1)
@@ -148,7 +149,9 @@ class expression(object):
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
                     right1 = table.search(cr, uid, [(fargs[0],'in', right)], context=context)
                     self.__exp[i] = ('id', 'in', right1)
-                continue
+                
+                if not isinstance(field,fields.property):
+                    continue
 
             if field._properties and ((not field.store) or field._fnct_search):
                 # this is a function field
@@ -235,7 +238,7 @@ class expression(object):
                         if isinstance(right, basestring):
                             res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context)]
                             if res_ids:
-                                opeartor = 'in'
+                                operator = 'in'
                         else:
                             if not isinstance(right, list):
                                 res_ids = [right]
@@ -278,15 +281,47 @@ class expression(object):
                         dom = _rec_get(ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
-                    if isinstance(right, basestring): # and not isinstance(field, fields.related):
+                    def _get_expression(field_obj,cr, uid, left, right, operator, context=None):
+                        if context is None:
+                            context = {}                        
                         c = context.copy()
                         c['active_test'] = False
+                        #Special treatment to ill-formed domains
+                        operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
+                        
+                        dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in','<>':'not in'}
+                        if isinstance(right,tuple):
+                            right = list(right)
+                        if (not isinstance(right,list)) and operator in ['not in','in']:
+                            operator = dict_op[operator]
+                        elif isinstance(right,list) and operator in ['<>','!=','=']: #for domain (FIELD,'=',['value1','value2'])
+                            operator = dict_op[operator]
                         res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)
                         if not res_ids:
-                            self.__exp[i] = ('id','=',0)
+                           return ('id','=',0)
                         else:
                             right = map(lambda x: x[0], res_ids)
-                            self.__exp[i] = (left, 'in', right)
+                            return (left, 'in', right)
+
+                    m2o_str = False
+                    if right:
+                        if isinstance(right, basestring): # and not isinstance(field, fields.related):
+                            m2o_str = True
+                        elif isinstance(right,(list,tuple)):
+                            m2o_str = True
+                            for ele in right:
+                                if not isinstance(ele, basestring): 
+                                    m2o_str = False
+                                    break
+                    else:
+                        new_op = '='
+                        if operator in  ['not like','not ilike','not in','<>','!=']:
+                            new_op = '!='
+                        #Is it ok to put 'left' and not 'id' ?
+                        self.__exp[i] = (left,new_op,False)
+                        
+                    if m2o_str:
+                        self.__exp[i] = _get_expression(field_obj,cr, uid, left, right, operator, context=context)
             else:
                 # other field type
                 # add the time part to datetime field when it's not there:

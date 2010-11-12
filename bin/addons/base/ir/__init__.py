@@ -25,7 +25,6 @@ import ir_ui_menu
 import ir_ui_view
 import ir_default
 import ir_actions
-import ir_report_custom
 import ir_attachment
 import ir_cron
 import ir_filters
@@ -35,6 +34,7 @@ import ir_exports
 import workflow
 import ir_rule
 import wizard
+import osv_memory_autovacuum
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

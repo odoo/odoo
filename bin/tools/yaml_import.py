@@ -70,14 +70,16 @@ def is_url(node):
 
 def is_eval(node):
     return isinstance(node, yaml_tag.Eval)
-    
+
 def is_ref(node):
     return isinstance(node, yaml_tag.Ref) \
         or _is_yaml_mapping(node, yaml_tag.Ref)
-    
+
 def is_ir_set(node):
     return _is_yaml_mapping(node, yaml_tag.IrSet)
 
+def is_string(node):
+    return isinstance(node, basestring)
 
 class TestReport(object):
     def __init__(self):
@@ -250,6 +252,25 @@ class YamlInterpreter(object):
                     if not success:
                         msg = 'Assertion "%s" FAILED\ntest: %s\n'
                         args = (assertion.string, test)
+                        for aop in ('==', '!=', '<>', 'in', 'not in', '>=', '<=', '>', '<'):
+                            if aop in test:
+                                left, right = test.split(aop,1)
+                                lmsg = ''
+                                rmsg = ''
+                                try:
+                                    lmsg = unsafe_eval(left, self.eval_context, RecordDictWrapper(record))
+                                except Exception, e:
+                                    lmsg = '<exc>'
+
+                                try:
+                                    rmsg = unsafe_eval(right, self.eval_context, RecordDictWrapper(record))
+                                except Exception, e:
+                                    rmsg = '<exc>'
+
+                                msg += 'values: ! %s %s %s'
+                                args += ( lmsg, aop, rmsg )
+                                break
+
                         self._log_assert_failure(assertion.severity, msg, *args)
                         return
             else: # all tests were successful for this assertion tag (no break)
@@ -282,7 +303,7 @@ class YamlInterpreter(object):
         else:
             self.validate_xml_id(record.id)
             if self.isnoupdate(record) and self.mode != 'init':
-                id = self.pool.get('ir.model.data')._update_dummy(self.cr, self.uid, record.model, self.module, record.id)
+                id = self.pool.get('ir.model.data')._update_dummy(self.cr, 1, record.model, self.module, record.id)
                 # check if the resource already existed at the last update
                 if id:
                     self.id_map[record] = int(id)
@@ -293,8 +314,10 @@ class YamlInterpreter(object):
 
             record_dict = self._create_record(model, fields)
             self.logger.debug("RECORD_DICT %s" % record_dict)
-            id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
-                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
+            #context = self.get_context(record, self.eval_context)
+            context = record.context #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
+            id = self.pool.get('ir.model.data')._update(self.cr, 1, record.model, \
+                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
@@ -353,6 +376,14 @@ class YamlInterpreter(object):
         elif column._type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
+        elif column._type == "date" and is_string(expression):
+            # enforce ISO format for string date values, to be locale-agnostic during tests
+            time.strptime(expression, misc.DEFAULT_SERVER_DATE_FORMAT)
+            value = expression
+        elif column._type == "datetime" and is_string(expression):
+            # enforce ISO format for string datetime values, to be locale-agnostic during tests
+            time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
+            value = expression
         else: # scalar field
             if is_eval(expression):
                 value = self.process_eval(expression)
@@ -360,14 +391,14 @@ class YamlInterpreter(object):
                 value = expression
             # raise YamlImportException('Unsupported column "%s" or value %s:%s' % (field_name, type(expression), expression))
         return value
-    
+
     def process_context(self, node):
         self.context = node.__dict__
         if node.uid:
             self.uid = self.get_id(node.uid)
         if node.noupdate:
             self.noupdate = node.noupdate
-    
+
     def process_python(self, node):
         def log(msg, *args):
             self.logger.log(logging.TEST, msg, *args)
@@ -384,7 +415,7 @@ class YamlInterpreter(object):
             return
         except Exception, e:
             self.logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
-            raise YamlImportAbortion(e)
+            raise
         else:
             self.assert_report.record(True, python.severity)
     
@@ -538,7 +569,7 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
         
-        pid = self.pool.get('ir.model.data')._update(self.cr, self.uid, \
+        pid = self.pool.get('ir.model.data')._update(self.cr, 1, \
                 'ir.ui.menu', self.module, values, node.id, mode=self.mode, \
                 noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
 
@@ -549,7 +580,7 @@ class YamlInterpreter(object):
             action_type = node.type or 'act_window'
             action_id = self.get_id(node.action)
             action = "ir.actions.%s,%d" % (action_type, action_id)
-            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', \
+            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
                     'tree_but_open', 'Menuitem', [('ir.ui.menu', int(parent_id))], action, True, True, xml_id=node.id)
 
     def process_act_window(self, node):
@@ -576,13 +607,14 @@ class YamlInterpreter(object):
             'usage': node.usage,
             'limit': node.limit,
             'auto_refresh': node.auto_refresh,
+            'multi': getattr(node, 'multi', False),
         }
 
         self._set_group_values(node, values)
 
         if node.target:
             values['target'] = node.target
-        id = self.pool.get('ir.model.data')._update(self.cr, self.uid, \
+        id = self.pool.get('ir.model.data')._update(self.cr, 1, \
                 'ir.actions.act_window', self.module, values, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
 
@@ -590,7 +622,7 @@ class YamlInterpreter(object):
             keyword = 'client_action_relate'
             value = 'ir.actions.act_window,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', keyword, \
+            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', keyword, \
                     node.id, [node.src_model], value, replace=replace, noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
         # TODO add remove ir.model.data
 
@@ -603,7 +635,7 @@ class YamlInterpreter(object):
                 ids = [self.get_id(node.id)]
             if len(ids):
                 self.pool.get(node.model).unlink(self.cr, self.uid, ids)
-                self.pool.get('ir.model.data')._unlink(self.cr, self.uid, node.model, ids)
+                self.pool.get('ir.model.data')._unlink(self.cr, 1, node.model, ids)
         else:
             self.logger.log(logging.TEST, "Record not deleted.")
     
@@ -612,7 +644,7 @@ class YamlInterpreter(object):
 
         res = {'name': node.name, 'url': node.url, 'target': node.target}
 
-        id = self.pool.get('ir.model.data')._update(self.cr, self.uid, \
+        id = self.pool.get('ir.model.data')._update(self.cr, 1, \
                 "ir.actions.url", self.module, res, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
         # ir_set
@@ -620,7 +652,7 @@ class YamlInterpreter(object):
             keyword = node.keyword or 'client_action_multi'
             value = 'ir.actions.url,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', \
+            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
                     keyword, node.url, ["ir.actions.url"], value, replace=replace, \
                     noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
     
@@ -635,7 +667,7 @@ class YamlInterpreter(object):
             else:
                 value = expression
             res[fieldname] = value
-        self.pool.get('ir.model.data').ir_set(self.cr, self.uid, res['key'], res['key2'], \
+        self.pool.get('ir.model.data').ir_set(self.cr, 1, res['key'], res['key2'], \
                 res['name'], res['models'], res['value'], replace=res.get('replace',True), \
                 isobject=res.get('isobject', False), meta=res.get('meta',None))
 
@@ -644,7 +676,7 @@ class YamlInterpreter(object):
         for dest, f in (('name','string'), ('model','model'), ('report_name','name')):
             values[dest] = getattr(node, f)
             assert values[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
+        for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
             if getattr(node, field):
                 values[dest] = getattr(node, field)
         if node.auto:
@@ -660,7 +692,7 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
 
-        id = self.pool.get('ir.model.data')._update(self.cr, self.uid, "ir.actions.report.xml", \
+        id = self.pool.get('ir.model.data')._update(self.cr, 1, "ir.actions.report.xml", \
                 self.module, values, xml_id, noupdate=self.isnoupdate(node), mode=self.mode)
         self.id_map[xml_id] = int(id)
 
@@ -668,7 +700,7 @@ class YamlInterpreter(object):
             keyword = node.keyword or 'client_print_multi'
             value = 'ir.actions.report.xml,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', \
+            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
                     keyword, values['name'], [values['model']], value, replace=replace, isobject=True, xml_id=xml_id)
             
     def process_none(self):

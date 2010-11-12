@@ -63,12 +63,13 @@ class ir_model(osv.osv):
         is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
         return [('id', 'in', [id for id in is_osv_mem if bool(is_osv_mem[id]) == value])]
 
+
     _columns = {
         'name': fields.char('Object Name', size=64, translate=True, required=True),
         'model': fields.char('Object', size=64, required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Manually Created',readonly=True),
+        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'osv_memory': fields.function(_is_osv_memory, method=True, string='In-memory model', type='boolean',
             fnct_search=_search_osv_memory,
@@ -142,103 +143,6 @@ class ir_model(osv.osv):
         x_custom_model._rec_name = x_name
 ir_model()
 
-
-class ir_model_grid(osv.osv):
-    _name = 'ir.model.grid'
-    _table = 'ir_model'
-    _inherit = 'ir.model'
-    _description = "Objects Security Grid"
-
-    def create(self, cr, uid, vals, context=None):
-        raise osv.except_osv('Error !', 'You cannot add an entry to this view !')
-
-    def unlink(self, *args, **argv):
-        raise osv.except_osv('Error !', 'You cannot delete an entry of this view !')
-
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = super(osv.osv, self).read(cr, uid, ids, fields, context, load)
-        allgr = self.pool.get('res.groups').search(cr, uid, [], context=context)
-        acc_obj = self.pool.get('ir.model.access')
-
-        if not isinstance(result,list):
-            result=[result]
-
-        for res in result:
-            rules = acc_obj.search(cr, uid, [('model_id', '=', res['id'])])
-            rules_br = acc_obj.browse(cr, uid, rules, context=context)
-            for g in allgr:
-                res['group_'+str(g)] = ''
-            for rule in rules_br:
-                perm_list = []
-                if rule.perm_read:
-                    perm_list.append('r')
-                if rule.perm_write:
-                    perm_list.append('w')
-                if rule.perm_create:
-                    perm_list.append('c')
-                if rule.perm_unlink:
-                    perm_list.append('u')
-                perms = ",".join(perm_list)
-                if rule.group_id:
-                    res['group_%d'%rule.group_id.id] = perms
-                else:
-                    res['group_0'] = perms
-        return result
-
-    #
-    # This function do not write fields from ir.model because
-    # access rights may be different for managing models and
-    # access rights
-    #
-    def write(self, cr, uid, ids, vals, context=None):
-        vals_new = vals.copy()
-        acc_obj = self.pool.get('ir.model.access')
-        for grid in self.browse(cr, uid, ids, context=context):
-            model_id = grid.id
-            perms_rel = ['read','write','create','unlink']
-            for val in vals:
-                if not val[:6]=='group_':
-                    continue
-                group_id = int(val[6:]) or False
-                rules = acc_obj.search(cr, uid, [('model_id', '=', model_id),('group_id', '=', group_id)])
-                if not rules:
-                    rules = [acc_obj.create(cr, uid, {
-                        'name': grid.name,
-                        'model_id':model_id,
-                        'group_id':group_id
-                    }) ]
-                vals2 = dict(map(lambda x: ('perm_'+x, x[0] in (vals[val] or '')), perms_rel))
-                acc_obj.write(cr, uid, rules, vals2, context=context)
-        return True
-
-    def fields_get(self, cr, uid, fields=None, context=None):
-        result = super(ir_model_grid, self).fields_get(cr, uid, fields, context)
-        groups = self.pool.get('res.groups').search(cr, uid, [])
-        groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
-        result['group_0'] = {'string': 'All Users','type': 'char','size': 7}
-        for group in groups_br:
-            result['group_%d'%group.id] = {'string': '%s'%group.name,'type': 'char','size': 7}
-        return result
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
-        result = super(ir_model_grid, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
-        groups = self.pool.get('res.groups').search(cr, uid, [])
-        groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
-        cols = ['model', 'name']
-        xml = '''<?xml version="1.0"?>
-<%s editable="bottom">
-    <field name="name" select="1" readonly="1" required="1"/>
-    <field name="model" select="1" readonly="1" required="1"/>
-    <field name="group_0"/>
-    ''' % (view_type,)
-        for group in groups_br:
-            xml += '''<field name="group_%d"/>''' % (group.id, )
-        xml += '''</%s>''' % (view_type,)
-        result['arch'] = xml
-        result['fields'] = self.fields_get(cr, uid, cols, context)
-        return result
-ir_model_grid()
-
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
     _description = "Fields"
@@ -256,7 +160,7 @@ class ir_model_fields(osv.osv):
         'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
         'translate': fields.boolean('Translate'),
         'size': fields.integer('Size'),
-        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manually Created', required=True, readonly=True, select=1),
+        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
         'domain': fields.char('Domain', size=256),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
@@ -305,7 +209,7 @@ class ir_model_fields(osv.osv):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 
             if vals.get('relation',False) and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
-                 raise except_orm(_('Error'), _("Model %s Does not Exist !" % vals['relation']))
+                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
@@ -327,15 +231,13 @@ class ir_model_access(osv.osv):
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
         'perm_create': fields.boolean('Create Access'),
-        'perm_unlink': fields.boolean('Delete Permission'),
+        'perm_unlink': fields.boolean('Delete Access'),
     }
 
     def check_groups(self, cr, uid, group):
-        res = False
         grouparr  = group.split('.')
         if not grouparr:
             return False
-
         cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN (select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))
         return bool(cr.fetchone())
 
@@ -385,6 +287,12 @@ class ir_model_access(osv.osv):
             model_name = model.name
         else:
             model_name = model
+
+        # osv_memory objects can be read by everyone, as they only return
+        # results that belong to the current user (except for superuser)
+        model_obj = self.pool.get(model_name)
+        if isinstance(model_obj, osv.osv_memory):
+            return True
 
         # We check if a specific rule exists
         cr.execute('SELECT MAX(CASE WHEN perm_' + mode + ' THEN 1 ELSE 0 END) '
@@ -477,7 +385,7 @@ class ir_model_data(osv.osv):
         'module': lambda *a: ''
     }
     _sql_constraints = [
-        ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same id for the same module'),
+        ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same id for the same module !'),
     ]
 
     def __init__(self, pool, cr):
@@ -518,13 +426,11 @@ class ir_model_data(osv.osv):
         return id
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
-        warning = True
         model_obj = self.pool.get(model)
         if not context:
             context = {}
         if xml_id and ('.' in xml_id):
-            assert len(xml_id.split('.'))==2, _('"%s" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id') % (xml_id)
-            warning = False
+            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
             module, xml_id = xml_id.split('.')
         if (not xml_id) and (not self.doinit):
             return False
@@ -611,7 +517,6 @@ class ir_model_data(osv.osv):
         return True
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
-        obj = self.pool.get('ir.values')
         if type(models[0])==type([]) or type(models[0])==type(()):
             model,res_id = models[0]
         else:
@@ -649,7 +554,7 @@ class ir_model_data(osv.osv):
                 if model=='workflow.activity':
                     cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                     wkf_todo.extend(cr.fetchall())
-                    cr.execute("update wkf_transition set condition='True', role_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
+                    cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
                     cr.execute("delete from wkf_transition where act_to=%s", (res_id,))
 
         for model,id in wkf_todo:

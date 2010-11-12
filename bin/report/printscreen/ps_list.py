@@ -30,12 +30,14 @@ import locale
 import time, os
 from operator import itemgetter
 from datetime import datetime
+from report import report_sxw
 
 class report_printscreen_list(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
         self.context = {}
         self.groupby = []
+        self.cr=''
 
     def _parse_node(self, root_node):
         result = []
@@ -60,18 +62,15 @@ class report_printscreen_list(report_int):
     def create(self, cr, uid, ids, datas, context=None):
         if not context:
             context={}
+        self.cr=cr
         self.context = context
         self.groupby = context.get('group_by',[])
         self.groupby_no_leaf = context.get('group_by_no_leaf',False)
         pool = pooler.get_pool(cr.dbname)
         model = pool.get(datas['model'])
-        model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
-        if model_id:
-            model_desc = pool.get('ir.model').browse(cr, uid, model_id[0], context).name
-            self.title = model_desc
-        else:
-            model_desc = model._description
-            self.title = model_desc
+        # Title come from description of model which are specified in py file.
+        model_desc = model._description
+        self.title = model_desc
         datas['ids'] = ids
         model = pooler.get_pool(cr.dbname).get(datas['model'])
         result = model.fields_view_get(cr, uid, view_type='tree', context=context)
@@ -83,34 +82,36 @@ class report_printscreen_list(report_int):
                 for rec in records:
                     rec['__group'] = True
                     rec['__no_leaf'] = self.groupby_no_leaf
+                    rec['__grouped_by'] = groupby[0] if (isinstance(groupby, list) and groupby) else groupby
                     for f in fields_order:
                         if f not in rec:
                             rec.update({f:False})
                         elif isinstance(rec[f], tuple):
                             rec[f] = rec[f][1]
                     rows.append(rec)
-                    groupby = (rec.get('__context', {})).get('group_by',[])
-                    domain = rec.get('__domain', [])
-                    if groupby:
-                        get_groupby_data(groupby, domain)
+                    inner_groupby = (rec.get('__context', {})).get('group_by',[])
+                    inner_domain = rec.get('__domain', [])
+                    if inner_groupby:
+                        get_groupby_data(inner_groupby, inner_domain)
                     else:
                         if self.groupby_no_leaf:
                             continue
-                        child_ids = model.search(cr, uid, domain)
+                        child_ids = model.search(cr, uid, inner_domain)
                         res = model.read(cr, uid, child_ids, result['fields'].keys(), context)
+                        res.sort(lambda x,y: cmp(ids.index(x['id']), ids.index(y['id'])))
                         rows.extend(res)
             dom = [('id','in',ids)]
             if self.groupby_no_leaf and len(ids) and not ids[0]:
                 dom = datas.get('_domain',[])
             get_groupby_data(self.groupby, dom)
         else:
-             rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
-             ids2 = map(itemgetter('id'), rows) # getting the ids from read result
-             if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
-                 rows_new = []
-                 for id in datas['ids']:
-                     rows_new += [elem for elem in rows if elem['id'] == id]
-                 rows = rows_new
+            rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
+            ids2 = map(itemgetter('id'), rows) # getting the ids from read result
+            if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
+                rows_new = []
+                for id in datas['ids']:
+                    rows_new += [elem for elem in rows if elem['id'] == id]
+                rows = rows_new
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
         return (self.obj.get(), 'pdf')
 
@@ -132,6 +133,10 @@ class report_printscreen_list(report_int):
         _append_node('PageHeight', '%.2f' %(pageSize[1] * 2.8346,))
         _append_node('report-header', title)
 
+        _append_node('company', pooler.get_pool(self.cr.dbname).get('res.users').browse(self.cr,uid,uid).company_id.name)
+        rpt_obj = pooler.get_pool(self.cr.dbname).get('res.users')
+        rml_obj=report_sxw.rml_parse(self.cr, uid, rpt_obj._name,context)
+        _append_node('header-date', str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")))
         l = []
         t = 0
         rowcount = 0;
@@ -175,7 +180,7 @@ class report_printscreen_list(report_int):
                 count += 1
                 if fields[f]['type']=='many2one' and line[f]:
                     if not line.get('__group'):
-                        line[f]= line[f][1]
+                        line[f] = line[f][1]
                 if fields[f]['type']=='selection' and line[f]:
                     for key, value in fields[f]['selection']:
                         if key == line[f]:
@@ -212,31 +217,41 @@ class report_printscreen_list(report_int):
                         d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
                         new_d1 = d1.strftime(format)
                     line[f] = new_d1
+
+
                 if line.get('__group'):
                     col = etree.SubElement(node_line, 'col', para='group', tree='no')
                 else:
                     col = etree.SubElement(node_line, 'col', para='yes', tree='no')
+
+                # Prevent empty labels in groups
+                if f == line.get('__grouped_by') and line.get('__group') and not line[f] and not float_flag and not temp[count]:
+                    col.text = line[f] = 'Undefined'
+                    col.set('tree', 'undefined')
+
                 if line[f] != None:
                     col.text = tools.ustr(line[f] or '')
                     if float_flag:
-                       col.set('tree','float')
+                        col.set('tree','float')
                     if line.get('__no_leaf') and temp[count] == 1 and f != 'id' and not line['__context']['group_by']:
                         tsum[count] = float(tsum[count]) + float(line[f])
                     if not line.get('__group') and f != 'id' and temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
                 else:
-                     col.text = '/'
+                    col.text = '/'
+
         node_line = etree.SubElement(lines, 'row')
         for f in range(0, len(fields_order)):
             col = etree.SubElement(node_line, 'col', para='group', tree='no')
-            col.set('tree','float')
+            col.set('tree', 'float')
             if tsum[f] != None:
-               if tsum[f] >= 0.01 :
-                   prec = '%.2f'
-                   total = prec%(tsum[f])
-                   txt = str(total or '')
-               else:
-                   txt = str(tsum[f] or '')
+                if tsum[f] != 0.0:
+                    digits = fields[fields_order[f]].get('digits', (16, 2))
+                    prec = '%%.%sf' % (digits[1], )
+                    total = prec % (tsum[f], )
+                    txt = str(total or '')
+                else:
+                    txt = str(tsum[f] or '')
             else:
                 txt = '/'
             if f == 0:

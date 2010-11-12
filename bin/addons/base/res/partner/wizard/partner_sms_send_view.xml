@@ -14,13 +14,13 @@
                     <field name="mobile_to"/>
                     <field name="app_id"/>
    				    <field name="user"/>
-				    <field name="password"/>				    
+				    <field name="password"/>
                     <separator string="Message" colspan="4" />
 				    <field name="text" colspan="4" nolabel="1"/>
 			        <separator string="" colspan="4" />
                     <group colspan="4" col="6">
                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                        <button name="sms_send" string="Send SMS" type="object" icon="gtk-go-back"/>
+                        <button name="sms_send" string="Send SMS" type="object" icon="gtk-go-forward"/>
                     </group>
              </form>
             </field>
@@ -32,7 +32,6 @@
             view_mode="form"
             target="new"
             key2="client_action_multi"
-            id="action_partner_sms_send"
-            groups="base.group_extended"/>
+            id="action_partner_sms_send"/>
     </data>
 </openerp>

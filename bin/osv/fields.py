@@ -31,13 +31,13 @@
 #   required
 #   size
 #
-from collections import defaultdict
+import datetime as DT
 import string
 import netsvc
 import sys
+import warnings
 
 from psycopg2 import Binary
-import warnings
 
 import tools
 from tools.translate import _
@@ -193,14 +193,42 @@ class float(_column):
 
 class date(_column):
     _type = 'date'
+    @staticmethod
+    def today(*args):
+        """ Returns the current date in a format fit for being a
+        default value to a ``date`` field.
 
+        This method should be provided as is to the _defaults dict, it
+        should not be called.
+        """
+        return DT.date.today().strftime(
+            tools.DEFAULT_SERVER_DATE_FORMAT)
 
 class datetime(_column):
     _type = 'datetime'
+    @staticmethod
+    def now(*args):
+        """ Returns the current datetime in a format fit for being a
+        default value to a ``datetime`` field.
 
+        This method should be provided as is to the _defaults dict, it
+        should not be called.
+        """
+        return DT.datetime.now().strftime(
+            tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
 class time(_column):
     _type = 'time'
+    @staticmethod
+    def now( *args):
+        """ Returns the current time in a format fit for being a
+        default value to a ``time`` field.
+
+        This method should be proivided as is to the _defaults dict,
+        it should not be called.
+        """
+        return DT.datetime.now().strftime(
+            tools.DEFAULT_SERVER_TIME_FORMAT)
 
 class binary(_column):
     _type = 'binary'
@@ -228,7 +256,13 @@ class binary(_column):
                 if v['id'] == i:
                     val = v[name]
                     break
-            if context.get('bin_size', False) and val:
+
+            # If client is requesting only the size of the field, we return it instead
+            # of the content. Presumably a separate request will be done to read the actual
+            # content if it's needed at some point.
+            # TODO: after 6.0 we should consider returning a dict with size and content instead of
+            #       having an implicit convention for the value
+            if val and context.get('bin_size_%s' % name, context.get('bin_size')):
                 res[i] = tools.human_size(long(val))
             else:
                 res[i] = val
@@ -303,14 +337,13 @@ class many2one(_column):
     def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
         result = {}
         for id in ids:
-            result[id] = obj.datas[id][name]
+            result[id] = obj.datas[id].get(name, False)
         return result
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
-        if not context:
-            context = {}
-        if not values:
-            values = {}
+        context = context or {}
+        values = values or {}
+
         res = {}
         for r in values:
             res[r['id']] = r[name]
@@ -319,21 +352,14 @@ class many2one(_column):
         obj = obj.pool.get(self._obj)
 
         # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
-        from orm import except_orm
-        names = {}
-        for record in list(set(filter(None, res.values()))):
-            try:
-                record_name = dict(obj.name_get(cr, user, [record], context))
-            except except_orm:
-                record_name = {}
-                record_name[record] = '// Access Denied //'
-            names.update(record_name)
-
-        for r in res.keys():
-            if res[r] and res[r] in names:
-                res[r] = (res[r], names[res[r]])
+        # we use uid=1 because the visibility of a many2one field value (just id and name)
+        # must be the access right of the parent form and not the linked object itself.
+        records = dict(obj.name_get(cr, 1, list(set(filter(None, res.values()))), context=context))
+        for id in res:
+            if res[id] in records:
+                res[id] = (res[id], records[res[id]])
             else:
-                res[r] = False
+                res[id] = False
         return res
 
     def set(self, cr, obj_src, id, field, values, user=None, context=None):
@@ -436,11 +462,14 @@ class one2many(_column):
         if not values:
             values = {}
 
-        res = defaultdict(list)
+        res = {}
+        for id in ids:
+            res[id] = []
 
         ids2 = obj.pool.get(self._obj).search(cr, user, self._domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            res[r[self._fields_id]].append(r['id'])
+            if r[self._fields_id] in res:
+                res[r[self._fields_id]].append(r['id'])
         return res
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
@@ -517,31 +546,50 @@ class many2many(_column):
             return res
         for id in ids:
             res[id] = []
-        limit_str = self._limit is not None and ' limit %d' % self._limit or ''
+        if offset:
+            warnings.warn("Specifying offset at a many2many.get() may produce unpredictable results.",
+                      DeprecationWarning, stacklevel=2)
         obj = obj.pool.get(self._obj)
 
-        d1, d2, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
-        if d1:
-            d1 = ' and ' + ' and '.join(d1)
-        else: d1 = ''
+        # static domains are lists, and are evaluated both here and on client-side, while string 
+        # domains supposed by dynamic and evaluated on client-side only (thus ignored here)
+        # FIXME: make this distinction explicit in API!
+        domain = isinstance(self._domain, list) and self._domain or []
+
+        wquery = obj._where_calc(cr, user, domain, context=context)
+        obj._apply_ir_rules(cr, user, wquery, 'read', context=context)
+        from_c, where_c, where_params = wquery.get_sql()
+        if where_c:
+            where_c = ' AND ' + where_c
+
+        if offset or self._limit:
+            order_by = ' ORDER BY "%s".%s' %(obj._table, obj._order.split(',')[0])
+        else:
+            order_by = ''
+
+        limit_str = ''
+        if self._limit is not None:
+            limit_str = ' LIMIT %d' % self._limit
+
         query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
-                   FROM %(rel)s, %(tbl)s \
-                  WHERE %(rel)s.%(id1)s in %%s \
+                   FROM %(rel)s, %(from_c)s \
+                  WHERE %(rel)s.%(id1)s IN %%s \
                     AND %(rel)s.%(id2)s = %(tbl)s.id \
-                 %(d1)s  \
+                 %(where_c)s  \
+                 %(order_by)s \
                  %(limit)s \
-                  ORDER BY %(tbl)s.%(order)s \
                  OFFSET %(offset)d' \
             % {'rel': self._rel,
+               'from_c': from_c,
                'tbl': obj._table,
                'id1': self._id1,
                'id2': self._id2,
-               'd1': d1,
+               'where_c': where_c,
                'limit': limit_str,
-               'order': obj._order,
+               'order_by': order_by,
                'offset': offset,
               }
-        cr.execute(query, [tuple(ids)] + d2)
+        cr.execute(query, [tuple(ids),] + where_params)
         for r in cr.fetchall():
             res[r[1]].append(r[0])
         return res
@@ -661,7 +709,9 @@ class function(_column):
             self.selectable = False
 
         if store:
-            self._classic_read = True
+            if self._type != 'many2one':
+                # m2o fields need to return tuples with name_get, not just foreign keys
+                self._classic_read = True
             self._classic_write = True
             if type=='binary':
                 self._symbol_get=lambda x:x and str(x)
@@ -754,45 +804,42 @@ class related(function):
             i -= 1
         return [(self._arg[0], 'in', sarg)]
 
-    def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
-        if values and field_name:
-            self._field_get2(cr, uid, obj, context)
-            relation = obj._name
-            res = {}
-            if type(ids) != type([]):
-                ids=[ids]
-            objlst = obj.browse(cr, uid, ids)
-            for data in objlst:
-                t_id = None
-                t_data = data
-                relation = obj._name
-                for i in range(len(self.arg)):
-                    field_detail = self._relations[i]
-                    relation = field_detail['object']
-                    if not t_data[self.arg[i]]:
-                        if self._type not in ('one2many', 'many2many'):
-                            t_id = t_data['id']
-                        t_data = False
-                        break
-                    if field_detail['type'] in ('one2many', 'many2many'):
-                        if self._type != "many2one":
-                            t_id = t_data.id
-                            t_data = t_data[self.arg[i]][0]
-                        else:
-                            t_data = False
-                            break
-                    else:
+    def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
+        self._field_get2(cr, uid, obj, context=context)
+        if type(ids) != type([]):
+            ids=[ids]
+        objlst = obj.browse(cr, uid, ids)
+        for data in objlst:
+            t_id = data.id
+            t_data = data
+            for i in range(len(self.arg)):
+                if not t_data: break
+                field_detail = self._relations[i]
+                if not t_data[self.arg[i]]:
+                    if self._type not in ('one2many', 'many2many'):
                         t_id = t_data['id']
-                        t_data = t_data[self.arg[i]]
-
-                if t_id and t_data:
-                    obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values}, context=context)
+                    t_data = False
+                elif field_detail['type'] in ('one2many', 'many2many'):
+                    if self._type != "many2one":
+                        t_id = t_data.id
+                        t_data = t_data[self.arg[i]][0]
+                    else:
+                        t_data = False
+                else:
+                    t_id = t_data['id']
+                    t_data = t_data[self.arg[i]]
+            else:
+                model = obj.pool.get(self._relations[-1]['object'])
+                model.write(cr, uid, [t_id], {args[-1]: values}, context=context)
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         self._field_get2(cr, uid, obj, context)
         if not ids: return {}
         relation = obj._name
-        res = {}.fromkeys(ids, False)
+        if self._type in ('one2many', 'many2many'):
+            res = dict([(i, []) for i in ids])
+        else:
+            res = {}.fromkeys(ids, False)
 
         objlst = obj.browse(cr, 1, ids, context=context)
         for data in objlst:
@@ -812,11 +859,11 @@ class related(function):
                     break
                 if field_detail['type'] in ('one2many', 'many2many') and i != len(self.arg) - 1:
                     t_data = t_data[self.arg[i]][0]
-                else:
+                elif t_data:
                     t_data = t_data[self.arg[i]]
             if type(t_data) == type(objlst[0]):
                 res[data.id] = t_data.id
-            else:
+            elif t_data:
                 res[data.id] = t_data
         if self._type=='many2one':
             ids = filter(None, res.values())
@@ -886,38 +933,44 @@ class serialized(_column):
         super(serialized, self).__init__(string=string, **args)
 
 
+# TODO: review completly this class for speed improvement
 class property(function):
 
     def _get_default(self, obj, cr, uid, prop_name, context=None):
-        from orm import browse_record
-        prop = obj.pool.get('ir.property')
-        domain = prop._get_domain_default(cr, uid, prop_name, obj._name, context)
-        ids = prop.search(cr, uid, domain, order='company_id', context=context)
-        if not ids:
-            return False
+        return self._get_defaults(obj, cr, uid, [prop_name], context=None)[0][prop_name]
 
-        default_value = prop.get_by_id(cr, uid, ids, context=context)
-        if isinstance(default_value, browse_record):
-            return default_value.id
-        return default_value or False
+    def _get_defaults(self, obj, cr, uid, prop_name, context=None):
+        prop = obj.pool.get('ir.property')
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name), ('res_id','=',False)]
+        ids = prop.search(cr, uid, domain, context=context)
+        replaces = {}
+        default_value = {}.fromkeys(prop_name, False)
+        for prop_rec in prop.browse(cr, uid, ids, context=context):
+            if default_value.get(prop_rec.fields_id.name, False):
+                continue
+            value = prop.get_by_record(cr, uid, prop_rec, context=context) or False
+            default_value[prop_rec.fields_id.name] = value
+            if value and (prop_rec.type == 'many2one'):
+                replaces.setdefault(value._name, {})
+                replaces[value._name][value.id] = True
+        return default_value, replaces
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
         vids = [obj._name + ',' + str(oid) for oid in  ids]
 
-        domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
-        if domain is not None:
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
+        #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
+        if vids:
             domain = [('res_id', 'in', vids)] + domain
-            return prop.search(cr, uid, domain, context=context)
-        else:
-            return []
+        return prop.search(cr, uid, domain, context=context)
 
-
+    # TODO: to rewrite more clean
     def _fnct_write(self, obj, cr, uid, id, prop_name, id_val, obj_dest, context=None):
         if context is None:
             context = {}
 
-        nids = self._get_by_id(obj, cr, uid, prop_name, [id], context)
+        nids = self._get_by_id(obj, cr, uid, [prop_name], [id], context)
         if nids:
             cr.execute('DELETE FROM ir_property WHERE id IN %s', (tuple(nids),))
 
@@ -938,29 +991,37 @@ class property(function):
                 'company_id': cid,
                 'fields_id': def_id,
                 'type': self._type,
-                }, context=context)
+            }, context=context)
         return False
 
 
     def _fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
-        from orm import browse_record
         properties = obj.pool.get('ir.property')
-
-        default_val = self._get_default(obj, cr, uid, prop_name, context)
-
-        nids = self._get_by_id(obj, cr, uid, prop_name, ids, context)
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
+        domain += [('res_id','in', [obj._name + ',' + str(oid) for oid in  ids])]
+        nids = properties.search(cr, uid, domain, context=context)
+        default_val,replaces = self._get_defaults(obj, cr, uid, prop_name, context)
 
         res = {}
         for id in ids:
-            res[id] = default_val
-        for prop in properties.browse(cr, uid, nids):
-            value = prop.get_by_id(context=context)
-            if isinstance(value, browse_record):
-                if not value.exists():
-                    cr.execute('DELETE FROM ir_property WHERE id=%s', (prop.id,))
-                    continue
-                value = value.id
-            res[prop.res_id.id] = value or False
+            res[id] = default_val.copy()
+
+        brs = properties.browse(cr, uid, nids, context=context)
+        for prop in brs:
+            value = properties.get_by_record(cr, uid, prop, context=context)
+            res[prop.res_id.id][prop.fields_id.name] = value or False
+            if value and (prop.type == 'many2one'):
+                replaces.setdefault(value._name, {})
+                replaces[value._name][value.id] = True
+
+        for rep in replaces:
+            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, uid, replaces[rep].keys(), context=context))
+
+        for prop in prop_name:
+            for id in ids:
+                if res[id][prop] and hasattr(res[id][prop], '_name'):
+                    res[id][prop] = (res[id][prop].id , replaces[res[id][prop]._name].get(res[id][prop].id, False))
+
         return res
 
 
@@ -977,7 +1038,7 @@ class property(function):
         # TODO remove obj_prop parameter (use many2one type)
         self.field_id = {}
         function.__init__(self, self._fnct_read, False, self._fnct_write,
-                          obj_prop, **args)
+                          obj_prop, multi='properties', **args)
 
     def restart(self):
         self.field_id = {}

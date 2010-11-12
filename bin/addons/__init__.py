@@ -203,14 +203,14 @@ def get_module_filetree(module, dir='.'):
 
     return tree
 
-def get_module_as_zip_from_module_directory(module_directory, b64enc=True, src=True):
-    """Compress a module directory
+def zip_directory(directory, b64enc=True, src=True):
+    """Compress a directory
 
-    @param module_directory: The module directory
+    @param directory: The directory to compress
     @param base64enc: if True the function will encode the zip file with base64
     @param src: Integrate the source files
 
-    @return: a stream to store in a file-like object
+    @return: a string containing the zip file
     """
 
     RE_exclude = re.compile('(?:^\..+\.swp$)|(?:\.py[oc]$)|(?:\.bak$)|(?:\.~.~$)', re.I)
@@ -225,16 +225,16 @@ def get_module_as_zip_from_module_directory(module_directory, b64enc=True, src=T
 
     archname = StringIO()
     archive = PyZipFile(archname, "w", ZIP_DEFLATED)
-    archive.writepy(module_directory)
-    _zippy(archive, module_directory, src=src)
+    archive.writepy(directory)
+    _zippy(archive, directory, src=src)
     archive.close()
-    val = archname.getvalue()
+    archive_data = archname.getvalue()
     archname.close()
 
     if b64enc:
-        val = base64.encodestring(val)
+        return base64.encodestring(archive_data)
 
-    return val
+    return archive_data
 
 def get_module_as_zip(modulename, b64enc=True, src=True):
     """Generate a module as zip file with the source or not and can do a base64 encoding
@@ -256,7 +256,7 @@ def get_module_as_zip(modulename, b64enc=True, src=True):
         if b64enc:
             val = base64.encodestring(val)
     else:
-        val = get_module_as_zip_from_module_directory(ap, b64enc, src)
+        val = zip_directory(ap, b64enc, src)
 
     return val
 
@@ -270,7 +270,18 @@ def get_module_resource(module, *args):
     @return: absolute path to the resource
     """
     a = get_module_path(module)
-    return a and opj(a, *args) or False
+    if not a: return False
+    resource_path = opj(a, *args)
+    if zipfile.is_zipfile( a +'.zip') :
+        zip = zipfile.ZipFile( a + ".zip")
+        files = ['/'.join(f.split('/')[1:]) for f in zip.namelist()]
+        resource_path = '/'.join(args)
+        if resource_path in files:
+            return opj(a, resource_path)
+    elif os.path.exists(resource_path):
+        return resource_path
+    return False
+
 
 
 def get_modules():
@@ -297,9 +308,10 @@ def load_information_from_description_file(module):
     """
     :param module: The name of the module (sale, purchase, ...)
     """
+
     for filename in ['__openerp__.py', '__terp__.py']:
         description_file = get_module_resource(module, filename)
-        if os.path.isfile(description_file):
+        if description_file :
             return eval(tools.file_open(description_file).read())
 
     #TODO: refactor the logger in this file to follow the logging guidelines
@@ -332,9 +344,8 @@ def upgrade_graph(graph, cr, module_list, force=None):
     for module in module_list:
         mod_path = get_module_path(module)
         terp_file = get_module_resource(module, '__openerp__.py')
-        if not terp_file or not os.path.isfile(terp_file):
+        if not terp_file:
             terp_file = get_module_resource(module, '__terp__.py')
-
         if not mod_path or not terp_file:
             logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not found, skipped' % (module))
             continue
@@ -590,7 +601,7 @@ log = logging.getLogger('init')
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 
-    def process_sql_file(cr, file):
+    def process_sql_file(cr, fp):
         queries = fp.read().split(';')
         for query in queries:
             new_query = ' '.join(query.split())
@@ -634,14 +645,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 
     def load_test(cr, module_name, id_map, mode):
         cr.commit()
-        if not tools.config.options['test-disable']:
+        if not tools.config.options['test_disable']:
             try:
                 _load_data(cr, module_name, id_map, mode, 'test')
             except Exception, e:
                 logger.notifyChannel('ERROR', netsvc.LOG_TEST, e)
                 pass
             finally:
-                if tools.config.options['test-commit']:
+                if tools.config.options['test_commit']:
                     cr.commit()
                 else:
                     cr.rollback()
@@ -655,7 +666,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             file = tools.file_open(pathname)
             # TODO manage .csv file with noupdate == (kind == 'init')
             if ext == '.sql':
-                process_sql_file(cr, fp)
+                process_sql_file(cr, file)
             elif ext == '.csv':
                 noupdate = (kind == 'init')
                 tools.convert_csv_import(cr, module_name, pathname, file.read(), id_map, mode, noupdate)
@@ -757,16 +768,21 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 
     return has_updates
 
+def _check_module_names(cr, module_names):
+    mod_names = set(module_names)
+    if 'base' in mod_names:
+        # ignore dummy 'all' module
+        if 'all' in mod_names:
+            mod_names.remove('all')
+    if mod_names:
+        cr.execute("SELECT count(id) AS count FROM ir_module_module WHERE name in %s", (tuple(mod_names),))
+        if cr.dictfetchone()['count'] != len(mod_names):
+            # find out what module name(s) are incorrect:
+            cr.execute("SELECT name FROM ir_module_module")
+            incorrect_names = mod_names.difference([x['name'] for x in cr.dictfetchall()])
+            logging.getLogger('init').warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
+
 def load_modules(db, force_demo=False, status=None, update_module=False):
-
-    def check_module_name(cr, mods, state):
-        for mod in mods:
-            id = modobj.search(cr, 1, ['&', ('state', '=', state), ('name', '=', mod)])
-            if id:
-                getattr(modobj, states[state])(cr, 1, id)
-            elif mod != 'all':
-                logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: invalid module name!' % (mod))
-
     if not status:
         status = {}
     cr = db.cursor()
@@ -795,16 +811,23 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         if update_module:
             modobj = pool.get('ir.module.module')
-            states = {'installed': 'button_upgrade', 'uninstalled': 'button_install'}
             logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
                 modobj.update_list(cr, 1)
 
+            _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
+
             mods = [k for k in tools.config['init'] if tools.config['init'][k]]
-            check_module_name(cr, mods, 'uninstalled')
+            if mods:
+                ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
+                if ids:
+                    modobj.button_install(cr, 1, ids)
 
             mods = [k for k in tools.config['update'] if tools.config['update'][k]]
-            check_module_name(cr, mods, 'installed')
+            if mods:
+                ids = modobj.search(cr, 1, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
+                if ids:
+                    modobj.button_upgrade(cr, 1, ids)
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
 

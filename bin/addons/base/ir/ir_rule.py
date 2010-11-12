@@ -34,7 +34,7 @@ class ir_rule(osv.osv):
         res = {}
         for rule in self.browse(cr, uid, ids, context):
             eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
-                            'time':time}
+                              'time':time}
             res[rule.id] = eval(rule.domain_force, eval_user_data)
         return res
 
@@ -55,8 +55,8 @@ class ir_rule(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object',select=1, required=True),
         'global': fields.function(_get_value, method=True, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),
         'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
-        'domain_force': fields.char('Domain', size=250),
-        'domain': fields.function(_domain_force_get, method=True, string='Domain', type='char', size=250),
+        'domain_force': fields.text('Domain'),
+        'domain': fields.function(_domain_force_get, method=True, string='Domain', type='text'),
         'perm_read': fields.boolean('Apply For Read'),
         'perm_write': fields.boolean('Apply For Write'),
         'perm_create': fields.boolean('Apply For Create'),
@@ -73,7 +73,7 @@ class ir_rule(osv.osv):
         'global': True,
     }
     _sql_constraints = [
-        ('no_access_rights', 'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)', 'Rule must have at least one checked access right'),
+        ('no_access_rights', 'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)', 'Rule must have at least one checked access right !'),
     ]
     _constraints = [
         (_check_model_obj, 'Rules are not supported for osv_memory objects !', ['model_id'])
@@ -103,16 +103,18 @@ class ir_rule(osv.osv):
                             JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
                             WHERE u_rel.uid = %s) OR r.global)""", (model_name, uid))
         ids = map(lambda x: x[0], cr.fetchall())
-        for rule in self.browse(cr, uid, ids):
-            for group in rule.groups:
-                group_rule.setdefault(group.id, []).append(rule.id)
-            if not rule.groups:
-              global_rules.append(rule.id)
-        dom = self.domain_create(cr, uid, global_rules)
-        dom += ['|'] * (len(group_rule)-1)
-        for value in group_rule.values():
-            dom += self.domain_create(cr, uid, value)
-        return dom
+        if ids:
+            for rule in self.browse(cr, uid, ids):
+                for group in rule.groups:
+                    group_rule.setdefault(group.id, []).append(rule.id)
+                if not rule.groups:
+                  global_rules.append(rule.id)
+            dom = self.domain_create(cr, uid, global_rules)
+            dom += ['|'] * (len(group_rule)-1)
+            for value in group_rule.values():
+                dom += self.domain_create(cr, uid, value)
+            return dom
+        return []
 
     def clear_cache(self, cr, uid):
         cr.execute("""SELECT DISTINCT m.model
@@ -135,7 +137,8 @@ class ir_rule(osv.osv):
     def domain_get(self, cr, uid, model_name, mode='read', context={}):
         dom = self._compute_domain(cr, uid, model_name, mode=mode)
         if dom:
-            return self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
+            query = self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
+            return query.where_clause, query.where_clause_params, query.tables
         return [], [], ['"'+self.pool.get(model_name)._table+'"']
 
     def unlink(self, cr, uid, ids, context=None):

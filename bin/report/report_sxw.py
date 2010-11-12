@@ -19,26 +19,21 @@
 #
 ##############################################################################
 from lxml import etree
-import traceback, sys
 import StringIO
 import cStringIO
 import base64
-import copy
-import locale
 from datetime import datetime
 import os
 import re
 import time
 from interface import report_rml
 import preprocess
-import ir
-import netsvc
-import osv
+import logging
 import pooler
 import tools
-import warnings
 import zipfile
 import common
+from osv.fields import float as float_class, function as function_class
 
 DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -110,7 +105,7 @@ class _date_format(str, _format):
         if self.val:
             if getattr(self,'name', None):
                 date = datetime.strptime(self.name, DT_FORMAT)
-                return date.strftime(self.lang_obj.date_format)
+                return date.strftime(str(self.lang_obj.date_format))
         return self.val
 
 class _dttime_format(str, _format):
@@ -121,8 +116,8 @@ class _dttime_format(str, _format):
     def __str__(self):
         if self.val and getattr(self,'name', None):
             return datetime.strptime(self.name, DHM_FORMAT)\
-                   .strftime("%s %s"%(self.lang_obj.date_format,
-                                      self.lang_obj.time_format))
+                   .strftime("%s %s"%(str(self.lang_obj.date_format),
+                                      str(self.lang_obj.time_format)))
         return self.val
 
 
@@ -174,6 +169,7 @@ class rml_parse(object):
         self.localcontext.update(context)
         self.rml_header = user.company_id.rml_header
         self.rml_header2 = user.company_id.rml_header2
+        self.rml_header3 = user.company_id.rml_header3
         self.logo = user.company_id.logo
         self.name = name
         self._node = None
@@ -239,9 +235,46 @@ class rml_parse(object):
         self.default_lang[lang] = self.lang_dict.copy()
         return True
 
-    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False):
+    def digits_fmt(self, obj=None, f=None, dp=None):
+        digits = self.get_digits(obj, f, dp)
+        return "%%.%df" % (digits, )
+
+    def get_digits(self, obj=None, f=None, dp=None):
+        d = DEFAULT_DIGITS = 2
+        if dp:
+            decimal_precision_obj = self.pool.get('decimal.precision')
+            ids = decimal_precision_obj.search(self.cr, self.uid, [('name', '=', dp)])
+            if ids:
+                d = decimal_precision_obj.browse(self.cr, self.uid, ids)[0].digits
+        elif obj and f:
+            res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16, DEFAULT_DIGITS)))
+            if isinstance(res_digits, tuple):
+                d = res_digits[1]
+            else:
+                d = res_digits(self.cr)[1]
+        elif (hasattr(obj, '_field') and\
+                isinstance(obj._field, (float_class, function_class)) and\
+                obj._field.digits):
+                d = obj._field.digits[1] or DEFAULT_DIGITS
+        return d
+
+    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False):
+        """
+            Assuming 'Account' decimal.precision=3:
+                formatLang(value) -> digits=2 (default)
+                formatLang(value, digits=4) -> digits=4
+                formatLang(value, dp='Account') -> digits=3
+                formatLang(value, digits=5, dp='Account') -> digits=5
+        """
+        if digits is None:
+            if dp:
+                digits = self.get_digits(dp=dp)
+            else:
+                digits = self.get_digits(value)
+
         if isinstance(value, (str, unicode)) and not value:
             return ''
+
         if not self.lang_dict_called:
             self._get_lang_dict()
             self.lang_dict_called = True
@@ -249,26 +282,20 @@ class rml_parse(object):
         if date or date_time:
             if not str(value):
                 return ''
+
             date_format = self.lang_dict['date_format']
             parse_format = DT_FORMAT
             if date_time:
+                value=value.split('.')[0]
                 date_format = date_format + " " + self.lang_dict['time_format']
                 parse_format = DHM_FORMAT
-
-            # filtering time.strftime('%Y-%m-%d')
-#            if type(value) == type(''):
-#                parse_format = DHM_FORMAT
-#                if (not date_time):
-#                    return str(value)
-
             if not isinstance(value, time.struct_time):
-                try:
-                    date = datetime.datetime(str(value), parse_format)
-                except:# sometimes it takes converted values into value, so we dont need conversion.
-                    return str(value)
+                return time.strftime(date_format, time.strptime(value, parse_format))
+
             else:
                 date = datetime(*value.timetuple()[:6])
             return date.strftime(date_format)
+
         return self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
     def repeatIn(self, lst, name,nodes_parent=False):
@@ -286,17 +313,19 @@ class rml_parse(object):
                 if not self._transl_regex.match(piece_list[pn]):
                     source_string = piece_list[pn].replace('\n', ' ').strip()
                     if len(source_string):
-                        translated_string = transl_obj._get_source(self.cr, self.uid, self.name, 'rml', lang, source_string)
+                        translated_string = transl_obj._get_source(self.cr, self.uid, self.name, ('report', 'rml'), lang, source_string)
                         if translated_string:
                             piece_list[pn] = piece_list[pn].replace(source_string, translated_string)
             text = ''.join(piece_list)
         return text
 
     def _add_header(self, rml_dom, header='external'):
-        if header=='external':
-            rml_head =  self.rml_header
-        else:
+        if header=='internal':
             rml_head =  self.rml_header2
+        elif header=='internal landscape':
+            rml_head =  self.rml_header3
+        else:
+            rml_head =  self.rml_header
 
         head_dom = etree.XML(rml_head)
         for tag in head_dom:
@@ -311,6 +340,8 @@ class rml_parse(object):
     def set_context(self, objects, data, ids, report_type = None):
         self.localcontext['data'] = data
         self.localcontext['objects'] = objects
+        self.localcontext['digits_fmt'] = self.digits_fmt
+        self.localcontext['get_digits'] = self.get_digits
         self.datas = data
         self.ids = ids
         self.objects = objects
@@ -321,18 +352,23 @@ class rml_parse(object):
                 self.localcontext.update({'name_space' :common.sxw_namespace})
 
 class report_sxw(report_rml, preprocess.report):
-    def __init__(self, name, table, rml=False, parser=rml_parse, header=True, store=False):
+    def __init__(self, name, table, rml=False, parser=rml_parse, header='external', store=False):
         report_rml.__init__(self, name, table, rml, '')
         self.name = name
         self.parser = parser
         self.header = header
         self.store = store
+        self.internal_header=False
+        if header=='internal' or header=='internal landscape':
+            self.internal_header=True
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = pooler.get_pool(cr.dbname).get(self.table)
         return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context, fields_process=_fields_process)
 
     def create(self, cr, uid, ids, data, context=None):
+        if self.internal_header:
+            context.update({'internal_header':self.internal_header})
         pool = pooler.get_pool(cr.dbname)
         ir_obj = pool.get('ir.actions.report.xml')
         report_xml_ids = ir_obj.search(cr, uid,
@@ -348,6 +384,7 @@ class report_sxw(report_rml, preprocess.report):
                     for key,arg in argv.items():
                         setattr(self, key, arg)
             report_xml = a(title=title, report_type=report_type, report_rml_content=rml, name=title, attachment=False, header=self.header)
+        report_xml.header = self.header
         report_type = report_xml.report_type
         if report_type in ['sxw','odt']:
             fnct = self.create_source_odt
@@ -396,8 +433,8 @@ class report_sxw(report_rml, preprocess.report):
                 result = self.create_single_pdf(cr, uid, [obj.id], data, report_xml, context)
                 if not result:
                     return False
-                try:
-                    if aname:
+                if aname:
+                    try:
                         name = aname+'.'+result[1]
                         pool.get('ir.attachment').create(cr, uid, {
                             'name': aname,
@@ -407,11 +444,9 @@ class report_sxw(report_rml, preprocess.report):
                             'res_id': obj.id,
                             }, context=context
                         )
-                        cr.commit()
-                except Exception,e:
-                     import traceback, sys
-                     tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-                     netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,str(e))
+                    except Exception:
+                        #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
+                        logging.getLogger('report').error('Could not create saved report attachment', exc_info=True)
                 results.append(result)
             if results:
                 if results[0][1]=='pdf':

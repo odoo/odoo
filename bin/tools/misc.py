@@ -24,37 +24,33 @@
 Miscelleanous tools used by OpenERP.
 """
 
-import os, time, sys
 import inspect
-
-from config import config
-
-import zipfile
-import release
-import socket
 import logging
+import os
 import re
-from itertools import islice
-import threading
-from which import which
-
 import smtplib
+import socket
+import sys
+import threading
+import time
+import zipfile
+from datetime import datetime
 from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
 from email.Header import Header
 from email.Utils import formatdate, COMMASPACE
-from email.Utils import formatdate, COMMASPACE
 from email import Encoders
-import netsvc
-
-
+from itertools import islice, izip
+from which import which
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
 else:
     from threading import local
 
-from itertools import izip
+import netsvc
+from config import config
+from lru import LRU
 
 _logger = logging.getLogger('tools')
 
@@ -62,9 +58,7 @@ _logger = logging.getLogger('tools')
 def init_db(cr):
     import addons
     f = addons.get_module_resource('base', 'base.sql')
-    for line in file_open(f).read().split(';'):
-        if (len(line)>0) and (not line.isspace()):
-            cr.execute(line)
+    cr.execute(file_open(f).read())
     cr.commit()
 
     for i in addons.get_modules():
@@ -112,11 +106,12 @@ def init_db(cr):
         id = cr.fetchone()[0]
         cr.execute('insert into ir_module_module \
                 (id, author, website, name, shortdesc, description, \
-                    category_id, state, certificate) \
-                values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (
+                    category_id, state, certificate, web) \
+                values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (
             id, info.get('author', ''),
             info.get('website', ''), i, info.get('name', False),
-            info.get('description', ''), p_id, state, info.get('certificate') or None))
+            info.get('description', ''), p_id, state, info.get('certificate') or None,
+            info.get('web') or False))
         cr.execute('insert into ir_model_data \
             (name,model,module, res_id, noupdate) values (%s,%s,%s,%s,%s)', (
                 'module_meta_information', 'ir.module.module', i, id, True))
@@ -205,18 +200,18 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         subdir2 = (subdir2 != 'addons' or None) and subdir2
 
         for adp in adps:
-          try:
-            if subdir2:
-                fn = os.path.join(adp, subdir2, name)
-            else:
-                fn = os.path.join(adp, name)
-            fn = os.path.normpath(fn)
-            fo = file_open(fn, mode=mode, subdir=None, pathinfo=pathinfo)
-            if pathinfo:
-                return fo, fn
-            return fo
-          except IOError, e:
-            pass
+            try:
+                if subdir2:
+                    fn = os.path.join(adp, subdir2, name)
+                else:
+                    fn = os.path.join(adp, name)
+                fn = os.path.normpath(fn)
+                fo = file_open(fn, mode=mode, subdir=None, pathinfo=pathinfo)
+                if pathinfo:
+                    return fo, fn
+                return fo
+            except IOError:
+                pass
 
     if subdir:
         name = os.path.join(rtp, subdir, name)
@@ -249,7 +244,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
                 if pathinfo:
                     return fo, name
                 return fo
-            except:
+            except Exception:
                 name2 = os.path.normpath(os.path.join(head + '.zip', zipname))
                 pass
     for i in (name2, name):
@@ -350,7 +345,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     html = ustr(html)
 
-    from lxml.etree import Element, tostring
+    from lxml.etree import tostring
     try:
         from lxml.html.soupparser import fromstring
         kwargs = {}
@@ -371,7 +366,6 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     url_index = []
     i = 0
     for link in tree.findall('.//a'):
-        title = link.text
         url = link.get('href')
         if url:
             i += 1
@@ -404,6 +398,13 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
+def generate_tracking_message_id(openobject_id):
+    """Returns a string that can be used in the Message-ID RFC822 header field so we
+       can track the replies related to a given object thanks to the "In-Reply-To" or
+       "References" fields that Mail User Agents will set.
+    """
+    return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
+
 def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False, debug=False):
     """Low-level method to send directly a Message through the configured smtp server.
         :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
@@ -414,8 +415,15 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
         :return: True if the mail was delivered successfully to the smtp,
                  else False (+ exception logged)
     """
+    class WriteToLogger(object):
+        def __init__(self):
+            self.logger = netsvc.Logger()
+
+        def write(self, s):
+            self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
+
     if openobject_id:
-        message['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
+        message['Message-Id'] = generate_tracking_message_id(openobject_id)
 
     try:
         smtp_server = config['smtp_server']
@@ -424,7 +432,7 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
             from mailbox import Maildir
             maildir_path = smtp_server[8:]
             mdir = Maildir(maildir_path,factory=None, create = True)
-            mdir.add(msg.as_string(True))
+            mdir.add(message.as_string(True))
             return True
 
         oldstderr = smtplib.stderr
@@ -451,11 +459,11 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
                 s.quit()
                 if debug:
                     smtplib.stderr = oldstderr
-            except:
+            except Exception:
                 # ignored, just a consequence of the previous exception
                 pass
 
-    except Exception, e:
+    except Exception:
         _logger.error('could not deliver email', exc_info=True)
         return False
 
@@ -484,18 +492,14 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
                          "address or having configured one")
 
     if not email_from: email_from = config.get('email_from', False)
+    email_from = ustr(email_from).encode('utf-8')
 
     if not email_cc: email_cc = []
     if not email_bcc: email_bcc = []
     if not body: body = u''
-    try: email_body = body.encode('utf-8')
-    except (UnicodeEncodeError, UnicodeDecodeError):
-        email_body = body
 
-    try:
-        email_text = MIMEText(email_body.encode('utf8') or '',_subtype=subtype,_charset='utf-8')
-    except:
-        email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
+    email_body = ustr(body).encode('utf-8')
+    email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
 
     if attach: msg = MIMEMultipart()
     else: msg = email_text
@@ -529,13 +533,6 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
             msg.attach(part)
 
-    class WriteToLogger(object):
-        def __init__(self):
-            self.logger = netsvc.Logger()
-
-        def write(self, s):
-            self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
-
     return _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, openobject_id=openobject_id, ssl=ssl, debug=debug)
 
 #----------------------------------------------------------
@@ -547,7 +544,7 @@ def sms_send(user, password, api_id, text, to):
     url = "http://api.urlsms.com/SendSMS.aspx"
     #url = "http://196.7.150.220/http/sendmsg"
     params = urllib.urlencode({'UserID': user, 'Password': password, 'SenderID': api_id, 'MsgText': text, 'RecipientMobileNo':to})
-    f = urllib.urlopen(url+"?"+params)
+    urllib.urlopen(url+"?"+params)
     # FIXME: Use the logger if there is an error
     return True
 
@@ -700,7 +697,7 @@ class cache(object):
 
     __caches = []
 
-    def __init__(self, timeout=None, skiparg=2, multi=None):
+    def __init__(self, timeout=None, skiparg=2, multi=None, size=8192):
         assert skiparg >= 2 # at least self and cr
         if timeout is None:
             self.timeout = config['cache_timeout']
@@ -709,7 +706,7 @@ class cache(object):
         self.skiparg = skiparg
         self.multi = multi
         self.lasttime = time.time()
-        self.cache = {}
+        self.cache = LRU(size)      # TODO take size from config
         self.fun = None
         cache.__caches.append(self)
 
@@ -867,14 +864,14 @@ def ustr(value, hint_encoding='utf-8'):
         try:
             return unicode(value)
         except Exception:
-            raise UnicodeError('unable de to convert %r' % (value,))
+            raise UnicodeError('unable to convert %r' % (value,))
 
     for ln in get_encodings(hint_encoding):
         try:
             return unicode(value, ln)
         except Exception:
             pass
-    raise UnicodeError('unable de to convert %r' % (value,))
+    raise UnicodeError('unable to convert %r' % (value,))
 
 
 def exception_to_unicode(e):
@@ -884,7 +881,7 @@ def exception_to_unicode(e):
         return "\n".join((ustr(a) for a in e.args))
     try:
         return ustr(e)
-    except:
+    except Exception:
         return u"Unknown message"
 
 
@@ -918,9 +915,9 @@ def get_iso_codes(lang):
 
 def get_languages():
     languages={
-        'ab_RU': u'Abkhazian (RU)',
+        'ab_RU': u'Abkhazian / аҧсуа',
         'ar_AR': u'Arabic / الْعَرَبيّة',
-        'bg_BG': u'Bulgarian / български',
+        'bg_BG': u'Bulgarian / български език',
         'bs_BS': u'Bosnian / bosanski jezik',
         'ca_ES': u'Catalan / Català',
         'cs_CZ': u'Czech / Čeština',
@@ -931,48 +928,65 @@ def get_languages():
         'en_GB': u'English (UK)',
         'en_US': u'English (US)',
         'es_AR': u'Spanish (AR) / Español (AR)',
+        'es_BO': u'Spanish (BO) / Español (BO)',
+        'es_CL': u'Spanish (CL) / Español (CL)',
+        'es_CO': u'Spanish (CO) / Español (CO)',
+        'es_CR': u'Spanish (CR) / Español (CR)',
+        'es_DO': u'Spanish (DO) / Español (DO)',
+        'es_EC': u'Spanish (EC) / Español (EC)',
         'es_ES': u'Spanish / Español',
+        'es_GT': u'Spanish (GT) / Español (GT)',
+        'es_HN': u'Spanish (HN) / Español (HN)',
+        'es_MX': u'Spanish (MX) / Español (MX)',
+        'es_NI': u'Spanish (NI) / Español (NI)',
+        'es_PA': u'Spanish (PA) / Español (PA)',
+        'es_PE': u'Spanish (PE) / Español (PE)',
+        'es_PR': u'Spanish (PR) / Español (PR)',
+        'es_PY': u'Spanish (PY) / Español (PY)',
+        'es_SV': u'Spanish (SV) / Español (SV)',
+        'es_UY': u'Spanish (UY) / Español (UY)',
+        'es_VE': u'Spanish (VE) / Español (VE)',
         'et_EE': u'Estonian / Eesti keel',
         'fa_IR': u'Persian / فارس',
-        'fi_FI': u'Finland / Suomi',
+        'fi_FI': u'Finnish / Suomi',
         'fr_BE': u'French (BE) / Français (BE)',
         'fr_CH': u'French (CH) / Français (CH)',
         'fr_FR': u'French / Français',
         'gl_ES': u'Galician / Galego',
-        'gu_IN': u'Gujarati / India',
-        'hi_IN': u'Hindi / India',
+        'gu_IN': u'Gujarati / ગુજરાતી',
+        'hi_IN': u'Hindi / हिंदी',
         'hr_HR': u'Croatian / hrvatski jezik',
         'hu_HU': u'Hungarian / Magyar',
         'id_ID': u'Indonesian / Bahasa Indonesia',
         'it_IT': u'Italian / Italiano',
-        'iu_CA': u'Inuktitut / Canada',
-        'ja_JP': u'Japanese / Japan',
-        'ko_KP': u'Korean / Korea, Democratic Peoples Republic of',
-        'ko_KR': u'Korean / Korea, Republic of',
+        'iu_CA': u'Inuktitut / ᐃᓄᒃᑎᑐᑦ',
+        'ja_JP': u'Japanese / 日本語',
+        'ko_KP': u'Korean (KP) / 한국어 (KP)',
+        'ko_KR': u'Korean (KR) / 한국어 (KR)',
         'lt_LT': u'Lithuanian / Lietuvių kalba',
-        'lv_LV': u'Latvian / Latvia',
-        'ml_IN': u'Malayalam / India',
-        'mn_MN': u'Mongolian / Mongolia',
-        'nb_NO': u'Norwegian Bokmål / Norway',
+        'lv_LV': u'Latvian / latviešu valoda',
+        'ml_IN': u'Malayalam / മലയാളം',
+        'mn_MN': u'Mongolian / монгол',
+        'nb_NO': u'Norwegian Bokmål / Norsk bokmål',
         'nl_NL': u'Dutch / Nederlands',
-        'nl_BE': u'Dutch (Belgium) / Nederlands (Belgïe)',
-        'oc_FR': u'Occitan (post 1500) / France',
+        'nl_BE': u'Flemish (BE) / Vlaams (BE)',
+        'oc_FR': u'Occitan (FR, post 1500) / Occitan',
         'pl_PL': u'Polish / Język polski',
-        'pt_BR': u'Portugese (BR) / português (BR)',
-        'pt_PT': u'Portugese / português',
-        'ro_RO': u'Romanian / limba română',
+        'pt_BR': u'Portugese (BR) / Português (BR)',
+        'pt_PT': u'Portugese / Português',
+        'ro_RO': u'Romanian / română',
         'ru_RU': u'Russian / русский язык',
-        'si_LK': u'Sinhalese / Sri Lanka',
+        'si_LK': u'Sinhalese / සිංහල',
         'sl_SI': u'Slovenian / slovenščina',
         'sk_SK': u'Slovak / Slovenský jazyk',
-        'sq_AL': u'Albanian / Shqipëri',
-        'sr_RS': u'Serbian / Serbia',
+        'sq_AL': u'Albanian / Shqip',
+        'sr_RS': u'Serbian / српски језик',
         'sv_SE': u'Swedish / svenska',
-        'te_IN': u'Telugu / India',
+        'te_IN': u'Telugu / తెలుగు',
         'tr_TR': u'Turkish / Türkçe',
-        'vi_VN': u'Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam',
-        'uk_UA': u'Ukrainian / украї́нська мо́ва',
-        'ur_PK': u'Urdu / Pakistan',
+        'vi_VN': u'Vietnamese / Tiếng Việt',
+        'uk_UA': u'Ukrainian / українська',
+        'ur_PK': u'Urdu / اردو',
         'zh_CN': u'Chinese (CN) / 简体中文',
         'zh_HK': u'Chinese (HK)',
         'zh_TW': u'Chinese (TW) / 正體字',
@@ -982,9 +996,6 @@ def get_languages():
     return languages
 
 def scan_languages():
-#    import glob
-#    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['root_path'],'addons', 'base', 'i18n', '*.po'))]
-#    ret = [(lang, lang_dict.get(lang, lang)) for lang in file_list]
     # Now it will take all languages from get languages function without filter it with base module languages
     lang_dict = get_languages()
     ret = [(lang, lang_dict.get(lang, lang)) for lang in list(lang_dict)]
@@ -1042,7 +1053,6 @@ def logged(f):
 
     @wraps(f)
     def wrapper(*args, **kwargs):
-        import netsvc
         from pprint import pformat
 
         vector = ['Call -> function: %r' % f]
@@ -1104,9 +1114,7 @@ def debug(what):
             --log-level=debug
 
     """
-    import netsvc
     from inspect import stack
-    import re
     from pprint import pformat
     st = stack()[1]
     param = re.split("debug *\((.+)\)", st[4][0].strip())[1].strip()
@@ -1156,9 +1164,6 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 ])
 
 def extract_zip_file(zip_file, outdirectory):
-    import zipfile
-    import os
-
     zf = zipfile.ZipFile(zip_file, 'r')
     out = outdirectory
     for path in zf.namelist():
@@ -1181,7 +1186,6 @@ def detect_ip_addr():
     """
     def _detect_ip_addr():
         from array import array
-        import socket
         from struct import pack, unpack
 
         try:
@@ -1222,7 +1226,7 @@ def detect_ip_addr():
 
     try:
         ip_addr = _detect_ip_addr()
-    except:
+    except Exception:
         ip_addr = 'localhost'
     return ip_addr
 
@@ -1250,7 +1254,7 @@ def get_win32_timezone():
             res = str(_winreg.QueryValueEx(current_tz_key,"StandardName")[0])  # [0] is value, [1] is type code
             _winreg.CloseKey(current_tz_key)
             _winreg.CloseKey(hklm)
-        except:
+        except Exception:
             pass
     return res
 
@@ -1259,11 +1263,9 @@ def detect_server_timezone():
        Defaults to UTC if no working timezone can be found.
        @return: the timezone identifier as expected by pytz.timezone.
     """
-    import time
-    import netsvc
     try:
         import pytz
-    except:
+    except Exception:
         netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
             "Python pytz module is not available. Timezone will be set to UTC by default.")
         return 'UTC'
@@ -1280,7 +1282,7 @@ def detect_server_timezone():
         try:
             f = open("/etc/timezone")
             tz_value = f.read(128).strip()
-        except:
+        except Exception:
             pass
         finally:
             f.close()
@@ -1308,6 +1310,66 @@ def detect_server_timezone():
     netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
         "No valid timezone could be detected, using default UTC timezone. You can specify it explicitly with option 'timezone' in the server configuration.")
     return 'UTC'
+
+def get_server_timezone():
+    # timezone detection is safe in multithread, so lazy init is ok here
+    if (not config['timezone']):
+        config['timezone'] = detect_server_timezone()
+    return config['timezone']
+
+
+DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
+DEFAULT_SERVER_TIME_FORMAT = "%H:%M:%S"
+DEFAULT_SERVER_DATETIME_FORMAT = "%s %s" % (
+    DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_TIME_FORMAT)
+
+def server_to_local_timestamp(src_tstamp_str, src_format, dst_format, dst_tz_name,
+        tz_offset=True, ignore_unparsable_time=True):
+    """
+    Convert a source timestamp string into a destination timestamp string, attempting to apply the
+    correct offset if both the server and local timezone are recognized, or no
+    offset at all if they aren't or if tz_offset is false (i.e. assuming they are both in the same TZ).
+
+    WARNING: This method is here to allow formatting dates correctly for inclusion in strings where
+             the client would not be able to format/offset it correctly. DO NOT use it for returning
+             date fields directly, these are supposed to be handled by the client!!
+
+    @param src_tstamp_str: the str value containing the timestamp in the server timezone.
+    @param src_format: the format to use when parsing the server timestamp.
+    @param dst_format: the format to use when formatting the resulting timestamp for the local/client timezone.
+    @param dst_tz_name: name of the destination timezone (such as the 'tz' value of the client context)
+    @param ignore_unparsable_time: if True, return False if src_tstamp_str cannot be parsed
+                                   using src_format or formatted using dst_format.
+
+    @return: local/client formatted timestamp, expressed in the local/client timezone if possible
+            and if tz_offset is true, or src_tstamp_str if timezone offset could not be determined.
+    """
+    if not src_tstamp_str:
+        return False
+
+    res = src_tstamp_str
+    if src_format and dst_format:
+        # find out server timezone
+        server_tz = get_server_timezone()
+        try:
+            # dt_value needs to be a datetime.datetime object (so no time.struct_time or mx.DateTime.DateTime here!)
+            dt_value = datetime.strptime(src_tstamp_str, src_format)
+            if tz_offset and dst_tz_name:
+                try:
+                    import pytz
+                    src_tz = pytz.timezone(server_tz)
+                    dst_tz = pytz.timezone(dst_tz_name)
+                    src_dt = src_tz.localize(dt_value, is_dst=True)
+                    dt_value = src_dt.astimezone(dst_tz)
+                except Exception:
+                    pass
+            res = dt_value.strftime(dst_format)
+        except Exception:
+            # Normal ways to end up here are if strptime or strftime failed
+            if not ignore_unparsable_time:
+                return False
+    return res
 
 
 def split_every(n, iterable, piece_maker=tuple):
@@ -1337,12 +1399,31 @@ class upload_data_thread(threading.Thread):
             fp = urllib.urlopen('http://www.openerp.com/scripts/survey.php', args)
             fp.read()
             fp.close()
-        except:
+        except Exception:
             pass
 
 def upload_data(email, data, type='SURVEY'):
     a = upload_data_thread(email, data, type)
     a.start()
     return True
+
+
+# port of python 2.6's attrgetter with support for dotted notation
+def resolve_attr(obj, attr):
+    for name in attr.split("."):
+        obj = getattr(obj, name)
+    return obj
+
+def attrgetter(*items):
+    if len(items) == 1:
+        attr = items[0]
+        def g(obj):
+            return resolve_attr(obj, attr)
+    else:
+        def g(obj):
+            return tuple(resolve_attr(obj, attr) for attr in items)
+    return g
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

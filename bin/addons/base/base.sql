@@ -148,7 +148,6 @@ CREATE TABLE res_users (
     context_lang varchar(64) default '',
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
-    action_id int,
     company_id int,
     primary key(id)
 );
@@ -159,20 +158,6 @@ CREATE TABLE res_groups (
     name varchar(64) NOT NULL,
     primary key(id)
 );
-
-create table res_roles (
-    id serial NOT NULL,
-    parent_id int references res_roles on delete set null,
-    name varchar(64) NOT NULL,
-    primary key(id)
-);
-
-CREATE TABLE res_roles_users_rel (
-    uid integer NOT NULL references res_users on delete cascade,
-    rid integer NOT NULL references res_roles on delete cascade
-);
-create index res_roles_users_rel_uid_idx on res_roles_users_rel (uid);
-create index res_roles_users_rel_rid_idx on res_roles_users_rel (rid);
 
 CREATE TABLE res_groups_users_rel (
     uid integer NOT NULL references res_users on delete cascade,
@@ -223,7 +208,7 @@ create table wkf_transition
     trigger_expr_id varchar(128) default NULL,
 
     signal varchar(64) default null,
-    role_id int references res_roles on delete set null,
+    group_id int references res_groups on delete set null,
 
     primary key(id)
 );
@@ -302,6 +287,7 @@ CREATE TABLE ir_module_module (
     certificate character varying(64),
     description text,
     demo boolean default False,
+    web boolean DEFAULT FALSE,
     primary key(id)
 );
 ALTER TABLE ir_module_module add constraint name_uniq unique (name);
@@ -344,7 +330,7 @@ CREATE TABLE ir_model_data (
 -- Users
 ---------------------------------
 
-insert into res_users (id,login,password,name,action_id,active,company_id) values (1,'admin',NULL,'Administrator',NULL,True,1);
+insert into res_users (id,login,password,name,active,company_id,context_lang) values (1,'admin','admin','Administrator',True,1,'en_US');
 insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_root','base','res.users',True,1);
 
 -- Compatibility purpose, to remove V6.0

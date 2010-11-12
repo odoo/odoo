@@ -27,8 +27,8 @@ import pooler
 class ir_sequence_type(osv.osv):
     _name = 'ir.sequence.type'
     _columns = {
-        'name': fields.char('Sequence Name',size=64, required=True),
-        'code': fields.char('Sequence Code',size=32, required=True),
+        'name': fields.char('Name',size=64, required=True),
+        'code': fields.char('Code',size=32, required=True),
     }
 ir_sequence_type()
 
@@ -39,13 +39,13 @@ def _code_get(self, cr, uid, context={}):
 class ir_sequence(osv.osv):
     _name = 'ir.sequence'
     _columns = {
-        'name': fields.char('Sequence Name',size=64, required=True),
-        'code': fields.selection(_code_get, 'Sequence Code',size=64, required=True),
+        'name': fields.char('Name',size=64, required=True),
+        'code': fields.selection(_code_get, 'Code',size=64, required=True),
         'active': fields.boolean('Active'),
-        'prefix': fields.char('Prefix',size=64),
-        'suffix': fields.char('Suffix',size=64),
-        'number_next': fields.integer('Next Number', required=True),
-        'number_increment': fields.integer('Increment Number', required=True),
+        'prefix': fields.char('Prefix',size=64, help="Prefix value of the record for the sequence"),
+        'suffix': fields.char('Suffix',size=64, help="Suffix value of the record for the sequence"),
+        'number_next': fields.integer('Next Number', required=True, help="Next number of this sequence"),
+        'number_increment': fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
         'padding' : fields.integer('Number padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
         'company_id': fields.many2one('res.company', 'Company'),
     }

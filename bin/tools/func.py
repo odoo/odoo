@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,17 +16,17 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-__all__ = ['partial', 'wraps', 'update_wrapper']
+__all__ = ['partial', 'wraps', 'update_wrapper', 'synchronized']
 
 try:
     from functools import partial, wraps, update_wrapper
 except ImportError:
     # The functools module doesn't exist in python < 2.5
-    # Code taken from python 2.5 
+    # Code taken from python 2.5
     # http://svn.python.org/view/python/tags/r254/Lib/functools.py?view=markup
 
     def partial(fun, *args, **kwargs):
@@ -75,4 +76,20 @@ except ImportError:
         """
         return partial(update_wrapper, wrapped=wrapped,
                        assigned=assigned, updated=updated)
+
+
+
+def synchronized(lock_attr='_lock'):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            lock = getattr(self, lock_attr)
+            try:
+                lock.acquire()
+                return func(self, *args, **kwargs)
+            finally:
+                lock.release()
+        return wrapper
+    return decorator
+
 

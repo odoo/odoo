@@ -69,22 +69,27 @@ class ir_ui_menu(osv.osv):
 
     def create_shortcut(self, cr, uid, values, context={}):
         dataobj = self.pool.get('ir.model.data')
-        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut', context)
-        shortcut_menu_id  = int(dataobj.read(cr, uid, menu_id, ['res_id'], context)['res_id'])
-        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, values, context)
+        new_context = context.copy()
+        for key in context:
+            if key.startswith('default_'):
+                del new_context[key]
+
+        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut', new_context)
+        shortcut_menu_id  = int(dataobj.read(cr, uid, menu_id, ['res_id'], new_context)['res_id'])
+        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, values, new_context)
         menu_data = {'name':values['name'],
                     'sequence':10,
                     'action':'ir.actions.act_window,'+str(action_id),
                     'parent_id':shortcut_menu_id,
                     'icon':'STOCK_JUSTIFY_FILL'}
-        menu_id =  self.pool.get('ir.ui.menu').create(cr, uid, menu_data)
+        menu_id =  self.pool.get('ir.ui.menu').create(cr, 1, menu_data)
         sc_data= {'name':values['name'], 'sequence': 1,'res_id': menu_id }
-        sc_menu_id = self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, context)
+        sc_menu_id = self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, new_context)
 
         user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
         key = (cr.dbname, shortcut_menu_id, tuple(user_groups))
         self._cache[key] = True
-        return True
+        return action_id
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
                context=None, count=False):
@@ -125,7 +130,6 @@ class ir_ui_menu(osv.osv):
                 data = menu.action
                 if data:
                     model_field = { 'ir.actions.act_window':    'res_model',
-                                    'ir.actions.report.custom': 'model',
                                     'ir.actions.report.xml':    'model',
                                     'ir.actions.wizard':        'model',
                                     'ir.actions.server':        'model_id',
@@ -183,7 +187,7 @@ class ir_ui_menu(osv.osv):
         rex=re.compile('\([0-9]+\)')
         concat=rex.findall(datas['name'])
         if concat:
-            next_num=eval(concat[0])+1
+            next_num=int(concat[0])+1
             datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
         else:
             datas['name']=datas['name']+'(1)'
@@ -256,6 +260,8 @@ class ir_ui_menu(osv.osv):
                 return False
             level -= 1
         return True
+    
+    
 
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
@@ -264,7 +270,7 @@ class ir_ui_menu(osv.osv):
         'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
         'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
-                "If this field is empty, Open ERP will compute visibility based on the related object's read access."),
+                "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, method=True,
             string='Complete Name', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
@@ -272,7 +278,6 @@ class ir_ui_menu(osv.osv):
         'action': fields.function(_action, fnct_inv=_action_inv,
             method=True, type='reference', string='Action',
             selection=[
-                ('ir.actions.report.custom', 'ir.actions.report.custom'),
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
                 ('ir.actions.wizard', 'ir.actions.wizard'),
@@ -286,7 +291,7 @@ class ir_ui_menu(osv.osv):
     _defaults = {
         'icon' : lambda *a: 'STOCK_OPEN',
         'icon_pict': lambda *a: ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
-        'sequence' : lambda *a: 10
+        'sequence' : lambda *a: 10,
     }
     _order = "sequence,id"
 ir_ui_menu()
