@@ -47,7 +47,7 @@ class outlook_installer(osv.osv_memory):
 
     _defaults = {
         'outlook' : True,
-        'name' : 'Openerp-Outlook-Addin v1.exe',
+        'name' : 'Openerp-Outlook-Addin.exe',
         'doc_name' : 'Installation Guide to OpenERP Outlook Plug-in.doc',
         'description' : """
 * Save the Outlook plug­-in.
