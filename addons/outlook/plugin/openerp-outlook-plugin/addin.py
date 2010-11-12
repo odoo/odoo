@@ -24,45 +24,33 @@
 ##############################################################################
 
 from win32com import universal
-from win32com.server.exception import COMException
 from win32com.client import gencache, DispatchWithEvents
-import winerror
 import pythoncom
 from win32com.client import constants
 import sys
 import os
 from win32com.client import Dispatch
 import win32con
-
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))    #outlook
 sys.path.append(os.path.abspath(__file__))                     #outlook/addin
-
 import manager
 from win32com.client import CastTo
 import win32ui
-from tiny_xmlrpc import *
-
+from tiny_xmlrpc import XMLRpcConn
 import locale
 locale.setlocale(locale.LC_NUMERIC, "C")
-
 # Support for COM objects we use.
 gencache.EnsureModule('{00062FFF-0000-0000-C000-000000000046}', 0, 9, 0, bForDemand=True) # Outlook 9
 gencache.EnsureModule('{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}', 0, 2, 1, bForDemand=True) # Office 9
-
 # The TLB defiining the interfaces we implement
 universal.RegisterInterfaces('{AC0714F2-3D04-11D1-AE7D-00A0C90F26F4}', 0, 1, 0, ["_IDTExtensibility2"])
-
 global NewConn
-
 # Retrieves registered XMLRPC connection
 def GetConn():
     d=Dispatch("Python.OpenERP.XMLRpcConn")
-    mngr = manager.GetManager()
     return d
-
-class ButtonEvent:
+class Configuration:
     def OnClick(self, button, cancel):
-        import win32ui
         try:
             mngr = manager.GetManager()
             mngr.ShowManager()
@@ -91,8 +79,6 @@ class ViewPartners:
 #
 class OpenPartner:
 	def OnClick(self, button, cancel):
-		import win32ui
-		from manager import ustr
 		mngr = manager.GetManager()
 		data=mngr.LoadConfig()
 		outlook = Dispatch("Outlook.Application")
@@ -170,7 +156,7 @@ class OutlookAddin:
 
             item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
-            item = self.menu_bar_Button = DispatchWithEvents(item, ButtonEvent)
+            item = self.menu_bar_Button = DispatchWithEvents(item, Configuration)
             item.Caption="OpenERP Configuration"
             item.TooltipText = "Click to configure OpenERP"
             item.Enabled = True
@@ -192,7 +178,6 @@ class OutlookAddin:
             item.Enabled = True
 
             # Adding Menu in Menu Bar to the Web Menu of the Outlook
-            toolbaradvance = bars.Item("Advanced")
             toolbarweb = bars.Item("Web")
 
             item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
@@ -205,29 +190,36 @@ class OutlookAddin:
             item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
             item = self.toolbarButtonOpenDocument = DispatchWithEvents(item, OpenDocument)
             item.Caption = "Open Document"
-            item.TooltipText = "Click to Open Document that ha been pushed to server."
+            item.TooltipText = "Click to Open Document that has been pushed to server."
             item.Enabled = True
 
             # Hook events for the item
-            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
-            item = self.toolbarButtonPartner = DispatchWithEvents(item, ViewPartners)
-            item.Caption = "Open Contact"
-            item.TooltipText = "Click to Open OpenERP Partner Contact Information."
-            item.Enabled = True
+#            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
+#            item = self.toolbarButtonPartner = DispatchWithEvents(item, ViewPartners)
+#            item.Caption = "Open Contact"
+#            item.TooltipText = "Click to Open OpenERP Partner Contact Information."
+#            item.Enabled = True
 
 
-            item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
-            # Hook events for the item
-            item = self.menu_bar_viewpartner_Button = DispatchWithEvents(item, ViewPartners)
-            item.Caption = "Open Contact"
-            item.TooltipText = "Click to Open Partner detail"
-            item.Enabled = True
+#            item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
+#            # Hook events for the item
+#            item = self.menu_bar_viewpartner_Button = DispatchWithEvents(item, ViewPartners)
+#            item.Caption = "Open Contact"
+#            item.TooltipText = "Click to Open Partner detail"
+#            item.Enabled = True
 
             item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.menu_bar_openpartner_Button = DispatchWithEvents(item, OpenPartner)
             item.Caption = "Open Partner"
             item.TooltipText = "Click to Open Partner detail"
+            item.Enabled = True
+
+            item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
+            # Hook events for the item
+            item = self.menu_bar_opendocument_Button = DispatchWithEvents(item, OpenDocument)
+            item.Caption = "Open Document"
+            item.TooltipText = "Click to Open Document that has been pushed to server."
             item.Enabled = True
 
 
@@ -259,14 +251,14 @@ def UnregisterAddin(klass):
     import _winreg
     try:
         _winreg.DeleteKey(_winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Office\\Outlook\\Addins\\" + klass._reg_progid_)
-    except WindowsError:
+    except:
         pass
 
 def UnregisterXMLConn(klass):
     import _winreg
     try:
         _winreg.DeleteKey(_winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Office\\Outlook\\Addins\\XMLConnection" + klass._reg_progid_)
-    except WindowsError:
+    except:
         pass
 
 def RegisterXMLConn(klass):
@@ -279,7 +271,6 @@ def RegisterXMLConn(klass):
     _winreg.SetValueEx(subkey, "FriendlyName", 0, _winreg.REG_SZ, klass._reg_progid_)
 
 if __name__ == '__main__':
-
     import win32com.server.register
     NewConn=XMLRpcConn()
     win32com.server.register.UseCommandLine(OutlookAddin)

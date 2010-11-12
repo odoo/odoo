@@ -201,7 +201,7 @@ class crm_case(object):
                 if stage.on_change:
                     data.update({'probability': stage.probability})
             self.write(cr, uid, [case.id], data, context=context)
-        return True
+        return prev_stage
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
