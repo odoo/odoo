@@ -25,7 +25,6 @@
 
 from processors import *
 from opt_processors import *
-import sys
 import os
 import addin
 from dialogs import ShowDialog, MakePropertyPage
@@ -301,7 +300,7 @@ class WEBOKButtonProcessor(ButtonProcessor):
         server = win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[0])
         try:
             port = int(win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[1]))
-        except ValueError, e:
+        except ValueError:
             win32ui.MessageBox("Port should be an integer", "OpenERP Connection", flag_excl)
             return
         if server.strip() == "" or server.strip() == "http:\\\\":
@@ -412,7 +411,6 @@ class DialogCommand(ButtonProcessor):
 def TestConnection(btnProcessor,*args):
     server = NewConn.getitem('_server')
     port = NewConn.getitem('_port')
-    url = NewConn.getitem('_uri')
     NewConn.GetDBList()
     if str(NewConn.getitem('_running')) == 'False':
         btnProcessor.window.LoadAllControls()
@@ -590,7 +588,6 @@ def DeleteSelectedObjects(btnProcessor,*args):
         for n in extra:
             nombre = n.tostring()
             sel_text = nombre[0:r]
-        s = win32gui.SendMessage(hwndList, commctrl.LVM_DELETEITEM, sel)
         try:
             NewConn.DeleteObject(sel_text)
         except Exception,e:
@@ -622,8 +619,6 @@ def GetSelectedItems(hwndList):
 
 def MakeAttachment(btnProcessor,*args):
     #Check if server running or user logged in
-    from win32com.client import Dispatch
-    import win32com
     b = check()
     if not b:
         return
@@ -712,7 +707,7 @@ def GetSearchText(txtProcessor,*args):
     mail = ex.Selection.Item(1)
     try:
         search_text = ustr(mail.SenderEmailAddress).encode('iso-8859-1')
-    except Exception,e:
+    except Exception:
         pass
     win32gui.SendMessage(search_box, win32con.WM_SETTEXT, 0, search_text)
     txtProcessor.init_done=True
@@ -837,7 +832,6 @@ def CreateContact(btnProcessor,*args):
         win32ui.MessageBox("Contact name or Email id is Missing\nPlease fill those information", "Create Contact", flag_error)
         return
     try:
-        id = NewConn.CreateContact(str(res))
         if not partner:
             msg="New contact created."
         else:
@@ -860,7 +854,6 @@ def SetAllText(txtProcessor,*args):
     url = NewConn.getitem('_uri')
     tbox = txtProcessor.GetControl()
     win32gui.SendMessage(tbox, win32con.WM_SETTEXT, 0, str(url))
-    k=win32gui.GetDlgItemText(txtProcessor.window.hwnd, txtProcessor.control_id)
     uname = NewConn.getitem('_uname')
     tbox = txtProcessor.GetControl(txtProcessor.other_ids[0])
     win32gui.SendMessage(tbox, win32con.WM_SETTEXT, 0, str(uname))
@@ -926,9 +919,6 @@ def SetDefaultList(listProcessor,*args):
 
 def SetDefaultContact(txtProcessor,*args):
     # Acquiring the control of the text box
-    txt_name = txtProcessor.GetControl()
-    txt_email = txtProcessor.GetControl(txtProcessor.other_ids[0])
-
     global name
     global email
     global partner_ref
@@ -958,7 +948,7 @@ def SetDefaultContact(txtProcessor,*args):
         mail = GetMail(txtProcessor)
         name = ustr(mail.SenderName).encode('iso-8859-1')
         email = ustr(mail.SenderEmailAddress).encode('iso-8859-1')
-    except Exception,e:
+    except Exception:
         pass
 
     win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.control_id,name)
@@ -968,7 +958,6 @@ def SetDefaultContact(txtProcessor,*args):
 
 def setCheckList(groupProcessor,*args):
     try:
-        child_style = win32con.BS_AUTOCHECKBOX | win32con.WS_TABSTOP
         hinst = win32gui.dllhandle
         objs = groupProcessor.window.manager.config['objects']
         ins_objs = NewConn.GetAllObjects()
@@ -977,7 +966,6 @@ def setCheckList(groupProcessor,*args):
         cnt=0
         id=4001
         id1=6001
-        load_bmp_flags=win32con.LR_LOADFROMFILE | win32con.LR_LOADTRANSPARENT
         if groupProcessor.init_done:
            return
         else:
@@ -1049,7 +1037,6 @@ def set_name_email(dialogProcessor,*args):
 #setting values to the appropriate text areas
 def GetDefaultEmail(txtProcessor,*args):
 
-    from win32com.client import Dispatch
     import win32con
     b = check()
     global partner_ref
@@ -1093,7 +1080,7 @@ def GetDefaultEmail(txtProcessor,*args):
     #Fetching Sender MailID from Selected Mail
     try:
         search_partner_text = ustr(mail.SenderEmailAddress).encode('iso-8859-1')
-    except Exception,e:
+    except Exception:
         win32ui.MessageBox("Error In reading email ID from Email ","Open Contact", flag_error)
         pass
     win32gui.SendMessage(search_partner_box, win32con.WM_SETTEXT, 0, search_partner_text)
@@ -1320,7 +1307,7 @@ def SelectPartnerFromList(btnProcessor,*args):
             return
         try:
             partner_ref = str(sel_text)
-        except Exception,e:
+        except Exception:
             pass
         win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
         return
@@ -1362,7 +1349,6 @@ def ConnectWebServer(btnProcessor, *args):
 
 
 def OpenPartnerForm(txtProcessor,*args):
-    from win32com.client import Dispatch
     import win32con
     b = check()
     if not b:
@@ -1378,7 +1364,7 @@ def OpenPartnerForm(txtProcessor,*args):
     	partner_text = ustr(mail.SenderName).encode('iso-8859-1')
         sender_mail = ustr(mail.SenderEmailAddress).encode('iso-8859-1')
 
-    except Exception,e:
+    except Exception:
     	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< Error in reading email.>")
     	pass
     vals = NewConn.SearchPartner(sender_mail)
@@ -1405,12 +1391,10 @@ def OpenPartnerForm(txtProcessor,*args):
     txtProcessor.init_done=True
 
 def SerachOpenDocuemnt(txtProcessor,*args):
-    from win32com.client import Dispatch
     import win32con
     import win32ui
     import win32com
-    from win32com.mapi import mapi, mapiutil, mapitags
-    import pythoncom
+    from win32com.mapi import  mapitags
     b = check()
     if not b:
         return
@@ -1431,7 +1415,6 @@ def SerachOpenDocuemnt(txtProcessor,*args):
 
     message_id = None
     try:
-        outlook = win32com.client.Dispatch("Outlook.Application")
         session = win32com.client.Dispatch("MAPI.session")
         session.Logon('Outlook')
         objMessage = session.GetMessage(mail.EntryID, mail.Parent.StoreID)
@@ -1542,7 +1525,7 @@ def SelectCountryFromList(btnProcessor,*args):
             country_ref = str(sel_text)
             new_con_country = str(sel_text)
             search_country = str(sel_text)
-        except Exception,e:
+        except Exception:
             pass
         win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
         return
@@ -1631,7 +1614,7 @@ def SelectStateFromList(btnProcessor,*args):
             state_ref = str(sel_text)
             new_con_state = str(sel_text)
             win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
-        except Exception,e:
+        except Exception:
             pass
 
         return

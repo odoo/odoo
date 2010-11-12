@@ -24,9 +24,7 @@
 ##############################################################################
 
 from win32com import universal
-from win32com.server.exception import COMException
 from win32com.client import gencache, DispatchWithEvents
-import winerror
 import pythoncom
 from win32com.client import constants
 import sys
@@ -50,11 +48,9 @@ global NewConn
 # Retrieves registered XMLRPC connection
 def GetConn():
     d=Dispatch("Python.OpenERP.XMLRpcConn")
-    mngr = manager.GetManager()
     return d
 class Configuration:
     def OnClick(self, button, cancel):
-        import win32ui
         try:
             mngr = manager.GetManager()
             mngr.ShowManager()
@@ -83,8 +79,6 @@ class ViewPartners:
 #
 class OpenPartner:
 	def OnClick(self, button, cancel):
-		import win32ui
-		from manager import ustr
 		mngr = manager.GetManager()
 		data=mngr.LoadConfig()
 		outlook = Dispatch("Outlook.Application")
@@ -184,7 +178,6 @@ class OutlookAddin:
             item.Enabled = True
 
             # Adding Menu in Menu Bar to the Web Menu of the Outlook
-            toolbaradvance = bars.Item("Advanced")
             toolbarweb = bars.Item("Web")
 
             item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)

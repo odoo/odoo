@@ -245,7 +245,7 @@ class document_file(osv.osv):
         # files to be unlinked, update the db (safer to do first, can be
         # rolled back) and then unlink the files. The list wouldn't exist
         # after we discard the objects
-
+        ids = self.search(cr, uid, [('id','in',ids)])
         for f in self.browse(cr, uid, ids, context):
             # TODO: update the node cache
             par = f.parent_id
