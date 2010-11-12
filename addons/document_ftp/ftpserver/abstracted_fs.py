@@ -150,7 +150,7 @@ class abstracted_fs(object):
                 return ret
         except EnvironmentError:
             raise
-        except Exception,e:
+        except Exception:
             self._log.exception('Cannot locate item %s at node %s', objname, repr(node))
             pass
 

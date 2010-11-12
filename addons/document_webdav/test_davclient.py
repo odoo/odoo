@@ -32,7 +32,6 @@
 # code taken from the 'http-client.py' script:
 # http://git.hellug.gr/?p=xrg/openerp;a=history;f=tests/http-client.py;hb=refs/heads/xrg-60
 
-import re
 import gzip
 import logging
 import xml.dom.minidom
