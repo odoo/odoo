@@ -9,10 +9,8 @@
     <record id="base.group_hr_user" model="res.groups">
         <field name="name">Human Resources / User</field>
     </record>
-    
-    <record id="base.user_demo" model="res.users">
-        <field eval="[(4, ref('base.group_hr_user'))]" name="groups_id"/>
-    </record>
-
+	<record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4, ref('base.group_hr_user'))]"/>
+     </record>
 </data>
 </openerp>

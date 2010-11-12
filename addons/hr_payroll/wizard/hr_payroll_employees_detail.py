@@ -22,7 +22,6 @@
 import time
 
 from osv import fields, osv
-from tools.translate import _
 
 class hr_payroll_employees_detail(osv.osv_memory):
 
@@ -43,8 +42,8 @@ class hr_payroll_employees_detail(osv.osv_memory):
 
    _defaults = {
 #        'fiscalyear_id':_get_fiscalyear,
-        'date_from':time.strftime('%Y-01-01'),
-        'date_to':time.strftime('%Y-%m-%d'),
+        'date_from': lambda *a: time.strftime('%Y-01-01'),
+        'date_to': lambda *a: time.strftime('%Y-%m-%d'),
 
     }
 
@@ -55,7 +54,7 @@ class hr_payroll_employees_detail(osv.osv_memory):
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
          @param context: A standard dictionary
-         @return : return report
+         @return: return report
         """
         if context is None:
             context = {}
