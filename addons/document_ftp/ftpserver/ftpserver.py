@@ -2223,6 +2223,7 @@ class FTPHandler(asynchat.async_chat):
             if self.restart_position:
                 mode = 'r+'
             fd = self.try_as_current_user(self.fs.create, (datacr, datacr[2], mode + 'b'))
+            assert fd
         except FTPExceptionSent:
             self.fs.close_cr(datacr)
             return
