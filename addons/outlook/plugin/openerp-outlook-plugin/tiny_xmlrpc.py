@@ -68,16 +68,16 @@ class XMLRpcConn(object):
         self._server=server
         self._port=port
         self._uri=uri
-    	self._obj_list=[]
-    	self._dbname=''
-    	self._uname='admin'
-    	self._pwd='a'
-    	self._login=False
-    	self._running=False
-    	self._uid=False
-    	self._iscrm=True
-    	self.partner_id_list=None
-    	self.protocol=None
+        self._obj_list=[]
+        self._dbname=''
+        self._uname='admin'
+        self._pwd='a'
+        self._login=False
+        self._running=False
+        self._uid=False
+        self._iscrm=True
+        self.partner_id_list=None
+        self.protocol=None
 
     def getitem(self, attrib):
     	v=self.__getattribute__(attrib)
@@ -200,7 +200,6 @@ class XMLRpcConn(object):
             if attachments:
             	result = self.MakeAttachment([rec], mail)
             attachment_ids = result.get(model, {}).get(res_id, [])
-            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','history',model, res_id, msg, attachment_ids)
             new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
             flag = True
 
@@ -394,7 +393,6 @@ class XMLRpcConn(object):
     	address_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'search', [('email','=',ustr(email))])
     	if not partner_id or not address_id or not country_id or not state_id:
     		return flag
-    	address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address','read',address_id[0],['id','partner_id','state_id','country_id'])
     	vals_res_address={
     					   'partner_id' : partner_id[0],
     					   'name' : new_dict['name'],

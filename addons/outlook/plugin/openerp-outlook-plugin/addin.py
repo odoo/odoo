@@ -251,14 +251,14 @@ def UnregisterAddin(klass):
     import _winreg
     try:
         _winreg.DeleteKey(_winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Office\\Outlook\\Addins\\" + klass._reg_progid_)
-    except WindowsError:
+    except:
         pass
 
 def UnregisterXMLConn(klass):
     import _winreg
     try:
         _winreg.DeleteKey(_winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Office\\Outlook\\Addins\\XMLConnection" + klass._reg_progid_)
-    except WindowsError:
+    except:
         pass
 
 def RegisterXMLConn(klass):
