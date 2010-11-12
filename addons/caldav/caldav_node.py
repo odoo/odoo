@@ -19,17 +19,15 @@
 #
 ##############################################################################
 
-import time
 from document_webdav import nodes
 from document.nodes import _str2time, nodefd_static
 import logging
-import StringIO
 from orm_utils import get_last_modified
 
 try:
-    from tools.dict_tools import dict_merge, dict_merge2
+    from tools.dict_tools import  dict_merge2
 except ImportError:
-    from document.dict_tools import dict_merge, dict_merge2
+    from document.dict_tools import  dict_merge2
 
 # TODO: implement DAV-aware errors, inherit from IOError
 
@@ -392,7 +390,7 @@ class node_calendar(nodes.node_class):
         try:
             calendar = calendar_obj.browse(cr, uid, self.calendar_id, context=ctx)
             return calendar.description or calendar.name
-        except Exception, e:
+        except Exception:
             return None
 
     def _get_dav_supported_report_set(self, cr):

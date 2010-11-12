@@ -23,7 +23,6 @@
 from osv import osv, fields
 from osv.orm import except_orm
 
-import os
 import nodes
 from tools.translate import _
 
@@ -217,7 +216,6 @@ class document_directory(osv.osv):
         """Check what permission user 'uid' has on directory 'id'
         """
         assert len(ids) == 1
-        id = ids[0]
 
         res = 0
         for pperms in [('read', 5), ('write', 2), ('unlink', 8)]:

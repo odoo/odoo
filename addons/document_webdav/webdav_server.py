@@ -28,7 +28,6 @@
 
 
 import netsvc
-import tools
 from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
@@ -37,7 +36,7 @@ from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
 import re
-from string import atoi,split
+from string import atoi
 from DAV.errors import *
 # from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
 
@@ -99,7 +98,6 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         """ Our uri scheme removes the /webdav/ component from there, so we
         need to mangle the header, too.
         """
-        dest = self.headers['Destination']
         up = urlparse.urlparse(urllib.unquote(self.headers['Destination']))
         if up.path.startswith(self.davpath):
             self.headers['Destination'] = up.path[len(self.davpath):]

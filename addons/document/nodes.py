@@ -542,7 +542,7 @@ class node_dir(node_database):
             for dfld in dirr.dctx_ids:
                 try:
                     self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
-                except Exception:
+                except Exception,e:
                     print "Cannot eval %s" % dfld.expr
                     print e
                     pass
@@ -907,7 +907,7 @@ class node_res_obj(node_class):
             for fld,expr in self.dctx_dict.items():
                 try:
                     self.dctx[fld] = safe_eval(expr, dc2)
-                except Exception:
+                except Exception,e:
                     print "Cannot eval %s for %s" % (expr, fld)
                     print e
                     pass
