@@ -24,7 +24,7 @@ import decimal_precision as dp
 
 import math
 from _common import rounding
-import re  
+import re
 from tools.translate import _
 
 def is_pair(x):
@@ -649,7 +649,7 @@ class product_supplierinfo(osv.osv):
         return res and res[0] or False
 
     _columns = {
-        'name' : fields.many2one('res.partner', 'Supplier', required=True, ondelete='cascade', help="Supplier of this product"),
+        'name' : fields.many2one('res.partner', 'Supplier', required=True,domain = [('supplier','=',True)], ondelete='cascade', help="Supplier of this product"),
         'product_name': fields.char('Supplier Product Name', size=128, help="This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Supplier Product Code', size=64, help="This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Sequence', help="Assigns the priority to the list of product supplier."),
