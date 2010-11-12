@@ -34,10 +34,12 @@ class document_ftp_browse(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         res = {}
         if 'url' in fields:
+            print "fieldsdaas",fields
             user_pool = self.pool.get('res.users')
             current_user = user_pool.browse(cr, uid, uid, context=context)
             data_pool = self.pool.get('ir.model.data')
             aid = data_pool._get_id(cr, uid, 'document_ftp', 'action_document_browse')
+            print "aidddddddd",aid
             aid = data_pool.browse(cr, uid, aid, context=context).res_id
             ftp_url = self.pool.get('ir.actions.url').browse(cr, uid, aid, context=context)
             url = ftp_url.url and ftp_url.url.split('ftp://') or []
@@ -51,6 +53,7 @@ class document_ftp_browse(osv.osv_memory):
     def browse_ftp(self, cr, uid, ids, context):
         data_id = ids and ids[0] or False
         data = self.browse(cr, uid, data_id, context)
+        print "browseeeeeeeee",data
         final_url = data.url
         return {
         'type': 'ir.actions.act_url',

@@ -60,20 +60,11 @@ class project_task(osv.osv):
         if not context:
             context = {}
 
-        data_obj = self.pool.get('ir.model.data')
-
+        data_pool = self.pool.get('ir.model.data')
         value = {}
-
-        task_form_ids = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
-        task_tree_ids = data_obj._get_id(cr, uid, 'project', 'view_task_tree2')
-        task_calendar_ids = data_obj._get_id(cr, uid, 'project', 'view_task_calendar')
-        
-        if task_form_ids:
-            task_form_id = data_obj.browse(cr, uid, task_form_ids, context=context).res_id
-        if task_tree_ids:
-            task_tree_id = data_obj.browse(cr, uid, task_tree_ids, context=context).res_id
-        if task_calendar_ids:
-            task_calendar_id = data_obj.browse(cr, uid, task_calendar_ids, context=context).res_id
+        task_form_id = data_pool.get_object(cr, uid, 'project', 'view_task_form2')
+        task_tree_id = data_pool.get_object(cr, uid, 'project', 'view_task_tree2')
+        task_calendar_id = data_pool.get_object(cr, uid, 'project', 'view_task_calendar')
         for id in ids:
             value = {
                     'name': _('Tasks'),

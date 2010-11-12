@@ -399,7 +399,7 @@ property or property parameter."),
         res = None
         def ics_datetime(idate, short=False):
             if idate:
-                if short:
+                if short or len(idate)<=10:
                     return date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
                 else:
                     return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
@@ -414,12 +414,7 @@ property or property parameter."),
         event = cal.add('vevent')
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
-        if not event_obj.date_deadline[10:]:
-            short = True
-        else:
-            short = False
-            
-        event.add('dtend').value = ics_datetime(event_obj.date_deadline, short)
+        event.add('dtend').value = ics_datetime(event_obj.date_deadline)
         event.add('summary').value = event_obj.name
         if  event_obj.description:
             event.add('description').value = event_obj.description
