@@ -24,7 +24,7 @@
     </record>
     <record id="basic_calendar_lines_vtodo0" model="basic.calendar.lines">
         <field model="basic.calendar" name="calendar_id" ref="basic_calendar_tasks0"/>
-        <field name="domain">[('user_id','=', dctx_user_id)]</field>
+        <field name="domain">[('user_id','=', uid)]</field>
         <field name="name">vtodo</field>
         <field name="object_id" ref="project.model_project_task"/>
     </record>
