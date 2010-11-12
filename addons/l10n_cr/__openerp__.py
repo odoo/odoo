@@ -40,12 +40,12 @@
 	'website': 'http://clearcorp.co.cr',
 	'category': 'Localisation/Account Charts',
 	'description': """Chart of accounts for Costa Rica
-	Includes:
-	* account.type
-	* account.account.template
-	* account.tax.template
-	* account.tax.code.template
-	* account.chart.template
+Includes:
+* account.type
+* account.account.template
+* account.tax.template
+* account.tax.code.template
+* account.chart.template
 
 Everything is in English with Spanish translation. Further translations are welcome, please go to
 http://translations.launchpad.net/openerp-costa-rica
@@ -60,7 +60,7 @@ http://translations.launchpad.net/openerp-costa-rica
 		'data/account_tax_code_template.xml',
 		'data/account_chart_template.xml',
 		'data/account_tax_template.xml',
-		'l10n_wizard.xml'
+		'l10n_wizard.xml',
 	],
 	'license': 'Other OSI approved licence',
 	'installable': True,
