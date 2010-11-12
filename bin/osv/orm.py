@@ -131,6 +131,10 @@ class browse_record(object):
         table : the object (inherited from orm)
         context : dictionary with an optional context
         '''
+        if fields_process is None:
+            domain = {}
+        if context is None:
+            context = {}
         self._list_class = list_class or browse_record_list
         self._cr = cr
         self._uid = uid
@@ -139,8 +143,8 @@ class browse_record(object):
         self._table_name = self._table._name
         self.__logger = logging.getLogger(
             'osv.browse_record.' + self._table_name)
-        self._context = context or {}
-        self._fields_process = fields_process or {}
+        self._context = context
+        self._fields_process = fields_process
 
         cache.setdefault(table._name, {})
         self._data = cache[table._name]

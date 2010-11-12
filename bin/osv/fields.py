@@ -64,6 +64,10 @@ class _column(object):
     _symbol_get = None
 
     def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
+        if domain is None:
+            domain = []
+        if context is None:
+            context = {}
         self.states = states or {}
         self.string = string
         self.readonly = readonly
@@ -74,8 +78,8 @@ class _column(object):
         self.change_default = change_default
         self.ondelete = ondelete
         self.translate = translate
-        self._domain = domain or []
-        self._context = context or {}
+        self._domain = domain
+        self._context = context
         self.write = False
         self.read = False
         self.view_load = 0
