@@ -278,7 +278,8 @@ class rml_parse(object):
             ret_lst.append({name:id})
         return ret_lst
 
-    def _translate(self,text):
+    def _translate(self, text):
+        text = tools.ustr(text)
         lang = self.localcontext['lang']
         if lang and text and not text.isspace():
             transl_obj = self.pool.get('ir.translation')
