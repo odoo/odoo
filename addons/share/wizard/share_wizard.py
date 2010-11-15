@@ -65,8 +65,7 @@ class share_create(osv.osv_memory):
     _defaults = {
         'user_type' : lambda self, cr, uid, *a: 'existing' if self.pool.get('res.users').search(cr, uid, [('share', '=', True)]) else 'new',
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
-        'share_root_url': lambda self, cr, uid, context, *a: context.get('share_root_url', 
-                                _('Please specify "share_root_url" in server configuration or in context')),
+        'share_root_url': lambda self, cr, uid, context, *a: context.get('share_root_url') or _('Please specify "share_root_url" in context'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
         'access_mode': 'readonly'
     }
