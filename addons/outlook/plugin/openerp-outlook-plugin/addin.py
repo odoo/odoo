@@ -31,32 +31,24 @@ import sys
 import os
 from win32com.client import Dispatch
 import win32con
-
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))    #outlook
 sys.path.append(os.path.abspath(__file__))                     #outlook/addin
-
 import manager
 from win32com.client import CastTo
 import win32ui
-from tiny_xmlrpc import *
-
+from tiny_xmlrpc import XMLRpcConn
 import locale
 locale.setlocale(locale.LC_NUMERIC, "C")
-
 # Support for COM objects we use.
 gencache.EnsureModule('{00062FFF-0000-0000-C000-000000000046}', 0, 9, 0, bForDemand=True) # Outlook 9
 gencache.EnsureModule('{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}', 0, 2, 1, bForDemand=True) # Office 9
-
 # The TLB defiining the interfaces we implement
 universal.RegisterInterfaces('{AC0714F2-3D04-11D1-AE7D-00A0C90F26F4}', 0, 1, 0, ["_IDTExtensibility2"])
-
 global NewConn
-
 # Retrieves registered XMLRPC connection
 def GetConn():
     d=Dispatch("Python.OpenERP.XMLRpcConn")
     return d
-
 class Configuration:
     def OnClick(self, button, cancel):
         try:
@@ -259,14 +251,14 @@ def UnregisterAddin(klass):
     import _winreg
     try:
         _winreg.DeleteKey(_winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Office\\Outlook\\Addins\\" + klass._reg_progid_)
-    except WindowsError:
+    except:
         pass
 
 def UnregisterXMLConn(klass):
     import _winreg
     try:
         _winreg.DeleteKey(_winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Office\\Outlook\\Addins\\XMLConnection" + klass._reg_progid_)
-    except WindowsError:
+    except:
         pass
 
 def RegisterXMLConn(klass):
@@ -279,7 +271,6 @@ def RegisterXMLConn(klass):
     _winreg.SetValueEx(subkey, "FriendlyName", 0, _winreg.REG_SZ, klass._reg_progid_)
 
 if __name__ == '__main__':
-
     import win32com.server.register
     NewConn=XMLRpcConn()
     win32com.server.register.UseCommandLine(OutlookAddin)

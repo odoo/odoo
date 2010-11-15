@@ -4,6 +4,7 @@
         <record model="ir.ui.view" id="view_calendar_collection_form">
             <field name="name">Calendar Collections : Form</field>
             <field name="model">document.directory</field>
+            <field name="priority">40</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Calendar Collections">
@@ -75,12 +76,17 @@
             <field name="name">Calendar Collections : Tree</field>
             <field name="model">document.directory</field>
             <field name="type">tree</field>
+            <field name="priority">40</field>
             <field name="arch" type="xml">
                 <tree string="Calendar Collections" toolbar="1">
                     <field name="name"/>
+                    <field name="parent_id"/>
                     <field name="user_id"/>
                     <field name="create_date"/>
                     <field name="write_date"/>
+                    <field name="type"/>
+                    <field name="calendar_collection"/>
+                    <field name="storage_id"/>
                 </tree>
             </field>
         </record>
@@ -181,12 +187,10 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="user_id"/>
-                    <field name="collection_id"/>
-                    <field name="calendar_color" />
-                    <field name="calendar_order"/>
-                    <field name="has_webcal" />
-                    <field name="create_date"/>
-                    <field name="write_date"/>
+                    <field name="collection_id" required="1"/>
+                    <field name="has_webcal" groups="base.group_extended" />
+                    <field name="calendar_color" groups="base.group_extended" />
+                    <field name="calendar_order" groups="base.group_extended" />
                 </tree>
             </field>
         </record>

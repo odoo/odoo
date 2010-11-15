@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:35+0000\n"
+"PO-Revision-Date: 2010-11-12 09:04+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-11-13 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_coda
@@ -38,7 +38,7 @@ msgstr "Ongeldige modelnaam in de definitie van de actie."
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda_import
 msgid "Account Coda Import"
-msgstr ""
+msgstr "Account Coda Import"
 
 #. module: account_coda
 #: field:account.coda,name:0
@@ -53,7 +53,7 @@ msgstr "Sorteren op"
 #. module: account_coda
 #: field:account.coda.import,awaiting_account:0
 msgid "Default Account for Unrecognized Movement"
-msgstr ""
+msgstr "Standaard rekening voor niet-herkende boeking"
 
 #. module: account_coda
 #: help:account.coda,date:0
@@ -73,7 +73,7 @@ msgstr "Import logboek"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Import"
-msgstr ""
+msgstr "Importeren"
 
 #. module: account_coda
 #: view:account.coda:0
@@ -92,6 +92,8 @@ msgid ""
 "Set here the default account that will be used, if the partner is found but "
 "does not have the bank account, or if he is domiciled"
 msgstr ""
+"Vul hier de standaard rekening die wordt gebruikt als de relatie niet wordt "
+"gevonden of geen bankrekening heeft of als hij is verhuist"
 
 #. module: account_coda
 #: view:account.coda:0
@@ -105,11 +107,13 @@ msgid ""
 "Set here the payable account that will be used, by default, if the partner "
 "is not found"
 msgstr ""
+"Vul hier de betaalrekening in die wordt gebruikt als de relatie niet is "
+"gevonden"
 
 #. module: account_coda
 #: view:account.coda:0
 msgid "Search Coda"
-msgstr ""
+msgstr "Coda zoeken"
 
 #. module: account_coda
 #: view:account.coda:0
@@ -126,7 +130,7 @@ msgstr "Datum"
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_statement
 msgid "Coda Import Logs"
-msgstr ""
+msgstr "Coda Import Logboek"
 
 #. module: account_coda
 #: constraint:ir.ui.view:0
@@ -151,12 +155,12 @@ msgstr "Detail bankafschriften opslaan"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Open Statements"
-msgstr ""
+msgstr "Afschriften openen"
 
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_import
@@ -172,12 +176,12 @@ msgstr "Importeer Coda afschrift"
 #. module: account_coda
 #: view:account.coda:0
 msgid "Statements"
-msgstr ""
+msgstr "Afschriften"
 
 #. module: account_coda
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
 
 #. module: account_coda
 #: field:account.bank.statement,coda_id:0
@@ -192,7 +196,7 @@ msgstr "Resultaten :"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Result of Imported Coda Statements"
-msgstr ""
+msgstr "Resultaat van geïmporteerde Coda afschriften"
 
 #. module: account_coda
 #: help:account.coda.import,def_receivable:0
@@ -200,6 +204,8 @@ msgid ""
 "Set here the receivable account that will be used, by default, if the "
 "partner is not found"
 msgstr ""
+"Vul hier de ontvangstrekening in die wordt gebruikt als de relatie niet is "
+"gevonden"
 
 #. module: account_coda
 #: field:account.coda.import,coda:0
@@ -215,7 +221,7 @@ msgstr "Bank Afschrift"
 #. module: account_coda
 #: model:ir.actions.act_window,name:account_coda.action_account_coda
 msgid "Coda Logs"
-msgstr ""
+msgstr "Coda Logboek"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:0
@@ -226,12 +232,12 @@ msgstr "Resultaat"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Click on 'New' to select your file :"
-msgstr ""
+msgstr "Druk op 'Nieuw' om uw bestand te selecteren :"
 
 #. module: account_coda
 #: field:account.coda.import,def_receivable:0
 msgid "Default Receivable Account"
-msgstr ""
+msgstr "Sandaard ontvangstrekening"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -241,28 +247,28 @@ msgstr "Sluiten"
 #. module: account_coda
 #: field:account.coda,statement_ids:0
 msgid "Generated Bank Statements"
-msgstr ""
+msgstr "Gegenereerde bankafschriften"
 
 #. module: account_coda
 #: model:ir.module.module,shortdesc:account_coda.module_meta_information
 msgid "Account CODA - import bank statements from coda file"
-msgstr ""
+msgstr "Account CODA - bankafschriften importeren uit coda bestand"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Configure Your Journal and Account :"
-msgstr ""
+msgstr "Configureer uw dagboek en rekening :"
 
 #. module: account_coda
 #: view:account.coda:0
 msgid "Coda Import"
-msgstr ""
+msgstr "Coda importeren"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:0
 #, python-format
 msgid "The bank account %s is not defined for the partner %s.\n"
-msgstr ""
+msgstr "Bankrekening %s is niet gedefinieerd bij relatie %s.\n"
 
 #. module: account_coda
 #: view:account.coda:0
