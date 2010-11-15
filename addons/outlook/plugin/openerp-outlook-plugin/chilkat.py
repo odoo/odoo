@@ -3790,7 +3790,6 @@ class CkSpider(_object):
     def CanonicalizeUrl(self, *args): return _chilkat.CkSpider_CanonicalizeUrl(self, *args)
     def getDomain(self, *args): return _chilkat.CkSpider_getDomain(self, *args)
     def getBaseDomain(self, *args): return _chilkat.CkSpider_getBaseDomain(self, *args)
-
     def canonicalizeUrl(self, *args): return _chilkat.CkSpider_canonicalizeUrl(self, *args)
     def lastErrorText(self): return _chilkat.CkSpider_lastErrorText(self)
     def lastErrorXml(self): return _chilkat.CkSpider_lastErrorXml(self)
