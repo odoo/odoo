@@ -35,7 +35,7 @@ import report
 import tempfile
 import time
 from mako.template import Template
-
+from mako import exceptions
 import netsvc
 import pooler
 from report_helper import WebKitHelper
@@ -278,45 +278,57 @@ class WebKitParser(report_sxw):
         #default_filters=['unicode', 'entity'] can be used to set global filter
         body_mako_tpl = Template(template ,input_encoding='utf-8')
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
-        html = body_mako_tpl.render(     helper=helper, 
-                                         css=css,
-                                         _=self.translate_call,
-                                         **self.parser_instance.localcontext
-                                         )
+        try :
+            html = body_mako_tpl.render(     helper=helper, 
+                                             css=css,
+                                             _=self.translate_call,
+                                             **self.parser_instance.localcontext
+                                        )
+        except :
+            raise Exception(exceptions.html_error_template().render())
         head_mako_tpl = Template(header, input_encoding='utf-8')
-        head = head_mako_tpl.render(
-                                    company=company, 
-                                    time=time, 
-                                    helper=helper, 
-                                    css=css,
-                                    formatLang=self.formatLang,
-                                    setLang=self.setLang,
-                                    _=self.translate_call,
-                                    _debug=False
-                                )
+        try :
+            head = head_mako_tpl.render(
+                                        company=company, 
+                                        time=time, 
+                                        helper=helper, 
+                                        css=css,
+                                        formatLang=self.formatLang,
+                                        setLang=self.setLang,
+                                        _=self.translate_call,
+                                        _debug=False
+                                    )
+        except :
+            raise Exception(exceptions.html_error_template().render())
         foot = False
         if footer :
             foot_mako_tpl = Template(footer ,input_encoding='utf-8')
-            foot = foot_mako_tpl.render(
-                                        company=company, 
-                                        time=time, 
-                                        helper=helper, 
-                                        css=css, 
-                                        formatLang=self.formatLang,
-                                        setLang=self.setLang,
-                                        _=self.translate_call,
-                                        )
+            try :
+                foot = foot_mako_tpl.render(
+                                            company=company, 
+                                            time=time, 
+                                            helper=helper, 
+                                            css=css, 
+                                            formatLang=self.formatLang,
+                                            setLang=self.setLang,
+                                            _=self.translate_call,
+                                            )
+            except:
+                raise Exception(exceptions.html_error_template().render())
         if report_xml.webkit_debug :
-            deb = head_mako_tpl.render(
-                                        company=company, 
-                                        time=time, 
-                                        helper=helper, 
-                                        css=css, 
-                                        _debug=html,
-                                        formatLang=self.formatLang,
-                                        setLang=self.setLang,
-                                        _=self.translate_call,
-                                        )
+            try :
+                deb = head_mako_tpl.render(
+                                            company=company, 
+                                            time=time, 
+                                            helper=helper, 
+                                            css=css, 
+                                            _debug=html,
+                                            formatLang=self.formatLang,
+                                            setLang=self.setLang,
+                                            _=self.translate_call,
+                                            )
+            except :
+                raise Exception(exceptions.html_error_template().render())
             return (deb, 'html')
         bin = self.get_lib(cursor, uid, company.id)
         pdf = self.generate_pdf(bin, report_xml, head, foot, [html])
