@@ -930,6 +930,25 @@ class stock_picking(osv.osv):
         '''Call after the creation of the invoice'''
         return
 
+    def _get_invoice_type(self, pick):
+        src_usage = dest_usage = None
+        inv_type = None
+        if pick.invoice_state == '2binvoiced':
+            if pick.move_lines:
+                src_usage = pick.move_lines[0].location_id.usage
+                dest_usage = pick.move_lines[0].location_dest_id.usage
+            if pick.type == 'out' and dest_usage == 'supplier':
+                inv_type = 'in_refund'
+            elif pick.type == 'out' and dest_usage == 'customer':
+                inv_type = 'out_invoice'
+            elif pick.type == 'in' and src_usage == 'supplier':
+                inv_type = 'in_invoice'
+            elif pick.type == 'in' and src_usage == 'customer':
+                inv_type = 'out_refund'
+            else:
+                inv_type = 'out_invoice'
+        return inv_type
+
     def action_invoice_create(self, cr, uid, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.
@@ -945,7 +964,7 @@ class stock_picking(osv.osv):
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoices_group = {}
         res = {}
-
+        inv_type = type
         for picking in self.browse(cr, uid, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
@@ -954,8 +973,11 @@ class stock_picking(osv.osv):
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
+            
+            if not inv_type:
+                inv_type = self._get_invoice_type(picking)
 
-            if type in ('out_invoice', 'out_refund'):
+            if inv_type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
                 payment_term_id = self._get_payment_term(cr, uid, picking)
             else:
@@ -980,7 +1002,7 @@ class stock_picking(osv.osv):
                 invoice_vals = {
                     'name': picking.name,
                     'origin': (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
-                    'type': type,
+                    'type': inv_type,
                     'account_id': account_id,
                     'partner_id': partner.id,
                     'address_invoice_id': address_invoice_id,
@@ -1012,7 +1034,7 @@ class stock_picking(osv.osv):
                 else:
                     name = move_line.name
 
-                if type in ('out_invoice', 'out_refund'):
+                if inv_type in ('out_invoice', 'out_refund'):
                     account_id = move_line.product_id.product_tmpl_id.\
                             property_account_income.id
                     if not account_id:
@@ -1026,14 +1048,14 @@ class stock_picking(osv.osv):
                                 property_account_expense_categ.id
 
                 price_unit = self._get_price_unit_invoice(cr, uid,
-                        move_line, type)
+                        move_line, inv_type)
                 discount = self._get_discount_invoice(cr, uid, move_line)
-                tax_ids = self._get_taxes_invoice(cr, uid, move_line, type)
+                tax_ids = self._get_taxes_invoice(cr, uid, move_line, inv_type)
                 account_analytic_id = self._get_account_analytic_invoice(cr, uid, picking, move_line)
 
                 #set UoS if it's a sale and the picking doesn't have one
                 uos_id = move_line.product_uos and move_line.product_uos.id or False
-                if not uos_id and type in ('out_invoice', 'out_refund'):
+                if not uos_id and inv_type in ('out_invoice', 'out_refund'):
                     uos_id = move_line.product_uom.id
 
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
@@ -1053,7 +1075,7 @@ class stock_picking(osv.osv):
                 self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
 
             invoice_obj.button_compute(cr, uid, [invoice_id], context=context,
-                    set_total=(type in ('in_invoice', 'in_refund')))
+                    set_total=(inv_type in ('in_invoice', 'in_refund')))
             self.write(cr, uid, [picking.id], {
                 'invoice_state': 'invoiced',
                 }, context=context)
@@ -1353,7 +1375,7 @@ class stock_production_lot(osv.osv):
         'name': fields.char('Production Lot', size=64, required=True, help="Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"),
         'ref': fields.char('Internal Reference', size=256, help="Internal reference number in case it differs from the manufacturer's serial number"),
         'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL [INT_REF]"),
-        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
         'date': fields.datetime('Creation Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select=True,
             help="Current quantity of products with this Production Lot Number available in company warehouses",
@@ -1480,7 +1502,7 @@ class stock_move(osv.osv):
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Optional: next stock move when chaining them", select=True),
         'move_history_ids': fields.many2many('stock.move', 'stock_move_history_ids', 'parent_id', 'child_id', 'Move History (child moves)'),
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
-        'picking_id': fields.many2one('stock.picking', 'Picking List', select=True,states={'done': [('readonly', True)]}),
+        'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
                                   help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
@@ -2231,7 +2253,7 @@ class stock_move(osv.osv):
                 quantity_rest = quantity
                 uos_qty_rest =  uos_qty
                 if move.product_id.track_production and location_id:
-                    res += self.split_lines(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
+                    res += self.action_split(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
                 else:
                     res += [move.id]
                     update_val = {

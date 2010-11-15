@@ -68,7 +68,6 @@ class event_make_invoice(osv.osv_memory):
     def make_invoice(self, cr, uid, ids, context=None):
         reg_obj = self.pool.get('event.registration')
         mod_obj = self.pool.get('ir.model.data')
-        newinv = []
         if context is None:
             context = {}
 

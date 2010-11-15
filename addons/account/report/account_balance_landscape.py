@@ -22,7 +22,6 @@
 import time
 import locale
 from report import report_sxw
-import rml_parse
 
 parents = {
     'tr':1,
@@ -31,7 +30,7 @@ parents = {
     'section': 0
 }
 
-class account_balance_landscape(rml_parse.rml_parse):
+class account_balance_landscape(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(account_balance_landscape, self).__init__(cr, uid, name, context=context)
         self.flag=1

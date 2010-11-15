@@ -14,10 +14,10 @@
                     <hpaned position="100">
                         <child1>
                             <action colspan="4" height="200" name="%(mrp.mrp_production_action2)d" string="Next Production Orders" width="510"/>
-                            <action colspan="4" name="%(procurement.procurement_exceptions)d" string="Procurements in Exception"/>
+                            <action colspan="4" name="%(procurement.procurement_exceptions)d" string="Procurements in Exception" domain="[('state','=','exception')]"/>
                         </child1>
                         <child2>
-                            <action colspan="4" name="%(mrp.action_report_workcenter_load_tree)d" string="Work Center Future load"/>
+                            <action colspan="4" name="%(mrp.action_report_workcenter_load_tree)d" string="Work Center Future Load" groups="base.group_extended"/>
 
                             <action colspan="4" name="%(mrp.action_report_in_out_picking_tree)d" string="Stock Value Variation"/>
                         </child2>

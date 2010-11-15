@@ -13,7 +13,7 @@
                         <button string="Assign Task"
                             name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
                             icon="terp-partner" type="action"
-                            context="{'model' : 'project.task'}" colspan="2"/>
+                            context="{'model' : 'project.task', 'attendee_field':'attendee_ids'}" colspan="2"/>
                             <field name="attendee_ids" colspan="4"
                             nolabel="1" widget="one2many" mode="tree,form">
                             <tree string="Assignees details" editable="top">
@@ -70,7 +70,7 @@
                            <button string="Edit All"
                                help="Edit all Ourrences of recurrent Task"
                                attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
-                               name="open_meeting" icon="gtk-edit"
+                               name="open_task" icon="gtk-edit"
                                type="object" />
                            <button string="Exclude range" groups="base.group_extended"
                                 help="Add Exception Rule"
