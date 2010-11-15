@@ -457,7 +457,8 @@ class survey_question_wiz(osv.osv_memory):
         try:
             service = netsvc.LocalService(report_name);
             (result, format) = service.create(cr, uid, res_ids, {}, context)
-            fp = open(addons.get_module_resource('survey', 'report') + file_name + '.pdf', 'wb+');
+            ret_file_name = addons.get_module_resource('survey', 'report') + file_name + '.pdf'
+            fp = open(ret_file_name, 'wb+');
             fp.write(result);
             fp.close();
 

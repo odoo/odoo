@@ -19,14 +19,12 @@
 ##############################################################################
 
 import time
-
 import pooler
-import rml_parse
 from report import report_sxw
 from common_report_header import common_report_header
 from tools.translate import _
 
-class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
+class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
         super(report_pl_account_horizontal, self).__init__(cr, uid, name, context=context)

@@ -119,7 +119,7 @@ class crm_lead(crm_case, osv.osv):
 
         # Lead fields
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.project.bug')]"),
+            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
             domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
         'channel_id': fields.many2one('res.partner.canal', 'Channel'),
@@ -286,11 +286,31 @@ class crm_lead(crm_case, osv.osv):
         stage = super(crm_lead, self).stage_next(cr, uid, ids, context)
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
+            for case in self.browse(cr, uid, ids, context=context):
+                if case.type == 'lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                elif case.type == 'opportunity':
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                self.log(cr, uid, case.id, message)
             if stage_obj.on_change:
                 data = {'probability': stage_obj.probability}
                 self.write(cr, uid, ids, data)
         return stage
-
+    
+    def stage_previous(self, cr, uid, ids, context=None):
+        stage = super(crm_lead, self).stage_previous(cr, uid, ids, context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
+            for case in self.browse(cr, uid, ids, context=context):
+                if case.type == 'lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                elif case.type == 'opportunity':
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                self.log(cr, uid, case.id, message)
+        return stage
+    
     def message_new(self, cr, uid, msg, context):
         """
         Automatically calls when new email message arrives

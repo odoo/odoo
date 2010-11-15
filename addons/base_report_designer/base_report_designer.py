@@ -56,8 +56,7 @@ class report_xml(osv.osv):
             'report_sxw_content': base64.decodestring(file_sxw), 
             'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())), 
         })
-        db = pooler.get_db_only(cr.dbname)
-        interface.register_all(db)
+        pool.get('ir.actions.report.xml').register_all(cr)
         return True
 
     def report_get(self, cr, uid, report_id, context={}):

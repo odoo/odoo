@@ -3,6 +3,9 @@
     <data noupdate="1">
 
          <!-- Users -->
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4,ref('group_project_user'))]"/> 
+        </record>
 
         <record id="res_users_analyst" model="res.users">
             <field name="name">Phuong</field>

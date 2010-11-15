@@ -133,6 +133,7 @@ class crm_meeting(crm_case, osv.osv):
         res = super(crm_meeting, self).case_open(cr, uid, ids, args)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The meeting '%s' has been confirmed.") % name
+            id=base_calendar.base_calendar_id2real_id(id)
             self.log(cr, uid, id, message)
         return res
 

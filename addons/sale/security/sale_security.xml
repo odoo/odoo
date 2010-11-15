@@ -17,10 +17,6 @@
         <field eval="[(4, ref('base.group_sale_manager'))]" name="groups_id"/>
     </record>
 
-	<record id="base.user_demo" model="res.users">
-            <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
-        </record>
-
     <record model="ir.rule" id="sale_order_comp_rule">
         <field name="name">Sale Order multi-company</field>
         <field name="model_id" ref="model_sale_order"/>
