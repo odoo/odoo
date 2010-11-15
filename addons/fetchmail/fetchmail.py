@@ -42,7 +42,7 @@ class email_server(osv.osv):
         'active':fields.boolean('Active', required=False),
         'state':fields.selection([
             ('draft', 'Not Confirmed'),
-            ('wating', 'Waiting for Verification'),
+            ('waiting', 'Waiting for Verification'),
             ('done', 'Confirmed'),
         ], 'State', select=True, readonly=True),
         'server' : fields.char('Server', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}),
@@ -52,15 +52,17 @@ class email_server(osv.osv):
             ('imap', 'IMAP Server'),
         ], 'Server Type', select=True, readonly=False),
         'is_ssl':fields.boolean('SSL ?', required=False),
-        'attach':fields.boolean('Add Attachments ?', required=False),
+        'attach':fields.boolean('Add Attachments ?', required=False, help="Fetches mail with attachments if true."),
         'date': fields.date('Date', readonly=True, states={'draft':[('readonly', False)]}),
         'user' : fields.char('User Name', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}),
         'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly', False)]}),
         'note': fields.text('Description'),
-        'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]"),
-        'object_id': fields.many2one('ir.model', "Model", required=True),
+        'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]", 
+                                    help="An Email Server Action. It will be run whenever an e-mail is fetched from server."),
+        'object_id': fields.many2one('ir.model', "Model", required=True, help="OpenObject Model. Generates a record of this model."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"),
         'user_id':fields.many2one('res.users', 'User', required=False),
+        'message_ids': fields.one2many('mailgate.message', 'server_id', 'Messages', readonly=True),
     }
     _defaults = {
         'state': lambda *a: "draft",
@@ -96,20 +98,8 @@ class email_server(osv.osv):
     def set_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids , {'state':'draft'})
         return True
-
-    def button_fetch_mail(self, cr, uid, ids, context={}):
-        self.fetch_mail(cr, uid, ids)
-        return True
-
-    def _fetch_mails(self, cr, uid, ids=False, context={}):
-        if not ids:
-            ids = self.search(cr, uid, [])
-        return self.fetch_mail(cr, uid, ids, context)
-
-    def fetch_mail(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
-        email_tool = self.pool.get('email.server.tools')
+    
+    def button_confirm_login(self, cr, uid, ids, context={}):
         for server in self.browse(cr, uid, ids, context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             context.update({'server_id': server.id, 'server_type': server.type})
@@ -123,21 +113,8 @@ class email_server(osv.osv):
                         imap_server = IMAP4(server.server, int(server.port))
 
                     imap_server.login(server.user, server.password)
-                    imap_server.select()
-                    result, data = imap_server.search(None, '(UNSEEN)')
-                    for num in data[0].split():
-                        result, data = imap_server.fetch(num, '(RFC822)')
-                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, context=context)
-                        if res_id and server.action_id:
-                            action_pool = self.pool.get('ir.actions.server')
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
-
-                            imap_server.store(num, '+FLAGS', '\\Seen')
-                        count += 1
-                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
-
-                    imap_server.close()
-                    imap_server.logout()
+                    ret_server = imap_server
+                    
                 elif server.type == 'pop':
                     pop_server = None
                     if server.is_ssl:
@@ -149,15 +126,56 @@ class email_server(osv.osv):
                     #pop_server.user("recent:"+server.user)
                     pop_server.user(server.user)
                     pop_server.pass_(server.password)
-                    pop_server.list()
+                    ret_server = pop_server
+                    
+                self.write(cr, uid, [server.id], {'state':'done'})
+                if context.get('get_server',False):
+                    return ret_server
+            except Exception, e:
+                logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
+        return True
 
+    def button_fetch_mail(self, cr, uid, ids, context={}):
+        self.fetch_mail(cr, uid, ids, context=context)
+        return True
+
+    def _fetch_mails(self, cr, uid, ids=False, context={}):
+        if not ids:
+            ids = self.search(cr, uid, [])
+        return self.fetch_mail(cr, uid, ids, context=context)
+
+    def fetch_mail(self, cr, uid, ids, context={}):
+        email_tool = self.pool.get('email.server.tools')
+        action_pool = self.pool.get('ir.actions.server')
+        context.update({'get_server': True})
+        for server in self.browse(cr, uid, ids, context):
+            count = 0
+            try:
+                if server.type == 'imap':
+                    imap_server = self.button_confirm_login(cr, uid, [server.id], context=context)
+                    imap_server.select()
+                    result, data = imap_server.search(None, '(UNSEEN)')
+                    for num in data[0].split():
+                        result, data = imap_server.fetch(num, '(RFC822)')
+                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, context=context)
+                        if res_id and server.action_id:
+                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
+
+                            imap_server.store(num, '+FLAGS', '\\Seen')
+                        count += 1
+                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
+
+                    imap_server.close()
+                    imap_server.logout()
+                elif server.type == 'pop':
+                    pop_server = self.button_confirm_login(cr, uid, [server.id], context=context)
+                    pop_server.list()
                     (numMsgs, totalSize) = pop_server.stat()
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
                         res_id = email_tool.process_email(cr, uid, server.object_id.model, msg, attach=server.attach, context=context)
                         if res_id and server.action_id:
-                            action_pool = self.pool.get('ir.actions.server')
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                         pop_server.dele(num)
@@ -166,7 +184,6 @@ class email_server(osv.osv):
 
                     logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
 
-                self.write(cr, uid, [server.id], {'state':'done'})
             except Exception, e:
                 logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
 
