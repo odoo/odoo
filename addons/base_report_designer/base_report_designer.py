@@ -55,9 +55,7 @@ class report_xml(osv.osv):
             'report_sxw_content': base64.decodestring(file_sxw), 
             'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())), 
         })
-        
-        self.pool.get('ir.actions.report.xml').register_all(cr = cr)
-        cr.commit()
+        pool.get('ir.actions.report.xml').register_all(cr)
         return True
 
     def report_get(self, cr, uid, report_id, context={}):

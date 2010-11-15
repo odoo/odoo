@@ -21,11 +21,10 @@
 
 import time
 
-import rml_parse
 from common_report_header import common_report_header
 from report import report_sxw
 
-class tax_report(rml_parse.rml_parse, common_report_header):
+class tax_report(report_sxw.rml_parse, common_report_header):
     _name = 'report.account.vat.declaration'
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -60,7 +59,6 @@ class tax_report(rml_parse.rml_parse, common_report_header):
             'get_end_period': self.get_end_period,
             'get_basedon': self._get_basedon,
         })
-
 
     def _get_basedon(self, form):
         return form['form']['based_on']
