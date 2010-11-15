@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Sales lines" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Sale Lines.pdf">
+  <template pageSize="(595.0,842.0)" title="Sale Lines" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="27.0" y1="57.0" width="512" height="728"/>
     </pageTemplate>
@@ -62,13 +62,10 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,2" stop="4,2"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,2" stop="5,2"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,2" stop="1,2"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,2" stop="2,2"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -147,7 +144,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="196.0,78.0,62.0,58.0,56.0,63.0" style="Tableau6">
+    <blockTable colWidths="186.0,71.0,71.0,57.0,57.0,71.0" style="Tableau6">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -171,7 +168,7 @@
     </blockTable>
     <section>
       <para style="terp_default_1">[[repeatIn(o.lines,'l')]]</para>
-      <blockTable colWidths="195.0,78.0,62.0,58.0,56.0,63.0" style="Tableau7">
+      <blockTable colWidths="186.0,71.0,71.0,57.0,57.0,71.0" style="Tableau7">
         <tr>
           <td>
             <para style="terp_default_9">[ [[l.product_id.code]] ] [[l.product_id.name]]</para>
@@ -194,23 +191,8 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="84.0,85.0,86.0,114.0,68.0,74.0" style="Table1">
+    <blockTable colWidths="356.0,71.0,85.0" style="Table1">
       <tr>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
         <td>
           <para style="terp_default_9">
             <font color="white"> </font>
@@ -230,21 +212,6 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
           <para style="terp_default_9">Taxes</para>
         </td>
         <td>
@@ -252,21 +219,6 @@
         </td>
       </tr>
       <tr>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
         <td>
           <para style="terp_default_9">
             <font color="white"> </font>

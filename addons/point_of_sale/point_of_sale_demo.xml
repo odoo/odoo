@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
+        </record>
     	<record id="account.cash_journal" model="account.journal">
             <field eval="[(6, 0, [ref('base.user_root')])]" name="journal_users"/>
         </record>
