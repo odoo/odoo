@@ -577,8 +577,8 @@ class stock_picking(osv.osv):
             return res
         cr.execute("""select
                 picking_id,
-                min(date),
-                max(date)
+                min(date_expected),
+                max(date_expected)
             from
                 stock_move
             where
@@ -586,8 +586,8 @@ class stock_picking(osv.osv):
             group by
                 picking_id""",(tuple(ids),))
         for pick, dt1, dt2 in cr.fetchall():
-            res[pick]['min_date'] = dt1
-            res[pick]['max_date'] = dt2
+                res[pick]['min_date'] = dt1
+                res[pick]['max_date'] = dt2
         return res
 
     def create(self, cr, user, vals, context=None):
@@ -973,7 +973,7 @@ class stock_picking(osv.osv):
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
-            
+
             if not inv_type:
                 inv_type = self._get_invoice_type(picking)
 
