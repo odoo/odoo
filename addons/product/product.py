@@ -427,7 +427,7 @@ class product_product(osv.osv):
         'code': fields.function(_product_code, method=True, type='char', string='Reference'),
         'partner_ref' : fields.function(_product_partner_ref, method=True, type='char', string='Customer ref'),
         'default_code' : fields.char('Reference', size=64),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
         'ean13': fields.char('EAN13', size=13),
