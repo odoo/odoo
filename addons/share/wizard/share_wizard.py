@@ -427,6 +427,7 @@ class share_create(osv.osv_memory):
                     body += _("You may use the following login and password to get access to this protected area:") + "\n"
                     body += "%s: %s" % (_("Username"), result_line.login) + "\n"
                     body += "%s: %s" % (_("Password"), result_line.password) + "\n"
+                    body += "%s: %s" % (_("Database"), cr.dbname) + "\n"
                 else:
                     body += _("This additional data has been automatically added to your current access.\n")
                     body += _("You may use your existing login and password to view it. As a reminder, your login is %s.\n") % result_line.login

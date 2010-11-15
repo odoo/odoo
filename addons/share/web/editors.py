@@ -12,24 +12,20 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
                 '\n',
                 output.index(self.ADD_SHARE_BUTTON)) + 1
         output = output[:form_opener_insertion] + \
-                 '''<div id="share-wizard" class="sideheader-a"><h2>${_("Share View")}</h2></div>
+                 '''<div id="share-wizard" class="sideheader-a"><h2>${_("Sharing")}</h2></div>
                      <ul class="clean-a">
                          <li>
-                             <a id="share_view" href="javascript: void(0)"
-                             style="right: 36px;"
-                             >${_("Share")}</a>
+                             <a id="sharing" href="#share">${_("Share")}</a>
                          </li>
                      </ul>
                        <script type="text/javascript">
                            jQuery(document).ready(function() {
-                               jQuery('#share_view').click(function(){
-                                   var _view_type = jQuery('#_terp_view_type').val();
+                               $share = jQuery('#sharing').click(function(){
                                    var _domain =  jQuery('#_terp_domain').val();
                                    var _search_domain =  jQuery('#_terp_search_domain').val();
-                                   var _filter_domain =  jQuery('#_terp_filter_domain').val();
                                    var _context = jQuery('#_terp_context').val();
-                                   var url = openobject.http.getURL('/share', {view_type: _view_type, domain: _domain, search_domain: _search_domain, filter_domain : _filter_domain, context: _context});
-                                   window.open(url);
+                                   var _view_name = jQuery('#_terp_string').val();
+                                   window.open(openobject.http.getURL('/share', {domain: _domain, search_domain: _search_domain, context: _context, name: _view_name}));
                                });
                            });
                        </script>

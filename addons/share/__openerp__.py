@@ -48,7 +48,6 @@
         'wizard/share_wizard_view.xml'
     ],
     'installable': True,
-    'active': False,
     'web': True,
 }
 
