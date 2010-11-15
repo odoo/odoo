@@ -21,5 +21,6 @@
 
 import account_voucher_unreconcile
 import account_statement_from_invoice
+import account_voucher_payment_option
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
