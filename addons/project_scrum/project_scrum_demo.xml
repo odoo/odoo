@@ -154,7 +154,6 @@
         <!-- Resource: project.product.backlog -->
 
         <record id="scrum_product_backlog_0" model="project.scrum.product.backlog">
-            <field name="priority">3</field>
             <field name="name">Automatic migration system</field>
             <field name="expected_hours">6.0</field>
             <field name="note">This new system will enable you to migrate automatically from an old version of OpenERP to a new one. This system will migrate not only the OpenERP system but also the customers particularities. This happens without any kind of script or programming. It has been possible to carry out such a system thanks to the descriptive approach of OpenERP components. </field>
@@ -163,7 +162,6 @@
             <field name="project_id" ref="project.project_project_9"/>
         </record>
         <record id="scrum_product_backlog_1" model="project.scrum.product.backlog">
-            <field name="priority">3</field>
             <field name="name">New accounting module</field>
             <field name="expected_hours">111.0</field>
             <field name="note">The accounting module of OpenERP (financial accounting and management accounting) is being reshaped. New functionalities will be added: intangible assets, a new way of presenting ledgers and bookings, new stock valuation calculation, and lots of predefined reports. </field>
@@ -172,7 +170,6 @@
             <field name="project_id" ref="project.project_project_9"/>
         </record>
         <record id="scrum_product_backlog_2" model="project.scrum.product.backlog">
-            <field name="priority">3</field>
             <field name="name">Automated Plugin System to install/uninstall modules</field>
             <field name="expected_hours">4.0</field>
             <field name="note">We have to develop a plug-in system which will enable to install/remove modules. The basic version of OpenERP will include only the required minimum, and you will select the modules thanks to the plug-in manager. This allows you to limit your system to your real needs: quality management, localisations, project and service management, marketing campaigns, and so on... </field>
@@ -271,7 +268,7 @@
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Review all English Terms</field>
             <field name="state">done</field>
-            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date_end"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_3"/>
         </record>
         <record id="scrum_task_4" model="project.task">
@@ -280,7 +277,7 @@
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Review all french terms</field>
           	<field name="state">done</field>
-            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date_end"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_3"/>
         </record>
         <record id="scrum_task_5" model="project.task">
@@ -289,7 +286,7 @@
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Analytic Accounting features</field>
           	<field name="state">done</field>
-            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date_end"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
         <record id="scrum_task_6" model="project.task">
@@ -346,7 +343,7 @@
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Bugfix - memory leak</field>
           	<field name="state">done</field>
-            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date_end"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_4"/>
         </record>
         <record id="scrum_task_13" model="project.task">
