@@ -27,7 +27,7 @@ import time
 from manager import ustr
 from win32com.mapi import mapitags
 import pythoncom
-import win32com
+import win32com 
 import win32ui
 
 waittime = 10
@@ -202,7 +202,6 @@ class XMLRpcConn(object):
             if attachments:
                 result = self.MakeAttachment([rec], mail)
             attachment_ids = result.get(model, {}).get(res_id, [])
-            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','history',model, res_id, msg, attachment_ids)
             new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
             flag = True
         if flag:
