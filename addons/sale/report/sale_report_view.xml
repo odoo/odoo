@@ -3,6 +3,7 @@
 <data>
 
     <record id="view_order_product_tree" model="ir.ui.view">
+        <field eval="1" name="priority"/>
         <field name="name">sale.report.tree</field>
         <field name="model">sale.report</field>
         <field name="type">tree</field>
@@ -163,6 +164,7 @@
         <field name="view_mode">graph,tree</field>
         <field name="domain">[('state','in',('manual','progress')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
         <field name="view_id" ref="view_sales_by_partner_graph"/>
+        <field name="context">{'group_by_no_leaf':1,'group_by':['partner_id']}</field>
     </record>
     <record id="open_view_sales_by_partner_graph" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -208,6 +210,7 @@
         <field name="view_mode">graph,tree</field>
         <field name="domain">[('state','in',('manual','progress','done')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
         <field name="view_id" ref="view_sales_by_salesman_graph"/>
+        <field name="context">{'group_by_no_leaf':1,'group_by':['user_id']}</field>
     </record>
    <record id="open_view_sales_by_salesman_graph" model="ir.actions.act_window.view">
             <field eval="7" name="sequence"/>
@@ -227,7 +230,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Sales by Product Category">
-                <field name="product_id"/>
+                <field name="categ_id"/>
                 <field name="price_total"/>
             </tree>
         </field>
@@ -252,6 +255,7 @@
         <field name="view_mode">graph,tree</field>
         <field name="domain">[('state','in',('manual','progress','done')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
         <field name="view_id" ref="view_sales_product_total_price_graph"/>
+        <field name="context">{'group_by_no_leaf':1,'group_by':['categ_id']}</field>
     </record>
     <record id="open_view_sales_product_total_price_graph" model="ir.actions.act_window.view">
             <field eval="3" name="sequence"/>
