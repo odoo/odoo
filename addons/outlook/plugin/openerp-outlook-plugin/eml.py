@@ -50,8 +50,7 @@ def generateEML(mail):
 
     eml_name= ustr(sub).encode('iso-8859-1')+'-'+str(mail.EntryID)[-9:]
     ls = ['*', '/', '\\', '<', '>', ':', '?', '"', '|', '\t', '\n']
-    #mails_folder_path = os.path.abspath("%temp%\\dialogs\\resources\\mails\\")
-    mails_folder_path = os.path.abspath("C:\\printing")
+    mails_folder_path = os.path.abspath("%temp%\\dialogs\\resources\\mails\\")
     attachments_folder_path = mails_folder_path + "\\attachments\\"
     if not os.path.exists(attachments_folder_path):
         os.makedirs(attachments_folder_path)
