@@ -33,7 +33,7 @@ items and the chart of accounts.
     'update_xml': [
         'security/account_security.xml',
     ],
-    'demo_xml': [],
+    'demo_xml': ['account_accountant_demo.xml'],
     'test': [],
     'installable': True,
     'active': False,
