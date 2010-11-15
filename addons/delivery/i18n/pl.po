@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 15:04+0000\n"
+"PO-Revision-Date: 2010-11-08 08:28+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-11-09 04:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
-msgstr ""
+msgstr "Odn. zamówienia"
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
@@ -34,7 +34,7 @@ msgstr "Miejsce docelowe"
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr ""
+msgstr "Waga netto"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
@@ -45,7 +45,7 @@ msgstr "Nie ma ceny !"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "Pozycja siatki dostaw"
 
 #. module: delivery
 #: constraint:ir.actions.act_window:0
@@ -72,7 +72,7 @@ msgstr "Pozycja tabeli opłat za dostawy"
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr ""
+msgstr "Wydanie zewnętrzne"
 
 #. module: delivery
 #: view:res.partner:0
@@ -82,12 +82,12 @@ msgstr "Właściwości dostaw"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr ""
+msgstr "Pobrania do zafakturowania"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
+msgstr "Ustala kolejność wyświetlania w siatce dostaw"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -98,12 +98,12 @@ msgstr "Kraje"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "Wydanie zewnętrzne :"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sale Order"
-msgstr ""
+msgstr "Zamówienie sprzedaży"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -130,11 +130,13 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Jeśli pole Aktywne jest nieustawione, to możesz ukryć siatkę dostaw bez jej "
+"usuwania."
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Przesunięcie zapasu"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
@@ -147,12 +149,12 @@ msgstr ""
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Odn. śledzenia przewoźnika"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
 msgid "Net Weight"
-msgstr ""
+msgstr "Waga netto"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -167,7 +169,7 @@ msgstr "Definicja tabeli"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Anuluj"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -182,22 +184,22 @@ msgstr ""
 #. module: delivery
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "Fakturowane na"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Pobranie"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
-msgstr ""
+msgstr "Utwórz dostawę"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
@@ -239,7 +241,7 @@ msgstr "Błąd: JS musi być innej kategorii niż JM."
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Date"
-msgstr ""
+msgstr "Data zamówienia"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -249,12 +251,12 @@ msgstr "Nazwa tabeli"
 #. module: delivery
 #: view:stock.move:0
 msgid "Weights"
-msgstr ""
+msgstr "Wagi"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "Liczba paczek"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -274,7 +276,7 @@ msgstr "Metoda dostawy"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "Brak siatek !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -302,7 +304,7 @@ msgstr ""
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr ""
+msgstr "Numer partii"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -318,7 +320,7 @@ msgstr "Aktywna"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Shipping Date"
-msgstr ""
+msgstr "Data wysyłki"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
@@ -344,7 +346,7 @@ msgstr "Zmienna"
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "Ta metoda dostawy będzie stosowana przy fakturowaniu z pobrania."
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -354,7 +356,7 @@ msgstr "Wartość maksymalna"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Quantity"
-msgstr ""
+msgstr "Ilość"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
@@ -366,6 +368,7 @@ msgstr "Kod pocztowy wysyłki"
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Wypełnij to pole, jeśli planujesz fakturować wysyłkę na podstawie pobrania."
 
 #. module: delivery
 #: constraint:ir.model:0
@@ -388,7 +391,7 @@ msgstr "Sprzedaż i zakupy"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "Create Deliveries"
-msgstr ""
+msgstr "Utwórz dostawy"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_cost
@@ -399,7 +402,7 @@ msgstr "Koszty dostawy"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -453,6 +456,8 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Jeśli pole Aktywne jest nieustawione, to możesz ukryć przewoźnika bez jego "
+"usuwania."
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -467,7 +472,7 @@ msgstr "Przewoźnik"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Apply"
-msgstr ""
+msgstr "_Zastosuj"
 
 #. module: delivery
 #: field:sale.order,id:0

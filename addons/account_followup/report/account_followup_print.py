@@ -20,10 +20,8 @@
 ##############################################################################
 
 import time
-import ir
 
 import pooler
-from osv import osv
 from report import report_sxw
 
 class report_rappel(report_sxw.rml_parse):
@@ -37,13 +35,12 @@ class report_rappel(report_sxw.rml_parse):
             'get_text': self._get_text
                                 })
 
-    def _ids_to_objects(self, partners_ids):
+    def _ids_to_objects(self, partner_ids):
         pool = pooler.get_pool(self.cr.dbname)
         all_partners = []
-        for partner in partners_ids:
-            partners = pool.get('account_followup.stat').browse(self.cr, self.uid, [partner])
-            for par in partners:
-                all_partners.append(par.name)
+        for partner in pool.get('res.partner').browse(self.cr, self.uid, partner_ids):
+            if partner not in all_partners:
+                all_partners.append(partner)
         return all_partners
 
     def _adr_get(self, partner, type):

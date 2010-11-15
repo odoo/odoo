@@ -6,16 +6,16 @@
 #    d$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -27,8 +27,8 @@ from datetime import timedelta
 
 import netsvc
 from osv import fields, osv
-from tools import config
 from tools.translate import _
+import decimal_precision as dp
 
 def prev_bounds(cdate=False):
     when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
@@ -52,8 +52,9 @@ class hr_contract_wage_type(osv.osv):
 
     _inherit = 'hr.contract.wage.type'
     _columns = {
-        'type' : fields.selection([('basic','Basic'), ('gross','Gross'), ('net','Net')], 'Type', required=True),
+        'type': fields.selection([('basic','Basic'), ('gross','Gross'), ('net','Net')], 'Type', required=True),
     }
+
 hr_contract_wage_type()
 
 class hr_passport(osv.osv):
@@ -120,8 +121,7 @@ class hr_payroll_structure(osv.osv):
             'code':code+"(copy)",
             'company_id':self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         }
-        res_id = super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
-        return res_id
+        return super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
 
 hr_payroll_structure()
 
@@ -135,7 +135,6 @@ class hr_contract(osv.osv):
         res = {}
         ids += context.get('employee_structure', [])
 
-        slip_pool = self.pool.get('hr.payslip')
         slip_line_pool = self.pool.get('hr.payslip.line')
 
         for contract in self.browse(cr, uid, ids, context):
@@ -156,14 +155,13 @@ class hr_contract(osv.osv):
                 update['basic'] = contract.wage
 
             sal_type = contract.wage_type_id.type
-            function = contract.struct_id.id
+#            function = contract.struct_id.id
             lines = contract.struct_id.line_ids
             if not contract.struct_id:
                 res[contract.id] = obj['basic']
                 continue
 
             ad = []
-            c_type = {}
             for line in lines:
                 cd = line.code.lower()
                 obj[cd] = line.amount or 0.0
@@ -178,7 +176,7 @@ class hr_contract(osv.osv):
                     exp = line.category_id.condition
                     calculate = eval(exp, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
 
                 if not calculate:
                     continue
@@ -186,14 +184,14 @@ class hr_contract(osv.osv):
                 percent = 0.0
                 value = 0.0
                 base = False
-                company_contrib = 0.0
+#                company_contrib = 0.0
                 base = line.category_id.base
 
                 try:
                     #Please have a look at the configuration guide.
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
 
                 if sal_type in ('gross', 'net'):
                     if line.amount_type == 'per':
@@ -231,7 +229,7 @@ class hr_contract(osv.osv):
                     per = (all_per - ded_per)
                 else:
                     per = all_per
-                if per <=0 :
+                if per <=0:
                     per *= -1
                 final = (per * 100) + 100
                 basic = (sal * 100) / final
@@ -283,7 +281,7 @@ class hr_contract(osv.osv):
                     try:
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
-                        raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
                 elif line.amount_type in ('fix', 'func'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
@@ -313,11 +311,11 @@ class hr_contract(osv.osv):
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
     _columns = {
-        'permit_no':fields.char('Work Permit No', size=256, required=False, readonly=False),
-        'passport_id':fields.many2one('hr.passport', 'Passport', required=False),
-        'visa_no':fields.char('Visa No', size=64, required=False, readonly=False),
+        'permit_no': fields.char('Work Permit No', size=256, required=False, readonly=False),
+        'passport_id': fields.many2one('hr.passport', 'Passport', required=False),
+        'visa_no': fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
-        'struct_id' : fields.many2one('hr.payroll.structure', 'Salary Structure'),
+        'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure'),
         'working_days_per_week': fields.integer('Working Days', help="No of Working days / week for an employee"),
         'basic': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Basic Salary', digits=(14,2)),
         'gross': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Gross Salary', digits=(14,2)),
@@ -395,8 +393,6 @@ class payroll_register(osv.osv):
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
-        func_pool = self.pool.get('hr.payroll.structure')
-        slip_line_pool = self.pool.get('hr.payslip.line')
         wf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
@@ -859,7 +855,7 @@ class hr_payslip(osv.osv):
                     try:
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
-                        raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
                 elif line.amount_type in ('fix', 'func'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
@@ -882,12 +878,12 @@ class hr_payslip(osv.osv):
                 slip_line_obj.write(cr, uid, [line.id], {'total':amount}, context=context)
 
             record = {
-                'allounce':round(allow),
-                'deduction':round(deduct),
-                'grows':round(rs.basic + allow),
-                'net':round(rs.basic + allow - deduct),
+                'allounce':allow,
+                'deduction':deduct,
+                'grows':rs.basic + allow,
+                'net':rs.basic + allow - deduct,
                 'other_pay':others,
-                'total_pay':round(rs.basic + allow - deduct)
+                'total_pay':rs.basic + allow - deduct
             }
             res[rs.id] = record
         return res
@@ -908,15 +904,15 @@ class hr_payslip(osv.osv):
             ('done','Paid Salary'),
             ('cancel','Reject'),
         ],'State', select=True, readonly=True),
-        'basic_before_leaves': fields.float('Basic Salary', readonly=True,  digits=(16, 2)),
-        'leaves': fields.float('Leave Deductions', readonly=True,  digits=(16, 2)),
-        'basic': fields.float('Net Basic', readonly=True,  digits=(16, 2)),
-        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 2)),
-        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, 2)),
-        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits=(16, 2)),
-        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits=(16, 2)),
-        'other_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Others', digits=(16, 2)),
-        'total_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Total Payment', digits=(16, 2)),
+        'basic_before_leaves': fields.float('Basic Salary', readonly=True,  digits_compute=dp.get_precision('Account')),
+        'leaves': fields.float('Leave Deductions', readonly=True,  digits_compute=dp.get_precision('Account')),
+        'basic': fields.float('Net Basic', readonly=True,  digits_compute=dp.get_precision('Account')),
+        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', digits_compute=dp.get_precision('Account')),
+        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits_compute=dp.get_precision('Account')),
+        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits_compute=dp.get_precision('Account')),
+        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits_compute=dp.get_precision('Account')),
+        'other_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Others', digits_compute=dp.get_precision('Account')),
+        'total_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Total Payment', digits_compute=dp.get_precision('Account')),
         'line_ids':fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id':fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'holiday_days': fields.float('No of Leaves', readonly=True),
@@ -995,7 +991,6 @@ class hr_payslip(osv.osv):
         return True
 
     def verify_sheet(self, cr, uid, ids, context={}):
-        payslip_pool = self.pool.get('hr.payslip.line')
         register_pool = self.pool.get('company.contribution')
         register_line_pool = self.pool.get('hr.contibution.register.line')
 
@@ -1076,12 +1071,9 @@ class hr_payslip(osv.osv):
         return result
 
     def compute_sheet(self, cr, uid, ids, context=None):
-        emp_pool = self.pool.get('hr.employee')
-        slip_pool = self.pool.get('hr.payslip')
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
         holiday_pool = self.pool.get('hr.holidays')
-        contract_obj = self.pool.get('hr.contract')
         sequence_obj = self.pool.get('ir.sequence')
         if context is None:
             context = {}
@@ -1089,8 +1081,8 @@ class hr_payslip(osv.osv):
 
         #Check for the Holidays
         def get_days(start, end, month, year, calc_day):
-            count = 0
             import datetime
+            count = 0
             for day in range(start, end):
                 if datetime.date(year, month, day).weekday() == calc_day:
                     count += 1
@@ -1125,7 +1117,6 @@ class hr_payslip(osv.osv):
             #lines += slip.employee_id.line_ids
 
             ad = []
-            lns = {}
             all_per = 0.0
             ded_per = 0.0
             all_fix = 0.0
@@ -1142,7 +1133,6 @@ class hr_payslip(osv.osv):
                 obj['basic'] = contract.wage
                 update['basic'] = contract.wage
 
-            c_type = { }
             for line in lines:
                 cd = line.code.lower()
                 obj[cd] = line.amount or 0.0
@@ -1157,7 +1147,7 @@ class hr_payslip(osv.osv):
                     exp = line.category_id.condition
                     calculate = eval(exp, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
 
                 if not calculate:
                     continue
@@ -1165,14 +1155,14 @@ class hr_payslip(osv.osv):
                 percent = 0.0
                 value = 0.0
                 base = False
-                company_contrib = 0.0
+#                company_contrib = 0.0
                 base = line.category_id.base
 
                 try:
                     #Please have a look at the configuration guide.
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
 
                 if sal_type in ('gross', 'net'):
                     if line.amount_type == 'per':
@@ -1218,7 +1208,7 @@ class hr_payslip(osv.osv):
                     per = (all_per - ded_per)
                 else:
                     per = all_per
-                if per <=0 :
+                if per <=0:
                     per *= -1
                 final = (per * 100) + 100
                 basic = (sal * 100) / final
@@ -1310,7 +1300,7 @@ class hr_payslip(osv.osv):
 
                 slip_line_pool.create(cr, uid, res, context=context)
             basic = basic - total
-            leaves = total
+#            leaves = total
             update.update({
                 'basic':basic,
                 'basic_before_leaves': round(basic_before_leaves),
@@ -1332,7 +1322,6 @@ class hr_payslip_line(osv.osv):
     _description = 'Payslip Line'
 
     def onchange_category(self, cr, uid, ids, category_id):
-        seq = 0
         res = {
         }
         if category_id:
@@ -1378,7 +1367,7 @@ class hr_payslip_line(osv.osv):
             ('func','Function Value'),
         ],'Amount Type', select=True, required=True),
         'amount': fields.float('Amount / Percentage', digits=(16, 4)),
-        'total': fields.float('Sub Total', readonly=True, digits=(16, 4)),
+        'total': fields.float('Sub Total', readonly=True, digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
         'sequence': fields.integer('Sequence'),
         'note':fields.text('Description'),
@@ -1459,7 +1448,7 @@ class hr_employee(osv.osv):
                 try:
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
                 amount = 0.0
                 if line.amount_type == 'per':
                     amount = amt * line.amount

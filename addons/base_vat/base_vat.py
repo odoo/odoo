@@ -22,7 +22,6 @@
 import string
 
 from osv import osv, fields
-from tools.func import partial
 from tools.translate import _
 
 _ref_vat = {
@@ -82,7 +81,6 @@ class res_partner(osv.osv):
             #  it starts with 2 letters
             #  has more than 3 characters
             return cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
-
         vat_country, vat_number = self._split_vat(self.browse(cr, uid, ids)[0].vat)
         if default_vat_check(vat_country, vat_number):
             vat_no = vat_country in _ref_vat and _ref_vat[vat_country] or 'Country Code + Vat Number'
@@ -708,8 +706,6 @@ class res_partner(osv.osv):
         if int(vat[7:10]) <= 0:
             return False
         if int(vat[7:10]) > 100 and int(vat[7:10]) < 120:
-            return False
-        if int(vat[7:10]) > 121:
             return False
 
         sum = int(vat[0]) + mult_add(2, int(vat[1])) + int(vat[2]) + \

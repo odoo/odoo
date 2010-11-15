@@ -45,11 +45,25 @@
             	</search>
             </field>
         </record>
+        
+        <record id="view_task_hour_per_month_graph" model="ir.ui.view">
+            <field name="name">report.timesheet.task.user.graph</field>
+            <field name="model">report.timesheet.task.user</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Task Hours Per Month" type="bar">
+                     <field name="user_id"/>
+                     <field name="task_hrs" operator="+"/>
+                     <field name="timesheet_hrs" operator="+"/>
+                 </graph>
+            </field>
+        </record>
+                
         <record id="action_report_timesheet_task_user" model="ir.actions.act_window">
             <field name="name">Task Hours Per Month</field>
             <field name="res_model">report.timesheet.task.user</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_report_timesheet_task_user_search"/>
         </record>

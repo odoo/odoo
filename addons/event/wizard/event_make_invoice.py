@@ -57,6 +57,7 @@ class event_make_invoice(osv.osv_memory):
             if not event_reg.event_id.product_id:
                     raise osv.except_osv(_('Warning !'),
                         _("Event related doesn't have any product defined"))
+
             if not event_reg.partner_invoice_id:
                    raise osv.except_osv(_('Warning !'),
                         _("Registration doesn't have any partner to invoice."))
@@ -67,20 +68,19 @@ class event_make_invoice(osv.osv_memory):
     def make_invoice(self, cr, uid, ids, context=None):
         reg_obj = self.pool.get('event.registration')
         mod_obj = self.pool.get('ir.model.data')
-        newinv = []
         if context is None:
             context = {}
 
         for data in self.browse(cr, uid, ids, context=context):
             res = reg_obj.action_invoice_create(cr, uid, context.get(('active_ids'),[]), data.grouped, date_inv = data.invoice_date)
 
-        form_id = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
-        form_res = mod_obj.browse(cr, uid, form_id, context=context).res_id
-        tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
-        tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
+        form_id = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        form_res = form_id and form_id[1] or False
+        tree_id = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
+        tree_res = tree_id and tree_id[1] or False
         return {
-            'domain': "[('id','in',%s)]" % res,
-            'name': 'Invoices',
+            'domain': "[('id', 'in', %s)]" % res,
+            'name': _('Customer Invoices'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',

@@ -8,15 +8,15 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Follow-Up lines">
-                    <field name="name"/>
+                    <field name="partner_id"/>
                     <field name="date_move"/>
                     <field name="date_move_last"/>
                     <field name="date_followup" />
                     <field name="followup_id" />
-                    <field name="balance" sum="Balance"/>
                     <field name="debit"/>
                     <field name="credit"/>
-                    <field name="company_id"/>
+                    <field name="balance" sum="Balance"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="blocked" invisible="1" />
 					<field name="period_id" invisible="1" />
 
@@ -30,7 +30,7 @@
            <field name="type">graph</field>
            <field name="arch" type="xml">
                <graph string="Follow-Up lines" type="bar">
-                  <field name="name"/>
+                  <field name="partner_id"/>
                   <field name="balance" operator="+"/>
                </graph>
            </field>
@@ -51,18 +51,20 @@
               			   domain="[('blocked','=', False)]"
                            help = "Including journal entries marked as a litigation"/>
               <separator orientation="vertical"/>
-              <field name="name"/>
+              <field name="partner_id"/>
               <field name="balance" />
               <field name="date_move" />
               <field name="date_move_last" />
               </group>
               <newline/>
                 <group expand="1" string="Group By...">
-                	<filter string="Followup Level" icon="terp-stock_effects-object-colorize" name="followup_level" context="{'group_by':'followup_id'}" />
-                    <filter string="Latest Followup Date" icon="terp-go-month" context="{'group_by':'date_followup'}" />
+                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                     <separator orientation="vertical"/>
                     <filter string="Litigation" icon="terp-camera_test"  context="{'group_by':'blocked'}" />
                     <separator orientation="vertical"/>
+                    <filter string="Followup Level" icon="terp-stock_effects-object-colorize" name="followup_level" context="{'group_by':'followup_id'}" />
+                    <filter string="Latest Followup Date" icon="terp-go-month" context="{'group_by':'date_followup'}" />
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}" />
                 </group>
             </search>
@@ -75,10 +77,10 @@
             <field name="view_mode">tree,graph</field>
             <field name="context">{'search_default_followup_level':1,'search_default_fiscalyear':1}</field>
             <field name="search_view_id" ref="view_account_followup_stat_search"/>
+            <field name="help">Follow up on the reminders sent over to your partners for unpaid invoices.</field>
         </record>
-     <!-- <menuitem name="Partners Follow-Ups" id="menu_action_followup_stat" parent="account.menu_finance_generic_reporting"/> -->
 
-        <menuitem action="action_followup_stat" id="menu_action_followup_stat_follow" parent="account.next_id_22"/>
+        <menuitem action="action_followup_stat" id="menu_action_followup_stat_follow" parent="account.next_id_22" groups="account.group_account_user"/>
 
     </data>
 </openerp>

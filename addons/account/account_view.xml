@@ -77,6 +77,7 @@
             <field name="res_model">account.fiscalyear</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,search</field>
+            <field name="help">Define your company's fiscal year depending on the period you have chosen to follow. A fiscal year is a 1 year period over which a company budgets its spending. It may run over any period of 12 months. The fiscal year is referred to by the date in which it ends. For example, if a company's fiscal year ends November 30, 2011, then everything between December 1, 2010 and November 30, 2011  would be referred to as FY 2011. Not using the actual calendar year gives many companies an advantage, allowing them to close their books at a time which is most convenient for them.</field>
         </record>
         <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_accounting"/>
         <menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
@@ -144,6 +145,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,search</field>
             <field name="context">{'search_default_draft': 1}</field>
+            <field name="help">Here, you can define a period, an interval of time between successive closings of the books of your company. An accounting period typically is a month or a quarter, corresponding to the tax year used by the business. Create and manage them from here and decide whether a period should be left open or closed depending on your company's activities over a specific period.</field>
         </record>
         <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23"/>
 
@@ -237,11 +239,11 @@
             </field>
         </record>
         <record id="view_treasory_graph" model="ir.ui.view">
-           <field name="name">account.treasory.graph</field>
+           <field name="name">account.treasury.graph</field>
            <field name="model">account.account</field>
            <field name="type">graph</field>
            <field name="arch" type="xml">
-               <graph string="Treasory Analysis" type="bar">
+               <graph string="Treasury Analysis" type="bar">
                   <field name="name"/>
                   <field name="balance" operator="+"/>
                </graph>
@@ -254,6 +256,7 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="view_account_search"/>
             <field name="view_id" ref="view_account_list"/>
+            <field name="help">Create and manage accounts you will need to record financial entries in. Accounts are financial records of your company that register all financial transactions. Companies present their annual accounts in two main parts: the balance sheet and the income statement (profit and loss account). The annual accounts of a company are required by law to disclose a certain amount of information. They have to be certified by an external auditor yearly.</field>
         </record>
         <menuitem id="account_account_menu" name="Accounts" parent="menu_finance_accounting"/>
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
@@ -351,6 +354,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_journal_view_search"/>
+            <field name="help">Here you can personalize and create each view of your financial journals by selecting the fields you want to appear and the sequence they will appear.</field>
         </record>
 
         <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_low_level"/>
@@ -463,6 +467,7 @@
             <field name="res_model">account.journal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Create and manage your company's financial journals from this menu. A journal is a business diary in which all financial data related to the day to day business transactions of your company is recorded using double-entry book keeping system. Depending on the nature of its activities and number of daily transactions, a company may keep several  types of specialized journals such as a cash journal, purchases journal, and sales journal.</field>
         </record>
         <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="account_account_menu"/>
 
@@ -555,12 +560,12 @@
                         <page string="Transaction" name="statement_line_ids">
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <tree editable="bottom" string="Statement lines">
-                                    <field name="sequence" readonly="1"/>
-                                    <field name="date"/>
-                                    <field name="ref"/>
+                                    <field name="sequence" readonly="1" invisible="1"/>
+                                    <field name="date" groups="base.group_extended"/>
                                     <field name="name"/>
-                                    <field name="type"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency, {'amount': amount})"/>
+                                    <field name="ref"/>
+                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
@@ -568,8 +573,8 @@
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
-                                    <field name="type"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency, {'amount': amount})"/>
+                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
@@ -742,6 +747,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_type_search"/>
+            <field name="help">An account type is a name or code given to an account that indicates its purpose. For example, the account type could be linked to an asset account, expense account or payable account. From this view, you can create and manage the account types you need to be used for your company management.</field>
         </record>
         <menuitem action="action_account_type_form" groups="base.group_extended,group_account_manager" id="menu_action_account_type_form" parent="menu_low_level"/>
         <!--
@@ -854,6 +860,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_tax_code_tree"/>
             <field name="search_view_id" ref="view_tax_code_search"/>
+            <field name="help">A tax code is a reference of a tax that will be taken out of a gross income depending on the country and sometimes industry sector. OpenERP allows you to define and manage them from this menu.</field>
         </record>
        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_accounting"/>
        <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="menu_low_level" sequence="12"/>
@@ -983,7 +990,7 @@
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id" groups="base.group_extended"/>
-                    <field name="analytic_account_id" groups="base.group_extended" domain="[('parent_id','!=',False)]"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                     <field name="amount_currency" groups="base.group_extended" attrs="{'readonly':[('state','=','valid')]}"/>
                     <field name="currency_id" groups="base.group_extended" attrs="{'readonly':[('state','=','valid')]}"/>
                     <field name="reconcile_partial_id" groups="base.group_extended"/>
@@ -1060,13 +1067,13 @@
 
                             <group col="2" colspan="2"  groups="base.group_extended">
                                 <separator colspan="2" string="Analytic"/>
-                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                             </group>
                             <separator string="Narration" colspan="4"/>
                             <field name="narration" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Analytic Lines" groups="base.group_extended">
-                            <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}" groups="base.group_extended"/>
+                        <page string="Analytic Lines" groups="base.group_analytic_accounting">
+                            <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                         </page>
                     </notebook>
                 </form>
@@ -1105,15 +1112,15 @@
                             <field name="blocked" select="3"/>
                             <newline/>
                             <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-                            <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                            <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                             <separator colspan="4" string="State"/>
                             <newline/>
                             <field name="reconcile_id"/>
                             <field name="reconcile_partial_id"/>
                             <field name="state"/>
                         </page>
-                        <page string="Analytic Lines" groups="base.group_extended">
-                            <field colspan="4" name="analytic_lines" nolabel="1" groups="base.group_extended"/>
+                        <page string="Analytic Lines" groups="base.group_analytic_accounting">
+                            <field colspan="4" name="analytic_lines" nolabel="1" />
                         </page>
                     </notebook>
                 </form>
@@ -1353,13 +1360,13 @@
 
                                             <group col="2" colspan="2" groups="base.group_extended">
                                                 <separator colspan="2" string="Analytic"/>
-                                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                                             </group>
                                             <separator string="Narration" colspan="4"/>
                                             <field name="narration" colspan="4" nolabel="1"/>
                                         </page>
-                                        <page string="Analytic Lines" groups="base.group_extended">
-                                            <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}" groups="base.group_extended"/>
+                                        <page string="Analytic Lines" groups="base.group_analytic_accounting">
+                                            <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                                         </page>
                                     </notebook>
                                 </form>
@@ -1372,7 +1379,7 @@
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
-                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency" groups="base.group_extended"/>
                                     <field name="currency_id" groups="base.group_extended"/>
                                     <field name="tax_code_id"/>
@@ -1512,8 +1519,8 @@
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
-                                    <field name="type"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
+                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id)]" name="account_id"/>
                                     <field name="amount"/>
                                     <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'date':date}" name="reconcile_id"/>
@@ -1521,8 +1528,8 @@
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
-                                    <field name="type"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
+                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id)]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
@@ -1991,7 +1998,7 @@
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
-                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -2593,23 +2600,23 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                         <page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <tree editable="bottom" string="Statement lines">
-                                    <field name="sequence"/>
-                                    <field name="date"/>
-                                    <field name="ref"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="date" groups="base.group_extended"/>
                                     <field name="name"/>
-                                    <field name="type"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency, {'amount': amount})"/>
+                                    <field name="ref"/>
+                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="base.group_extended" />
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
-                                    <field name="type"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
+                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="base.group_extended" />
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
                                     <field name="ref"/>
                                     <field name="sequence"/>
@@ -2673,7 +2680,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                         <field name="state" colspan="4"/>
                         <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object" groups="base.group_extended"/>
                         <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-dialog-close" type="object"/>
-                        <button name="button_open" states="draft" string="Open CashBox" icon="terp-document-new" type="object"/>
+                        <button name="button_open" states="draft" string="Open CashBox" icon="gtk-go-forward" type="object"/>
                     </group>
                 </form>
             </field>

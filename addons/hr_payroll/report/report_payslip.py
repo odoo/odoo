@@ -8,22 +8,21 @@
 #    d$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from datetime import datetime
-
 from report import report_sxw
 from tools import amount_to_text_en
 
@@ -51,7 +50,7 @@ class payslip_report(report_sxw.rml_parse):
         for id in range(len(obj)):
             if obj[id].category_id.type in ('advance', 'loan', 'otherpay', 'otherdeduct', 'installment'):
                 ids.append(obj[id].id)
-        if len(ids):
+        if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
@@ -62,7 +61,7 @@ class payslip_report(report_sxw.rml_parse):
         for id in range(len(obj)):
             if obj[id].type == 'leaves':
                 ids.append(obj[id].id)
-        if len(ids):
+        if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
@@ -73,7 +72,7 @@ class payslip_report(report_sxw.rml_parse):
         for id in range(len(obj)):
             if obj[id].category_id.type == 'allowance' and obj[id].type != 'leaves':
                 ids.append(obj[id].id)
-        if len(ids):
+        if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
@@ -84,7 +83,7 @@ class payslip_report(report_sxw.rml_parse):
         for id in range(len(obj)):
             if obj[id].category_id.type == 'deduction' and obj[id].type != 'leaves':
                 ids.append(obj[id].id)
-        if len(ids):
+        if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 

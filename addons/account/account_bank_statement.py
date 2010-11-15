@@ -43,29 +43,8 @@ class account_bank_statement(osv.osv):
             seq = 0
             for line in statement.line_ids:
                 seq += 1
-                if not line.sequence:
-                    account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': seq}, context=context)
+                account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': seq}, context=context)
         return res
-
-    def button_import_invoice(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        context.update({'statement_id': ids[0]})
-
-        return {
-            'name': _('Import Invoice'),
-            'context': context,
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'account.statement.from.invoice',
-            'views': [(resource_id,'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'nodestroy': True
-        }
 
     def _default_journal_id(self, cr, uid, context={}):
         journal_pool = self.pool.get('account.journal')
@@ -142,7 +121,7 @@ class account_bank_statement(osv.osv):
             res[statement_id] = (currency_id, currency_names[currency_id])
         return res
 
-    _order = "date desc"
+    _order = "date desc, id desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
@@ -174,7 +153,7 @@ class account_bank_statement(osv.osv):
 
     _defaults = {
         'name': "/",
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
         'balance_start': _default_balance_start,
         'journal_id': _default_journal_id,
@@ -272,13 +251,10 @@ class account_bank_statement(osv.osv):
 
         if st_line.account_id and st_line.account_id.currency_id and st_line.account_id.currency_id.id <> company_currency_id:
             val['currency_id'] = st_line.account_id.currency_id.id
-            if company_currency_id==st_line.account_id.currency_id.id:
-                amount_cur = st_line.amount
-            else:
-                amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                        st_line.account_id.currency_id.id, amount, context=context,
-                        account=acc_cur)
-            val['amount_currency'] = amount_cur
+            amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
+                    st_line.account_id.currency_id.id, amount, context=context,
+                    account=acc_cur)
+            val['amount_currency'] = -amount_cur
 
         move_line_id = account_move_line_obj.create(cr, uid, val, context=context)
         torec.append(move_line_id)
@@ -319,7 +295,7 @@ class account_bank_statement(osv.osv):
         return move_id
 
     def get_next_st_line_number(self, cr, uid, st_number, st_line, context=None):
-        return st_number + ' - ' + str(st_line.sequence)
+        return st_number + '/' + str(st_line.sequence)
 
     def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
         st = self.browse(cr, uid, st_id, context)
@@ -426,9 +402,7 @@ account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
 
-    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context=None):
-        res_users_obj = self.pool.get('res.users')
-        res_currency_obj = self.pool.get('res.currency')
+    def onchange_type(self, cr, uid, line_id, partner_id, type, context=None):
         res = {'value': {}}
         obj_partner = self.pool.get('res.partner')
         if context is None:
@@ -436,39 +410,21 @@ class account_bank_statement_line(osv.osv):
         if not partner_id:
             return res
         account_id = False
-        line = self.browse(cursor, user, line_id)
+        line = self.browse(cr, uid, line_id)
         if not line or (line and not line[0].account_id):
-            part = obj_partner.browse(cursor, user, partner_id, context=context)
+            part = obj_partner.browse(cr, uid, partner_id, context=context)
             if type == 'supplier':
                 account_id = part.property_account_payable.id
             else:
                 account_id = part.property_account_receivable.id
             res['value']['account_id'] = account_id
-
-        if account_id and (not line or (line and not line[0].amount)) and not context.get('amount', False):
-            company_currency_id = res_users_obj.browse(cursor, user, user,
-                    context=context).company_id.currency_id.id
-            if not currency_id:
-                currency_id = company_currency_id
-
-            cursor.execute('SELECT sum(debit-credit) \
-                FROM account_move_line \
-                WHERE (reconcile_id is null) \
-                    AND partner_id = %s \
-                    AND account_id=%s', (partner_id, account_id))
-            pgres = cursor.fetchone()
-            balance = pgres and pgres[0] or 0.0
-
-            balance = res_currency_obj.compute(cursor, user, company_currency_id,
-                currency_id, balance, context=context)
-            res['value']['amount'] = balance
         return res
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Communication', size=64, required=True),
         'date': fields.date('Date', required=True),
         'amount': fields.float('Amount'),
         'type': fields.selection([
@@ -492,7 +448,7 @@ class account_bank_statement_line(osv.osv):
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'type': 'general',
     }
 
