@@ -34,14 +34,14 @@ class procurement_order(osv.osv):
     def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
         '''
         Call the scheduler to check the procurement order
-
+        
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
         @param ids: List of selected IDs
         @param use_new_cursor: False or the dbname
         @param context: A standard dictionary for contextual values
-        @return:  Dictionary of values
+        @return:  Dictionary of values        
         '''
         if not context:
             context = {}
@@ -50,7 +50,7 @@ class procurement_order(osv.osv):
             if use_new_cursor:
                 cr = pooler.get_db(use_new_cursor).cursor()
             wf_service = netsvc.LocalService("workflow")
-
+    
             procurement_obj = self.pool.get('procurement.order')
             if not ids:
                 ids = procurement_obj.search(cr, uid, [], order="date_planned")
@@ -112,13 +112,13 @@ class procurement_order(osv.osv):
             if uid:
                 request = self.pool.get('res.request')
                 summary = '''Here is the procurement scheduling report.
-
+    
         Start Time: %s
         End Time: %s
         Total Procurements processed: %d
         Procurements with exceptions: %d
         Skipped Procurements (scheduled date outside of scheduler range) %d
-
+    
         Exceptions:\n'''% (start_date, end_date, report_total, report_except, report_later)
                 summary += '\n'.join(report)
                 request.create(cr, uid,
@@ -141,7 +141,7 @@ class procurement_order(osv.osv):
     def create_automatic_op(self, cr, uid, context=None):
         """
         Create procurement of  virtual stock < 0
-
+        
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
@@ -153,7 +153,6 @@ class procurement_order(osv.osv):
         product_obj = self.pool.get('product.product')
         proc_obj = self.pool.get('procurement.order')
         warehouse_obj = self.pool.get('stock.warehouse')
-        stock_rule_obj = self.pool.get('stock.warehouse.orderpoint')
         wf_service = netsvc.LocalService("workflow")
 
         warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
@@ -169,15 +168,7 @@ class procurement_order(osv.osv):
 
                 newdate = datetime.today()
                 if product.supply_method == 'buy':
-                    rule_id= stock_rule_obj.search(cr, uid, [('product_id', '=', product.id)])
-                    if not rule_id:
-                        location_id = warehouse.lot_input_id.id
-                        break
-                    rule_prd_id= stock_rule_obj.browse(cr, uid,rule_id)[0].product_id.id
-                    if rule_prd_id == product.id:
-                        location_id= stock_rule_obj.browse(cr, uid,rule_id)[0].location_id.id
-                    else:
-                        location_id = warehouse.lot_input_id.id
+                    location_id = warehouse.lot_input_id.id
                 elif product.supply_method == 'produce':
                     location_id = warehouse.lot_stock_id.id
                 else:
@@ -200,14 +191,14 @@ class procurement_order(osv.osv):
         '''
         Create procurement based on Orderpoint
         use_new_cursor: False or the dbname
-
+        
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param user_id: The current user ID for security checks
         @param context: A standard dictionary for contextual values
         @param param: False or the dbname
         @return:  Dictionary of values
-        """
+        """        
         '''
         if not context:
             context = {}

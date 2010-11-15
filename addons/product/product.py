@@ -69,7 +69,7 @@ class product_uom(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
             help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
-        'factor': fields.float('Ratio', required=True,digits=(12, 6),
+        'factor': fields.float('Ratio', required=True,digits=(12, 12),
             help='How many times this UoM is smaller than the reference UoM in this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits_compute=dp.get_precision('Product UoM'),
@@ -342,7 +342,7 @@ class product_product(osv.osv):
 
     def _product_price(self, cr, uid, ids, name, arg, context={}):
         res = {}
-        quantity = context.get('quantity', 1)
+        quantity = context.get('quantity') or 1.0
         pricelist = context.get('pricelist', False)
         if pricelist:
             for id in ids:

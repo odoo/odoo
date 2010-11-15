@@ -458,6 +458,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
+            <field name="context">{'type':'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help">Supplier Invoices allows you to enter and manage invoices issued by your suppliers. OpenERP generates draft of supplier invoices automatically so that you can control what you received from your supplier according to what you purchased or received.</field>
         </record>
