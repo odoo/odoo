@@ -703,7 +703,7 @@ class project_work(osv.osv):
 
     _defaults = {
         'user_id': lambda obj, cr, uid, context: uid,
-        'date': time.strftime('%Y-%m-%d %H:%M:%S')
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')
     }
 
     _order = "date desc"
