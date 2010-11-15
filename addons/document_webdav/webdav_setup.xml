@@ -12,7 +12,7 @@
                 <field name="domain">[]</field>
                 <field eval="1" name="resource_find_all"/>
                 <field eval="0" name="ressource_tree"/>
-                <field name="user_id" ref="base.user_root"/>
+                <field name="user_id" eval="False"/>
                 <field name="company_id" ref="base.main_company"/>
                 <field name="storage_id" ref="document.storage_default"/>
                 <field name="type">directory</field>
@@ -24,7 +24,7 @@
             <field name="domain">[]</field>
             <field eval="1" name="resource_find_all"/>
             <field eval="0" name="ressource_tree"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" eval="False"/>
             <field name="company_id" ref="base.main_company"/>
             <field model="document.directory" name="parent_id" ref="document_directory_principals0"/>
             <field name="storage_id" ref="document.storage_default"/>
@@ -45,9 +45,10 @@
             <field name="name">resources</field>
         </record>
         <record id="document_directory_uids1" model="document.directory">
-            <field name="domain">[]</field>
+            <field name="domain">[('id','=',uid)]</field>
             <field eval="1" name="resource_find_all"/>
             <field eval="0" name="ressource_tree"/>
+            <field name="user_id" eval="False"/>
             <field name="resource_field" ref="base.field_res_users_login"/>
             <field name="company_id" ref="base.main_company"/>
             <field model="document.directory" name="parent_id" ref="document_directory_principals0"/>
@@ -58,10 +59,10 @@
             <field name="name">__uids__</field>
         </record>
         <record id="document_directory_users1" model="document.directory">
-            <field name="domain">[]</field>
+            <field name="domain">[('id','=',uid)]</field>
             <field eval="1" name="resource_find_all"/>
             <field eval="0" name="ressource_tree"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" eval="False"/>
             <field name="resource_field" ref="base.field_res_users_login"/>
             <field name="company_id" ref="base.main_company"/>
             <field model="document.directory" name="parent_id" ref="document_directory_principals0"/>

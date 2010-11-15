@@ -142,11 +142,11 @@ class crm_opportunity(osv.osv):
             @param uid: the current user’s ID for security checks,
             @param ids: List of stage’s IDs
             @stage_id: change state id on run time """
-
         if not stage_id:
             return {'value':{}}
 
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
+
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
