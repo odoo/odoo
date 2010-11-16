@@ -1412,7 +1412,6 @@ def SerachOpenDocuemnt(txtProcessor,*args):
         txtProcessor.init_done=True
         return
     linktodoc = ""
-
     message_id = None
     try:
         session = win32com.client.Dispatch("MAPI.session")

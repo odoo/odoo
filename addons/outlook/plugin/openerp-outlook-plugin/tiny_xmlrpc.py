@@ -27,7 +27,7 @@ import time
 from manager import ustr
 from win32com.mapi import mapitags
 import pythoncom
-import win32com 
+import win32com
 import win32ui
 waittime = 10
 wait_count = 0
@@ -200,6 +200,7 @@ class XMLRpcConn(object):
             if attachments:
             	result = self.MakeAttachment([rec], mail)
             attachment_ids = result.get(model, {}).get(res_id, [])
+            execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','history',model, res_id, msg, attachment_ids)
             new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
             flag = True
 
@@ -267,36 +268,36 @@ class XMLRpcConn(object):
     	flag = False
     	id = -1
     	try:
-    		conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-    		email=eml.generateEML(mail)
-    		message_id   = None
-    		session = win32com.client.Dispatch("MAPI.session")
-    		session.Logon('Outlook')
-    		objMessage = session.GetMessage(mail.EntryID, mail.Parent.StoreID)
-    		objFields = objMessage.Fields
-    		strheader = objFields.Item(mapitags.PR_TRANSPORT_MESSAGE_HEADERS)
-    		strheader = ustr(strheader).encode('iso-8859-1')
-    		headers = {}
-    		strheader = strheader.replace("\n ", " ").splitlines()
-    		for line in strheader:
-    			split_here = line.find(":")
-    			headers[line[:split_here]] = line[split_here:]
-    		temp1 = headers.get('Message-ID')
-    		temp2 = headers.get('Message-Id')
-    		if temp1 == None:    message_id = temp2
-    		if temp2 == None:    message_id = temp1
-    		startCut = message_id.find("<")
-    		endCut = message_id.find(">")
-    		message_id = message_id[startCut:endCut+1]
-    		email.replace_header('Message-Id',message_id)
-    		id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(email))
-    		if id > 0:
-    			flag = True
-    			return flag
-    		else:
-    			flag = False
-    			return flag
-    	except Exception,e:
+            conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+            email=eml.generateEML(mail)
+            message_id   = None
+            session = win32com.client.Dispatch("MAPI.session")
+            session.Logon('Outlook')
+            objMessage = session.GetMessage(mail.EntryID, mail.Parent.StoreID)
+            objFields = objMessage.Fields
+            strheader = objFields.Item(mapitags.PR_TRANSPORT_MESSAGE_HEADERS)
+            strheader = ustr(strheader).encode('iso-8859-1')
+            headers = {}
+            strheader = strheader.replace("\n ", " ").splitlines()
+            for line in strheader:
+            	split_here = line.find(":")
+            	headers[line[:split_here]] = line[split_here:]
+            temp1 = headers.get('Message-ID')
+            temp2 = headers.get('Message-Id')
+            if temp1 == None:    message_id = temp2
+            if temp2 == None:    message_id = temp1
+            startCut = message_id.find("<")
+            endCut = message_id.find(">")
+            message_id = message_id[startCut:endCut+1]
+            email.replace_header('Message-Id',message_id)
+            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(email))
+            if id > 0:
+            	flag = True
+            	return flag
+            else:
+            	flag = False
+            	return flag
+        except Exception,e:
     		win32ui.MessageBox("Create Case\n"+str(e),"Mail Reading Error")
     		return flag
 
