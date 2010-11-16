@@ -4214,6 +4214,12 @@ class orm(orm_template):
         return cr.fetchone()[0] == len(ids)
 
     def check_recursion(self, cr, uid, ids, parent=None):
+        warnings.warn("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
+                        self._name, DeprecationWarning, stacklevel=3)
+        assert ' ' not in (parent or '')
+        return self._check_recursion(cr, uid, ids, parent)
+
+    def _check_recursion(self, cr, uid, ids, parent=None):
         """
         Verifies that there is no loop in a hierarchical structure of records,
         by following the parent relationship using the **parent** field until a loop
