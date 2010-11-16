@@ -80,25 +80,25 @@ class XMLRpcConn(object):
         self.protocol=None
 
     def getitem(self, attrib):
-    	v=self.__getattribute__(attrib)
-    	return str(v)
+        v=self.__getattribute__(attrib)
+        return str(v)
 
     def setitem(self, attrib, value):
     	return self.__setattr__(attrib, value)
 
     def GetDBList(self):
-    	conn = xmlrpclib.ServerProxy(self._uri + '/xmlrpc/db')
-    	try:
-    		db_list = execute(conn, 'list')
-    		if db_list == False:
-    			self._running=False
-    			return []
-    		else:
-    			self._running=True
-    	except:
-    		db_list=-1
-    		self._running=True
-    	return db_list
+        conn = xmlrpclib.ServerProxy(self._uri + '/xmlrpc/db')
+        try:
+            db_list = execute(conn, 'list')
+            if db_list == False:
+                self._running=False
+                return []
+            else:
+                self._running=True
+        except:
+            db_list=-1
+            self._running=True
+        return db_list
 
     def login(self,dbname, user, pwd):
     	self._dbname = dbname
@@ -195,7 +195,7 @@ class XMLRpcConn(object):
             }
             obj_list= ['crm.lead','project.issue','hr.applicant','res.partner']
             if rec[0] not in obj_list:
-                ids = self.CreateEmailAttachment(rec,mail)
+                self.CreateEmailAttachment(rec,mail)
             result = {}
             if attachments:
             	result = self.MakeAttachment([rec], mail)
@@ -269,7 +269,7 @@ class XMLRpcConn(object):
     	id = -1
     	try:
             conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-            email=eml.generateEML(mail)
+            email, path = eml.generateEML(mail)
             message_id   = None
             session = win32com.client.Dispatch("MAPI.session")
             session.Logon('Outlook')
@@ -507,6 +507,8 @@ class XMLRpcConn(object):
     	return country
 
     def CreateEmailAttachment(self, rec, mail):
+        import eml
+        email, path = eml.generateEML(mail)
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         obj = rec[0]
         obj_id = rec[1]
@@ -524,16 +526,12 @@ class XMLRpcConn(object):
         		l = 64 - len(fn)
         		f = fn.split('.')
         		fn = f[0][0:l] + '.' + f[-1]
-        fn = fn[:-4]+'.txt'
-        f = open(fn,"w")
-        body = mail.Body.encode("utf-8")
-        f.writelines(body)
-        f.close()
-        f=open(fn,"rb")
+        fn = fn[:-4]+".eml"
+        f = open(path)
         content = "".join(f.readlines()).encode('base64')
         f.close()
-        res['name'] = ustr((mail.Subject).replace(' ',''))
-        res['datas_fname'] = ustr(fn)
+        res['name'] = fn
+        res['datas_fname'] = fn
         res['datas'] = content
         res['res_id'] = obj_id
         id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.attachment','create',res)

@@ -90,4 +90,4 @@ def generateEML(mail):
     if (success == False):
         print cemail.lastErrorText()
         sys.exit()
-    return new_mail
+    return new_mail, eml_path
