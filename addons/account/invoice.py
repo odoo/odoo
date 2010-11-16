@@ -660,7 +660,7 @@ class account_invoice(osv.osv):
         ctx = context.copy()
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
-            cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))
+            cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s AND manual is False", (id,))
             partner = self.browse(cr, uid, id, context=ctx).partner_id
             if partner.lang:
                 ctx.update({'lang': partner.lang})
