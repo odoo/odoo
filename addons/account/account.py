@@ -344,7 +344,7 @@ class account_account(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'code': fields.char('Code', size=64, required=True),
+        'code': fields.char('Code', size=64, required=True, select=1),
         'type': fields.selection([
             ('view', 'View'),
             ('other', 'Regular'),
@@ -2254,7 +2254,7 @@ class account_account_template(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'code': fields.char('Code', size=64),
+        'code': fields.char('Code', size=64, select=1),
         'type': fields.selection([
             ('receivable','Receivable'),
             ('payable','Payable'),
