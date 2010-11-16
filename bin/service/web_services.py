@@ -385,7 +385,7 @@ class common(_ObjectService):
                         'login_message','get_stats', 'check_connectivity',
                         'list_http_services']:
             pass
-        elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel']:
+        elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel', 'get_os_time']:
             passwd = params[0]
             params = params[1:]
             security.check_super(passwd)
@@ -567,6 +567,9 @@ GNU Public Licence.
 
     def exp_check_connectivity(self):
         return bool(sql_db.db_connect('template1'))
+        
+    def exp_get_os_time(self):
+        return os.times()
 
 common()
 
