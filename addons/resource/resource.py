@@ -224,7 +224,7 @@ class resource_resource(osv.osv):
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
         'code': fields.char('Code', size=16),
-        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the resource record without removing it."),
+        'active' : fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the resource record without removing it."),
         'company_id' : fields.many2one('res.company', 'Company'),
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
         'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
