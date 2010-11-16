@@ -598,6 +598,7 @@ class account_invoice(osv.osv):
         self.write(cr, uid, ids, {'state':'draft'})
         wf_service = netsvc.LocalService("workflow")
         for inv_id in ids:
+            wf_service.trg_delete(uid, 'account.invoice', inv_id, cr)
             wf_service.trg_create(uid, 'account.invoice', inv_id, cr)
         return True
 
