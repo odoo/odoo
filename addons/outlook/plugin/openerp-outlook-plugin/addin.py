@@ -90,10 +90,10 @@ class ViewPartners:
         self.outlook = Dispatch("Outlook.Application")
         self.ex = self.outlook.ActiveExplorer()
         if self.ex:
-            is_login = str(data['login'])
+            is_login = str(self.data['login'])
             if is_login == 'False':
                 win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
-            elif self.ex.Selection.Count == 1 or ex.Selection.Count == 0:
+            elif self.ex.Selection.Count == 1 or self.ex.Selection.Count == 0:
                 self.mngr = manager.GetManager()
                 self.mngr.ShowManager("IDD_VIEW_PARTNER_DIALOG")
             elif self.ex.Selection.Count > 1:
@@ -117,13 +117,12 @@ class OpenPartner:
 
     def OnClick(self, button, cancel):
         import win32ui
-        from manager import ustr
         self.mngr = manager.GetManager()
         self.data = self.mngr.LoadConfig()
         self.outlook = Dispatch("Outlook.Application")
         self.ex = self.outlook.ActiveExplorer()
         if ex:
-            is_login = str(data['login'])
+            is_login = str(self.data['login'])
             if is_login == 'False':
                 win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
             elif self.ex.Selection.Count == 1:
@@ -158,11 +157,11 @@ class OpenDocument:
         self.outlook = Dispatch("Outlook.Application")
         self.ex = self.outlook.ActiveExplorer()
         if self.ex:
-            is_login = str(data['login'])
+            is_login = str(self.data['login'])
             if is_login == 'False':
                 win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
-            elif self.ex.Selection.Count == 1 or ex.Selection.Count == 0:
-                self.mngr = manager.GetManager()
+            elif self.ex.Selection.Count == 1 or self.ex.Selection.Count == 0:
+                self.mngr = self.manager.GetManager()
                 self.mngr.ShowManager("IDD_OPEN_DOCUEMNT_DIALOG")
             elif self.ex.Selection.Count > 1:
                 win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Open Document",win32con.MB_ICONINFORMATION)
