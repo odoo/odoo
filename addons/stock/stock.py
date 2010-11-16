@@ -1610,7 +1610,7 @@ class stock_move(osv.osv):
         warning = {}
         if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
             warning = {
-                'title': _('Bad Lot Assignation !'),
+                'title': _('Insufficient Stock in Lot !'),
                 'message': _('You are moving %.2f products but only %.2f available in this lot.') % (product_qty, prodlot.stock_available or 0.0)
             }
         return {'warning': warning}
