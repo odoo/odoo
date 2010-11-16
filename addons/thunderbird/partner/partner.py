@@ -148,6 +148,7 @@ class thunderbird_partner(osv.osv_memory):
         dictcreate = dict(vals)
         ref_ids = str(dictcreate.get('ref_ids')).split(';')
         msg = dictcreate.get('message')
+        mail = msg
         msg = self.pool.get('email.server.tools').parse_message(msg)
         server_tools_pool = self.pool.get('email.server.tools')
         message_id = msg.get('message-id', False)
@@ -183,11 +184,11 @@ class thunderbird_partner(osv.osv_memory):
                       l = 64 - len(fn)
                       f = fn.split('.')
                       fn = f[0][0:l] + '.' + f[-1]
-                fn = fn[:-4]+'.txt'
+                fn = fn[:-4]+'.eml'
                 res['res_model'] = model
-                res['name'] = msg.get('subject','NO-SUBJECT')
+                res['name'] = msg.get('subject','NO-SUBJECT')+".eml"
                 res['datas_fname'] = fn
-                res['datas'] = base64.b64encode(msg.get('body'))
+                res['datas'] = base64.b64encode(mail)
                 res['res_id'] = res_id
                 obj_attch.create(cr, uid, res)
             server_tools_pool.history_message(cr, uid, model, res_id, msg_new)
