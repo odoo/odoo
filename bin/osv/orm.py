@@ -556,8 +556,8 @@ class orm_template(object):
 
         lines = []
         data = map(lambda x: '', range(len(fields)))
+        done = []
         for fpos in range(len(fields)):
-            done = []
             f = fields[fpos]
             if f:
                 r = row
@@ -602,7 +602,8 @@ class orm_template(object):
                         fields2 = map(lambda x: (x[:i+1]==f[:i+1] and x[i+1:]) \
                                 or [], fields)
                         if fields2 in done:
-                            break
+                            if [x for x in fields2 if x]:
+                                break
                         done.append(fields2)
                         for row2 in r:
                             lines2 = self.__export_row(cr, uid, row2, fields2,
