@@ -4099,7 +4099,11 @@ class orm(orm_template):
         context_wo_lang = context.copy()
         if 'lang' in context:
             del context_wo_lang['lang']
-        data = self.read(cr, uid, [id], context=context_wo_lang)[0]
+        data = self.read(cr, uid, [id,], context=context_wo_lang)
+        if data:
+            data = data[0]
+        else:
+            raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
         fields = self.fields_get(cr, uid, context=context)
         for f in fields:
