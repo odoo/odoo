@@ -733,12 +733,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 load_demo(cr, m, idref, mode)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
 
-                # launch tests only in demo mode, as most tests will depend
-                # on demo data. Other tests can be added into the regular
-                # 'data' section, but should probably not alter the data,
-                # as there is no rollback.
                 load_test(cr, m, idref, mode)
             elif tools.config.options['test_force']:
+                # forces test loading without demo data (useful when updating modules)
                 load_test(cr, m, idref, mode)
 
             package_todo.append(package.name)
