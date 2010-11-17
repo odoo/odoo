@@ -36,6 +36,7 @@ import release
 import sql_db
 import tools
 import locale
+import logging
 from cStringIO import StringIO
 
 class db(netsvc.ExportService):
@@ -385,7 +386,7 @@ class common(_ObjectService):
                         'login_message','get_stats', 'check_connectivity',
                         'list_http_services']:
             pass
-        elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel', 'get_os_time']:
+        elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel', 'get_os_time', 'get_sqlcount']:
             passwd = params[0]
             params = params[1:]
             security.check_super(passwd)
@@ -570,6 +571,12 @@ GNU Public Licence.
         
     def exp_get_os_time(self):
         return os.times()
+
+    def exp_get_sqlcount(self):
+        logger = logging.getLogger('db.cursor')
+        if not logger.isEnabledFor(logging.DEBUG_SQL):
+            logger.warning("Counters of SQL will not be reliable unless DEBUG_SQL is set at the server's config.")
+        return sql_db.sql_counter
 
 common()
 
