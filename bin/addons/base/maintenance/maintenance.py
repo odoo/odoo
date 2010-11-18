@@ -22,10 +22,12 @@
 from osv import osv, fields
 import time
 import netsvc
-
 from tools.misc import ustr
 from tools.translate import _
 import tools.maintenance as tm
+
+_nlogger = netsvc.Logger()
+_CHAN = __name__.split()[-1]
 
 class maintenance_contract(osv.osv):
     _name = "maintenance.contract"
@@ -35,6 +37,7 @@ class maintenance_contract(osv.osv):
         return [contract for contract in self.browse(cr, uid, self.search(cr, uid, [])) if contract.state == 'valid']
     
     def status(self, cr, uid):
+        """ Method called by the client to check availability of maintenance contract. """
         contracts = self._get_valid_contracts(cr, uid)
         return {
             'status': "full" if contracts else "none" ,
@@ -42,6 +45,7 @@ class maintenance_contract(osv.osv):
         }
     
     def send(self, cr, uid, tb, explanations, remarks=None):
+        """ Method called by the client to send a problem to the maintenance server. """
         if not remarks:
             remarks = ""
 
@@ -63,7 +67,7 @@ class maintenance_contract(osv.osv):
             
             origin = 'client'
             dbuuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-            crm_case_id = rc.submit({
+            crm_case_id = rc.submit_6({
                 'contract_name': contract_name,
                 'tb': tb,
                 'explanations': explanations,
@@ -73,11 +77,11 @@ class maintenance_contract(osv.osv):
                 'dbuuid': dbuuid})
 
         except tm.RemoteContractException, rce:
-            netsvc.Logger().notifyChannel('maintenance', netsvc.LOG_INFO, rce)
+            _nlogger.notifyChannel(_CHAN, netsvc.LOG_INFO, rce)
         except osv.except_osv:
             raise
         except:
-            pass # don't want to throw exceptions in exception handler
+            pass # we don't want to throw exceptions in an exception handler
         
         if not crm_case_id:
             return False

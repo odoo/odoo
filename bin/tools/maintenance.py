@@ -82,7 +82,7 @@ def remote_contract(cr, uid, contract_id):
         _logger.exception("Exception")
         raise RemoteContractException("Unable to contact the migration server")
 
-    info = ro.check_contract({
+    info = ro.check_contract_6({
                 "contract_name": contract_id,
                 "dbuuid": dbuuid,
                 "dbname": cr.dbname})
