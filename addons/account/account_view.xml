@@ -384,7 +384,7 @@
             <field name="arch" type="xml">
                 <tree string="Search Account Journal">
                     <group>
-                    <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-sale"/>
+                    <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-camera_test"/>
                     <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Purchase" icon="terp-purchase"/>
                    <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
                     <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Others" icon="terp-stock"/>
@@ -1697,7 +1697,7 @@
             <field name="arch" type="xml">
                 <search string="Journal Entry Model">
                   <group>
-                    <filter string="Sale" icon="terp-sale" domain="[('journal_id.type', '=', 'sale')]"/>
+                    <filter string="Sale" icon="terp-camera_test" domain="[('journal_id.type', '=', 'sale')]"/>
                     <filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
                     <separator orientation="vertical"/>
                       <field name="name"/>
