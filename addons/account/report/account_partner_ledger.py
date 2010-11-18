@@ -152,8 +152,10 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                 (partner.id, tuple(self.account_ids), tuple(move_state)))
         res = self.cr.dictfetchall()
         sum = 0.0
+        if self.initial_balance:
+                sum = self.init_bal_sum
         for r in res:
-            sum = r['debit'] - r['credit']
+            sum += r['debit'] - r['credit']
             r['progress'] = sum
             full_account.append(r)
         return full_account
@@ -178,7 +180,9 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             " " + RECONCILE_TAG + " "\
             "AND " + self.init_query + "  ",
             (partner.id, tuple(move_state), tuple(self.account_ids)))
-        return self.cr.fetchall()
+        res = self.cr.fetchall()
+        self.init_bal_sum = res[0][2]
+        return res
 
     def _sum_debit_partner(self, partner):
         move_state = ['draft','posted']
