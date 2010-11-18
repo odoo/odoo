@@ -25,6 +25,7 @@ import netsvc
 from tools.misc import ustr
 from tools.translate import _
 import tools.maintenance as tm
+import tools.ping
 
 _nlogger = netsvc.Logger()
 _CHAN = __name__.split()[-1]
@@ -93,6 +94,9 @@ class maintenance_contract(osv.osv):
         for contract in self.browse(cr, uid, ids, context=context):
             res[contract.id] = ("unvalid", "valid")[contract.date_stop >= time.strftime('%Y-%m-%d')]
         return res
+    
+    def send_ping(self, cr, uid, context={}):
+        tools.ping.send_ping(cr, uid)
 
     _columns = {
         'name' : fields.char('Contract ID', size=384, required=True, readonly=True),

@@ -21,20 +21,21 @@
 
 import urllib
 import pooler
+import config
 
 def send_ping(cr, uid):
-    pooler.get_pool(cr.dbname)
+    pool = pooler.get_pool(cr.dbname)
     
     args = urllib.urlencode({
         'arg0': "coucou",
     })
-    uo = urllib.urlopen('http://localhost/phonehome/phonehome.php', args)
+    uo = urllib.urlopen(config.config.get("ping_url"), args)
     try:
         submit_result = uo.read()
     finally:
         uo.close()
     
-    return ""
+    return submit_result
 
 
 

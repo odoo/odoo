@@ -95,7 +95,11 @@ class configmanager(object):
             'maintenance_db': 'tiny_belgium',
             'maintenance_login': 'maintenance',
             'maintenance_password': 'maintenance',
+            'ping_url': 'http://tiny.my.odoo.com:8069/phonehome.php',
         }
+        
+        self.blacklist_for_save = set(['maintenance_server', 'maintenance_db',
+            'maintenance_login', 'maintenance_password', "ping_url"])
 
         self.misc = {}
         self.config_file = fname
@@ -445,6 +449,8 @@ class configmanager(object):
         p.add_section('options')
         for opt in sorted(self.options.keys()):
             if opt in ('version', 'language', 'translate_out', 'translate_in', 'init', 'update'):
+                continue
+            if opt in self.blacklist_for_save:
                 continue
             if opt in ('log_level', 'assert_exit_level'):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
