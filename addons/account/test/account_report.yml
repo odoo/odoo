@@ -16,7 +16,7 @@
 -
   !python {model: account.invoice}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('test_invoice_1')], {}, {})
+    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('account.account_invoice_customer0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
 
@@ -37,41 +37,6 @@
     (data, format) = netsvc.LocalService('report.account.move.voucher').create(cr, uid, [ref('account.account_move_0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-voucher-report.'+format), 'wb+').write(data)
-
--
-  Demo data for Account tax code
--
-  !record {model: account.tax.code, id: account_tax_code_0}:
-    name : Tax Code Test
-    sign : 10.00
--
- Print Tax Code entries report
--
-  !python {model: account.tax.code}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.tax.code.entries').create(cr, uid, [ref('account_tax_code_0')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'account-tax-code-entries.'+format), 'wb+').write(data)
-
-
--
-  Print Vat Declaration Report
--
-   !python {model: account.tax.code}: |
-    import netsvc, tools, os
-    data_dict = {'model': 'ir.ui.menu', 'form': {'based_on': 'invoices','company_id':ref('base.main_company'),'periods':[]}}
-    (data, format) = netsvc.LocalService('report.account.vat.declaration').create(cr, uid, [ref("account_move_0")], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-vat-declaration.'+format), 'wb+').write(data)
-
--
-  In order to test the PDF reports defined on an invoice, we will print an invoice
--
-  !python {model: account.invoice}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('test_invoice_1')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
 
 -
   Print the Aged Partner Balance Report
