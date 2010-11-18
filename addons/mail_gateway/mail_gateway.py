@@ -486,6 +486,8 @@ class mailgate_tool(osv.osv_memory):
         if not msg_txt.is_multipart() or 'text/plain' in msg.get('Content-Type', ''):
             encoding = msg_txt.get_content_charset()
             body = msg_txt.get_payload(decode=True)
+            if 'text/html' in msg_txt.get('Content-Type', ''):
+                body = tools.html2plaintext(body)
             msg['body'] = tools.ustr(body, encoding)
 
         attachments = {}

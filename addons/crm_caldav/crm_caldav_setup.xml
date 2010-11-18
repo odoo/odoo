@@ -27,7 +27,7 @@
 
     <record id="basic_calendar_lines_vevent0" model="basic.calendar.lines">
         <field name="calendar_id" ref="basic_calendar_meetings0"/>
-        <field name="domain">[('user_id','=', uid)]</field>
+        <field name="domain">[('user_id','=', dctx_user_id)]</field>
         <field name="name">vevent</field>
         <field name="object_id" ref="crm.model_crm_meeting"/>
     </record>
