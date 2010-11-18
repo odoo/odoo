@@ -598,6 +598,7 @@ class account_invoice(osv.osv):
         self.write(cr, uid, ids, {'state':'draft'})
         wf_service = netsvc.LocalService("workflow")
         for inv_id in ids:
+            wf_service.trg_delete(uid, 'account.invoice', inv_id, cr)
             wf_service.trg_create(uid, 'account.invoice', inv_id, cr)
         return True
 
@@ -659,7 +660,7 @@ class account_invoice(osv.osv):
         ctx = context.copy()
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
-            cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))
+            cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s AND manual is False", (id,))
             partner = self.browse(cr, uid, id, context=ctx).partner_id
             if partner.lang:
                 ctx.update({'lang': partner.lang})
