@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:24+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:24+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:57+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,6 +40,11 @@ msgstr ""
 #. module: crm_profiling
 #: wizard_button:open_questionnaire,init,open:0
 msgid "Open Questionnaire"
+msgstr ""
+
+#. module: crm_profiling
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: crm_profiling
@@ -107,6 +112,11 @@ msgid "Use a questionnaire"
 msgstr ""
 
 #. module: crm_profiling
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: crm_profiling
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
@@ -137,6 +147,11 @@ msgstr ""
 #: view:crm_profiling.question:0
 #: field:crm_profiling.question,answers_ids:0
 msgid "Avalaible answers"
+msgstr ""
+
+#. module: crm_profiling
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid "You can create specific topic related questionnaires that will be used to guide your team(s) in the sales cycle by helping them to ask the right questions. Using the segmentation tool, you will be able to automatically assign a partner to a category based on his answers to the different questionnaires."
 msgstr ""
 
 #. module: crm_profiling
@@ -185,5 +200,10 @@ msgstr ""
 #. module: crm_profiling
 #: wizard_button:open_questionnaire,open,compute:0
 msgid "Save Data"
+msgstr ""
+
+#. module: crm_profiling
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
