@@ -446,18 +446,18 @@ class mrp_production(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
     _order = 'priority desc, date_planned asc';
-    
+
     def _check_qty(self, cr, uid, ids):
         orders = self.browse(cr, uid, ids)
         for order in orders:
             if order.product_qty <= 0:
                 return False
         return True
-    
+
     _constraints = [
         (_check_qty, 'Order quantity cannot be negative or zero !', ['product_qty']),
     ]
-    
+
     def unlink(self, cr, uid, ids, context=None):
         productions = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -639,16 +639,16 @@ class mrp_production(osv.osv):
         @param production_mode: specify production mode (consume/consume&produce).
         @return: True
         """
-       
+
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id)
-        
+
         final_product_todo = []
 
         produced_qty = 0
         if production_mode == 'consume_produce':
             produced_qty = production_qty
-            
+
         for produced_product in production.move_created_ids2:
             if (produced_product.scrapped) or (produced_product.product_id.id<>production.product_id.id):
                 continue
@@ -658,7 +658,7 @@ class mrp_production(osv.osv):
             consumed_products = {}
             check = {}
             scrapped = map(lambda x:x.scrapped,production.move_lines2).count(True)
-            
+
             for consumed_product in production.move_lines2:
                 consumed = consumed_product.product_qty
                 if consumed_product.scrapped:
@@ -671,9 +671,9 @@ class mrp_production(osv.osv):
                         if (len(production.move_lines2) - scrapped) > len(production.product_lines):
                             check[consumed_product.product_id.id] += consumed_product.product_qty
                             consumed = check[consumed_product.product_id.id]
-                        rest_consumed = produced_qty * f.product_qty / production.product_qty - consumed 
+                        rest_consumed = produced_qty * f.product_qty / production.product_qty - consumed
                         consumed_products[consumed_product.product_id.id] = rest_consumed
-            
+
             for raw_product in production.move_lines:
                 for f in production.product_lines:
                     if f.product_id.id == raw_product.product_id.id:
@@ -712,7 +712,7 @@ class mrp_production(osv.osv):
                     new_parent_ids.append(final_product.id)
             for new_parent_id in new_parent_ids:
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
-        
+
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
         return True
@@ -750,7 +750,7 @@ class mrp_production(osv.osv):
                         'account_id': account,
                         'general_account_id': wc.costs_general_account_id.id,
                         'journal_id': wc.costs_journal_id.id,
-                        'code': wc.code
+                        'code': wc.code,
                     } )
         return amount
 
@@ -827,7 +827,7 @@ class mrp_production(osv.osv):
                 'company_id': production.company_id.id,
             }
             res_final_id = move_obj.create(cr, uid, data)
-             
+
             self.write(cr, uid, [production.id], {'move_created_ids': [(6, 0, [res_final_id])]})
             moves = []
             for line in production.product_lines:
@@ -879,7 +879,7 @@ class mrp_production(osv.osv):
                     'company_id': production.company_id.id,
                 })
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                proc_ids.append(proc_id)                
+                proc_ids.append(proc_id)
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
             message = _("Manufacturing order '%s' is scheduled for the %s.") % (

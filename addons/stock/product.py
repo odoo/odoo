@@ -241,12 +241,12 @@ class product_product(osv.osv):
             where.append(tuple([to_date]))
         elif from_date:
             date_str = "date>=%s"
-            date_values = [from_date] 
+            date_values = [from_date]
         elif to_date:
             date_str = "date<=%s"
             date_values = [to_date]
 
-       
+
 	# TODO: perhaps merge in one query.
         if date_values:
             where.append(tuple(date_values))
@@ -282,13 +282,14 @@ class product_product(osv.osv):
             uoms = uom_obj.browse(cr, uid, list(set(uoms)), context=context)
         for o in uoms:
             uoms_o[o.id] = o
+        ctx = {'raise-exception': False} #TOCHECK: before change uom of product, stock move line are in old uom.
         for amount, prod_id, prod_uom in results:
             amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                    uoms_o[context.get('uom', False) or product2uom[prod_id]])
+                     uoms_o[context.get('uom', False) or product2uom[prod_id]], context=ctx)
             res[prod_id] += amount
         for amount, prod_id, prod_uom in results2:
             amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                    uoms_o[context.get('uom', False) or product2uom[prod_id]])
+                    uoms_o[context.get('uom', False) or product2uom[prod_id]], context=ctx)
             res[prod_id] -= amount
         return res
 
@@ -328,7 +329,7 @@ class product_product(osv.osv):
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Production Lot for all moves containing this product and going to a Customer Location"),
         'location_id': fields.dummy(string='Stock Location', relation='stock.location', type='many2one'),
         'valuation':fields.selection([('manual_periodic', 'Periodical (manual)'),
-                                        ('real_time','Real Time (automated)'),], 'Inventory Valuation', 
+                                        ('real_time','Real Time (automated)'),], 'Inventory Valuation',
                                         help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
                                         , required=True),
