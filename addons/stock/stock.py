@@ -2416,7 +2416,10 @@ class stock_inventory(osv.osv):
         return self.pool.get('stock.move').create(cr, uid, move_vals)
 
     def action_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'done'} ,context=context)
+        move_obj = self.pool.get('stock.move')
+        for inv in self.browse(cr,uid,ids):
+            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context)
+            self.write(cr, uid, [inv.id], {'state':'done'}, context=context)
         return True
 
     def action_confirm(self, cr, uid, ids, context=None):
@@ -2448,7 +2451,6 @@ class stock_inventory(osv.osv):
                         'prodlot_id': lot_id,
                         'date': inv.date,
                         'date': inv.date,
-                        'state': 'done'
                     }
                     if change > 0:
                         value.update( {
