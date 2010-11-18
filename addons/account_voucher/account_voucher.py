@@ -540,7 +540,6 @@ class account_voucher(osv.osv):
         return True
 
     def do_check(self, cr, uid, ids, context=None):
-        cur_obj = self.pool.get('res.currency')
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}

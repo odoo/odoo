@@ -5,22 +5,24 @@
        <!--
 	journaux standards
 	-->
+<!--
         <record id="journal_vente" model="account.journal">
             <field name="name">Journal des Ventes</field>
             <field name="code">JVT</field>
             <field name="type">sale</field>
             <field name="view_id" ref="account.account_journal_view"/>
             <field name="sequence_id" ref="account.sequence_journal"/>
-	          <!--
-	comptes par défaul
-	
-	    <field name="default_debit_account_id" ref="pcg_34211" />
-	    <field name="default_credit_account_id" ref="pcg_7111" />
-	-->
-        </record>
-       
+-->
+			<!--
+			comptes par défaul
 
-	
+	    	<field name="default_debit_account_id" ref="pcg_34211" />
+	    	<field name="default_credit_account_id" ref="pcg_7111" />
+			-->
+<!--        </record>
+
+
+
 	<record id="journal_achat" model="account.journal">
             <field name="name">Journal des Achats</field>
             <field name="code">JAC</field>
@@ -53,7 +55,7 @@
             <field name="view_id" ref="account.account_journal_view"/>
             <field name="sequence_id" ref="account.sequence_journal"/>
             </record>
-
+-->
 	</data>
 </openerp>
 

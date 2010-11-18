@@ -384,7 +384,7 @@
             <field name="arch" type="xml">
                 <tree string="Search Account Journal">
                     <group>
-                    <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-sale"/>
+                    <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-camera_test"/>
                     <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Purchase" icon="terp-purchase"/>
                    <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
                     <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Others" icon="terp-stock"/>
@@ -1236,6 +1236,7 @@
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="domain">[('account_id', 'child_of', active_id)]</field>
+            <field name="context">{'account_id':active_id}</field>
         </record>
 
         <record id="ir_account_move_line_select" model="ir.values">
@@ -1696,7 +1697,7 @@
             <field name="arch" type="xml">
                 <search string="Journal Entry Model">
                   <group>
-                    <filter string="Sale" icon="terp-sale" domain="[('journal_id.type', '=', 'sale')]"/>
+                    <filter string="Sale" icon="terp-camera_test" domain="[('journal_id.type', '=', 'sale')]"/>
                     <filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
                     <separator orientation="vertical"/>
                       <field name="name"/>
@@ -2257,6 +2258,7 @@
                         <field name="chart_template_id"/>
                         <field name="type"/>
                         <field name="type_tax_use"/>
+                        <field name="price_include"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Tax Definition">
