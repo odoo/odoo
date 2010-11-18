@@ -90,8 +90,8 @@ class res_company(osv.osv):
         'account_no':fields.char('Account No.', size=64),
     }
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False, access_rights_uid=None):
 
         if context is None:
             context = {}
@@ -106,8 +106,8 @@ class res_company(osv.osv):
             user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
             cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
             return cmp_ids
-        return super(res_company, self).search(cr, uid, args, offset=offset, limit=limit, order=order,
-            context=context, count=count)
+        return super(res_company, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
+            context=context, count=count, access_rights_uid=access_rights_uid)
 
     def _company_default_get(self, cr, uid, object=False, field=False, context=None):
         """

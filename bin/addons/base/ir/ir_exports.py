@@ -26,7 +26,7 @@ class ir_exports(osv.osv):
     _name = "ir.exports"
     _columns = {
         'name': fields.char('Export Name', size=128),
-        'resource': fields.char('Resource', size=128),
+        'resource': fields.char('Resource', size=128, select=True),
         'export_fields': fields.one2many('ir.exports.line', 'export_id',
                                          'Export ID'),
     }
