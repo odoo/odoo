@@ -95,7 +95,7 @@ class osv_pool(netsvc.Service):
                                 ids = []
                         cr = pooler.get_db_only(dbname).cursor()
                         return src(obj, cr, uid, ids, context=(ctx or {}))
-                    except Exception, e:
+                    except Exception:
                         pass
                     finally:
                         if cr: cr.close()
