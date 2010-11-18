@@ -40,7 +40,6 @@ from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
 from email.Header import Header
 from email.Utils import formatdate, COMMASPACE
-from email.Utils import formatdate, COMMASPACE
 from email import Encoders
 from itertools import islice, izip
 from which import which
@@ -51,6 +50,7 @@ else:
 
 import netsvc
 from config import config
+from lru import LRU
 
 _logger = logging.getLogger('tools')
 
@@ -432,7 +432,7 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
             from mailbox import Maildir
             maildir_path = smtp_server[8:]
             mdir = Maildir(maildir_path,factory=None, create = True)
-            mdir.add(msg.as_string(True))
+            mdir.add(message.as_string(True))
             return True
 
         oldstderr = smtplib.stderr
@@ -697,7 +697,7 @@ class cache(object):
 
     __caches = []
 
-    def __init__(self, timeout=None, skiparg=2, multi=None):
+    def __init__(self, timeout=None, skiparg=2, multi=None, size=8192):
         assert skiparg >= 2 # at least self and cr
         if timeout is None:
             self.timeout = config['cache_timeout']
@@ -706,7 +706,7 @@ class cache(object):
         self.skiparg = skiparg
         self.multi = multi
         self.lasttime = time.time()
-        self.cache = {}
+        self.cache = LRU(size)      # TODO take size from config
         self.fun = None
         cache.__caches.append(self)
 
@@ -864,14 +864,14 @@ def ustr(value, hint_encoding='utf-8'):
         try:
             return unicode(value)
         except Exception:
-            raise UnicodeError('unable de to convert %r' % (value,))
+            raise UnicodeError('unable to convert %r' % (value,))
 
     for ln in get_encodings(hint_encoding):
         try:
             return unicode(value, ln)
         except Exception:
             pass
-    raise UnicodeError('unable de to convert %r' % (value,))
+    raise UnicodeError('unable to convert %r' % (value,))
 
 
 def exception_to_unicode(e):
@@ -1408,7 +1408,7 @@ def upload_data(email, data, type='SURVEY'):
     return True
 
 
-# port of python 2.6's attrgetter with support for dotted notation 
+# port of python 2.6's attrgetter with support for dotted notation
 def resolve_attr(obj, attr):
     for name in attr.split("."):
         obj = getattr(obj, name)
