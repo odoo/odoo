@@ -204,8 +204,13 @@ class thunderbird_partner(osv.osv_memory):
     def search_message(self, cr, uid, message, context=None):
         #@param message: string of mail which is read from EML File
         #@return model,res_id
+        references = []
         dictcreate = dict(message)
-        message_id = dictcreate.get('message_id')
+        msg = dictcreate.get('message')
+        msg = self.pool.get('email.server.tools').parse_message(msg)
+        message_id = msg.get('message-id')
+        refs =  msg.get('references')
+        references = refs.split()
         msg_pool = self.pool.get('mailgate.message')
         model = ''
         res_id = 0
@@ -215,6 +220,12 @@ class thunderbird_partner(osv.osv_memory):
                 msg = msg_pool.browse(cr, uid, msg_ids[0])
                 model = msg.model
                 res_id = msg.res_id
+            else:
+                if references :
+                    msg_ids = msg_pool.search(cr, uid, [('message_id','in',references)])
+                    msg = msg_pool.browse(cr, uid, msg_ids[0])
+                    model = msg.model
+                    res_id = msg.res_id
         return (model,res_id)
 
 
