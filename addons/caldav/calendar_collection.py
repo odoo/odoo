@@ -35,12 +35,16 @@ class calendar_collection(osv.osv):
     }
     
     def _get_root_calendar_directory(self, cr, uid, context=None):
-        data_pool = self.pool.get('ir.model.data')
+        objid = self.pool.get('ir.model.data')
         try:
-            calendar_dir_id = data_pool.get_object(cr, uid, 'caldav', 'document_directory_calendars0')
-            return calendar_dir_id.name
+            mid = objid._get_id(cr, uid, 'caldav', 'document_directory_calendars0')
+            if not mid:
+                return False
+            root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']
+            root_cal_dir = self.browse(cr,uid, root_id, context=context) 
+            return root_cal_dir.name
         except Exception:
-            logger = logging.getLogger('caldav')
+            logger = logging.getLogger('document')
             logger.warning('Cannot set root directory for Calendars:', exc_info=True)
             return False
         return False
