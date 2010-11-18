@@ -731,7 +731,7 @@ class email_template_preview(osv.osv_memory):
             ref_obj_id = self.pool.get('email.template').read(cr, uid, context['template_id'], ['object_name'], context)
             ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id['object_name'][0], ['model'], context)['model']
             model_obj = self.pool.get(ref_obj_name)
-            ref_obj_ids = model_obj.search(cr, uid, [], 0, 20, 'id desc', context=context)
+            ref_obj_ids = model_obj.search(cr, uid, [], 0, 20, 'id', context=context)
             if not ref_obj_ids:
                 ref_obj_ids = []
 

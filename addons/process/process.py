@@ -43,7 +43,7 @@ class process_process(osv.osv):
     _description = "Process"
     _columns = {
         'name': fields.char('Name', size=30,required=True, translate=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the process without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the process without removing it."),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'note': fields.text('Notes', translate=True),
         'node_ids': fields.one2many('process.node', 'process_id', 'Nodes')

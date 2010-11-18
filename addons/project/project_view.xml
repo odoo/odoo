@@ -223,13 +223,10 @@
                                     widget="float_time"
                                     attrs="{'readonly':[('state','!=','draft')]}"
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
-                                <field name="effective_hours" widget="float_time"/>
                             </group>
                             <group col="3" colspan="2">
                                 <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
                                 <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
-
-                                <field name="delay_hours" widget="float_time"/>
                             </group>
 
                             <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
