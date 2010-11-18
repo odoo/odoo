@@ -737,7 +737,7 @@ class mrp_production(osv.osv):
                         'account_id': account,
                         'general_account_id': wc.costs_general_account_id.id,
                         'journal_id': wc.costs_journal_id.id,
-                        'ref': wc.code
+                        'code': wc.code
                     } )
             if wc.costs_journal_id and wc.costs_general_account_id:
                 value = wc_line.cycle * wc.costs_cycle
@@ -750,8 +750,7 @@ class mrp_production(osv.osv):
                         'account_id': account,
                         'general_account_id': wc.costs_general_account_id.id,
                         'journal_id': wc.costs_journal_id.id,
-                        'ref': wc.code,
-                        'product_id': production.product_id.id
+                        'code': wc.code,
                     } )
         return amount
 
