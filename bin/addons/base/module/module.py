@@ -187,9 +187,14 @@ class module(osv.osv):
     }
     _order = 'name'
 
+    def _name_uniq_msg(self, cr, uid, ids, context=None):
+        return _('The name of the module must be unique !')
+    def _certificate_uniq_msg(self, cr, uid, ids, context=None):
+        return _('The certificate ID of the module must be unique !')
+
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The name of the module must be unique !'),
-        ('certificate_uniq', 'unique (certificate)', 'The certificate ID of the module must be unique !')
+        ('name_uniq', 'UNIQUE (name)',_name_uniq_msg ),
+        ('certificate_uniq', 'UNIQUE (certificate)',_certificate_uniq_msg )
     ]
 
     def unlink(self, cr, uid, ids, context=None):

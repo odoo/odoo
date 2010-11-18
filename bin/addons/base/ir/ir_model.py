@@ -88,8 +88,10 @@ class ir_model(osv.osv):
                 return False
         return True
 
+    def _model_name_msg(self, cr, uid, ids, context=None):
+        return _('The Object name must start with x_ and not contain any special character !')
     _constraints = [
-        (_check_model_name, 'The Object name must start with x_ and not contain any special character !', ['model']),
+        (_check_model_name, _model_name_msg, ['model']),
     ]
 
     # overridden to allow searching both on model name (model field)
@@ -181,8 +183,11 @@ class ir_model_fields(osv.osv):
         'selectable': lambda *a: 1,
     }
     _order = "id"
+    def _size_gt_zero_msg(self, cr, user, ids, context=None):
+        return _('Size of the field can never be less than 1 !')
+
     _sql_constraints = [
-        ('size_gt_zero', 'CHECK (size>0)', 'Size of the field can never be less than 1 !'),
+        ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
     ]
     def unlink(self, cr, user, ids, context=None):
         for field in self.browse(cr, user, ids, context):

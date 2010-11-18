@@ -22,6 +22,7 @@
 from osv import fields, osv
 import re
 import tools
+from tools.translate import _
 
 def one_in(setA, setB):
     """Check the presence of an element of setA in setB
@@ -285,8 +286,12 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.server', 'ir.actions.server'),
             ]),
     }
+    
+    def _rec_message(self, cr, uid, ids, context=None):
+        return _('Error ! You can not create recursive Menu.')
+
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive Menu.', ['parent_id'])
+        (_check_recursion, _rec_message , ['parent_id'])
     ]
     _defaults = {
         'icon' : lambda *a: 'STOCK_OPEN',

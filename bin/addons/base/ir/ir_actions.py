@@ -151,8 +151,12 @@ class act_window(osv.osv):
             if action.src_model and not self.pool.get(action.src_model):
                 return False
         return True
+
+    def _invalid_model_msg(self, cr, uid, ids, context=None):
+        return _('Invalid model name in the action definition.')
+    
     _constraints = [
-        (_check_model, 'Invalid model name in the action definition.', ['res_model','src_model'])
+        (_check_model, _invalid_model_msg, ['res_model','src_model'])
     ]
 
     def _views_get_fnc(self, cr, uid, ids, name, arg, context={}):
