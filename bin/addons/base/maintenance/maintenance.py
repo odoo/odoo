@@ -31,6 +31,7 @@ _CHAN = __name__.split()[-1]
 
 class maintenance_contract(osv.osv):
     _name = "maintenance.contract"
+    
     _description = "Maintenance Contract"
 
     def _get_valid_contracts(self, cr, uid):

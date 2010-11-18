@@ -21,10 +21,8 @@
 
 import xmlrpclib
 import config
-import logging
 import pooler
 
-_logger = logging.getLogger(__name__)
 
 class RemoteConnectionException(Exception):
     pass
@@ -79,7 +77,6 @@ def remote_contract(cr, uid, contract_id):
                               config.config.get("maintenance_login"), config.config.get("maintenance_password")
                               ).get_remote_object('maintenance.maintenance')
     except:
-        _logger.exception("Exception")
         raise RemoteContractException("Unable to contact the migration server")
 
     info = ro.check_contract_6({
