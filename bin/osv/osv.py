@@ -74,17 +74,44 @@ class osv_pool(netsvc.Service):
                     uid = args[0]
 
                 lang = ctx and ctx.get('lang', False)
-                if not lang:
+                if not (lang or hasattr(src, '__call__')):
                     return src
 
                 # We open a *new* cursor here, one reason is that failed SQL
                 # queries (as in IntegrityError) will invalidate the current one.
                 cr = False
+                
+                if hasattr(src, '__call__'):
+                    # callable. We need to find the right parameters to call
+                    # the  orm._sql_message(self, cr, uid, ids, context) function,
+                    # or we skip..
+                    # our signature is f(osv_pool, dbname [,uid, obj, method, args])
+                    try:
+                        if args and len(args) > 1:
+                            obj = self.get(args[1])
+                            if len(args) > 3 and isinstance(args[3], (long, int, list)):
+                                ids = args[3]
+                            else:
+                                ids = []
+                        cr = pooler.get_db_only(dbname).cursor()
+                        return src(obj, cr, uid, ids, context=(ctx or {}))
+                    except Exception, e:
+                        pass
+                    finally:
+                        if cr: cr.close()
+                   
+                    return False # so that the original SQL error will
+                                 # be returned, it is the best we have.
+
                 try:
                     cr = pooler.get_db_only(dbname).cursor()
                     #return trans_obj._get_source( name=?)
-                    return translate(cr, name=False, source_type=ttype,
+                    res = translate(cr, name=False, source_type=ttype,
                                     lang=lang, source=src)
+                    if res:
+                        return res
+                    else:
+                        return src
                 finally:
                     if cr: cr.close()
 
@@ -105,7 +132,7 @@ class osv_pool(netsvc.Service):
                 for key in self._sql_error.keys():
                     if key in inst[0]:
                         self.abortResponse(1, _('Constraint Error'), 'warning',
-                                        tr(self._sql_error[key], 'sql_constraint'))
+                                        tr(self._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     self.logger.debug("IntegrityError", exc_info=True)

@@ -980,6 +980,8 @@ class orm_template(object):
                     for key in self.pool._sql_error.keys():
                         if key in e[0]:
                             msg = self.pool._sql_error[key]
+                            if hasattr(msg, '__call__'):
+                                msg = msg(cr, uid, [res_id,], context=context)
                             break
                     return (-1, res, 'Line ' + str(counter) +' : ' + msg, '')
                 if isinstance(e, osv.orm.except_orm):
