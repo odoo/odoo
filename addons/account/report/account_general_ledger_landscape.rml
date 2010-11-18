@@ -301,7 +301,7 @@
 					  	<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_debit_account(o), digits=get_digits(dp='Account')) ]]</u></para></td>
 					  	<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_credit_account(o), digits=get_digits(dp='Account')) ]]</u></para></td>
 			  			<td><para style="P9b"><u>[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</u></para></td>
-			  			<td><para style="P9b"><u>[[ o.currency_id and formatLang(sum_currency_amount_account(o), digits=get_digits(dp='Account')) + o.currency_id.code or '' ]]</u></para></td>
+			  			<td><para style="P9b"><u>[[ o.currency_id and formatLang(sum_currency_amount_account(o), digits=get_digits(dp='Account')) + o.currency_id.symbol or '' ]]</u></para></td>
 		   			</tr>
 	    		</blockTable>
 	    	</td>
