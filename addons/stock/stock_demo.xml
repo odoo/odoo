@@ -167,9 +167,14 @@
             <field name="location_id" ref="stock_location_components"/>
         </record>
 
+        <function model="stock.inventory" name="action_confirm">
+            <function eval="[[]]" model="stock.inventory" name="search"/>
+        </function>
+
         <function model="stock.inventory" name="action_done">
             <function eval="[[]]" model="stock.inventory" name="search"/>
         </function>
+
 
         <!--  Multi Company -->
 
