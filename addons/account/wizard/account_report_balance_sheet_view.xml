@@ -8,12 +8,18 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.account_common_report_view" />
             <field name="arch" type="xml">
-               <field name="target_move" position="after">
-                    <field name="display_account"/>
-                    <field name="display_type"/>
-                    <field name="reserve_account_id" required="0" invisible="1"/>
-                    <newline/>
-               </field>
+            <data>
+            <xpath expr="/form/label[@string='']" position="replace">
+                <separator string="Balance Sheet" colspan="4"/>
+                <label nolabel="1" colspan="4" string="This report allows you to print or generate a pdf of your trial balance allowing you to quickly check the balance of each of your accounts in a single report"/>
+            </xpath>
+            <xpath expr="//field[@name='target_move']" position="after">
+                <field name="display_account"/>
+                <field name="display_type"/>
+                <field name="reserve_account_id" required="0" invisible="1"/>
+                <newline/>
+            </xpath>
+            </data>
             </field>
         </record>
 
