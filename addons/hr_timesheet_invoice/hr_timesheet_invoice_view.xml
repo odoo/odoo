@@ -109,20 +109,7 @@
             </field>
         </record>
 
-        <record id="view_account_analytic_line_form_inherit" model="ir.ui.view">
-            <field name="name">account.analytic.line.form.to_invoice</field>
-            <field name="model">account.analytic.line</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
-            <field name="arch" type="xml">
-                <field name="product_uom_id" position="after">
-                    <field name="to_invoice"/>
-                    <field name="invoice_id"/>
-                </field>
-            </field>
-        </record>
-
-	<record id="view_account_analytic_line_form_inherit_account_id" model="ir.ui.view">
+        <record id="view_account_analytic_line_form_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.form.account_id</field>
             <field name="model">account.analytic.line</field>
             <field name="type">form</field>
@@ -134,7 +121,7 @@
             </field>
         </record>
 
-	<record id="view_account_analytic_line_tree_inherit_account_id" model="ir.ui.view">
+       <record id="view_account_analytic_line_tree_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.account_id</field>
             <field name="model">account.analytic.line</field>
             <field name="type">tree</field>
@@ -142,6 +129,19 @@
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
                     <field name="account_id" string="Project"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_line_form_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.to_invoice</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <field name="product_uom_id" position="after">
+                    <field name="to_invoice"/>
+                    <field name="invoice_id"/>
                 </field>
             </field>
         </record>

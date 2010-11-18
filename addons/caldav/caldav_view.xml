@@ -11,63 +11,10 @@
                     <field name="name" select="1" colspan="4"/>
                     <field name="user_id"/>
                     <field name="parent_id"/>
-		    <field name="calendar_collection" invisible="1"/>
-                    <field name="calendar_ids" colspan="4" nolabel="1">
-			<form string="Calendar">
-	                    <field name="name"/>
-	                    <field name="type"/>
-	                    <field name="user_id"/>
-	                    <field name="has_webcal" groups="base.group_extended" />
-	                    <field name="calendar_color" groups="base.group_extended" />
-	                    <field name="calendar_order" groups="base.group_extended" />
-	                    <notebook colspan="4">
-	                        <page string="Calendar Lines">
-	                            <field name="line_ids" mode="form,tree" colspan="4" nolabel="1">
-	                                <form string="Calendar Lines">
-	                                    <field name="name" required="1" select="1" />
-	                                    <field name="object_id" required="1" select="1" />
-	                                    <field name="domain" select="1" />
-	                                    <field name="mapping_ids" select="1" colspan="4" nolabel="1">
-	                                        <tree string="Attributes Mapping" editable="bottom">
-	                                            <field name="name" required="1" domain="[('type', '=', parent.name)]"/>
-	                                            <field name="fn" select="1" />
-	                                            <field name="field_id" select="1" required="1" domain="[('model_id', '=', parent.object_id)]" />
-	                                            <field name="expr" />
-	                                        </tree>
-	                                        <form string="Attributes Mapping">
-	                                            <field name="name" select="1" required="1" domain="[('type', '=', parent.name)]"/>
-	                                            <field name="field_id" select="1" domain="[('model_id', '=', parent.object_id)]"
-	                                                required="1" />
-	                                            <field name="fn" select="1" required="1" />
-	                                            <field name="expr" />
-	                                            <separator string="Value Mapping" colspan="4" />
-	                                            <field name="mapping" select="1" colspan="4" nolabel="1" />
-	                                        </form>
-	                                    </field>
-	                                </form>
-	                                <tree string="Calendar Lines" editable="bottom">
-	                                    <field name="name" select="1" />
-	                                    <field name="object_id" select="1" />
-	                                </tree>
-	                            </field>
-	                        </page>
-	                        <page string="Other Info">
-	                            <separator string="Description" colspan="4" />
-	                            <field name="description" colspan="4" nolabel="1" />
-	                        </page>
-	                    </notebook>
-	                </form>
-			<tree string="Calendars" toolbar="1">
-	                    <field name="name"/>
-	                    <field name="type"/>
-	                    <field name="user_id"/>
-	                    <field name="calendar_color" />
-	                    <field name="calendar_order"/>
-	                    <field name="has_webcal" />
-	                    <field name="create_date"/>
-	                    <field name="write_date"/>
-                	</tree>
-		   </field>
+                    <field name="type"/>
+                    <field name="calendar_collection"/>
+                    <field name="storage_id"/>
+                    <field name="calendar_ids" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
