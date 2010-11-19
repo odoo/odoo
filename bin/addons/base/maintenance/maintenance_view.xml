@@ -7,7 +7,7 @@
             <field name="model">maintenance.contract</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Maintenance Contract">
+                <tree string="Publisher Warranty Contract">
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
@@ -21,7 +21,7 @@
             <field name="model">maintenance.contract</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Maintenance Contract">
+                <form string="Publisher Warranty Contract">
                     <group col="2" colspan="4">
                         <group col="2">
                     		<field name="name"/>
@@ -36,9 +36,9 @@
                         </group>
                         <group col="2">
                         	<button name="check_validity" string="Validate" type="object"
-                        	attrs="{'invisible':[('state','in',['valid'])]}"/>
+                        	attrs="{'invisible':[('state','in',['valid', 'terminated', 'canceled'])]}"/>
                         	<button name="check_validity" string="Refresh Validation Dates" type="object"
-                        	attrs="{'invisible':[('state','in',['unvalid'])]}"/>
+                        	attrs="{'invisible':[('state','in',['unvalidated'])]}"/>
                         </group>
                 	</group>
                 </form>
@@ -50,7 +50,7 @@
             <field name="model">maintenance.contract</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Maintenance Contract">
+                <search string="Publisher Warranty Contract">
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
@@ -71,7 +71,7 @@
         </record>
 
         <record id="action_maintenance_contract_form" model="ir.actions.act_window">
-            <field name="name">Maintenance Contracts</field>
+            <field name="name">Publisher Warranty Contracts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">maintenance.contract</field>
             <field name="view_type">form</field>
@@ -79,7 +79,7 @@
             <field name="search_view_id" ref="maintenance_contract_search_view"/>
         </record>
 
-        <menuitem name="Maintenance" id="maintenance"
+        <menuitem name="Publisher Warranty" id="maintenance"
             parent="base.menu_administration" groups="base.group_extended"/>
 
         <menuitem action="action_maintenance_contract_form" id="menu_maintenance_contract" parent="maintenance"/>

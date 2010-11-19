@@ -22,11 +22,10 @@
 from osv import osv, fields
 import time
 import netsvc
-from tools.misc import ustr
 from tools.translate import _
 import tools.maintenance as tm
 import tools.ping
-import datetime
+from tools import misc
 
 _nlogger = netsvc.Logger()
 _CHAN = __name__.split()[-1]
@@ -41,6 +40,7 @@ class maintenance_contract(osv.osv):
     
     def status(self, cr, uid):
         """ Method called by the client to check availability of maintenance contract. """
+        
         contracts = self._get_valid_contracts(cr, uid)
         return {
             'status': "full" if contracts else "none" ,
@@ -49,36 +49,26 @@ class maintenance_contract(osv.osv):
     
     def send(self, cr, uid, tb, explanations, remarks=None):
         """ Method called by the client to send a problem to the maintenance server. """
+        
         if not remarks:
             remarks = ""
 
         valid_contracts = self._get_valid_contracts(cr, uid)
-
-        crm_case_id = None
-        rc = None
-        try:
-            for contract in valid_contracts: 
-                rc = tm.remote_contract(cr, uid, contract.name)
-                
-                if rc.id:
-                    contract_name = contract.name
-                    break
-                rc = None
+        valid_contract = valid_contracts[0]
         
-            if not rc:
-                raise osv.except_osv(_('Error'), _('Unable to find a valid contract'))
-            
+        try:
+            rc = tm.remote_contract(cr, uid, valid_contract.name)
+                
             origin = 'client'
             dbuuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
             crm_case_id = rc.submit_6({
-                'contract_name': contract_name,
+                'contract_name': valid_contract[0],
                 'tb': tb,
                 'explanations': explanations,
                 'remarks': remarks,
                 'origin': origin,
                 'dbname': cr.dbname,
                 'dbuuid': dbuuid})
-
         except tm.RemoteContractException, rce:
             _nlogger.notifyChannel(_CHAN, netsvc.LOG_INFO, rce)
         except osv.except_osv:
@@ -93,43 +83,42 @@ class maintenance_contract(osv.osv):
     def _valid_get(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for contract in self.browse(cr, uid, ids, context=context):
-            res[contract.id] = ("unvalid", "valid")[contract.date_stop >= time.strftime('%Y-%m-%d')]
+            res[contract.id] = ("unvalid", "valid")[contract.date_stop >= time.strftime(misc.DEFAULT_SERVER_DATE_FORMAT)]
         return res
     
     def check_validity(self, cr, uid, ids, context={}):
         contract_id = ids[0]
         contract = self.browse(cr, uid, contract_id)
-        valid = contract.state == "valid"
+        validated = contract.state != "unvalidated"
         
         self.send_ping(cr, uid, ids, cron_mode=False, context=context)
         
         contract = self.browse(cr, uid, contract_id)
-        valid2 = contract.state == "valid"
-        if not valid and not valid2:
-            raise osv.except_osv("Contract validation error",
-                                 "Please check your maintenance contract name and validity.")
+        validated2 = contract.state != "unvalidated"
+        if not validated and not validated2:
+            raise osv.except_osv(_("Contract validation error"),
+                                 _("Please check your maintenance contract name and validity."))
     
     def send_ping(self, cr, uid, ids, cron_mode=True, context={}):
         try:
             try:
                 result = tools.ping.send_ping(cr, uid)
             except:
-                raise osv.except_osv("Error", "Error during communication with the maintenance server.")
+                raise osv.except_osv(_("Error"), _("Error during communication with the maintenance server."))
             
-            contracts = result["validity_dates"]
+            contracts = result["contracts"]
             for contract in contracts:
                 c_id = self.search(cr, uid, [("name","=",contract)])[0]
                 date_from = contracts[contract][0]
                 date_to = contracts[contract][1]
-                valid = datetime.date.today() >= datetime.datetime.strptime(date_from, '%Y-%m-%d').date() \
-                    and datetime.date.today() <= datetime.datetime.strptime(date_to, '%Y-%m-%d').date()
+                state = contracts[contract][2]
                 self.write(cr, uid, c_id, {
                     "date_start": date_from,
                     "date_stop": date_to,
-                    "state": "valid" if valid else "unvalid",
+                    "state": state,
                 })
             
-            if cron_mode:
+            if cron_mode and result["interval_type"] and result["interval_number"]:
                 modosv = self.pool.get("ir.model.data")
                 sched_id = modosv.get_object_reference(cr, uid, "base", "ir_cron_ping_scheduler")[1]
                 cronosv = self.pool.get("ir.cron")
@@ -150,12 +139,13 @@ class maintenance_contract(osv.osv):
         'date_start' : fields.date('Starting Date', readonly=True),
         'date_stop' : fields.date('Ending Date', readonly=True),
         'state' : fields.function(_valid_get, method=True, string="State", type="selection",
-                                  selection=[('valid', 'Valid'),('unvalid', 'Unvalid')], readonly=True),
+                                  selection=[('unvalidated', 'Unvalidated'), ('valid', 'Valid')
+                                             , ('terminated', 'Terminated'), ('canceled', 'Canceled')], readonly=True),
         'kind' : fields.char('Kind', size=64, readonly=True),
     }
     
     _defaults = {
-        'state': 'unvalid',
+        'state': 'unvalidated',
     }
     
     _sql_constraints = [
