@@ -759,7 +759,8 @@ class account_voucher(osv.osv):
                                 writeoff_journal_id = context['write_off']['writeoff_journal_id']
                                 comment = context['write_off']['comment']
                                 self.pool.get('account.move.line').reconcile(cr, uid, rec_ids, 'manual', writeoff_account_id, writeoff_period_id, writeoff_journal_id, context)
-                    self.pool.get('account.move.line').reconcile_partial(cr, uid, rec_ids, 'manual', context)
+                            else:
+                                self.pool.get('account.move.line').reconcile_partial(cr, uid, rec_ids, 'manual', context)
             self.write(cr, uid, [inv.id], {
                 'move_id': move_id,
                 'state': 'posted',
