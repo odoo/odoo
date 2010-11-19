@@ -30,6 +30,34 @@ from tools.translate import _
 def is_pair(x):
     return not x%2
 
+def check_ean(ean_code):
+    if not ean_code:
+        return True
+    if len(ean_code) not in [13,14,8]:
+        return False
+    try:
+        int(ean_code)
+    except:
+        return False
+    oddsum=0
+    evensum=0
+    total=0
+    eanvalue=ean_code
+    reversevalue = eanvalue[::-1]
+    finalean=reversevalue[1:]
+
+    for i in range(len(finalean)):
+        if is_pair(i):
+            oddsum += int(finalean[i])
+        else:
+            evensum += int(finalean[i])
+    total=(oddsum * 3) + evensum
+
+    check = int(10 - math.ceil(total % 10.0))
+
+    if check != int(ean_code[-1]):
+        return False
+    return True
 #----------------------------------------------------------
 # UOM
 #----------------------------------------------------------
@@ -448,33 +476,8 @@ class product_product(osv.osv):
 
     def _check_ean_key(self, cr, uid, ids):
         for partner in self.browse(cr, uid, ids):
-            if not partner.ean13:
-                continue
-            if len(partner.ean13) not in [13,14,8]:
-                return False
-            try:
-                int(partner.ean13)
-            except:
-                return False
-            oddsum=0
-            evensum=0
-            total=0
-            eanvalue=partner.ean13
-            reversevalue = eanvalue[::-1]
-            finalean=reversevalue[1:]
-
-            for i in range(len(finalean)):
-                if is_pair(i):
-                    oddsum += int(finalean[i])
-                else:
-                    evensum += int(finalean[i])
-            total=(oddsum * 3) + evensum
-
-            check = int(10 - math.ceil(total % 10.0))
-
-            if check != int(partner.ean13[-1]):
-                return False
-        return True
+            res = check_ean(partner.ean13)
+        return res
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
@@ -602,6 +605,14 @@ class product_packaging(osv.osv):
         'width': fields.float('Width', help='The width of the package'),
         'length': fields.float('Length', help='The length of the package'),
     }
+
+
+    def _check_ean_key_r(self, cr, uid, ids):
+        for partner in self.browse(cr, uid, ids):
+            res = check_ean(partner.ean)
+        return res
+
+    _constraints = [(_check_ean_key_r, 'Error: Invalid ean code', ['ean'])]
 
 
     def name_get(self, cr, uid, ids, context={}):
