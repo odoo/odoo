@@ -204,13 +204,10 @@ class rml_parse(object):
                 return res['datas']
             else :
                 return ''
-        except Exception,e:
+        except Exception:
             return ''
 
     def setLang(self, lang):
-        if not lang or self.default_lang.has_key(lang):
-            if not lang:
-                key = 'en_US'
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
         for obj in self.objects:
@@ -519,7 +516,6 @@ class report_sxw(report_rml, preprocess.report):
                               xml_declaration=True)
 
         rml_dom =  etree.XML(rml)
-        body = rml_dom[-1]
         elements = []
         key1 = rml_parser.localcontext['name_space']["text"]+"p"
         key2 = rml_parser.localcontext['name_space']["text"]+"drop-down"

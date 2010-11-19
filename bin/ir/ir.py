@@ -31,7 +31,7 @@ def ir_del(cr, uid, id):
     obj = pooler.get_pool(cr.dbname).get('ir.values')
     return obj.unlink(cr, uid, [id])
 
-def ir_get(cr, uid, key, key2, models, meta=False, context={}, res_id_req=False):
+def ir_get(cr, uid, key, key2, models, meta=False, context=None, res_id_req=False):
     obj = pooler.get_pool(cr.dbname).get('ir.values')
     res = obj.get(cr, uid, key, key2, models, meta=meta, context=context, res_id_req=res_id_req)
     return res

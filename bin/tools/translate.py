@@ -200,6 +200,23 @@ class GettextAlias(object):
 _ = GettextAlias()
 
 
+def quote(s):
+    """Returns quoted PO term string, with special PO characters escaped"""
+    assert r"\n" not in s, "Translation terms may not include escaped newlines ('\\n'), please use only literal newlines! (in '%s')" % s
+    return '"%s"' % s.replace('\\','\\\\') \
+                     .replace('"','\\"') \
+                     .replace('\n', '\\n"\n"')
+
+re_escaped_char = re.compile(r"(\\.)")
+re_escaped_replacements = {'n': '\n', }
+
+def _sub_replacement(match_obj):
+    return re_escaped_replacements.get(match_obj.group(1)[1], match_obj.group(1)[1])
+
+def unquote(str):
+    """Returns unquoted PO term string, with special PO characters unescaped"""
+    return re_escaped_char.sub(_sub_replacement, str[1:-1])
+
 # class to handle po files
 class TinyPoFile(object):
     def __init__(self, buffer):
@@ -231,11 +248,6 @@ class TinyPoFile(object):
         return (self.lines_count - len(self.lines))
 
     def next(self):
-        def unquote(str):
-            return str[1:-1].replace("\\n", "\n")   \
-                            .replace("\\\\ ", "\\ ") \
-                            .replace('\\"', '"')
-
         type = name = res_id = source = trad = None
 
         if self.tnrs:
@@ -337,11 +349,6 @@ class TinyPoFile(object):
                           )
 
     def write(self, modules, tnrs, source, trad):
-        def quote(s):
-            return '"%s"' % s.replace('"','\\"') \
-                             .replace('\n', '\\n"\n"') \
-                             .replace(' \\ ',' \\\\ ')
-
 
         plurial = len(modules) > 1 and 's' or ''
         self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
@@ -654,29 +661,21 @@ def trans_generate(lang, modules, dbname=None):
 
     # parse source code for _() calls
     def get_module_from_path(path, mod_paths=None):
-#        if not mod_paths:
-##             First, construct a list of possible paths
-#            def_path = os.path.abspath(os.path.join(tools.config['root_path'], 'addons'))     # default addons path (base)
-#            ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
-#            mod_paths=[def_path]
-#            for adp in ad_paths:
-#                mod_paths.append(adp)
-#                if not adp.startswith('/'):
-#                    mod_paths.append(os.path.join(def_path,adp))
-#                elif adp.startswith(def_path):
-#                    mod_paths.append(adp[len(def_path)+1:])
-#        for mp in mod_paths:
-#            if path.startswith(mp) and (os.path.dirname(path) != mp):
-#                path = path[len(mp)+1:]
-#                return path.split(os.path.sep)[0]
-        path_dir = os.path.dirname(path[1:])
-        if path_dir:
-            if os.path.exists(os.path.join(tools.config['addons_path'],path[1:])):
-                return path.split(os.path.sep)[1]
-            else:
-                root_addons = os.path.join(tools.config['root_path'], 'addons')
-                if os.path.exists(os.path.join(root_addons,path[1:])):
-                    return path.split(os.path.sep)[1]
+        if not mod_paths:
+            # First, construct a list of possible paths
+            def_path = os.path.abspath(os.path.join(tools.config['root_path'], 'addons'))     # default addons path (base)
+            ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
+            mod_paths=[def_path]
+            for adp in ad_paths:
+                mod_paths.append(adp)
+                if not os.path.isabs(adp):
+                    mod_paths.append(adp)
+                elif adp.startswith(def_path):
+                    mod_paths.append(adp[len(def_path)+1:])
+        for mp in mod_paths:
+            if path.startswith(mp) and (os.path.dirname(path) != mp):
+                path = path[len(mp)+1:]
+                return path.split(os.path.sep)[0]
         return 'base'   # files that are not in a module are considered as being in 'base' module
 
     modobj = pool.get('ir.module.module')
@@ -685,25 +684,55 @@ def trans_generate(lang, modules, dbname=None):
 
     root_path = os.path.join(tools.config['root_path'], 'addons')
 
-    if root_path in tools.config['addons_path'] :
-        path_list = [root_path]
+    apaths = map(os.path.abspath, map(str.strip, tools.config['addons_path'].split(',')))
+    if root_path in apaths:
+        path_list = apaths
     else :
-        path_list = [root_path,tools.config['addons_path']]
+        path_list = [root_path,] + apaths
+
+    logger.notifyChannel("i18n", netsvc.LOG_DEBUG, "Scanning modules at paths: %s" % (' '.join(path_list),))
+
+    mod_paths = []
+    join_dquotes = re.compile(r'([^\\])"[\s\\]*"', re.DOTALL)
+    join_quotes = re.compile(r'([^\\])\'[\s\\]*\'', re.DOTALL)
+    re_dquotes = re.compile(r'[^a-zA-Z0-9_]_\([\s]*"(.+?)"[\s]*?\)', re.DOTALL)
+    re_quotes = re.compile(r'[^a-zA-Z0-9_]_\([\s]*\'(.+?)\'[\s]*?\)', re.DOTALL)
 
     def export_code_terms_from_file(fname, path, root, terms_type):
         fabsolutepath = join(root, fname)
         frelativepath = fabsolutepath[len(path):]
-        module = get_module_from_path(frelativepath)
+        module = get_module_from_path(fabsolutepath, mod_paths=mod_paths)
         is_mod_installed = module in installed_modules
         if (('all' in modules) or (module in modules)) and is_mod_installed:
+            logger.notifyChannel("i18n", netsvc.LOG_DEBUG, "Scanning code of %s at module: %s" % (frelativepath, module))
             code_string = tools.file_open(fabsolutepath, subdir='').read()
-            iter = re.finditer('[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)', code_string, re.S)
             if module in installed_modules:
                 frelativepath = str("addons" + frelativepath)
-            for i in iter:
-                push_translation(module, terms_type, frelativepath, 0, encode(i.group(1)))
+            ite = re_dquotes.finditer(code_string)
+            for i in ite:
+                src = i.group(1)
+                if src.startswith('""'):
+                    assert src.endswith('""'), "Incorrect usage of _(..) function (should contain only literal strings!) in file %s near: %s" % (frelativepath, src[:30])
+                    src = src[2:-2]
+                else:
+                    src = join_dquotes.sub(r'\1', src)
+                # now, since we did a binary read of a python source file, we
+                # have to expand pythonic escapes like the interpreter does.
+                src = src.decode('string_escape')
+                push_translation(module, terms_type, frelativepath, 0, encode(src))
+            ite = re_quotes.finditer(code_string)
+            for i in ite:
+                src = i.group(1)
+                if src.startswith("''"):
+                    assert src.endswith("''"), "Incorrect usage of _(..) function (should contain only literal strings!) in file %s near: %s" % (frelativepath, src[:30])
+                    src = src[2:-2]
+                else:
+                    src = join_quotes.sub(r'\1', src)
+                src = src.decode('string_escape')
+                push_translation(module, terms_type, frelativepath, 0, encode(src))
 
     for path in path_list:
+        logger.notifyChannel("i18n", netsvc.LOG_DEBUG, "Scanning files of modules at %s" % path)
         for root, dummy, files in tools.osutil.walksymlinks(path):
             for fname in itertools.chain(fnmatch.filter(files, '*.py')):
                 export_code_terms_from_file(fname, path, root, 'code')
