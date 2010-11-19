@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:59+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:59+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:09+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,9 +37,8 @@ msgid "Convert to Quotation"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:0
-#, python-format
-msgid "is converted to Quotation."
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: sale_crm
@@ -60,8 +59,8 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: sale_crm
@@ -72,6 +71,11 @@ msgstr ""
 #. module: sale_crm
 #: view:crm.lead:0
 msgid "Convert to Quote"
+msgstr ""
+
+#. module: sale_crm
+#: view:crm.make.sale:0
+msgid "_Create"
 msgstr ""
 
 #. module: sale_crm
@@ -128,6 +132,12 @@ msgid "My Quotations"
 msgstr ""
 
 #. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#, python-format
+msgid "is converted to Quotation."
+msgstr ""
+
+#. module: sale_crm
 #: field:crm.make.sale,close:0
 msgid "Close Opportunity"
 msgstr ""
@@ -146,5 +156,10 @@ msgstr ""
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Cancel"
+msgstr ""
+
+#. module: sale_crm
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
