@@ -9,10 +9,6 @@
         <field name="name">Warehouse / User</field>
     </record>
 
-    <record id="base.user_demo" model="res.users">
-        <field eval="[(4, ref('group_stock_user'))]" name="groups_id"/>
-    </record>
-
 <!-- multi -->
 
     <record model="ir.rule" id="stock_picking_rule">

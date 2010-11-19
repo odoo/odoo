@@ -9,10 +9,6 @@
     <record id="group_purchase_requisition_user" model="res.groups">
         <field name="name">Purchase Requisition / User</field>
     </record>
-    
-     <record id="base.user_demo" model="res.users">
-        <field eval="[(4, ref('group_purchase_requisition_user'))]" name="groups_id"/>
-    </record>
 
     <record model="ir.rule" id="purchase_requisition_comp_rule">
         <field name="name">Purchase Requisition multi-company</field>

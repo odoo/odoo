@@ -2,6 +2,10 @@
 <openerp>
 <data noupdate="1">
 
+    <record id="base.user_demo" model="res.users">
+        <field eval="[(4, ref('group_auction_user'))]" name="groups_id"/>
+    </record>
+
     <!-- demo data for Account -->
     <record model="account.account.type" id="account.account_type_tax">
           <field name="name">Tax</field>
