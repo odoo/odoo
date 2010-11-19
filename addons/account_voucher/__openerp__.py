@@ -24,18 +24,18 @@
     "version" : "1.0",
     "author" : 'OpenERP SA',
     "description": """Account Voucher module includes all the basic requirements of
-    Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc...
+    Voucher Entries for Bank, Cash, Sales, Purchase, Expense, Contra, etc...
     * Voucher Entry
     * Voucher Receipt
     * Cheque Register
+    You can create sales receipts and customer payment (Advance payment) also vendor vouchers and vendor payment too.And you can have Write off feature
+    on payment of customer/supplier payment.
     """,
     "category" : "Generic Modules/Accounting",
     "website" : "http://tinyerp.com",
     "depends" : ["account"],
     "init_xml" : [],
-
     "demo_xml" : [],
-
     "update_xml" : [
         "security/ir.model.access.csv",
         "account_voucher_sequence.xml",
