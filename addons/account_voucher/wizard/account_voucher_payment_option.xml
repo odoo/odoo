@@ -12,9 +12,10 @@
                      <field name="payment_option"/>
                      <group colspan="4" attrs="{'invisible':[('payment_option','!=','close_balance')]}">
                          <separator string="Write-Off Move" colspan="4"/>
+                         <field name="writeoff_amount"/>
+                         <field name="comment"/>
                          <field name="writeoff_journal_id" attrs="{'required':[('payment_option','=','close_balance')]}"/>
                          <field name="writeoff_acc_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'required':[('payment_option','=','close_balance')]}"/>
-                         <field name="comment"/>
                          <group colspan="4" groups="analytic.group_analytic_accounting">
                            <separator string="Analytic" colspan="4"/>
                            <field name="analytic_id"/>

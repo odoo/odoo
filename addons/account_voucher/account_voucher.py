@@ -543,7 +543,7 @@ class account_voucher(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
-        voucher = self.browse(cr, uid, [ids[0]], context=context)[0]
+        voucher = self.browse(cr, uid, ids, context=context)[0]
         debit= credit = 0.0
         if voucher.line_dr_ids:
             for line in voucher.line_dr_ids:
@@ -666,7 +666,6 @@ class account_voucher(osv.osv):
                 'date': inv.date,
                 'date_maturity': inv.date_due
             }
-
             if (debit == 0.0 or credit == 0.0 or debit+credit > 0) and (debit > 0.0 or credit > 0.0):
                 master_line = move_line_pool.create(cr, uid, move_line)
 
@@ -719,9 +718,14 @@ class account_voucher(osv.osv):
                 sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
                 move_line['amount_currency'] = company_currency <> current_currency and sign * line.amount or 0.0
                 master_line = move_line_pool.create(cr, uid, move_line)
+                test_ids.append('master_line')
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
                     rec_list_ids.append(rec_ids)
+            writeoff_account_id = False
+            writeoff_journal_id = False
+            writeoff_period_id = inv.period_id.id,
+            comment = False
 
             if not currency_pool.is_zero(cr, uid, inv.currency_id, line_total):
                 diff = line_total
@@ -745,119 +749,22 @@ class account_voucher(osv.osv):
                 move_line['account_id'] = account_id
                 move_line_pool.create(cr, uid, move_line)
 
+            for rec_ids in rec_list_ids:
+                if len(rec_ids) >= 2:
+                    if 'write_off' in context and context['write_off']['writeoff_acc_id']:
+                        writeoff_account_id = context['write_off']['writeoff_acc_id']
+                        writeoff_journal_id = context['write_off']['writeoff_journal_id']
+                        comment = context['write_off']['comment']
+                        self.pool.get('account.move.line').reconcile(cr, uid, rec_ids, 'manual', writeoff_account_id, writeoff_period_id, writeoff_journal_id, context)
+                    else:
+                        self.pool.get('account.move.line').reconcile_partial(cr, uid, rec_ids, 'manual', context)
+
             self.write(cr, uid, [inv.id], {
                 'move_id': move_id,
                 'state': 'posted',
                 'number': name,
             })
             move_pool.post(cr, uid, [move_id], context={})
-            for rec_ids in rec_list_ids:
-                if len(rec_ids) >= 2:
-                    move_line_pool.reconcile_partial(cr, uid, rec_ids)
-        return True
-
-    def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, period_id, pay_journal_id, writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context=None, name=''):
-        if context is None:
-            context = {}
-        seq_obj = self.pool.get('ir.sequence')
-        #TODO check if we can use different period for payment and the writeoff line
-        assert len(ids)==1, "Can only pay one voucher at a time"
-        voucher = self.browse(cr, uid, ids[0])
-        if voucher.number:
-            name = voucher.number
-        elif voucher.journal_id.sequence_id:
-            name = seq_obj.get_id(cr, uid, voucher.journal_id.sequence_id.id)
-        else:
-            raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal !'))
-        if not voucher.reference:
-            ref = name.replace('/','')
-        else:
-            ref = voucher.reference
-
-        src_account_id = voucher.account_id.id
-        # Take the seq as name for move
-        types = {'sale': -1, 'purchase': 1, 'payment': 1, 'receipt': -1}
-        direction = types[voucher.type]
-        #take the choosen date
-        if 'date_p' in context and context['date_p']:
-            date = context['date_p']
-        else:
-            date = time.strftime('%Y-%m-%d')
-        # Take the amount in currency and the currency of the payment
-        if 'amount_currency' in context and context['amount_currency'] and 'currency_id' in context and context['currency_id']:
-            amount_currency = context['amount_currency']
-            currency_id = context['currency_id']
-        else:
-            amount_currency = False
-            currency_id = False
-        pay_journal = self.pool.get('account.journal').read(cr, uid, pay_journal_id, ['type'], context=context)
-        if voucher.type in ('sale', 'receipt'):
-            if pay_journal['type'] == 'bank':
-                entry_type = 'bank_pay_voucher' # Bank payment
-            else:
-                entry_type = 'pay_voucher' # Cash payment
-        else:
-            entry_type = 'cont_voucher'
-
-        # Pay attention to the sign for both debit/credit AND amount_currency
-        l1 = {
-            'debit': direction * pay_amount>0 and direction * pay_amount,
-            'credit': direction * pay_amount<0 and - direction * pay_amount,
-            'account_id': src_account_id,
-            'partner_id': voucher.partner_id.id,
-            'ref':ref,
-            'date': date,
-            'currency_id':currency_id,
-            'amount_currency':amount_currency and direction * amount_currency or 0.0,
-            'company_id': voucher.company_id.id,
-        }
-        l2 = {
-            'debit': direction * pay_amount<0 and - direction * pay_amount,
-            'credit': direction * pay_amount>0 and direction * pay_amount,
-            'account_id': pay_account_id,
-            'partner_id': voucher.partner_id.id,
-            'ref':ref,
-            'date': date,
-            'currency_id':currency_id,
-            'amount_currency':amount_currency and - direction * amount_currency or 0.0,
-            'company_id': voucher.company_id.id,
-        }
-
-        if not name:
-            name = voucher.line_ids and voucher.line_ids[0].name or voucher.number
-        l1['name'] = name
-        l2['name'] = name
-        lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'name': name, 'date': date}
-        move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
-
-        line_ids = []
-        total = 0.0
-        line = self.pool.get('account.move.line')
-        move_ids = [move_id,]
-        if voucher.move_id:
-            move_ids.append(voucher.move_id.id)
-        cr.execute('SELECT id FROM account_move_line '\
-                   'WHERE move_id IN %s',
-                   ((move_id,),))
-        lines = line.browse(cr, uid, map(lambda x: x[0], cr.fetchall()) )
-        for l in lines:
-            if l.account_id.id == src_account_id:
-                line_ids.append(l.id)
-                total += (l.debit or 0.0) - (l.credit or 0.0)
-
-        voc_id, name = self.name_get(cr, uid, [voucher.id], context=context)[0]
-        if (not round(total,self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))) or writeoff_acc_id:
-            self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
-        else:
-            code = voucher.currency_id.code
-            # TODO: use currency's formatting function
-            msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)") % \
-                    (name, pay_amount, code, voucher.amount_total, code, total, code)
-            self.log(cr, uid, voc_id,  msg)
-            self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
-        # Update the stored value (fields.function), so we write to trigger recompute
-        self.write(cr, uid, ids, {'state':'posted'}, context=context)
         return True
 
     def copy(self, cr, uid, id, default={}, context=None):
