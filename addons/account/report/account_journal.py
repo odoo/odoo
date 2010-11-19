@@ -120,7 +120,6 @@ class journal_print(report_sxw.rml_parse, common_report_header):
 
         self.cr.execute('SELECT l.id FROM account_move_line l, account_move am WHERE l.move_id=am.id AND am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ORDER BY l.'+ self.sort_selection + '',(tuple(move_state), period_id, tuple(journal_id) ))
         ids = map(lambda x: x[0], self.cr.fetchall())
-        print"--ids--",ids
         return obj_mline.browse(self.cr, self.uid, ids)
 
     def _set_get_account_currency_code(self, account_id):
