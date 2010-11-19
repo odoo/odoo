@@ -71,7 +71,7 @@ class product_product(osv.osv):
         product_obj=self.browse(cr,uid,ids)[0]
         account_variation = product_obj.categ_id.property_stock_variation
         account_variation_id = account_variation and account_variation.id or False
-        if not account_variation_id: raise osv.except_osv(_('Error!'), _('Variation Account is not specified for Product Category: %s' % (product_obj.categ_id.name)))
+        if not account_variation_id: raise osv.except_osv(_('Error!'), _('Variation Account is not specified for Product Category: %s') % (product_obj.categ_id.name))
         move_ids = []
         loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
