@@ -51,4 +51,11 @@ class account_journal(osv.osv):
 
 account_journal()
 
+class account_move_line(osv.osv):
+    _inherit = "account.move.line"
+
+    _columns = {
+        'internal_sequence_number': fields.related('move_id','internal_sequence_number', type='char', relation='account.move', string='Internal Number'),
+    }
+account_move_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
