@@ -11,28 +11,28 @@
 
         <function eval="('default', False, 'internal_sequence', [('account.journal', False)], internal_sequence_journal, True, False, False, False, True)" id="internal_seq_default_set" model="ir.values" name="set"/>
 
-		<!--Account Journal Internal Number of account move line-->
+        <!--Account Journal Internal Number of account move line-->
 
-		<record id="sp_journal_col3" model="account.journal.column">
-			<field name="view_id" ref="account.account_sp_journal_view"/>
-			<field name="name">Internal Number</field>
-			<field name="field">internal_sequence_number</field>
-			<field eval="True" name="required"/>
-			<field eval="2" name="sequence"/>
-		</record>
+        <record id="sp_journal_col3" model="account.journal.column">
+            <field name="view_id" ref="account.account_sp_journal_view"/>
+            <field name="name">Internal Number</field>
+            <field name="field">internal_sequence_number</field>
+            <field eval="True" name="required"/>
+            <field eval="2" name="sequence"/>
+        </record>
 
-		<record id="journal_col1" model="account.journal.column">
-			<field name="view_id" ref="account.account_journal_view"/>
-			<field name="name">Internal Number</field>
-			<field name="field">internal_sequence_number</field>
-			<field eval="True" name="required"/>
-			<field eval="2" name="sequence"/>
-		</record>
+        <record id="journal_col1" model="account.journal.column">
+            <field name="view_id" ref="account.account_journal_view"/>
+            <field name="name">Internal Number</field>
+            <field name="field">internal_sequence_number</field>
+            <field eval="True" name="required"/>
+            <field eval="2" name="sequence"/>
+        </record>
 
-		<record id="bank_col3" model="account.journal.column">
-			<field name="view_id" ref="account.account_journal_bank_view"/>
-			<field name="name">Internal Number</field>
-			<field name="field">internal_sequence_number</field>
+        <record id="bank_col3" model="account.journal.column">
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="name">Internal Number</field>
+            <field name="field">internal_sequence_number</field>
             <field eval="True" name="required"/>
             <field eval="2" name="sequence"/>
         </record>
