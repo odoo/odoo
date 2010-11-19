@@ -18,14 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from report import report_sxw
-
 
 class pos_sales_user_today(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(pos_sales_user_today, self).__init__(cr, uid, name, context)
+        super(pos_sales_user_today, self).__init__(cr, uid, name, context=context)
         self.total = 0.0
         self.localcontext.update({
             'time': time,
@@ -40,17 +40,11 @@ class pos_sales_user_today(report_sxw.rml_parse):
         self.cr.execute("select po.name as pos,po.date_order,ru.name as user,po.state,rc.name " \
                         "from pos_order as po,res_users as ru,res_company as rc " \
                         "where to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date " \
-                        "and po.company_id=rc.id and po.user_id=ru.id and po.user_id IN %s" ,(tuple(ids), ))
+                        "and po.company_id=rc.id and po.user_id=ru.id and po.user_id IN %s", (tuple(ids), ))
 
         data = self.cr.dictfetchall()
         return data
 
 report_sxw.report_sxw('report.pos.sales.user.today', 'pos.order', 'addons/point_of_sale/report/pos_sales_user_today.rml', parser=pos_sales_user_today,header='internal')
 
-
-
-
-
-
-
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

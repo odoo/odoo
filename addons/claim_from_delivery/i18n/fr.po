@@ -6,24 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 12:02+0000\n"
-"PO-Revision-Date: 2010-08-30 12:22+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-17 07:57+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-31 03:58+0000\n"
+"X-Launchpad-Export-Date: 2010-11-19 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: claim_from_delivery
-#: model:ir.actions.act_window,name:claim_from_delivery.action_claim_from_delivery
-msgid "Claim"
-msgstr ""
-
-#. module: claim_from_delivery
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: claim_from_delivery
@@ -31,6 +27,8 @@ msgstr ""
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Le nom de l'objet doit commencer par x_ et ne doit contenir aucun caractère "
+"spécial!"
 
 #. module: claim_from_delivery
 #: model:ir.module.module,description:claim_from_delivery.module_meta_information
@@ -43,16 +41,19 @@ msgid "Claim from delivery"
 msgstr ""
 
 #. module: claim_from_delivery
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: claim_from_delivery
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nom de modèle invalide dans la définition de l'action"
 
 #. module: claim_from_delivery
 #: model:ir.model,name:claim_from_delivery.model_stock_picking
 msgid "Picking List"
 msgstr "Picking List"
 
-#. module: claim_from_delivery
-#: field:stock.picking,partner_id:0
-msgid "Partner"
-msgstr "Partner"
+#~ msgid "Partner"
+#~ msgstr "Partner"

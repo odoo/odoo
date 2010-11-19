@@ -2,13 +2,6 @@
 <openerp>
   <data noupdate="1">
 
-    <!-- Casual leave -->
-    <record model="hr.holidays.status" id="holiday_status_cl">
-      <field name="name">Casual Leave</field>
-      <field name="double_validation">True</field>
-      <field name="color_name">black</field>
-    </record>
-
     <record model="hr.holidays" id="hr_holidays_employee1_allocation_cl">
         <field name="name">Casual Leave for Fabien Pinckaers</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
@@ -27,13 +20,6 @@
       <field name="employee_id" ref="hr.employee1"/>
     </record>
 
-    <!-- Sick leave -->
-    <record model="hr.holidays.status" id="holiday_status_sl">
-      <field name="name">Sick Leave</field>
-      <field name="limit">True</field>
-      <field name="color_name">red</field>
-    </record>
-
     <record model="hr.holidays" id="hr_holidays_employee1_sl">
       <field name="name">Doctor Appointment</field>
       <field name="holiday_status_id" ref="holiday_status_sl"/>
@@ -47,6 +33,5 @@
 
     <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
-
   </data>
 </openerp>

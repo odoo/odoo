@@ -74,24 +74,24 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
-    <blockTableStyle id="Table_Move_line">
+    <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="Standard" fontName="Times-Roman"/>
-    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Table Contents" fontName="Times-Roman"/>
-    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
-    <paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Helvetica"/>
+    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER"/>
+    <paraStyle name="Caption" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Helvetica"/>
     <paraStyle name="Preformatted Text" fontName="Courier" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="Footer" fontName="Times-Roman"/>
-    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="Footer" fontName="Helvetica"/>
+    <paraStyle name="Horizontal Line" fontName="Helvetica" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
     <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
@@ -115,8 +115,8 @@
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9_bold_U" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <images/>
   </stylesheet>
-  <images/>
   <story>
     <blockTable colWidths="175.0,175.0,175.0" repeatRows="1" style="Table_Title">
       <tr>
@@ -157,10 +157,10 @@
     <blockTable colWidths="175.0,175.0,175.0" style="Table_Content_Date">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ data['form']['date_from'] ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang(data['form']['date_from'],date=True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ data['form']['date_to'] ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang (data['form']['date_to'] ,date=True)]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ company.currency_id.name ]]</para>
@@ -207,7 +207,7 @@
           <para style="terp_default_Bold_9">Totals:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</u></para>
+          <para style="terp_default_Right_9_bold_U">[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
         </td>
         <td>
           <para style="terp_default_Right_9_bold">
@@ -215,47 +215,47 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</u></para>
+          <para style="terp_default_Right_9_bold_U">[[ reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</u></para>
+          <para style="terp_default_Right_9_bold_U">[[ reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['profit'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</u></para>
+          <para style="terp_default_Right_9_bold_U">[[ reduce(lambda x, y: x+y['profit'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) and round(reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)/reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)* -100, 2)]] %</u></para>
+          <para style="terp_default_Right_9_bold_U">[[ reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) and round(reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)/reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)* -100, 2)]] %</para>
         </td>
       </tr>
     </blockTable>
     <para style="terp_default_2"/>
     <section>
       <para style="terp_default_8">[[ repeatIn(user_ids(lines(data['form'])), 'e') ]]</para>
-      <blockTable colWidths="137.0,16.0,65.0,61.0,71.0,66.0,52.0,51.0" style="Table_Journal_Total_detail">
+      <blockTable colWidths="137.0,29.0,52.0,61.0,71.0,66.0,52.0,51.0" style="Table_Journal_Total_detail">
         <tr>
           <td>
             <para style="terp_default_Bold_9">[[ e.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_8">[[ repeatIn(journal_ids(data['form'], e.id), 'j') ]]</para>
+            <para style="terp_default_8">[[ repeatIn(journal_ids(data['form'], [e.id]), 'j') ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], [j.id], [e.id]), 0) ]]</u></para>
+            <para style="terp_default_Right_9_bold_U">[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['amount_th'], line(data['form'], [j.id], [e.id]), 0) ]]</u></para>
+            <para style="terp_default_Right_9_bold_U">[[ reduce(lambda x, y: x+y['amount_th'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) ]]</u></para>
+            <para style="terp_default_Right_9_bold_U">[[ reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) ]]</u></para>
+            <para style="terp_default_Right_9_bold_U">[[ reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['profit'], line(data['form'], [j.id], [e.id]), 0) ]]</u></para>
+            <para style="terp_default_Right_9_bold_U">[[ reduce(lambda x, y: x+y['profit'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) and  (reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) / reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) * 100.0)]] %</u></para>
+            <para style="terp_default_Right_9_bold_U">[[reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) and '%d' % (reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) / reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) * 100.0, 2)]] %</para>
           </td>
         </tr>
       </blockTable>
@@ -296,35 +296,41 @@
           </td>
         </tr>
       </blockTable>
-      </section>
+      <para style="terp_default_2">
+        <font color="white"> </font>
+      </para>
       <section>
-      <para style="terp_default_8">[[ repeatIn(line(data['form'], [j.id],[e.id]), 'l') ]] </para>
-      <blockTable colWidths="155.0,64.0,61.0,71.0,66.0,52.0,50.0" style="Table_Move_line">
-        <tr>
-          <td>
-            <para style="terp_default_8">[[ l['name'] ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ l['unit_amount'] ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ l['amount_th'] ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ l['amount'] ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ l['cost'] ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ l['profit'] ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ l['eff'] ]] %</para>
-          </td>
-        </tr>
-      </blockTable>
-      <para style="terp_default_9">
+        <para style="terp_default_8">[[ repeatIn(line(data['form'], [j.id],[e.id]), 'l') ]] </para>
+        <blockTable colWidths="155.0,64.0,61.0,71.0,66.0,52.0,50.0" style="Table1">
+          <tr>
+            <td>
+              <para style="terp_default_8">[[ l['name'] ]]</para>
+            </td>
+            <td>
+              <para style="terp_default_Right_9">[[ l['unit_amount'] ]]</para>
+            </td>
+            <td>
+              <para style="terp_default_Right_9">[[ l['amount_th'] ]]</para>
+            </td>
+            <td>
+              <para style="terp_default_Right_9">[[ l['amount'] ]]</para>
+            </td>
+            <td>
+              <para style="terp_default_Right_9">[[ l['cost'] ]]</para>
+            </td>
+            <td>
+              <para style="terp_default_Right_9">[[ l['profit'] ]]</para>
+            </td>
+            <td>
+              <para style="terp_default_Right_9">[[ l['eff'] ]] %</para>
+            </td>
+          </tr>
+        </blockTable>
+        <para style="terp_default_2">
+          <font color="white"> </font>
+        </para>
+      </section>
+      <para style="terp_default_2">
         <font color="white"> </font>
       </para>
     </section>

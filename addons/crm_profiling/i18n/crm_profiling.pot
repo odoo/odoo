@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01:51+0000\n"
-"PO-Revision-Date: 2009-08-28 16:01:51+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:57+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
+msgid "Questions List"
+msgstr ""
+
+#. module: crm_profiling
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: crm_profiling
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: crm_profiling
@@ -33,18 +43,23 @@ msgid "Open Questionnaire"
 msgstr ""
 
 #. module: crm_profiling
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: crm_profiling
 #: field:crm.segmentation,child_ids:0
 msgid "Child Profiles"
 msgstr ""
 
 #. module: crm_profiling
-#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
-msgid "crm_profiling management"
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
 msgstr ""
 
 #. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: crm_profiling
@@ -54,11 +69,22 @@ msgid "Answer"
 msgstr ""
 
 #. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_crm_segmentation
+msgid "Partner Segmentation"
+msgstr ""
+
+#. module: crm_profiling
 #: view:res.partner:0
 msgid "Profiling"
 msgstr ""
 
 #. module: crm_profiling
+#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
+msgid "Crm Profiling management - To Perform Segmentation within Partners"
+msgstr ""
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
 #: field:crm_profiling.questionnaire,description:0
 msgid "Description"
 msgstr ""
@@ -86,6 +112,11 @@ msgid "Use a questionnaire"
 msgstr ""
 
 #. module: crm_profiling
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: crm_profiling
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
@@ -98,10 +129,8 @@ msgid "Questionnaires"
 msgstr ""
 
 #. module: crm_profiling
-#: field:crm_profiling.questionnaire,name:0
-#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
-#: wizard_view:open_questionnaire,init:0
-msgid "Questionnaire"
+#: help:crm.segmentation,profiling_active:0
+msgid "Check                             this box if you want to use this tab as part of the                              segmentation rule. If not checked, the criteria beneath will be ignored"
 msgstr ""
 
 #. module: crm_profiling
@@ -121,13 +150,13 @@ msgid "Avalaible answers"
 msgstr ""
 
 #. module: crm_profiling
-#: field:crm.segmentation,answer_yes:0
-msgid "Included Answers"
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid "You can create specific topic related questionnaires that will be used to guide your team(s) in the sales cycle by helping them to ask the right questions. Using the segmentation tool, you will be able to automatically assign a partner to a category based on his answers to the different questionnaires."
 msgstr ""
 
 #. module: crm_profiling
-#: help:crm.segmentation,profiling_active:0
-msgid "Check this box if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored"
+#: field:crm.segmentation,answer_yes:0
+msgid "Included Answers"
 msgstr ""
 
 #. module: crm_profiling
@@ -150,8 +179,17 @@ msgid "Cancel"
 msgstr ""
 
 #. module: crm_profiling
-#: view:crm.segmentation:0
-msgid "Partner Segmentations"
+#: model:ir.model,name:crm_profiling.model_res_partner
+msgid "Partner"
+msgstr ""
+
+#. module: crm_profiling
+#: code:addons/crm_profiling/crm_profiling.py:0
+#: field:crm_profiling.questionnaire,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
+#: wizard_view:open_questionnaire,init:0
+#, python-format
+msgid "Questionnaire"
 msgstr ""
 
 #. module: crm_profiling
@@ -162,5 +200,10 @@ msgstr ""
 #. module: crm_profiling
 #: wizard_button:open_questionnaire,open,compute:0
 msgid "Save Data"
+msgstr ""
+
+#. module: crm_profiling
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

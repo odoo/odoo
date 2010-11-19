@@ -31,7 +31,7 @@
 ##############################################################################
 
 import time
-import mx.DateTime
+from datetime import datetime
 import base64
 
 from osv import osv, fields
@@ -351,9 +351,9 @@ def _create_dta(obj, cr, uid, data, context=None):
         context = {}
     payment = payment_obj.browse(cr, uid, data['id'], context=context)
 
-    if not payment.mode or payment.mode.type.code != 'dta':
+    if not payment.mode:
         raise osv.except_osv(_('Error'),
-                _('No payment mode or payment type code invalid.'))
+                _('No payment mode'))
     bank = payment.mode.bank_id
     if not bank:
         raise osv.except_osv(_('Error'), _('No bank account for the company.'))
@@ -385,7 +385,6 @@ def _create_dta(obj, cr, uid, data, context=None):
         raise osv.except_osv(_('Error'),
                 _('No IBAN for the company bank account.'))
 
-    dta_line_obj = pool.get('account.dta.line')
     res_partner_bank_obj = pool.get('res.partner.bank')
 
     seq = 1
@@ -405,7 +404,7 @@ def _create_dta(obj, cr, uid, data, context=None):
         v['sequence'] = str(seq).rjust(5).replace(' ', '0')
         v['amount_to_pay']= str(pline.amount_currency).replace('.', ',')
         v['number'] = pline.name
-        v['currency'] = pline.currency.code
+        v['currency'] = pline.currency.symbol
 
         v['partner_bank_name'] =  pline.bank_id.bank.name or False
         v['partner_bank_clearing'] =  pline.bank_id.bank.clearing or False
@@ -469,11 +468,11 @@ def _create_dta(obj, cr, uid, data, context=None):
                     'on line: ' + pline.name)
 
         if pline.order_id.date_scheduled:
-            date_value = mx.DateTime.strptime(pline.order_id.date_scheduled, '%Y-%m-%d')
+            date_value = datetime.strptime(pline.order_id.date_scheduled, '%Y-%m-%d')
         elif pline.date:
-            date_value = mx.DateTime.strptime(pline.date, '%Y-%m-%d')
+            date_value = datetime.strptime(pline.date, '%Y-%m-%d')
         else:
-            date_value = mx.DateTime.now()
+            date_value = datetime.now()
         v['date_value'] = date_value.strftime("%y%m%d")
 
         # si compte iban -> iban (836)

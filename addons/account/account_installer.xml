@@ -8,13 +8,13 @@
             <field name="arch" type="xml">
             <data>
                 <form position="attributes">
-                    <attribute name="string">Accounting Modules Configuration</attribute>
+                    <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
-                    <attribute name="string">Configure Your Accounting System</attribute>
+                    <attribute name="string">Configure Your Accounting Chart</attribute>
                 </separator>
                 <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">Configure your accounting system. By default, Chart of Account is matching to your country. If there are not chart of account certified for your county, you can install the generic chart of account.</attribute>
+                    <attribute name="string">The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default.</attribute>
                 </xpath>
                 <xpath expr="//button[@string='Install Modules']" position="attributes">
                     <attribute name="string">Configure</attribute>
@@ -26,7 +26,7 @@
                 <group colspan="8">
                     <group colspan="4" height="450" width="600">
                         <field name="charts"/>
-                            <group colspan="4">
+                            <group colspan="4" groups="base.group_extended">
                                 <separator col="4" colspan="4" string="Configure Fiscal Year"/>
                                 <field name="company_id" colspan="4" widget="selection" groups="base.group_multi_company"/>
                                 <field name="date_start" on_change="on_change_start_date(date_start)"/>
@@ -34,23 +34,23 @@
                                 <field name="period" colspan="4"/>
                             </group>
                             <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
-                                <separator col="4" colspan="4" string="Bank and Cost Account"/>
+                                <field name="sale_tax" on_change="on_change_tax(sale_tax)" attrs="{'required':[('charts','=','configurable')]}"/>
+                                <field name="purchase_tax" groups="base.group_extended"/>
+                            </group>
+                            <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
+                                <separator col="4" colspan="4" string="Bank and Cash Accounts"/>
                                 <field colspan="4" mode="tree" height="200" name="bank_accounts_id" nolabel="1" widget="one2many_list">
                                     <form string="">
                                         <field name="acc_name"/>
                                         <field name="account_type"/>
-                                        <field name="currency_id" widget="selection"/>
+                                        <field name="currency_id" widget="selection" groups="base.group_extended"/>
                                     </form>
-                                    <tree editable="bottom" string="">
+                                    <tree editable="bottom" string="Your bank and cash accounts">
                                         <field name="acc_name"/>
                                         <field name="account_type"/>
-                                        <field name="currency_id" widget="selection"/>
+                                        <field name="currency_id" widget="selection" groups="base.group_extended"/>
                                     </tree>
                                 </field>
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
-                                <field name="sale_tax" colspan="2" on_change="on_change_tax(sale_tax)"/>
-                                <field name="purchase_tax" colspan="2" />
                             </group>
                         </group>
                     </group>
@@ -66,13 +66,17 @@
             <field name="arch" type="xml">
                 <data>
                     <form position="attributes">
-                        <attribute name="string">Accounting Modules Configuration</attribute>
+                        <attribute name="string">Accounting Application Configuration</attribute>
                     </form>
                     <separator string="title" position="attributes">
-                        <attribute name="string">Extra Accounting Modules</attribute>
+                         <attribute name="string">Configure Your Accounting Application</attribute>
+
                     </separator>
                     <xpath expr="//label[@string='description']" position="attributes">
-                        <attribute name="string">From this screen, you can install extra accounting modules in your accounting system. Select the modules to directly install them. If you do not think you need any of these right now, you can easily install them later.</attribute>
+                        <attribute name="string">Add extra Accounting functionalities to the ones already installed.</attribute>
+                    </xpath>
+                    <xpath expr="//button[@string='Install Modules']" position="attributes">
+                        <attribute name="string">Configure</attribute>
                     </xpath>
                     <xpath expr='//separator[@string="vsep"]' position='attributes'>
                         <attribute name='string'></attribute>
@@ -100,7 +104,7 @@
         </record>
 
         <record id="action_account_installer" model="ir.actions.act_window">
-            <field name="name">Accounting Modules Installation</field>
+            <field name="name">Accounting Application Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.installer.modules</field>
             <field name="view_id" ref="view_account_modules_installer"/>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,27 +23,30 @@ from osv import fields, osv
 import tools
 
 class report_event_registration(osv.osv):
-    
+
     _name = "report.event.registration"
-    _description = "Events on registrations and Events on type"
+    _description = "Events Analysis"
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Event Start Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
+        'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),        
-        'event_id': fields.many2one('event.event', 'Event Related', required=True), 
-        'draft_state': fields.integer(' # No of draft Registration.', size=20), 
-        'confirm_state': fields.integer(' # No of Confirm Registration', size=20), 
-        'register_max': fields.integer('Maximum Registrations'), 
-        'nbevent': fields.integer('Number Of Events'), 
+        'event_id': fields.many2one('event.event', 'Event', required=True),
+        'draft_state': fields.integer(' # No of Draft Registrations', size=20),
+        'confirm_state': fields.integer(' # No of Confirmed Registrations', size=20),
+        'register_max': fields.integer('Maximum Registrations'),
+        'nbevent': fields.integer('Number Of Events'),
         'type': fields.many2one('event.type', 'Event Type'),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
-        'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
-        'speaker_id':fields.many2one('res.partner', 'Speaker', readonly=True),
+        'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
+        'speaker_id': fields.many2one('res.partner', 'Speaker', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
+        'total': fields.float('Total'),
+        'section_id': fields.related('event_id', 'section_id', type='many2one', relation='crm.case.section', string='Sale Team', store=True, readonly=True),
     }
     _order = 'date desc'
     def init(self, cr):
@@ -53,34 +56,76 @@ class report_event_registration(osv.osv):
         """
         tools.drop_view_if_exists(cr, 'report_event_registration')
         cr.execute("""
-         create or replace view report_event_registration as (
-                select
-                e.id as id,
-                c.event_id as event_id,
-                e.date_begin as date,
-                e.user_id as user_id,
-                e.main_speaker_id as speaker_id,
-                to_char(e.date_begin, 'YYYY') as year,
-                to_char(e.date_begin, 'MM') as month,
-                to_char(e.date_begin, 'YYYY-MM-DD') as day,
-                count(t.id) as nbevent,
-                t.id as type,
-                (SELECT sum(c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id and t.id=e.type and state in ('draft')) as draft_state,
-                (SELECT sum(c.nb_register) FROM event_registration  c  WHERE c.event_id=e.id and t.id=e.type and state in ('open')) as confirm_state,
-                e.register_max as register_max,
-                e.state as state
-                from
+         CREATE OR REPLACE view report_event_registration AS (
+                SELECT
+                id,
+                event_id,
+                date,
+                user_id,
+                section_id,
+                company_id,
+                product_id,
+                speaker_id,
+                year,
+                month,
+                nbevent,
+                type,
+                SUM(draft_state) AS draft_state,
+                SUM(confirm_state) AS confirm_state,
+                SUM(total) AS total,
+                register_max,
+                state
+                FROM(
+                SELECT
+                MIN(e.id) AS id,
+                e.id AS event_id,
+                e.date_begin AS date,
+                e.user_id AS user_id,
+                e.section_id AS section_id,
+                e.company_id AS company_id,
+                e.product_id AS product_id,
+                e.main_speaker_id AS speaker_id,
+                to_char(e.date_begin, 'YYYY') AS year,
+                to_char(e.date_begin, 'MM') AS month,
+                count(e.id) AS nbevent,
+                t.id AS type,
+                CASE WHEN c.state IN ('draft') THEN c.nb_register ELSE 0 END AS draft_state,
+                CASE WHEN c.state IN ('open','done') THEN c.nb_register ELSE 0 END AS confirm_state,
+                CASE WHEN c.state IN ('done') THEN c.price_subtotal ELSE 0 END AS total,
+                e.register_max AS register_max,
+                e.state AS state
+                FROM
                 event_event e
-                inner join
-                    event_registration c on (e.id=c.event_id)
-                inner join
-                    event_type t on (e.type=t.id)
-               group by
+                LEFT JOIN
+                    event_registration c ON (e.id=c.event_id)
+                LEFT JOIN
+                    event_type t ON (e.type=t.id)
+               GROUP BY
                     to_char(e.date_begin, 'YYYY'),
                     to_char(e.date_begin, 'MM'),
-                    t.id, e.id, e.date_begin,e.main_speaker_id,
-                    e.register_max, e.type, e.state, c.event_id, e.user_id,
-                    to_char(e.date_begin, 'YYYY-MM-DD')
-                )""")
+                    c.state,
+                    c.nb_register,
+                    t.id, e.id, e.date_begin, e.main_speaker_id,
+                    e.register_max, e.type, e.state, c.event_id, e.user_id,e.company_id,e.product_id,e.section_id,
+                    to_char(e.date_begin, 'YYYY-MM-DD'), c.id, c.price_subtotal )AS foo
+                GROUP BY
+                id,
+                event_id,
+                date,
+                user_id,
+                section_id,
+                company_id,
+                product_id,
+                speaker_id,
+                year,
+                month,
+                nbevent,
+                type,
+                register_max,
+                state
+              )
+                """)
 
 report_event_registration()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

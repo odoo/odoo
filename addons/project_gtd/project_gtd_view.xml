@@ -19,7 +19,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Context">
-                <field name="name"/>
+                <field name="name" select="1"/>
                 <field name="sequence"/>
             </form>
         </field>
@@ -28,9 +28,10 @@
     <record model="ir.actions.act_window" id="open_gtd_context_tree">
         <field name="name">Contexts</field>
         <field name="res_model">project.gtd.context</field>
+        <field name="help">Contexts are defined in the "Getting Things Done" methodology. It allows you to categorize your tasks according to the context in which they have to be done: at office, at home, when I take my car, etc.</field>
     </record>
 
-    <menuitem name="Contexts" id="menu_open_gtd_time_contexts" groups="group_project_getting,base.group_system"
+    <menuitem name="Contexts" id="menu_open_gtd_time_contexts" groups="group_project_getting"
                 parent="project.menu_tasks_config" action="open_gtd_context_tree"/>
 
     <record model="ir.ui.view" id="view_gtd_timebox_tree">
@@ -53,7 +54,7 @@
         <field name="arch" type="xml">
             <form string="Timeboxes">
                 <separator string="Timebox Definition" colspan="4"/>
-                <field name="name"/>
+                <field name="name" select="1"/>
                 <field name="sequence"/>
                 <field name="icon"/>
             </form>
@@ -66,6 +67,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_gtd_timebox_tree"/>
+        <field name="help">Timeboxes are defined in the "Getting Things Done" methodology. It defines a period of time in order to categorize your tasks: today, this week, this month, long term.</field>
     </record>
 
     <menuitem name="Timeboxes" id="menu_open_gtd_time_timeboxes" parent="project.menu_tasks_config" action="open_gtd_timebox_tree"/>
@@ -77,9 +79,10 @@
         <field name="inherit_id" ref="project.view_task_tree2" />
         <field name="arch" type="xml">
             <field name="remaining_hours" position="after">
-                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('gtd_visible',False)"/>
                 <field string="Timebox" name="timebox_id" groups="project_gtd.group_project_getting" invisible=" not context.get('gtd_visible', False)"/>
+                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('gtd_visible',False)"/>
                 <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('gtd_visible',False)"/>
+                <field name="context_id" groups="project_gtd.group_project_getting" invisible="not context.get('gtd_visible', False)" widget="selection"/>
                 <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
             </field>
         </field>

@@ -19,12 +19,11 @@
 #
 ##############################################################################
 
+import time
+
 from crm import crm
 from osv import fields, osv
 from tools.translate import _
-import netsvc
-import pooler
-import time
 import tools
 import decimal_precision as dp
 
@@ -35,6 +34,7 @@ class event_type(osv.osv):
     _columns = {
         'name': fields.char('Event type', size=64, required=True),
     }
+
 event_type()
 
 class event_event(osv.osv):
@@ -55,7 +55,8 @@ class event_event(osv.osv):
             'registration_ids': False,
         })
         return super(event_event, self).copy(cr, uid, id, default=default, context=context)
-    def onchange_product(self, cr, uid, ids, product_id):
+
+    def onchange_product(self, cr, uid, ids, product_id=False):
         """This function returns value of  product's unit price based on product id.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -89,10 +90,10 @@ class event_event(osv.osv):
                 #send reminder that will confirm the event for all the people that were already confirmed
                 reg_ids = register_pool.search(cr, uid, [
                                ('event_id', '=', event.id),
-                               ('state', 'not in', ['draft', 'cancel'])])
+                               ('state', 'not in', ['draft', 'cancel'])], context=context)
                 register_pool.mail_user_confirm(cr, uid, reg_ids)
 
-        return self.write(cr, uid, ids, {'state': 'confirm'})
+        return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
 
     def button_confirm(self, cr, uid, ids, context=None):
         """This Function Confirm Event.
@@ -114,9 +115,8 @@ class event_event(osv.osv):
             else:
                 unconfirmed_ids.append(event.id)
         if unconfirmed_ids:
-            view_id = data_pool._get_id(cr, uid, 'event', 'view_event_confirm')
-            view_data = data_pool.browse(cr, uid, view_id)
-            view_id = view_data.res_id
+            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_confirm')
+            view_id = view_id and view_id[1] or False
             context['event_ids'] = unconfirmed_ids
             return {
                 'name': _('Confirm Event'),
@@ -132,7 +132,6 @@ class event_event(osv.osv):
             }
         return res
 
-
     def _get_register(self, cr, uid, ids, fields, args, context=None):
         """Get Confirm or uncofirm register value.
         @param ids: List of Event registration type's id
@@ -142,7 +141,7 @@ class event_event(osv.osv):
         """
         register_pool = self.pool.get('event.registration')
         res = {}
-        for event in self.browse(cr, uid, ids, context):
+        for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = {}
             for field in fields:
                 res[event.id][field] = False
@@ -154,13 +153,17 @@ class event_event(osv.osv):
 
             reg_ids = register_pool.search(cr, uid, [
                         ('event_id', '=', event.id),
-                       ('state', 'in', state)])
+                       ('state', 'in', state)], context=context)
+
+            number = 0.0
+            if reg_ids:
+                cr.execute('SELECT SUM(nb_register) FROM event_registration WHERE id IN %s', (tuple(reg_ids),))
+                number = cr.fetchone()
 
             if 'register_current' in fields:
-                res[event.id]['register_current'] = len(reg_ids)
+                res[event.id]['register_current'] = number and number[0] or 0.0
             if 'register_prospect' in fields:
-                res[event.id]['register_prospect'] = len(reg_ids)
-
+                res[event.id]['register_prospect'] = number and number[0] or 0.0
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -190,8 +193,8 @@ class event_event(osv.osv):
                     register_values['description'] = vals['mail_confirm']
 
                 if register_values:
-                    reg_ids = register_pool.search(cr, uid, [('event_id', '=', event.id)])
-                    register_pool.write(cr, uid, reg_ids, register_values)
+                    reg_ids = register_pool.search(cr, uid, [('event_id', '=', event.id)], context=context)
+                    register_pool.write(cr, uid, reg_ids, register_values, context=context)
         return res
 
     _columns = {
@@ -207,7 +210,7 @@ class event_event(osv.osv):
         'register_current': fields.function(_get_register, method=True, string='Confirmed Registrations', multi='register_current',
             help="Total of Open and Done Registrations"),
         'register_prospect': fields.function(_get_register, method=True, string='Unconfirmed Registrations', multi='register_prospect',
-            help="Total of Prospect Registrations"),
+            help="Total of Prospect Registrati./event/event.py:41:ons"),
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
         'date_begin': fields.datetime('Beginning date', required=True, help="Beginning Date of Event", readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('Closing date', required=True, help="Closing Date of Event", readonly=True, states={'draft': [('readonly', False)]}),
@@ -225,17 +228,16 @@ class event_event(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="The invoices of this event registration will be created with this Product. Thus it allows you to set the default label and the accounting info you want by default on these invoices."),
         'note': fields.text('Notes', help="Description or Summary of Event", readonly=False, states={'done': [('readonly', True)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True, states={'draft': [('readonly', False)]}, help="Pricelist version for current event."),
-        'unit_price': fields.related('product_id', 'list_price', type='float', string='Registration Cost', readonly=True, states={'draft':[('readonly',False)]}, help="This will be the default price used as registration cost when invoicing this event. Note that you can specify for each registration a specific amount if you want to"),
+        'unit_price': fields.related('product_id', 'list_price', type='float', string='Registration Cost', readonly=True, states={'draft':[('readonly',False)]}, help="This will be the default price used as registration cost when invoicing this event. Note that you can specify for each registration a specific amount if you want to", digits_compute=dp.get_precision('Sale Price')),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who are giving speech on event."),
-        'speaker_ids':fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
+        'speaker_ids': fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
         'address_id': fields.many2one('res.partner.address','Location Address', readonly=False, states={'done': [('readonly', True)]}),
         'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}),
         'language': fields.char('Language',size=64, readonly=False, states={'done': [('readonly', True)]}),
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
-        'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
-
+        'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
     }
 
     _defaults = {
@@ -249,18 +251,23 @@ class event_event(osv.osv):
         Checks for recursion level for event
         """
         level = 100
-
         while len(ids):
-            cr.execute('select distinct parent_id from event_event where id IN %s', (tuple(ids),))
+            cr.execute('SELECT DISTINCT parent_id FROM event_event WHERE id IN %s', (tuple(ids),))
             ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
+        return True
 
+    def _check_closing_date(self, cr, uid, ids):
+        for event in self.browse(cr, uid, ids):
+            if event.date_end < event.date_begin:
+                return False
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive event.', ['parent_id'])
+        (_check_recursion, 'Error ! You cannot create recursive event.', ['parent_id']),
+        (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
     ]
 
     def do_team_change(self, cr, uid, ids, team_id, context=None):
@@ -273,8 +280,8 @@ class event_event(osv.osv):
         if context is None:
             context = {}
         team_pool = self.pool.get('crm.case.section')
-        team = team_pool.browse(cr, uid, team_id, context=context)
         res = {}
+        team = team_pool.browse(cr, uid, team_id, context=context)
         if team.reply_to:
             res = {'value': {'reply_to': team.reply_to}}
         return res
@@ -300,14 +307,14 @@ class event_registration(osv.osv):
 
     _columns = {
         'name': fields.char('Summary', size=124,  readonly=True, states={'draft': [('readonly', False)]}),
-        'email_cc': fields.text('CC', size=252 , readonly=False, states={'done': [('readonly', True)]}, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
+        'email_cc': fields.text('CC', size=252, readonly=False, states={'done': [('readonly', True)]}, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'nb_register': fields.integer('Quantity', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of Registrations or Tickets"),
-        'event_id': fields.many2one('event.event', 'Event Related', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         "partner_invoice_id": fields.many2one('res.partner', 'Partner Invoiced', readonly=True, states={'draft': [('readonly', False)]}),
         "contact_id": fields.many2one('res.partner.contact', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}), #TODO: filter only the contacts that have a function into the selected partner_id
-        "unit_price": fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Event Price'), readonly=True, states={'draft': [('readonly', False)]}),
-        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Event Price')),
+        "unit_price": fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
+        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute=dp.get_precision('Sale Price'), store=True),
         "badge_ids": fields.one2many('event.registration.badge', 'registration_id', 'Badges', readonly=False, states={'done': [('readonly', True)]}),
         "event_product": fields.char("Invoice Name", size=128, readonly=True, states={'draft': [('readonly', False)]}),
         "tobe_invoiced": fields.boolean("To be Invoiced", readonly=True, states={'draft': [('readonly', False)]}),
@@ -316,8 +323,8 @@ class event_registration(osv.osv):
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
-        'create_date': fields.datetime('Creation Date' , readonly=True),
-        'write_date': fields.datetime('Write Date' , readonly=True),
+        'create_date': fields.datetime('Creation Date', readonly=True),
+        'write_date': fields.datetime('Write Date', readonly=True),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
@@ -336,29 +343,21 @@ class event_registration(osv.osv):
     _defaults = {
         'nb_register': 1,
         'tobe_invoiced':  True,
-        'state': lambda *a: 'draft',
-        'active': lambda *a: 1,
+        'state': 'draft',
+        'active': 1,
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
     def _make_invoice(self, cr, uid, reg, lines, context=None):
         """ Create Invoice from Invoice lines
-        @param reg : Model of Event Registration
+        @param reg: Model of Event Registration
         @param lines: Ids of Invoice lines
         """
         if context is None:
             context = {}
         inv_pool = self.pool.get('account.invoice')
-        inv_lines_pool = self.pool.get('account.invoice.line')
-
         val_invoice = inv_pool.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
         val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
-        partner_address_id = val_invoice['value']['address_invoice_id']
-
-        value = inv_lines_pool.product_id_change(cr, uid, [], reg.event_id.product_id.id, uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
-
-        l = inv_lines_pool.read(cr, uid, lines)
-
         val_invoice['value'].update({
                 'origin': reg.event_product,
                 'reference': False,
@@ -366,7 +365,7 @@ class event_registration(osv.osv):
                 'comment': "",
                 'date_invoice': context.get('date_inv', False)
             })
-        inv_id = inv_pool.create(cr, uid, val_invoice['value'])
+        inv_id = inv_pool.create(cr, uid, val_invoice['value'], context=context)
         inv_pool.button_compute(cr, uid, [inv_id])
         self.history(cr, uid, [reg], _('Invoiced'))
         return inv_id
@@ -389,12 +388,9 @@ class event_registration(osv.osv):
             context['date_inv'] = date_inv
 
         for reg in self.browse(cr, uid, ids, context=context):
-
             val_invoice = inv_pool.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
-
             val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
             partner_address_id = val_invoice['value']['address_invoice_id']
-
             if not partner_address_id:
                raise osv.except_osv(_('Error !'),
                         _("Registered partner doesn't have an address to make the invoice."))
@@ -403,7 +399,6 @@ class event_registration(osv.osv):
             product = product_pool.browse(cr, uid, reg.event_id.product_id.id, context=context)
             for tax in product.taxes_id:
                 tax_ids.append(tax.id)
-
             vals = value['value']
             c_name = reg.contact_id and ('-' + contact_pool.name_get(cr, uid, [reg.contact_id.id])[0][1]) or ''
             vals.update({
@@ -415,21 +410,19 @@ class event_registration(osv.osv):
             })
             inv_line_ids = self._create_invoice_lines(cr, uid, [reg.id], vals)
             invoices.setdefault(reg.partner_id.id, []).append((reg, inv_line_ids))
-
         for val in invoices.values():
             res = False
             if grouped:
-                res = self._make_invoice(cr, uid, val[0][0], [v for k , v in val], context=context)
+                res = self._make_invoice(cr, uid, val[0][0], [v for k, v in val], context=context)
 
-                for k , v in val:
+                for k, v in val:
                     self.do_close(cr, uid, [k.id], context={'invoice_id': res})
 
             else:
-               for k , v in val:
+               for k, v in val:
                    res = self._make_invoice(cr, uid, k, [v], context=context)
                    self.do_close(cr, uid, [k.id], context={'invoice_id': res})
             if res: new_invoice_ids.append(res)
-
         return new_invoice_ids
 
     def do_open(self, cr, uid, ids, context=None):
@@ -462,18 +455,19 @@ class event_registration(osv.osv):
         """
         if not context:
             context = {}
+        if type(ids) in (int, long,):
+            ids = [ids]
         data_pool = self.pool.get('ir.model.data')
         unconfirmed_ids = []
         for registration in self.browse(cr, uid, ids, context=context):
             total_confirmed = registration.event_id.register_current + registration.nb_register
             if total_confirmed <= registration.event_id.register_max or registration.event_id.register_max == 0:
-                self.do_open(cr, uid, [registration.id], context)
+                self.do_open(cr, uid, [registration.id], context=context)
             else:
                 unconfirmed_ids.append(registration.id)
         if unconfirmed_ids:
-            view_id = data_pool._get_id(cr, uid, 'event', 'view_event_confirm_registration')
-            view_data = data_pool.browse(cr, uid, view_id)
-            view_id = view_data.res_id
+            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_confirm_registration')
+            view_id = view_id and view_id[1] or False
             context['registration_ids'] = unconfirmed_ids
             return {
                 'name': _('Confirm Registration'),
@@ -500,11 +494,10 @@ class event_registration(osv.osv):
             if registration.tobe_invoiced and not registration.invoice_id:
                 unclosed_ids.append(registration.id)
             else:
-                self.do_close(cr, uid, [registration.id])
+                self.do_close(cr, uid, [registration.id], context=context)
         if unclosed_ids:
-            view_id = data_pool._get_id(cr, uid, 'event', 'view_event_make_invoice')
-            view_data = data_pool.browse(cr, uid, view_id)
-            view_id = view_data.res_id
+            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_make_invoice')
+            view_id = view_id and view_id[1] or False
             context['active_ids'] = unclosed_ids
             return {
                 'name': _('Close Registration'),
@@ -525,8 +518,7 @@ class event_registration(osv.osv):
         """
         registrations = self.browse(cr, uid, ids)
         self.history(cr, uid, registrations, _('Cancel'))
-        self.write(cr, uid, ids, {'state': 'cancel'})
-        return True
+        return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, confirm=False, context=None):
         """
@@ -559,10 +551,10 @@ class event_registration(osv.osv):
                     body = regestration.event_id.mail_confirm
             if subject or body:
                 tools.email_send(src, email_to, subject, body, email_cc = email_cc, openobject_id = regestration.id)
-                self.history(cr, uid, [regestration], subject, history=True, \
-                        email=email_to, details=body, \
-                        subject=subject, email_from=src, \
-                        email_cc=', '.join(email_cc))
+                self.history(cr, uid, [regestration], subject, history = True, \
+                        email = email_to, details = body, \
+                        subject = subject, email_from = src, \
+                        email_cc = ', '.join(email_cc))
 
         return True
 
@@ -579,7 +571,7 @@ class event_registration(osv.osv):
 
     def onchange_contact_id(self, cr, uid, ids, contact, partner):
 
-        """This function returns value of Badge Name , Badge Title based on Partner contact.
+        """This function returns value of Badge Name, Badge Title based on Partner contact.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -590,11 +582,9 @@ class event_registration(osv.osv):
         data ={}
         if not contact:
             return data
-        contact_obj = self.pool.get('res.partner.contact')
         addr_obj = self.pool.get('res.partner.address')
         job_obj = self.pool.get('res.partner.job')
 
-        contact_id = contact_obj.browse(cr, uid, contact)
         if partner:
             partner_addresses = addr_obj.search(cr, uid, [('partner_id', '=', partner)])
             job_ids = job_obj.search(cr, uid, [('contact_id', '=', contact), ('address_id', 'in', partner_addresses)])
@@ -611,7 +601,7 @@ class event_registration(osv.osv):
         @param event_id: Event ID
         @param partner_invoice_id: Partner Invoice ID
         """
-        context={}
+        context = {}
         if not event_id:
             return {'value': {'unit_price': False, 'event_product': False}}
 
@@ -620,12 +610,17 @@ class event_registration(osv.osv):
         res_obj = self.pool.get('res.partner')
 
         data_event =  event_obj.browse(cr, uid, event_id)
-        res = {'value': {'unit_price': False, 'event_product': False, 'user_id': False,
-                        'date': data_event.date_begin, 'date_deadline': data_event.date_end, 'description': data_event.note, 'name': data_event.name,
-                        'section_id': data_event.section_id and data_event.section_id.id or False,
+        res = {'value': {'unit_price': False,
+                         'event_product': False,
+                         'user_id': False,
+                         'date': data_event.date_begin,
+                         'date_deadline': data_event.date_end,
+                         'description': data_event.note,
+                         'name': data_event.name,
+                         'section_id': data_event.section_id and data_event.section_id.id or False,
                         }}
         if data_event.user_id.id:
-            res['value'].update({'user_id':data_event.user_id.id})
+            res['value'].update({'user_id': data_event.user_id.id})
         if data_event.product_id:
             pricelist_id = data_event.pricelist_id and data_event.pricelist_id.id or False
             if partner_invoice_id:
@@ -653,7 +648,7 @@ class event_registration(osv.osv):
         data['contact_id'], data['partner_invoice_id'], data['email_from'] = (False, False, False)
         if not part:
             return {'value': data}
-        data['partner_invoice_id']=part
+        data['partner_invoice_id'] = part
         # this calls onchange_partner_invoice_id
         d = self.onchange_partner_invoice_id(cr, uid, ids, event_id, part)
         # this updates the dictionary
@@ -666,7 +661,6 @@ class event_registration(osv.osv):
                     data['contact_id'] = job_obj.browse(cr, uid, job_ids[0]).contact_id.id
                     d = self.onchange_contact_id(cr, uid, ids, data['contact_id'], part)
                     data.update(d['value'])
-        partner_data = res_obj.browse(cr, uid, part)
         return {'value': data}
 
     def onchange_partner_invoice_id(self, cr, uid, ids, event_id, partner_invoice_id):
@@ -678,8 +672,8 @@ class event_registration(osv.osv):
         @param event_id: Event ID
         @param partner_invoice_id: Partner Invoice ID
         """
-        data={}
-        context={}
+        data = {}
+        context = {}
         event_obj = self.pool.get('event.event')
         prod_obj = self.pool.get('product.product')
         res_obj = self.pool.get('res.partner')
@@ -687,7 +681,7 @@ class event_registration(osv.osv):
         data['unit_price']=False
         if not event_id:
             return {'value': data}
-        data_event =  event_obj.browse(cr, uid, event_id)
+        data_event =  event_obj.browse(cr, uid, event_id, context=context)
         if data_event.product_id:
             data['event_product'] = data_event.product_id.name
             pricelist_id = data_event.pricelist_id and data_event.pricelist_id.id or False
@@ -706,12 +700,12 @@ class event_registration_badge(osv.osv):
     _name = 'event.registration.badge'
     _description = __doc__
     _columns = {
-        'registration_id': fields.many2one('event.registration', 'Registration', required=True),
+        "registration_id": fields.many2one('event.registration', 'Registration', required=True),
         "title": fields.char('Title', size=128),
         "name": fields.char('Name', size=128, required=True),
         "address_id": fields.many2one('res.partner.address', 'Address'),
     }
+
 event_registration_badge()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

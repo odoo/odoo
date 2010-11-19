@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-08-03 07:25+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:46+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -28,9 +28,20 @@ msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
 msgstr "Уплативший член"
+
+#. module: membership
+#: help:product.product,membership_date_from:0
+msgid "Active Membership since this date"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:0
+msgid "Group By..."
+msgstr ""
 
 #. module: membership
 #: constraint:ir.actions.act_window:0
@@ -38,10 +49,24 @@ msgid "Invalid model name in the action definition."
 msgstr "Недопустимое имя модели в определении действия."
 
 #. module: membership
-#: field:report.partner_member.year,currency:0
-#: field:report.partner_member.year_new,currency:0
-msgid "Currency"
-msgstr "Валюта"
+#: field:report.membership,num_paid:0
+msgid "# Paid"
+msgstr ""
+
+#. module: membership
+#: field:report.membership,tot_earned:0
+msgid "Earned Amount"
+msgstr ""
+
+#. module: membership
+#: model:ir.model,name:membership.model_report_membership
+msgid "Membership Analysis"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "March"
+msgstr ""
 
 #. module: membership
 #: model:process.node,note:membership.process_node_setassociation0
@@ -54,8 +79,10 @@ msgid "Invoice is be paid."
 msgstr ""
 
 #. module: membership
-#: model:process.node,note:membership.process_node_membershipproduct0
-msgid "Define membership product."
+#: field:membership.membership_line,company_id:0
+#: view:report.membership:0
+#: field:report.membership,company_id:0
+msgid "Company"
 msgstr ""
 
 #. module: membership
@@ -69,8 +96,34 @@ msgid "Waiting to invoice"
 msgstr ""
 
 #. module: membership
+#: help:report.membership,date_to:0
+msgid "End membership date"
+msgstr ""
+
+#. module: membership
+#: view:res.partner:0
+msgid "Suppliers"
+msgstr ""
+
+#. module: membership
+#: view:res.partner:0
+msgid "All Members"
+msgstr ""
+
+#. module: membership
+#: field:res.partner,membership_stop:0
+msgid "Stop membership date"
+msgstr "Дата прекращения членства"
+
+#. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
 msgid "Product to member"
+msgstr ""
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+#: view:res.partner:0
+msgid "Join Membership"
 msgstr ""
 
 #. module: membership
@@ -84,18 +137,23 @@ msgid "Member is associated."
 msgstr ""
 
 #. module: membership
+#: field:report.membership,tot_pending:0
+msgid "Pending Amount"
+msgstr ""
+
+#. module: membership
 #: model:process.transition,note:membership.process_transition_associationpartner0
 msgid "Associated partner."
 msgstr ""
 
 #. module: membership
-#: constraint:account.account:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "Ошибка! Вы не можете создавать взаимно подчиненные счета."
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr ""
 
 #. module: membership
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
+#: view:res.partner:0
+msgid "End Membership Date"
 msgstr ""
 
 #. module: membership
@@ -104,15 +162,16 @@ msgid "Date from"
 msgstr "Дата с"
 
 #. module: membership
+#: code:addons/membership/membership.py:0
+#, python-format
+msgid "Partner doesn't have an address to make the invoice."
+msgstr ""
+
+#. module: membership
+#: model:ir.model,name:membership.model_res_partner
 #: field:membership.membership_line,partner:0
 msgid "Partner"
 msgstr "Партнер"
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_members_free
-#: model:ir.ui.menu,name:membership.menu_members_free
-msgid "Free members"
-msgstr "Свободные участники"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetopaid0
@@ -130,24 +189,14 @@ msgid "From"
 msgstr "От"
 
 #. module: membership
-#: constraint:membership.membership_line:0
-msgid "Error, this membership product is out of date"
-msgstr "Ошибка, данная продукция для членов устарела."
-
-#. module: membership
-#: wizard_button:wizard_invoice_membership,init,ok:0
-msgid "Confirm"
-msgstr "Подтвердить"
-
-#. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
 msgstr "Создать"
 
 #. module: membership
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
+#: model:process.transition,note:membership.process_transition_invoicetoassociate0
+msgid "Invoiced member may be Associated member."
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -155,14 +204,16 @@ msgid "Member line"
 msgstr ""
 
 #. module: membership
-#: field:membership.membership_line,state:0
-msgid "State"
-msgstr "Состояние"
-
-#. module: membership
+#: help:report.membership,date_from:0
 #: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "Начало членства"
+
+#. module: membership
+#: code:addons/membership/membership.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
@@ -170,24 +221,25 @@ msgid "Paid member"
 msgstr ""
 
 #. module: membership
-#: model:ir.model,name:membership.model_report_partner_member_year
-#: model:ir.ui.menu,name:membership.menu_report_partner_member_year
-#: view:report.partner_member.year:0
-msgid "Membership by Years"
-msgstr "Членство по годам"
+#: view:res.partner:0
+msgid "Group By"
+msgstr ""
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_reporting
-msgid "Reporting"
-msgstr "Отчетность"
+#: field:report.membership,num_waiting:0
+msgid "# Waiting"
+msgstr ""
 
 #. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_members
 #: view:res.partner:0
 msgid "Members"
 msgstr "Члены"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Non Member"
 msgstr "Не член"
@@ -198,9 +250,26 @@ msgid "Open invoice."
 msgstr ""
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_conf
-msgid "Configuration"
-msgstr "Настройки"
+#: selection:report.membership,month:0
+msgid "July"
+msgstr ""
+
+#. module: membership
+#: model:product.template,name:membership.membership_0_product_template
+msgid "Golden Membership"
+msgstr ""
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Members Analysis"
+msgstr ""
+
+#. module: membership
+#: field:membership.membership_line,membership_id:0
+#: view:report.membership:0
+#: field:report.membership,membership_id:0
+msgid "Membership Product"
+msgstr ""
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
@@ -208,8 +277,19 @@ msgid "Define product for membership."
 msgstr ""
 
 #. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetoassociate0
-msgid "Invoiced member may be Associated member."
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Неправильный XML для просмотра архитектуры!"
+
+#. module: membership
+#: view:membership.invoice:0
+msgid "Join"
+msgstr ""
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_invoice
+#: field:membership.membership_line,account_invoice_id:0
+msgid "Invoice"
 msgstr ""
 
 #. module: membership
@@ -220,15 +300,14 @@ msgstr ""
 "категориям."
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_membership_products
 #: view:product.product:0
 msgid "Membership products"
 msgstr ""
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_members_waiting
-msgid "Future members (invoice not confirmed)"
-msgstr "Будущие члены (счет на подтвержден)"
+#: field:membership.membership_line,date:0
+msgid "Join Date"
+msgstr ""
 
 #. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
@@ -236,22 +315,51 @@ msgid "Set association"
 msgstr ""
 
 #. module: membership
-#: model:product.template,name:membership.member_product_1_product_template
-msgid "Membership Product - 2"
+#: view:res.partner:0
+msgid " Membership State"
 msgstr ""
 
 #. module: membership
-#: model:product.template,name:membership.member_product_0_product_template
-msgid "Membership Product - 1"
+#: view:res.partner:0
+msgid "Memberships"
 msgstr ""
 
 #. module: membership
-#: field:report.partner_member.year,canceled_amount:0
-#: field:report.partner_member.year,canceled_number:0
-#: field:report.partner_member.year_new,canceled_amount:0
-#: field:report.partner_member.year_new,canceled_number:0
-msgid "Canceled"
-msgstr "Отменено"
+#: model:ir.model,name:membership.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "September"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "December"
+msgstr ""
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:0
+#: field:report.membership,month:0
+msgid "Month"
+msgstr ""
+
+#. module: membership
+#: view:product.product:0
+msgid "Group by..."
+msgstr ""
+
+#. module: membership
+#: code:addons/membership/membership.py:0
+#, python-format
+msgid "Partner is a free Member."
+msgstr ""
 
 #. module: membership
 #: model:product.pricelist,name:membership.list1m
@@ -259,15 +367,42 @@ msgid "Member Sale Pricelist"
 msgstr "Каталог продажи членам"
 
 #. module: membership
-#: field:report.partner_member.year,invoiced_amount:0
-#: field:report.partner_member.year,invoiced_number:0
-#: field:report.partner_member.year_new,invoiced_amount:0
-#: field:report.partner_member.year_new,invoiced_number:0
-msgid "Invoiced"
-msgstr "Выставлен счет"
+#: field:report.membership,associate_member_id:0
+#: view:res.partner:0
+msgid "Associate Member"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:0
+msgid "Associated Partner"
+msgstr ""
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_invoice
+#: view:membership.invoice:0
+msgid "Membership Invoice"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:0
+#: field:report.membership,user_id:0
+#: view:res.partner:0
+msgid "Salesman"
+msgstr ""
+
+#. module: membership
+#: model:process.node,note:membership.process_node_membershipproduct0
+msgid "Define membership product."
+msgstr ""
+
+#. module: membership
+#: view:product.product:0
+msgid "Category"
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
 msgstr ""
@@ -275,6 +410,11 @@ msgstr ""
 #. module: membership
 #: model:product.pricelist.version,name:membership.ver1m
 msgid "Member Sale Pricelist Version"
+msgstr ""
+
+#. module: membership
+#: help:product.product,membership_date_to:0
+msgid "Expired date of Membership"
 msgstr ""
 
 #. module: membership
@@ -289,13 +429,33 @@ msgid "The price negociated by the partner"
 msgstr "Цена обсуждается партнером"
 
 #. module: membership
+#: view:report.membership:0
+msgid "Forecast"
+msgstr ""
+
+#. module: membership
+#: field:report.membership,partner_id:0
+msgid "Member"
+msgstr ""
+
+#. module: membership
+#: view:product.product:0
+msgid "Date From"
+msgstr ""
+
+#. module: membership
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
+
+#. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
 msgstr ""
 
 #. module: membership
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
+#: view:product.product:0
+msgid "Accounting Info"
 msgstr ""
 
 #. module: membership
@@ -304,8 +464,25 @@ msgid "Cancel membership date"
 msgstr "Дата отмены членства"
 
 #. module: membership
+#: view:res.partner:0
+msgid "Customers"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "August"
+msgstr ""
+
+#. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
+#: view:product.product:0
 msgid "Membership Products"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "June"
 msgstr ""
 
 #. module: membership
@@ -314,15 +491,8 @@ msgid "Membership invoice paid."
 msgstr ""
 
 #. module: membership
-#: field:report.partner_member.year,paid_amount:0
-#: field:report.partner_member.year,paid_number:0
-#: field:report.partner_member.year_new,paid_amount:0
-#: field:report.partner_member.year_new,paid_number:0
-msgid "Paid"
-msgstr "Оплачено"
-
-#. module: membership
 #: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Invoiced Member"
 msgstr ""
@@ -330,8 +500,10 @@ msgstr ""
 #. module: membership
 #: model:ir.module.module,shortdesc:membership.module_meta_information
 #: model:ir.ui.menu,name:membership.menu_membership
+#: field:membership.invoice,product_id:0
 #: view:product.product:0
 #: field:product.product,membership:0
+#: view:report.membership:0
 #: view:res.partner:0
 #: field:res.partner,member_lines:0
 msgid "Membership"
@@ -344,6 +516,7 @@ msgstr "Укажите, является ли продукция членско�
 
 #. module: membership
 #: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
 msgstr "Члены в ожидании"
@@ -354,21 +527,46 @@ msgid "Association Partner"
 msgstr ""
 
 #. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_members_invoiced
-#: model:ir.ui.menu,name:membership.menu_members_invoiced
-msgid "Invoiced members"
-msgstr "Члены, которым выставлены счета"
-
-#. module: membership
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
+#: selection:report.membership,month:0
+msgid "November"
 msgstr ""
 
 #. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_members_old
-#: model:ir.ui.menu,name:membership.menu_members_old
-msgid "Old members"
-msgstr "Старые члены"
+#: view:product.product:0
+msgid "Extended Filters..."
+msgstr ""
+
+#. module: membership
+#: field:membership.membership_line,state:0
+msgid "Membership State"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "October"
+msgstr ""
+
+#. module: membership
+#: view:product.product:0
+msgid "Sale Description"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "January"
+msgstr ""
+
+#. module: membership
+#: view:product.product:0
+msgid "Membership Fee"
+msgstr ""
+
+#. module: membership
+#: constraint:product.pricelist.item:0
+msgid ""
+"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+"Item!"
+msgstr ""
 
 #. module: membership
 #: field:res.partner,membership_amount:0
@@ -376,12 +574,13 @@ msgid "Membership amount"
 msgstr ""
 
 #. module: membership
-#: wizard_view:wizard_invoice_membership,init:0
-msgid "Choose invoice details"
-msgstr "Выбрать подробности счета"
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Old Member"
 msgstr "Старый член"
@@ -392,12 +591,21 @@ msgid "To"
 msgstr "До"
 
 #. module: membership
-#: field:report.partner_member.year,waiting_amount:0
-#: field:report.partner_member.year,waiting_number:0
-#: field:report.partner_member.year_new,waiting_amount:0
-#: field:report.partner_member.year_new,waiting_number:0
-msgid "Waiting"
-msgstr "В ожидании"
+#: view:report.membership:0
+#: field:report.membership,membership_state:0
+#: field:res.partner,membership_state:0
+msgid "Current Membership State"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:0
+msgid "Last 365 Days"
+msgstr ""
+
+#. module: membership
+#: view:product.product:0
+msgid "General"
+msgstr ""
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -405,26 +613,24 @@ msgid "Draft invoice is now open."
 msgstr ""
 
 #. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_members_waiting
-msgid "Future members"
-msgstr "Будущие пользователи"
+#: view:product.product:0
+msgid "Inactive"
+msgstr ""
 
 #. module: membership
-#: wizard_button:wizard_invoice_membership,init,end:0
-msgid "Cancel"
-msgstr "Отмена"
+#: view:report.membership:0
+msgid "Last 30 Days"
+msgstr ""
 
 #. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_members_associated
-#: model:ir.ui.menu,name:membership.menu_members_associated
-msgid "Associated members"
-msgstr "Ассоциированные члены"
+#: view:membership.invoice:0
+msgid "Close"
+msgstr ""
 
 #. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_members_paid
-#: model:ir.ui.menu,name:membership.menu_members_paid
-msgid "Paid members"
-msgstr "Оплатившие члены"
+#: view:res.partner:0
+msgid "All non Members"
+msgstr ""
 
 #. module: membership
 #: view:product.product:0
@@ -434,6 +640,11 @@ msgstr "Информация"
 #. module: membership
 #: field:membership.membership_line,account_invoice_line:0
 msgid "Account Invoice line"
+msgstr ""
+
+#. module: membership
+#: view:product.product:0
+msgid "Categorization"
 msgstr ""
 
 #. module: membership
@@ -450,16 +661,27 @@ msgid "Draft invoice for membership."
 msgstr ""
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:res.partner,membership_state:0
-msgid "Canceled Member"
-msgstr "Отменил членство"
-
-#. module: membership
+#: field:membership.invoice,member_price:0
+#: field:membership.membership_line,member_price:0
 #: model:product.price.type,name:membership.product_price_type_memberprice
 #: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "Цена члена"
+
+#. module: membership
+#: view:product.product:0
+msgid "Purchase Description"
+msgstr ""
+
+#. module: membership
+#: model:ir.model,name:membership.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: membership
+#: view:product.product:0
+msgid "Description"
+msgstr ""
 
 #. module: membership
 #: field:res.partner,free_member:0
@@ -467,26 +689,44 @@ msgid "Free member"
 msgstr ""
 
 #. module: membership
-#: field:res.partner,membership_stop:0
-msgid "Stop membership date"
-msgstr "Дата прекращения членства"
+#: selection:report.membership,month:0
+msgid "May"
+msgstr ""
 
 #. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_members
-#: model:ir.ui.menu,name:membership.menu_members
-msgid "Current members"
-msgstr "Текущие члены"
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr ""
 
 #. module: membership
-#: model:ir.model,name:membership.model_report_partner_member_year_new
-#: model:ir.ui.menu,name:membership.menu_report_partner_member_year_new
-#: view:report.partner_member.year_new:0
-msgid "New Membership by Years"
-msgstr "Новое членство по годам"
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr ""
+
+#. module: membership
+#: view:product.product:0
+msgid "Sale Taxes"
+msgstr ""
+
+#. module: membership
+#: field:report.membership,date_to:0
+#: view:res.partner:0
+msgid "End Date"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "February"
+msgstr ""
 
 #. module: membership
 #: model:process.node,name:membership.process_node_invoicedmember0
 msgid "Invoiced member"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "April"
 msgstr ""
 
 #. module: membership
@@ -500,14 +740,21 @@ msgid "Waiting member"
 msgstr ""
 
 #. module: membership
-#: model:ir.actions.wizard,name:membership.wizard_invoice_membership
-msgid "Invoice Membership"
-msgstr "Счет за членство"
+#: field:report.membership,date_from:0
+#: view:res.partner:0
+msgid "Start Date"
+msgstr ""
 
 #. module: membership
 #: model:process.node,name:membership.process_node_membershipproduct0
-#: wizard_field:wizard_invoice_membership,init,product:0
 msgid "Membership product"
+msgstr ""
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Cancelled Member"
 msgstr ""
 
 #. module: membership
@@ -516,12 +763,87 @@ msgid "Error: Invalid ean code"
 msgstr "Ошибка: Неправильный штрих-код"
 
 #. module: membership
-#: field:report.partner_member.year,year:0
-#: field:report.partner_member.year_new,year:0
+#: view:report.membership:0
+#: field:report.membership,year:0
 msgid "Year"
 msgstr "Год"
 
 #. module: membership
-#: field:res.partner,membership_state:0
-msgid "Current membership state"
+#: view:report.membership:0
+msgid "Revenue Done"
 msgstr ""
+
+#~ msgid "Currency"
+#~ msgstr "Валюта"
+
+#~ msgid "Error, this membership product is out of date"
+#~ msgstr "Ошибка, данная продукция для членов устарела."
+
+#~ msgid "Confirm"
+#~ msgstr "Подтвердить"
+
+#~ msgid "State"
+#~ msgstr "Состояние"
+
+#~ msgid "Membership by Years"
+#~ msgstr "Членство по годам"
+
+#~ msgid "Reporting"
+#~ msgstr "Отчетность"
+
+#~ msgid "Configuration"
+#~ msgstr "Настройки"
+
+#~ msgid "Future members (invoice not confirmed)"
+#~ msgstr "Будущие члены (счет на подтвержден)"
+
+#~ msgid "Canceled"
+#~ msgstr "Отменено"
+
+#~ msgid "Invoiced"
+#~ msgstr "Выставлен счет"
+
+#~ msgid "Paid"
+#~ msgstr "Оплачено"
+
+#~ msgid "Invoiced members"
+#~ msgstr "Члены, которым выставлены счета"
+
+#~ msgid "Old members"
+#~ msgstr "Старые члены"
+
+#~ msgid "Choose invoice details"
+#~ msgstr "Выбрать подробности счета"
+
+#~ msgid "Waiting"
+#~ msgstr "В ожидании"
+
+#~ msgid "Cancel"
+#~ msgstr "Отмена"
+
+#~ msgid "Associated members"
+#~ msgstr "Ассоциированные члены"
+
+#~ msgid "Paid members"
+#~ msgstr "Оплатившие члены"
+
+#~ msgid "Canceled Member"
+#~ msgstr "Отменил членство"
+
+#~ msgid "Current members"
+#~ msgstr "Текущие члены"
+
+#~ msgid "New Membership by Years"
+#~ msgstr "Новое членство по годам"
+
+#~ msgid "Invoice Membership"
+#~ msgstr "Счет за членство"
+
+#~ msgid "Free members"
+#~ msgstr "Свободные участники"
+
+#~ msgid "Error ! You can not create recursive accounts."
+#~ msgstr "Ошибка! Вы не можете создавать взаимно подчиненные счета."
+
+#~ msgid "Future members"
+#~ msgstr "Будущие пользователи"

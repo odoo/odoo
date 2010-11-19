@@ -125,7 +125,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="conf_account_type_view"/>
         </record>
-	
+
 	        <record id="conf_fas" model="account.account.template">
 	            <field name="code">10</field>
 	            <field name="name">Fixed Assets</field>
@@ -133,7 +133,7 @@
 	            <field name="type">view</field>
 	            <field name="user_type" ref="account_type_asset_view1"/>
 	        </record>
-	
+
 		        <record id="conf_xfa" model="account.account.template">
 		            <field name="code">100</field>
 		            <field name="name">Fixed Asset Account</field>
@@ -141,7 +141,7 @@
 		            <field name="type">other</field>
 		            <field name="user_type" ref="account_type_asset_view1"/>
 		        </record>
-		
+
 	        <record id="conf_nca" model="account.account.template">
 	            <field name="code">11</field>
 	            <field name="name">Net Current Assets</field>
@@ -149,7 +149,7 @@
 	            <field name="type">view</field>
 	            <field name="user_type" ref="account_type_asset_view1"/>
 	        </record>
-		
+
 		        <record id="conf_cas" model="account.account.template">
 		            <field name="code">110</field>
 		            <field name="name">Current Assets</field>
@@ -157,7 +157,7 @@
 		            <field name="type">view</field>
 		            <field name="user_type" ref="account_type_asset_view1"/>
 		        </record>
-			
+
 			        <record id="conf_stk" model="account.account.template">
 			            <field name="code">1101</field>
 			            <field name="name">Purchased Stocks</field>
@@ -165,7 +165,7 @@
 			            <field name="type">other</field>
 			            <field name="user_type" ref="conf_account_type_asset"/>
 			        </record>
-			
+
 			        <record id="conf_a_recv" model="account.account.template">
 			            <field name="code">1102</field>
 			            <field name="name">Debtors</field>
@@ -174,7 +174,7 @@
 			            <field eval="True" name="reconcile"/>
 			            <field name="user_type" ref="conf_account_type_asset"/>
 			        </record>
-				
+
 			        <record id="conf_ova" model="account.account.template">
 			            <field name="code">1103</field>
 			            <field name="name">Tax Paid</field>
@@ -182,15 +182,15 @@
 			            <field name="type">other</field>
 			            <field name="user_type" ref="conf_account_type_asset"/>
 			        </record>
-			
+
 			        <record id="conf_bnk" model="account.account.template">
 			            <field name="code">1104</field>
 			            <field name="name">Bank Current Account</field>
 			            <field ref="conf_cas" name="parent_id"/>
-			            <field name="type">other</field>
-			            <field name="user_type" ref="conf_account_type_bnk"/>
+			            <field name="type">liquidity</field>
+			            <field name="user_type" ref="conf_account_type_asset"/>
 			        </record>
-			
+
 		        <record id="conf_cli" model="account.account.template">
 		            <field name="code">111</field>
 		            <field name="name">Current Liabilities</field>
@@ -198,7 +198,7 @@
 		            <field name="type">view</field>
 		            <field name="user_type" ref="account_type_liability_view1"/>
 		        </record>
-		
+
 			        <record id="conf_a_pay" model="account.account.template">
 			            <field name="code">1111</field>
 			            <field name="name">Creditors</field>
@@ -207,7 +207,7 @@
 			            <field eval="True" name="reconcile"/>
 			            <field name="user_type" ref="conf_account_type_liability"/>
 			        </record>
-			
+
 			        <record id="conf_iva" model="account.account.template">
 			            <field name="code">1112</field>
 			            <field name="name">Tax Received</field>
@@ -215,17 +215,17 @@
 			            <field name="type">other</field>
 			            <field name="user_type" ref="conf_account_type_liability"/>
 			        </record>
-			
+
 			        <record id="conf_a_reserve_and_surplus" model="account.account.template">
 			            <field name="code">1113</field>
-			            <field name="name">Reserve and Surplus Account</field>
+			            <field name="name">Reserve and Profit/Loss Account</field>
 			            <field ref="conf_cli" name="parent_id"/>
 			            <field name="type">payable</field>
 			            <field eval="True" name="reconcile"/>
 			            <field name="user_type" ref="conf_account_type_liability"/>
 			        </record>
-	
-	
+
+
         <!-- Profit and Loss -->
 
         <record id="conf_gpf" model="account.account.template">
@@ -243,7 +243,7 @@
 	            <field name="type">view</field>
 	            <field name="user_type" ref="account_type_income_view1"/>
 	        </record>
-	
+
 		        <record id="conf_a_sale" model="account.account.template">
 		            <field name="code">200</field>
 		            <field name="name">Product Sales</field>
@@ -251,7 +251,7 @@
 		            <field name="type">other</field>
 		            <field name="user_type" ref="conf_account_type_income"/>
 		        </record>
-	
+
 	        <record id="conf_cos" model="account.account.template">
 	            <field name="code">21</field>
 	            <field name="name">Cost of Sales</field>
@@ -259,7 +259,7 @@
 	            <field name="type">view</field>
 	            <field name="user_type" ref="account_type_income_view1"/>
 	        </record>
-	
+
 		        <record id="conf_cog" model="account.account.template">
 		            <field name="code">210</field>
 		            <field name="name">Cost of Goods Sold</field>
@@ -267,7 +267,7 @@
 		            <field name="type">other</field>
 		            <field name="user_type" ref="conf_account_type_expense"/>
 		        </record>
-	
+
 	        <record id="conf_ovr" model="account.account.template">
 	            <field name="code">22</field>
 	            <field name="name">Overheads</field>
@@ -275,7 +275,7 @@
 	            <field name="type">view</field>
 	            <field name="user_type" ref="account_type_expense_view1"/>
 	        </record>
-	
+
 		        <record id="conf_a_expense" model="account.account.template">
 		            <field name="code">220</field>
 		            <field name="name">Expenses</field>
@@ -317,7 +317,7 @@
 		            <field name="name">Tax Received Rate S (15%)</field>
 		            <field name="parent_id" ref="tax_code_input"/>
 		        </record>
-	
+
 		        <record id="tax_code_input_R" model="account.tax.code.template">
 		            <field name="name">Tax Received Rate R (5%)</field>
 		            <field name="parent_id" ref="tax_code_input"/>
@@ -327,14 +327,14 @@
 		            <field name="name">Tax Received Rate X (Exempt)</field>
 		            <field name="parent_id" ref="tax_code_input"/>
 		        </record>
-	
+
 		        <record id="tax_code_input_O" model="account.tax.code.template">
 		            <field name="name">Tax Received Rate O (Out of scope)</field>
 		            <field name="parent_id" ref="tax_code_input"/>
 		        </record>
 
 	        <!-- Output TAX -->
-	
+
 	        <record id="tax_code_output" model="account.tax.code.template">
 	            <field name="name">Tax Paid</field>
 	            <field name="parent_id" ref="tax_code_balance_net"/>
@@ -344,7 +344,7 @@
 		            <field name="name">Tax Paid Rate S (15%)</field>
 		            <field name="parent_id" ref="tax_code_output"/>
 		        </record>
-		
+
 		        <record id="tax_code_output_R" model="account.tax.code.template">
 		            <field name="name">Tax Paid Rate R (5%)</field>
 		            <field name="parent_id" ref="tax_code_output"/>
@@ -354,7 +354,7 @@
 		            <field name="name">Tax Paid Rate X (Exempt)</field>
 		            <field name="parent_id" ref="tax_code_output"/>
 		        </record>
-		
+
 		        <record id="tax_code_output_O" model="account.tax.code.template">
 		            <field name="name">Tax Paid Rate O (Out of scope)</field>
 		            <field name="parent_id" ref="tax_code_output"/>
@@ -362,9 +362,9 @@
 
 
 	        <!-- Invoiced Base of TAX -->
-	
+
 	        <!-- Purchases -->
-	
+
 	        <record id="tax_code_base_net" model="account.tax.code.template">
 	            <field name="name">Tax Bases</field>
 	            <field name="parent_id" ref="tax_code_chart_root"/>
@@ -379,7 +379,7 @@
 			            <field name="name">Taxable Purchases Rated S (15%)</field>
 			            <field name="parent_id" ref="tax_code_base_purchases"/>
 			        </record>
-	
+
 			        <record id="tax_code_purch_R" model="account.tax.code.template">
 			            <field name="name">Taxable Purchases Rated R (5%)</field>
 			            <field name="parent_id" ref="tax_code_base_purchases"/>
@@ -389,34 +389,34 @@
 			            <field name="name">Taxable Purchases Type X (Exempt)</field>
 			            <field name="parent_id" ref="tax_code_base_purchases"/>
 			        </record>
-			
+
 			        <record id="tax_code_purch_O" model="account.tax.code.template">
 			            <field name="name">Taxable Purchases Type O (Out of scope)</field>
 			            <field name="parent_id" ref="tax_code_base_purchases"/>
 			        </record>
 
 		        <!-- Sales -->
-		
+
 		        <record id="tax_code_base_sales" model="account.tax.code.template">
 		            <field name="name">Base of Taxable Sales</field>
 		            <field name="parent_id" ref="tax_code_base_net"/>
 		        </record>
-	
+
 			        <record id="tax_code_sales_S" model="account.tax.code.template">
 			            <field name="name">Taxable Sales Rated S (15%)</field>
 			            <field name="parent_id" ref="tax_code_base_sales"/>
 			        </record>
-			
+
 			        <record id="tax_code_sales_R" model="account.tax.code.template">
 			            <field name="name">Taxable Sales Rated R (5%)</field>
 			            <field name="parent_id" ref="tax_code_base_sales"/>
 			        </record>
-			
+
 			        <record id="tax_code_sales_X" model="account.tax.code.template">
 			            <field name="name">Taxable Sales Type X (Exempt)</field>
 			            <field name="parent_id" ref="tax_code_base_sales"/>
 			        </record>
-			
+
 			        <record id="tax_code_sales_O" model="account.tax.code.template">
 			            <field name="name">Taxable Sales Type O (Out of scope)</field>
 			            <field name="parent_id" ref="tax_code_base_sales"/>
@@ -550,19 +550,19 @@
             <field name="ref_tax_code_id" ref="tax_code_input_O"/>
             <field name="type_tax_use">sale</field>
         </record>
-        
-        
-        
+
+
+
 	    <!-- = = = = = = = = = = = = = = = -->
-	     <!-- Fiscal Position Templates     -->
+	     <!-- Fiscal Mapping Templates     -->
 	    <!-- = = = = = = = = = = = = = = = -->
-        
-        
+
+
         <record id="fiscal_position_normal_taxes_template1" model="account.fiscal.position.template">
             <field name="name">Normal Taxes</field>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
-        
+
         <record id="fiscal_position_tax_exempt_template2" model="account.fiscal.position.template">
             <field name="name">Tax Exempt</field>
             <field name="chart_template_id" ref="configurable_chart_template"/>
@@ -587,7 +587,7 @@
 
 
 		<!--  Assigned Default Taxes For Different Account -->
-		
+
 		<record id="conf_a_sale" model="account.account.template">
 			<field name="tax_ids" eval="[(6,0,[ref('itaxs')])]"/>
 		</record>
@@ -595,7 +595,7 @@
 		<record id="conf_a_expense" model="account.account.template">
 			<field name="tax_ids" eval="[(6,0,[ref('otaxs')])]"/>
 		</record>
-		
-		
+
+
     </data>
 </openerp>

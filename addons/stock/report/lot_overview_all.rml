@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Location Content" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Location Content.pdf">
+  <template pageSize="(595.0,842.0)" title="Location Content" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+      <frame id="first" x1="34.0" y1="27.0" width="523" height="782"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -24,6 +24,8 @@
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBELOW" colorName="#999999" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#999999" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#999999" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#999999" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table8">
       <blockAlignment value="LEFT"/>
@@ -93,7 +95,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="233.0,60.0,59.0,59.0,72.0" style="Table6">
+    <blockTable colWidths="253.0,65.0,63.0,63.0,78.0" style="Table6">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Location / Product</para>
@@ -108,28 +110,18 @@
           <para style="terp_tblheader_Details_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Value([[ company.currency_id.name ]])</para>
+          <para style="terp_tblheader_Details_Right">Value</para>
         </td>
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
+      <para style="terp_default_2">[[ repeatIn(objects,'o') ]]</para>
       <section>
-        <para style="terp_default_8">[[ repeatIn(process(o.id),'ob') ]]</para>
-        <blockTable colWidths="152.0,82.0,59.0,59.0,58.0,72.0" style="Table7">
+        <para style="terp_default_2">[[ repeatIn(process(o.id),'ob') ]]</para>
+        <blockTable colWidths="319.0,63.0,63.0,78.0" style="Table7">
           <tr>
             <td>
-              <para style="terp_default_Bold_9">[[ ob['location_name'] ]]</para>
-            </td>
-            <td>
-              <para style="terp_default_Bold_9">
-                <font color="white"> </font>
-              </para>
-            </td>
-            <td>
-              <para style="terp_default_Bold_9">
-                <font color="white"> </font>
-              </para>
+              <para style="terp_default_Bold_9">[[ (not ob['product']) and removeParentNode('blockTable') ]][[ ob['location_name'] ]]</para>
             </td>
             <td>
               <para style="terp_default_Bold_9">
@@ -149,8 +141,8 @@
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_8">[[ repeatIn(ob['product'],'p') ]]</para>
-          <blockTable colWidths="38.0,196.0,60.0,59.0,58.0,72.0" style="Table8">
+          <para style="terp_default_2">[[ repeatIn(ob['product'],'p') ]]</para>
+          <blockTable colWidths="29.0,225.0,65.0,63.0,63.0,78.0" style="Table8">
             <tr>
               <td>
                 <para style="terp_default_9">
@@ -175,12 +167,10 @@
             </tr>
           </blockTable>
         </section>
-        <blockTable colWidths="38.0,366.0,78.0" style="Table10">
+        <blockTable colWidths="29.0,409.0,84.0" style="Table10">
           <tr>
             <td>
-              <para style="terp_default_9">
-                <font color="white"> </font>
-              </para>
+              <para style="terp_tblheader_Details">[[ (not ob['product']) and removeParentNode('blockTable') ]]</para>
             </td>
             <td>
               <para style="terp_default_Bold_9">Total:</para>
@@ -192,7 +182,7 @@
         </blockTable>
       </section>
     </section>
-    <blockTable colWidths="71.0,334.0,77.0" repeatRows="1" style="Table2">
+    <blockTable colWidths="77.0,362.0,84.0" repeatRows="1" style="Table2">
       <tr>
         <td>
           <para style="terp_default_Bold_9">Grand Total:</para>
@@ -207,7 +197,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
+    <para style="terp_default_2">
       <font color="white"> </font>
     </para>
   </story>

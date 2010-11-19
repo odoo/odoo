@@ -6,14 +6,13 @@
 
        <menuitem name="Configuration"
            id="knowledge.menu_document_configuration"
-           parent="knowledge.menu_document" sequence="50" groups="base.group_system" />
+           parent="knowledge.menu_document" sequence="50"/>
 
        <menuitem name="Wiki" id="menu_wiki_configuration"
            parent="knowledge.menu_document_configuration" sequence="2" />
 
 
-<!--  Wiki Groups Tree view -->
-
+        <!--  Wiki Groups Tree view -->
        <record model="ir.ui.view" id="wiki_group_tree">
             <field name="name">wiki.groups.tree</field>
             <field name="model">wiki.groups</field>
@@ -25,23 +24,25 @@
             </field>
         </record>
 
-<!--  Wiki Groups Form view -->
-
+        <!--  Wiki Groups Form view -->
         <record model="ir.ui.view" id="wiki_group_form">
             <field name="name">wiki.groups.form</field>
             <field name="model">wiki.groups</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Wiki Groups">
-                    <group colspan="4" col="4">
+                    <group col="4" colspan="3" >
                         <field name="name" select="1"/>
                         <field name="create_date" readonly="2"/>
+                    </group>
+                    <group col="2" colspan="1">
                         <field name="method" select="1"/>
-                        <field name="home" select="1"
+                        <field name="home" select="1" domain="[('group_id','=',active_id)]"
                             attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}" />
                     </group>
                     <notebook colspan="4">
                     <page string="Notes">
+                        <separator string="Group Description" colspan="4"/>
                         <field name="notes" colspan="4" nolabel="1"/>
                     </page><page string="Configuration">
                         <separator string="Page Template" colspan="4"/>
@@ -64,8 +65,7 @@
             </field>
         </record>
 
-<!--  Wiki Groups Action  -->
-
+        <!--  Wiki Groups Action  -->
         <record model="ir.actions.act_window" id="action_wiki_groups">
             <field name="name">Wiki Groups</field>
             <field name="res_model">wiki.groups</field>
@@ -84,8 +84,7 @@
             <field name="view_type">tree</field>
         </record>
 
-<!-- wiki Tree view For child -->
-
+        <!-- wiki Tree view For child -->
         <record id="view_wiki_tree_childs" model="ir.ui.view">
             <field name="name">wiki.wiki.tree.childs</field>
             <field name="model">wiki.wiki</field>
@@ -103,8 +102,7 @@
             </field>
         </record>
 
-<!-- wiki Tree view  -->
-
+        <!-- wiki Tree view  -->
         <record model="ir.ui.view" id="view_wiki_tree">
             <field name="name">wiki.wiki.tree</field>
             <field name="model">wiki.wiki</field>
@@ -112,27 +110,28 @@
             <field name="arch" type="xml">
                 <tree string="Wiki">
                     <field name="name"/>
+                    <field name="group_id"/>
                     <field name="section" invisible="not context.get('section',False)"/>
-                    <field name="group_id" invisible="context.get('group_id',False)"/>
                     <field name="review"/>
+                    <field name="create_uid" invisible="context.get('create_uid',False)"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
                 </tree>
             </field>
         </record>
 
-<!-- wiki Form view  -->
-
+        <!-- wiki Form view  -->
         <record model="ir.ui.view" id="view_wiki_form">
             <field name="name">wiki.wiki.form</field>
             <field name="model">wiki.wiki</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Wiki">
-                    <group col="8" colspan="4">
-                        <field name="name" select="1" colspan="8"/>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1" colspan="6"/>
                         <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/>
-                        <field name="section"/>
+                        <field name="parent_id" groups="base.group_extended" domain="[('group_id','=',group_id)]"/>
+                        <field name="section"/>                        
                     </group>
                     <notebook colspan="4">
                         <page string="Content">
@@ -140,44 +139,47 @@
                         <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
                         </page>
                     </notebook>
-                    <separator colspan="4" string="Modifications"/>
-                    <group col="4" colspan="4">
+                    <group col="2" colspan="2">
+                        <separator colspan="4" string="Modification Information"/>
                         <field name="write_date" readonly="1"/>
-                        <field name="review" select="1"/>
-                        <field name="tags" select="1" groups="base.group_extended"/>
-                        <field name="toc"/>
+                        <field name="minor_edit" groups="base.group_extended"/>
+                        <field name="review" select="1" groups="base.group_extended"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="4" string="Meta Information"/>
+                        <field name="tags" select="1"/>
+                        <field name="toc" groups="base.group_extended"/>
                     </group>
                 </form>
             </field>
         </record>
 
-    <!-- wiki Search view  -->
-
+        <!-- wiki Search view  -->
         <record id="view_wiki_filter" model="ir.ui.view">
             <field name="name">wiki.wiki.search</field>
             <field name="model">wiki.wiki</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wiki">
-                    <filter icon="terp-check" string="Need Review" domain="[('review','=',True)]"/>
+                    <filter icon="terp-gtk-jump-to-ltr" string="Need Review" domain="[('review','=',True)]"/>
                     <separator orientation="vertical"/>
-                    <field name="section" select="1"/>
                     <field name="name" select="1"/>
                     <field name="group_id" select="1"/>
+                    <field name="tags" select="1"/>
+                    <field name="section" select="1" groups="base.group_extended"/>
                     <field name="write_uid" select="1"/>
                     <field name="write_date" select="1"/>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="8" col="6">
-                        <filter icon="terp-check" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter icon="terp-folder-blue" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
                         <filter icon="terp-personal" string="Author" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter icon="terp-personal-" string="Last Contributor" domain="[]" context="{'group_by':'write_uid'}"/>
+                        <filter icon="terp-personal+" string="Last Contributor" domain="[]" context="{'group_by':'write_uid'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
-<!-- search page for wiki -->
-
+        <!-- search page for wiki -->
         <record model="ir.actions.act_window" id="action_wiki">
             <field name="name">Wiki Pages</field>
             <field name="res_model">wiki.wiki</field>
@@ -192,8 +194,7 @@
             id="menu_action_wiki_wiki" name="Wiki Pages"
             action="action_wiki" />
 
-<!--  Pages Waiting Review -->
-
+        <!--  Pages Waiting Review -->
         <record model="ir.actions.act_window" id="action_wiki_review">
             <field name="name">Pages Waiting Review</field>
             <field name="res_model">wiki.wiki</field>
@@ -205,8 +206,7 @@
             <field name="filter" eval="True"/>
         </record>
 
-<!-- History Tree view -->
-
+        <!-- History Tree view -->
         <record model="ir.ui.view" id="view_wiki_history_tree">
             <field name="name">wiki.wiki.history.tree</field>
             <field name="model">wiki.wiki.history</field>
@@ -221,8 +221,7 @@
             </field>
         </record>
 
-<!-- History Form view  -->
-
+        <!-- History Form view  -->
         <record model="ir.ui.view" id="wiki_history_form">
             <field name="name">wiki.wiki.history.form</field>
             <field name="model">wiki.wiki.history</field>
@@ -238,8 +237,7 @@
             </field>
         </record>
 
-<!-- History Action  -->
-
+        <!-- History Action  -->
         <record model="ir.actions.act_window" id="action_history">
             <field name="name">All Page Histories</field>
             <field name="res_model">wiki.wiki.history</field>
@@ -247,13 +245,15 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <act_window domain="[('wiki_id', '=', active_id)]"
+        <act_window 
+            context="{'search_default_wiki_id': [active_id]}"
             id="act_wiki_wiki_history"
             name="Page History"
             res_model="wiki.wiki.history"
             src_model="wiki.wiki"/>
 
-        <act_window domain="[('group_id', '=', active_id)]"
+        <act_window
+            context="{'search_default_group_id': [active_id]}"
             id="act_wiki_group_open"
             name="Search Page"
             res_model="wiki.wiki"

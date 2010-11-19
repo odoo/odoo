@@ -24,13 +24,14 @@ class backlog_create_task(osv.osv_memory):
     _name = 'project.scrum.backlog.create.task'
     _description = 'Create Tasks from Product Backlogs'
     _columns = {
-        'user_id': fields.many2one('res.users', 'Assign To', help="Resposible user who can work on task")
+        'user_id': fields.many2one('res.users', 'Assign To', help="Responsible user who can work on task")
     }
 
     def do_create(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         task = self.pool.get('project.task')
         backlog_id = self.pool.get('project.scrum.product.backlog')
+        document_pool = self.pool.get('ir.attachment')
         ids_task = []
 
         if context is None:
@@ -41,7 +42,7 @@ class backlog_create_task(osv.osv_memory):
         id = mod_obj.read(cr, uid, result, ['res_id'])
 
         for backlog in backlogs:
-            ids_task.append(task.create(cr, uid, {
+            task_id = task.create(cr, uid, {
                 'product_backlog_id': backlog.id,
                 'name': backlog.name,
                 'description': backlog.note,
@@ -50,8 +51,11 @@ class backlog_create_task(osv.osv_memory):
                 'planned_hours': backlog.expected_hours,
                 'remaining_hours':backlog.expected_hours,
                 'sequence':backlog.sequence,
-            }))
-
+            })
+            document_ids = document_pool.search(cr, uid, [('res_id', '=', backlog.id), ('res_model', '=', backlog_id._name)])
+            for document_id in document_ids:
+                document_pool.copy(cr, uid, document_id, default={'res_id':task_id, 'res_model':task._name})
+            ids_task.append(task_id)
         return {
             'domain': "[('product_backlog_id','in',["+','.join(map(str, context['active_ids']))+"])]",
             'name': 'Tasks',

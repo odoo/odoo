@@ -2,103 +2,93 @@
   Create project 'Develop a thunderbird-openerp synchronization plugin'
 - 
   !record {model: project.project, id: project_project_project1}:
-    company_id: base.main_company
-    name: Project2
+    name: Develop a thunderbird-openerp synchronization plugin
     members:
-      - project_long_term.res_users_manager0
-      - project_long_term.res_users_user0
-      - project_long_term.res_users_userfinance0
-      - project_long_term.res_users_userdesign0
-      - project_long_term.res_users_userdeveloper0
-      - project_long_term.res_users_usertester0
-      - project_long_term.res_users_useranalyst0
+      - project.res_users_project_manager
+      - project.res_users_technical_leader
+      - project.res_users_developer
+      - project.res_users_designer
+      - project.res_users_tester
+      - project.res_users_analyst
+      - project.res_users_finacial_manager
         
 - 
-  Create phase 'Develop GUI' in Thunderbird
+  Create phase 'Develop GUI' in thunderbird
 - 
   !record {model: project.phase, id: project_phase_phase1}:
     date_start: '2010-06-02'
-    duration: 100.0
-    name: phase22
+    duration: 200.0
+    name: Develop GUI in thunderbird
     product_uom: product.uom_day
     project_id: project_project_project1
     state: draft
     resource_ids:
-      - resource_id: project_long_term.resource_resource_analyst0
+      - resource_id: project_long_term.resource_analyst
         useability: 80.0
-      - resource_id: project_long_term.resource_resource_programmer0
+      - resource_id: project_long_term.resource_developer
         useability: 30.0
-      - resource_id: project_long_term.resource_resource_webdesigner0
+      - resource_id: project_long_term.resource_designer
         useability: 30.0
     
     
 - 
   Create the phase task 'Develop GUI for Server Configuration'
 - 
-  !record {model: project.task, id: project_task_t00}:
-    name: t1
+  !record {model: project.task, id: project_task_t10}:
+    name: Develop GUI for Server Configuration
     planned_hours: 20.0
     remaining_hours: 20.0
     state: draft
     phase_id: project_phase_phase1
     project_id: project_project_project1
-    user_id: project_long_term.res_users_userdeveloper0
+    user_id: project.res_users_developer
     
 - 
   Create the phase task 'Develop GUI for Modules Configuration'
 - 
   !record {model: project.task, id: project_task_t11}:
-    name: t2
+    name: Develop GUI for Modules Configuration
     planned_hours: 25.0
     remaining_hours: 25.0
     state: draft
     phase_id: project_phase_phase1
     project_id: project_project_project1
-    user_id: project_long_term.res_users_userdeveloper0
+    user_id: project.res_users_developer
 - 
   Create the phase task 'Develop GUI for OpenERP Synchronisation'
 - 
-  !record {model: project.task, id: project_task_t22}:
-    name: t3
+  !record {model: project.task, id: project_task_t12}:
+    name: Develop GUI for OpenERP Synchronisation
     planned_hours: 30.0
     remaining_hours: 30.0
     state: draft
     phase_id: project_phase_phase1
     project_id: project_project_project1
-    
-    
+    user_id: project.res_users_developer
 - 
-  Create the phase task 'Develop required Menus'
+  Create the phase task 'Design required GUI/Menus'
 - 
-  !record {model: project.task, id: project_task_t33}:
-    name: t4
+  !record {model: project.task, id: project_task_13}:
+    name: Design required GUI/Menus
     planned_hours: 25.0
     remaining_hours: 25.0
     state: draft
     phase_id: project_phase_phase1
     project_id: project_project_project1
-
-- 
-  Get the project to schedule the tasks 
-- 
-  !record {model: project.compute.tasks, id: project_compute_tasks_0}:
-    project_id: project_project_project1
+    user_id: project.res_users_designer
     
     
 - 
   Schedule tasks
 - 
-  !python {model: project.compute.tasks}: |
-        self.compute_date(cr, uid, [ref("project_compute_tasks_0")], {"lang": "en_US", "tz": False,
-            "active_id": ref("project_long_term.menu_compute_tasks"),
-            "active_model": "ir.ui.menu", "active_ids": [ref("project_long_term.menu_compute_tasks")],
-        })
+  !python {model: project.project}: |
+        self.schedule_tasks(cr, uid, ref("project_project_project1"))
 
 -
   Check if tasks scheduled, check that either of task's start_date, end_date and user_id is not null
 -
   !python {model: project.project}: |
-     prj=self.browse(cr, uid, [ref("project_project_project1")])[0]
+     prj = self.browse(cr, uid, [ref("project_project_project1")])[0]
      for task in prj.tasks:
      	if (not task.user_id) or (not task.date_start) or (not task.date_end):
      	   raise AssertionError("Project Tasks not scheduled")

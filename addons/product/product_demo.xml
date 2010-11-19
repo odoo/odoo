@@ -5,17 +5,12 @@
     Resource: product.category 
     -->
         
-        <record id="cat0" model="product.category">
-            <field name="parent_id" ref="null"/>
-            <field name="name">All products</field>
-            <field name="type">view</field>
-        </record>
         <record id="cat1" model="product.category">
-            <field name="parent_id" ref="cat0"/>
+            <field name="parent_id" ref="product.cat0"/>
             <field name="name">Sellable</field>
         </record>
         <record id="cat2" model="product.category">
-            <field name="parent_id" ref="cat0"/>
+            <field name="parent_id" ref="product.cat0"/>
             <field name="name">Private</field>
         </record>
         <record id="product_category_3" model="product.category">
@@ -463,18 +458,17 @@
         <field name="uom_id" ref="product_uom_unit"/>
         <field name="uom_po_id" ref="product_uom_unit"/>
         <field name="name">Restaurant Expenses</field>
-            <field eval="1" name="hr_expense_ok"/>
         <field name="categ_id" ref="product_category_otherproducts0"/>
     </record>
 
     <record id="product_product_worker0" model="product.product">
-            <field name="default_code">WORK</field>
-            <field name="supply_method">produce</field>
-            <field name="type">service</field>
-            <field eval="'make_to_order'" name="procure_method"/>
+ 		<field name="default_code">WORK</field>
+		<field name="supply_method">produce</field>
+ 		<field name="type">service</field>
+		<field eval="'make_to_order'" name="procure_method"/>
         <field eval="0" name="sale_ok"/>
         <field eval="1" name="purchase_ok"/> 
-            <field name="standard_price">20.0</field>
+        <field name="standard_price">20.0</field>
         <field name="uom_id" ref="uom_hour"/>
         <field name="uom_po_id" ref="uom_hour"/>
         <field name="name">Worker</field>
@@ -486,15 +480,12 @@
             <field name="supply_method">buy</field>
             <field name="standard_price">10.0</field>
             <field eval="0" name="sale_ok"/>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Rear Panel SHE100</field>
-            <field eval="'Public Pricelist (0.00) : 1.00
-One-shot customers (0.00) : 1.00
-Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
+        	<field name="uom_id" ref="product_uom_unit"/>
+        	<field name="uom_po_id" ref="product_uom_unit"/>
+        	<field name="name">Rear Panel SHE100</field>
             <field eval="5" name="seller_delay"/>
-        <field name="categ_id" ref="product_category_misc0"/>
-    </record>
+        	<field name="categ_id" ref="product_category_misc0"/>
+	</record>
 
     <record id="product_product_rearpanelarm1" model="product.product">
             <field name="default_code">RPAN200</field>
@@ -504,9 +495,6 @@ Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
         <field name="uom_id" ref="product_uom_unit"/>
         <field name="uom_po_id" ref="product_uom_unit"/>
         <field name="name">Rear Panel SHE200</field>
-            <field eval="'Public Pricelist (0.00) : 1.00
-One-shot customers (0.00) : 1.00
-Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
             <field eval="5" name="seller_delay"/>
         <field name="categ_id" ref="product_category_misc0"/>
     </record>
@@ -519,9 +507,6 @@ Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
         <field name="uom_id" ref="product_uom_unit"/>
         <field name="uom_po_id" ref="product_uom_unit"/>
         <field name="name">Side Panel</field>
-            <field eval="'Public Pricelist (0.00) : 1.00
-One-shot customers (0.00) : 1.00
-Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
             <field eval="5" name="seller_delay"/>
         <field name="categ_id" ref="product_category_misc0"/>
     </record>
@@ -534,9 +519,6 @@ Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
         <field name="uom_id" ref="product_uom_unit"/>
         <field name="uom_po_id" ref="product_uom_unit"/>
         <field name="name">Rack 100cm</field>
-            <field eval="'Public Pricelist (0.00) : 1.00
-One-shot customers (0.00) : 1.00
-Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
             <field eval="8" name="seller_delay"/>
         <field name="categ_id" ref="product_category_misc0"/>
     </record>
@@ -549,9 +531,6 @@ Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
         <field name="uom_id" ref="product_uom_unit"/>
         <field name="uom_po_id" ref="product_uom_unit"/>
         <field name="name">Rack 200cm</field>
-            <field eval="'Public Pricelist (0.00) : 1.00
-One-shot customers (0.00) : 1.00
-Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
             <field eval="8" name="seller_delay"/>
         <field name="categ_id" ref="product_category_misc0"/>
     </record>
@@ -576,9 +555,6 @@ Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
         <field name="uom_id" ref="product_uom_unit"/>
         <field name="uom_po_id" ref="product_uom_unit"/>
         <field name="name">Wood Lintel 4m</field>
-            <field eval="'Public Pricelist (0.00) : 1.00
-One-shot customers (0.00) : 1.00
-Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
             <field eval="10" name="seller_delay"/>
         <field name="categ_id" ref="product_category_misc0"/>
     </record>
@@ -590,9 +566,6 @@ Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
         <field name="uom_id" ref="product_uom_unit"/>
         <field name="uom_po_id" ref="product_uom_unit"/>
         <field name="name">Metal Cleats</field>
-            <field eval="'Public Pricelist (0.00) : 1.00
-One-shot customers (0.00) : 1.00
-Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
             <field eval="20" name="seller_delay"/>
         <field name="categ_id" ref="product_category_misc0"/>
     </record>
@@ -607,7 +580,6 @@ Returning customers (0.00) : 0.99'" name="pricelist_sale"/>
         <field name="uom_id" ref="product_uom_unit"/>
         <field name="uom_po_id" ref="product_uom_unit"/>
         <field name="name">Hotel Expenses</field>
-            <field eval="1" name="hr_expense_ok"/>
         <field name="categ_id" ref="product_category_otherproducts0"/>
     </record>
 

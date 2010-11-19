@@ -201,6 +201,10 @@ function setDbName(argDbName){
 	getPref().setCharPref('serverdbname',argDbName);
 }
 
+//set webserver url
+function setWebServerURL(argWebServerURL){
+	getPref().setCharPref('webserverurl',argWebServerURL);
+}
 //set preference value of username for login
 function setUsername(argUsername){
 	getPref().setCharPref('username',argUsername);
@@ -399,6 +403,16 @@ function getDbName(){
 	return getPref().getCharPref('serverdbname');
 }
 
+//get webserver url
+function getWebServerURL(){
+	return getPref().getCharPref('webserverurl');
+}
+
+//get webserver port
+function getwebPort(){
+	return getPref().getCharPref('webserverport');
+}
+
 //get username from config settings
 function getUsername(){
 	return getPref().getCharPref('username');
@@ -459,7 +473,8 @@ function getSenderName(){
         }
 }
 
-//ger partner name
+
+//get partner name
 function getPartnerName(){
 	return getPref().getCharPref('partnername');
 }
@@ -758,10 +773,9 @@ var listAllCountryHandler = {
 			var popup = document.getElementById("country"); // a <menupopup> element
 			for (i=0;i<arrPartnerList.length;i++){
 				popup.menupopup.appendChild(createMenuItem_partner(arrPartnerList[i][1],arrPartnerList[i][0]));
-
 			}
 		}
-	
+	       
 	},
 	onFault: function (client, ctxt, fault) {
 		
@@ -779,7 +793,7 @@ var listAllStateHandler = {
 		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
                 // Set the number of results
 		var count = arrIdList.Count();
-
+        
 		// Loop through the results, adding items to the list
 		for (i = 0; i < count; i++) {
 			var strlResult = arrIdList.QueryElementAt(i, Components.interfaces.nsISupportsArray);
@@ -788,16 +802,20 @@ var listAllStateHandler = {
 			arrDataPair[0] = strlResult.QueryElementAt(0, Components.interfaces.nsISupportsPRInt32);
 			arrDataPair[1] = strlResult.QueryElementAt(1, Components.interfaces.nsISupportsCString);
 			arrPartnerList1[i] = arrDataPair;
+
+          
 		}
 		if (!context)
 		{
 			const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+
 			var popup = document.getElementById("state"); 
             // a <menupopup> element
 			for (i=0;i<arrPartnerList1.length;i++){
 				popup.menupopup.appendChild(createMenuItem_partner(arrPartnerList1[i][1],arrPartnerList1[i][0]));
 
 			}
+          //  popup.menupopup.selectedItem = popup.menupopup.firstChild;
 		}
 	
 	},
@@ -863,6 +881,14 @@ function getAllState(){
 	setServerService('xmlrpc/object');
 	var xmlRpcClient = getXmlRpc();
 	arrPartnerList1 = [];
+    var state = document.getElementById('state').menupopup;
+    while (state.firstChild) 
+     {
+        //The list is LIVE so it will re-index each call
+        state.removeChild(state.firstChild);
+    };
+
+
 	var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strDbName.data = branchobj.getCharPref("serverdbname");
 	var struid = xmlRpcClient.createType(xmlRpcClient.INT,{});
@@ -874,7 +900,7 @@ function getAllState(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	var strvalue = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strvalue.data = document.getElementById("state").value;
+	strvalue.data = document.getElementById("country").value;
     xmlRpcClient.asyncCall(listAllStateHandler,null,'execute',[ strDbName,struid,strpass,strobj,strmethod,strvalue ],6);
 }
 
@@ -909,32 +935,48 @@ function createMenuItem(aLabel) {
 }
 
 
-function listinstallmodule( result ) {
-	if ( rpc.onfault( result ) ) 
-	{ 
-		setmodule_install('no')
+var listinstallmodulehandler = {
+    onResult: function(client, context, result) {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
+		var count = arrIdList.Count();
+        if (count > 0) 
+        { 
+	        setmodule_install('yes')
+        }
+	
+	},
+	onFault: function (client, ctxt, fault) {
+        setmodule_install('no')
+	},
+
+	onError: function (client, ctxt, status, errorMsg) {
+        setmodule_install('no')
 	}
 }
 
 function module_install()
 {
-	setmodule_install("yes")
+	setmodule_install("no")
 	var branchobj = getPref();
 	setServerService('xmlrpc/object');
 	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 	var xmlRpcClient = getXmlRpc();
-	strDbName = branchobj.getCharPref("serverdbname");
-	struid = branchobj.getIntPref('userid');
-	strpass = branchobj.getCharPref("password");
-	strmethod = 'search';
-	strobj = 'thunderbird.partner'; // TOFIX: Find module 'thunderbird' into 'module.module' model.
-	var temp = new Array()
-	server=getServer()
-	port=getPort()
-	basicList=getBasicList()
-	rpc.addserver('object',basicList[3] , basicList[4],'/xmlrpc/object');
-	srcids=rpc.ask( 'object', 'execute', [basicList[0],basicList[1],basicList[2],strobj,strmethod,[]],listinstallmodule)
+    var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strDbName.data = branchobj.getCharPref("serverdbname");
+	var struid = xmlRpcClient.createType(xmlRpcClient.INT,{});
+	struid.data = branchobj.getIntPref('userid');
+	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strpass.data = branchobj.getCharPref("password");
+	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strmethod.data = 'name_search';
+	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strobj.data = 'ir.model';
+    var strvalue = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+    strvalue.data = 'thunderbird.partner';
+    xmlRpcClient.asyncCall(listinstallmodulehandler,null,'execute',[ strDbName,struid,strpass,strobj,strmethod, strvalue],6);
 }
+
 
 
 var listSearchContactHandler = {
@@ -951,7 +993,7 @@ var listSearchContactHandler = {
                  setPartnerName(strlSearchResultValue);
                  var t = getPartnerName();}
 
-             if(strlSearchResult=="contactname"){
+            if(strlSearchResult=="contactname"){
                  setSenderName(strlSearchResultValue);
                  var t = getSenderName();}
             
@@ -1006,6 +1048,7 @@ var listSearchContactHandler = {
 	}
 
 }
+
 var listSearchContactdetailHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -1048,6 +1091,7 @@ var listSearchContactdetailHandler = {
                  document.getElementById("txtmobile").value =strlSearchResultValue;}
 
             if(strlSearchResult=="email"&& strlSearchResultValue!=''){
+                 alert("Contact is Available.")
                  document.getElementById("txtemail").value =strlSearchResultValue;}
 
             if(strlSearchResult=="res_id"){
@@ -1195,7 +1239,7 @@ var listSearchCheckboxHandler = {
 					listcell.setAttribute("label",arrFinalList[i][j][1]); //stores the name ofthe record
 		  			listItem.appendChild(listcell);
 		  			listItem.value = arrFinalList[i][j][0]; //stores the id of the record
-		  			listItem.label = arr1[i]; // stores the value of the object
+		  			listItem.label = arr1[i]; // stores the value of the object   
 					cmbSearchList.appendChild(listItem);
 		  		}
 			}
@@ -1362,7 +1406,24 @@ function dictcontact(a,b){
 var listArchiveHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+        list_documents = document.getElementById('listSearchBox')
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
+        createId = parseInt(createId);
+        if(createId==0)
+        {
+            alert("Mail is Already Pushed.");
+        }
+        else if (createId<0)
+        {
+            alert("sorry Mail is not Pushed.");
+        
+        }
+    
+    else if (createId>=1)
+        {
+            alert("Mail is Successfully Pushed.");
+        }
+    window.close();
 
 	},
 	onFault: function (client, ctxt, fault) {
@@ -1389,7 +1450,6 @@ function parse_eml(){
 	} 
 
 	name = fpath + getFileName() +".eml"
-
 	var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 	file.initWithPath( name );
 	if ( file.exists() == false ) {
@@ -1402,6 +1462,7 @@ function parse_eml(){
 		var output = sis.read( sis.available() );
 		return output
     }
+    
 }
 function upload_archivemail()
 {
@@ -1438,14 +1499,32 @@ function upload_archivemail()
     var a = ['ref_ids','message'];
 	var b = [ref_ids, eml_string];
     var arrofarr = dictcontact(a,b);
+
     xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-    alert("Mail Archived Successfully.");
-	window.close();
-    
+     
+}
+
+var listArchiveDocumentHandler = {
+	onResult: function(client, context, result) {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
+        var popup = document.getElementById("section").selectedItem; 
+        alert("Document Created Successfully For " +" " + ":" + " "+ popup.label);
+		window.close();
+
+	},
+	onFault: function (client, ctxt, fault) {
+
+	},
+
+	onError: function (client, ctxt, status, errorMsg) {
+
+	}
 }
 
 function create_archivemail(){
-	var popup = document.getElementById("section").selectedItem; // a <menupopup> element
+	var popup = document.getElementById("section").selectedItem; 
+    // a <menupopup> element
 
 	if (String(popup) != "null"){
 		object=popup.value;
@@ -1469,10 +1548,10 @@ function create_archivemail(){
 		var a = ['model', 'message'];
 		var b = [object, eml_string];
 		var arrofarr = dictcontact(a,b);
-		xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-        alert("Document Created Successfully.");
+		xmlRpcClient.asyncCall(listArchiveDocumentHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
+        //alert("Document Created Successfully For " +" " + ":" + " "+ popup.label);
 		}
-    	window.close();
+    	//window.close();
 	}
 	else
 	{
@@ -1679,6 +1758,16 @@ function createInstance(name,test){
 }
 
 //xmlrpc request handler for handling the login information
+function check_module_install(count){
+    if (getmodule_install() == "no")
+    {
+        if (count <= 0){ return false; }
+        count = count - 1;
+        return check_module_install(count)
+    }
+    return true
+}
+    
 var listLoginHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -1686,7 +1775,8 @@ var listLoginHandler = {
 		if(login.type == 12){
 			login = result.QueryInterface(Components.interfaces.nsISupportsPRInt32)
 			setUserId(login.data);
-			alert('Successfully Login To OpenERP.');
+            module_install();
+            alert('Successfully Login To OpenERP.');
             window.close();
 		}
 		else{
@@ -1701,6 +1791,7 @@ var listLoginHandler = {
 		alert("Database does not Exist!\n\n Please specify proper database name.");
 	}
 }
+
 
 //function to check the login information
 function testConnection(){
@@ -1744,8 +1835,15 @@ function testConnection(){
 	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strpass.data = getPref().getCharPref('password');
 	xmlRpcClient.asyncCall(listLoginHandler,null,'login',[strDbName,strusername,strpass],3);
+    
 }
 
+function testConnection_web(){
+	var branchobj = getPref();
+    weburl = getWebServerURL();
+    window.open(weburl, "", "chrome","resizable=yes,scrollbars=yes,status=yes");
+    
+}
 
 //xmlrpc request handler for handling the login information
 var listcreateLoginHandler = {
@@ -1790,7 +1888,10 @@ var listCreatePartnerHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
+        setPartnerId(createId);
+        txtselectpartner = document.getElementById('txtselectpartner')
 		if(typeof(createId.data) == 'number' && createId!=0){
+         window.opener.document.getElementById('txtselectpartner').setAttribute('value',txtselectpartner.value);
 			window.close();
 		}
 		if(createId == 0){
@@ -1808,6 +1909,7 @@ var listCreatePartnerHandler = {
 //function to create the tiny partner object
 function createPartner(){
 	var branchobj = getPref();
+    txtselectpartner = document.getElementById('txtselectpartner')
 	setServerService('xmlrpc/object');
 	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 	var xmlRpcClient = getXmlRpc();
@@ -1821,12 +1923,13 @@ function createPartner(){
 	strmethod.data = 'create_partner';
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
-	if(document.getElementById('txtname').value ==''){
+	if(document.getElementById('txtselectpartner').value ==''){
 		alert("You Must Enter Partner Name.");
 		return false;
 	}
-	var a = ['name'];
-	var b = [document.getElementById('txtname').value];
+    setPartnerId(txtselectpartner.value)
+	var a = ['partner_id','name'];
+	var b = [getPartnerId(),txtselectpartner.value];
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listCreatePartnerHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
@@ -1944,7 +2047,7 @@ var listsearchAttachmentHandler = {
 				count += 1
 				var hbox = document.createElement("vbox");
 				var checkbox1 = document.createElement("checkbox");
-
+            
 				checkbox1.setAttribute("label",object[i]);
 				checkbox1.setAttribute("id","cbx"+(i+1));
 				checkbox1.setAttribute("width",150)

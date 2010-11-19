@@ -8,6 +8,31 @@
 
         <!-- MEMBERSHIP/MEMBERSHIP PRODUCTS -->
 
+        <record model="ir.ui.view" id="membership_product_search_form_view">
+            <field name="name">membership.product.search.form</field>
+            <field name="model">product.product</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Membership Products">
+                   <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',0)]"/>
+                   <separator orientation="vertical"/>
+                   <field name="code"/>
+                   <field name="name"/>
+                   <field name="categ_id" widget="selection" operator="child_of"/>
+                   <newline/>
+                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
+                   </group>
+                   <newline/>
+                   <group  expand='0' string='Group by...' groups="base.group_extended">
+                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
+                       <separator orientation="vertical"/>
+                       <filter string='Date From' icon="terp-go-month" domain="[]" context="{'group_by' : 'membership_date_from'}" />
+                   </group>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="membership_products_tree">
             <field name="name">Membership products</field>
             <field name="model">product.product</field>
@@ -19,31 +44,55 @@
                     <field name="membership_date_from"/>
                     <field name="membership_date_to"/>
                     <field name="list_price" string="Membership Fee"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="uom_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.ui.view" id="membership_products_form">
-            <field name="name">Memberships</field>
+            <field name="name">Membership Products</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Membership products">
-                    <field name="name"/>
-                    <field name="default_code"/>
-                    <field name="type"/>
-                    <field name="categ_id"/>
-                    <field name="membership_date_from" required="1"/>
-                    <field name="membership_date_to" required="1"/>
-                    <field name="list_price" string="Membership Fee"/>
-                    <separator colspan="4" string="Customer Taxes:"/>
-                    <field name="taxes_id" colspan="4" nolabel="1"/>
+                  <group col="6">
+                      <field name="name"/>
+                      <field name="default_code"/>
+                      <field name="active"/>
+                      <field name="membership" invisible="1"/>
+                      <field name="membership_date_from" required="1"/>
+                      <field name="membership_date_to" required="1"/>
+                      <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    </group>
+                    <notebook colspan="4">
+                      <page string="General">
+                        <separator string="Accounting Info" colspan="2"/>
+                        <separator string="Categorization" colspan="2"/>
+                        <field name="list_price" string="Membership Fee"/>
+                        <field name="type" />
+                        <field name="property_account_income" domain="[('type', '!=', 'view')]"/>
+                        <field name="categ_id"/>
+                        <separator string="Sale Taxes" colspan="2"/>
+                        <newline/>
+                        <field name="taxes_id" nolabel="1" colspan="4"/>
+                      </page>
+                      <page string="Description">
+                            <separator string="Description"/>
+                            <field colspan="4" name="description" nolabel="1"/>
+                            <separator string="Sale Description"/>
+                            <field colspan="4" name="description_sale" nolabel="1"/>
+                            <separator string="Purchase Description"/>
+                            <field colspan="4" name="description_purchase" nolabel="1"/>
+                      </page>
+                    </notebook>
                 </form>
             </field>
         </record>
 
         <record model="ir.ui.view" id="product_normal_form_view">
-            <field name="name">Membership product</field>
+            <field name="name">Membership Products</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
@@ -59,10 +108,11 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_membership_products">
-            <field name="name">Memberships</field>
+            <field name="name">Membership Products</field>
             <field name="res_model">product.product</field>
             <field name="domain">[('membership','=',True), ('type', '=', 'service')]</field>
             <field name="context">{'membership':True, 'type':'service'}</field>
+            <field name="search_view_id" ref="membership_product_search_form_view"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_product_view_tree">
@@ -81,13 +131,12 @@
 
         <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
         <menuitem name="Membership" id="menu_membership" sequence="0" parent="base.menu_association"/>
-        <menuitem name="Memberships" parent="menu_membership"
-            id="menu_membership_products"
-            action="action_membership_products" sequence="1"/>
-
-
-
-
+        <menuitem name="Membership Products"
+                  parent="menu_membership"
+                  id="menu_membership_products"
+                  action="action_membership_products"
+                  sequence="1"
+                  groups="base.group_partner_manager"/>
 
 
         <!-- MEMBERSHIP/CURRENT MEMBERS -->
@@ -99,10 +148,11 @@
             <field name="arch" type="xml">
                 <tree string="Members">
                     <field name="name"/>
+                    <field name="membership_state"/>
                     <field name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')]}"/>
                     <field name="membership_start"/>
                     <field name="membership_stop"/>
-                    <field name="membership_state"/>
+                    <field name="user_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -113,14 +163,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <field name="category_id" position="after">
-                       <filter icon="terp-personal" name="old" domain="[('membership_state', '=', 'old')]" string="Old Members" />
-                       <filter icon="terp-personal" name = "invoiced" domain="[('membership_state', '=', 'invoiced')]" string="Invoiced Members"/>
-                       <filter icon="terp-personal" domain="[('membership_state', '=', 'paid')]" string="Paid Members" />
-                       <filter icon="terp-personal" domain="[('membership_state', '=', 'waiting')]" string="Future Members" />
-                       <separator orientation="vertical"/>
-                       <field name="membership_state"/>
-                       <field name="membership_start"/>
-                       <newline/>
+          <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+                     <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+          <separator orientation="vertical"/>
+          <filter icon="terp-personal" name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
+          <filter icon="terp-personal" name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
+          <separator orientation="vertical"/>
+                   <field name="membership_stop" string="End Membership Date"/>
+                   <field name="membership_start" invisible="1"/>
+                   <newline/>
                </field>
             </field>
         </record>
@@ -133,12 +184,14 @@
             <field name="arch" type="xml">
                 <field name="membership_start" position="after">
                 <newline/>
-	            <group expand="0" string="Group By" colspan="10" col="8">
-	                <filter string="Associate Member" name = "associate" icon="terp-personal" domain="[]" context="{'group_by':'associate_member'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
+              <group expand="0" string="Group By" colspan="10" col="8">
+                <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+                  <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
+                  <separator orientation="vertical"/>
+                    <filter string=" Membership State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
                     <separator orientation="vertical"/>
-	                <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
-	                <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
+                  <filter string="Start Date" help="Starting Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
+                  <filter string="End Date" help="Ending Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
                 </group>
                 </field>
             </field>
@@ -149,6 +202,7 @@
             <field name="res_model">res.partner</field>
             <field name="search_view_id" ref="view_res_partner_member_filter"/>
             <field name="context">{"search_default_old": 1}</field>
+            <field name="context">{"search_default_all_members": 1}</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
@@ -161,6 +215,7 @@
         <record model="ir.actions.act_window.view" id="action_membership_members_view_form">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
             <field name="act_window_id" ref="action_membership_members"/>
         </record>
 
@@ -190,8 +245,8 @@
                         <group colspan="2" col="2">
                             <group colspan="4" col="3">
                             <field name="free_member"/>
-                            <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" icon="gtk-apply"/>
-                            <field colspan="4" name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')], 'readonly':[('free_member','=',True)]}"/>
+                            <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" icon="gtk-apply"/>
+                            <field colspan="4" name="associate_member" attrs="{'readonly':[('membership_state','!=', 'none')]}"/>
                             <field colspan="4" name="membership_state"/>
                             </group>
                         </group>

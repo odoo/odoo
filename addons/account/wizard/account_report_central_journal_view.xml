@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="account_common_report_view" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="fiscalyear_id" position="after">
+                <field name="target_move" position="after">
                     <field name="amount_currency"/>
                     <newline/>
                 </field>
@@ -26,7 +26,7 @@
         </record>
 
         <menuitem
-            name="Central Journals"
+            name="Centralizing Journal"
             parent="account.menu_journals_report"
             action="action_account_central_journal"
             id="menu_account_central_journal"

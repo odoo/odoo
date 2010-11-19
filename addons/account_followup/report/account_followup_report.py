@@ -20,21 +20,15 @@
 ##############################################################################
 
 from osv import fields, osv
-
-def _code_get(self, cr, uid, context={}):
-    acc_type_obj = self.pool.get('account.account.type')
-    ids = acc_type_obj.search(cr, uid, [])
-    res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context)
-    return [(r['code'], r['name']) for r in res]
-
+import tools
 
 class account_followup_stat(osv.osv):
     _name = "account_followup.stat"
     _description = "Followup Statistics"
+    _rec_name = 'partner_id'
     _auto = False
     _columns = {
-        'name': fields.many2one('res.partner', 'Partner', readonly=True),
-        'account_type': fields.selection(_code_get, 'Account Type', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'date_move':fields.date('First move', readonly=True),
         'date_move_last':fields.date('Last move', readonly=True),
         'date_followup':fields.date('Latest followup', readonly=True),
@@ -43,33 +37,60 @@ class account_followup_stat(osv.osv):
         'balance':fields.float('Balance', readonly=True),
         'debit':fields.float('Debit', readonly=True),
         'credit':fields.float('Credit', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'blocked': fields.boolean('Blocked', readonly=True),
+        'period_id': fields.many2one('account.period', 'Period', readonly=True),
+
     }
     _order = 'date_move'
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+                context=None, count=False):
+            for arg in args:
+                if arg[0] == 'period_id' and arg[2] == 'current_year':
+                    current_year = self.pool.get('account.fiscalyear').find(cr, uid)
+                    ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                    args.append(['period_id','in',ids])
+                    args.remove(arg)
+            return super(account_followup_stat, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
+                context=context, count=count)
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
+            for arg in domain:
+                if arg[0] == 'period_id' and arg[2] == 'current_year':
+                    current_year = self.pool.get('account.fiscalyear').find(cr, uid)
+                    ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                    domain.append(['period_id','in',ids])
+                    domain.remove(arg)
+            return super(account_followup_stat, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context)
+
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'account_followup_stat')
         cr.execute("""
             create or replace view account_followup_stat as (
-                select
-                    l.partner_id as id,
-                    l.partner_id as name,
-                    min(l.date) as date_move,
-                    max(l.date) as date_move_last,
-                    max(l.followup_date) as date_followup,
-                    max(l.followup_line_id) as followup_id,
-                    sum(l.debit) as debit,
-                    sum(l.credit) as credit,
-                    sum(l.debit - l.credit) as balance,
-                    a.type as account_type
-                from
+                SELECT
+                    l.id AS id,
+                    l.partner_id AS partner_id,
+                    min(l.date) AS date_move,
+                    max(l.date) AS date_move_last,
+                    max(l.followup_date) AS date_followup,
+                    max(l.followup_line_id) AS followup_id,
+                    sum(l.debit) AS debit,
+                    sum(l.credit) AS credit,
+                    sum(l.debit - l.credit) AS balance,
+                    l.company_id AS company_id,
+                    l.blocked as blocked,
+                    l.period_id AS period_id
+                FROM
                     account_move_line l
-                left join
-                    account_account a on (l.account_id=a.id)
-                where
-                    l.reconcile_id is NULL and
-                    a.type = 'receivable'
-                    and a.active and
-                    l.partner_id is not null
-                group by
-                    l.partner_id, a.type
+                    LEFT JOIN account_account a ON (l.account_id = a.id)
+                WHERE
+                    a.active AND
+                    a.type = 'receivable' AND
+                    l.reconcile_id is NULL AND
+                    l.partner_id IS NOT NULL
+                GROUP BY
+                    l.id, l.partner_id, l.company_id, l.blocked, l.period_id
             )""")
 account_followup_stat()
 

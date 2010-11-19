@@ -27,9 +27,9 @@ import netsvc
 from tools.translate import _
 
 from time import strftime
-import datetime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import copy
-from mx.DateTime import *
 import os
 
 class survey_type(osv.osv):
@@ -60,7 +60,7 @@ class survey(osv.osv):
         'response_user': fields.integer('Maximum Answer per User',
                      help="Set to one if  you require only one Answer per user"),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
-        'responsible_id': fields.many2one('res.users', 'Responsible'),
+        'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible for survey"),
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
         'note': fields.text('Description', size=128),
@@ -68,6 +68,7 @@ class survey(osv.osv):
         'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
         'send_response': fields.boolean('E-mail Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
+        'invited_user_ids': fields.many2many('res.users', 'survey_invited_user_rel', 'sid', 'uid', 'Invited User'),
     }
     _defaults = {
         'state': lambda * a: "draft",
@@ -694,7 +695,7 @@ class survey_request(osv.osv):
     }
     _defaults = {
         'state': lambda * a: 'draft',
-#        'date_deadline': lambda * a :  (now() + RelativeDateTime(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
+#        'date_deadline': lambda * a :  (datetime.now() + relativedelta(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
     }
     def survey_req_waiting_answer(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, { 'state' : 'waiting_answer'})

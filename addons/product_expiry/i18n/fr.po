@@ -6,20 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-06-30 15:09+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-06-21 15:56+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 04:08+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product lifetime"
-msgstr "Durée limite de consommation"
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Production lot"
+msgstr ""
+
+#. module: product_expiry
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_from_product_template
@@ -45,9 +51,24 @@ msgstr ""
 "faire partie de la même catégorie"
 
 #. module: product_expiry
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
+#: field:product.product,life_time:0
+msgid "Product Life Time"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,use_time:0
+msgid "Product Use Time"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
+msgid "The date signifying an alert to notify about the production lot."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr ""
 
 #. module: product_expiry
 #: help:stock.production.lot,life_date:0
@@ -55,6 +76,11 @@ msgid "The date the lot may become dangerous and should not be consumed."
 msgstr ""
 "La date à laquelle le lot peut devenir dangereux et ne doit plus être "
 "consommé."
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product Removal Time"
+msgstr ""
 
 #. module: product_expiry
 #: field:stock.production.lot,removal_date:0
@@ -103,6 +129,13 @@ msgstr ""
 "l'unité de mesure"
 
 #. module: product_expiry
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which, needs an alert to notify about the "
+"production lot."
+msgstr ""
+
+#. module: product_expiry
 #: field:stock.production.lot,life_date:0
 msgid "End of Life Date"
 msgstr "Date limite de consommation"
@@ -130,19 +163,9 @@ msgstr ""
 "Le nombre de jours après lesquels un lot de production doit être retiré."
 
 #. module: product_expiry
-#: field:product.product,use_time:0
-msgid "Product usetime"
-msgstr "Durée limite d'utilisation optimale"
-
-#. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
-msgstr "Date d'alerte"
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product removal time"
-msgstr "Durée avant retrait"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML non valide pour l'architecture de la vue"
 
 #. module: product_expiry
 #: help:product.product,use_time:0
@@ -174,5 +197,20 @@ msgstr "La date à laquelle le lot doit être retiré."
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
-msgid "Product alert time"
-msgstr "Durée avant alerte"
+msgid "Product Alert Time"
+msgstr ""
+
+#~ msgid "Product lifetime"
+#~ msgstr "Durée limite de consommation"
+
+#~ msgid "Product usetime"
+#~ msgstr "Durée limite d'utilisation optimale"
+
+#~ msgid "Alert Date"
+#~ msgstr "Date d'alerte"
+
+#~ msgid "Product removal time"
+#~ msgstr "Durée avant retrait"
+
+#~ msgid "Product alert time"
+#~ msgstr "Durée avant alerte"

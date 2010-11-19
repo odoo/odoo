@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Account Balance" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Account Balance.pdf">
+  <template pageSize="(595.0,842.0)" title="Account Balance" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="35.0" y1="35.0" width="525" height="772"/>
     </pageTemplate>
@@ -14,11 +14,11 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
- 	<blockTableStyle id="Table2">
+   <blockTableStyle id="Table2">
       <blockValign value="TOP"/>
       <blockAlignment value="RIGHT"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
-	<lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,-1"/>
     </blockTableStyle>
 
     <blockTableStyle id="Table8">
@@ -111,12 +111,12 @@
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-	 	<lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+     <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-		<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+    <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Account_Balance_Content">
       <blockAlignment value="LEFT"/>
@@ -148,11 +148,11 @@
     <paraStyle name="P7" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="P8" fontName="Helvetica"/>
     <paraStyle name="P9" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="P10" fontName="Helvetica-Bold" fontSize="8.0" leading="14" spaceBefore="0.0" spaceAfter="6.0" alignment="RIGHT"/>
+    <paraStyle name="P10" fontName="Helvetica-Bold" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="0.0" alignment="RIGHT"/>
     <paraStyle name="P11" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P12" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="P13" fontName="Helvetica-Bold" fontSize="2.0" leading="3" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0" textColor="#ffffff"/>
-      <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P15" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="P16" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P17" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
@@ -189,7 +189,7 @@
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Heading 3" fontName="Helvetica-Bold" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
-     <paraStyle name="P12a" fontName="Helvetica-Bold" fontSize="8.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12a" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <images/>
   </stylesheet>
   <story>
@@ -199,7 +199,7 @@
     <blockTable colWidths="525.0" style="Table_Tilte_Table">
       <tr>
         <td>
-          <para style="P15">Account Balance </para>
+          <para style="P15">Trial Balance </para>
         </td>
       </tr>
     </blockTable>
@@ -212,7 +212,7 @@
     <blockTable colWidths="130.0,80.0,100.0,140.0,90.0" style="Table8">
       <tr>
         <td><para style="terp_tblheader_General_Centre">[[ data['model']=='account.account' and 'Company'or removeParentNode('para') ]]</para>
-      	<para style="terp_tblheader_General_Centre"> [[ data['model']=='ir.ui.menu' and 'Chart of Account' or removeParentNode('para') ]]</para></td>
+        <para style="terp_tblheader_General_Centre"> [[ data['model']=='ir.ui.menu' and 'Chart of Account' or removeParentNode('para') ]]</para></td>
         <td>
           <para style="terp_tblheader_General_Centre">Fiscal Year</para>
         </td>
@@ -223,7 +223,7 @@
           <para style="terp_tblheader_General_Centre">Filter By <font>[[ get_filter(data)!='No Filter' and get_filter(data) ]]</font> </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Printing Date</para>
+          <para style="terp_tblheader_General_Centre">Target Moves</para>
         </td>
       </tr>
       <tr>
@@ -273,7 +273,7 @@
           </blockTable>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True)]]</para>
+          <para style="terp_default_Centre_8">[[ get_target_move(data) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -283,20 +283,20 @@
         <para style="P11">
       <font color="white"> </font>
     </para>
-  <blockTable colWidths="67,264.0,70.0,70.0,80.0" style="Table2" repeatRows="1">
+  <blockTable colWidths="80,215.0,80.0,80.0,80.0" style="Table2" repeatRows="1">
       <tr noRowsplits="1">
         <td><para style="P12a">Code</para></td>
         <td><para style="P12a">Account</para></td>
-        <td><para style="P10">Debit([[ company.currency_id.code]])</para></td>
-        <td><para style="P10">Credit([[ company.currency_id.code]])</para></td>
-        <td><para style="P10">Balance([[ company.currency_id.code]])</para></td>
+        <td><para style="P10">Debit</para></td>
+        <td><para style="P10">Credit</para></td>
+        <td><para style="P10">Balance</para></td>
       </tr>
       <tr>
-		<td><para style="P14">[[ repeatIn(lines(data['form']), 'a') ]]<font>[[ (a['level']&gt;2 and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><i>[[ a['code'] or removeParentNode('tr')  ]]</i></para></td>
-        <td><para style="P14"><font>[[ (a['level']&gt;2 and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font color="white">[[ '..'*(a['level']-1) ]]</font><font>[[ a['name'] ]]</font> </para></td>
-        <td><para style="P3"><font>[[ (a['level']&gt;2 and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['debit']) ]] [[ company.currency_id.symbol ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[formatLang(a['debit']) ]] [[ company.currency_id.symbol ]]</font></para></td>
-        <td><para style="P3"><font>[[ (a['level']&gt;2 and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font')]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['credit']) ]] [[ company.currency_id.symbol ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['credit']) ]] [[ company.currency_id.symbol ]]</font> </para></td>
-        <td><para style="P3"><font>[[ (a['level']&gt;2 and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['balance']) ]] [[ company.currency_id.symbol ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['balance']) ]] [[ company.currency_id.symbol ]]</font> </para></td>
+    <td><para style="P14">[[ repeatIn(lines(data['form']), 'a') ]]<font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><i>[[ a['code'] or removeParentNode('tr')  ]]</i></para></td>
+        <td><para style="P14"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font color="white">[[ '..'*(a['level']-1) ]]</font><font>[[ a['name'] ]]</font> </para></td>
+        <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['debit']) ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[formatLang(a['debit']) ]]</font></para></td>
+        <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font')]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['credit']) ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['credit']) ]]</font> </para></td>
+        <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['balance']) ]] [[ company.currency_id.symbol ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['balance']) ]] [[ company.currency_id.symbol ]]</font> </para></td>
       </tr>
     </blockTable>
     <para style="P11">

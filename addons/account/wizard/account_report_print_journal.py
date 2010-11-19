@@ -35,10 +35,10 @@ class account_print_journal(osv.osv_memory):
         'sort_selection': 'date',
     }
 
-    def _print_report(self, cr, uid, ids, data, query_line, context=None):
+    def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['sort_selection'])[0])
         return {'type': 'ir.actions.report.xml', 'report_name': 'account.journal.period.print', 'datas': data}
 

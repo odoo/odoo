@@ -31,15 +31,15 @@
                     <group>
                         <filter icon="terp-go-year" string="  Year  "
                             domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
-                            help="Idea Vote created last 365 days"/>
+                            help="Idea Vote created in curren year"/>
                         <filter icon="terp-go-month" string="   Month   "
-                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-%%m-01'))]"
-                            help="Idea Vote created in last 30 days"/>
+                            domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                            help="Idea Vote created in current month"/>
                         <filter icon="terp-go-month"
                              string="    Month-1    "
                              separator="1"
-                             domain="[('date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
-                             help="Idea Vote created last 7 days"/>
+                             domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                             help="Idea Vote created last month"/>
                          <separator orientation="vertical"/>
                          <filter icon="terp-go-today"
                              string="    Today    "
@@ -60,12 +60,12 @@
                             domain="[('idea_state','=',('cancel'))]"/>
                         <separator orientation="vertical"/>
                         <field name="idea_id" string="Idea"/>
-                        <field name="creater_id" string="creater"/>
+                        <field name="creater_id" string="Creator"/>
                         <field name="user_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="10" col="12">
-                        <filter string="creater" icon="terp-personal" context="{'group_by':'creater_id'}"/>
+                    <group expand="1" string="Group By..." colspan="10" col="12">
+                        <filter string="Creator" icon="terp-personal" context="{'group_by':'creater_id'}"/>
                         <filter string="User" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Idea" icon="terp-idea" context="{'group_by':'idea_id'}"/>
@@ -74,9 +74,9 @@
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" name="State" context="{'group_by':'idea_state'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
-                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
-                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Open Date"/>
+                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Open Date"/>
+                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Open Date"/>
                     </group>
                 </search>
             </field>
@@ -91,7 +91,7 @@
             <field name="context">{'search_default_User':1,'search_default_State':1,'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
 
-        <menuitem action="action_report_vote_all" id="menu_report_vote_all" parent="menu_idea_reporting" sequence="1" groups="base.group_tool_manager,base.group_system"/>
+        <menuitem action="action_report_vote_all" id="menu_report_vote_all" parent="menu_idea_reporting" sequence="1" groups="base.group_tool_manager"/>
     </data>
 </openerp>
 

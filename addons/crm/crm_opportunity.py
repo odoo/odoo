@@ -19,12 +19,10 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from osv import fields,osv,orm
+from osv import fields, osv
 from tools.translate import _
 import crm
 import time
-import mx.DateTime
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -72,7 +70,7 @@ class crm_opportunity(osv.osv):
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
-                message = _('The Opportunity') + " '" + name + "' "+ _("has been Won.")
+                message = _("The opportunity '%s' has been won.") % name
                 self.log(cr, uid, id, message)
         return res
 
@@ -86,16 +84,17 @@ class crm_opportunity(osv.osv):
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
         stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 0)]})
-        if not stage_id:
-            raise osv.except_osv(_('Warning !'), _('There is no stage for lost opportunities defined for this Sale Team.'))
-        value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
-        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+        value = {}
+        if stage_id:
+            value = self.onchange_stage_id(cr, uid, ids, stage_id, context={}).get('value', {})
+            value['stage_id'] = stage_id
+        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
 
         res = self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
-                message = _('The Opportunity') + " '" + name + "' "+ _("has been Lost.")
+                message = _("The opportunity '%s' has been marked as lost.") % name
                 self.log(cr, uid, id, message)
         return res
 
@@ -121,7 +120,7 @@ class crm_opportunity(osv.osv):
         """
         res = super(crm_opportunity, self).case_reset(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'stage_id': False})
-        return True
+        return res
    
  
     def case_open(self, cr, uid, ids, *args):
@@ -143,27 +142,14 @@ class crm_opportunity(osv.osv):
             @param uid: the current user’s ID for security checks,
             @param ids: List of stage’s IDs
             @stage_id: change state id on run time """
-
         if not stage_id:
             return {'value':{}}
 
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
+
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
-
-    def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context={}):
-        """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of stage’s IDs
-            @stage_id: change state id on run time """
-
-        if not partner_assigned_id:
-            return {'value':{'date_assign': False}}
-        else:
-            return {'value':{'date_assign': time.strftime('%Y-%m-%d')}}
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),

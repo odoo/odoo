@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 05:24:00+0000\n"
-"PO-Revision-Date: 2010-08-20 05:24:00+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:58+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,11 @@ msgstr ""
 #. module: decimal_precision
 #: field:decimal.precision,digits:0
 msgid "Digits"
+msgstr ""
+
+#. module: decimal_precision
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: decimal_precision
@@ -36,24 +41,24 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: decimal_precision
-#: view:decimal.precision:0
-msgid "Decimal Precision"
+#: model:ir.module.module,shortdesc:decimal_precision.module_meta_information
+msgid "Decimal Precision Configuration"
 msgstr ""
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
 #: model:ir.ui.menu,name:decimal_precision.menu_decimal_precision_form
-msgid "Decimal Accuracy Definitions"
+msgid "Decimal Accuracy"
 msgstr ""
 
 #. module: decimal_precision
-#: model:ir.module.module,description:decimal_precision.module_meta_information
-msgid "\n"
-"This module allows to configure the price accuracy you need for different kind\n"
-"of usage: accounting, sales, purchases, ...\n"
-"\n"
-"The decimal precision is configured per company.\n"
-""
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_decimal_precision
+msgid "decimal.precision"
 msgstr ""
 
 #. module: decimal_precision
@@ -67,12 +72,12 @@ msgid "Usage"
 msgstr ""
 
 #. module: decimal_precision
-#: model:ir.module.module,shortdesc:decimal_precision.module_meta_information
-msgid "Decimal Precision Configuration"
+#: view:decimal.precision:0
+msgid "Decimal Precision"
 msgstr ""
 
 #. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_decimal_precision
-msgid "decimal.precision"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

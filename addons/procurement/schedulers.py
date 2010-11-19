@@ -20,9 +20,11 @@
 ##############################################################################
 
 import time
-from mx import DateTime
-
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from osv import osv
+from tools.translate import _
+import tools
 import netsvc
 import pooler
 
@@ -44,94 +46,96 @@ class procurement_order(osv.osv):
         if not context:
             context = {}
 
-        if use_new_cursor:
-            cr = pooler.get_db(use_new_cursor).cursor()
-        wf_service = netsvc.LocalService("workflow")
-
-        procurement_obj = self.pool.get('procurement.order')
-        if not ids:
-            ids = procurement_obj.search(cr, uid, [], order="date_planned")
-        for id in ids:
-            wf_service.trg_validate(uid, 'procurement.order', id, 'button_restart', cr)
-        if use_new_cursor:
-            cr.commit()
-
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-        maxdate = DateTime.now() + DateTime.RelativeDateTime(days=company.schedule_range)
-        start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
-        offset = 0
-        report = []
-        report_total = 0
-        report_except = 0
-        report_later = 0
-        allids = self.search(cr, uid, [])
-        while True:
-            cr.execute('select id from procurement_order where state=%s and procure_method=%s order by priority,date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
-            ids = map(lambda x: x[0], cr.fetchall())
-            for proc in procurement_obj.browse(cr, uid, ids):
-                if (maxdate.strftime('%Y-%m-%d') >= proc.date_planned):
-                    wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
-                else:
-                    offset += 1
-                    report_later += 1
-            for proc in procurement_obj.browse(cr, uid, ids):
-                if proc.state == 'exception':
-                    report.append('PROC %d: on order - %3.2f %-5s - %s' % \
-                            (proc.id, proc.product_qty, proc.product_uom.name,
-                                proc.product_id.name))
-                    report_except += 1
-                report_total += 1
+        try:
             if use_new_cursor:
-                cr.commit()
+                cr = pooler.get_db(use_new_cursor).cursor()
+            wf_service = netsvc.LocalService("workflow")
+    
+            procurement_obj = self.pool.get('procurement.order')
             if not ids:
-                break
-
-        offset = 0
-        ids = []
-        while True:
-            report_ids = []
-            ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
-            for proc in procurement_obj.browse(cr, uid, ids):
-                if ((maxdate).strftime('%Y-%m-%d') >= proc.date_planned) :
-                    wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
-                    report_ids.append(proc.id)
-                else:
-                    report_later += 1
-                report_total += 1
-            for proc in procurement_obj.browse(cr, uid, report_ids):
-                if proc.state == 'exception':
-                    report.append('PROC %d: from stock - %3.2f %-5s - %s' % \
-                            (proc.id, proc.product_qty, proc.product_uom.name,
-                                proc.product_id.name,))
-                    report_except += 1
+                ids = procurement_obj.search(cr, uid, [], order="date_planned")
+            for id in ids:
+                wf_service.trg_validate(uid, 'procurement.order', id, 'button_restart', cr)
             if use_new_cursor:
                 cr.commit()
-            offset += len(ids)
-            if not ids: break
-        end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
-        if uid:
-            request = self.pool.get('res.request')
-            summary = '''Here is the procurement scheduling report.
+            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
+            maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+            start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
+            offset = 0
+            report = []
+            report_total = 0
+            report_except = 0
+            report_later = 0
+            while True:
+                cr.execute("select id from procurement_order where state='confirmed' and procure_method='make_to_order' order by priority,date_planned limit 500 offset %s", (offset,))
+                ids = map(lambda x: x[0], cr.fetchall())
+                for proc in procurement_obj.browse(cr, uid, ids):
+                    if maxdate >= proc.date_planned:
+                        wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
+                    else:
+                        offset += 1
+                        report_later += 1
+                for proc in procurement_obj.browse(cr, uid, ids):
+                    if proc.state == 'exception':
+                        report.append('PROC %d: on order - %3.2f %-5s - %s' % \
+                                (proc.id, proc.product_qty, proc.product_uom.name,
+                                    proc.product_id.name))
+                        report_except += 1
+                    report_total += 1
+                if use_new_cursor:
+                    cr.commit()
+                if not ids:
+                    break
+            offset = 0
+            ids = []
+            while True:
+                report_ids = []
+                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
+                for proc in procurement_obj.browse(cr, uid, ids):
+                    if maxdate >= proc.date_planned:
+                        wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
+                        report_ids.append(proc.id)
+                    else:
+                        report_later += 1
+                    report_total += 1
+                for proc in procurement_obj.browse(cr, uid, report_ids):
+                    if proc.state == 'exception':
+                        report.append('PROC %d: from stock - %3.2f %-5s - %s' % \
+                                (proc.id, proc.product_qty, proc.product_uom.name,
+                                    proc.product_id.name,))
+                        report_except += 1
+                if use_new_cursor:
+                    cr.commit()
+                offset += len(ids)
+                if not ids: break
+            end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
+            if uid:
+                request = self.pool.get('res.request')
+                summary = '''Here is the procurement scheduling report.
+    
+        Start Time: %s
+        End Time: %s
+        Total Procurements processed: %d
+        Procurements with exceptions: %d
+        Skipped Procurements (scheduled date outside of scheduler range) %d
+    
+        Exceptions:\n'''% (start_date, end_date, report_total, report_except, report_later)
+                summary += '\n'.join(report)
+                request.create(cr, uid,
+                    {'name': "Procurement Processing Report.",
+                        'act_from': uid,
+                        'act_to': uid,
+                        'body': summary,
+                    })
 
-    Computation Started; %s
-    Computation Finished; %s
-
-    Total procurement: %d
-    Exception procurement: %d
-    Not run now procurement: %d
-
-    Exceptions;
-    '''% (start_date, end_date, report_total, report_except, report_later)
-            summary += '\n'.join(report)
-            request.create(cr, uid,
-                {'name': "Procurement calculation report.",
-                    'act_from': uid,
-                    'act_to': uid,
-                    'body': summary,
-                })
-        if use_new_cursor:
-            cr.commit()
-            cr.close()
+            if use_new_cursor:
+                cr.commit()
+        finally:
+            if use_new_cursor:
+                try:
+                    cr.close()
+                except Exception:
+                    pass
         return {}
 
     def create_automatic_op(self, cr, uid, context=None):
@@ -162,7 +166,7 @@ class procurement_order(osv.osv):
                 if product.virtual_available >= 0.0:
                     continue
 
-                newdate = DateTime.now()
+                newdate = datetime.today()
                 if product.supply_method == 'buy':
                     location_id = warehouse.lot_input_id.id
                 elif product.supply_method == 'produce':
@@ -170,8 +174,8 @@ class procurement_order(osv.osv):
                 else:
                     continue
                 proc_id = proc_obj.create(cr, uid, {
-                    'name': 'Automatic OP: %s' % product.name,
-                    'origin': 'SCHEDULER',
+                    'name': _('Automatic OP: %s') % (product.name,),
+                    'origin': _('SCHEDULER'),
                     'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                     'product_id': product.id,
                     'product_qty': -product.virtual_available,
@@ -224,24 +228,18 @@ class procurement_order(osv.osv):
                     reste = qty % op.qty_multiple
                     if reste > 0:
                         qty += op.qty_multiple - reste
-                    newdate = DateTime.now() + DateTime.RelativeDateTime(
+                    newdate = datetime.today() + relativedelta(
                             days = int(op.product_id.seller_delay))
-                    if op.product_id.supply_method == 'buy':
-                        location_id = op.warehouse_id.lot_input_id
-                    elif op.product_id.supply_method == 'produce':
-                        location_id = op.warehouse_id.lot_stock_id
-                    else:
-                        continue
                     if qty <= 0:
                         continue
                     if op.product_id.type not in ('consu'):
                         proc_id = procurement_obj.create(cr, uid, {
-                            'name': 'OP:' + str(op.id),
+                            'name': op.name,
                             'date_planned': newdate.strftime('%Y-%m-%d'),
                             'product_id': op.product_id.id,
                             'product_qty': qty,
                             'product_uom': op.product_uom.id,
-                            'location_id': op.warehouse_id.lot_input_id.id,
+                            'location_id': op.location_id.id,
                             'procure_method': 'make_to_order',
                             'origin': op.name
                         })

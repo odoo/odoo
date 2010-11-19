@@ -26,7 +26,7 @@ from osv import osv
 class account_balance_report(osv.osv_memory):
     _inherit = "account.common.account.report"
     _name = 'account.balance.report'
-    _description = 'Account Balance Report'
+    _description = 'Trial Balance Report'
 
     _defaults = {
         'journal_ids': [],
@@ -43,8 +43,8 @@ class account_balance_report(osv.osv_memory):
         res['arch'] = etree.tostring(doc)
         return res
 
-    def _print_report(self, cr, uid, ids, data, query_line, context=None):
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+    def _print_report(self, cr, uid, ids, data, context=None):
+        data = self.pre_print_report(cr, uid, ids, data, context=context)
         return {'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data}
 
 account_balance_report()

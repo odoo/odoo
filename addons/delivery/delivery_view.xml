@@ -35,8 +35,9 @@
             <field name="res_model">delivery.carrier</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Create and manage the delivery method(s) you want your sales to be processed with. Each delivery method can be assigned to a pricelist which computes the price of the delivery according to the products sold or delivered.</field>
         </record>
-        <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery" groups="base.group_system"/>
+        <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery" groups="base.group_extended"/>
 
         <!-- Delivery Grids -->
         <record id="view_delivery_grid_tree" model="ir.ui.view">
@@ -84,6 +85,7 @@
             <field name="res_model">delivery.grid</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">The delivery pricelist allows you to compute the cost and sales price of the delivery based on the weight of the products and other criteria. You can define several pricelists for one delivery method, for each region such as countries or a zone in a specific country defined by a zip code range.</field>
         </record>
         <menuitem action="action_delivery_grid_form" id="menu_action_delivery_grid_form" parent="menu_delivery"/>
 
@@ -175,22 +177,6 @@
             </field>
         </record>
 
-        <record id="view_picking_withcarrier_delivery_form" model="ir.ui.view">
-            <field name="name">delivery.stock.picking_withcarrier.delivery.form.view</field>
-            <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_delivery_form"/>
-            <field name="arch" type="xml">
-                <field name="address_id" position="after">
-                    <field name="carrier_id"/>
-                    <field name="carrier_tracking_ref" groups="base.group_extended"/>
-                    <field name="number_of_packages" groups="base.group_extended"/>
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </field>
-            </field>
-        </record>
-
         <record id="action_picking_tree4" model="ir.actions.act_window">
             <field name="name">Picking to be invoiced</field>
             <field name="res_model">stock.picking</field>
@@ -242,29 +228,19 @@
             </field>
         </record>
 
-        <record id="view_picking_withcarrier_delivery_move_form" model="ir.ui.view">
-            <field name="name">delivery.stock.picking_withcarrier.delivery.move.form.view</field>
-            <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_delivery_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_move_withweight_form" model="ir.ui.view">
             <field name="name">stock.move.form.weight</field>
             <field name="type">form</field>
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                <field name="product_uom" position="after">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </field>
+                <group colspan="2" col="2" position="after">
+                    <group colspan="2" col="2" groups="base.group_extended">
+                        <separator string="Weights" colspan="2"/>
+                        <field name="weight"/>
+                        <field name="weight_net"/>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -274,10 +250,13 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form_reception_picking"/>
             <field name="arch" type="xml">
-                <field name="product_uom" position="after">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </field>
+                <group colspan="2" col="2" position="after">
+                    <group colspan="2" col="2" groups="base.group_extended">
+                        <separator string="Weights" colspan="2"/>
+                        <field name="weight"/>
+                        <field name="weight_net"/>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -286,8 +265,8 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                    <xpath expr="/form/notebook/page[@string='Sale Order']/group[1]/button[@name='button_dummy']" position="after">
-                         <button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-add" context="{'order_id':id}"/>                    
+                    <xpath expr="/form/notebook/page[@string='Sales Order']/group[1]/button[@name='button_dummy']" position="after">
+                         <button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-add" context="{'order_id':active_id}"/>                    
                     </xpath>
             </field>
         </record>

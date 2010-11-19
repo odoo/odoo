@@ -1,5 +1,30 @@
 # Control Processors for our dialog.
 
+# This module is part of the spambayes project, which is Copyright 2003
+# The Python Software Foundation and is covered by the Python Software
+# Foundation license.
+
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 import win32gui, win32api, win32con
 import commctrl
 import struct, array
@@ -86,21 +111,6 @@ class RadioButtonProcessor(ControlProcessor):
             conn = self.func()
             conn.setitem('protocol', text)
             p=conn.getitem('protocol')
-
-#    def OnCommand(self, wparam, lparam):
-#        win32ui.MessageBox("clicked===",'')
-#        code = win32api.HIWORD(wparam)
-#        id = win32api.LOWORD(wparam)
-#        win32ui.MessageBox("clicked===",'')
-#        if code == win32con.BN_CLICKED:
-#            win32ui.MessageBox("clicked===",'')
-#            import win32ui
-#            conn = self.func()
-#            win32ui.MessageBox("clicked===",'')
-#            text=win32gui.GetDlgItemText(self.window.hwnd, self.control_id)
-#            win32ui.MessageBox("clicked===",'')
-#            conn.setitem('protocol', text)
-#            win32ui.MessageBox("clicked==="+text,'')
 
 class CloseButtonProcessor(ButtonProcessor):
     def OnClicked(self, id):

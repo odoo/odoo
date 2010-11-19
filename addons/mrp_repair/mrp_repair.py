@@ -19,12 +19,10 @@
 #
 ##############################################################################
 
-import time
 from osv import fields,osv
 import netsvc
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, today, DateTime, localtime
-from tools import config
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from tools.translate import _
 import decimal_precision as dp
 
@@ -45,6 +43,7 @@ class mrp_repair(osv.osv):
         """
         res = {}
         cur_obj = self.pool.get('res.currency')
+
         for repair in self.browse(cr, uid, ids):
             res[repair.id] = 0.0
             for line in repair.operations:
@@ -62,6 +61,7 @@ class mrp_repair(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
+        #return {}.fromkeys(ids, 0)
         cur_obj = self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
         for repair in self.browse(cr, uid, ids):
@@ -93,12 +93,31 @@ class mrp_repair(osv.osv):
             cur = repair.pricelist_id.currency_id
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res
+    
+    def _get_default_address(self, cr, uid, ids, field_name, arg, context):
+        res = {}
+        partner_obj = self.pool.get('res.partner')
+        for data in self.browse(cr, uid, ids):
+            adr_id = False
+            if data.partner_id:
+                adr_id = partner_obj.address_get(cr, uid, [data.partner_id.id], ['default'])['default']
+            res[data.id] = adr_id
+        return res
+
+    def _get_lines(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        result = {}
+        for line in self.pool.get('mrp.repair.line').browse(cr, uid, ids, context=context):
+            result[line.repair_id.id] = True
+        return result.keys()
 
     _columns = {
         'name': fields.char('Repair Reference',size=24, required=True),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'partner_id' : fields.many2one('res.partner', 'Partner', select=True, help='This field allow you to choose the parner that will be invoiced and delivered'),
         'address_id': fields.many2one('res.partner.address', 'Delivery Address', domain="[('partner_id','=',partner_id)]"),
+        'default_address_id': fields.function(_get_default_address, method=True, type="many2one", relation="res.partner.address"),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, domain="[('product_id','=',product_id)]"),
         'state': fields.selection([
             ('draft','Quotation'),
@@ -109,7 +128,7 @@ class mrp_repair(osv.osv):
             ('invoice_except','Invoice Exception'),
             ('done','Done'),
             ('cancel','Cancel')
-            ], 'Repair State', readonly=True,
+            ], 'State', readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' state is used when a user confirms the repair order. \
             \n* The \'Ready to Repair\' state is used to start to repairing, user can start repairing only after repair order is confirmed. \
@@ -137,9 +156,21 @@ class mrp_repair(osv.osv):
         'deliver_bool': fields.boolean('Deliver', help="Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a picking with selected product. Note that you can select the locations in the Info tab, if you have the extended view."),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'repaired': fields.boolean('Repaired', readonly=True),
-        'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
-        'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
-        'amount_total': fields.function(_amount_total, method=True, string='Total'),
+        'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount',
+            store={
+                'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
+                'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
+            }),
+        'amount_tax': fields.function(_amount_tax, method=True, string='Taxes',
+            store={
+                'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
+                'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
+            }),
+        'amount_total': fields.function(_amount_total, method=True, string='Total',
+            store={
+                'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
+                'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
+            }),
     }
 
     _defaults = {
@@ -162,7 +193,6 @@ class mrp_repair(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
         })
         return super(mrp_repair, self).copy(cr, uid, id, default, context)
-
 
     def onchange_product_id(self, cr, uid, ids, product_id=None):
         """ On change of product sets some values.
@@ -192,8 +222,7 @@ class mrp_repair(osv.osv):
         if move_id:
             move =  self.pool.get('stock.move').browse(cr, uid, move_id)
             product = self.pool.get('product.product').browse(cr, uid, prod_id)
-            date = move.date_planned
-            limit = mx.DateTime.strptime(date, '%Y-%m-%d %H:%M:%S') + RelativeDateTime(months=product.warranty)
+            limit = datetime.strptime(move.date_expected, '%Y-%m-%d %H:%M:%S') + relativedelta(months=product.warranty)
             data['value']['guarantee_limit'] = limit.strftime('%Y-%m-%d')
             data['value']['location_id'] = move.location_dest_id.id
             data['value']['location_dest_id'] = move.location_dest_id.id
@@ -242,7 +271,6 @@ class mrp_repair(osv.osv):
         @param product_id: Product id from current record.
         @return: Dictionary of values.
         """
-        prodlot_obj = self.pool.get('stock.production.lot')
         move_obj = self.pool.get('stock.move')
         data = {}
         data['value'] = {
@@ -254,7 +282,6 @@ class mrp_repair(osv.osv):
 
         if not lot:
             return data
-        lot_info = prodlot_obj.browse(cr, uid, lot)
         move_ids = move_obj.search(cr, uid, [('prodlot_id', '=', lot)])
 
         if not len(move_ids):
@@ -307,7 +334,6 @@ class mrp_repair(osv.osv):
         """ Cancels repair order.
         @return: True
         """
-        ok=True
         mrp_line_obj = self.pool.get('mrp.repair.line')
         for repair in self.browse(cr, uid, ids):
             mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'})
@@ -401,7 +427,7 @@ class mrp_repair(osv.osv):
                             raise osv.except_osv(_('Warning !'), _('No product defined on Fees!'))
                         
                         if fee.product_id.property_account_income:
-                            account_id = fee.product_id.property_account_income
+                            account_id = fee.product_id.property_account_income.id
                         elif fee.product_id.categ_id.property_account_income_categ:
                             account_id = fee.product_id.categ_id.property_account_income_categ.id
                         else:
@@ -475,7 +501,7 @@ class mrp_repair(osv.osv):
         return True
 
     def wkf_repair_done(self, cr, uid, ids, *args):
-        res = self.action_repair_done(cr, uid, ids)
+        self.action_repair_done(cr, uid, ids)
         return True
 
     def action_repair_done(self, cr, uid, ids, context=None):
@@ -488,7 +514,6 @@ class mrp_repair(osv.osv):
         repair_line_obj = self.pool.get('mrp.repair.line')
         seq_obj = self.pool.get('ir.sequence')
         pick_obj = self.pool.get('stock.picking')
-        company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for repair in self.browse(cr, uid, ids, context=context):
             for move in repair.operations:
                 move_id = move_obj.create(cr, uid, {
@@ -654,26 +679,27 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         """
         if not type:
             return {'value': {
-                        'location_id': False,
-                        'location_dest_id': False
-                    }
-            }
-        produc_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
-        if type == 'add':
-            stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
-            to_invoice = False
-            if guarantee_limit and today() > mx.DateTime.strptime(guarantee_limit, '%Y-%m-%d'):
-                to_invoice=True
-            return {'value': {
-                        'to_invoice': to_invoice,
-                        'location_id': stock_id,
-                        'location_dest_id': produc_id
-                    }
-            }
-        return {'value': {
-                'to_invoice': False,
-                'location_id': produc_id,
+                'location_id': False,
                 'location_dest_id': False
+                }
+            }
+
+        product_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
+        if type != 'add':
+            return {'value': {
+                'to_invoice': False,
+                'location_id': product_id,
+                'location_dest_id': False
+                }
+            }
+
+        stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
+        to_invoice = (guarantee_limit and
+                      datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
+        return {'value': {
+            'to_invoice': to_invoice,
+            'location_id': stock_id,
+            'location_dest_id': product_id
             }
         }
 

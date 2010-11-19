@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2009 Sharoon Thomas
-#    Copyright (C) 2004-2010 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2010-2010 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,10 +23,10 @@
 {
     "name" : "Email Template for OpenERP",
     "version" : "0.7 RC",
-    "author" : "Sharoon Thomas, Openlabs",
+    "author" : "Openlabs",
     "website" : "http://openerp.com",
     "category" : "Added functionality",
-    "depends" : ['base'],
+    "depends" : ['marketing'],
     "description": """
     Email Template is extraction of Power Email basically just to send the emails.
     """,

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 06:56:26+0000\n"
-"PO-Revision-Date: 2010-08-20 06:56:26+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:18+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -41,6 +41,11 @@ msgid "Knowledge Management System"
 msgstr ""
 
 #. module: knowledge
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: knowledge
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
 msgstr ""
@@ -56,6 +61,16 @@ msgid "Knowledge"
 msgstr ""
 
 #. module: knowledge
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: knowledge
+#: help:knowledge.installer,document_ftp:0
+msgid "Provides an FTP access to your OpenERP's Document Management System. It lets you access attachments and virtual documents through a standard FTP client."
+msgstr ""
+
+#. module: knowledge
 #: help:knowledge.installer,document_webdav:0
 msgid "Provides a WebDAV access to your OpenERP's Document Management System. Lets you access attachments and virtual documents through your standard file browser."
 msgstr ""
@@ -68,11 +83,6 @@ msgstr ""
 #. module: knowledge
 #: view:knowledge.installer:0
 msgid "title"
-msgstr ""
-
-#. module: knowledge
-#: help:knowledge.installer,document_ftp:0
-msgid "Provides an FTP access to your OpenERP's Document Management System. Lets you access attachments and virtual documents through a standard FTP client."
 msgstr ""
 
 #. module: knowledge
@@ -92,23 +102,8 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
-msgid "Knowledge Modules Installation"
-msgstr ""
-
-#. module: knowledge
-#: view:ir.actions.todo:0
-msgid "Launch"
-msgstr ""
-
-#. module: knowledge
 #: field:knowledge.installer,wiki_quality_manual:0
 msgid "Quality Manual"
-msgstr ""
-
-#. module: knowledge
-#: view:knowledge.installer:0
-msgid "Templates of Content"
 msgstr ""
 
 #. module: knowledge
@@ -127,13 +122,13 @@ msgid "Internal FAQ"
 msgstr ""
 
 #. module: knowledge
-#: model:ir.ui.menu,name:knowledge.menu_document2
-msgid "Collaborative Content"
+#: field:knowledge.installer,config_logo:0
+msgid "Image"
 msgstr ""
 
 #. module: knowledge
-#: field:knowledge.installer,config_logo:0
-msgid "Image"
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
+msgid "Knowledge Application Configuration"
 msgstr ""
 
 #. module: knowledge
@@ -144,5 +139,15 @@ msgstr ""
 #. module: knowledge
 #: help:knowledge.installer,wiki:0
 msgid "Lets you create wiki pages and page groups in order to keep track of business knowledge and share it with and  between your employees."
+msgstr ""
+
+#. module: knowledge
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: knowledge
+#: view:knowledge.installer:0
+msgid "Content templates"
 msgstr ""
 

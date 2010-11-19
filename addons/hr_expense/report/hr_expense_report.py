@@ -48,8 +48,8 @@ class hr_expense_report(osv.osv):
         'user_id':fields.many2one('res.users', 'Validation User', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
-        'delay_valid':fields.float('Delay Valid', readonly=True),
-        'delay_confirm':fields.float('Delay Confirm', readonly=True),
+        'delay_valid':fields.float('Delay to Valid', readonly=True),
+        'delay_confirm':fields.float('Delay to Confirm', readonly=True),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account',readonly=True),
         'price_average':fields.float('Average Price', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
@@ -71,7 +71,7 @@ class hr_expense_report(osv.osv):
             create or replace view hr_expense_report as (
                  select
                      min(l.id) as id,
-                     date_trunc('day',s.create_date) as date,
+                     date_trunc('day',s.date) as date,
                      s.employee_id,
                      s.journal_id,
                      s.currency_id,
@@ -100,7 +100,7 @@ class hr_expense_report(osv.osv):
                  left join hr_expense_expense s on (s.id=l.expense_id)
                  left join product_uom u on (u.id=l.uom_id)
                  group by
-                     date_trunc('day',s.create_date),
+                     date_trunc('day',s.date),
                      to_char(date_trunc('day',s.create_date), 'YYYY'),
                      to_char(date_trunc('day',s.create_date), 'MM'),
                      to_char(date_trunc('day',s.create_date), 'YYYY-MM-DD'),
@@ -120,5 +120,7 @@ class hr_expense_report(osv.osv):
                      s.employee_id
             )
         """)
+
 hr_expense_report()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

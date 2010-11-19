@@ -1,11 +1,11 @@
 -
   This scenario tests the delegation process. Closing all the delegated tasks(task delegation at multiple levels) transits the parent task from pending to open state.  
 - 
-  Creating a project OpenERP Documentaion
+  Creating a project OpenERP Documentation
 - 
-  !record {model: project.project, id: project_project_openerpdocumentaion0}:
+  !record {model: project.project, id: project_project_openerpdocumentation0}:
     company_id: base.main_company
-    name: OpenERP Documentaion    
+    name: OpenERP Documentation    
     
 - 
   Creating a task 'Develop book for Technical and Functional reference'
@@ -13,7 +13,7 @@
   !record {model: project.task, id: project_task_documentation_book}:
     name: Develop book for Technical and Functional reference
     planned_hours: 20.0
-    project_id: project_project_openerpdocumentaion0
+    project_id: project_project_openerpdocumentation0
     remaining_hours: 20.0
     state: draft
     
@@ -31,7 +31,7 @@
   !record {model: project.task, id: project_task_publish_book}:
     name: Publish the References
     planned_hours: 10.0
-    project_id: project_project_openerpdocumentaion0
+    project_id: project_project_openerpdocumentation0
     remaining_hours: 10.0
     state: draft
     
@@ -77,7 +77,7 @@
   !record {model: project.task, id: project_task_delegate_openerp_tutorial}:
     name: Prepare a book that gives functional overview of OpenERP
     planned_hours: 30.0
-    project_id: project.project_project_openerpdocumentaion0
+    project_id: project.project_project_openerpdocumentation0
     remaining_hours: 30.0
     state: draft
     
@@ -95,7 +95,7 @@
   !record {model: project.task, id: project_task_delegate_developer_book}:
     name: Prepare a technical reference for creating your modules
     planned_hours: 30.0
-    project_id: project_project_openerpdocumentaion0
+    project_id: project_project_openerpdocumentation0
     remaining_hours: 30.0
     state: draft
  
@@ -123,7 +123,7 @@
   !record {model: project.task, id: project_task_delegate_module_develop}:
     name: Prepare documentation for Module Development
     planned_hours: 30.0
-    project_id: project.project_project_openerpdocumentaion0
+    project_id: project.project_project_openerpdocumentation0
     remaining_hours: 30.0
     state: draft
     
@@ -134,7 +134,7 @@
   !record {model: project.task, id: project_task_delegate_business_process_develop}:
     name: Prepare documentation for Business Process Development
     planned_hours: 30.0
-    project_id: project_project_openerpdocumentaion0
+    project_id: project_project_openerpdocumentation0
     remaining_hours: 30.0
     state: draft
 
@@ -204,7 +204,7 @@
        - state == "pending"
                  
 - 
-  Close the child project 'Prepare a technical reference for creating your modules'
+  Close the child task 'Prepare a technical reference for creating your modules'
 - 
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_delegate_developer_book")], {"lang": "en_US",
@@ -214,7 +214,7 @@
       })
       
 - 
-  Close the child project 'Prepare a book that gives functional overview of OpenERP' 
+  Close the child task 'Prepare a book that gives functional overview of OpenERP' 
 - 
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_delegate_openerp_tutorial")], {"lang": "en_US",

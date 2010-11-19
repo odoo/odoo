@@ -7,14 +7,41 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-02 15:02+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"PO-Revision-Date: 2010-10-09 14:32+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:51+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: account
+#: field:account.partner.balance,result_selection:0
+#: field:account.aged.trial.balance,result_selection:0
+#: field:account.partner.ledger,result_selection:0
+msgid "Partner's"
+msgstr ""
+
+#. module: account
+#: field:account.partner.balance,display_partner:0
+msgid "Display Partners"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_account_pl_report
+msgid "Profit And Loss"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_account_bs_report
+msgid "Balance Sheet"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_general_Balance_report
+msgid  "Trial Balance"
+msgstr ""
 
 #. module: account
 #: field:account.tax.template,description:0
@@ -40,12 +67,12 @@ msgstr "تشفير المدخلات"
 #. module: account
 #: model:ir.actions.todo,note:account.config_wizard_account_base_setup_form
 msgid "Specify The Message for the Overdue Payment Report."
-msgstr ""
+msgstr "تحديد الرسالة لتقرير الدفع المتأخر"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement from draft"
-msgstr ""
+msgstr "تأكيد الحساب من المسودة"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_asset
@@ -55,17 +82,17 @@ msgstr "أصل"
 #. module: account
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "اسم النموذج غير صالح في تعريف العمل."
 
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr ""
+msgstr "العملة المستعملة لإدخال البيان"
 
 #. module: account
 #: wizard_view:account_use_models,init_form:0
 msgid "Select Message"
-msgstr ""
+msgstr "اختر رسالة"
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
@@ -73,54 +100,55 @@ msgid ""
 "This account will be used to value incoming stock for the current product "
 "category"
 msgstr ""
+"سيتم استخدام هذا الحساب لتقييم المؤن الواردة بالنسبة لفئة المنتج الحالي"
 
 #. module: account
 #: help:account.invoice,period_id:0
 msgid "Keep empty to use the period of the validation(invoice) date."
-msgstr ""
+msgstr "الإبقاء فارغ لاستخدام فترة تاريخ المصادقة (الفاتورة)"
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,reconcile:0
 msgid "Reconciliation result"
-msgstr ""
+msgstr "نتيجة التسوية"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled entries"
-msgstr ""
+msgstr "إدخالات لم يتم تسويتها"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
 #: field:account.tax,base_code_id:0
 #: field:account.tax.template,base_code_id:0
 msgid "Base Code"
-msgstr ""
+msgstr "رمز الأساس"
 
 #. module: account
 #: view:account.account:0
 msgid "Account Statistics"
-msgstr ""
+msgstr "إحصائيات الحساب"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_vat_declaration
 #: model:ir.ui.menu,name:account.menu_wizard_vat_declaration
 msgid "Print Taxes Report"
-msgstr ""
+msgstr "طباعة تقرير الضرائب"
 
 #. module: account
 #: field:account.account,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "أصل"
 
 #. module: account
 #: selection:account.move,type:0
 msgid "Journal Voucher"
-msgstr ""
+msgstr "قسيمة الدفتر"
 
 #. module: account
 #: field:account.invoice,residual:0
 msgid "Residual"
-msgstr ""
+msgstr "متبقي"
 
 #. module: account
 #: field:account.tax,base_sign:0
@@ -128,18 +156,18 @@ msgstr ""
 #: field:account.tax.template,base_sign:0
 #: field:account.tax.template,ref_base_sign:0
 msgid "Base Code Sign"
-msgstr ""
+msgstr "علامة رمز الأساس"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
 #: model:ir.ui.menu,name:account.menu_unreconcile_select
 msgid "Unreconcile entries"
-msgstr ""
+msgstr "إلغاء تسوية الإدخالات"
 
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr ""
+msgstr "خظأ! إن مدة الفترة أو الفترات غير صالحة "
 
 #. module: account
 #: view:account.bank.statement.reconcile:0
@@ -149,17 +177,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_move_line_form
 #: model:ir.ui.menu,name:account.menu_action_move_line_form
 msgid "Entries"
-msgstr ""
+msgstr "إدخالات"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Debit Centralisation"
-msgstr ""
+msgstr "تمركز المدين"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_invoice_state_confirm
 msgid "Confirm draft invoices"
-msgstr ""
+msgstr "تثبيت مشاريع الفواتير"
 
 #. module: account
 #: help:account.payment.term.line,days2:0
@@ -168,11 +196,14 @@ msgid ""
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
 msgstr ""
+"يوم الشهر، إدخال -1 من أجل آخر يوم من الشهر الحالي. إذا كان إيجابيا  فسيعطي "
+"اليوم من الشهر القادم. إدخال 0 من أجل أيام صافية (وإلا فإنه يستند إلى بداية "
+"الشهر)."
 
 #. module: account
 #: view:account.move:0
 msgid "Total Credit"
-msgstr ""
+msgstr "مجموع المدين"
 
 #. module: account
 #: field:account.config.wizard,charts:0
@@ -190,39 +221,39 @@ msgstr ""
 #: rml:account.third_party_ledger:0
 #: rml:account.third_party_ledger_other:0
 msgid "Entry label"
-msgstr ""
+msgstr "تسمية المدخل"
 
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
 msgid "Account Model Entries"
-msgstr ""
+msgstr "إدخالات نماذج الحسابات"
 
 #. module: account
 #: field:account.tax.code,sum_period:0
 msgid "Period Sum"
-msgstr ""
+msgstr "مجموع الفترة"
 
 #. module: account
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Compute Code (if type=code)"
-msgstr ""
+msgstr "رمز الحساب (إذا كان النوع = الرمز)"
 
 #. module: account
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr ""
+msgstr "خط إدخال الحساب"
 
 #. module: account
 #: wizard_view:account.aged.trial.balance,init:0
 msgid "Aged Trial Balance"
-msgstr ""
+msgstr "ميزان المراجعة القديم"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurrent Entries"
-msgstr ""
+msgstr "إدخالات متكررة"
 
 #. module: account
 #: field:account.analytic.line,amount:0
@@ -235,19 +266,19 @@ msgstr ""
 #: field:account.tax.template,amount:0
 #: xsl:account.transfer:0
 msgid "Amount"
-msgstr ""
+msgstr "المبلغ"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
 #: model:ir.actions.wizard,name:account.wizard_third_party_ledger
 #: model:ir.ui.menu,name:account.menu_third_party_ledger
 msgid "Partner Ledger"
-msgstr ""
+msgstr "دفتر الشركاء"
 
 #. module: account
 #: field:product.template,supplier_taxes_id:0
 msgid "Supplier Taxes"
-msgstr ""
+msgstr "ضرائب المورد"
 
 #. module: account
 #: view:account.move:0
@@ -516,6 +547,16 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.chart,init,target_move:0
+#: field:account.common.report,target_move:0
+#: field:account.report.general.ledger,target_move:0
+#: field:account.balance.report,target_move:0
+#: field:account.pl.report,target_move:0
+#: field:account.bs.report,target_move:0
+#: field:account.print.journal,target_move:0
+#: field:account.general.journal,target_move:0
+#: field:account.central.journal,target_move:0
+#: field:account.partner.balance,target_move:0
+#: field:account.partner.ledger,target_move:0
 msgid "Target Moves"
 msgstr ""
 
@@ -610,7 +651,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
-msgid "Fiscal Position Accounts Mapping"
+msgid "Accounts Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -926,14 +967,6 @@ msgid "Quantity"
 msgstr ""
 
 #. module: account
-#: wizard_field:account.account.balance.report,checktype,date_to:0
-#: wizard_field:account.general.ledger.report,checktype,date_to:0
-#: wizard_field:account.partner.balance.report,init,date2:0
-#: wizard_field:account.third_party_ledger.report,init,date2:0
-msgid "End date"
-msgstr ""
-
-#. module: account
 #: field:account.invoice.tax,base_amount:0
 msgid "Base Code Amount"
 msgstr ""
@@ -1004,7 +1037,7 @@ msgstr ""
 #: field:account.invoice,fiscal_position:0
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
-msgid "Fiscal Position"
+msgid "Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -1015,6 +1048,7 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,page_split:0
+#: field:account.partner.ledger,page_split:0
 msgid "One Partner Per Page"
 msgstr ""
 
@@ -1026,7 +1060,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
-msgid "Fiscal Position Taxes Mapping"
+msgid "Taxes Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -1113,7 +1147,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
-msgid "Fiscal Position Templates"
+msgid "Fiscal Mapping Templates"
 msgstr ""
 
 #. module: account
@@ -1145,7 +1179,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
-msgid "Fiscal Position Template"
+msgid "Fiscal Mapping Template"
 msgstr ""
 
 #. module: account
@@ -1211,7 +1245,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Fiscal Position Template Account Mapping"
+msgid "Template Account Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -1422,13 +1456,13 @@ msgid "Display History"
 msgstr ""
 
 #. module: account
-#: wizard_field:account.third_party_ledger.report,init,date1:0
-msgid "        Start date"
-msgstr ""
-
-#. module: account
 #: wizard_field:account.account.balance.report,checktype,display_account:0
 #: wizard_field:account.general.ledger.report,checktype,display_account:0
+#: field:account.common.report,display_account:0
+#: field:account.report.general.ledger,display_account:0
+#: field:account.balance.report,display_account:0
+#: field:account.pl.report,display_account:0
+#: field:account.bs.report,display_account:0
 msgid "Display accounts "
 msgstr ""
 
@@ -1644,6 +1678,16 @@ msgstr ""
 #: view:account.journal.period:0
 #: model:ir.actions.act_window,name:account.action_account_journal_period_tree
 #: model:ir.ui.menu,name:account.menu_action_account_journal_period_tree
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
 msgid "Journals"
 msgstr ""
 
@@ -1789,7 +1833,7 @@ msgstr ""
 #. module: account
 #: help:res.partner,property_account_position:0
 msgid ""
-"The fiscal position will determine taxes and the accounts used for the the "
+"The fiscal mapping will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
 
@@ -1833,12 +1877,37 @@ msgstr ""
 #: wizard_button:account.partner.balance.report,init,report:0
 #: wizard_button:account.print.journal.report,init,print:0
 #: wizard_button:account.third_party_ledger.report,init,checkreport:0
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.partner.balance:0
+#: view:account.aged.trial.balance:0
+#: view:account.partner.ledger:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
 msgid "Print"
 msgstr ""
 
 #. module: account
 #: wizard_field:account.account.balance.report,checktype,date_from:0
-msgid "Start date"
+#: field:account.config.wizard,date1:0
+#: field:account.fiscalyear,date_start:0
+#: field:account.subscription,date_start:0
+#: field:account.common.report,date_from:0
+#: field:account.report.general.ledger,date_from:0
+#: field:account.balance.report,date_from:0
+#: field:account.pl.report,date_from:0
+#: field:account.bs.report,date_from:0
+#: field:account.print.journal,date_from:0
+#: field:account.general.journal,date_from:0
+#: field:account.central.journal,date_from:0
+#: field:account.partner.balance,date_from:0
+#: field:account.partner.ledger,date_from:0
+#: field:account.aged.trial.balance,date_from:0 
+msgid "Start Date"
 msgstr ""
 
 #. module: account
@@ -1920,7 +1989,13 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,sortbydate:0
-msgid "Sort by:"
+#: field:account.report.general.ledger,sortby:0
+msgid "Sort By:"
+msgstr ""
+
+#. module: account
+#: field:account.vat.declaration,chart_tax_id:0
+msgid "Chart of Tax"
 msgstr ""
 
 #. module: account
@@ -1967,11 +2042,6 @@ msgstr ""
 #. module: account
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: account
-#: wizard_field:account.partner.balance.report,init,date1:0
-msgid "          Start date"
 msgstr ""
 
 #. module: account
@@ -2060,7 +2130,7 @@ msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
-msgid "Fiscal Position Remark :"
+msgid "Fiscal Mapping Remark :"
 msgstr ""
 
 #. module: account
@@ -2476,6 +2546,10 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,landscape:0
+#: field:account.common.report,landscape:0
+#: field:account.report.general.ledger,landscape:0
+#: field:account.pl.report,landscape:0
+#: field:account.bs.report,landscape:0
 msgid "Landscape Mode"
 msgstr ""
 
@@ -2531,7 +2605,40 @@ msgstr ""
 #: wizard_button:account_use_models,init_form,end:0
 #: view:wizard.company.setup:0
 #: view:wizard.multi.charts.accounts:0
+#: view:account.period.close:0
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.partner.balance:0
+#: view:account.aged.trial.balance:0
+#: view:account.partner.ledger:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.vat.declaration:0
 msgid "Cancel"
+msgstr ""
+
+#. module: account
+#: view:account.vat.declaration:0
+msgid "Print Tax Statement"
+msgstr ""
+
+#. module: account
+#: field:account.common.report,chart_account_id:0
+#: field:account.report.general.ledger,chart_account_id:0
+#: field:account.balance.report,chart_account_id:0
+#: field:account.pl.report,chart_account_id:0
+#: field:account.bs.report,chart_account_id:0
+#: field:account.print.journal,chart_account_id:0
+#: field:account.general.journal,chart_account_id:0
+#: field:account.central.journal,chart_account_id:0
+#: field:account.partner.balance,chart_account_id:0
+#: field:account.aged.trial.balance,chart_account_id:0
+#: field:account.partner.ledger,chart_account_id:0
+msgid "Chart of account"
 msgstr ""
 
 #. module: account
@@ -2759,6 +2866,7 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.aged.trial.balance,init,direction_selection:0
+#: field:account.aged.trial.balance,direction_selection:0
 msgid "Analysis Direction"
 msgstr ""
 
@@ -3494,6 +3602,18 @@ msgstr ""
 #: wizard_field:account.general.ledger.report,checktype,fiscalyear:0
 #: wizard_field:account.partner.balance.report,init,fiscalyear:0
 #: wizard_field:account.third_party_ledger.report,init,fiscalyear:0
+#: field:account.common.report,fiscalyear_id:0
+#: field:account.report.general.ledger,fiscalyear_id:0
+#: field:account.balance.report,fiscalyear_id:0
+#: field:account.pl.report,fiscalyear_id:0
+#: field:account.bs.report,fiscalyear_id:0
+#: field:account.print.journal,fiscalyear_id:0
+#: field:account.general.journal,fiscalyear_id:0
+#: field:account.central.journal,fiscalyear_id:0
+#: field:account.partner.balance,fiscalyear_id:0
+#: field:account.aged.trial.balance,fiscalyear_id:0
+#: field:account.partner.ledger,fiscalyear_id:0
+#: field:account.vat.declaration,fiscalyear_id:0
 msgid "Fiscal year"
 msgstr ""
 
@@ -3536,6 +3656,11 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,amount_currency:0
+#: field:account.report.general.ledger,amount_currency:0
+#: field:account.print.journal,amount_currency:0
+#: field:account.general.journal,amount_currency:0
+#: field:account.central.journal,amount_currency:0
+#: field:account.partner.ledger,amount_currency:0
 msgid "With Currency"
 msgstr ""
 
@@ -3626,7 +3751,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
+msgid "Template for Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -3706,10 +3831,8 @@ msgid "Account Configure Wizard "
 msgstr ""
 
 #. module: account
-#: field:account.config.wizard,date1:0
-#: field:account.fiscalyear,date_start:0
-#: field:account.subscription,date_start:0
-msgid "Start Date"
+#: field:account.aged.trial.balance,period_length:0 
+msgid "Period length(days)"
 msgstr ""
 
 #. module: account
@@ -3731,7 +3854,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
-msgid "Fiscal Position Template Tax Mapping"
+msgid "Template Tax Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -4001,7 +4124,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,amount_taxed:0
 msgid "Taxed Amount"
-msgstr ""
+msgstr "حساب ضريبي"
 
 #. module: account
 #: field:account.invoice.line,price_subtotal:0
@@ -4027,7 +4150,8 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,reconcil:0
-msgid "       Include Reconciled Entries"
+#: field:account.partner.ledger,reconcil:0
+msgid "Include Reconciled Entries"
 msgstr ""
 
 #. module: account
@@ -4106,6 +4230,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_period_form
 #: model:ir.ui.menu,name:account.menu_action_account_period_form
 #: model:ir.ui.menu,name:account.next_id_23
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
+#: view:account.vat.declaration:0
 msgid "Periods"
 msgstr ""
 
@@ -4265,7 +4400,23 @@ msgstr ""
 #: wizard_field:account.general.ledger.report,checktype,soldeinit:0
 #: wizard_field:account.partner.balance.report,init,soldeinit:0
 #: wizard_field:account.third_party_ledger.report,init,soldeinit:0
+#: field:account.report.general.ledger,initial_balance:0
+#: field:account.partner.ledger,initial_balance:0
 msgid "Include initial balances"
+msgstr ""
+
+#. module: account
+#: field:account.common.report,filter:0
+#: field:account.report.general.ledger,filter:0
+#: field:account.balance.report,filter:0
+#: field:account.pl.report,filter:0
+#: field:account.bs.report,filter:0
+#: field:account.print.journal,filter:0
+#: field:account.general.journal,filter:0
+#: field:account.central.journal,filter:0
+#: field:account.partner.balance,filter:0
+#: field:account.partner.ledger,filter:0
+msgid "Filter by"
 msgstr ""
 
 #. module: account
@@ -4319,7 +4470,65 @@ msgstr ""
 #. module: account
 #: field:account.config.wizard,date2:0
 #: field:account.fiscalyear,date_stop:0
+#: wizard_field:account.account.balance.report,checktype,date_to:0
+#: wizard_field:account.general.ledger.report,checktype,date_to:0
+#: wizard_field:account.partner.balance.report,init,date2:0
+#: wizard_field:account.third_party_ledger.report,init,date2:0
+#: field:account.common.report,date_to:0
+#: field:account.report.general.ledger,date_to:0
+#: field:account.balance.report,date_to:0
+#: field:account.pl.report,date_to:0
+#: field:account.bs.report,date_to:0
+#: field:account.print.journal,date_to:0
+#: field:account.general.journal,date_to:0
+#: field:account.central.journal,date_to:0
+#: field:account.partner.balance,date_to:0
+#: field:account.partner.ledger,date_to:0
 msgid "End Date"
+msgstr ""
+
+#. module: account
+#: field:account.common.report,period_from:0
+#: field:account.report.general.ledger,period_from:0
+#: field:account.balance.report,period_from:0
+#: field:account.pl.report,period_from:0
+#: field:account.bs.report,period_from:0
+#: field:account.print.journal,period_from:0
+#: field:account.general.journal,period_from:0
+#: field:account.central.journal,period_from:0
+#: field:account.partner.balance,period_from:0
+#: field:account.partner.ledger,period_from:0
+#: field:account.vat.declaration,period_from:0
+msgid "Start period"
+msgstr ""
+
+#. module: account
+#: field:account.common.report,period_to:0
+#: field:account.report.general.ledger,period_to:0
+#: field:account.balance.report,period_to:0
+#: field:account.pl.report,period_to:0
+#: field:account.bs.report,period_to:0
+#: field:account.print.journal,period_to:0
+#: field:account.general.journal,period_to:0
+#: field:account.central.journal,period_to:0
+#: field:account.partner.balance,period_to:0
+#: field:account.partner.ledger,period_to:0
+#: field:account.vat.declaration,period_to:0
+msgid "End period"
+msgstr ""
+
+#. module: account
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
+msgid "Dates"
 msgstr ""
 
 #. module: account
@@ -5704,6 +5913,7 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.print.journal.report,init,sort_selection:0
+#: field:account.print.journal,sort_selection:0
 msgid "Entries Sorted By"
 msgstr ""
 
@@ -5866,7 +6076,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
-msgid "Fiscal Positions"
+msgid "Fiscal Mappings"
 msgstr ""
 
 #. module: account
@@ -5903,7 +6113,22 @@ msgstr ""
 #: wizard_view:account.general.ledger.report,checktype:0
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
 msgid "Filters"
+msgstr ""
+
+#. module: account
+#: field:account.vat.declaration,based_on:0
+msgid "Based on"
 msgstr ""
 
 #. module: account

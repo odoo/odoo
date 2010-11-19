@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01:51+0000\n"
-"PO-Revision-Date: 2009-08-28 16:01:51+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:44+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,23 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: mrp_subproduct
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: mrp_subproduct
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: mrp_subproduct
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
+msgid "Sub Product"
+msgstr ""
+
+#. module: mrp_subproduct
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: mrp_subproduct
@@ -31,18 +41,33 @@ msgid "sub products"
 msgstr ""
 
 #. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_production
+msgid "Manufacturing Order"
+msgstr ""
+
+#. module: mrp_subproduct
+#: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
+msgid "MRP Sub Product - To produce several products from one production order"
+msgstr ""
+
+#. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
 msgid "Product"
 msgstr ""
 
 #. module: mrp_subproduct
-#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
-msgid "Mrp Sub Product"
+#: field:mrp.bom,sub_products:0
+msgid "sub_products"
 msgstr ""
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,subproduct_type:0
 msgid "Quantity Type"
+msgstr ""
+
+#. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_bom
+msgid "Bill of Material"
 msgstr ""
 
 #. module: mrp_subproduct
@@ -71,8 +96,8 @@ msgid "Variable"
 msgstr ""
 
 #. module: mrp_subproduct
-#: field:mrp.bom,sub_products:0
-msgid "sub_products"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: mrp_subproduct
@@ -81,7 +106,7 @@ msgid "Fixed"
 msgstr ""
 
 #. module: mrp_subproduct
-#: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
-msgid "MRP Sub Product"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

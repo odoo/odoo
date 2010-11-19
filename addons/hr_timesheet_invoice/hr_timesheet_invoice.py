@@ -27,8 +27,8 @@ class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
     _description = "Invoice Rate"
     _columns = {
-        'name': fields.char('Internal name', size=128, required=True),
-        'customer_name': fields.char('Name', size=128, help="Name of the customer"),
+        'name': fields.char('Internal name', size=128, required=True, translate=True),
+        'customer_name': fields.char('Name', size=128, help="Label for the customer"),
         'factor': fields.float('Discount (%)', required=True, help="Discount in percentage"),
     }
     _defaults = {
@@ -44,21 +44,30 @@ class account_analytic_account(osv.osv):
         if context is None:
             context = {}
         res = {}
+
+        cr.execute('SELECT account_id as account_id, l.invoice_id '
+                'FROM hr_analytic_timesheet h LEFT JOIN account_analytic_line l '
+                    'ON (h.line_id=l.id) '
+                    'WHERE l.account_id = ANY(%s)', (ids,))
+        account_to_invoice_map = {}
+        for rec in cr.dictfetchall():
+            account_to_invoice_map.setdefault(rec['account_id'], []).append(rec['invoice_id'])
+
         for account in self.browse(cr, uid, ids, context=context):
             invoiced = {}
-            cr.execute('select distinct(l.invoice_id) from hr_analytic_timesheet h left join account_analytic_line l on (h.line_id=l.id) where account_id=%s', (account.id,))
-            invoice_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
+            invoice_ids = filter(None, list(set(account_to_invoice_map.get(account.id, []))))
             for invoice in obj_invoice.browse(cr, uid, invoice_ids, context=context):
                 res.setdefault(account.id, 0.0)
                 res[account.id] += invoice.amount_untaxed
         for id in ids:
             res[id] = round(res.get(id, 0.0),2)
-        return res
 
+        return res
 
     _inherit = "account.analytic.account"
     _columns = {
-        'pricelist_id' : fields.many2one('product.pricelist', 'Sale Pricelist'),
+        'pricelist_id': fields.many2one('product.pricelist', 'Sale Pricelist',
+            help="The product to invoice is defined on the employee form, the price will be deduced by this pricelist on the product."),
         'amount_max': fields.float('Max. Invoice Price'),
         'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
             help="Total invoiced"),
@@ -77,7 +86,7 @@ class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing'),
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', help="It allows to set the discount while making invoice"),
     }
 
     def unlink(self, cursor, user, ids, context=None):
@@ -157,6 +166,7 @@ class account_invoice(osv.osv):
             obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:
                 if il['account_analytic_id']:
+		    # *-* browse (or refactor to avoid read inside the loop)
                     to_invoice = obj_analytic_account.read(cr, uid, [il['account_analytic_id']], ['to_invoice'])[0]['to_invoice']
                     if to_invoice:
                         il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]

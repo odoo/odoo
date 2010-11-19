@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Quantity Cost Ledger" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Cost Ledger.pdf">
+  <template pageSize="(595.0,842.0)" title="Cost Ledger" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+      <frame id="first" x1="30.0" y1="29.0" width="534" height="783"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -79,16 +79,16 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="Standard" fontName="Times-Roman"/>
-    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Table Contents" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="Caption" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Helvetica" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Caption" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="15.0" leading="19" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="Footer" fontName="Times-Roman"/>
-    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="Footer" fontName="Helvetica"/>
+    <paraStyle name="Horizontal Line" fontName="Helvetica" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
     <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
@@ -110,14 +110,33 @@
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_9_Italic" fontName="Times-Italic" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_9_Italic_Right" fontName="Times-Italic" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9_Italic" fontName="Helvetica-Oblique" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9_Italic_Right" fontName="Helvetica-Oblique" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Rignt_9_U" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9_Right_U" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <images/>
   </stylesheet>
-  <images/>
   <story>
-    <blockTable colWidths="161.0,161.0,161.0" repeatRows="1" style="Table_Header_Detail">
+  <pto>
+  <pto_header>
+  <blockTable colWidths="57.0,322.0,85.0,71.0" style="Table_Header_Move_Line">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Code/Date</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">J.C./Move name</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Quantity</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Total</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
+    <blockTable colWidths="178.0,178.0,178.0" repeatRows="1" style="Table_Header_Detail">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -134,16 +153,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="161.0,161.0,161.0" style="Table_Date_Detail">
+    <blockTable colWidths="178.0,178.0,178.0" style="Table_Date_Detail">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Period from</para>
@@ -156,16 +166,16 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="161.0,161.0,161.0" style="Table_Date_Content">
+    <blockTable colWidths="178.0,178.0,178.0" style="Table_Date_Content">
       <tr>
         <td>
-          <para style="terp_tblheader_General_Centre">[[ formatLang(data['form']['date1'],date = True) ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang(data['form']['date1'],date = True) ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">[[ formatLang(data['form']['date2'],date = True) ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang(data['form']['date2'],date = True) ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -175,7 +185,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="82.0,247.0,92.0,60.0" style="Table_Header_Move_Line">
+    <blockTable colWidths="57.0,322.0,85.0,71.0" style="Table_Header_Move_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Code/Date</para>
@@ -184,17 +194,14 @@
           <para style="terp_tblheader_Details">J.C./Move name</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Quantity</para>
+          <para style="terp_tblheader_Details_Centre">Quantity</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Total</para>
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="81.0,249.0,92.0,60.0" style="Table_Final_Total">
+    <blockTable colWidths="57.0,322.0,85.0,71.0" style="Table_Final_Total">
       <tr>
         <td>
           <para style="terp_default_Bold_9">Total:</para>
@@ -214,21 +221,15 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
     <section>
-      <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
-      <para style="terp_default_2">
-        <font color="white"> </font>
-      </para>
-      <blockTable colWidths="81.0,249.0,92.0,59.0" style="Table_Account_Detail">
+      <para style="terp_default_2">[[ repeatIn(objects,'o') ]]</para>
+      <blockTable colWidths="57.0,322.0,85.0,71.0" style="Table_Account_Detail">
         <tr>
           <td>
-            <para style="terp_default_Bold_9">[[ o.code ]]<font face="Times-Roman" size="10.0"/></para>
+            <para style="terp_default_Bold_9">[[ o.code ]]<font face="Helvetica" size="10.0"/></para>
           </td>
           <td>
-            <para style="terp_default_Bold_9">[[ o.complete_name ]]<font face="Times-Roman" size="10.0"/></para>
+            <para style="terp_default_Bold_9">[[ o.complete_name ]]<font face="Helvetica" size="10.0"/></para>
           </td>
           <td>
             <para style="terp_default_Bold_9">Max Qty: [[ formatLang (o.quantity_max )]]</para>
@@ -238,15 +239,9 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_2">
-        <font color="white"> </font>
-      </para>
       <section>
-        <para style="terp_default_8">[[ repeatIn(lines_g(o.id,data['form']['date1'],data['form']['date2'],data['form']['journal']),'move_g') ]]</para>
-        <para style="terp_default_2">
-          <font color="white"> </font>
-        </para>
-        <blockTable colWidths="81.0,342.0,59.0" style="Table_Analytical_Detail">
+        <para style="terp_default_2">[[ repeatIn(lines_g(o.id,data['form']['date1'],data['form']['date2'],data['form']['journal']),'move_g') ]]</para>
+        <blockTable colWidths="57.0,407.0,71.0" style="Table_Analytical_Detail">
           <tr>
             <td>
               <para style="terp_default_Bold_9">[[ move_g['code'] ]] </para>
@@ -259,7 +254,7 @@
             </td>
           </tr>
         </blockTable>
-        <blockTable colWidths="81.0,51.0,290.0,59.0" style="Table_Move_Line_Content">
+        <blockTable colWidths="57.0,71.0,336.0,71.0" style="Table_Move_Line_Content">
           <tr>
             <td>
               <para style="terp_default_9_Italic">[[ repeatIn(lines_a(move_g['id'],o.id,data['form']['date1'],data['form']['date2'],data['form']['journal']),'move_a') ]]</para>
@@ -280,15 +275,7 @@
           <font color="white"> </font>
         </para>
       </section>
-      <para style="terp_default_2">
-        <font color="white"> </font>
-      </para>
-      <para style="terp_default_2">
-        <font color="white"> </font>
-      </para>
     </section>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
+    </pto>
   </story>
 </document>

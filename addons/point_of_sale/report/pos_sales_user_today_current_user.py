@@ -18,14 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from report import report_sxw
-
 
 class pos_sales_user_today_current_user(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(pos_sales_user_today_current_user, self).__init__(cr, uid, name, context)
+        super(pos_sales_user_today_current_user, self).__init__(cr, uid, name, context=context)
         self.total = 0.0
         self.qty = 0.0
         self.localcontext.update({
@@ -45,11 +45,11 @@ class pos_sales_user_today_current_user(report_sxw.rml_parse):
     def _get_data_current_user(self, user):
         data={}
         self.cr.execute("select po.name,po. state,sum(pol.qty)as Qty,sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
-                        "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt ,res_users as ru,res_company as rc  " \
+                        "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, res_users as ru,res_company as rc  " \
                         "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
                         "and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date  and po.user_id = ru.id and rc.id = %s and ru.id = %s " \
                         "group by po.name, po.state " \
-                        ,(str(user.company_id.id),str(self.uid)))
+                ,(str(user.company_id.id),str(self.uid)))
 
         data = self.cr.dictfetchall()
         for d in data:
@@ -65,10 +65,4 @@ class pos_sales_user_today_current_user(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.pos.sales.user.today.current.user', 'pos.order', 'addons/point_of_sale/report/pos_sales_user_today_current_user.rml', parser=pos_sales_user_today_current_user,header='internal')
 
-
-
-
-
-
-
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

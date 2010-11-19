@@ -72,6 +72,7 @@ class account_invoice_report(osv.osv):
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
         'residual': fields.float('Total Residual', readonly=True),
         'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
+        'due_delay': fields.float('Avg. Due Delay', readonly=True, group_operator="avg"),
     }
     _order = 'date desc'
     def init(self, cr):
@@ -134,6 +135,11 @@ class account_invoice_report(osv.osv):
                         left join account_invoice as a ON (a.move_id=aml.move_id)
                         left join account_invoice_line as l ON (a.id=l.invoice_id)
                         where a.id=ai.id)) as delay_to_pay,
+                    sum((select extract(epoch from avg(date_trunc('day',a.date_due)-date_trunc('day',a.date_invoice)))/(24*60*60)::decimal(16,2)
+                        from account_move_line as aml
+                        left join account_invoice as a ON (a.move_id=aml.move_id)
+                        left join account_invoice_line as l ON (a.id=l.invoice_id)
+                        where a.id=ai.id)) as due_delay,
                     (case when ai.type in ('out_refund','in_invoice') then
                       ai.residual * -1
                     else
@@ -145,7 +151,7 @@ class account_invoice_report(osv.osv):
                 left join account_invoice as ai ON (ai.id=ail.invoice_id)
                 left join product_template pt on (pt.id=ail.product_id)
                 left join product_uom u on (u.id=ail.uos_id),
-                res_currency_rate cr 
+                res_currency_rate cr
                 where cr.id in (select id from res_currency_rate cr2  where (cr2.currency_id = ai.currency_id)
                 and ((ai.date_invoice is not null and cr.name <= ai.date_invoice) or (ai.date_invoice is null and cr.name <= NOW())) limit 1)
                 group by ail.product_id,

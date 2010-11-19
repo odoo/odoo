@@ -21,7 +21,6 @@
 
 import time
 
-import netsvc
 from osv import osv, fields
 from tools.translate import _
 
@@ -30,8 +29,7 @@ class account_automatic_reconcile(osv.osv_memory):
     _description = 'Automatic Reconcile'
 
     _columns = {
-        'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Accounts to Reconcile', domain = [('reconcile','=',1)], \
-                                        help = 'If no account is specified, the reconciliation will be made using every accounts that can be reconcilied'),
+        'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Accounts to Reconcile', domain = [('reconcile','=',1)],),
         'writeoff_acc_id': fields.many2one('account.account', 'Account'),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'period_id': fields.many2one('account.period', 'Period'),
@@ -51,8 +49,8 @@ class account_automatic_reconcile(osv.osv_memory):
         return context.get('unreconciled', 0)
 
     _defaults = {
-        'date1': time.strftime('%Y-01-01'),
-        'date2': time.strftime('%Y-%m-%d'),
+        'date1': lambda *a: time.strftime('%Y-01-01'),
+        'date2': lambda *a: time.strftime('%Y-%m-%d'),
         'reconciled': _get_reconciled,
         'unreconciled': _get_unreconciled,
         'power': 2
@@ -142,25 +140,25 @@ class account_automatic_reconcile(osv.osv_memory):
         if context is None:
             context = {}
         form = self.read(cr, uid, ids, [])[0]
-        max_amount = form.get('max_amount', 0.0)
+        max_amount = form.get('max_amount', False) and form.get('max_amount') or 0.0
         power = form['power']
         allow_write_off = form['allow_write_off']
         reconciled = unreconciled = 0
         if not form['account_ids']:
             raise osv.except_osv(_('UserError'), _('You must select accounts to reconcile'))
         for account_id in form['account_ids']:
+            params = (account_id,)
             if not allow_write_off:
-                query = "SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL \
-                AND state <> 'draft' GROUP BY partner_id \
-                HAVING ABS(SUM(debit-credit)) = %s AND count(*)>0"%(account_id, 0.0)
-#                HAVING ABS(SUM(debit-credit)) <> %s AND count(*)>0"%(account_id, 0.0)
-#                HAVING count(*)>0"%(account_id,)
+                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL
+                AND state <> 'draft' GROUP BY partner_id
+                HAVING ABS(SUM(debit-credit)) = 0.0 AND count(*)>0"""
             else:
-                query = "SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL \
-                AND state <> 'draft' GROUP BY partner_id \
-                HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0"%(account_id, max_amount or 0.0)
+                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL
+                AND state <> 'draft' GROUP BY partner_id
+                HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0"""
+                params += (max_amount,)
             # reconcile automatically all transactions from partners whose balance is 0
-            cr.execute(query)
+            cr.execute(query, params)
             partner_ids = [id for (id,) in cr.fetchall()]
             for partner_id in partner_ids:
                 cr.execute(
@@ -172,69 +170,69 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND reconcile_id IS NULL",
                     (account_id, partner_id))
                 line_ids = [id for (id,) in cr.fetchall()]
-                if len(line_ids):
+                if line_ids:
                     reconciled += len(line_ids)
                     if allow_write_off:
                         move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
-#                        move_line_obj.reconcile_partial(cr, uid, line_ids, 'manual', context={})
                     else:
                         move_line_obj.reconcile_partial(cr, uid, line_ids, 'manual', context={})
-#                        move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
 
-                        # get the list of partners who have more than one unreconciled transaction
-                        cr.execute(
-                            "SELECT partner_id " \
-                            "FROM account_move_line " \
-                            "WHERE account_id=%s " \
-                            "AND reconcile_id IS NULL " \
-                            "AND state <> 'draft' " \
-                            "AND partner_id IS NOT NULL " \
-                            "GROUP BY partner_id " \
-                            "HAVING count(*)>1",
-                            (account_id,))
-                        partner_ids = [id for (id,) in cr.fetchall()]
-                        #filter?
-                        for partner_id in partner_ids:
-                            # get the list of unreconciled 'debit transactions' for this partner
-                            cr.execute(
-                                "SELECT id, debit " \
-                                "FROM account_move_line " \
-                                "WHERE account_id=%s " \
-                                "AND partner_id=%s " \
-                                "AND reconcile_id IS NULL " \
-                                "AND state <> 'draft' " \
-                                "AND debit > 0",
-                                (account_id, partner_id))
-                            debits = cr.fetchall()
+            # get the list of partners who have more than one unreconciled transaction
+            cr.execute(
+                "SELECT partner_id " \
+                "FROM account_move_line " \
+                "WHERE account_id=%s " \
+                "AND reconcile_id IS NULL " \
+                "AND state <> 'draft' " \
+                "AND partner_id IS NOT NULL " \
+                "GROUP BY partner_id " \
+                "HAVING count(*)>1",
+                (account_id,))
+            partner_ids = [id for (id,) in cr.fetchall()]
+            #filter?
+            for partner_id in partner_ids:
+                # get the list of unreconciled 'debit transactions' for this partner
+                cr.execute(
+                    "SELECT id, debit " \
+                    "FROM account_move_line " \
+                    "WHERE account_id=%s " \
+                    "AND partner_id=%s " \
+                    "AND reconcile_id IS NULL " \
+                    "AND state <> 'draft' " \
+                    "AND debit > 0 " \
+                    "ORDER BY date_maturity",
+                    (account_id, partner_id))
+                debits = cr.fetchall()
 
-                            # get the list of unreconciled 'credit transactions' for this partner
-                            cr.execute(
-                                "SELECT id, credit " \
-                                "FROM account_move_line " \
-                                "WHERE account_id=%s " \
-                                "AND partner_id=%s " \
-                                "AND reconcile_id IS NULL " \
-                                "AND state <> 'draft' " \
-                                "AND credit > 0",
-                                (account_id, partner_id))
-                            credits = cr.fetchall()
+                # get the list of unreconciled 'credit transactions' for this partner
+                cr.execute(
+                    "SELECT id, credit " \
+                    "FROM account_move_line " \
+                    "WHERE account_id=%s " \
+                    "AND partner_id=%s " \
+                    "AND reconcile_id IS NULL " \
+                    "AND state <> 'draft' " \
+                    "AND credit > 0 " \
+                    "ORDER BY date_maturity",
+                    (account_id, partner_id))
+                credits = cr.fetchall()
 
-                            (rec, unrec) = self.do_reconcile(cr, uid, credits, debits, max_amount, power, form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
-                            reconciled += rec
-                            unreconciled += unrec
+                (rec, unrec) = self.do_reconcile(cr, uid, credits, debits, max_amount, power, form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
+                reconciled += rec
+                unreconciled += unrec
 
-                        # add the number of transactions for partners who have only one
-                        # unreconciled transactions to the unreconciled count
-                        partner_filter = partner_ids and 'AND partner_id not in (%s)' % ','.join(map(str, filter(None, partner_ids))) or ''
-                        cr.execute(
-                            "SELECT count(*) " \
-                            "FROM account_move_line " \
-                            "WHERE account_id=%s " \
-                            "AND reconcile_id IS NULL " \
-                            "AND state <> 'draft' " + partner_filter,
-                            (account_id,))
-                        additional_unrec = cr.fetchone()[0]
-                        unreconciled = unreconciled + additional_unrec
+            # add the number of transactions for partners who have only one
+            # unreconciled transactions to the unreconciled count
+            partner_filter = partner_ids and 'AND partner_id not in (%s)' % ','.join(map(str, filter(None, partner_ids))) or ''
+            cr.execute(
+                "SELECT count(*) " \
+                "FROM account_move_line " \
+                "WHERE account_id=%s " \
+                "AND reconcile_id IS NULL " \
+                "AND state <> 'draft' " + partner_filter,
+                (account_id,))
+            additional_unrec = cr.fetchone()[0]
+            unreconciled = unreconciled + additional_unrec
         context.update({'reconciled': reconciled, 'unreconciled': unreconciled})
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','account_automatic_reconcile_view1')])
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']

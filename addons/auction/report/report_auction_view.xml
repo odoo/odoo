@@ -37,23 +37,24 @@
         <field name="arch" type="xml">
             <search string="Auction Summary">
                 <group>
-                    <filter icon="terp-go-year" string="  365 Days  "
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                        help="Auction in last 365 days"/>
-                    <filter icon="terp-go-month" string="   30 Days   "
+                    <filter icon="terp-go-year" string="Year"
+                        domain="[('year','=',time.strftime('%%Y'))]"
+                        help="Auction during current year."/>
+                    <filter icon="terp-go-month" string="Month"
                         name="month"
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                        help="Auction in last 30 days"/>
+                        domain="[('month','=',time.strftime('%%m'))]"
+                        help="Auction during current month."/>
                     <filter icon="terp-go-week"
-                         string="    7 Days    "
+                         string="Month -1"
                          separator="1"
-                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                         help="Auction during last 7 days"/>
+                         domain="[('month','=',(datetime.date.today() - datetime.timedelta(365/12)).strftime('%%m'))]"
+                         help="Auction during last month."/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-document-new"
                         string="Draft"
                         domain="[('state','=','draft')]"/>
                     <filter icon="terp-dolar"
+                        name="sold"
                         string="Sold"
                         domain="[('state','=', 'sold')]"/>
                     <separator orientation="vertical"/>
@@ -74,7 +75,7 @@
                     <filter string="Buyer" icon="terp-personal" name="buyer" context="{'group_by':'buyer'}"/>
                     <filter string="Seller" icon="terp-personal" name="seller" context="{'group_by':'seller'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Auction" icon="terp-project" name="auction" context="{'group_by':'auction'}"/>
+                    <filter string="Auction" icon="terp-purchase" name="auction_date" context="{'group_by':'auction'}"/>
                     <separator orientation="vertical" />
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Type"
@@ -113,7 +114,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_report_auction_search"/>
-        <field name="context">{'search_default_month':1}</field>
+        <field name="context">{'search_default_month':1,'search_default_sold':1,'search_default_auction_date':1, 'group_by':[], 'group_by_no_leaf':1}</field>
     </record>
 
     <menuitem name="Auction Analysis" action="action_report_auction" id="menu_report_auction" parent="auction.auction_report_menu"/>

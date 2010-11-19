@@ -33,6 +33,7 @@ function selectPartner(){
 	}
 }
 
+
 //function for the intialization procedure //used while loading and unloading of the window
 var myPrefObserver =
 {
@@ -48,9 +49,9 @@ var myPrefObserver =
         document.getElementById("txtname").value = getSenderName();
         document.getElementById("txtemail").value = getSenderEmail();
         document.getElementById("country").value = getAllCountry();
-        document.getElementById("state").value = getAllState();
         setPartnerId(0);
 	},
+    
 
 	//sets the value of email information in preferences and adds observer for the window
 	register: function()
@@ -88,6 +89,15 @@ var myPrefObserver =
 				}
 			}
 		}
+    },
+
+    webregister: function()
+  	{
+    	preferenceBranch.addObserver("", myPrefObserver, false);
+        weburl = getWebServerURL();
+	    document.getElementById("txtweburl").value = weburl;
+    	var s = document.getElementById('txtweburl').value;
+	   
     },
 
     createContactAddress: function()

@@ -11,9 +11,9 @@
 	<!-- stylesheet -->
 
 	<xsl:template name="stylesheet">
-		<paraStyle name="title" fontName="Helvetica-Bold" fontSize="22" alignment="center"/>
-		<paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+		<paraStyle name="title" fontName="Helvetica-Bold" fontSize="15.0" leftIndent="-8.0cm" alignment="center"/>
 		<paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT"/>
+		<paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
 		<paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT"/>
 		<paraStyle name="terp_tblheader_Details_Right_bold" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT"/>
 
@@ -50,10 +50,9 @@
 	</xsl:template>
 
 	<xsl:template match="config">
-		<xpre style="title">
+		<para style="title">
 		<xsl:value-of select="report-header"/>
-		</xpre>
-		<spacer length="1cm" width="2mm"/>
+		</para>
 	</xsl:template>
 
 	<xsl:template match="title">

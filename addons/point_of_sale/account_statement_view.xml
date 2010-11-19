@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_account_journal_pos_user_form">
+            <field name="name">POS Journal</field>
+            <field name="model">account.journal</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Point of Sale">
+                        <group col="6" colspan="4">
+                            <separator colspan="6" string="Extended Configureation"/>
+                            <field name="check_dtls" groups="point_of_sale.group_pos_manager"/>
+                            <field name="auto_cash"/>
+                            <field name="special_journal"/>
+                        </group>
+                        <separator colspan="4" string="Users"/>
+                        <field name="journal_users" nolabel="1" colspan="4"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem name="Cash Register" parent="point_of_sale.menu_point_root" id="menu_cash_register" 
+                sequence="4" groups="point_of_sale.group_pos_manager"/>
+
+        <!--<menuitem
+            name="All Cash Registers"
+            parent="menu_cash_register"
+            action="account.action_view_bank_statement_tree"
+            id="menu_all_menu_cash_register"
+            sequence="4"
+        />-->
+        
+        <record id="view_pos_open_cash_statement_filter" model="ir.ui.view">
+            <field name="name">account.bank.statement.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Cash Statements">
+                    <group col="8" colspan="4">
+                        <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <field name="name"/>
+                        <field name="journal_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
+                        <separator orientation="vertical"/>
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="view_pos_confirm_cash_statement_filter" model="ir.ui.view">
+            <field name="name">account.bank.statement.inherit2</field>
+            <field name="model">account.bank.statement</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Cash Statements">
+                    <group col="8" colspan="4">
+                        <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                        <filter string="Confirm" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <field name="name"/>
+                        <field name="journal_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
+                        <separator orientation="vertical"/>
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_new_bank_statement_tree" model="ir.actions.act_window">
+            <field name="name">Cash Register</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
+            <field name="domain">[('journal_id.type', '=', 'cash')]</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account.view_bank_statement_tree"/>
+            <field name="act_window_id" ref="action_new_bank_statement_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement2_all">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="act_window_id" ref="action_new_bank_statement_tree"/>
+        </record>
+
+        <record id="view_cash_statement_pos_tree" model="ir.ui.view">
+            <field name="name">account.bank.statement.tree</field>
+            <field name="model">account.bank.statement</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account.view_cash_statement_tree"/>
+            <field name="arch" type="xml">
+                <field name="journal_id" position="after">
+                    <field name="user_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_new_bank_statement_all_tree" model="ir.actions.act_window">
+            <field name="name">Cash Registers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement_all_register1">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_cash_statement_pos_tree"/>
+            <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement_all_register">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
+        </record>
+
+        <menuitem
+            name="Cash Registers"
+            parent="menu_cash_register"
+            action="action_new_bank_statement_all_tree"
+            id="menu_all_menu_all_register"
+            sequence="4"
+        />
+
+        <menuitem name="Cash register management" parent="point_of_sale.menu_point_root"
+            id="menu_point_open_config" sequence="1"/>
+        <menuitem
+            name="Open Cash Registers" parent="menu_point_open_config"
+            string="Open Cash Registers"
+            action="action_pos_open_statement"
+            id="menu_open_statement" sequence="1" />
+
+        <menuitem
+            name="Close Cash Registers" parent="menu_point_open_config"
+            string="Close Cash Registers"
+            action="action_pos_close_statement"
+            id="menu_close_statement" sequence="2" />
+
+    </data>
+</openerp>

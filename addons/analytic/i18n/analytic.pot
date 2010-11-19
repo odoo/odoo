@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-18 10:59:19+0000\n"
-"PO-Revision-Date: 2010-06-18 10:59:19+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:22+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,11 +18,6 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr ""
-
-#. module: analytic
-#: help:account.analytic.line,amount_currency:0
-msgid "The amount expressed in the related account currency if not equal to the company one."
 msgstr ""
 
 #. module: analytic
@@ -41,14 +36,14 @@ msgid "Specifies the amount of quantity to count."
 msgstr ""
 
 #. module: analytic
-#: help:account.analytic.line,currency_id:0
-msgid "The related account currency if not equal to the company one."
-msgstr ""
-
-#. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
 msgid "Module for defining analytic accounting object.\n"
 "    "
+msgstr ""
+
+#. module: analytic
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: analytic
@@ -77,18 +72,6 @@ msgid "Debit"
 msgstr ""
 
 #. module: analytic
-#: help:account.analytic.account,state:0
-msgid "* When an account is created its in 'Draft' state.                                  \n"
-"* If any associated partner is there, it can be in 'Open' state.                                  \n"
-"* If any pending balance is there it can be in 'Pending'.                                   \n"
-"* And finally when all the transactions are over, it can be in 'Close' state.                                   \n"
-"* The project can be in either if the states 'Template' and 'Running'.\n"
-" If it is template then we can make projects based on the template projects. If its in 'Running' state it is a normal project.                                 \n"
-" If it is to be reviewed then the state is 'Pending'.\n"
-" When the project is completed the state is set to 'Done'."
-msgstr ""
-
-#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
 msgstr ""
@@ -104,6 +87,11 @@ msgid "Pending"
 msgstr ""
 
 #. module: analytic
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
 msgstr ""
@@ -115,14 +103,19 @@ msgid "Description"
 msgstr ""
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid "Calculated by multiplying the quantity and the price given in the Product's cost price."
+#: selection:account.analytic.account,type:0
+msgid "Normal"
 msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
 #: field:account.analytic.line,company_id:0
 msgid "Company"
+msgstr ""
+
+#. module: analytic
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: analytic
@@ -147,13 +140,18 @@ msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
-#: field:account.analytic.line,currency_id:0
 msgid "Account currency"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "View"
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr ""
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid "Calculated by multiplying the quantity and the price given in the Product's cost price. Always expressed in the company main currency."
 msgstr ""
 
 #. module: analytic
@@ -187,14 +185,8 @@ msgid "Balance"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Date Start"
-msgstr ""
-
-#. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
+#: help:account.analytic.account,type:0
+msgid "If you select the View Type, it means you won't allow to create journal entries using that account."
 msgstr ""
 
 #. module: analytic
@@ -203,13 +195,13 @@ msgid "Date End"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Account Code"
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Normal"
+#: field:account.analytic.account,code:0
+msgid "Account Code"
 msgstr ""
 
 #. module: analytic
@@ -225,18 +217,23 @@ msgid "Analytic Account"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,company_currency_id:0
-msgid "Currency"
+#: selection:account.analytic.account,type:0
+msgid "View"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.line,amount_currency:0
-msgid "Amount currency"
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
 msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
-msgid "Associated Partner"
+msgid "Partner"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
 msgstr ""
 
 #. module: analytic
@@ -247,5 +244,10 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
+msgstr ""
+
+#. module: analytic
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

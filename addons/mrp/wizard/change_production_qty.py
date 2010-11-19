@@ -19,11 +19,7 @@
 #
 ##############################################################################
 
-import time
-import ir
-from osv.osv import except_osv
 from osv import fields, osv
-import netsvc
 from tools.translate import _
 
 class change_production_qty(osv.osv_memory):
@@ -63,7 +59,6 @@ class change_production_qty(osv.osv_memory):
         record_id = context and context.get('active_id',False)
         assert record_id, _('Active Id is not found')
         prod_obj = self.pool.get('mrp.production')
-        product_lines_obj = self.pool.get('mrp.production.product.line')
         bom_obj = self.pool.get('mrp.bom')
         for wiz_qty in self.browse(cr, uid, ids):
             prod = prod_obj.browse(cr, uid,record_id)
@@ -87,10 +82,10 @@ class change_production_qty(osv.osv_memory):
                 factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
                 res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, [])
                 for r in res[0]:
-                    if r['product_id']== move.product_id.id:
-                        move_lines_obj.write(cr, uid,move.id, {'product_qty' :  r['product_qty']})
+                    if r['product_id'] == move.product_id.id:
+                        move_lines_obj.write(cr, uid, [move.id], {'product_qty' :  r['product_qty']})
             for m in prod.move_created_ids:
-                move_lines_obj.write(cr, uid,m.id, {'product_qty': wiz_qty.product_qty})
+                move_lines_obj.write(cr, uid, [m.id], {'product_qty': wiz_qty.product_qty})
     
         return {}
     

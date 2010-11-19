@@ -6,28 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-08-03 04:16+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 04:02+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+#: model:ir.model,name:board.model_board_menu_create
+msgid "Menu Create"
+msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_board
-msgid "board.board"
-msgstr "控制台"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "在这动作定义中有无效的模块名"
 
 #. module: board
+#: view:board.note:0
 #: field:board.note,user_id:0
 msgid "Author"
 msgstr "作者"
@@ -38,25 +38,55 @@ msgid "Dashboard main module"
 msgstr "控制面板主要模块"
 
 #. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "User Error!"
+msgstr "用户错误！"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.open_board_administration_form
+#: model:ir.ui.menu,name:board.menu_board_admin
+msgid "Administration Dashboard"
+msgstr ""
+
+#. module: board
 #: view:board.note:0
 #: field:board.note,note:0
+#: model:ir.model,name:board.model_board_note
 msgid "Note"
 msgstr "备注"
 
 #. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "宽度"
+#: view:board.note:0
+msgid "Group By..."
+msgstr ""
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+#: model:ir.model,name:board.model_board_board
+msgid "Board"
+msgstr ""
+
+#. module: board
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
 
 #. module: board
 #: field:board.board.line,name:0
 msgid "Title"
 msgstr "标题"
+
+#. module: board
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+
+#. module: board
+#: model:ir.model,name:board.model_board_note_type
+msgid "NOte Type"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
@@ -71,9 +101,21 @@ msgid "Publish a note"
 msgstr "发布备注"
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:board.menu.create:0
 msgid "Menu Information"
 msgstr "菜单信息"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+#: view:res.users:0
+msgid "Latest Connections"
+msgstr ""
+
+#. module: board
+#: field:board.note,type:0
+msgid "Note type"
+msgstr "备注类型"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -81,27 +123,19 @@ msgid "Action Views"
 msgstr "动作视图"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note
-msgid "board.note"
-msgstr "备注"
-
-#. module: board
+#: view:board.note:0
 #: field:board.note,date:0
 msgid "Date"
 msgstr "日期"
 
 #. module: board
-#: model:ir.ui.menu,name:board.next_id_50
-msgid "Configuration"
-msgstr "设置"
-
-#. module: board
+#: view:board.note:0
 #: field:board.note.type,name:0
 msgid "Note Type"
 msgstr "备注类型"
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:board.menu.create:0
 msgid "Create Menu For Dashboard"
 msgstr "创建控制面板菜单"
 
@@ -111,7 +145,12 @@ msgid "Invalid XML for View Architecture!"
 msgstr "无效的视图结构xml文件!"
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_parent_id:0
+#: model:ir.model,name:board.model_board_board_line
+msgid "Board Line"
+msgstr ""
+
+#. module: board
+#: field:board.menu.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "上级菜单"
 
@@ -121,14 +160,24 @@ msgid "Notes"
 msgstr "备注"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "board.note.type"
-msgstr "备注类型"
+#: help:board.board.line,sequence:0
+msgid ""
+"Gives the sequence order                         when displaying a list of "
+"board lines."
+msgstr ""
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "请插入看板视图！"
 
 #. module: board
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
+#: model:ir.ui.menu,name:board.admin_menu_dasboard
+#: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "控制面板"
 
@@ -148,14 +197,15 @@ msgid "Open Dashboard"
 msgstr "打开控制面板"
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_name:0
+#: field:board.menu.create,menu_name:0
 msgid "Menu Name"
 msgstr "菜单名称"
 
 #. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr "备注类型"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_latest_activities_tree
+msgid "Latest Activities"
+msgstr ""
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -173,20 +223,20 @@ msgid "Right"
 msgstr "右对齐"
 
 #. module: board
+#: field:board.board.line,width:0
+msgid "Width"
+msgstr "宽度"
+
+#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr "序号"
 
 #. module: board
 #: view:board.board:0
-#: wizard_button:board.board.menu.create,init,create_menu:0
+#: view:board.menu.create:0
 msgid "Create Menu"
 msgstr "创建菜单"
-
-#. module: board
-#: model:ir.ui.menu,name:board.dashboard_menu
-msgid "Dashboards"
-msgstr "控制面板"
 
 #. module: board
 #: field:board.board.line,height:0
@@ -194,12 +244,12 @@ msgid "Height"
 msgstr "高度"
 
 #. module: board
-#: model:ir.actions.wizard,name:board.wizard_board_create_menu
+#: model:ir.actions.act_window,name:board.action_board_menu_create
 msgid "Create Board Menu"
 msgstr "创建控制台菜单"
 
 #. module: board
-#: wizard_button:board.board.menu.create,init,end:0
+#: view:board.menu.create:0
 msgid "Cancel"
 msgstr "取消"
 
@@ -209,22 +259,28 @@ msgid "Dashboard View"
 msgstr "控制面板视图"
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "board.board.line"
-msgstr "控制台明细"
-
-#. module: board
+#: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "主题"
 
-#, python-format
-#~ msgid "User Error!"
-#~ msgstr "用户错误！"
+#~ msgid "Configuration"
+#~ msgstr "设置"
 
-#, python-format
-#~ msgid "Please Insert Dashboard View(s) !"
-#~ msgstr "请插入看板视图！"
+#~ msgid "board.board"
+#~ msgstr "控制台"
+
+#~ msgid "board.note"
+#~ msgstr "备注"
+
+#~ msgid "board.note.type"
+#~ msgstr "备注类型"
 
 #~ msgid "Action"
 #~ msgstr "动作"
+
+#~ msgid "board.board.line"
+#~ msgstr "控制台明细"
+
+#~ msgid "Dashboards"
+#~ msgstr "控制面板"

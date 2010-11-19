@@ -95,11 +95,13 @@ class hr_contract(osv.osv):
     _columns = {
         'name': fields.char('Contract Reference', size=32, required=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
-        'department_id': fields.related('employee_id','department_id', string="Department", readonly=True),
-        'type_id': fields.many2one('hr.contract.type', "Contract Type"),
+        'department_id': fields.related('employee_id','department_id', type='many2one', relation='hr.department', string="Department", readonly=True),
+        'type_id': fields.many2one('hr.contract.type', "Contract Type", required=True),
         'job_id': fields.many2one('hr.job', 'Job Title'),
         'date_start': fields.date('Start Date', required=True),
         'date_end': fields.date('End Date'),
+        'trial_date_start': fields.date('Trial Start Date'),
+        'trial_date_end': fields.date('Trial End Date'),
         'working_hours': fields.many2one('resource.calendar','Working Schedule'),
         'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
         'wage': fields.float('Wage', digits=(16,2), required=True),
@@ -109,7 +111,7 @@ class hr_contract(osv.osv):
         'notes': fields.text('Notes'),
     }
     _defaults = {
-        'date_start': time.strftime("%Y-%m-%d"),
+        'date_start': lambda *a: time.strftime("%Y-%m-%d"),
     }
 
 hr_contract()

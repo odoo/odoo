@@ -30,7 +30,7 @@
     <record id="board_hr_applicants_status_form" model="ir.ui.view">
         <field name="name">board.hr.applicants.status.form</field>
         <field name="model">board.board</field>
-        <field name="inherit_id" ref="hr.board_hr_form"/>
+        <field name="inherit_id" ref="hr.board_hr_manager_form"/>
         <field name="type">form</field>
         <field name="arch" type="xml">
           <xpath expr="/form/hpaned/child2" position="inside">
@@ -38,6 +38,13 @@
           </xpath>
         </field>
     </record>
-
+    <menuitem id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" sequence="0" groups="base.group_hr_manager,base.group_hr_user"/>
+    <menuitem
+        action="hr.open_board_hr_manager"
+        icon="terp-graph"
+        id="base.menu_hr_manager"
+        parent="base.menu_hr_dasboard"
+        groups = "base.group_hr_manager"
+        sequence="5"/>
     </data>
 </openerp>

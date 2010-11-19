@@ -6,16 +6,16 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -35,7 +35,7 @@ class purchase_requisition(osv.osv):
         'date_start': fields.datetime('Requisition Date'),
         'date_end': fields.datetime('Requisition Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'exclusive': fields.selection([('exclusive','Purchase Tender (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', required=True, help="Purchase Tender (exclusive):On the confirmation of a purchase order, it cancels the remaining purchase order.Multiple Requisitions:It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
+        'exclusive': fields.selection([('exclusive','Purchase Requisition (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', required=True, help="Purchase Requisition (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nPurchase Requisition(Multiple):  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
@@ -68,30 +68,18 @@ class purchase_requisition(osv.osv):
                 if str(purchase_id.state) in('draft','wait'):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
         self.write(cr, uid, ids, {'state': 'cancel'})
-        for (id,name) in self.name_get(cr, uid, ids):
-                    message = _('Tender') + " '" + name + "' "+ _("is cancelled")
-                    self.log(cr, uid, id, message)
         return True
 
     def tender_in_progress(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
-        for (id,name) in self.name_get(cr, uid, ids):
-                    message = _('Tender') + " '" + name + "' "+ _(" is In Progress")
-                    self.log(cr, uid, id, message)
         return True
 
     def tender_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'draft'})
-        for (id,name) in self.name_get(cr, uid, ids):
-                    message = _('Tender') + " '" + name + "' "+ _("is in draft state")
-                    self.log(cr, uid, id, message)
         return True
 
     def tender_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
-        for (id,name) in self.name_get(cr, uid, ids):
-                    message = _('Tender') + " '" + name + "' "+ _("is done")
-                    self.log(cr, uid, id, message)
         return True
 
 purchase_requisition()

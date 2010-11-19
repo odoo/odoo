@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,11 +23,10 @@ import time
 from report import report_sxw
 import pooler
 
-
 class order(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(order, self).__init__(cr, uid, name, context)
+        super(order, self).__init__(cr, uid, name, context=context)
 
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid)
         partner = user.company_id.partner_id
@@ -55,6 +54,7 @@ class order(report_sxw.rml_parse):
             if line[0] != 0:
                 dsum = dsum +(line[2] * (line[0]*line[1]/100))
         return dsum
+
     def _get_journal_amt(self, order_id):
         lst=[]
         sql = """ select aj.name from account_bank_statement as abs
@@ -76,4 +76,3 @@ class order(report_sxw.rml_parse):
 report_sxw.report_sxw('report.pos.receipt.with.remboursment', 'pos.order', 'addons/point_of_sale/report/pos_receipt_with_remboursment.rml', parser=order, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -27,7 +27,8 @@ from report.interface import report_rml
 from report.interface import toxml
 
 import pooler
-
+import time
+from report import report_sxw
 
 def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
@@ -68,21 +69,14 @@ def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, 
               display[index]=' '
               count=''
 
-    xml = '''
-        <time-element index="%d">
-            <value>%s</value>
-        </time-element>
-        '''
-    time_xml = ([xml % (index, value) for index,value in display.iteritems()])
     data_xml=['<info id="%d" number="%d" val="%s" />' % (row_id,x,display[x]) for x in range(1,len(display)+1) ]
 
     # Computing the xml
     xml = '''
     %s
     <employee row="%d" id="%d" name="%s" sum="%s">
-    %s
     </employee>
-    ''' % (data_xml,row_id,dept, toxml(name),count, '\n'.join(time_xml))
+    ''' % (data_xml,row_id,dept, toxml(name),count)
 
     return xml
 
@@ -93,7 +87,8 @@ class report_custom(report_rml):
         depts=[]
         emp_id={}
 #        done={}
-
+        rpt_obj = pooler.get_pool(cr.dbname).get('hr.holidays')
+        rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         cr.execute("SELECT name FROM res_company")
         res=cr.fetchone()[0]
         date_xml=[]
@@ -105,7 +100,6 @@ class report_custom(report_rml):
         today=datetime.datetime.today()
 
         first_date=data['form']['date_from']
-
         som = strToDate(first_date)
         eom = som+datetime.timedelta(59)
         day_diff=eom-som
@@ -119,8 +113,8 @@ class report_custom(report_rml):
         else:
             type="Confirmed and Validated"
             holiday_type=('confirm','validate')
-        date_xml.append('<from>%s</from>\n'% (som))
-        date_xml.append('<to>%s</to>\n' %(eom))
+        date_xml.append('<from>%s</from>\n'% (str(rml_obj.formatLang(som.strftime("%Y-%m-%d"),date=True))))
+        date_xml.append('<to>%s</to>\n' %(str(rml_obj.formatLang(eom.strftime("%Y-%m-%d"),date=True))))
         date_xml.append('<type>%s</type>'%(type))
 
 #        date_xml=[]
@@ -234,14 +228,23 @@ class report_custom(report_rml):
                     dept_done=1
                     emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, item['id'], item['name'], som, eom)
                     row_id = row_id +1
+
+        header_xml = '''
+        <header>
+        <date>%s</date>
+        <company>%s</company>
+        </header>
+        '''  % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+
         # Computing the xml
         xml='''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
         %s
         %s
+        %s
         </report>
-        ''' % (months_xml,date_xml, emp_xml)
+        ''' % (header_xml,months_xml,date_xml, emp_xml)
 
         return xml
 

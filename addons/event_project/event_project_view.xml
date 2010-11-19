@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <!-- EVENTS  -->
+
+        <record model="ir.ui.view" id="view_event_form_inherited">
+            <field name="name">Events</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                <page string="Tasks">
+                    <separator string="Tasks management" colspan="4"/>
+                    <field name="project_id"/>
+                    <button string="Create Retro-Planning" name="%(action_event_project)d" type="action" icon="gtk-execute"/>
+                    <field name="task_ids" colspan="4" nolabel="1" widget="one2many_list" >
+                       <tree string="All tasks" colors="red:date_deadline&lt;current_date and state=='draft';blue:date_deadline==current_date and state=='draft';gray:state in ('cancel','done')">
+                            <field name="sequence"/>
+                            <field name="name"/>
+                            <field name="user_id" />
+                            <field name="date_deadline" />
+                            <field name="planned_hours" widget="float_time"/>
+                            <field name="effective_hours" widget="float_time"/>
+                            <field name="state" />
+                        </tree>
+                    </field>
+                </page>
+                </notebook>
+            </field>
+        </record>
+      <act_window
+            id="act_event_task"
+            name="Tasks"
+            res_model="project.task"
+            src_model="event.event"
+            view_mode="tree,form,calendar,graph"
+            context="{'search_default_project_id': project_id}"
+            view_type="form"/>
+
+    </data>
+</openerp>

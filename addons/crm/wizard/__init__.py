@@ -20,7 +20,7 @@
 ##############################################################################
 
 import crm_send_email
-import crm_forward_to_partner
+import crm_add_note
 
 import crm_lead_to_partner
 import crm_lead_to_opportunity
@@ -30,7 +30,6 @@ import crm_phonecall_to_partner
 import crm_phonecall_to_opportunity
 import crm_partner_to_opportunity
 
-import crm_custom_create_menu
 import crm_merge_opportunities
 
 

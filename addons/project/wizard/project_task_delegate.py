@@ -30,7 +30,7 @@ class project_task_delegate(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Delegated Title', size=64, required=True, help="New title of the task delegated to the user"),
-        'prefix': fields.char('Your Task Title', size=64, required=True, help="New title of your own task to validate the work done"),
+        'prefix': fields.char('Your Task Title', size=64, required=True, help="Title for your validation task"),
         'user_id': fields.many2one('res.users', 'Assign To', required=True, help="User you want to delegate this task to"),
         'new_task_description': fields.text('New Task Description', help="Reinclude the description of the task in the task of the user"),
         'planned_hours': fields.float('Planned Hours',  help="Estimated time to close this task by the delegated user"),
@@ -48,10 +48,7 @@ class project_task_delegate(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         task_pool = self.pool.get('project.task')
         task = task_pool.browse(cr, uid, record_id, context=context)
-        project = task.project_id
-        manager = project.user_id or False
-        partner = task.partner_id or task.project_id.partner_id
-        
+
         if 'name' in fields:
             if task.name.startswith(_('CHECK: ')):
                 newname = str(task.name).replace(_('CHECK: '), '')

@@ -85,14 +85,14 @@
     ],
     'demo_xml': [
          'mrp_demo.xml',
-         'board_manufacturing_demo.xml'
     ],
     'test': [
          'test/mrp_procurement.yml',
          'test/mrp_packs.yml',
          'test/mrp_phantom_bom.yml',
          'test/mrp_production_order.yml',
-         
+         'test/mrp_report.yml',
+
     ],
     'installable': True,
     'active': False,

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-19 12:03:06+0000\n"
-"PO-Revision-Date: 2010-08-19 12:03:06+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:17+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,15 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_cancel
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: account_cancel
-#: model:ir.module.module,description:account_cancel.module_meta_information
-msgid "\n"
-"    Module adds 'Allow cancelling entries' field on form view of account journal. If set to true it allows user to cancel entries & invoices.\n"
-"    "
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: account_cancel
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: account_cancel

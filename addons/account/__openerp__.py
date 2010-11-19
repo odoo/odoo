@@ -32,7 +32,7 @@
     Customer and Supplier Invoices
     Bank statements
     Reconciliation process by partner
-    Creates a dashboards for accountants that includes:
+    Creates a dashboard for accountants that includes:
     * List of uninvoiced quotations
     * Graph of aged receivables
     * Graph of aged incomes
@@ -49,7 +49,10 @@ module named account_voucher.
         'security/ir.model.access.csv',
         'account_menuitem.xml',
         'account_wizard.xml',
-        'wizard/account_statement_from_invoice_view.xml',
+        'report/account_invoice_report_view.xml',
+        'report/account_entries_report_view.xml',
+        'report/account_report_view.xml',
+        'report/account_analytic_entries_report_view.xml',
         'wizard/account_move_bank_reconcile_view.xml',
         'wizard/account_use_model_view.xml',
         'account_installer.xml',
@@ -81,7 +84,6 @@ module named account_voucher.
         'wizard/account_report_partner_balance_view.xml',
         'wizard/account_report_account_balance_view.xml',
         'wizard/account_report_aged_partner_balance_view.xml',
-        'wizard/account_compare_account_balance_report_view.xml',
         'wizard/account_report_partner_ledger_view.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/account_reconcile_partner_process_view.xml',
@@ -108,10 +110,6 @@ module named account_voucher.
         'process/supplier_invoice_process.xml',
         'sequence_view.xml',
         'company_view.xml',
-        'report/account_invoice_report_view.xml',
-        'report/account_entries_report_view.xml',
-        'report/account_report_view.xml',
-        'report/account_analytic_entries_report_view.xml',
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",
         "wizard/account_report_balance_sheet_view.xml"
@@ -121,8 +119,7 @@ module named account_voucher.
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
-        'account_unit_test.xml',
-        'board_account_demo.xml',
+#        'account_unit_test.xml',
     ],
     'test': [
         'test/account_customer_invoice.yml',
@@ -134,6 +131,9 @@ module named account_voucher.
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
         'test/account_fiscalyear_close.yml',
+        'test/account_bank_statement.yml',
+        'test/account_cash_statement.yml',
+        'test/account_report.yml',
     ],
     'installable': True,
     'active': False,

@@ -1,741 +1,241 @@
 <?xml version="1.0" ?>
 <openerp>
     <data noupdate="1">
-    <!-- Users  -->
-
-        <record id="res_users_demouser1" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="address_id" ref="base.main_address"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">Demo User1</field>
-            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
-            <field name="signature">Mr Demo</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Setup')]"/>
-            <field name="login">demo1</field>
-            <field name="password">demo1</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_manager0" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">Manager1</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">manager1</field>
-            <field name="password">manager1</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_manager1" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">Manager2</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">manager2</field>
-            <field name="password">manager2</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_user0" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">user1</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">user1</field>
-            <field name="password">USER1</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_user1" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">user2</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">user2</field>
-            <field name="password">user2</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_userfinance0" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">user_finance</field>
-            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_finance')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">user_finance</field>
-            <field name="password">user_finance</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_userdesign0" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">user_design1</field>
-            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">user_design1</field>
-            <field name="password">user_design1</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_userdesign1" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">user_design2</field>
-            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">user_design2</field>
-            <field name="password">user_design2</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_userdeveloper0" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">user_developer1</field>
-            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">user_developer1</field>
-            <field name="password">user_developer1</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_userdeveloper1" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">user_developer2</field>
-            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">user_developer2</field>
-            <field name="password">user_developer1</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_usertester0" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">user_tester1</field>
-            <field eval="[(6,0,[ref('base.group_user')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">user_tester1</field>
-            <field name="password">user_tester1</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_usertester1" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">user_tester2</field>
-            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">user_tester2</field>
-            <field name="password">user_tester2</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <record id="res_users_useranalyst0" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
-            <field name="context_lang">en_US</field>
-            <field name="name">user_analyst</field>
-            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6, 0, [])]" name="roles_id"/>
-            <field eval="[(6, 0, [])]" name="rules_id"/>
-            <field eval="1" name="active"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
-            <field name="login">user_analyst</field>
-            <field name="password">user_analyst</field>
-            <field eval="[(6, 0, [])]" name="company_ids"/>
-        </record>
-
-        <!-- Resources -->
-
-        <record id="resource_resource_analyst0" model="resource.resource">
-            <field eval="1.0" name="time_efficiency"/>
-            <field name="user_id" ref="res_users_useranalyst0"/>
+<!--
+This Demo data file Human Resources, Phases and Resources,Tasks allocation and  also run scheduling of phase and tasks.
+-->
+        <!-- Human Resources -->
+        <record id="resource_analyst" model="resource.resource">
+            <field name="user_id" ref="project.res_users_analyst"/>
             <field name="name">Analyst</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="1" name="active"/>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
-            <field name="resource_type">user</field>
         </record>
 
-        <record id="resource_resource_programmer0" model="resource.resource">
-            <field eval="1.0" name="time_efficiency"/>
-            <field name="user_id" ref="res_users_userdeveloper0"/>
-            <field name="name">Programmer</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="1" name="active"/>
+        <record id="resource_project_manager" model="resource.resource">
+            <field name="user_id" ref="project.res_users_project_manager"/>
+            <field name="name">Project Manager</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
-            <field name="resource_type">user</field>
         </record>
 
-        <record id="resource_resource_tester0" model="resource.resource">
-            <field eval="1.0" name="time_efficiency"/>
-            <field name="user_id" ref="res_users_usertester0"/>
+         <record id="resource_technical_leader" model="resource.resource">
+            <field name="user_id" ref="project.res_users_technical_leader"/>
+            <field name="name">Technical Leader</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+        </record>
+
+        <record id="resource_developer" model="resource.resource">
+            <field name="user_id" ref="project.res_users_developer"/>
+            <field name="name">Developer</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+        </record>
+
+        <record id="resource_designer" model="resource.resource">
+            <field name="user_id" ref="project.res_users_designer"/>
+            <field name="name">Designer</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+        </record>
+
+        <record id="resource_tester" model="resource.resource">
+            <field name="user_id" ref="project.res_users_tester"/>
             <field name="name">Tester</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="1" name="active"/>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
-            <field name="resource_type">user</field>
         </record>
 
-        <record id="resource_resource_webdesigner0" model="resource.resource">
-            <field eval="1.0" name="time_efficiency"/>
-            <field name="user_id" ref="res_users_userdesign0"/>
-            <field name="name">Web Designer</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="1" name="active"/>
+        <record id="resource_finacial_manager" model="resource.resource">
+            <field name="user_id" ref="project.res_users_finacial_manager"/>
+            <field name="name">Project Finacial Manager</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
-            <field name="resource_type">user</field>
         </record>
 
-        <!-- Projects -->
-        <record id="project_project_openerpwebsitedevelopment0" model="project.project">
-            <field eval="10" name="sequence"/>
-            <field name="company_currency_id" ref="base.EUR"/>
-            <field eval="1" name="active"/>
-            <field eval="1" name="warn_manager"/>
-            <field eval="0" name="warn_customer"/>
-            <field name="date_start" eval="(DateTime.now()-timedelta(70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="1" name="priority"/>
-            <field name="state">open</field>
-            <field name="type">normal</field>
-            <field name="description">Develop an OpenERP Website.</field>
-            <field eval="[(6, 0, [ref('res_users_manager0'), ref('res_users_user0'), ref('res_users_userfinance0'), ref('res_users_userdesign0'), ref('res_users_userdeveloper0'), ref('res_users_usertester0'), ref('res_users_useranalyst0')])]" name="members"/>
-            <field name="date" eval="(DateTime.now()+timedelta(60-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="currency_id" ref="base.EUR"/>
-            <field eval="[(6, 0, [])]" name="type_ids"/>
-            <field name="name">OpenERP Website Development</field>
-        </record>
+
+
+        
 
         <!-- Project Phases -->
-        <record id="project_phase_informationgatheringandunderstanding0" model="project.phase">
+        <record id="project_phase_1" model="project.phase">
             <field eval="[(6, 0, [])]" name="previous_phase_ids"/>
-            <field name="name">Information Gathering and Understanding</field>
+            <field name="name">Collect Requirement and Make SRS</field>
             <field name="product_uom" ref="product.uom_day"/>
-            <field eval="10" name="sequence"/>
-            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(18-70)).strftime('%Y-%m-%d')"/>
-            <field name="date_start" eval="(DateTime.now()-timedelta(70)).strftime('%Y-%m-%d')"/>
-            <field name="state">draft</field>
-            <field name="responsible_id" ref="res_users_demouser1"/>
-            <field eval="15.0" name="duration"/>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(2-70)).strftime('%Y-%m-%d')"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(15-70)).strftime('%Y-%m-%d')"/>
+            <field eval="1" name="sequence"/>
+            <field name="duration">30</field>
+            <field name="responsible_id" ref="project.res_users_analyst"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
-        <record id="project_phase_planning0" model="project.phase">
-            <field eval="[(6, 0, [ref('project_phase_informationgatheringandunderstanding0')])]" name="previous_phase_ids"/>
-            <field name="name">Planning</field>
+        <record id="project_phase_2" model="project.phase">
+            <field eval="[(6, 0, [ref('project_phase_1')])]" name="previous_phase_ids"/>
+            <field name="name">Design Model</field>
             <field name="product_uom" ref="product.uom_day"/>
-            <field eval="10" name="sequence"/>
-            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(28-70)).strftime('%Y-%m-%d')"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(10-70)).strftime('%Y-%m-%d')"/>
-            <field name="state">draft</field>
-            <field name="responsible_id" ref="res_users_manager0"/>
-            <field eval="15.0" name="duration"/>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(13-70)).strftime('%Y-%m-%d')"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(25-70)).strftime('%Y-%m-%d')"/>
+            <field eval="2" name="sequence"/>
+            <field name="duration">20</field>
+            <field name="responsible_id" ref="project.res_users_project_manager"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
-        <record id="project_phase_webdesign0" model="project.phase">
-            <field eval="[(6, 0, [ref('project_phase_planning0')])]" name="previous_phase_ids"/>
-            <field name="name">Web Design </field>
+        <record id="project_phase_3" model="project.phase">
+            <field eval="[(6, 0, [ref('project_phase_2')])]" name="previous_phase_ids"/>
+            <field name="name">Planning and compute Risk analysis, Time chart </field>
             <field name="product_uom" ref="product.uom_day"/>
-            <field eval="10" name="sequence"/>
-            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(45-70)).strftime('%Y-%m-%d')"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(20-70)).strftime('%Y-%m-%d')"/>
-            <field name="state">draft</field>
-            <field name="responsible_id" ref="res_users_userdesign0"/>
-            <field eval="20.0" name="duration"/>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(25-70)).strftime('%Y-%m-%d')"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d')"/>
+            <field eval="3" name="sequence"/>
+            <field name="duration">20</field>
+            <field name="responsible_id" ref="project.res_users_project_manager"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
-        <record id="project_phase_developmentintegrationandtesting0" model="project.phase">
-            <field eval="[(6, 0, [ref('project_phase_webdesign0')])]" name="previous_phase_ids"/>
-            <field name="name">Development, Integration and Testing</field>
+        <record id="project_phase_4" model="project.phase">
+            <field eval="[(6, 0, [ref('project_phase_2')])]" name="previous_phase_ids"/>
+            <field name="name">Development and Integration</field>
             <field name="product_uom" ref="product.uom_day"/>
-            <field eval="10" name="sequence"/>
-            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(57-70)).strftime('%Y-%m-%d')"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(30-70)).strftime('%Y-%m-%d')"/>
-            <field name="state">draft</field>
-            <field name="responsible_id" ref="res_users_manager0"/>
-            <field eval="22.0" name="duration"/>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(35-70)).strftime('%Y-%m-%d')"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(52-70)).strftime('%Y-%m-%d')"/>
+            <field eval="4" name="sequence"/>
+            <field name="duration">90</field>
+            <field name="responsible_id" ref="project.res_users_technical_leader"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
-        <record id="project_phase_websitedeployment0" model="project.phase">
-            <field eval="[(6, 0, [ref('project_phase_developmentintegrationandtesting0')])]" name="previous_phase_ids"/>
-            <field name="name">Website Deployment</field>
+        <record id="project_phase_5" model="project.phase">
+            <field eval="[(6, 0, [ref('project_phase_4')])]" name="previous_phase_ids"/>
+            <field name="name">Review and Testing</field>
             <field name="product_uom" ref="product.uom_day"/>
-            <field eval="10" name="sequence"/>
-            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(63-70)).strftime('%Y-%m-%d')"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d')"/>
-            <field name="state">draft</field>
-            <field name="responsible_id" ref="res_users_manager0"/>
-            <field eval="5.0" name="duration"/>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(58-70)).strftime('%Y-%m-%d')"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(60-70)).strftime('%Y-%m-%d')"/>
+            <field eval="5" name="sequence"/>
+            <field name="duration">30</field>
+            <field name="responsible_id" ref="project.res_users_project_manager"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
+        </record>
+
+        <record id="project_phase_6" model="project.phase">
+            <field eval="[(6, 0, [ref('project_phase_5')])]" name="previous_phase_ids"/>
+            <field name="name">Deployement and Training</field>
+            <field name="product_uom" ref="product.uom_day"/>
+            <field eval="5" name="sequence"/>
+            <field name="duration">10</field>
+            <field name="responsible_id" ref="project.res_users_analyst"/>
+            <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
         <!--  Project Resource Allocation -->
-        <record id="project_resource_allocation_0" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_resource_analyst0"/>
-            <field name="phase_id" ref="project_phase_informationgatheringandunderstanding0"/>
-            <field eval="40.0" name="useability"/>
+        <record id="resource_allocation_1" model="project.resource.allocation">
+            <field name="resource_id" ref="resource_analyst"/>
+            <field name="phase_id" ref="project_phase_1"/>
         </record>
 
-        <record id="project_resource_allocation_1" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_resource_programmer0"/>
-            <field name="phase_id" ref="project_phase_informationgatheringandunderstanding0"/>
-            <field eval="60.0" name="useability"/>
+        <record id="resource_allocation_2" model="project.resource.allocation">
+            <field name="resource_id" ref="resource_project_manager"/>
+            <field name="phase_id" ref="project_phase_2"/>
         </record>
 
-        <record id="project_resource_allocation_2" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_resource_tester0"/>
-            <field name="phase_id" ref="project_phase_informationgatheringandunderstanding0"/>
-            <field eval="40.0" name="useability"/>
+        <record id="resource_allocation_3" model="project.resource.allocation">
+            <field name="resource_id" ref="resource_project_manager"/>
+            <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_resource_allocation_3" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_resource_analyst0"/>
-            <field name="phase_id" ref="project_phase_planning0"/>
-            <field eval="70.0" name="useability"/>
+        <record id="resource_allocation_4" model="project.resource.allocation">
+            <field name="resource_id" ref="resource_technical_leader"/>
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_resource_allocation_4" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_resource_programmer0"/>
-            <field name="phase_id" ref="project_phase_planning0"/>
-            <field eval="70.0" name="useability"/>
+        <record id="resource_allocation_5" model="project.resource.allocation">
+            <field name="resource_id" ref="resource_developer"/>
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_resource_allocation_5" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_resource_webdesigner0"/>
-            <field name="phase_id" ref="project_phase_webdesign0"/>
-            <field eval="80.0" name="useability"/>
+        <record id="resource_allocation_6" model="project.resource.allocation">
+            <field name="resource_id" ref="resource_designer"/>
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_resource_allocation_6" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_resource_programmer0"/>
-            <field name="phase_id" ref="project_phase_webdesign0"/>
-            <field eval="30.0" name="useability"/>
+        <record id="resource_allocation_7" model="project.resource.allocation">
+            <field name="resource_id" ref="resource_tester"/>
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_resource_allocation_7" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_resource_programmer0"/>
-            <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
-            <field eval="100.0" name="useability"/>
+        <record id="resource_allocation_8" model="project.resource.allocation">
+            <field name="resource_id" ref="resource_project_manager"/>
+            <field name="phase_id" ref="project_phase_5"/>
         </record>
 
-        <record id="project_resource_allocation_8" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_resource_tester0"/>
-            <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
-            <field eval="50.0" name="useability"/>
+        <record id="resource_allocation_9" model="project.resource.allocation">
+            <field name="resource_id" ref="resource_analyst"/>
+            <field name="phase_id" ref="project_phase_6"/>
         </record>
 
         <!-- Tasks -->
-        <record id="project_task_preparerequirementsdocument0" model="project.task">
-            <field eval="15" name="sequence"/>
-            <field eval="100.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_user0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()-timedelta(70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Prepare Requirements Document</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="100.0" name="total_hours"/>
-            <field eval="100.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_informationgatheringandunderstanding0"/>
+
+        <record id="project.project_task_1" model="project.task">
+            <field name="phase_id" ref="project_phase_1"/>
         </record>
 
-        <record id="project_task_definewebsitegoalspurposesandtargetaudience0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="80.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_useranalyst0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()-timedelta(70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Define Website Goals, Purposes and Target Audience</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(10-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="80.0" name="total_hours"/>
-            <field eval="80.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_informationgatheringandunderstanding0"/>
+        <record id="project.project_task_2" model="project.task">
+            <field name="phase_id" ref="project_phase_1"/>
         </record>
 
-        <record id="project_task_usecases0" model="project.task">
-            <field eval="17" name="sequence"/>
-            <field eval="40.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_userdesign0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(48-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Use Cases</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="40.0" name="total_hours"/>
-            <field eval="40.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_informationgatheringandunderstanding0"/>
+        <record id="project.project_task_3" model="project.task">
+            <field name="phase_id" ref="project_phase_2"/>
         </record>
 
-        <record id="project_task_budgetplanning0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="25.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_userfinance0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(10-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Budget Planning</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(18-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="25.0" name="total_hours"/>
-            <field eval="25.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_planning0"/>
+        <record id="project.project_task_4" model="project.task">
+            <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_qualityplanning0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="25.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_user0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(10-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Quality Planning</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(18-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="25.0" name="total_hours"/>
-            <field eval="25.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_planning0"/>
+        <record id="project.project_task_5" model="project.task">
+            <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_riskmanagementplanning0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="20.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_user1"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(13-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Risk Management Planning</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(20-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="20.0" name="total_hours"/>
-            <field eval="20.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_planning0"/>
+        <record id="project.project_task_6" model="project.task">
+            <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_createprojectschedules0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="30.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_manager0"/>
-			<field name="state">open</field>            
-            <field name="date_start" eval="(DateTime.now()+timedelta(20-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Create Project Schedules</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(25-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="30.0" name="total_hours"/>
-            <field eval="30.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_planning0"/>
+        <record id="project.project_task_7" model="project.task">
+            <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_dataflowdesign0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="10.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_manager0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(20-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Dataflow Design</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(23-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="10.0" name="total_hours"/>
-            <field eval="10.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_webdesign0"/>
+        <record id="project.project_task_8" model="project.task">
+            <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_userinterfacedesign0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="50.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_userdesign0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(22-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">User Interface Design</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="150.0" name="total_hours"/>
-            <field eval="150.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_webdesign0"/>
+        <record id="project.project_task_9" model="project.task">
+            <field name="phase_id" ref="project_phase_3"/>
         </record>
 
-        <record id="project_task_tasklevelwbs0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="40.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_userdesign0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(30-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Task Level WBS</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="40.0" name="total_hours"/>
-            <field eval="40.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_webdesign0"/>
+        <record id="project.project_task_10" model="project.task">
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_modularprogramming0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="90.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_userdeveloper0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(30-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Modular Programming</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(50-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="90.0" name="total_hours"/>
-            <field eval="90.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
+        <record id="project.project_task_11" model="project.task">
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_integratemodules0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="20.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_userdeveloper1"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(45-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Integrate Modules</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(53-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="20.0" name="total_hours"/>
-            <field eval="20.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
+        <record id="project.project_task_12" model="project.task">
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_unittesting0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="50.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_usertester0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Unit Testing</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="50.0" name="total_hours"/>
-            <field eval="50.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
+        <record id="project.project_task_13" model="project.task">
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_regressiontest0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="30.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_usertester0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Regression Test</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="30.0" name="total_hours"/>
-            <field eval="30.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
+        <record id="project.project_task_14" model="project.task">
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_documentation0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="15.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_demouser1"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Documentation</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="15.0" name="total_hours"/>
-            <field eval="15.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_websitedeployment0"/>
+        <record id="project.project_task_15" model="project.task">
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_performancetuning0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="40.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_usertester1"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(45-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Performance Tuning</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="40.0" name="total_hours"/>
-            <field eval="40.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
+        <record id="project.project_task_16" model="project.task">
+            <field name="phase_id" ref="project_phase_4"/>
         </record>
 
-        <record id="project_task_deploywebsite0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="5.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_userdeveloper0"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Deploy Website</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(60-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="5.0" name="total_hours"/>
-            <field eval="5.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_websitedeployment0"/>
+        <record id="project.project_task_17" model="project.task">
+            <field name="phase_id" ref="project_phase_6"/>
         </record>
 
-        <record id="project_task_presentation0" model="project.task">
-            <field eval="10" name="sequence"/>
-            <field eval="10.0" name="planned_hours"/>
-            <field name="user_id" ref="res_users_demouser1"/>
-            <field name="state">open</field>
-            <field name="date_start" eval="(DateTime.now()+timedelta(58-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="priority">2</field>
-            <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6, 0, [])]" name="child_ids"/>
-            <field eval="[(6, 0, [])]" name="parent_ids"/>
-            <field eval="1" name="active"/>
-            <field name="name">Presentation</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(65-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="10.0" name="total_hours"/>
-            <field eval="10.0" name="remaining_hours"/>
-            <field name="phase_id" ref="project_phase_websitedeployment0"/>
+        <record id="project.project_task_18" model="project.task">
+            <field name="phase_id" ref="project_phase_6"/>
         </record>
+
+        <!-- run scheduling of phase -->
+        <function model="project.project" name="schedule_phases" eval="(ref('project.project_integrate_openerp'),)"/>
+        <!-- run scheduling of tasks -->
+        <function model="project.project" name="schedule_tasks" eval="(ref('project.project_integrate_openerp'),)"/>
 
     </data>
 </openerp>

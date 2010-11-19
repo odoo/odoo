@@ -22,9 +22,12 @@
 from report.render import render
 from report.interface import report_int
 from pychart import *
-from mx.DateTime import *
+import time
+from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
 from report.misc import choice_colors
-import time, mx
+
 import random
 import StringIO
 
@@ -51,8 +54,8 @@ class report_custom(report_int):
             stop = start
         if time_unit == 'month':
             dates = {}
-            a = Date(*map(int, start.split("-"))).year*12+Date(*map(int, start.split("-"))).month
-            z = Date(*map(int,  stop.split("-"))).year*12+Date(*map(int,  stop.split("-"))).month+1
+            a = int(start.split("-")[0])*12 + int(start.split("-")[1])
+            z = int(stop.split("-")[0])*12 + int(stop.split("-")[1]) + 1
             for i in range(a,z):
                 year = i/12
                 month = i%12
@@ -62,27 +65,31 @@ class report_custom(report_int):
                 months = {1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"}
                 dates[i] = {
                     'name' :months[month],
-                    'start':(Date(year, month, 2) + RelativeDateTime(day=1)).strftime('%Y-%m-%d'),
-                    'stop' :(Date(year, month, 2) + RelativeDateTime(day=-1)).strftime('%Y-%m-%d'),
+                    'start':(datetime(year, month, 2) + relativedelta(day=1)).strftime('%Y-%m-%d'),
+                    'stop' :(datetime(year, month, 2) + relativedelta(day=31)).strftime('%Y-%m-%d'),
                 }
             return dates
         elif time_unit == 'week':
             dates = {}
-            a = Date(*map(int, start.split("-"))).iso_week[0]*52+Date(*map(int, start.split("-"))).iso_week[1]
-            z = Date(*map(int,  stop.split("-"))).iso_week[0]*52+Date(*map(int,  stop.split("-"))).iso_week[1]
+            start_week = date(int(start.split("-")[0]),int(start.split("-")[1]),int(start.split("-")[2])).isocalendar()
+            end_week = date(int(stop.split("-")[0]),int(stop.split("-")[1]),int(stop.split("-")[2])).isocalendar()
+            a = int(start.split("-")[0])*52 + start_week[1]
+            z = int(stop.split("-")[0])*52 + end_week[1]
             for i in range(a,z+1):
                 year = i/52
                 week = i%52
+                d = date(year, 1, 1)
+
                 dates[i] = {
                     'name' :"Week #%d" % week,
-                    'start':ISO.WeekTime(year, week, 1).strftime('%Y-%m-%d'),
-                    'stop' :ISO.WeekTime(year, week, 7).strftime('%Y-%m-%d'),
+                    'start':(d + timedelta(days=-d.weekday(), weeks=week)).strftime('%Y-%m-%d'),
+                    'stop' :(d + timedelta(days=6-d.weekday(), weeks=week)).strftime('%Y-%m-%d'),
                 }
             return dates
         else: # time_unit = day
             dates = {}
-            a = Date(*map(int, start.split("-")))
-            z = Date(*map(int, stop.split("-")))
+            a = datetime(int(start.split("-")[0]),int(start.split("-")[1]),int(start.split("-")[2]))
+            z = datetime(int(stop.split("-")[0]),int(stop.split("-")[1]),int(stop.split("-")[2]))
             i = a
             while i <= z:
                 dates[map(int,i.strftime('%Y%m%d').split())[0]] = {
@@ -90,7 +97,7 @@ class report_custom(report_int):
                     'start':i.strftime('%Y-%m-%d'),
                     'stop' :i.strftime('%Y-%m-%d'),
                 }
-                i = i + RelativeDateTime(days=+1)
+                i = i + relativedelta(days=+1)
             return dates
         return {}
 
@@ -117,11 +124,16 @@ class report_custom(report_int):
             x_index.append((dates[date]['name'], date))
         pdf_string = StringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
+        can.set_title("Work Centers Load")
         chart_object.set_defaults(line_plot.T, line_style=None)
         if datas['form']['measure_unit'] == 'cycles':
             y_label = "Load (Cycles)"
         else:
             y_label = "Load (Hours)"
+
+        # For add the report header on the top of the report.
+        tb = text_box.T(loc=(300, 500), text="/hL/15/bWork Centers Load", line_style=None)
+        tb.draw()
         ar = area.T(legend = legend.T(),
                     x_grid_style = line_style.gray70_dash1,
                     x_axis = axis.X(label="Periods", format="/a90/hC%s"),
@@ -130,7 +142,6 @@ class report_custom(report_int):
                     y_range = (0, None),
                     size = (640,480))
         bar_plot.fill_styles.reset();
-
         # select workcenters
         cr.execute(
             "SELECT mw.id, rs.name FROM mrp_workcenter mw, resource_resource rs " \

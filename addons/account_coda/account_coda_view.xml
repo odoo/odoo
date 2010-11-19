@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <form string="Coda import">
                 <field name="name" />
-                <field name="journal_id" />
+                <field name="journal_id" widget="selection"/>
                 <field name="date" />
                 <field name="user_id" />
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -30,8 +30,8 @@
         <field name="model">account.coda</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Coda import">
-                <field name="journal_id" />
+            <tree string="Coda Import">
+                <field name="journal_id" widget="selection"/>
                 <field name="date" />
                 <field name="user_id" />
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -46,25 +46,26 @@
             <field name="arch" type="xml">
                 <search string="Search Coda">
                    <group col="10" colspan="4">
-                        <field name="journal_id"/>
+                        <field name="journal_id" widget='selection'/>
                         <field name="date"/>
-                        <field name="user_id" default="uid"/>
+                        <field name="user_id" widget='selection'/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
+                        <filter string="User" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="User" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="Company" icon="terp-personal" domain="[]"  context="{'group_by':'company_id'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     </group>
                </search>
             </field>
         </record>
 
     <record model="ir.actions.act_window" id="action_account_coda">
-        <field name="name">Statements</field>
+        <field name="name">Coda Logs</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">account.coda</field>
         <field name="view_type">form</field>
@@ -75,16 +76,17 @@
 
     <menuitem name="Coda Import Logs" parent="account.menu_finance_bank_and_cash" id="menu_account_coda_statement" action="action_account_coda" groups="base.group_extended" sequence="32"/>
 
-    <menuitem name="Import Coda Statements" action="action_account_coda_import" parent="account.menu_account_coda"
+    <menuitem name="Import Coda Statements" action="action_account_coda_import" parent="account.menu_account_pp_statements"
      id="menu_account_coda_import" sequence="20"/>
 
     <act_window name="Coda File"
-        domain="[('statement_ids', 'in', [active_id])]"
-        res_model="account.coda"
-        src_model="account.bank.statement"
-        view_type="form"
-        view_mode="tree,form"
-         id="act_account_payment_account_bank_statement"/>
+		domain="[('statement_ids', 'in', [active_id])]"
+		context="{'bank_statement': 1}"
+		res_model="account.coda"
+		src_model="account.bank.statement"
+		view_type="form"
+		view_mode="tree,form"
+		id="act_account_payment_account_bank_statement"/>
 
     </data>
 </openerp>

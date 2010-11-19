@@ -23,19 +23,18 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Generic Modules/Accounting',
-    "description": """Account Accountant: This module makes the account as an Invoicing system but not an
-accounting one.
+    "description": """
+This module gives the admin user the access to all the accounting features like the journal
+items and the chart of accounts.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
     "depends" : ["account"],
     'update_xml': [
-        'account_security.xml',
+        'security/account_security.xml',
     ],
-    'demo_xml': [
-    ],
-    'test': [
-    ],
+    'demo_xml': ['account_accountant_demo.xml'],
+    'test': [],
     'installable': True,
     'active': False,
     'certificate': '',

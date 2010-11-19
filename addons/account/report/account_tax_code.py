@@ -21,11 +21,7 @@
 ##############################################################################
 
 import time
-import pooler
-import rml_parse
-import copy
 from report import report_sxw
-import re
 
 def _get_country(record):
     if record.partner_id \
@@ -46,7 +42,7 @@ def _record_to_report_line(record):
             'country': _get_country(record)
             }
 
-class account_tax_code_report(rml_parse.rml_parse):
+class account_tax_code_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(account_tax_code_report, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({

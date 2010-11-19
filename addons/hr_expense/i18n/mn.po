@@ -7,521 +7,905 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-09 03:52+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-10-29 09:31+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-09 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
 msgid "Confirmed Expenses"
-msgstr ""
+msgstr "Батлагдсан зардлууд"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
 msgid "Expense Line"
-msgstr ""
+msgstr "Зардлын мөр"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reimbursement0
 msgid "The accoutant reimburse the expenses"
-msgstr ""
+msgstr "Зардлуудыг нөхөн төлөх данс"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all_confirm
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all_confirm
-msgid "Expenses waiting validation"
-msgstr ""
+#: field:hr.expense.expense,date_confirm:0
+#: field:hr.expense.report,date_confirm:0
+msgid "Confirmation Date"
+msgstr "Баталсан огноо"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: view:hr.expense.report:0
+msgid "Group By..."
+msgstr "Бүлэглэвэл..."
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.product_product_expense_air_product_template
+msgid "Air Ticket"
+msgstr "Онгоцны тийз"
 
 #. module: hr_expense
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_confirm:0
-msgid "Date Confirmed"
-msgstr ""
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,department_id:0
+msgid "Department"
+msgstr "Хэлтэс"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-msgid "Waiting confirmation"
-msgstr ""
+#: view:hr.expense.report:0
+msgid "Extended filters..."
+msgstr "Нэмэлт шүүлтүүр"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "March"
+msgstr "3 сар"
+
+#. module: hr_expense
+#: field:hr.expense.report,invoiced:0
+msgid "# of Invoiced Lines"
+msgstr "Нэхэмжилсэн мөрийн тоо"
+
+#. module: hr_expense
+#: field:hr.expense.expense,company_id:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,company_id:0
+msgid "Company"
+msgstr "Компани"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Ноороглох"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_my_confirm
-#: model:ir.ui.menu,name:hr_expense.menu_expense_my_confirm
-msgid "My expenses waiting validation"
-msgstr ""
+#: view:hr.expense.expense:0
+msgid "To Pay"
+msgstr "Төлөх"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all
-msgid "All expenses"
-msgstr ""
+#: model:ir.model,name:hr_expense.model_hr_expense_report
+msgid "Expenses Statistics"
+msgstr "Зардлын шинжилгээ"
 
 #. module: hr_expense
+#: selection:hr.expense.expense,state:0
+#: view:hr.expense.report:0
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
-msgstr ""
+msgstr "Зөвшөөрсөн"
 
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
 msgid "UoM"
-msgstr ""
+msgstr "Хэмжих нэгж"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: model:process.transition.action,name:hr_expense.process_transition_action_refuse0
-msgid "Refuse"
+#: help:hr.expense.expense,date_valid:0
+msgid ""
+"Date of the acceptation of the sheet expense. It's filled when the button "
+"Accept is pressed."
 msgstr ""
+"Цалингийн хуудасны зардлыг хүлээн зөвшөөрсөн огноо. Хүлээн зөвшөөрөх товчийг "
+"дарахад бөглөгдөнө"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Notes"
-msgstr ""
+msgstr "Тэмдэглэл"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
+#: field:hr.expense.expense,invoice_id:0
+msgid "Employee's Invoice"
+msgstr "Ажилтны нэхэмжлэх"
+
+#. module: hr_expense
+#: selection:hr.expense.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Цуцлагдсан"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Validation"
-msgstr ""
+msgstr "Батламжлах"
 
 #. module: hr_expense
-#: help:product.product,hr_expense_ok:0
-msgid ""
-"Determine if the product can be visible in the list of product within a "
-"selection from an HR expense sheet line."
-msgstr ""
+#: selection:hr.expense.report,state:0
+msgid "Waiting confirmation"
+msgstr "Батлахыг хүлээх"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
+#: selection:hr.expense.report,state:0
 msgid "Accepted"
-msgstr ""
+msgstr "Зөвшөөрсөн"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: view:hr.expense.report:0
+msgid "   Month   "
+msgstr "   Сар   "
+
+#. module: hr_expense
+#: report:hr.expense:0
 #: field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
-msgstr ""
+msgstr "Лавлах"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 msgid "Certified honest and conform,"
-msgstr ""
+msgstr "Үнэн зөв, зохимжтойг гэрчилж байна"
 
 #. module: hr_expense
-#: model:ir.actions.report.xml,name:hr_expense.hr_expenses
-msgid "Print HR expenses"
+#: help:hr.expense.expense,date_confirm:0
+msgid ""
+"Date of the confirmation of the sheet expense. It's filled when the button "
+"Confirm is pressed."
 msgstr ""
+"Цалингийн хуудсын зардлыг баталсан огноо. Энэ нь 'Батлах' товчийг дарахад "
+"бөглөгдөнө."
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+#: field:hr.expense.report,nbr:0
+msgid "# of Lines"
+msgstr "Мөрийн тоо"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
 msgid "Refuse expense"
-msgstr ""
+msgstr "Татгалзсан зардал"
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.product_product_expense_car_product_template
+msgid "Car Travel"
+msgstr "Машинаар зорчих"
+
+#. module: hr_expense
+#: field:hr.expense.report,price_average:0
+msgid "Average Price"
+msgstr "Дундаж үнэ"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Total Invoiced Lines"
+msgstr "Бүх нэхэмжилсэн мөрүүд"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_confirm0
 msgid "Confirm"
-msgstr ""
+msgstr "Батлах"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_supplierinvoice0
 msgid "The accoutant validates the sheet"
+msgstr "Нягтлан энэ хуудсыг батламжилна"
+
+#. module: hr_expense
+#: field:hr.expense.report,delay_valid:0
+msgid "Delay to Valid"
+msgstr "Хүчинтэй болох хүртэлх хугацаа"
+
+#. module: hr_expense
+#: help:hr.expense.line,sequence:0
+msgid "Gives the sequence order when displaying a list of expense lines."
+msgstr "Зардлын мөрүүдийг харахдаа тэдгээрт дарааллыг олгоно."
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid ""
+"Please configure Default Expanse account for Product purchase, "
+"`property_account_expense_categ`"
 msgstr ""
+"Худалдан авч буй барааны 'Өгөгдмөл өсөлт' талбарын тохируулна уу.  "
+"`property_account_expense_categ`"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Аналитик данс"
 
 #. module: hr_expense
-#: model:process.node,name:hr_expense.process_node_supplierinvoice0
-#: model:process.transition,name:hr_expense.process_transition_approveinvoice0
-msgid "Supplier Invoice"
-msgstr ""
+#: field:hr.expense.report,date:0
+msgid "Date "
+msgstr "Огноо "
 
 #. module: hr_expense
 #: field:hr.expense.expense,state:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,state:0
 msgid "State"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
+#: view:hr.expense.expense:0
 #: field:hr.expense.expense,employee_id:0
+#: view:hr.expense.report:0
 msgid "Employee"
-msgstr ""
+msgstr "Ажилтан"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
+#: field:hr.expense.report,product_qty:0
 msgid "Qty"
-msgstr ""
+msgstr "Тоо хэмжээ"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Нийт үнэ"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
 msgid "Some costs may be reinvoices to the customer"
-msgstr ""
+msgstr "Зарим үнүүдийг харилцагч дахин нэхэмжилж магадгүй"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_my
-#: model:ir.ui.menu,name:hr_expense.menu_expense_my
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "Error !"
+msgstr "Алдаа !"
+
+#. module: hr_expense
+#: view:board.board:0
+#: model:ir.actions.act_window,name:hr_expense.action_my_expense
 msgid "My Expenses"
-msgstr ""
+msgstr "Миний өөрийн зардлууд"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Creation Date"
+msgstr "Үүсгэсэн огноо"
+
+#. module: hr_expense
+#: model:ir.actions.report.xml,name:hr_expense.hr_expenses
+msgid "HR expenses"
+msgstr "Хүний нөөцийн зардлууд"
 
 #. module: hr_expense
 #: field:hr.expense.expense,id:0
 msgid "Sheet ID"
-msgstr ""
+msgstr "Хуудасны дугаар"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimburseexpense0
 msgid "Reimburse expense"
-msgstr ""
+msgstr "Нөхөн төлөх зардал"
 
 #. module: hr_expense
 #: field:hr.expense.expense,journal_id:0
+#: field:hr.expense.report,journal_id:0
 msgid "Force Journal"
-msgstr ""
+msgstr "Хүчинтэй журнал"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_my_new
-#: model:ir.ui.menu,name:hr_expense.menu_expense_my_new
-msgid "New Expenses Sheet"
-msgstr ""
+#: view:hr.expense.report:0
+#: field:hr.expense.report,no_of_products:0
+msgid "# of Products"
+msgstr "Бүтээгдэхүүний тоо"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "July"
+msgstr "7 сар"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_reimburseexpense0
 msgid "After creating invoice, reimburse expenses"
-msgstr ""
+msgstr "Зардлуудыг төлөөд дараа нь нэхэмжлэл үүсгэх"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
 msgid "Reimbursement"
-msgstr ""
+msgstr "Нөхөн төлөлт"
 
 #. module: hr_expense
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Дэлгэцийн XML алдаатай!"
 
 #. module: hr_expense
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Алдаа: Борлуулалтын нэгж нь хэмжилтийн нэгжээс өөр нэр томъёл"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "    Month-1    "
+msgstr "    Сар 1    "
+
+#. module: hr_expense
+#: field:hr.expense.expense,date_valid:0
+#: field:hr.expense.report,date_valid:0
+msgid "Validation Date"
+msgstr "Батламжилсан огноо"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_report_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report_all
+msgid "Expenses Analysis"
+msgstr "Зардлын шинжилгээ"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
 #: field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
+#: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense"
-msgstr ""
+msgstr "Зардал"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
-msgstr ""
+msgstr "Зардлын мөрүүд"
+
+#. module: hr_expense
+#: field:hr.expense.report,delay_confirm:0
+msgid "Delay to Confirm"
+msgstr "Батлах хүртэлх хугацаа"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "September"
+msgstr "9 сар"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "December"
+msgstr "12 сар"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,month:0
+msgid "Month"
+msgstr "Сар"
 
 #. module: hr_expense
 #: field:hr.expense.expense,currency_id:0
+#: field:hr.expense.report,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Валют"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a working address"
+msgstr "Ажилтан ажлын хаягтай байх ёстой"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Waiting Approval"
+msgstr "Зөвшөөрөл хүлээж байгаа"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_draftexpenses0
 msgid "Employee encode all his expenses"
-msgstr ""
+msgstr "Ажилчдын бүх зардлыг бүртгэх"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
+#: view:hr.expense.report:0
+#: selection:hr.expense.report,state:0
 msgid "Invoiced"
+msgstr "Нэхэмжилсэн"
+
+#. module: hr_expense
+#: field:product.product,hr_expense_ok:0
+msgid "Can Constitute an Expense"
+msgstr "Зардлаас харагдахаар тогтоох эсэх"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "  Year  "
+msgstr "  Он  "
+
+#. module: hr_expense
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
+"Алдаа: Өгөгдмөл хэмжих нэгж ба худалдан авалтын хэмжилт нь 1 ангилалд байх "
+"ёстой"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
+#: selection:hr.expense.report,state:0
 msgid "Reimbursed"
-msgstr ""
+msgstr "Нөхөн төлөлт"
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
 msgid "Note"
-msgstr ""
+msgstr "Тэмдэглэл"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_reimbursereinvoice0
 msgid "Create Customer invoice"
-msgstr ""
+msgstr "Хэрэглэгчийн нэхэмжлэл үүсгэх"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: selection:hr.expense.expense,state:0
+#: selection:hr.expense.report,state:0
 msgid "Draft"
+msgstr "Ноорог"
+
+#. module: hr_expense
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Алдаа ! Рекурс цэсийг үүсгэж болохгүй"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Accounting data"
+msgstr "Дансны өгөгдөл"
+
+#. module: hr_expense
+#: model:process.transition,note:hr_expense.process_transition_approveexpense0
+msgid "Expense is approved."
+msgstr "Зардлуудыг зөвшөөрлөө"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "August"
+msgstr "8 сар"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_approved0
+msgid "The direct manager approves the sheet"
+msgstr "Хариуцсан байгаа менежер энэ хуудсыг зөвшөөрнө"
+
+#. module: hr_expense
+#: field:hr.expense.expense,amount:0
+msgid "Total Amount"
+msgstr "Нийт хэмжээ"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "June"
+msgstr "6 сар"
+
+#. module: hr_expense
+#: model:process.node,name:hr_expense.process_node_draftexpenses0
+msgid "Draft Expenses"
+msgstr "Ноорог зардлууд"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Customer Project"
+msgstr "Үйлчлүүлэгчийн төсөл"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,user_id:0
+msgid "User"
+msgstr "Хэрэглэгч"
+
+#. module: hr_expense
+#: report:hr.expense:0
+#: field:hr.expense.expense,date:0
+#: field:hr.expense.line,date_value:0
+msgid "Date"
+msgstr "Огноо"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "November"
+msgstr "11 сар"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "October"
+msgstr "10 сар"
+
+#. module: hr_expense
+#: report:hr.expense:0
+msgid "Total:"
+msgstr "Нийт:"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "January"
+msgstr "1 сар"
+
+#. module: hr_expense
+#: report:hr.expense:0
+msgid "HR Expenses"
+msgstr "Хүний нөөцийн зардалууд"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_confirmedexpenses0
+msgid "The employee validates his expense sheet"
+msgstr "Ажилтаны зардлын хуудсыг  хүчинтэйд тооцох"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_refused0
+msgid "The direct manager refuses the sheet.Reset as draft."
 msgstr ""
+"Хариуцсан менежер энэ зардлын хуудсанд татгалзсан хариу өгч, ноорог болгож "
+"болно."
+
+#. module: hr_expense
+#: model:process.node,name:hr_expense.process_node_supplierinvoice0
+#: model:process.transition,name:hr_expense.process_transition_approveinvoice0
+msgid "Supplier Invoice"
+msgstr "Нийлүүлэгчийн нэхэмжлэл"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Expenses Sheet"
+msgstr "Зардлын хуудас"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Waiting"
+msgstr "Хүлээгдэж байгаа"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+#: field:hr.expense.report,day:0
+msgid "Day"
+msgstr "Өдөр"
+
+#. module: hr_expense
+#: model:ir.module.module,shortdesc:hr_expense.module_meta_information
+msgid "Human Resources Expenses Tracking"
+msgstr "Хүний нөөцийн зардлын хяналт"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "References"
+msgstr "Хамаарах лавлагаа"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: field:hr.expense.report,invoice_id:0
+#: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
+msgid "Invoice"
+msgstr "Нэхэмжлэл"
+
+#. module: hr_expense
+#: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
+msgid "Reinvoice"
+msgstr "Дахин нэхэмжлэх"
+
+#. module: hr_expense
+#: view:board.board:0
+#: model:ir.actions.act_window,name:hr_expense.action_employee_expense
+msgid "All Employee Expenses"
+msgstr "Бүх ажилнты зардал"
 
 #. module: hr_expense
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Accounting data"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.transition,note:hr_expense.process_transition_approveexpense0
-msgid "Expense is approved."
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,amount:0
-msgid "Total Amount"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,name:hr_expense.process_node_draftexpenses0
-msgid "Draft Expenses"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,user_id:0
-msgid "User"
-msgstr ""
-
-#. module: hr_expense
-#: rml:hr.expense:0
-#: field:hr.expense.expense,date:0
-#: field:hr.expense.line,date_value:0
-msgid "Date"
-msgstr ""
-
-#. module: hr_expense
-#: rml:hr.expense:0
-msgid "Total:"
-msgstr ""
-
-#. module: hr_expense
-#: rml:hr.expense:0
-msgid "HR Expenses"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-msgid "Date Validated"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,account_move_id:0
-msgid "Account Move"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_confirmedexpenses0
-msgid "The employee validates his expense sheet"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_refused0
-msgid "The direct manager refuses the sheet.Reset as draft."
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Expenses Sheet"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all_invoiced
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all_invoiced
-msgid "Expenses waiting payment"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_my_draft
-#: model:ir.ui.menu,name:hr_expense.menu_expense_my_draft
-msgid "My Draft expenses"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.module.module,shortdesc:hr_expense.module_meta_information
-msgid "Human Resources Expenses Tracking"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,invoice_id:0
-#: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
-msgid "Invoice"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Cancel"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
-msgid "Reinvoice"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.process,name:hr_expense.process_process_expenseprocess0
-msgid "Expense Process"
-msgstr ""
+"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+"болохгүй!"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Other Info"
-msgstr ""
+msgstr "Бусад мэдээлэл"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all_draft
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all_draft
-msgid "Draft expenses"
-msgstr ""
+#: help:hr.expense.expense,journal_id:0
+msgid "The journal used when the expense is invoiced"
+msgstr "Зардлыг нэхэмжлэхэд энэ журнал хэрэглэгдэнэ."
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: model:process.transition.action,name:hr_expense.process_transition_action_refuse0
+msgid "Refuse"
+msgstr "Татгалзах"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_confirmexpense0
 msgid "Confirm expense"
-msgstr ""
+msgstr "Зардлыг батлах"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_approveexpense0
 msgid "Approve expense"
-msgstr ""
+msgstr "Зардлыг зөвшөөрөх"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_accept0
 msgid "Accept"
-msgstr ""
+msgstr "Зөвшөөрөх"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 msgid "This document must be dated and signed for reimbursement"
 msgstr ""
+"Энэ бичиг баримтанд нь  огноо болон нөхөн төлөлтийн гарын үсэг  зурагдсан "
+"байх ёстой."
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
 msgid "Expense is refused."
-msgstr ""
+msgstr "Зардал хүлээн зөвшөөрөгдсөнгүй."
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 #: field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all_valid
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all_valid
-msgid "Expenses waiting invoice"
-msgstr ""
+msgstr "Нэгжийн үнэ"
 
 #. module: hr_expense
 #: field:hr.expense.line,product_id:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,product_id:0
+#: model:ir.model,name:hr_expense.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Бүтээгдэхүүн"
 
 #. module: hr_expense
-#: field:hr.expense.line,description:0
-msgid "Description"
-msgstr ""
+#: view:hr.expense.expense:0
+msgid "Expenses of My Department"
+msgstr "Тухайн хэлтсийн зардал"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: field:hr.expense.expense,name:0
-msgid "Expense Sheet"
-msgstr ""
+#: field:hr.expense.line,description:0
+msgid "Description"
+msgstr "Тайлбар"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "May"
+msgstr "5 сар"
 
 #. module: hr_expense
 #: field:hr.expense.line,unit_quantity:0
 msgid "Quantities"
-msgstr ""
+msgstr "Тоо хэмжээ"
 
 #. module: hr_expense
+#: field:hr.expense.report,no_of_account:0
+msgid "# of Accounts"
+msgstr "Дансны тоо"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
 #: model:process.node,name:hr_expense.process_node_refused0
 msgid "Refused"
-msgstr ""
+msgstr "Татгалзсан"
 
 #. module: hr_expense
-#: field:product.product,hr_expense_ok:0
-msgid "Can be Expensed"
-msgstr ""
-
-#. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 msgid "Ref."
-msgstr ""
+msgstr "реф."
+
+#. module: hr_expense
+#: field:hr.expense.report,employee_id:0
+msgid "Employee's Name"
+msgstr "Ажилтны нэр"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "This Month"
+msgstr "Энэ сар"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,user_id:0
 msgid "Validation User"
-msgstr ""
+msgstr "Батламжилсан хэрэглэгч"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 msgid "(Date and signature)"
-msgstr ""
+msgstr "Огноо болон гарын үсэг"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: selection:hr.expense.report,month:0
+msgid "February"
+msgstr "2 сар"
+
+#. module: hr_expense
+#: report:hr.expense:0
 msgid "Name"
-msgstr ""
+msgstr "Нэр"
 
 #. module: hr_expense
-#: field:hr.expense.line,name:0
-msgid "Short Description"
-msgstr ""
+#: field:hr.expense.expense,account_move_id:0
+msgid "Ledger Posting"
+msgstr "Дэвтэрт бичсэн гүйлгээ"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveinvoice0
 msgid "Creates supplier invoice."
-msgstr ""
+msgstr "Нийлүүлэгчийн нэхэмжлэл бүрдүүлэлт"
 
 #. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_approved0
-msgid "The direct manager approves the sheet"
+#: model:product.template,name:hr_expense.product_product_expense_hotel_product_template
+msgid "Hotel Accommodation"
+msgstr "Зочид буудлын байрлах"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "April"
+msgstr "4 сар"
+
+#. module: hr_expense
+#: field:hr.expense.line,name:0
+msgid "Expense Note"
+msgstr "Зардлын тэмдэглэл"
+
+#. module: hr_expense
+#: help:hr.expense.expense,state:0
+msgid ""
+"When the expense request is created the state is 'Draft'.\n"
+" It is confirmed by the user and request is sent to admin, the state is "
+"'Waiting Confirmation'.            \n"
+"If the admin accepts it, the state is 'Accepted'.\n"
+" If an invoice is made for the expense request, the state is 'Invoiced'.\n"
+" If the expense is paid to user, the state is 'Reimbursed'."
 msgstr ""
+"When the expense request is created the state is 'Draft'.\n"
+"Зардлын хүсэлт 'Ноорог' төлөвт үүссэний дара:\n"
+"Хэрэглэгч баталбал хүсэлт администраторт 'Зөвшөөрөл хүлээж байгаа' "
+"төлөвтэйгөөр шилжинэ. \n"
+"Администратор зөвшөөрвөл 'Зөвшөөрсөн' төлөвт шилжинэ.\n"
+"Зардлын хүсэлтэд нэхэмжлэх үүсвэл 'Нэхэмжилсэн' төлөвт шилжинэ.\n"
+"Зардлыг хэрэглэгчид төлбөл 'Нөхөн төлсөн' төлөвт шилжинэ."
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Approve"
+msgstr "Зөвшөөрсөн"
+
+#. module: hr_expense
+#: view:hr.expense.line:0
+#: field:hr.expense.line,total_amount:0
+msgid "Total"
+msgstr "Нийт"
+
+#. module: hr_expense
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
+msgstr "osv_memory обьект нь дүрмийг дэмжихгүй"
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Дараалал"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_confirmexpense0
 msgid "Expense is confirmed."
-msgstr ""
+msgstr "Батлагдсан зардал"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
+#: model:ir.actions.act_window,name:hr_expense.expense_all
+#: model:ir.ui.menu,name:hr_expense.menu_expense_all
 #: model:ir.ui.menu,name:hr_expense.next_id_49
 msgid "Expenses"
+msgstr "Зардлууд"
+
+#. module: hr_expense
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.line,total_amount:0
-msgid "Total"
+#: view:hr.expense.report:0
+#: field:hr.expense.report,year:0
+msgid "Year"
+msgstr "Он"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "To Approve"
+msgstr "Зөвшөөрөх"
+
+#. module: hr_expense
+#: help:product.product,hr_expense_ok:0
+msgid ""
+"Determines if the product can be visible in the list of product within a "
+"selection from an HR expense sheet line."
 msgstr ""
+"Хүний нөөцийн зардлын хуудаснаас бараа сонгоход энэ бараа барааны жагсаалтад "
+"харагдах эсэхийг тодорхойлно."
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
-msgstr ""
+msgstr "Дахин нэхэмжлэх"
+
+#~ msgid "Expenses waiting validation"
+#~ msgstr "Батлахыг хүлээж буй зардлууд"
+
+#~ msgid "Date Confirmed"
+#~ msgstr "Баталсан огноо"
+
+#~ msgid "My expenses waiting validation"
+#~ msgstr "Батлахыг хүлээж буй миний зардлууд"
+
+#~ msgid "All expenses"
+#~ msgstr "Бүх зардлууд"
+
+#~ msgid "Print HR expenses"
+#~ msgstr "Зардлуудыг хэвлэх"
+
+#~ msgid "New Expenses Sheet"
+#~ msgstr "Шинэ зардлын хуудас"
+
+#~ msgid "Date Validated"
+#~ msgstr "Батлагдсан огноо"
+
+#~ msgid "Account Move"
+#~ msgstr "Данс шилжүүлэх"
+
+#~ msgid "Expenses waiting payment"
+#~ msgstr "Хүлээлтийн зардлын төлбөр"
+
+#~ msgid "My Draft expenses"
+#~ msgstr "Миний ноорог зардлууд"
+
+#~ msgid "Cancel"
+#~ msgstr "Цуцлах"
+
+#~ msgid "Draft expenses"
+#~ msgstr "Ноорог зардлууд"
+
+#~ msgid "Expenses waiting invoice"
+#~ msgstr "Зардлын нэхэмжлэл хүлээх"
+
+#~ msgid "Expense Sheet"
+#~ msgstr "Зардлын хуудас"
+
+#~ msgid "Can be Expensed"
+#~ msgstr "Зарлага болгох"
+
+#~ msgid "Short Description"
+#~ msgstr "Богино тайлбар"
+
+#~ msgid "Expense Process"
+#~ msgstr "Урсгал зардал"

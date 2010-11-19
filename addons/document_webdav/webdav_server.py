@@ -28,7 +28,6 @@
 
 
 import netsvc
-import tools
 from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
@@ -36,9 +35,12 @@ from service.websrv_lib import HTTPDir, FixSendError, HttpOptions
 from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
-from string import atoi,split
+import re
+from string import atoi
 from DAV.errors import *
 # from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
+
+khtml_re = re.compile(r' KHTML/([0-9\.]+) ')
 
 def OpenDAVConfig(**kw):
     class OpenDAV:
@@ -57,7 +59,7 @@ def OpenDAVConfig(**kw):
 class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
     protocol_version = 'HTTP/1.1'
-    _HTTP_OPTIONS= { 'DAV' : ['1',],
+    _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
                     'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT',
                             'PROPFIND', 'PROPPATCH', 'OPTIONS', 'MKCOL',
                             'DELETE', 'TRACE', 'REPORT', ]
@@ -81,14 +83,21 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
 
     def setup(self):
         self.davpath = '/'+config.get_misc('webdav','vdir','webdav')
-        self.baseuri = "http://%s:%d/"% (self.server.server_name, self.server.server_port)
+        addr, port = self.server.server_name, self.server.server_port
+        server_proto = getattr(self.server,'proto', 'http').lower()
+        try:
+            if hasattr(self.request, 'getsockname'):
+                addr, port = self.request.getsockname()
+        except Exception, e:
+            self.log_error("Cannot calculate own address: %s" , e)
+        # Too early here to use self.headers
+        self.baseuri = "%s://%s:%d/"% (server_proto, addr, port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
 
     def copymove(self, CLASS):
         """ Our uri scheme removes the /webdav/ component from there, so we
         need to mangle the header, too.
         """
-        dest = self.headers['Destination']
         up = urlparse.urlparse(urllib.unquote(self.headers['Destination']))
         if up.path.startswith(self.davpath):
             self.headers['Destination'] = up.path[len(self.davpath):]
@@ -123,6 +132,16 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         # the BufferingHttpServer will send Connection: close , while
         # the BaseHTTPRequestHandler will only accept int code.
         # workaround both of them.
+        if self.command == 'PROPFIND' and int(code) == 404:
+            kh = khtml_re.search(self.headers.get('User-Agent',''))
+            if kh and (kh.group(1) < '4.5'):
+                # There is an ugly bug in all khtml < 4.5.x, where the 404
+                # response is treated as an immediate error, which would even
+                # break the flow of a subsequent PUT request. At the same time,
+                # the 200 response  (rather than 207 with content) is treated
+                # as "path not exist", so we send this instead
+                # https://bugs.kde.org/show_bug.cgi?id=166081
+                code = 200
         BaseHTTPRequestHandler.send_response(self, int(code), message)
 
     def send_header(self, key, value):
@@ -156,8 +175,6 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             etag = None
 
             for match in self.headers['If-Match'].split(','):
-                if match.startswith('"') and match.endswith('"'):
-                    match = match[1:-1]
                 if match == '*':
                     if dc.exists(uri):
                         test = True
@@ -208,8 +225,9 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         if self.headers.has_key("Content-Type"):
             ct=self.headers['Content-Type']
         try:
-            location = dc.put(uri,body,ct)
+            location = dc.put(uri, body, ct)
         except DAV_Error, (ec,dd):
+            self.log_error("Cannot PUT to %s: %s", uri, dd)
             return self.send_status(ec)
 
         headers = {}
@@ -264,8 +282,7 @@ try:
         handler.debug = config.get_misc('webdav','debug',True)
         _dc = { 'verbose' : verbose,
                 'directory' : directory,
-                'lockemulation' : False,
-
+                'lockemulation' : True,
                 }
 
         conf = OpenDAVConfig(**_dc)

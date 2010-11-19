@@ -2,11 +2,12 @@
 <openerp>
     <data>
 
-        <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"/>
-        <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
-        <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_system" sequence="50"/>
+        <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"
+            groups="base.group_hr_manager,base.group_hr_user"/>
+        <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0" groups="base.group_hr_manager"/>
+        <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="1"/>
-        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" groups="base.group_system" name="Employees" sequence="1" />
+        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" groups="base.group_hr_manager" name="Employees" sequence="1" />
 
         <!--
         ==========
@@ -22,12 +23,12 @@
                     <group colspan="4" col="8">
                         <group colspan="6" col="6">
                         <field colspan="6" name="name" />
-                        <field name="user_id"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="user_id" on_change="onchange_user(user_id)"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/>
                         <field name="active" groups="base.group_extended"/>
                         <newline/>
+                        <field name="department_id" widget="selection" />
                         <field name="parent_id" />
-                        <field name="coach_id" />
                         </group>
                         <group colspan="2" col="1">
                         <field name="photo" widget='image' nolabel="1"/>
@@ -36,31 +37,32 @@
                     <notebook colspan="6">
                         <page string="Personal Information">
                             <group col="2" colspan="2">
-                            <separator colspan="2" string="Social IDs"/>
-                            <field name="ssnid"/>
-                            <field name="sinid" groups="base.group_extended"/>
-                            <field name="otherid" groups="base.group_extended"/>
+                                <separator colspan="2" string="Social IDs"/>
+                                <field name="ssnid"/>
+                                <field name="sinid" groups="base.group_extended"/>
+                                <field name="identification_id" groups="base.group_extended"/>
+                                <field name="passport_id"/>
                             </group>
                             <group col="2" colspan="2">
-                            <separator string="Status" colspan="2"/>
-                            <field name="gender"/>
-                            <field name="marital" widget="selection"/>
-                            <field name="country_id"/>
-                            <field name="birthday"/>
+                                <separator string="Status" colspan="2"/>
+                                <field name="gender"/>
+                                <field name="marital" widget="selection"/>
+                                <field name="country_id"/>
+                                <field name="birthday"/>
                             </group>
                             <group col="2" colspan="2">
-                            <separator string="Contact Information" colspan="2"/>
-                            <field name="address_home_id" colspan="2"/>
-                            <field name="partner_id" invisible="1" />
-                            <field name="address_id" colspan="2" domain="[('partner_id', '=', partner_id)]"/>
-                            <field name="work_phone"/>
-                            <field name="work_email" widget="email" />
-                            <field name="work_location"/>
+                                <separator string="Contact Information" colspan="2"/>
+                                <field name="address_home_id" colspan="2"/>
+                                <field name="partner_id" invisible="1" />
+                                <field name="address_id" colspan="2" domain="[('partner_id', '=', partner_id)]"/>
+                                <field name="work_phone"/>
+                                <field name="work_email" widget="email" />
+                                <field name="work_location"/>
                             </group>
                             <group col="2" colspan="2">
-                            <separator string="Position" colspan="2"/>
-                            <field name="job_id" widget="selection" domain="[('state','!=','old')]"/>
-                            <field name="department_id" widget="selection"/>
+                                <separator string="Position" colspan="2"/>
+                                <field name="job_id" domain="[('state','!=','old')]"/>
+                                <field name="coach_id" />
                             </group>
                         </page>
                         <page string="Categories">
@@ -83,7 +85,8 @@
                 <tree string="Employees">
                     <field name="name"/>
                     <field name="work_phone"/>
-                    <field name="work_email"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="work_email" invisible="1"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
@@ -98,7 +101,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <filter icon="terp-personal-" domain="[('active','=',False)]" string="Unactive" groups="base.group_extended"/>
+                    <filter icon="terp-personal+" domain="[('active','=',True)]" name="active" string="Active" groups="base.group_extended"/>
                     <separator orientation="vertical" />
                     <field name="name"/>
                     <field name="department_id" widget="selection">
@@ -113,6 +116,7 @@
                     <separator orientation="vertical" />
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                    <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
              </field>
@@ -143,12 +147,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
+            <field name="context">{"search_default_department_id": department_id,"search_default_active":eval('True')}</field>
             <field name="view_id" ref="view_employee_tree"/>
             <field name="search_view_id" ref="view_employee_filter"/>
-            <field name="help">The employee directory contains all data related to your employees: from their photo up to their hourly estimated costs for the timesheets. Employees are managed by departments and can be linked to users to manage their access rights.</field>
+            <field name="help">Here you can manage your work force by creating employees and assigning them specific properties in the system. Maintain all employee related information and keep track of anything that needs to be recorded for them. The personal information tab will help you maintain their identity data. The Categories tab gives you the opportunity to assign them related employee categories depending on their position and activities within the company. A category can be a seniority level within the company or a department. The Timesheets tab allows to assign them a specific timesheet and analytic journal where they will be able to enter time through the system. In the note tab, you can enter text data that should be recorded for a specific employee.</field>
         </record>
 
-        <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
+        <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main" groups="base.group_hr_manager,base.group_hr_user"/>
 
         <!--
         =======================
@@ -256,8 +261,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Employees Categories">
-                    <field name="name"/>
-                    <field name="parent_id"/>
+                    <field name="complete_name"/>
                 </tree>
             </field>
         </record>
@@ -321,8 +325,9 @@
                     <field name="name" />
                     <field name="department_id" />
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="expected_employees"/>
+                    <field name="expected_employees" on_change="on_change_expected_employee(expected_employees,no_of_employee)"/>
                     <field name="no_of_employee"/>
+                    <field name="no_of_recruitment"/>
                     </group>
                     <newline/>
                     <notebook colspan="4">
@@ -337,10 +342,10 @@
                         </page>
                     </notebook>
                     <group col="6" colspan="4">
-                      <field name="state"/>
-                      <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
-                <button name="job_open" string="Open" states="old,recruit" type="object" icon="terp-camera_test"/>
-                            <button name="job_old" string="Old" states="open,recruit" type="object" icon="gtk-cancel"/>
+                        <field name="state"/>
+                        <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
+                        <button name="job_open" string="In Position" states="old,recruit" type="object" icon="terp-camera_test"/>
+                        <button name="job_old" string="Mark as Old" states="open,recruit" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -357,6 +362,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
+                    <field name="no_of_recruitment"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -381,6 +387,7 @@
                     <newline />
                     <group expand="0" string="Group By...">
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
                     </group>
                 </search>
@@ -393,11 +400,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_job_filter"/>
-            <field name="context">{'search_default_Current':1}</field>
-            <field name="help">Job Positions are used to define the jobs, the requirements. You can attach a survey to a job position. This survey will be used in the recruitement process to evaluate the applicants for this job position.</field>
+            <field name="context">{"search_default_Current":1,"search_default_department_id": department_id}</field>
+            <field name="help">JJob Positions is used to define jobs and their requirements. You can attach a survey to a job position. This survey will be used in the recruitment process to evaluate the applicants for this job position.</field>
         </record>
 
-        <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_manager,base.group_system"/>
+        <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
         <menuitem parent="base.menu_crm_case_job_req_main" id="menu_hr_job" action="action_hr_job" sequence="2"/>
 
     </data>

@@ -63,7 +63,7 @@
         </record>
 
         <record id="process_node_saleprocurement0" model="process.node">
-            <field name="menu_id" ref="base.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
             <field name="model_id" ref="procurement.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurement Order&quot;&quot;&quot;" name="name"/>
@@ -85,7 +85,6 @@
         </record>
 
         <record id="process_node_deliveryorder0" model="process.node">
-            <field name="menu_id" ref="stock.menu_action_picking_tree_delivery"/>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Delivery Order&quot;&quot;&quot;" name="name"/>
@@ -133,18 +132,6 @@
         <!--
             Process Transition
         -->
-
-        <record id="res_roles_salesman0" model="res.roles">
-            <field eval="&quot;&quot;&quot;Salesman&quot;&quot;&quot;" name="name"/>
-        </record>
-
-        <record id="sale.trans_draft_router" model="workflow.transition">
-            <field name="role_id" ref="res_roles_salesman0"/>
-        </record>
-
-        <record id="sale.trans_wait_invoice_invoice_manual" model="workflow.transition">
-            <field name="role_id" ref="res_roles_salesman0"/>
-        </record>
 
         <record id="process_transition_confirmquotation0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
@@ -197,7 +184,6 @@
         </record>
 
         <record id="process_transition_saleorderprocurement0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement of sold material&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;For every sale order line, a procurement order is created to supply the sold product.&quot;&quot;&quot;" name="note"/>
@@ -206,10 +192,9 @@
         </record>
 
         <record id="process_transition_saleinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a sale order&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;A sale order generates an invoice, as soon as it is confirmed by the salesman. Depending on the Invoicing control of the sale order, the invoice is based on delivered or on ordered quantities.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Depending on the Invoicing control of the sale order, the invoice can be based on delivered or on ordered quantities. Thus, a sale order can generates an invoice or a delivery order as soon as it is confirmed by the salesman.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="account.process_node_draftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_order0"/>
         </record>
@@ -261,7 +246,7 @@
         </record>
 
         <record id="process_transition_action_validate0" model="process.transition.action">
-            <field eval="&quot;&quot;&quot;test_finnished&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;test_finished&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
             <field eval="&quot;&quot;&quot;Validate&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_deliver0"/>

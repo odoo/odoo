@@ -22,11 +22,7 @@
 import netsvc
 from osv import osv,fields
 from tools.translate import _
-from mx import DateTime
 import time
-import pos_box_entries
-import pos_add_product
-import pos_payment
 
 class pos_return(osv.osv_memory):
     _name = 'pos.return'
@@ -127,9 +123,9 @@ class pos_return(osv.osv_memory):
                    <button icon='gtk-cancel' special="cancel"
                                string="Cancel" />
                                    <button icon='gtk-ok' name= "create_returns"
-                       string="Return goods and Exchange" type="object"/>
+                       string="Return with Exchange" type="object"/>
                                    <button icon='gtk-ok' name="create_returns2"
-                        string="Return without Refund" type="object"/>
+                        string="Refund Without Exchange" type="object"/>
                 </form>"""
 
             result['arch'] = _moves_arch_lst
@@ -147,6 +143,23 @@ class pos_return(osv.osv_memory):
              @return: Return the add product form again for adding more product
 
         """
+        current_rec = self.read(cr, uid, data[0], context=context)
+        order_obj =self.pool.get('pos.order')
+        line_obj = self.pool.get('pos.order.line')
+        pos_current = order_obj.browse(cr, uid, context.get('active_id'))
+        pos_line_ids = pos_current.lines
+        if pos_line_ids:
+            for pos_line in pos_line_ids:
+                line_field = "return"+str(pos_line.id)
+                pos_list = current_rec.keys()
+                newline_vals = {}
+                if line_field in pos_list :
+                    less_qty = current_rec.get(line_field)
+                    pos_cur_line = line_obj.browse(cr, uid, pos_line.id, context=context)
+                    qty = pos_cur_line.qty
+                    qty = qty - less_qty
+                    newline_vals.update({'qty':qty})
+                    line_obj.write(cr, uid, pos_line.id, newline_vals, context=context)
         return {
             'name': _('Add Product'),
             'view_type': 'form',
@@ -166,18 +179,19 @@ class pos_return(osv.osv_memory):
         stock_move_obj = self.pool.get('stock.move')
         property_obj= self.pool.get("ir.property")
         uom_obj =self. pool.get('product.uom')
+        statementl_obj = self.pool.get('account.bank.statement.line')
         wf_service = netsvc.LocalService("workflow")
         #Todo :Need to clean the code
         if active_id:
-            picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in',[active_id]), ('state', '=', 'done')])
             data = self.read(cr, uid, ids)[0]
-            clone_list = []
             date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
                 val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
-                cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
+                cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
+                            "WHERE w.lot_stock_id=s.id AND w.id=%s ", 
+                            (order_id.shop_id.warehouse_id.id,))
                 res = cr.fetchone()
                 location_id = res and res[0] or None
                 stock_dest_id = val.id
@@ -191,13 +205,16 @@ class pos_return(osv.osv_memory):
                                                               'lines':[],
                                                               'statement_ids':[],
                                                               'picking_id':[]})
+                account_def = property_obj.get(cr, uid, 'property_account_payable', 'res.partner', context=context)
+                amount = 0.0
                 for line in order_id.lines:
                     if line.id:
                         try:
                             qty = data['return%s' %line.id]
+                            amount += qty * line.price_unit
                         except :
                             qty = line.qty
-                        new_move = stock_move_obj.create(cr, uid, {
+                        stock_move_obj.create(cr, uid, {
                             'product_qty': qty ,
                             'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
                             'picking_id': new_picking,
@@ -206,10 +223,19 @@ class pos_return(osv.osv_memory):
                             'product_id': line.product_id.id,
                             'location_dest_id': stock_dest_id,
                             'name': '%s (return)' %order_id.name,
-                            'date': date_cur,
-                            'date_planned': date_cur
+                            'date': date_cur
                         })
-                        line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
+                        if qty != 0.0:
+                            line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
+                statementl_obj.create(cr, uid, {
+                                                'name': 'Refund %s'%order_id.name,
+                                                'statement_id': order_id.statement_ids[0].statement_id.id,
+                                                'pos_statement_id': new_order,
+                                                'date': time.strftime('%Y-%m-%d'),
+                                                'account_id': order_id.partner_id and order_id.partner_id.property_account_payable \
+                                                             and order_id.partner_id.property_account_payable.id or account_def.id,
+                                                'amount': -amount,
+                                                })
                 order_obj.write(cr,uid, [active_id,new_order], {'state': 'done'})
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
@@ -246,19 +272,13 @@ class add_product(osv.osv_memory):
         data = data and data[0] or False
         if active_id:
             order_obj = self.pool.get('pos.order')
-            lines_obj = self.pool.get('pos.order.line')
             picking_obj = self.pool.get('stock.picking')
             stock_move_obj = self.pool.get('stock.move')
-            move_obj = self.pool.get('stock.move')
             property_obj= self.pool.get("ir.property")
-            invoice_obj= self.pool.get('account.invoice')
-            picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in',[active_id]), ('state', '=', 'done')])
-            clone_list = []
             date_cur=time.strftime('%Y-%m-%d')
             uom_obj = self.pool.get('product.uom')
             prod_obj=self.pool.get('product.product')
             wf_service = netsvc.LocalService("workflow")
-            return_boj=self.pool.get('pos.return')
             order_obj.add_product(cr, uid, active_id, data['product_id'], data['quantity'], context=context)
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
@@ -266,7 +286,9 @@ class add_product(osv.osv_memory):
                 qty=data['quantity']
                 prop_ids = property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
                 val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
-                cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
+                cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
+                            "WHERE w.lot_stock_id=s.id AND w.id=%s ",
+                            (order_id.shop_id.warehouse_id.id,))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
                 stock_dest_id = val.id
@@ -279,7 +301,7 @@ class add_product(osv.osv_memory):
                                 'type':'out',
                                 'date':date_cur
                             })
-                new_move=stock_move_obj.create(cr, uid, {
+                stock_move_obj.create(cr, uid, {
                                 'product_qty': qty,
                                 'product_uos_qty': uom_obj._compute_qty(cr, uid, prod_id.uom_id.id, qty, prod_id.uom_id.id),
                                 'picking_id':new_picking,
@@ -288,14 +310,12 @@ class add_product(osv.osv_memory):
                                 'product_id':prod_id.id,
                                 'location_dest_id':stock_dest_id,
                                 'name':'%s (return)' %order_id.name,
-                                'date':date_cur,
-                                'date_planned':date_cur
+                                'date':date_cur
                             })
 
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
                 order_obj.write(cr,uid,active_id,{'picking_id':new_picking})
-
 
         return {
             'name': _('Add Product'),
@@ -315,21 +335,23 @@ class add_product(osv.osv_memory):
         lines_obj = self.pool.get('pos.order.line')
         picking_obj = self.pool.get('stock.picking')
         stock_move_obj = self.pool.get('stock.move')
-        move_obj = self.pool.get('stock.move')
         property_obj= self.pool.get("ir.property")
         invoice_obj=self.pool.get('account.invoice')
-        picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in', active_ids), ('state', '=', 'done')])
-        clone_list = []
         date_cur=time.strftime('%Y-%m-%d %H:%M:%S')
         uom_obj = self.pool.get('product.uom')
         return_boj=self.pool.get('pos.return')
         return_id=return_boj.search(cr,uid,[])
         data=return_boj.read(cr,uid,return_id,[])[0]
         wf_service = netsvc.LocalService("workflow")
+        self_data = self.read(cr, uid, ids)[0]
+        order_obj.add_product(cr, uid, active_ids[0], self_data['product_id'], self_data['quantity'], context=context)
+        
         for order_id in order_obj.browse(cr, uid, active_ids, context=context):
             prop_ids =property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
             val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
-            cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
+            cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
+                        " WHERE w.lot_stock_id=s.id AND w.id=%s ",
+                        (order_id.shop_id.warehouse_id.id,))
             res=cr.fetchone()
             location_id=res and res[0] or None
             stock_dest_id = val.id
@@ -344,24 +366,27 @@ class add_product(osv.osv_memory):
                             'date':date_cur
                         })
             for line in order_id.lines:
-                key=('return%s') %line.id
-                if line.id  and  data.has_key(key):
-                    new_move=stock_move_obj.create(cr, uid, {
-                        'product_qty': data['return%s' %line.id ],
-                        'product_uos_qty': uom_obj._compute_qty(cr, uid, data['return%s' %line.id], line.product_id.uom_id.id),
+                key= 'return%s' % line.id
+                if line.id: 
+                    if data.has_key(key):
+                        qty = data[key]
+                        lines_obj.write(cr,uid,[line.id], {
+                                'qty_rfd':(line.qty or 0.0) + data[key],
+                                'qty':line.qty-(data[key] or 0.0)
+                        })
+                    else:
+                        qty = line.qty
+                    stock_move_obj.create(cr, uid, {
+                        'product_qty': qty,
+                        'product_uos_qty': uom_obj._compute_qty(cr, uid, qty, line.product_id.uom_id.id),
                         'picking_id':new_picking,
                         'product_uom':line.product_id.uom_id.id,
                         'location_id':location_id,
                         'product_id':line.product_id.id,
                         'location_dest_id':stock_dest_id,
-                        'name':'%s (return)' %order_id.name,
+                        'name':'%s (return)' % order_id.name,
                         'date':date_cur,
-                        'date_planned':date_cur
                     })
-                    lines_obj.write(cr,uid,[line.id], {
-                                'qty_rfd':(line.qty or 0.0) + data['return%s' %line.id],
-                                'qty':line.qty-(data['return%s' %line.id] or 0.0)
-                            })
             wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [new_picking], context)
         obj=order_obj.browse(cr,uid, active_ids[0])

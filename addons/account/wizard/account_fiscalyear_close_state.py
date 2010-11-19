@@ -20,8 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
-import tools
 
 class account_fiscalyear_close_state(osv.osv_memory):
     """
@@ -31,7 +29,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
     _description = "Fiscalyear Close state"
     _columns = {
        'fy_id': fields.many2one('account.fiscalyear', \
-                                 'Fiscal Year to close', required=True),
+                                 'Fiscal Year to close', required=True, help="Select a fiscal year to close"),
     }
 
     def data_save(self, cr, uid, ids, context=None):

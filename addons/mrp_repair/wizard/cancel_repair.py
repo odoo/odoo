@@ -69,8 +69,8 @@ class repair_cancel(osv.osv_memory):
                             <group col="2" colspan="2">
                                 <label string="Do you want to continue?" colspan="4"/>
                                 <separator colspan="4"/>
-                                <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
-                                <button name="cancel_repair" string="Yes" type="object" icon="gtk-ok"/>
+                                <button icon="gtk-stop" special="cancel" string="_No" readonly="0"/>
+                                <button name="cancel_repair" string="_Yes" type="object" icon="gtk-ok"/>
                             </group>
                         </form>                             
                     """

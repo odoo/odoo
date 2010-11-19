@@ -6,20 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-08-17 11:39+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-18 10:33+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
 msgstr "ID Conto4"
+
+#. module: account_analytic_plans
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
 
 #. module: account_analytic_plans
 #: constraint:ir.model:0
@@ -30,8 +35,10 @@ msgstr ""
 "speciali !"
 
 #. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+#: view:account.crossovered.analytic:0
+#: model:ir.actions.act_window,name:account_analytic_plans.action_account_crossovered_analytic
 #: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
-#: model:ir.actions.wizard,name:account_analytic_plans.account_analytic_account_inverted_balance_report
 msgid "Crossovered Analytic"
 msgstr ""
 
@@ -41,9 +48,14 @@ msgid "Account5 Id"
 msgstr "ID Conto5"
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,date2:0
+#: field:account.crossovered.analytic,date2:0
 msgid "End Date"
 msgstr "Data finale"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "Identificativo di Account3"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
@@ -55,9 +67,22 @@ msgstr "Tasso (%)"
 #: field:account.analytic.plan,name:0
 #: field:account.analytic.plan.line,plan_id:0
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
 msgid "Analytic Plan"
 msgstr "Piano analitico"
+
+#. module: account_analytic_plans
+#: view:analytic.plan.create.model:0
+msgid ""
+"This distribution model has been saved.You will be able to reuse it later."
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#, python-format
+msgid "Please put a name and a code before saving the model !"
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
@@ -70,12 +95,12 @@ msgid "Analytic Distribution Lines"
 msgstr "Righe della distribuzione analitica"
 
 #. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,print:0
+#: view:account.crossovered.analytic:0
 msgid "Print"
 msgstr "Stampa"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "To Date"
 msgstr "Alla data"
 
@@ -90,7 +115,7 @@ msgid "Analytic Distribution's Models"
 msgstr "Modelli di distribuzione analitica"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "Account Name"
 msgstr "Nome conto"
 
@@ -110,70 +135,79 @@ msgid "Invalid model name in the action definition."
 msgstr "Nome del modello non valido nella definizione dell'azione."
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,name:0
-msgid "Plan Name"
-msgstr "Nome del piano"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "Printing date"
 msgstr "Data di stampa"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "Percentage"
 msgstr "Percentuale"
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,empty_line:0
+#: model:ir.model,name:account_analytic_plans.model_sale_order_line
+msgid "Sale Order Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,empty_line:0
 msgid "Dont show empty lines"
 msgstr "Non mostrare le righe vuote"
 
 #. module: account_analytic_plans
-#: wizard_view:wizard.crossovered.analytic,init:0
-msgid "Select Information"
-msgstr "Scegli l'informazione"
+#: model:ir.actions.act_window,name:account_analytic_plans.action_analytic_plan_create_model
+msgid "analytic.plan.create.model.action"
+msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
-msgstr "Identificativo di Account3"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "A model having this name and code already exists !"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
-#: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
+#: view:account.crossovered.analytic:0
+#: field:account.crossovered.analytic,journal_ids:0
 msgid "Analytic Journal"
 msgstr "Libro Giornale analitico"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
 msgstr "100%"
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,ref:0
-msgid "Analytic Account Ref."
-msgstr "Riferimento conto analitico"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Currency"
+msgstr ""
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
 msgstr "Conto analitico :"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Line"
 msgstr "Riga piano analitico"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#, python-format
+msgid "No analytic plan defined !"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account Reference:"
 msgstr "Riferimento conto analitico"
 
 #. module: account_analytic_plans
-#: model:ir.actions.wizard,name:account_analytic_plans.create_model
-msgid "Create Model"
-msgstr "Crea un modello"
+#: field:account.analytic.plan.line,name:0
+msgid "Plan Name"
+msgstr "Nome del piano"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan,default_instance_id:0
@@ -181,17 +215,34 @@ msgid "Default Entries"
 msgstr "Valori di default"
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan:0
 #: field:account.analytic.plan,plan_ids:0
 #: field:account.journal,plan_id:0
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
 msgstr "Piani analitici"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,min_required:0
-msgid "Minimum Allowed (%)"
-msgstr "Minimo consentito (%)"
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:0
+#, python-format
+msgid "User Error"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_move_line
+msgid "Journal Items"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
+msgid "analytic.plan.create.model"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
@@ -204,7 +255,14 @@ msgid "Maximum Allowed (%)"
 msgstr "Massimo consentito (%)"
 
 #. module: account_analytic_plans
-#: wizard_view:create.model,info:0
+#: field:account.analytic.plan.line,root_analytic_id:0
+msgid "Root Account"
+msgstr "Conto base"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: view:analytic.plan.create.model:0
+#, python-format
 msgid "Distribution Model Saved"
 msgstr "Modello di distribuzione salvato"
 
@@ -222,6 +280,62 @@ msgstr "XML non valido per Visualizzazione Architettura!"
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
 msgid "Distribution Models"
 msgstr "Modelli di distribuzione"
+
+#. module: account_analytic_plans
+#: view:analytic.plan.create.model:0
+msgid "Ok"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
+msgid "Multiple-plans management in Analytic Accounting"
+msgstr "Gestione multi-piano in contabilità analitica"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.line:0
+msgid "Analytic Plan Lines"
+msgstr "Righe del piano analitico"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,min_required:0
+msgid "Minimum Allowed (%)"
+msgstr "Minimo consentito (%)"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,plan_id:0
+msgid "Model's Plan"
+msgstr "Piano del modello"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account2_ids:0
+msgid "Account2 Id"
+msgstr "Identificativo di Account2"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Amount"
+msgstr "Quantità"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
+msgid "Print Crossovered Analytic"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account6_ids:0
+msgid "Account6 Id"
+msgstr "Identificativo di Account6"
 
 #. module: account_analytic_plans
 #: model:ir.module.module,description:account_analytic_plans.module_meta_information
@@ -255,84 +369,26 @@ msgid ""
 "So when this line of invoice will be confirmed, it will generate 3 analytic "
 "lines,\n"
 "for one account entry.\n"
+"The analytic plan validates the minimum and maximum percentage at the time "
+"of creation\n"
+"of distribution models.\n"
 "        "
 msgstr ""
-"Questo modulo permette di usare molti piani analitici, This module allows to "
-"use several analytic plans, in accordo al Giornale Contabile,\n"
-"così queste linee multiple analitiche sono create quando una fatture, o la "
-"voce, sono confermate.\n"
-"\n"
-"Per esempio, puoi definire la seguente struttura analitica:\n"
-"  Progetti\n"
-"      Progetto 1\n"
-"          Sotto progetto 1.1\n"
-"          Sotto progetto 1.2\n"
-"      Progetto 2\n"
-"  Venditori\n"
-"      Eric \n"
-"      Fabien\n"
-"\n"
-"Nell'esempio abbiamo due piani: Progetti e Venditori. Una linea dettaglio "
-"della fattura deve essere in grado di scrivere voci di conto analitico in "
-"due piani: Sotto Progetto 1.1 e Fabien. L'importo può essere anche diviso. "
-"Il seguente esempio è relativo ad una fattura che riguarda due sotto "
-"progetti ed è assegnata ad un venditore:\n"
-"\n"
-"Piano conti analitici1:\n"
-"    Sotto progetto 1.1: 50%\n"
-"    Sotto progetto 1.2: 50%\n"
-"Piano conti analitici 2:\n"
-"    Eric: 100%\n"
-"\n"
-"Così, quando le linee/dettagli della fattura sono confermate, verranno "
-"generate 3 linee di conto analitico per una voce di conto.\n"
-"        "
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr "Gestione multi-piano in contabilità analitica"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan.line:0
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
-msgid "Analytic Plan Lines"
-msgstr "Righe del piano analitico"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Crossovered Analytic -"
+#: view:analytic.plan.create.model:0
+msgid "Save This Distribution as a Model"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,plan_id:0
-msgid "Model's Plan"
-msgstr "Piano del modello"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account2_ids:0
-msgid "Account2 Id"
-msgstr "Identificativo di Account2"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Amount"
-msgstr "Quantità"
-
-#. module: account_analytic_plans
-#: help:account.analytic.plan.line,root_analytic_id:0
-msgid "Root account of this plan."
-msgstr "Conto base di questo piano"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account6_ids:0
-msgid "Account6 Id"
-msgstr "Identificativo di Account6"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr "Quantità"
+
+#. module: account_analytic_plans
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
+msgid "Multi Plans"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account_ids:0
@@ -340,32 +396,41 @@ msgid "Account Id"
 msgstr "Identificativo del conto"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "Code"
 msgstr "Codice"
 
 #. module: account_analytic_plans
-#: wizard_button:create.model,info,end:0
-msgid "OK"
-msgstr "OK"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.line,root_analytic_id:0
-msgid "Root Account"
-msgstr "Conto base"
-
-#. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid ""
-"This distribution model has been saved. You will be able to reuse it later."
+#: model:ir.model,name:account_analytic_plans.model_account_journal
+msgid "Journal"
 msgstr ""
-"Questo modello di distribuzione è stato salvato. Lo potrai usare di nuovo in "
-"seguito."
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "You have to define an analytic journal on the '%s' journal!"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "No Analytic Journal !"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
 msgstr "Sequenza"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_bank_statement
+msgid "Bank Statement"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
@@ -376,32 +441,140 @@ msgstr "Conto Analitico"
 #: field:account.analytic.default,analytics_id:0
 #: view:account.analytic.plan.instance:0
 #: field:account.analytic.plan.instance,name:0
+#: field:account.bank.statement.line,analytics_id:0
 #: field:account.invoice.line,analytics_id:0
 #: field:account.move.line,analytics_id:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_default
 msgid "Analytic Distribution"
 msgstr "Distribuzione analitica"
 
 #. module: account_analytic_plans
-#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
-msgid "Analytic Distribution's models"
-msgstr "Modelli della distribuzione analitica"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "Value Error"
+msgstr ""
 
 #. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,end:0
+#: help:account.analytic.plan.line,root_analytic_id:0
+msgid "Root account of this plan."
+msgstr "Conto base di questo piano"
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,ref:0
+msgid "Analytic Account Reference"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: account_analytic_plans
+#: view:account.crossovered.analytic:0
+#: view:analytic.plan.create.model:0
 msgid "Cancel"
 msgstr "Annulla"
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,date1:0
+#: field:account.crossovered.analytic,date1:0
 msgid "Start Date"
 msgstr "Data di inizio"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "at"
 msgstr "a"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
 msgstr "Dalla data"
+
+#~ msgid "Select Information"
+#~ msgstr "Scegli l'informazione"
+
+#~ msgid "Create Model"
+#~ msgstr "Crea un modello"
+
+#~ msgid "Analytic Distribution's models"
+#~ msgstr "Modelli della distribuzione analitica"
+
+#~ msgid ""
+#~ "This distribution model has been saved. You will be able to reuse it later."
+#~ msgstr ""
+#~ "Questo modello di distribuzione è stato salvato. Lo potrai usare di nuovo in "
+#~ "seguito."
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Analytic Account Ref."
+#~ msgstr "Riferimento conto analitico"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Questo modulo permette di usare molti piani analitici, This module allows to "
+#~ "use several analytic plans, in accordo al Giornale Contabile,\n"
+#~ "così queste linee multiple analitiche sono create quando una fatture, o la "
+#~ "voce, sono confermate.\n"
+#~ "\n"
+#~ "Per esempio, puoi definire la seguente struttura analitica:\n"
+#~ "  Progetti\n"
+#~ "      Progetto 1\n"
+#~ "          Sotto progetto 1.1\n"
+#~ "          Sotto progetto 1.2\n"
+#~ "      Progetto 2\n"
+#~ "  Venditori\n"
+#~ "      Eric \n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Nell'esempio abbiamo due piani: Progetti e Venditori. Una linea dettaglio "
+#~ "della fattura deve essere in grado di scrivere voci di conto analitico in "
+#~ "due piani: Sotto Progetto 1.1 e Fabien. L'importo può essere anche diviso. "
+#~ "Il seguente esempio è relativo ad una fattura che riguarda due sotto "
+#~ "progetti ed è assegnata ad un venditore:\n"
+#~ "\n"
+#~ "Piano conti analitici1:\n"
+#~ "    Sotto progetto 1.1: 50%\n"
+#~ "    Sotto progetto 1.2: 50%\n"
+#~ "Piano conti analitici 2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "Così, quando le linee/dettagli della fattura sono confermate, verranno "
+#~ "generate 3 linee di conto analitico per una voce di conto.\n"
+#~ "        "

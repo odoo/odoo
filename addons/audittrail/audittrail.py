@@ -35,15 +35,15 @@ class audittrail_rule(osv.osv):
     _description = "Audittrail Rule"
     _columns = {
         "name": fields.char("Rule Name", size=32, required=True),
-        "object_id": fields.many2one('ir.model', 'Object', required=True),
+        "object_id": fields.many2one('ir.model', 'Object', required=True, help="Select object for which you want to generate log."),
         "user_id": fields.many2many('res.users', 'audittail_rules_users',
                                             'user_id', 'rule_id', 'Users', help="if  User is not added then it will applicable for all users"),
-        "log_read": fields.boolean("Log Reads"),
-        "log_write": fields.boolean("Log Writes"),
-        "log_unlink": fields.boolean("Log Deletes"),
-        "log_create": fields.boolean("Log Creates"),
-        "log_action": fields.boolean("Log Action"),
-        "log_workflow": fields.boolean("Log Workflow"),
+        "log_read": fields.boolean("Log Reads", help="Select this if you want to keep track of read/open on any record of the object of this rule"),
+        "log_write": fields.boolean("Log Writes", help="Select this if you want to keep track of modification on any record of the object of this rule"),
+        "log_unlink": fields.boolean("Log Deletes", help="Select this if you want to keep track of deletion on any record of the object of this rule"),
+        "log_create": fields.boolean("Log Creates",help="Select this if you want to keep track of creation on any record of the object of this rule"),
+        "log_action": fields.boolean("Log Action",help="Select this if you want to keep track of actions on the object of this rule"),
+        "log_workflow": fields.boolean("Log Workflow",help="Select this if you want to keep track of workflow on any record of the object of this rule"),
         "state": fields.selection((("draft", "Draft"),
                                    ("subscribed", "Subscribed")),
                                    "State", required=True),
@@ -208,7 +208,7 @@ class audittrail_objects_proxy(osv_pool):
         else:
             field_ids = field_pool.search(cr, uid, [('name', '=', field_name), ('model_id', '=', model.id)])
         field_id = field_ids and field_ids[0] or False
-        assert field_id, _("'%s' field is not exits in '%s' model" %(field_name, model.model))
+        assert field_id, _("'%s' field does not exist in '%s' model" %(field_name, model.model))
 
         field = field_pool.read(cr, uid, field_id)
         relation_model = field['relation']
@@ -254,7 +254,7 @@ class audittrail_objects_proxy(osv_pool):
             else:
                 field_ids = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', '=', model.id)])
             field_id = field_ids and field_ids[0] or False
-            assert field_id, _("'%s' field is not exits in '%s' model" %(line['name'], model.model))
+            assert field_id, _("'%s' field does not exist in '%s' model" %(line['name'], model.model))
 
             field = field_pool.read(cr, uid, field_id)
             old_value = 'old_value' in line and  line['old_value'] or ''
@@ -303,7 +303,7 @@ class audittrail_objects_proxy(osv_pool):
 
         model_ids = model_pool.search(cr, uid, [('model', '=', model)])
         model_id = model_ids and model_ids[0] or False
-        assert model_id, _("'%s' Model is not exits..." %(model))
+        assert model_id, _("'%s' Model does not exist..." %(model))
         model = model_pool.browse(cr, uid, model_id)
 
         if method in ('create'):
@@ -456,7 +456,7 @@ class audittrail_objects_proxy(osv_pool):
         """
         Overrides Object Proxy execute method
         @param db: the current database
-        @param uid: the current user’s ID for security checks,
+        @param uid: the current user's ID for security checks,
         @param object: Object who's values are being changed
         @param method: get any method and create log
 
@@ -500,49 +500,47 @@ class audittrail_objects_proxy(osv_pool):
                             return self.log_fct(db, uid, model, method, fct_src, *args)
 
                 return fct_src(db, uid, model, method, *args)
-        res = my_fct(db, uid, model, method, *args)
-        cr.close()
-        return res
-
+        try:
+            res = my_fct(db, uid, model, method, *args)
+            return res
+        finally:
+            cr.close()
 
     def exec_workflow(self, db, uid, model, method, *args, **argv):
         pool = pooler.get_pool(db)
-        cr = pooler.get_db(db).cursor()
-        cr.autocommit(True)
         logged_uids = []
         fct_src = super(audittrail_objects_proxy, self).exec_workflow
         field = method
         rule = False
         model_pool = pool.get('ir.model')
         rule_pool = pool.get('audittrail.rule')
-        model_ids = model_pool.search(cr, uid, [('model', '=', model)])
-        for obj_name in pool.obj_list():
-            if obj_name == 'audittrail.rule':
-                rule = True
-        if not rule:
-            cr.close()
-            return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
-        if not model_ids:
-            cr.close()
-            return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
+        cr = pooler.get_db(db).cursor()
+        cr.autocommit(True)
+        try:
+            model_ids = model_pool.search(cr, uid, [('model', '=', model)])
+            for obj_name in pool.obj_list():
+                if obj_name == 'audittrail.rule':
+                    rule = True
+            if not rule:
+                return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
+            if not model_ids:
+                return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
 
-        rule_ids = rule_pool.search(cr, uid, [('object_id', 'in', model_ids), ('state', '=', 'subscribed')])
-        if not rule_ids:
-             cr.close()
-             return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
+            rule_ids = rule_pool.search(cr, uid, [('object_id', 'in', model_ids), ('state', '=', 'subscribed')])
+            if not rule_ids:
+                return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
 
-        for thisrule in rule_pool.browse(cr, uid, rule_ids):
-            for user in thisrule.user_id:
-                logged_uids.append(user.id)
-            if not logged_uids or uid in logged_uids:
-                 if thisrule.log_workflow:
-                     cr.close()
-                     return self.log_fct(db, uid, model, method, fct_src, *args)
+            for thisrule in rule_pool.browse(cr, uid, rule_ids):
+                for user in thisrule.user_id:
+                    logged_uids.append(user.id)
+                if not logged_uids or uid in logged_uids:
+                    if thisrule.log_workflow:
+                        return self.log_fct(db, uid, model, method, fct_src, *args)
+                return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
+
+            return True
+        finally:
             cr.close()
-            return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
-
-        cr.close()
-        return True
 
 audittrail_objects_proxy()
 

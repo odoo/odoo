@@ -24,7 +24,7 @@ import decimal_precision as dp
 
 import math
 from _common import rounding
-
+import re  
 from tools.translate import _
 
 def is_pair(x):
@@ -69,15 +69,15 @@ class product_uom(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
             help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
-        'factor': fields.float('Ratio', digits=(12, 6), required=True,
+        'factor': fields.float('Ratio', required=True,digits=(12, 6),
             help='How many times this UoM is smaller than the reference UoM in this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
-        'factor_inv': fields.function(_factor_inv, digits=(12, 6),
+        'factor_inv': fields.function(_factor_inv, digits_compute=dp.get_precision('Product UoM'),
             fnct_inv=_factor_inv_write,
             method=True, string='Ratio',
             help='How many times this UoM is bigger than the reference UoM in this category:\n'\
                     '1 * (this unit) = ratio * (reference unit)', required=True),
-        'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
+        'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Product UoM'), required=True,
             help="The computed quantity will be a multiple of this value. "\
                  "Use 1.0 for a UoM that cannot be further split, such as a piece."),
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
@@ -247,7 +247,11 @@ class product_template(osv.osv):
         'warranty': fields.float('Warranty (months)'),
         'sale_ok': fields.boolean('Can be Sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
-        'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'State', help="Tells the user if he can use the product or not."),
+        'state': fields.selection([('',''),
+            ('draft', 'In Development'),
+            ('sellable','Normal'),
+            ('end','End of Lifecycle'),
+            ('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
         'uom_id': fields.many2one('product.uom', 'Default Unit Of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
@@ -274,15 +278,13 @@ class product_template(osv.osv):
     def _default_category(self, cr, uid, context={}):
         if 'categ_id' in context and context['categ_id']:
             return context['categ_id']
-        return False
+        md = self.pool.get('ir.model.data')
+        res = md.get_object_reference(cr, uid, 'product', 'cat0') or False
+        return res and res[1] or False
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
-        if uom_id and uom_po_id:
-            uom_obj=self.pool.get('product.uom')
-            uom=uom_obj.browse(cursor,user,[uom_id])[0]
-            uom_po=uom_obj.browse(cursor,user,[uom_po_id])[0]
-            if uom.category_id.id != uom_po.category_id.id:
-                return {'value': {'uom_po_id': uom_id}}
+        if uom_id:
+            return {'value': {'uom_po_id': uom_id}}
         return False
 
     _defaults = {
@@ -302,6 +304,7 @@ class product_template(osv.osv):
         'uos_coeff' : lambda *a: 1.0,
         'mes_type' : lambda *a: 'fixed',
         'categ_id' : _default_category,
+        'type' : lambda *a: 'consu',
     }
 
     def _check_uom(self, cursor, user, ids):
@@ -377,23 +380,23 @@ class product_product(osv.osv):
             res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
         return res
 
-    def _get_partner_code_name(self, cr, uid, ids, product_id, partner_id, context={}):
-        product = self.browse(cr, uid, [product_id], context)[0]
+    def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context={}):
         for supinfo in product.seller_ids:
             if supinfo.name.id == partner_id:
-                return {'code': supinfo.product_code, 'name': supinfo.product_name, 'variants': ''}
-        return {'code' : product.default_code, 'name' : product.name, 'variants': product.variants}
+                return {'code': supinfo.product_code or product.default_code, 'name': supinfo.product_name or product.name, 'variants': ''}
+        res = {'code': product.default_code, 'name': product.name, 'variants': product.variants}
+        return res
 
     def _product_code(self, cr, uid, ids, name, arg, context={}):
         res = {}
         for p in self.browse(cr, uid, ids, context):
-            res[p.id] = self._get_partner_code_name(cr, uid, [], p.id, context.get('partner_id', None), context)['code']
+            res[p.id] = self._get_partner_code_name(cr, uid, [], p, context.get('partner_id', None), context)['code']
         return res
 
     def _product_partner_ref(self, cr, uid, ids, name, arg, context={}):
         res = {}
         for p in self.browse(cr, uid, ids, context):
-            data = self._get_partner_code_name(cr, uid, [], p.id, context.get('partner_id', None), context)
+            data = self._get_partner_code_name(cr, uid, [], p, context.get('partner_id', None), context)
             if not data['variants']:
                 data['variants'] = p.variants
             if not data['code']:
@@ -489,12 +492,17 @@ class product_product(osv.osv):
         if not context:
             context={}
         if name:
-            ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
             if not len(ids):
                 ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
             if not len(ids):
                 ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
                 ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+            if not len(ids):
+               ptrn=re.compile('(\[(.*?)\])')
+               res = ptrn.search(str(name))
+               if res:
+                   ids = self.search(cr, user, [('default_code','ilike',res.group(2))]+ args, limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context)
@@ -503,7 +511,15 @@ class product_product(osv.osv):
     #
     # Could be overrided for variants matrices prices
     #
-    def price_get(self, cr, uid, ids, ptype='list_price', context={}):
+    def price_get(self, cr, uid, ids, ptype='list_price', context=None):
+        if context is None:
+            context = {}
+
+        if 'currency_id' in context:
+            pricetype_obj = self.pool.get('product.price.type')
+            price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
+            price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
+
         res = {}
         product_uom_obj = self.pool.get('product.uom')
         for product in self.browse(cr, uid, ids, context=context):
@@ -517,11 +533,8 @@ class product_product(osv.osv):
                         uom.id, res[product.id], context['uom'])
             # Convert from price_type currency to asked one
             if 'currency_id' in context:
-                pricetype_obj = self.pool.get('product.price.type')
                 # Take the price_type currency from the product field
                 # This is right cause a field cannot be in more than one currency
-                price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
-                price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
                 res[product.id] = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
                     context['currency_id'], res[product.id],context=context)
 
@@ -719,3 +732,21 @@ class pricelist_partnerinfo(osv.osv):
 pricelist_partnerinfo()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+class res_users(osv.osv):
+    _inherit = 'res.users'
+    def _get_group(self, cr, uid, context):
+        result = super(res_users, self)._get_group(cr, uid, context)
+        dataobj = self.pool.get('ir.model.data')
+        try:
+            dummy,group_id = dataobj.get_object_reference(cr, 1, 'product', 'group_product_manager')
+            result.append(group_id)
+        except ValueError:
+            # If these groups does not exists anymore
+            pass
+        return result
+
+    _defaults = {
+        'groups_id': _get_group,
+    }
+
+res_users()

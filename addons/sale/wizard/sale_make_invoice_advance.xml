@@ -2,26 +2,26 @@
 <openerp>
     <data>
         <record id="view_sale_advance_payment_inv" model="ir.ui.view">
-            <field name="name">Deposit Invoice</field>
+            <field name="name">Advance Invoice</field>
             <field name="model">sale.advance.payment.inv</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partial Invoice">
+                <form string="Advance Invoice">
                     <field name="product_id"/>
                     <newline />
-                    <field name="qtty"/>
+                    <field name="qtty" invisible="1"/>
                     <field name="amount"/>
                     <newline />
                     <separator string="" colspan="4"/>
                     <label string=""  colspan="2" />
-					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-					<button name="create_invoices" string="Create Partial Invoice" type="object" icon="gtk-ok"/>
+                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    <button name="create_invoices" string="Create Invoice" type="object" icon="gtk-go-forward"/>
                 </form>
             </field>
         </record>
 
         <record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
-            <field name="name">Deposit</field>
+            <field name="name">Advance Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.advance.payment.inv</field>
             <field name="view_type">form</field>
@@ -34,15 +34,15 @@
             <field name="model">sale.open.invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-	            <form string="Invoices">
-		            <label string="You invoice has been successfully created!" />
+                <form string="Invoices">
+                    <label string="You invoice has been successfully created!" />
                     <newline />
                     <separator string="" colspan="4"/>
-		            <group colspan="4">
-		                <button special="cancel" string="Close" icon="gtk-cancel"/>
-		                <button name="open_invoice" string="Open Invoice" type="object" icon="gtk-open"/>
-		            </group>
-	             </form>
+                    <group colspan="4">
+                        <button special="cancel" string="Close" icon="gtk-cancel"/>
+                        <button name="open_invoice" string="Open Invoice" type="object" icon="gtk-go-forward"/>
+                    </group>
+                 </form>
             </field>
         </record>
 

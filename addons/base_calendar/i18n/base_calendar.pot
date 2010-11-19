@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-19 12:50:56+0000\n"
-"PO-Revision-Date: 2010-08-19 12:50:56+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:44+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,8 +23,6 @@ msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 msgid "Hourly"
 msgstr ""
 
@@ -40,15 +38,19 @@ msgid "This property defines the list of date/time exceptions for a recurring ca
 msgstr ""
 
 #. module: base_calendar
+#: field:calendar.event,vtimezone:0
+#: field:calendar.todo,vtimezone:0
+msgid "Timezone"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event.edit.all,name:0
 msgid "Title"
 msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Monthly"
 msgstr ""
@@ -56,6 +58,11 @@ msgstr ""
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invited User"
+msgstr ""
+
+#. module: base_calendar
+#: view:base.calendar.set.exrule:0
+msgid "Select range to Exclude"
 msgstr ""
 
 #. module: base_calendar
@@ -91,6 +98,12 @@ msgid "Fourth"
 msgstr ""
 
 #. module: base_calendar
+#: help:calendar.event,count:0
+#: help:calendar.todo,count:0
+msgid "Repeat max that times"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,show_as:0
 #: field:calendar.todo,show_as:0
 msgid "Show as"
@@ -114,6 +127,8 @@ msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Hours"
 msgstr ""
@@ -165,8 +180,8 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
 msgstr ""
 
 #. module: base_calendar
@@ -200,18 +215,15 @@ msgid "Tue"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
-#: selection:calendar.todo,rrule_type:0
-msgid "Yearly"
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
 msgstr ""
 
 #. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
+#: selection:base.calendar.set.exrule,freq:0
+#: selection:calendar.event,rrule_type:0
+#: selection:calendar.todo,rrule_type:0
+msgid "Yearly"
 msgstr ""
 
 #. module: base_calendar
@@ -233,6 +245,8 @@ msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Days"
 msgstr ""
@@ -258,8 +272,8 @@ msgid "Chair Person"
 msgstr ""
 
 #. module: base_calendar
-#: selection:calendar.alarm,action:0
-msgid "Procedure"
+#: view:calendar.event:0
+msgid "Exclude range"
 msgstr ""
 
 #. module: base_calendar
@@ -275,6 +289,8 @@ msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Minutes"
 msgstr ""
@@ -296,22 +312,24 @@ msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 msgid "Secondly"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
 msgstr ""
 
 #. module: base_calendar
 #: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Group By..."
+msgstr ""
+
+#. module: base_calendar
+#: help:base_calendar.invite.attendee,email:0
+msgid "Provide external email address who will receive this invitation."
 msgstr ""
 
 #. module: base_calendar
@@ -325,9 +343,9 @@ msgid "Specify the type of Invitation"
 msgstr ""
 
 #. module: base_calendar
-#: help:calendar.event,exrule:0
-#: help:calendar.todo,exrule:0
-msgid "defines a rule or repeating pattern for an exception to a recurrence set"
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Years"
 msgstr ""
 
 #. module: base_calendar
@@ -339,6 +357,12 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Optional Participation"
+msgstr ""
+
+#. module: base_calendar
+#: help:calendar.event,interval:0
+#: help:calendar.todo,interval:0
+msgid "Repeat every x"
 msgstr ""
 
 #. module: base_calendar
@@ -437,6 +461,11 @@ msgid "Reminder details"
 msgstr ""
 
 #. module: base_calendar
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.attendee,parent_ids:0
 msgid "Delegrated From"
 msgstr ""
@@ -474,6 +503,11 @@ msgid "Event Detail"
 msgstr ""
 
 #. module: base_calendar
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.alarm,state:0
 msgid "Run"
 msgstr ""
@@ -494,6 +528,12 @@ msgstr ""
 #: field:calendar.event,end_date:0
 #: field:calendar.todo,end_date:0
 msgid "Repeat Until"
+msgstr ""
+
+#. module: base_calendar
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Seconds"
 msgstr ""
 
 #. module: base_calendar
@@ -570,6 +610,11 @@ msgid "Created"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
+msgid "Set Exclude range"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
 msgid "Private"
@@ -577,9 +622,7 @@ msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Daily"
 msgstr ""
@@ -603,6 +646,12 @@ msgid "Contact"
 msgstr ""
 
 #. module: base_calendar
+#: help:calendar.event,rrule_type:0
+#: help:calendar.todo,rrule_type:0
+msgid "Let the event automatically repeat at that interval"
+msgstr ""
+
+#. module: base_calendar
 #: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Delegate"
@@ -613,11 +662,6 @@ msgstr ""
 #: view:calendar.attendee:0
 #: field:calendar.attendee,partner_id:0
 msgid "Partner"
-msgstr ""
-
-#. module: base_calendar
-#: view:base.calendar.set.exrule:0
-msgid "Select data for ExRule"
 msgstr ""
 
 #. module: base_calendar
@@ -726,6 +770,12 @@ msgid "Decline"
 msgstr ""
 
 #. module: base_calendar
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Weeks"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.attendee,cutype:0
 msgid "Group"
 msgstr ""
@@ -808,7 +858,6 @@ msgstr ""
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr ""
@@ -871,8 +920,10 @@ msgid "June"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
 msgstr ""
 
 #. module: base_calendar
@@ -888,20 +939,16 @@ msgid "Delegated From"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,user_id:0
 msgid "User"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.event:0
-msgid "ExRule"
-msgstr ""
-
-#. module: base_calendar
-#: view:calendar.event:0
-#: field:calendar.event,date:0
-msgid "Date"
+#: field:calendar.alarm,active:0
+#: field:calendar.event,active:0
+#: field:calendar.todo,active:0
+#: field:res.alarm,active:0
+msgid "Active"
 msgstr ""
 
 #. module: base_calendar
@@ -914,6 +961,11 @@ msgstr ""
 #. module: base_calendar
 #: help:calendar.attendee,member:0
 msgid "Indicate the groups that the attendee belongs to"
+msgstr ""
+
+#. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+msgid "Data"
 msgstr ""
 
 #. module: base_calendar
@@ -990,11 +1042,9 @@ msgid "Summary"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,active:0
-#: field:calendar.event,active:0
-#: field:calendar.todo,active:0
-#: field:res.alarm,active:0
-msgid "Active"
+#: view:calendar.event:0
+#: field:calendar.event,date:0
+msgid "Date"
 msgstr ""
 
 #. module: base_calendar
@@ -1005,6 +1055,11 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.alarm,action:0
 msgid "Action"
+msgstr ""
+
+#. module: base_calendar
+#: help:base_calendar.invite.attendee,type:0
+msgid "Select whom you want to Invite"
 msgstr ""
 
 #. module: base_calendar
@@ -1040,9 +1095,7 @@ msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Weekly"
 msgstr ""
@@ -1125,6 +1178,16 @@ msgid "Tuesday"
 msgstr ""
 
 #. module: base_calendar
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: base_calendar
+#: selection:calendar.alarm,action:0
+msgid "Procedure"
+msgstr ""
+
+#. module: base_calendar
 #: help:calendar.alarm,description:0
 msgid "Provides a more complete                             description of the calendar component, than that                             provided by the \"SUMMARY\" property"
 msgstr ""
@@ -1155,6 +1218,7 @@ msgid "Tentative"
 msgstr ""
 
 #. module: base_calendar
+#: view:calendar.attendee:0
 #: view:calendar.event:0
 #: field:calendar.event,user_id:0
 #: field:calendar.todo,user_id:0
@@ -1204,6 +1268,12 @@ msgid "Details"
 msgstr ""
 
 #. module: base_calendar
+#: help:calendar.event,exrule:0
+#: help:calendar.todo,exrule:0
+msgid "Defines a rule or repeating pattern of time to exclude from the recurring rule."
+msgstr ""
+
+#. module: base_calendar
 #: field:base.calendar.set.exrule,month_list:0
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
@@ -1211,9 +1281,8 @@ msgid "Month"
 msgstr ""
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: view:calendar.event:0
-msgid "Invite People"
+#: selection:base_calendar.invite.attendee,type:0
+msgid "External Email"
 msgstr ""
 
 #. module: base_calendar
@@ -1273,6 +1342,12 @@ msgid "ir.values"
 msgstr ""
 
 #. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+#: view:calendar.event:0
+msgid "Invite People"
+msgstr ""
+
+#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
 msgid "Objects"
 msgstr ""
@@ -1301,8 +1376,6 @@ msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 msgid "Minutely"
 msgstr ""
 
@@ -1322,6 +1395,12 @@ msgstr ""
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "February"
+msgstr ""
+
+#. module: base_calendar
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Months"
 msgstr ""
 
 #. module: base_calendar
@@ -1438,9 +1517,9 @@ msgid "Sequence"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,vtimezone:0
-#: field:calendar.todo,vtimezone:0
-msgid "Timezone"
+#: help:calendar.event,alarm_id:0
+#: help:calendar.todo,alarm_id:0
+msgid "Set an alarm at this time, before the event occurs"
 msgstr ""
 
 #. module: base_calendar
@@ -1452,13 +1531,6 @@ msgstr ""
 #: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Accept"
-msgstr ""
-
-#. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
-#: selection:calendar.event,week_list:0
-#: selection:calendar.todo,week_list:0
-msgid "Saturday"
 msgstr ""
 
 #. module: base_calendar
@@ -1491,8 +1563,8 @@ msgid "Duration"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base_calendar.invite.attendee,type:0
-msgid "External Email"
+#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
+msgid "Create specific calendar alarms that can be assigned to calendar events or meetings."
 msgstr ""
 
 #. module: base_calendar
@@ -1501,10 +1573,10 @@ msgid "Trigger Date"
 msgstr ""
 
 #. module: base_calendar
-#: help:calendar.alarm,attach:0
-msgid "* Points to a sound resource,                     which is rendered when the alarm is triggered for audio,\n"
-"                    * File which is intended to be sent as message attachments for email,\n"
-"                    * Points to a procedure resource, which is invoked when                      the alarm is triggered for procedure."
+#: selection:base.calendar.set.exrule,week_list:0
+#: selection:calendar.event,week_list:0
+#: selection:calendar.todo,week_list:0
+msgid "Saturday"
 msgstr ""
 
 #. module: base_calendar

@@ -9,16 +9,22 @@
             <field name="model">report.membership</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('open','free');gray:state in ('done','cancel') " string="Membership">
-                    <field name="state"/>
+                <tree colors="blue:membership_state in ('draft');black:membership_state in ('open','free');gray:membership_state in ('done','cancel') " string="Membership">
                     <field name="partner_id"/>
+                    <field name="membership_state"/>
+                    <field name="associate_member_id" invisible="1"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="membership_id"/>
-                    <field name="canceled_number"/>
-                    <field name="waiting_number"/>
-                    <field name="invoiced_number"/>
-                    <field name="paid_number"/>
-                    <field name="year"/>
-                    <field name="month"/>
+                    <field name="num_waiting" invisible="context.get('waiting_invoiced_totpending_visible', True)"/>
+                    <field name="num_invoiced" invisible="context.get('waiting_invoiced_totpending_visible', True)"/>
+                    <field name="tot_pending" invisible="context.get('waiting_invoiced_totpending_visible', True)"/>
+                    <field name="num_paid" invisible="context.get('paid_old_totearned_visible', True)"/>
+                    <field name="tot_earned" invisible="context.get('paid_old_totearned_visible', True)"/>
+                    <field name="year" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -31,56 +37,51 @@
                 <search string="Membership">
                     <group col="8" colspan="4">
                         <filter string="Last 365 Days" icon="terp-go-year"
-                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+                            domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_from','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
                         <filter string="Last 30 Days" icon="terp-go-month" name="month"
-                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                            domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_from','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
-		                <filter icon="terp-camera_test"
-		                    string="Invoiced"
-		                    domain="[('state','=','open')]"/>
-		                <filter icon="terp-check"
-                            string="Paid"
-                            domain="[('state','=','paid')]"/>
-                        <filter icon="terp-gtk-media-pause"
-                            string="Waiting"
-                            default="1" name="none"
-                            domain="[('state','=', 'draft')]"/>
-    
+                        <filter string="Forecast" icon="terp-gtk-jump-to-ltr" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
+                        <filter string="Revenue Done" name="Revenue" icon="terp-dolar" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
                         <separator orientation="vertical"/>
                         <field name="partner_id"/>
                         <field name="membership_id"/>
+                        <field name="user_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="12">
-                        <filter string="Members" icon="terp-personal" name="member"
-                            domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Memberships" icon="terp-personal" name="membership"
-                            domain="[]" context="{'group_by':'membership_id'}"/>    
-                       <filter string="state" icon="terp-stock_effects-object-colorize"
-                            domain="[]" context="{'group_by':'state'}"/>
-                                      
-                        <separator orientation="vertical"/>       
+                    <group expand="1" string="Group By..." colspan="4" col="12">
+                        <filter string="Salesman" icon="terp-personal" name="salesman"
+                            domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Associated Partner" icon="terp-partner" name="associate_member_id"
+                            domain="[]" context="{'group_by':'associate_member_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Membership Product" icon="terp-accessories-archiver" name="product"
+                            domain="[]" context="{'group_by':'membership_id'}"/>
+                        <filter string="Current Membership State" icon="terp-stock_effects-object-colorize"
+                            domain="[]" context="{'group_by':'membership_state'}"/>
+                        <separator orientation="vertical" groups="base.group_multi_company"/>
+                        <filter string="Company" icon="terp-go-home"
+                            domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator orientation="vertical"/>
                         <filter string="Year" name="year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'year'}"/>
                         <filter string="Month" name="month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}"/>    
-
+                            domain="[]" context="{'group_by':'month'}"/>
                     </group>
                 </search>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_report_membership_graph1">
             <field name="name">report.membership.graph1</field>
             <field name="model">report.membership</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Membership" type="bar">
-                    <field name="year"/>
-                    <field name="canceled_number"/>
-                    <field name="waiting_number"/>
-                    <field name="invoiced_number"/>
-                    <field name="paid_number"/>
+                    <field name="year" />
+                    <field name="num_waiting" operator="+"/>
+                    <field name="num_invoiced" operator="+"/>
+                    <field name="num_paid" operator="+"/>
                 </graph>
             </field>
         </record>
@@ -89,7 +90,7 @@
             <field name="res_model">report.membership</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_report_membership_search"/>
-            <field name="context">{"search_default_member":1}</field>
+            <field name="context">{"search_default_member":1, 'search_default_Revenue':1, 'search_default_salesman':1, }</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_report_membership_tree_view1">
@@ -107,9 +108,10 @@
             <field name="act_window_id" ref="action_report_membership_tree"/>
         </record>
 
-        <menuitem name="Membership" parent="base.menu_report_association"
+        <menuitem name="Members Analysis" parent="base.menu_report_association"
             action="action_report_membership_tree"
-            id="menu_report_membership"/>
+            id="menu_report_membership"
+            groups="base.group_partner_manager"/>
 
     </data>
-</openerp>            
+</openerp>

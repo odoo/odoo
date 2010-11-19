@@ -20,13 +20,12 @@
 ##############################################################################
 
 import time
-import datetime
-import mx.DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 import pooler
 import tools
 from osv import fields,osv
-
 
 def _code_get(self, cr, uid, context={}):
     acc_type_obj = self.pool.get('account.account.type')
@@ -75,7 +74,7 @@ class temp_range(osv.osv):
     _description = 'A Temporary table used for Dashboard view'
 
     _columns = {
-        'name' : fields.char('Range',size=64)
+        'name': fields.char('Range',size=64)
     }
 
 temp_range()
@@ -128,13 +127,13 @@ class report_aged_receivable(osv.osv):
         LIST_RANGES = []
         if fy_id:
             fy_start_date = pool_obj_fy.read(cr, uid, fy_id, ['date_start'])['date_start']
-            fy_start_date = mx.DateTime.strptime(fy_start_date, '%Y-%m-%d')
-            last_month_date = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
+            fy_start_date = datetime.strptime(fy_start_date, '%Y-%m-%d')
+            last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
 
             while (last_month_date > fy_start_date):
                 LIST_RANGES.append(today + " to " + last_month_date.strftime('%Y-%m-%d'))
-                today = (last_month_date- 1).strftime('%Y-%m-%d')
-                last_month_date = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
+                today = (last_month_date- relativedelta(days=1)).strftime('%Y-%m-%d')
+                last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
 
             LIST_RANGES.append(today +" to " + fy_start_date.strftime('%Y-%m-%d'))
             cr.execute('delete from temp_range')
@@ -166,7 +165,7 @@ class report_invoice_created(osv.osv):
         'amount_untaxed': fields.float('Untaxed', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'date_invoice': fields.date('Date Invoiced', readonly=True),
+        'date_invoice': fields.date('Invoice Date', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'residual': fields.float('Residual', readonly=True),
         'state': fields.selection([
@@ -178,7 +177,7 @@ class report_invoice_created(osv.osv):
             ('cancel','Cancelled')
         ],'State', readonly=True),
         'origin': fields.char('Source Document', size=64, readonly=True, help="Reference of the document that generated this invoice report."),
-        'create_date' : fields.datetime('Create Date', readonly=True)
+        'create_date': fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
 
@@ -285,4 +284,3 @@ class report_account_sales(osv.osv):
 report_account_sales()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

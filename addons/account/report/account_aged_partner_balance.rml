@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-    <template pageSize="(1120.0,770.0)" title="Aged Trial balance" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Aged Trial Balance.pdf">
+    <template pageSize="(1120.0,770.0)" title="Aged Trial Balance" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
        <frame id="first" x1="20.0" y1="35.0" width="1080" height="650"/>
     </pageTemplate>
@@ -82,9 +82,22 @@
     <paraStyle name="Caption" fontName="Helvetica" fontSize="8.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Index" fontName="Helvetica"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>            
+    <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9_italic" fontName="Helvetica-Oblique" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+  	<paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+
   </stylesheet>
   <story>
     <para style="P9">
@@ -94,7 +107,7 @@
       <tr>
         <td><para style="terp_header"><font color="white"> </font></para>
         </td>
-        <td><para style="terp_header_Centre">Aged Trial balance</para></td>
+        <td><para style="terp_header_Centre">Aged Trial Balance</para></td>
         <td><para style="terp_header"><font color="white"> </font></para></td>
       </tr>
     </blockTable>
@@ -119,7 +132,7 @@
           <para style="terp_tblheader_General_Centre">Analysis Direction</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Printing Date</para>
+          <para style="terp_tblheader_General_Centre">Target Moves</para>
         </td>
       </tr>
         <tr>
@@ -142,40 +155,38 @@
           <para style="terp_default_Centre_8">[[ data['form']['direction_selection'] ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True)]]</para>
+          <para style="terp_default_Centre_8">[[ get_target_move(data) ]]</para>
         </td>
       </tr>
       </blockTable>
-    <para style="P9">
-      <font color="white"> </font>
-    </para>  <para style="P9">
+	<para style="P9">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="300.0,100.0,100.0,100.0,100.0,105.0,105.0,125.0" style="Table2" repeatRows="1">
       <tr>
         <td>
-          <para style="P2">Partners</para>
+          <para style="terp_tblheader_Details">Partners</para>
         </td>
         <td>
-          <para style="P8">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]]</para>
         </td>
         <td>
-          <para style="P8">[[ data['form']['4']['name'] ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['4']['name'] ]]</para>
         </td>
         <td>
-          <para style="P8">[[ data['form']['3']['name'] ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['3']['name'] ]]</para>
         </td>
         <td>
-          <para style="P8">[[ data['form']['2']['name'] ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['2']['name'] ]]</para>
         </td>
         <td>
-          <para style="P8">[[ data['form']['1']['name'] ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['1']['name'] ]]</para>
         </td>
         <td>
-          <para style="P8">[[ data['form']['0']['name'] ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['0']['name'] ]]</para>
         </td>
         <td>
-          <para style="P8">Total</para>
+          <para style="terp_tblheader_Details_Right">Total</para>
         </td>
       </tr>
 
@@ -184,36 +195,28 @@
         <td>
           <para style="P3"> <font color="white">[[ (get_lines(data['form']), 'partner') == False or removeParentNode('para')  ]]</font></para>
           <para style="P3"> <font color="white">[[ (get_lines_with_out_partner(data['form']), 'not_partner') == False or removeParentNode('para')  ]]</font></para>
-          <para style="P9"><font color="white"> </font></para>
           <para style="Total">Account Total</para>
         </td>
         <td>
-        <para style="P9"><font color="white"> </font></para>
-          <para style="Total_right">[[ formatLang(get_direction('6') or 0.00) ]] </para>
+          <para style="Total_right">[[ formatLang(get_direction('6')) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-        <para style="P9"><font color="white"> </font></para>
-          <para style="Total_right">[[ formatLang(get_for_period('4') or 0.00) ]]</para>
+          <para style="Total_right">[[ formatLang(get_for_period('4')) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-        <para style="P9"><font color="white"> </font></para>
-          <para style="Total_right">[[ formatLang(get_for_period('3') or 0.00) ]]</para>
+          <para style="Total_right">[[ formatLang(get_for_period('3')) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-        <para style="P9"><font color="white"> </font></para>
-          <para style="Total_right">[[ formatLang(get_for_period('2') or 0.00) ]]</para>
+          <para style="Total_right">[[ formatLang(get_for_period('2')) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-        <para style="P9"><font color="white"> </font></para>
-          <para style="Total_right">[[ formatLang(get_for_period('1') or 0.00) ]]</para>
+          <para style="Total_right">[[ formatLang(get_for_period('1')) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-        <para style="P9"><font color="white"> </font></para>
-          <para style="Total_right">[[ formatLang(get_for_period('0') or 0.00) ]]</para>
+          <para style="Total_right">[[ formatLang(get_for_period('0')) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-        <para style="P9"><font color="white"> </font></para>
-          <para style="Total_right">[[ formatLang(get_total('5') or 0.00) ]]</para>
+          <para style="Total_right">[[ formatLang(get_total('5')) ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
 
@@ -223,25 +226,25 @@
           <para style="P2_content">[[ partner['name'] ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['direction'] or 0.00) ]] </para>
+          <para style="content">[[ formatLang(partner['direction']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['4'] or 0.00)]]</para>
+          <para style="content">[[ formatLang(partner['4'])]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['3'] or 0.00)]]</para>
+          <para style="content">[[ formatLang(partner['3'])]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['2'] or 0.00) ]]</para>
+          <para style="content">[[ formatLang(partner['2']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['1'] or 0.00)  ]]</para>
+          <para style="content">[[ formatLang(partner['1'])  ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['0'] or 0.00) ]]</para>
+          <para style="content">[[ formatLang(partner['0']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['total'] or 0.00 ) ]]</para>
+          <para style="content">[[ formatLang(partner['total']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -250,25 +253,25 @@
           <para style="P2_content">[[ not_partner['name'] ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['direction'] or 0.00) ]] </para>
+          <para style="content">[[ formatLang(not_partner['direction']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['4'] or 0.00)]]</para>
+          <para style="content">[[ formatLang(not_partner['4'])]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['3'] or 0.00)]]</para>
+          <para style="content">[[ formatLang(not_partner['3'])]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['2'] or 0.00) ]]</para>
+          <para style="content">[[ formatLang(not_partner['2']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['1'] or 0.00)  ]]</para>
+          <para style="content">[[ formatLang(not_partner['1'])  ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['0'] or 0.00) ]]</para>
+          <para style="content">[[ formatLang(not_partner['0']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['total'] or 0.00 ) ]]</para>
+          <para style="content">[[ formatLang(not_partner['total']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>

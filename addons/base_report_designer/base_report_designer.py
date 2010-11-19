@@ -20,13 +20,13 @@
 ##############################################################################
 
 from osv import osv
-from wizard.tiny_sxw2rml import sxw2rml
+from openerp_sxw2rml import sxw2rml
 from StringIO import StringIO
 from report import interface
 import base64
 import pooler
 import tools
-
+import addons
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
@@ -37,12 +37,9 @@ class report_xml(osv.osv):
         '''
         sxwval = StringIO(base64.decodestring(file_sxw))
         if file_type=='sxw':
-            fp = tools.file_open('normalized_oo2rml.xsl', 
-                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+            fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_oo2rml.xsl'),'rb')
         if file_type=='odt':
-            fp = tools.file_open('normalized_odt2rml.xsl', 
-                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
-
+            fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_odt2rml.xsl'),'rb')
         return  {'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))}
 
     def upload_report(self, cr, uid, report_id, file_sxw, file_type, context):
@@ -52,17 +49,14 @@ class report_xml(osv.osv):
         pool = pooler.get_pool(cr.dbname)
         sxwval = StringIO(base64.decodestring(file_sxw))
         if file_type=='sxw':
-            fp = tools.file_open('normalized_oo2rml.xsl', 
-                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+            fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_oo2rml.xsl'),'rb')
         if file_type=='odt':
-            fp = tools.file_open('normalized_odt2rml.xsl', 
-                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+            fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_odt2rml.xsl'),'rb')
         report = pool.get('ir.actions.report.xml').write(cr, uid, [report_id], {
             'report_sxw_content': base64.decodestring(file_sxw), 
             'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())), 
         })
-        db = pooler.get_db_only(cr.dbname)
-        interface.register_all(db)
+        pool.get('ir.actions.report.xml').register_all(cr)
         return True
 
     def report_get(self, cr, uid, report_id, context={}):

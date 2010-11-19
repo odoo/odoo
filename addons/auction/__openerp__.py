@@ -42,6 +42,7 @@
     'depends': ['base', 'account', 'hr_attendance'],
     'init_xml': ['auction_sequence.xml', 'auction_data.xml'],
     'update_xml': [
+        'security/auction_security.xml',
         'security/ir.model.access.csv',
         'wizard/auction_lots_make_invoice_buyer_view.xml',
         'wizard/auction_lots_make_invoice_view.xml',
@@ -59,7 +60,9 @@
 
     ],
     'demo_xml': ['auction_demo.xml','board_auction_demo.xml'],
-    'test': ['test/auction.yml'],
+    'test': ['test/auction.yml',
+             'test/auction_report.yml',
+             ],
 
     'installable': True,
     'active': False,

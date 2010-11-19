@@ -23,7 +23,6 @@ from osv import fields, osv
 from datetime import datetime
 import crm
 import time
-import mx.DateTime
 from tools.translate import _
 from crm import crm_case
 import binascii
@@ -84,12 +83,12 @@ class crm_lead(crm_case, osv.osv):
                         new_dates = cal_obj.interval_get(cr,
                             uid,
                             lead.section_id.resource_calendar_id and lead.section_id.resource_calendar_id.id or False,
-                            mx.DateTime.strptime(lead.create_date, '%Y-%m-%d %H:%M:%S'),
+                            datetime.strptime(lead.create_date, '%Y-%m-%d %H:%M:%S'),
                             duration,
                             resource=resource_id
                         )
                         no_days = []
-                        date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
+                        date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
                         for in_time, out_time in new_dates:
                             if in_time.date not in no_days:
                                 no_days.append(in_time.date)
@@ -103,7 +102,7 @@ class crm_lead(crm_case, osv.osv):
         # Overridden from res.partner.address:
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', 
             select=True, help="Optional linked partner, usually after conversion of the lead"),
-        
+
         # From crm.case
         'id': fields.integer('ID'),
         'name': fields.char('Name', size=64),
@@ -114,20 +113,21 @@ class crm_lead(crm_case, osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which this case belongs to. Defines responsible user and e-mail address for the mail gateway.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
-        'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
+        'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
 
         # Lead fields
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                        domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.lead')]"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', \
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.lead')]"),
-        'partner_name': fields.char("Partner Name", size=64),
-        'optin': fields.boolean('Opt-In'),
-        'optout': fields.boolean('Opt-Out'),
+            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
+            domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
+        'channel_id': fields.many2one('res.partner.canal', 'Channel'),
+
+        'contact_name': fields.char('Contact Name', size=64), 
+        'partner_name': fields.char("Customer Name", size=64),
+        'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
+        'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),
@@ -149,8 +149,6 @@ class crm_lead(crm_case, osv.osv):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
-        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
-        'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
 
     _defaults = {
@@ -187,20 +185,26 @@ class crm_lead(crm_case, osv.osv):
         @param *args: Give Tuple Value
         """
         old_state = self.read(cr, uid, ids, ['state'])[0]['state']
+        old_stage_id = self.read(cr, uid, ids, ['stage_id'])[0]['stage_id']
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
         if old_state == 'draft':
-            stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
-            if stage_id:
-                value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
-            else:
-                value = {}
-            value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+            value = {}
+            if not old_stage_id:
+                stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
+                if stage_id:
+                    value.update({'stage_id': stage_id})
+                    value.update(self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value'])
+            value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
             self.write(cr, uid, ids, value)
 
-        for (id, name) in self.name_get(cr, uid, ids):
-            type = self.browse(cr, uid, id).type or 'Lead'
-            message = (_('The ') + type.title()) + " '" + name + "' "+ _("has been Opened.")
-            self.log(cr, uid, id, message)
+        for case in self.browse(cr, uid, ids):
+            if case.type == 'lead':
+                message = _("The lead '%s' has been opened.") % case.name
+            elif case.type == 'opportunity':
+                message = _("The opportunity '%s' has been opened.") % case.name
+            else:
+                message = _("The case '%s' has been opened.") % case.name
+            self.log(cr, uid, case.id, message)
         return res
 
     def case_close(self, cr, uid, ids, *args):
@@ -213,11 +217,14 @@ class crm_lead(crm_case, osv.osv):
         """
         res = super(crm_lead, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
-        for (id, name) in self.name_get(cr, uid, ids):
-            lead = self.browse(cr, uid, id)
-            if lead.type == 'lead':
-                message = _('The Lead') + " '" + name + "' "+ _("has been Closed.")
-                self.log(cr, uid, id, message)
+        for case in self.browse(cr, uid, ids):
+            if case.type == 'lead':
+                message = _("The lead '%s' has been closed.") % case.name
+            elif case.type == 'opportunity':
+                message = _("The opportunity '%s' has been closed.") % case.name
+            else:
+                message = _("The case '%s' has been closed.") % case.name
+            self.log(cr, uid, case.id, message)
         return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):
@@ -279,11 +286,31 @@ class crm_lead(crm_case, osv.osv):
         stage = super(crm_lead, self).stage_next(cr, uid, ids, context)
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
+            for case in self.browse(cr, uid, ids, context=context):
+                if case.type == 'lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                elif case.type == 'opportunity':
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                self.log(cr, uid, case.id, message)
             if stage_obj.on_change:
                 data = {'probability': stage_obj.probability}
                 self.write(cr, uid, ids, data)
         return stage
-
+    
+    def stage_previous(self, cr, uid, ids, context=None):
+        stage = super(crm_lead, self).stage_previous(cr, uid, ids, context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
+            for case in self.browse(cr, uid, ids, context=context):
+                if case.type == 'lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                elif case.type == 'opportunity':
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                self.log(cr, uid, case.id, message)
+        return stage
+    
     def message_new(self, cr, uid, msg, context):
         """
         Automatically calls when new email message arrives
@@ -315,10 +342,6 @@ class crm_lead(crm_case, osv.osv):
             vals.update(res)
 
         res = self.create(cr, uid, vals, context)
-        
-        message = _('A Lead created') + " '" + subject + "' " + _("from Mailgate.")
-        self.log(cr, uid, res, message)
-        
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {

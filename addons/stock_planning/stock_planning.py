@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from osv import osv, fields
 import netsvc
@@ -538,14 +538,14 @@ class stock_planning(osv.osv):
         return res / product.uom_id.factor, uom.rounding
 
     def calculate_planning(self, cr, uid, ids, context, *args):
-        one_minute = RelativeDateTime(minutes=1)
-        current_date_beginning_c = mx.DateTime.today()
-        current_date_end_c = current_date_beginning_c  + RelativeDateTime(days=1, minutes=-1)  # to get hour 23:59:00
+        one_minute = relativedelta(minutes=1)
+        current_date_beginning_c = datetime.today()
+        current_date_end_c = current_date_beginning_c  + relativedelta(days=1, minutes=-1)  # to get hour 23:59:00
         current_date_beginning = current_date_beginning_c.strftime('%Y-%m-%d %H:%M:%S')
         current_date_end = current_date_end_c.strftime('%Y-%m-%d %H:%M:%S')
         for val in self.browse(cr, uid, ids, context=context):
-            day = mx.DateTime.strptime(val.period_id.date_start, '%Y-%m-%d %H:%M:%S')
-            dbefore = mx.DateTime.DateTime(day.year, day.month, day.day) - one_minute
+            day = datetime.strptime(val.period_id.date_start, '%Y-%m-%d %H:%M:%S')
+            dbefore = datetime(day.year, day.month, day.day) - one_minute
             day_before_calculated_period = dbefore.strftime('%Y-%m-%d %H:%M:%S')   # one day before start of calculated period
             cr.execute("SELECT date_start \
                     FROM stock_period AS period \
@@ -556,8 +556,9 @@ class stock_planning(osv.osv):
             date = cr.fetchone()
             start_date_current_period = date and date[0] or False
             start_date_current_period = start_date_current_period or current_date_beginning
-            day = mx.DateTime.strptime(start_date_current_period, '%Y-%m-%d %H:%M:%S')
-            dbefore = mx.DateTime.DateTime(day.year, day.month, day.day) - one_minute
+            
+            day = datetime.strptime(start_date_current_period, '%Y-%m-%d %H:%M:%S')
+            dbefore = datetime(day.year, day.month, day.day) - one_minute
             date_for_start = dbefore.strftime('%Y-%m-%d %H:%M:%S')   # one day before current period
             already_out = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='out', done=True, context=context),
             already_in = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='in', done=True, context=context),
@@ -690,7 +691,7 @@ class stock_planning(osv.osv):
                         'name': _('MPS(') + str(user.login) +') '+ obj.period_id.name,
                         'picking_id': picking_id,
                         'product_id': obj.product_id.id,
-                        'date_planned': obj.period_id.date_start,
+                        'date': obj.period_id.date_start,
                         'product_qty': uom_qty,
                         'product_uom': uom,
                         'product_uos_qty': uos_qty,

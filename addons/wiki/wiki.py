@@ -24,13 +24,13 @@ from osv import fields, osv
 from tools.translate import _
 import difflib
 
-class Wiki(osv.osv):
+class wiki_wiki(osv.osv):
     """ wiki """
     _name = "wiki.wiki"
 
-Wiki()
+wiki_wiki()
 
-class WikiGroup(osv.osv):
+class wiki_group(osv.osv):
     """ Wiki Groups """
 
     _name = "wiki.groups"
@@ -45,8 +45,8 @@ class WikiGroup(osv.osv):
        'template': fields.text('Wiki Template'),
        'section': fields.boolean("Make Section ?"),
        'method':fields.selection([('list', 'List'), ('page', 'Home Page'), \
-                                   ('tree', 'Tree')], 'Display Method'),
-       'home':fields.many2one('wiki.wiki', 'Home Page'),
+                                   ('tree', 'Tree')], 'Display Method', help="Define the default behaviour of the menu created on this group"),
+       'home':fields.many2one('wiki.wiki', 'Home Page', help="Required to select home page if display method is Home Page"),
        'menu_id': fields.many2one('ir.ui.menu', "Menu", readonly=True),
     }
 
@@ -71,7 +71,7 @@ class WikiGroup(osv.osv):
             group_id = ids[0]
         if not group_id:
             return {}
-        value = {            
+        value = {
             'name': 'Wiki Page',
             'view_type': 'form',
             'view_mode': 'form,tree',
@@ -94,10 +94,10 @@ class WikiGroup(osv.osv):
             value['view_type'] = 'tree'
 
         return value
-WikiGroup()
+wiki_group()
 
 
-class Wiki2(osv.osv):
+class wiki_wiki2(osv.osv):
     """ Wiki Page """
 
     _inherit = "wiki.wiki"
@@ -108,10 +108,10 @@ class Wiki2(osv.osv):
         'name': fields.char('Title', size=256, select=True, required=True),
         'write_uid': fields.many2one('res.users', "Last Contributor", select=True),
         'text_area': fields.text("Content"),
-        'create_uid': fields.many2one('res.users', 'Author', select=True),
-        'create_date': fields.datetime("Created on", select=True),
-        'write_date': fields.datetime("Modification Date", select=True),
-        'tags': fields.char('Tags', size=1024, select=True),
+        'create_uid': fields.many2one('res.users', 'Author', select=True, readonly=True),
+        'create_date': fields.datetime("Created on", select=True, readonly=True),
+        'write_date': fields.datetime("Modification Date", select=True, readonly=True),
+        'tags': fields.char('Keywords', size=1024, select=True),
         'history_id': fields.one2many('wiki.wiki.history', 'wiki_id', 'History Lines'),
         'minor_edit': fields.boolean('Minor edit', select=True),
         'summary': fields.char('Summary', size=256),
@@ -119,11 +119,16 @@ class Wiki2(osv.osv):
         'group_id': fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null',
             help="Topic, also called Wiki Group"),
         'toc': fields.boolean('Table of Contents',
-            help="Indicates that this pages is a table of contents (linking to other pages)"),
+            help="Indicates that this pages have a table of contents or not"),
         'review': fields.boolean('Needs Review', select=True,
             help="Indicates that this page should be reviewed, raising the attention of other contributors"),
-        'parent_id': fields.many2one('wiki.wiki', 'Parent Page'),
+        'parent_id': fields.many2one('wiki.wiki', 'Parent Page', help="Allows you to link with the other page with in the current topic"),
         'child_ids': fields.one2many('wiki.wiki', 'parent_id', 'Child Pages'),
+    }
+    _defaults = {
+        'toc': lambda *a: True,
+        'review': lambda *a: True,
+        'minor_edit': lambda *a: True,
     }
 
     def onchange_group_id(self, cr, uid, ids, group_id, content, context={}):
@@ -159,49 +164,43 @@ class Wiki2(osv.osv):
             @param uid: the current user’s ID for security checks,
             @param id: Give wiki page's ID """
 
-        return super(Wiki, self).copy_data(cr, uid, id, {'wiki_id': False}, context)
+        return super(wiki_wiki2, self).copy_data(cr, uid, id, {'wiki_id': False}, context)
 
-    def create(self, cr, uid, vals, context=None):
-
-        """ @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks, """
-
-        id = super(Wiki, self).create(cr, uid, vals, context)
+    def create_history(self, cr, uid, ids, vals, context=None):
+        history_id = False
         history = self.pool.get('wiki.wiki.history')
         if vals.get('text_area'):
             res = {
                 'minor_edit': vals.get('minor_edit', True),
                 'text_area': vals.get('text_area', ''),
                 'write_uid': uid,
-                'wiki_id': id,
+                'wiki_id': ids[0],
                 'summary':vals.get('summary', '')
             }
-            history.create(cr, uid, res)
-        return id
+            history_id = history.create(cr, uid, res)
+        return history_id
+
+    def create(self, cr, uid, vals, context=None):
+
+        """ @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks, """
+        wiki_id = super(wiki_wiki2, self).create(cr, uid,
+                             vals, context)
+        self.create_history(cr, uid, [wiki_id], vals, context)
+        return wiki_id
 
     def write(self, cr, uid, ids, vals, context=None):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
-
-        result = super(Wiki, self).write(cr, uid, ids, vals, context)
-        history = self.pool.get('wiki.wiki.history')
-        if vals.get('text_area'):
-            for id in ids:
-                res = {
-                    'minor_edit': vals.get('minor_edit', True),
-                    'text_area': vals.get('text_area', ''),
-                    'write_uid': uid,
-                    'wiki_id': id,
-                    'summary': vals.get('summary', '')
-                }
-                history.create(cr, uid, res)
+        result = super(wiki_wiki2, self).write(cr, uid, ids, vals, context)
+        self.create_history(cr, uid, ids, vals, context)
         return result
 
-Wiki2()
+wiki_wiki2()
 
 
-class History(osv.osv):
+class wiki_history(osv.osv):
     """ Wiki History """
 
     _name = "wiki.wiki.history"
@@ -240,6 +239,6 @@ class History(osv.osv):
         diff = difflib.HtmlDiff()
         return diff.make_file(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=False)
 
-History()
+wiki_history()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

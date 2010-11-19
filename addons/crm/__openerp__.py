@@ -84,8 +84,7 @@ Create dashboard for CRM that includes:
         'wizard/crm_partner_to_opportunity_view.xml',
 
         'wizard/crm_send_email_view.xml',
-        'wizard/crm_forward_to_partner_view.xml',
-        'wizard/crm_custom_create_menu_view.xml',
+        'wizard/crm_add_note_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
@@ -120,7 +119,6 @@ Create dashboard for CRM that includes:
         'crm_meeting_demo.xml',
         'crm_opportunity_demo.xml',
         'crm_phonecall_demo.xml',
-        'board_crm_demo.xml',
     ],
     'test': [
             'test/test_crm_lead.yml',

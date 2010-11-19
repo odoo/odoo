@@ -14,11 +14,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action Rule">
-                    <field name="name"/>
-                    <field name="model_id" select="1" on_change="onchange_model_id(model_id)"/>
-                    <field name="filter_id" />
-                    <field name="sequence"/>
-                    <field name="active"/>
+                    <group col="6" colspan="4">
+                        <field name="name"/>
+                        <field name="model_id" select="1" on_change="onchange_model_id(model_id)"/>
+                        <field name="filter_id" />
+                        <field name="sequence"/>
+                        <field name="active"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Conditions">
                             <group col="2" colspan="2" name="model">
@@ -63,12 +65,13 @@
                                 <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
                                     <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
                                 </group>
-	                            <separator colspan="4" string="Email Information"/>
+                                <separator colspan="4" string="Email Information"/>
                                 <field name="act_email_from" />
-	                            <field name="act_mail_to_user"/>
-	                            <field colspan="4" name="act_mail_to_email"/>
-	                            <field name="act_mail_to_watchers"/>
-	                            <field colspan="4" name="act_email_cc"/>
+                                <field name="act_email_to" />
+                                <field name="act_mail_to_user"/>
+                                <field colspan="4" name="act_mail_to_email"/>
+                                <field name="act_mail_to_watchers"/>
+                                <field colspan="4" name="act_email_cc"/>
                             <separator colspan="4" string="Email Body"/>
                             <field colspan="4" name="act_mail_body" height="250"
                             	nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />
@@ -111,6 +114,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_base_action_rule_tree"/>
+            <field name="help">Create actions automatically triggered based on a user activity in the system.E.g.: an opportunity created by a specific user can be automatically maintained with a specific sales team, or an opportunity which still has status pending after 14 days triggers an automatic reminder email.</field>
         </record>
 
            <menuitem id="menu_base_action_rule_form"

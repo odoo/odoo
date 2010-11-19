@@ -33,6 +33,7 @@ class product_pricelist(report_sxw.rml_parse):
             'time': time,
             'get_pricelist': self._get_pricelist,
             'get_currency': self._get_currency,
+            'get_currency_symbol': self._get_currency_symbol,
             'get_categories': self._get_categories,
             'get_price': self._get_price,
             'get_titles': self._get_titles,
@@ -69,6 +70,12 @@ class product_pricelist(report_sxw.rml_parse):
         pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'])[0]
         return pricelist['currency_id'][1]
 
+    def _get_currency_symbol(self, pricelist_id):
+        pool = pooler.get_pool(self.cr.dbname)
+        pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'])[0]
+        symbol = pool.get('res.currency').read(self.cr, self.uid, [pricelist['currency_id'][0]], ['symbol'])[0]
+        return symbol['symbol'] or ''
+
     def _get_categories(self, products,form):
         cat_ids=[]
         res=[]
@@ -80,9 +87,12 @@ class product_pricelist(report_sxw.rml_parse):
             pro_ids.append(product.id)
             if product.categ_id.id not in cat_ids:
                 cat_ids.append(product.categ_id.id)
-        cats = pool.get('product.category').read(self.cr, self.uid, cat_ids, ['name'])
+
+        cats = pool.get('product.category').name_get(self.cr, self.uid, cat_ids)
+        if not cats:
+            return res
         for cat in cats:
-            product_ids=pool.get('product.product').search(self.cr, self.uid, [('id','in',pro_ids),('categ_id','=',cat['id'])])
+            product_ids=pool.get('product.product').search(self.cr, self.uid, [('id','in',pro_ids),('categ_id','=',cat[0])])
             products = []
             for product in pool.get('product.product').read(self.cr, self.uid, product_ids, ['name','code']):
                 val = {
@@ -98,17 +108,18 @@ class product_pricelist(report_sxw.rml_parse):
                         val['qty'+str(i)]=self._get_price(self.pricelist, product['id'], qty)
                     i += 1
                 products.append(val)
-            res.append({'name':cat['name'],'products': products})
+            res.append({'name':cat[1],'products': products})
         return res
 
     def _get_price(self,pricelist_id, product_id,qty):
+        sale_price_digits = self.get_digits(dp='Sale Price')
         pool = pooler.get_pool(self.cr.dbname)
         price_dict = pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id,qty)
         if price_dict[pricelist_id]:
-            price = self.formatLang(price_dict[pricelist_id])
+            price = self.formatLang(price_dict[pricelist_id], digits=sale_price_digits)
         else:
             res = pool.get('product.product').read(self.cr, self.uid, [product_id])
-            price =  self.formatLang(res[0]['list_price'])
+            price =  self.formatLang(res[0]['list_price'], digits=sale_price_digits)
         return price
 
 report_sxw.report_sxw('report.product.pricelist','product.product','addons/product/report/product_pricelist.rml',parser=product_pricelist)

@@ -7,19 +7,41 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 11:07+0000\n"
+"PO-Revision-Date: 2010-09-29 10:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:53+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
 #: field:account.tax.template,description:0
 msgid "Internal Name"
 msgstr "Interni naziv"
+
+#. module: account
+#: field:account.partner.balance,result_selection:0
+#: field:account.aged.trial.balance,result_selection:0
+#: field:account.partner.ledger,result_selection:0
+msgid "Partner's"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_account_pl_report
+msgid "Profit And Loss"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_account_bs_report
+msgid "Balance Sheet"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_general_Balance_report
+msgid  "Trial Balance"
+msgstr ""
 
 #. module: account
 #: view:account.tax.code:0
@@ -623,8 +645,8 @@ msgstr "(Postite prazno da se odpre terenutno stanje)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
-msgid "Fiscal Position Accounts Mapping"
-msgstr "Preslikava kontov glede na davčno pozicijo"
+msgid "Accounts Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,contact_id:0
@@ -1019,8 +1041,8 @@ msgstr "Skupaj (brez davkov):"
 #: field:account.invoice,fiscal_position:0
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
-msgid "Fiscal Position"
-msgstr "Davčna pozicija"
+msgid "Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -1041,8 +1063,8 @@ msgstr "Otroci"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
-msgid "Fiscal Position Taxes Mapping"
-msgstr "Preslikava davkov glede na davčno pozicijo"
+msgid "Taxes Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2_new
@@ -1130,8 +1152,8 @@ msgstr "Nov analitičen konto"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
-msgid "Fiscal Position Templates"
-msgstr "Predloge davčnih pozicij"
+msgid "Fiscal Mapping Templates"
+msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
@@ -1162,8 +1184,8 @@ msgstr "Znesek izražen v poljubni drugi valuti"
 #. module: account
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
-msgid "Fiscal Position Template"
-msgstr "Vzorec za davčno pozicijo"
+msgid "Fiscal Mapping Template"
+msgstr ""
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -1228,8 +1250,8 @@ msgstr "Valute družba"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Fiscal Position Template Account Mapping"
-msgstr "Preslikava kontov za vzorec za davčno pozicijo"
+msgid "Template Account Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,parent_id:0
@@ -1810,11 +1832,9 @@ msgstr "Naslednji"
 #. module: account
 #: help:res.partner,property_account_position:0
 msgid ""
-"The fiscal position will determine taxes and the accounts used for the the "
+"The fiscal mapping will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
-"Davčna pozicija bo določila davke in konte, ki se bodo uporabljali za tega "
-"partnerja."
 
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
@@ -2087,8 +2107,8 @@ msgstr "Proces računa stranke"
 
 #. module: account
 #: rml:account.invoice:0
-msgid "Fiscal Position Remark :"
-msgstr "Opomba za davčno pozicijo"
+msgid "Fiscal Mapping Remark :"
+msgstr ""
 
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,period_id:0
@@ -3657,7 +3677,7 @@ msgstr "Zaporedje"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
+msgid "Template for Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -3762,7 +3782,7 @@ msgstr "Osnutki računov"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
-msgid "Fiscal Position Template Tax Mapping"
+msgid "Template Tax Fiscal Mapping"
 msgstr ""
 
 #. module: account
@@ -5906,7 +5926,7 @@ msgstr "Plačilni pogoj"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
-msgid "Fiscal Positions"
+msgid "Fiscal Mappings"
 msgstr ""
 
 #. module: account

@@ -13,13 +13,40 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:54+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
 #: field:account.tax.template,description:0
 msgid "Internal Name"
 msgstr "Nombre interno"
+
+#. module: account
+#: field:account.partner.balance,result_selection:0
+#: field:account.aged.trial.balance,result_selection:0
+#: field:account.partner.ledger,result_selection:0
+msgid "Partner's"
+msgstr ""
+
+#. module: account
+#: field:account.partner.balance,display_partner:0
+msgid "Display Partners"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_account_pl_report
+msgid "Profit And Loss"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_account_bs_report
+msgid "Balance Sheet"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_general_Balance_report
+msgid  "Trial Balance"
+msgstr ""
 
 #. module: account
 #: view:account.tax.code:0
@@ -178,7 +205,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Total Credit"
-msgstr ""
+msgstr "Crédito total"
 
 #. module: account
 #: field:account.config.wizard,charts:0
@@ -258,7 +285,7 @@ msgstr "Impuestos del proveedor"
 #. module: account
 #: view:account.move:0
 msgid "Total Debit"
-msgstr ""
+msgstr "Total debe"
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -325,7 +352,7 @@ msgstr "Origen"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Move Name"
-msgstr ""
+msgstr "Mover nombre"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -415,7 +442,7 @@ msgstr "Conciliación del pago"
 #. module: account
 #: model:account.journal,name:account.expenses_journal
 msgid "Journal de frais"
-msgstr ""
+msgstr "Diario de gastos"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
@@ -435,7 +462,7 @@ msgstr "Negativo"
 #. module: account
 #: rml:account.partner.balance:0
 msgid "(Account/Partner) Name"
-msgstr ""
+msgstr "Nombre de Cuenta/Empresa"
 
 #. module: account
 #: selection:account.move,type:0
@@ -533,6 +560,16 @@ msgstr "Pago conciliado"
 
 #. module: account
 #: wizard_field:account.chart,init,target_move:0
+#: field:account.common.report,target_move:0
+#: field:account.report.general.ledger,target_move:0
+#: field:account.balance.report,target_move:0
+#: field:account.pl.report,target_move:0
+#: field:account.bs.report,target_move:0
+#: field:account.print.journal,target_move:0
+#: field:account.general.journal,target_move:0
+#: field:account.central.journal,target_move:0
+#: field:account.partner.balance,target_move:0
+#: field:account.partner.ledger,target_move:0
 msgid "Target Moves"
 msgstr "Movimientos destino"
 
@@ -632,8 +669,8 @@ msgstr "(dejar vacío para abrir el estado actual)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
-msgid "Fiscal Position Accounts Mapping"
-msgstr "Mapeo de cuentas y posición fiscal"
+msgid "Accounts Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,contact_id:0
@@ -952,14 +989,6 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: account
-#: wizard_field:account.account.balance.report,checktype,date_to:0
-#: wizard_field:account.general.ledger.report,checktype,date_to:0
-#: wizard_field:account.partner.balance.report,init,date2:0
-#: wizard_field:account.third_party_ledger.report,init,date2:0
-msgid "End date"
-msgstr "Fecha de finalización"
-
-#. module: account
 #: field:account.invoice.tax,base_amount:0
 msgid "Base Code Amount"
 msgstr "Importe de código base"
@@ -1030,8 +1059,8 @@ msgstr "Total Neto:"
 #: field:account.invoice,fiscal_position:0
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
-msgid "Fiscal Position"
-msgstr "Posición fiscal"
+msgid "Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -1041,6 +1070,7 @@ msgstr "UdM"
 
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,page_split:0
+#: field:account.partner.ledger,page_split:0
 msgid "One Partner Per Page"
 msgstr "Un partner por página"
 
@@ -1052,8 +1082,8 @@ msgstr "Hijos"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
-msgid "Fiscal Position Taxes Mapping"
-msgstr "Cruce de posición de impuestos fiscales"
+msgid "Taxes Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2_new
@@ -1141,8 +1171,8 @@ msgstr "Nueva cuenta analítica"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
-msgid "Fiscal Position Templates"
-msgstr "Plantillas de posiciones fiscales"
+msgid "Fiscal Mapping Templates"
+msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
@@ -1153,7 +1183,7 @@ msgstr "Precio unitario"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Period from :"
-msgstr ""
+msgstr "Período desde :"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -1163,7 +1193,7 @@ msgstr "asistente.multi.charts.accounts"
 #. module: account
 #: model:account.journal,name:account.sales_journal
 msgid "Journal de vente"
-msgstr ""
+msgstr "Diario de ventas"
 
 #. module: account
 #: help:account.model.line,amount_currency:0
@@ -1173,8 +1203,8 @@ msgstr "El importe expresado en otra moneda opcional."
 #. module: account
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
-msgid "Fiscal Position Template"
-msgstr "Plantilla de posición fiscal"
+msgid "Fiscal Mapping Template"
+msgstr ""
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -1245,8 +1275,8 @@ msgstr "Moneda de la compañía"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Fiscal Position Template Account Mapping"
-msgstr "Asociación de cuentas Planilla posición fiscal"
+msgid "Template Account Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,parent_id:0
@@ -1458,14 +1488,14 @@ msgid "Display History"
 msgstr "Mostrar historial"
 
 #. module: account
-#: wizard_field:account.third_party_ledger.report,init,date1:0
-msgid "        Start date"
-msgstr "        Fecha de Inicio"
-
-#. module: account
 #: wizard_field:account.account.balance.report,checktype,display_account:0
 #: wizard_field:account.general.ledger.report,checktype,display_account:0
-msgid "Display accounts "
+#: field:account.common.report,display_account:0
+#: field:account.report.general.ledger,display_account:0
+#: field:account.balance.report,display_account:0
+#: field:account.pl.report,display_account:0
+#: field:account.bs.report,display_account:0
+msgid "Display accounts"
 msgstr "Mostrar cuentas "
 
 #. module: account
@@ -1509,7 +1539,7 @@ msgstr "Cerrar estados"
 #. module: account
 #: model:ir.model,name:account.model_wizard_company_setup
 msgid "wizard.company.setup"
-msgstr ""
+msgstr "wizard.company.setup"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form
@@ -1590,7 +1620,7 @@ msgstr "Abrir para Conciliación"
 #. module: account
 #: model:account.journal,name:account.bilan_journal
 msgid "Journal d'ouverture"
-msgstr ""
+msgstr "Diario de apertura"
 
 #. module: account
 #: selection:account.tax,tax_group:0
@@ -1682,6 +1712,16 @@ msgstr "Saldo inicial"
 #: view:account.journal.period:0
 #: model:ir.actions.act_window,name:account.action_account_journal_period_tree
 #: model:ir.ui.menu,name:account.menu_action_account_journal_period_tree
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
 msgid "Journals"
 msgstr "Diarios"
 
@@ -1828,11 +1868,9 @@ msgstr "Siguiente"
 #. module: account
 #: help:res.partner,property_account_position:0
 msgid ""
-"The fiscal position will determine taxes and the accounts used for the the "
+"The fiscal mapping will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
-"La posición fiscal determinará los impuestos y las cuentas utilizadas por el "
-"partner"
 
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
@@ -1874,11 +1912,35 @@ msgstr "año"
 #: wizard_button:account.partner.balance.report,init,report:0
 #: wizard_button:account.print.journal.report,init,print:0
 #: wizard_button:account.third_party_ledger.report,init,checkreport:0
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.partner.balance:0
+#: view:account.aged.trial.balance:0
+#: view:account.partner.ledger:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
 msgid "Print"
 msgstr "Imprimir"
 
 #. module: account
 #: wizard_field:account.account.balance.report,checktype,date_from:0
+#: field:account.config.wizard,date1:0
+#: field:account.fiscalyear,date_start:0
+#: field:account.subscription,date_start:0
+#: field:account.common.report,date_from:0
+#: field:account.report.general.ledger,date_from:0
+#: field:account.balance.report,date_from:0
+#: field:account.pl.report,date_from:0
+#: field:account.bs.report,date_from:0
+#: field:account.print.journal,date_from:0
+#: field:account.general.journal,date_from:0
+#: field:account.central.journal,date_from:0
+#: field:account.partner.balance,date_from:0
+#: field:account.partner.ledger,date_from:0
 msgid "Start date"
 msgstr "Fecha de inicio"
 
@@ -1960,9 +2022,14 @@ msgid "The partner reference of this invoice."
 msgstr "La referencia del partner de esta factura."
 
 #. module: account
-#: wizard_field:account.general.ledger.report,checktype,sortbydate:0
+#: field:account.report.general.ledger,sortby:0
 msgid "Sort by:"
 msgstr "Ordenar por:"
+
+#. module: account
+#: field:account.vat.declaration,chart_tax_id:0
+msgid "Chart of Tax"
+msgstr ""
 
 #. module: account
 #: field:account.move,to_check:0
@@ -2106,7 +2173,7 @@ msgstr "Proceso de factura de cliente"
 
 #. module: account
 #: rml:account.invoice:0
-msgid "Fiscal Position Remark :"
+msgid "Fiscal Mapping Remark :"
 msgstr ""
 
 #. module: account
@@ -2390,7 +2457,7 @@ msgstr "Plantilla del plan de cuentas"
 #. module: account
 #: model:account.journal,name:account.refund_sales_journal
 msgid "Journal d'extourne"
-msgstr ""
+msgstr "Diario de inversión"
 
 #. module: account
 #: rml:account.journal.period.print:0
@@ -2484,7 +2551,7 @@ msgstr "Abrir diario"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "KI"
-msgstr ""
+msgstr "KI"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.action_account_analytic_line
@@ -2531,6 +2598,10 @@ msgstr "La cantidad en la moneda del diario"
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,landscape:0
+#: field:account.common.report,landscape:0
+#: field:account.report.general.ledger,landscape:0
+#: field:account.pl.report,landscape:0
+#: field:account.bs.report,landscape:0
 msgid "Landscape Mode"
 msgstr "Modo apaisado"
 
@@ -2586,8 +2657,42 @@ msgstr "Crear factura desde cuentas analíticas"
 #: wizard_button:account_use_models,init_form,end:0
 #: view:wizard.company.setup:0
 #: view:wizard.multi.charts.accounts:0
+#: view:account.period.close:0
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.partner.balance:0
+#: view:account.aged.trial.balance:0
+#: view:account.partner.ledger:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.vat.declaration:0
 msgid "Cancel"
 msgstr "Cancelar"
+
+
+#. module: account
+#: view:account.vat.declaration:0
+msgid "Print Tax Statement"
+msgstr ""
+
+#. module: account
+#: field:account.common.report,chart_account_id:0
+#: field:account.report.general.ledger,chart_account_id:0
+#: field:account.balance.report,chart_account_id:0
+#: field:account.pl.report,chart_account_id:0
+#: field:account.bs.report,chart_account_id:0
+#: field:account.print.journal,chart_account_id:0
+#: field:account.general.journal,chart_account_id:0
+#: field:account.central.journal,chart_account_id:0
+#: field:account.partner.balance,chart_account_id:0
+#: field:account.aged.trial.balance,chart_account_id:0
+#: field:account.partner.ledger,chart_account_id:0
+msgid "Chart of account"
+msgstr ""
 
 #. module: account
 #: field:account.account.type,name:0
@@ -2672,7 +2777,7 @@ msgstr "Crear factura"
 #. module: account
 #: model:account.account.type,name:account.account_type_cash_equity
 msgid "Equity"
-msgstr ""
+msgstr "Patrimonio"
 
 #. module: account
 #: field:wizard.company.setup,overdue_msg:0
@@ -2739,7 +2844,7 @@ msgstr "-"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "asgfas"
-msgstr ""
+msgstr "asgfas"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
@@ -2820,7 +2925,7 @@ msgid "Reconciliation transactions"
 msgstr "Conciliación de transacciones"
 
 #. module: account
-#: wizard_field:account.aged.trial.balance,init,direction_selection:0
+#: field:account.aged.trial.balance,direction_selection:0
 msgid "Analysis Direction"
 msgstr "Dirección de análisis"
 
@@ -3224,7 +3329,7 @@ msgstr "Cuenta"
 #. module: account
 #: model:account.journal,name:account.bank_journal
 msgid "Journal de Banque CHF"
-msgstr ""
+msgstr "Diario de bancos"
 
 #. module: account
 #: selection:account.account.balance.report,checktype,state:0
@@ -3574,6 +3679,18 @@ msgstr "Hijos consolidados"
 #: wizard_field:account.general.ledger.report,checktype,fiscalyear:0
 #: wizard_field:account.partner.balance.report,init,fiscalyear:0
 #: wizard_field:account.third_party_ledger.report,init,fiscalyear:0
+#: field:account.common.report,fiscalyear_id:0
+#: field:account.report.general.ledger,fiscalyear_id:0
+#: field:account.balance.report,fiscalyear_id:0
+#: field:account.pl.report,fiscalyear_id:0
+#: field:account.bs.report,fiscalyear_id:0
+#: field:account.print.journal,fiscalyear_id:0
+#: field:account.general.journal,fiscalyear_id:0
+#: field:account.central.journal,fiscalyear_id:0
+#: field:account.partner.balance,fiscalyear_id:0
+#: field:account.aged.trial.balance,fiscalyear_id:0
+#: field:account.partner.ledger,fiscalyear_id:0
+#: field:account.vat.declaration,fiscalyear_id:0
 msgid "Fiscal year"
 msgstr "Año fiscal"
 
@@ -3616,6 +3733,11 @@ msgstr "Modelo de asiento"
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,amount_currency:0
+#: field:account.report.general.ledger,amount_currency:0
+#: field:account.print.journal,amount_currency:0
+#: field:account.general.journal,amount_currency:0
+#: field:account.central.journal,amount_currency:0
+#: field:account.partner.ledger,amount_currency:0
 msgid "With Currency"
 msgstr "Con moneda"
 
@@ -3710,8 +3832,8 @@ msgstr "Secuencia"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "Plantilla para posición fiscal"
+msgid "Template for Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3795,8 +3917,14 @@ msgstr "Asistente de configuración contabilidad "
 #: field:account.config.wizard,date1:0
 #: field:account.fiscalyear,date_start:0
 #: field:account.subscription,date_start:0
+#: field:account.aged.trial.balance,date_from:0
 msgid "Start Date"
 msgstr "Fecha de inicio"
+
+#. module: account
+#: field:account.aged.trial.balance,period_length:0 
+msgid "Period length(days)"
+msgstr ""
 
 #. module: account
 #: wizard_view:account.general.ledger.report,account_selection:0
@@ -3817,8 +3945,8 @@ msgstr "Facturas en borrador"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
-msgid "Fiscal Position Template Tax Mapping"
-msgstr "Asociación de impuestos plantilla posición fiscal"
+msgid "Template Tax Fiscal Mapping"
+msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
@@ -3895,7 +4023,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_wizard_company_setup_form
 #: view:wizard.company.setup:0
 msgid "Overdue Payment Report Message"
-msgstr ""
+msgstr "Mensaje para reporte de pagos vencidos"
 
 #. module: account
 #: selection:account.tax,tax_group:0
@@ -4136,8 +4264,9 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,reconcil:0
-msgid "       Include Reconciled Entries"
-msgstr "       Incluir asientos conciliados"
+#: field:account.partner.ledger,reconcil:0
+msgid "Include Reconciled Entries"
+msgstr "Incluir asientos conciliados"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -4217,6 +4346,17 @@ msgstr "Finalizado"
 #: model:ir.actions.act_window,name:account.action_account_period_form
 #: model:ir.ui.menu,name:account.menu_action_account_period_form
 #: model:ir.ui.menu,name:account.next_id_23
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
+#: view:account.vat.declaration:0
 msgid "Periods"
 msgstr "Períodos"
 
@@ -4382,8 +4522,24 @@ msgstr "Eliminar Líneas"
 #: wizard_field:account.general.ledger.report,checktype,soldeinit:0
 #: wizard_field:account.partner.balance.report,init,soldeinit:0
 #: wizard_field:account.third_party_ledger.report,init,soldeinit:0
+#: field:account.report.general.ledger,initial_balance:0
+#: field:account.partner.ledger,initial_balance:0
 msgid "Include initial balances"
 msgstr "Incluir balances iniciales"
+
+#. module: account
+#: field:account.common.report,filter:0
+#: field:account.report.general.ledger,filter:0
+#: field:account.balance.report,filter:0
+#: field:account.pl.report,filter:0
+#: field:account.bs.report,filter:0
+#: field:account.print.journal,filter:0
+#: field:account.general.journal,filter:0
+#: field:account.central.journal,filter:0
+#: field:account.partner.balance,filter:0
+#: field:account.partner.ledger,filter:0
+msgid "Filter by"
+msgstr ""
 
 #. module: account
 #: view:account.account.template:0
@@ -4436,8 +4592,62 @@ msgstr "Notas de Crédito"
 #. module: account
 #: field:account.config.wizard,date2:0
 #: field:account.fiscalyear,date_stop:0
+#: field:account.common.report,date_to:0
+#: field:account.report.general.ledger,date_to:0
+#: field:account.balance.report,date_to:0
+#: field:account.pl.report,date_to:0
+#: field:account.bs.report,date_to:0
+#: field:account.print.journal,date_to:0
+#: field:account.general.journal,date_to:0
+#: field:account.central.journal,date_to:0
+#: field:account.partner.balance,date_to:0
+#: field:account.partner.ledger,date_to:0
 msgid "End Date"
 msgstr "Fecha de fin"
+
+#. module: account
+#: field:account.common.report,period_from:0
+#: field:account.report.general.ledger,period_from:0
+#: field:account.balance.report,period_from:0
+#: field:account.pl.report,period_from:0
+#: field:account.bs.report,period_from:0
+#: field:account.print.journal,period_from:0
+#: field:account.general.journal,period_from:0
+#: field:account.central.journal,period_from:0
+#: field:account.partner.balance,period_from:0
+#: field:account.partner.ledger,period_from:0
+#: field:account.vat.declaration,period_from:0
+msgid "Start period"
+msgstr ""
+
+#. module: account
+#: field:account.common.report,period_to:0
+#: field:account.report.general.ledger,period_to:0
+#: field:account.balance.report,period_to:0
+#: field:account.pl.report,period_to:0
+#: field:account.bs.report,period_to:0
+#: field:account.print.journal,period_to:0
+#: field:account.general.journal,period_to:0
+#: field:account.central.journal,period_to:0
+#: field:account.partner.balance,period_to:0
+#: field:account.partner.ledger,period_to:0
+#: field:account.vat.declaration,period_to:0
+msgid "End period"
+msgstr ""
+
+#. module: account
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
+msgid "Dates"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_open_closed_fiscalyear
@@ -4526,7 +4736,7 @@ msgstr "¿Está seguro que desea abrir esta factura?"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 msgid "Partner Other Ledger"
-msgstr ""
+msgstr "Asociar Otro Libro Mayor"
 
 #. module: account
 #: view:res.partner:0
@@ -4560,7 +4770,7 @@ msgstr "Asientos contables"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_unreconciled
 msgid "Receivables & Payables"
-msgstr ""
+msgstr "Cuentas a cobrar y pagar"
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -4815,7 +5025,7 @@ msgstr "Ref."
 #. module: account
 #: field:account.invoice,address_invoice_id:0
 msgid "Invoice Address"
-msgstr "Dirección de facturación"
+msgstr "Domicilio de Facturación"
 
 #. module: account
 #: rml:account.analytic.account.analytic.check:0
@@ -4869,7 +5079,7 @@ msgstr "Cuentas a cobrar"
 #. module: account
 #: wizard_button:account.move.line.unreconcile.select,init,open:0
 msgid "Open for unreconciliation"
-msgstr "Abrir para desconciliar"
+msgstr "Abrir para des-conciliar"
 
 #. module: account
 #: field:account.bank.statement.reconcile,statement_line:0
@@ -4942,7 +5152,7 @@ msgstr "Impuestos de ventas"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
 msgid "Account Reconciliation"
-msgstr "Conciliación de la cuenta"
+msgstr "Conciliación Contable"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5026,7 +5236,7 @@ msgstr "Fecha de operación"
 #. module: account
 #: field:account.invoice,invoice_line:0
 msgid "Invoice Lines"
-msgstr "Líneas de factura"
+msgstr "Líneas de la factura"
 
 #. module: account
 #: field:account.period,date_start:0
@@ -5851,6 +6061,7 @@ msgstr "contabilidad.secuencia.ejerciciofiscal"
 
 #. module: account
 #: wizard_field:account.print.journal.report,init,sort_selection:0
+#: field:account.print.journal,sort_selection:0
 msgid "Entries Sorted By"
 msgstr "Asientos ordenados por"
 
@@ -6015,8 +6226,8 @@ msgstr "Términos de Pago"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
-msgid "Fiscal Positions"
-msgstr "Posiciones fiscales"
+msgid "Fiscal Mappings"
+msgstr ""
 
 #. module: account
 #: model:process.process,name:account.process_process_statementprocess0
@@ -6054,8 +6265,23 @@ msgstr "Nombre de Columna"
 #: wizard_view:account.general.ledger.report,checktype:0
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
+#: view:account.common.report:0
+#: view:account.report.general.ledger:0
+#: view:account.balance.report:0
+#: view:account.pl.report:0
+#: view:account.bs.report:0
+#: view:account.print.journal:0
+#: view:account.general.journal:0
+#: view:account.central.journal:0
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
 msgid "Filters"
 msgstr "Filtros"
+
+#. module: account
+#: field:account.vat.declaration,based_on:0
+msgid "Based on"
+msgstr ""
 
 #. module: account
 #: wizard_button:account.wizard_paid_open,init,yes:0
@@ -6241,7 +6467,7 @@ msgstr ""
 #. module: account
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Select Period"
-msgstr ""
+msgstr "Seleccionar período"
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,init:0
@@ -6431,6 +6657,9 @@ msgstr ""
 #~ msgid "You can not use this general account in this journal !"
 #~ msgstr "¡No puede usar esta cuenta general en este diario!"
 
+#~ msgid "Fiscal Position Accounts Mapping"
+#~ msgstr "Mapeo de cuentas y posición fiscal"
+
 #, python-format
 #~ msgid "You can not add/modify entries in a closed journal."
 #~ msgstr "No puede añadir/modificar asientos en un diario cerrado."
@@ -6454,6 +6683,18 @@ msgstr ""
 #~ msgid "The opening journal must not have any entry in the new fiscal year !"
 #~ msgstr ""
 #~ "El diario de apertura no debe tener ningún asiento en el nuevo año fiscal !"
+
+#~ msgid "Fiscal Position Taxes Mapping"
+#~ msgstr "Cruce de posición de impuestos fiscales"
+
+#~ msgid "Fiscal Position"
+#~ msgstr "Posición fiscal"
+
+#~ msgid "Fiscal Position Template"
+#~ msgstr "Plantilla de posición fiscal"
+
+#~ msgid "Fiscal Position Templates"
+#~ msgstr "Plantillas de posiciones fiscales"
 
 #, python-format
 #~ msgid ""
@@ -6493,6 +6734,13 @@ msgstr ""
 #, python-format
 #~ msgid "Entries are not of the same account or already reconciled ! "
 #~ msgstr "Asientos no son de la misma cuenta o ya están conciliados ! "
+
+#~ msgid ""
+#~ "The fiscal position will determine taxes and the accounts used for the the "
+#~ "partner."
+#~ msgstr ""
+#~ "La posición fiscal determinará los impuestos y las cuentas utilizadas por el "
+#~ "partner"
 
 #, python-format
 #~ msgid "Invalid action !"
@@ -6575,6 +6823,9 @@ msgstr ""
 #~ msgid "SAJ"
 #~ msgstr "VENTA"
 
+#~ msgid "Template for Fiscal Position"
+#~ msgstr "Plantilla para posición fiscal"
+
 #, python-format
 #~ msgid "The journal must have centralised counterpart"
 #~ msgstr "﻿El diario debe tener una contrapartida centralizada"
@@ -6635,6 +6886,9 @@ msgstr ""
 #~ msgid "You have to define an analytic journal on the '%s' journal!"
 #~ msgstr "¡Debe definir un diario analítico en el diario '%s'!"
 
+#~ msgid "Fiscal Positions"
+#~ msgstr "Posiciones fiscales"
+
 #, python-format
 #~ msgid "No Period found on Invoice!"
 #~ msgstr "No se encontro el período en la factura"
@@ -6660,6 +6914,9 @@ msgstr ""
 #, python-format
 #~ msgid "You must select accounts to reconcile"
 #~ msgstr "Debe seleccionar las cuentas a conciliar"
+
+#~ msgid "Fiscal Position Template Account Mapping"
+#~ msgstr "Asociación de cuentas Planilla posición fiscal"
 
 #, python-format
 #~ msgid "Cannot create invoice move on centralised journal"
@@ -6711,6 +6968,9 @@ msgstr ""
 #, python-format
 #~ msgid "Data Insufficient !"
 #~ msgstr "¡Datos insuficientes!"
+
+#~ msgid "Fiscal Position Template Tax Mapping"
+#~ msgstr "Asociación de impuestos plantilla posición fiscal"
 
 #, python-format
 #~ msgid "Can not pay draft/proforma/cancel invoice."

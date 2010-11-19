@@ -1,0 +1,4600 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* stock
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"PO-Revision-Date: 2010-11-06 19:36+0000\n"
+"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-11-07 04:48+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-rating-rated"
+msgstr "terp-rating-rated"
+
+#. module: stock
+#: field:product.product,track_outgoing:0
+msgid "Track Outgoing Lots"
+msgstr "Lotes de seguimiento de salida"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_ups_upload
+msgid "Stock ups upload"
+msgstr "Stock ups upload"
+
+#. module: stock
+#: field:stock.location,chained_location_id:0
+msgid "Chained Location If Fixed"
+msgstr "Ubicación encadenada si fija"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Put in a new pack"
+msgstr "Poner en un nuevo paquete"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_SAVE"
+msgstr "STOCK_SAVE"
+
+#. module: stock
+#: field:stock.move.split.lines,action:0
+msgid "Action"
+msgstr "Acción"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid ""
+"There is no journal defined '\\n                                'on the "
+"product category: \"%s\" (id: %d)"
+msgstr ""
+"No existe un diario definido '\\n                                'en la "
+"categoria del producto: \"%s\" (id: %d)"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-account"
+msgstr "terp-account"
+
+#. module: stock
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Nombre de modelo no válido en la definición de acción."
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_line_date
+#: model:ir.ui.menu,name:stock.menu_report_stock_line_date
+msgid "Last Product Inventories"
+msgstr "Ultimos Inventarios Producto"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_SORT_ASCENDING"
+msgstr "STOCK_SORT_ASCENDING"
+
+#. module: stock
+#: field:stock.production.lot.revision,indice:0
+msgid "Revision Number"
+msgstr "Número de revisión"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_MEDIA_FORWARD"
+msgstr "STOCK_MEDIA_FORWARD"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Do not Found Partial data of Stock Move Line :%s' %(move.id))\n"
+"            product_qty = partial_data.get('product_qty',0.0)\n"
+"            move_product_qty[move.id] = product_qty\n"
+"            product_uom = partial_data.get('product_uom',False)\n"
+"            product_price = partial_data.get('product_price',0.0)\n"
+"            product_currency = partial_data.get('product_currency',False)\n"
+"            prodlot_ids[move.id] = partial_data.get('prodlot_id"
+msgstr ""
+"Do not Found Partial data of Stock Move Line :%s' %(move.id))\n"
+"            product_qty = partial_data.get('product_qty',0.0)\n"
+"            move_product_qty[move.id] = product_qty\n"
+"            product_uom = partial_data.get('product_uom',False)\n"
+"            product_price = partial_data.get('product_price',0.0)\n"
+"            product_currency = partial_data.get('product_currency',False)\n"
+"            prodlot_ids[move.id] = partial_data.get('prodlot_id"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_inventory_control
+msgid "Inventory Control"
+msgstr "Control de inventario"
+
+#. module: stock
+#: help:stock.production.lot,ref:0
+msgid ""
+"Internal reference number in case it differs from the manufacturer's serial "
+"number"
+msgstr ""
+"Número de referencia interna en caso de que este difiera del número de serie "
+"de fabricación"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_ZOOM_100"
+msgstr "STOCK_ZOOM_100"
+
+#. module: stock
+#: model:ir.actions.report.xml,name:stock.report_picking_list
+#: view:stock.picking:0
+msgid "Picking list"
+msgstr "Lista Movimientos"
+
+#. module: stock
+#: view:board.board:0
+msgid "Outgoing Products delay"
+msgstr "Retraso en albaranes de salida"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+#: field:report.stock.inventory,product_qty:0
+#: field:report.stock.move,product_qty:0
+#: field:stock.inventory.line,product_qty:0
+#: field:stock.inventory.line.split,qty:0
+#: report:stock.inventory.move:0
+#: field:stock.move,product_qty:0
+#: field:stock.move.consume,product_qty:0
+#: field:stock.move.scrap,product_qty:0
+#: field:stock.move.split,qty:0
+#: field:stock.move.split.lines,quantity:0
+#: field:stock.move.split.lines.exist,quantity:0
+#: report:stock.picking.list:0
+#: field:stock.report.prodlots,qty:0
+#: field:stock.report.tracklots,name:0
+#: field:stock.split.into,quantity:0
+#, python-format
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: stock
+#: view:report.stock.move:0
+#: field:report.stock.move,day:0
+msgid "Day"
+msgstr "Día"
+
+#. module: stock
+#: view:stock.inventory:0
+#: field:stock.inventory.line.split,product_uom:0
+#: view:stock.move:0
+#: field:stock.move.split,product_uom:0
+#: view:stock.picking:0
+#: view:stock.production.lot:0
+msgid "UoM"
+msgstr "UdM"
+
+#. module: stock
+#: field:product.category,property_stock_journal:0
+#: view:report.stock.move:0
+#: field:stock.change.standard.price,stock_journal:0
+msgid "Stock journal"
+msgstr "Diario de inventario"
+
+#. module: stock
+#: view:report.stock.move:0
+msgid "Incoming"
+msgstr "Entrada"
+
+#. module: stock
+#: help:product.category,property_stock_account_output_categ:0
+msgid ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"outgoing stock moves will be posted in this account. This is the default "
+"value for all products in this category, it can also directly be set on each "
+"product."
+msgstr ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"outgoing stock moves will be posted in this account. This is the default "
+"value for all products in this category, it can also directly be set on each "
+"product."
+
+#. module: stock
+#: help:stock.move,address_id:0
+msgid ""
+"Optional address where goods are to be delivered, specifically used for "
+"allotment"
+msgstr ""
+"Dirección opcional para entregar mercadería, usadas especificamente para "
+"entregas"
+
+#. module: stock
+#: code:addons/stock/report/report_stock.py:0
+#, python-format
+msgid "You cannot delete any record!"
+msgstr "Usted no puede borrar ningun registro!"
+
+#. module: stock
+#: field:product.template,property_stock_inventory:0
+msgid "Inventory Location"
+msgstr "Ubicación de inventario"
+
+#. module: stock
+#: help:stock.tracking,serial:0
+msgid "Other reference or serial number"
+msgstr "Otra referencia o número de serie"
+
+#. module: stock
+#: field:stock.move,origin:0
+#: view:stock.picking:0
+#: field:stock.picking,origin:0
+msgid "Origin"
+msgstr "Origen"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_configuration
+msgid "Configuration"
+msgstr "Configuración"
+
+#. module: stock
+#: view:stock.tracking:0
+msgid "Pack Identification"
+msgstr "Albarán de identificación"
+
+#. module: stock
+#: view:stock.move:0
+#: field:stock.picking,name:0
+#: view:stock.production.lot:0
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: stock
+#: help:stock.fill.inventory,set_stock_zero:0
+msgid ""
+"If checked, all product quantities will be set to zero to help ensure a real "
+"physical inventory is done"
+msgstr ""
+"Si check, todas las cantidades de productos serán puestas en cero para "
+"garantizar que el inventario físico esta hecho"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_split_lines
+msgid "Split lines"
+msgstr "Split lines"
+
+#. module: stock
+#: view:stock.production.lot:0
+msgid "Upstream Traceability"
+msgstr "Trazabilidad hacia arriba"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You cannot cancel picking because stock move is in done state !"
+msgstr ""
+"No puede cancelar el albarán porque los movimientos de inventario estan en "
+"estado realizado !"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Warning!"
+
+#. module: stock
+#: field:stock.invoice.onshipping,group:0
+msgid "Group by partner"
+msgstr "Agrupado por empresa"
+
+#. module: stock
+#: help:stock.move,state:0
+msgid ""
+"When the stock move is created it is in the 'Draft' state.\n"
+" After that it is set to 'Confirmed' state.\n"
+" If stock is available state is set to 'Available'.\n"
+" When the picking is done the state is 'Done'.                               "
+"   \n"
+"The state is 'Waiting' if the move is waiting for another one."
+msgstr ""
+"When the stock move is created it is in the 'Draft' state.\n"
+" After that it is set to 'Confirmed' state.\n"
+" If stock is available state is set to 'Available'.\n"
+" When the picking is done the state is 'Done'.                               "
+"   \n"
+"The state is 'Waiting' if the move is waiting for another one."
+
+#. module: stock
+#: model:ir.model,name:stock.model_res_partner
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,partner_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,partner_id:0
+#: view:stock.move:0
+#: field:stock.move,partner_id:0
+#: view:stock.picking:0
+#: field:stock.picking,partner_id:0
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "No invoicing"
+msgstr "No Facturado"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_production_lot
+#: field:stock.production.lot.revision,lot_id:0
+#: field:stock.report.prodlots,prodlot_id:0
+msgid "Production lot"
+msgstr "Lote de producción"
+
+#. module: stock
+#: help:stock.incoterms,code:0
+msgid "Code for Incoterms"
+msgstr "Codigo para Incoterms"
+
+#. module: stock
+#: field:stock.tracking,move_ids:0
+msgid "Moves for this pack"
+msgstr "Movimientos para este empaquetado"
+
+#. module: stock
+#: selection:report.stock.inventory,location_type:0
+#: selection:stock.location,usage:0
+msgid "Internal Location"
+msgstr "Ubicación Interna"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Confirm Inventory"
+msgstr "Confirmar el inventario"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,state:0
+#: view:report.stock.move:0
+#: field:report.stock.move,state:0
+#: view:stock.inventory:0
+#: field:stock.inventory,state:0
+#: field:stock.inventory.line,state:0
+#: view:stock.move:0
+#: field:stock.move,state:0
+#: view:stock.picking:0
+#: field:stock.picking,state:0
+#: report:stock.picking.list:0
+msgid "State"
+msgstr "Estado"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-mail-forward"
+msgstr "terp-mail-forward"
+
+#. module: stock
+#: field:stock.location,stock_real_value:0
+msgid "Real Stock Value"
+msgstr "Valor stock real"
+
+#. module: stock
+#: field:report.stock.move,day_diff2:0
+msgid "Lag (Days)"
+msgstr "Retraso (Días)"
+
+#. module: stock
+#: model:ir.model,name:stock.model_action_traceability
+msgid "Action traceability "
+msgstr "Acción Trazabilidad "
+
+#. module: stock
+#: field:stock.location,posy:0
+msgid "Shelves (Y)"
+msgstr "Estantería (Y)"
+
+#. module: stock
+#: view:stock.move:0
+msgid "UOM"
+msgstr "UdM"
+
+#. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.move,state:0
+#: view:stock.picking:0
+#: selection:stock.picking,state:0
+#: view:stock.production.lot:0
+#: field:stock.production.lot,stock_available:0
+msgid "Available"
+msgstr "Disponible"
+
+#. module: stock
+#: view:stock.picking:0
+#: field:stock.picking,min_date:0
+msgid "Expected Date"
+msgstr "Fecha Prevista"
+
+#. module: stock
+#: view:board.board:0
+#: model:ir.actions.act_window,name:stock.action_outgoing_product_board
+msgid "Outgoing Product"
+msgstr "Productos Salientes"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_QUIT"
+msgstr "STOCK_QUIT"
+
+#. module: stock
+#: field:report.stock.move,product_qty_in:0
+msgid "In Qty"
+msgstr "En Ctdad."
+
+#. module: stock
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
+#, python-format
+msgid "No product in this location."
+msgstr "No hay productos en esta ubicación."
+
+#. module: stock
+#: field:stock.warehouse,lot_output_id:0
+msgid "Location Output"
+msgstr "Ubicación de salida"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.split_into
+#: model:ir.model,name:stock.model_stock_split_into
+msgid "Split into"
+msgstr "Dividir en"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Today"
+msgstr "Hoy"
+
+#. module: stock
+#: field:stock.move,price_currency_id:0
+msgid "Currency for average price"
+msgstr "Moneda para precio promedio"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_GOTO_TOP"
+msgstr "STOCK_GOTO_TOP"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_ABOUT"
+msgstr "STOCK_ABOUT"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-hr"
+msgstr "terp-hr"
+
+#. module: stock
+#: field:report.stock.inventory,location_type:0
+#: field:stock.location,usage:0
+msgid "Location Type"
+msgstr "Tipo Ubicación"
+
+#. module: stock
+#: help:report.stock.move,type:0
+#: help:stock.picking,type:0
+msgid "Shipping type specify, goods coming in or going out."
+msgstr "Tipo envio especifico, mercadería entrante o saliente."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-stock_effects-object-colorize"
+msgstr "terp-stock_effects-object-colorize"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_DELETE"
+msgstr "STOCK_DELETE"
+
+#. module: stock
+#: model:ir.actions.report.xml,name:stock.report_move_labels
+msgid "Item Labels"
+msgstr "Etiquetas"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_move
+msgid "Moves Statistics"
+msgstr "Estadística Movimientos"
+
+#. module: stock
+#: view:stock.production.lot:0
+msgid "Product Lots Filter"
+msgstr "Filtrar lotes producto"
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+#: report:stock.inventory.move:0
+#: report:stock.picking.list:0
+msgid "["
+msgstr "["
+
+#. module: stock
+#: help:stock.production.lot,stock_available:0
+msgid ""
+"Current quantity of products with this Production Lot Number available in "
+"company warehouses"
+msgstr ""
+"CAntidad de productos actual con este número de lote de producción "
+"disponible en los almacenes de la compania"
+
+#. module: stock
+#: field:stock.move,move_history_ids:0
+msgid "Move History (child moves)"
+msgstr "Historial Movimientos (movimientos hijos)"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree6
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree6
+#: field:stock.picking,move_lines:0
+msgid "Internal Moves"
+msgstr "Albaranes internos"
+
+#. module: stock
+#: field:stock.move,location_dest_id:0
+msgid "Destination Location"
+msgstr "Ubicación destino"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You can not process picking without stock moves"
+msgstr "No puede procesar albaranes sin movimientos de inventario"
+
+#. module: stock
+#: field:stock.move,product_packaging:0
+msgid "Packaging"
+msgstr "Empaquetado"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Order(Origin)"
+msgstr "Orden(Origen)"
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+msgid "Grand Total:"
+msgstr "Gran Total:"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_move_report
+#: model:ir.ui.menu,name:stock.menu_action_stock_move_report
+#: view:report.stock.move:0
+msgid "Moves Analysis"
+msgstr "Análisis de Movimientos"
+
+#. module: stock
+#: view:stock.location:0
+#: field:stock.location,comment:0
+msgid "Additional Information"
+msgstr "Información adicional"
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+msgid "Location / Product"
+msgstr "Ubicación / Producto"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Reception"
+msgstr "Recepción"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_FLOPPY"
+msgstr "STOCK_FLOPPY"
+
+#. module: stock
+#: field:stock.tracking,serial:0
+msgid "Additional Reference"
+msgstr "Referencia Adicional"
+
+#. module: stock
+#: view:stock.production.lot.revision:0
+msgid "Production Lot Revisions"
+msgstr "Revisiones de lote de producción"
+
+#. module: stock
+#: help:product.product,track_outgoing:0
+msgid ""
+"Forces to specify a Production Lot for all moves containing this product and "
+"going to a Customer Location"
+msgstr ""
+"Forza a especificar un lote de producción por todos los movimientos "
+"contenidos en este producto y envia a una ubicación de cliente"
+
+#. module: stock
+#: field:stock.location,complete_name:0
+#: field:stock.location,name:0
+msgid "Location Name"
+msgstr "Nombre ubicación"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Posted Inventory"
+msgstr "Inventario enviado"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Move Information"
+msgstr "Información de movimiento"
+
+#. module: stock
+#: view:report.stock.move:0
+msgid "Outgoing"
+msgstr "Salida"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "August"
+msgstr "Agosto"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_tracking_form
+#: model:ir.model,name:stock.model_stock_tracking
+#: model:ir.ui.menu,name:stock.menu_action_tracking_form
+#: view:stock.tracking:0
+msgid "Packs"
+msgstr "Paquetes"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_UNDERLINE"
+msgstr "STOCK_UNDERLINE"
+
+#. module: stock
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Ventas & Compras"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "June"
+msgstr "Junio"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-folder-blue"
+msgstr "terp-folder-blue"
+
+#. module: stock
+#: field:product.template,property_stock_procurement:0
+msgid "Procurement Location"
+msgstr "Ubicación de abastecimiento"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_production_lot_form
+#: model:ir.ui.menu,name:stock.menu_action_production_lot_form
+#: field:stock.inventory.line.split,line_exist_ids:0
+#: field:stock.inventory.line.split,line_ids:0
+#: field:stock.move.split,line_exist_ids:0
+#: field:stock.move.split,line_ids:0
+msgid "Production Lots"
+msgstr "Lotes de producción"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-project"
+msgstr "terp-project"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Recipient"
+msgstr "Recipiente"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_location_tree
+#: model:ir.ui.menu,name:stock.menu_action_location_tree
+msgid "Location Structure"
+msgstr "Estructura de Ubicación"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "October"
+msgstr "Octubre"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_inventory_line
+msgid "Inventory Line"
+msgstr "Linea de inventario"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_BOLD"
+msgstr "STOCK_BOLD"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-personal+"
+msgstr "terp-personal+"
+
+#. module: stock
+#: help:product.category,property_stock_journal:0
+msgid ""
+"When doing real-time inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr ""
+"Cuando hace valoración de inventario en tiempo real,este es el diario "
+"contable en el cual donde los asientos serán automaticamente validados "
+"cuando los movimientos de stock sean procesados."
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_partial_picking
+msgid "Process Picking"
+msgstr "Procesar Albarán"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-graph"
+msgstr "terp-graph"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_FIND_AND_REPLACE"
+msgstr "STOCK_FIND_AND_REPLACE"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Receptions"
+msgstr "Recepciones Futuras"
+
+#. module: stock
+#: help:stock.inventory.line.split,use_exist:0
+#: help:stock.move.split,use_exist:0
+msgid ""
+"Check this option to select existing lots in the list below, otherwise you "
+"should enter new ones line by line."
+msgstr ""
+"Check esta opción para seleccionar lotes existentes en la lista de abajo, de "
+"otra manera usted deberá ingreasr linea por linea."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-dialog-close"
+msgstr "terp-dialog-close"
+
+#. module: stock
+#: field:stock.move,move_dest_id:0
+msgid "Destination Move"
+msgstr "Movimiento Destino"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Process Now"
+msgstr "Procesar Ahora"
+
+#. module: stock
+#: field:stock.location,address_id:0
+msgid "Location Address"
+msgstr "Dirección ubicación"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is consumed with"
+msgstr "es consumido con"
+
+#. module: stock
+#: help:stock.move,prodlot_id:0
+msgid "Production lot is used to put a serial number on the production"
+msgstr ""
+"Lote de producción se utiliza para poner un número de serie a la producción"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_MEDIA_REWIND"
+msgstr "STOCK_MEDIA_REWIND"
+
+#. module: stock
+#: field:stock.warehouse,lot_input_id:0
+msgid "Location Input"
+msgstr "Ubicación de entrada"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-personal-"
+msgstr "terp-personal-"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_CUT"
+msgstr "STOCK_CUT"
+
+#. module: stock
+#: help:stock.picking,date:0
+msgid "Date of Order"
+msgstr "Fecha Orden"
+
+#. module: stock
+#: selection:product.product,valuation:0
+msgid "Periodical (manual)"
+msgstr "Periodico (manual)"
+
+#. module: stock
+#: model:stock.location,name:stock.location_procurement
+msgid "Procurements"
+msgstr "Abastecimientos"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_3
+msgid "IT Suppliers"
+msgstr "Proveedores TI"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_inventory_form_draft
+msgid "Draft Physical Inventories"
+msgstr "Inventarios periódicos borrador"
+
+#. module: stock
+#: selection:report.stock.inventory,location_type:0
+#: selection:stock.location,usage:0
+msgid "Transit Location for Inter-Companies Transfers"
+msgstr "Ubicación de transito, para transferencias entre companias"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_NEW"
+msgstr "STOCK_NEW"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_splitinto.py:0
+#, python-format
+msgid ""
+"Total quantity after split exceeds the quantity to split ' \\n               "
+"                     'for this product: \"%s\" (id: %d)"
+msgstr ""
+"Cantidad Total despues de dividir  la cantidad a dividir' \\n                "
+"                    'para este producto: \"%s\" (id: %d)"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future P&L"
+msgstr "Futuro P&L"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree4
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree4
+#: view:stock.picking:0
+msgid "Incoming Shipments"
+msgstr "Envios Entrantes"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Scrap"
+msgstr "Residuo(Chatarra)"
+
+#. module: stock
+#: field:stock.location,child_ids:0
+msgid "Contains"
+msgstr "Contiene"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-dolar"
+msgstr "terp-dolar"
+
+#. module: stock
+#: view:board.board:0
+msgid "Incoming Products Delay"
+msgstr "Incoming Products Delay"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Qty"
+msgstr "Ctdad. Futura"
+
+#. module: stock
+#: view:stock.location:0
+msgid "Stock Locations"
+msgstr "Ubicaciones de inventario"
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+#: field:stock.move,price_unit:0
+msgid "Unit Price"
+msgstr "Precio Unidad"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_split_lines_exist
+msgid "Exist Split lines"
+msgstr "Existen lineas divididas"
+
+#. module: stock
+#: field:stock.move,date_expected:0
+msgid "Scheduled Date"
+msgstr "Fecha Programada"
+
+#. module: stock
+#: view:stock.tracking:0
+msgid "Pack Search"
+msgstr "Buscar Paquete"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-gtk-jump-to-ltr"
+msgstr "terp-gtk-jump-to-ltr"
+
+#. module: stock
+#: selection:stock.move,priority:0
+msgid "Urgent"
+msgstr "Urgente"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Journal"
+msgstr "Diario"
+
+#. module: stock
+#: field:product.category,property_stock_variation:0
+msgid "Stock Variation Account"
+msgstr "Cuenta de Variación de inventario"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Bad Lot Assignation !"
+msgstr "Mal Asignación de lote !"
+
+#. module: stock
+#: help:stock.picking,location_id:0
+msgid ""
+"Keep empty if you produce at the location where the finished products are "
+"needed.Set a location if you produce at a fixed location. This can be a "
+"partner location if you subcontract the manufacturing operations."
+msgstr ""
+"Keep empty if you produce at the location where the finished products are "
+"needed.Set a location if you produce at a fixed location. This can be a "
+"partner location if you subcontract the manufacturing operations."
+
+#. module: stock
+#: view:res.partner:0
+msgid "Inventory Properties"
+msgstr "Propiedades de inventario"
+
+#. module: stock
+#: field:report.stock.move,day_diff:0
+msgid "Execution Lead Time (Days)"
+msgstr "Plazo de ejecución (Días)"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_stock_product_location_open
+msgid "Stock by Location"
+msgstr "Existencias por ubicacion"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_SAVE_AS"
+msgstr "STOCK_SAVE_AS"
+
+#. module: stock
+#: view:report.stock.move:0
+msgid "Month-1"
+msgstr "Mes-1"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-stock_symbol-selection"
+msgstr "terp-stock_symbol-selection"
+
+#. module: stock
+#: help:stock.location,active:0
+msgid ""
+"By unchecking the active field, you may hide a location without deleting it."
+msgstr "Desactivando el campo, puede ocultar la ubicación sin eliminarla."
+
+#. module: stock
+#: help:stock.location,posx:0
+#: help:stock.location,posy:0
+#: help:stock.location,posz:0
+msgid "Optional localization details, for information purpose only"
+msgstr "Detalles opcionales de la ubicación, solo para información"
+
+#. module: stock
+#: field:stock.location,stock_virtual:0
+msgid "Virtual Stock"
+msgstr "Stock virtual"
+
+#. module: stock
+#: selection:report.stock.inventory,location_type:0
+#: selection:stock.location,usage:0
+msgid "View"
+msgstr "Vista"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_DIALOG_ERROR"
+msgstr "STOCK_DIALOG_ERROR"
+
+#. module: stock
+#: field:stock.location,parent_left:0
+msgid "Left Parent"
+msgstr "Padre izquierdo"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_INDEX"
+msgstr "STOCK_INDEX"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-stage"
+msgstr "terp-stage"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_GOTO_BOTTOM"
+msgstr "STOCK_GOTO_BOTTOM"
+
+#. module: stock
+#: field:stock.move.track,quantity:0
+msgid "Quantity per lot"
+msgstr "Cantidad por lote"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_product_stock_move_open
+#: model:ir.actions.act_window,name:stock.action_move_form2
+#: model:ir.ui.menu,name:stock.menu_action_move_form2
+#: view:stock.inventory:0
+#: view:stock.move:0
+#: view:stock.picking:0
+#: view:stock.production.lot:0
+#: view:stock.tracking:0
+msgid "Stock Moves"
+msgstr "Movimientos de stock"
+
+#. module: stock
+#: field:product.template,property_stock_production:0
+msgid "Production Location"
+msgstr "Ubicación de producción"
+
+#. module: stock
+#: help:stock.picking,address_id:0
+msgid "Address of partner"
+msgstr "Dirección empresa"
+
+#. module: stock
+#: model:res.company,overdue_msg:stock.res_company_tinyshop0
+msgid ""
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Please find in attachment a reminder of all your unpaid invoices, for a "
+"total amount due of:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
+msgstr ""
+"\n"
+"Fecha: %(date)s\n"
+"\n"
+"Estimado %(partner_name)s,\n"
+"\n"
+"Por favor adjunto encontrará un recordatorio de todas sus facturas "
+"pendientes, por un total de:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Gracias,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
+
+#. module: stock
+#: help:stock.location,usage:0
+msgid ""
+"* Supplier Location: Virtual location representing the source location for "
+"products coming from your suppliers\n"
+"                       \n"
+"* View: Virtual location used to create a hierarchical structures for your "
+"warehouse, aggregating its child locations ; can't directly contain "
+"products\n"
+"                       \n"
+"* Internal Location: Physical locations inside your own warehouses,\n"
+"                       \n"
+"* Customer Location: Virtual location representing the destination location "
+"for products sent to your customers\n"
+"                       \n"
+"* Inventory: Virtual location serving as counterpart for inventory "
+"operations used to correct stock levels (Physical inventories)\n"
+"                       \n"
+"* Procurement: Virtual location serving as temporary counterpart for "
+"procurement operations when the source (supplier or production) is not known "
+"yet. This location should be empty when the procurement scheduler has "
+"finished running.\n"
+"                       \n"
+"* Production: Virtual counterpart location for production operations: this "
+"location consumes the raw material and produces finished products\n"
+"                      "
+msgstr ""
+"* Supplier Location: Virtual location representing the source location for "
+"products coming from your suppliers\n"
+"                       \n"
+"* View: Virtual location used to create a hierarchical structures for your "
+"warehouse, aggregating its child locations ; can't directly contain "
+"products\n"
+"                       \n"
+"* Internal Location: Physical locations inside your own warehouses,\n"
+"                       \n"
+"* Customer Location: Virtual location representing the destination location "
+"for products sent to your customers\n"
+"                       \n"
+"* Inventory: Virtual location serving as counterpart for inventory "
+"operations used to correct stock levels (Physical inventories)\n"
+"                       \n"
+"* Procurement: Virtual location serving as temporary counterpart for "
+"procurement operations when the source (supplier or production) is not known "
+"yet. This location should be empty when the procurement scheduler has "
+"finished running.\n"
+"                       \n"
+"* Production: Virtual counterpart location for production operations: this "
+"location consumes the raw material and produces finished products\n"
+"                      "
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_GO_FORWARD"
+msgstr "STOCK_GO_FORWARD"
+
+#. module: stock
+#: field:stock.production.lot.revision,author_id:0
+msgid "Author"
+msgstr "Autor"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_UNDELETE"
+msgstr "STOCK_UNDELETE"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Delivery Order"
+msgstr "Orden Entrega"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_EXECUTE"
+msgstr "STOCK_EXECUTE"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#, python-format
+msgid "No invoice were created"
+msgstr "No se creo ninguna factura"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_DIALOG_QUESTION"
+msgstr "STOCK_DIALOG_QUESTION"
+
+#. module: stock
+#: selection:stock.location,chained_auto_packing:0
+msgid "Manual Operation"
+msgstr "Operación manual"
+
+#. module: stock
+#: view:stock.location:0
+#: view:stock.move:0
+msgid "Supplier"
+msgstr "Proveedor"
+
+#. module: stock
+#: field:stock.picking,date_done:0
+msgid "Date Done"
+msgstr "Fecha realizado"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Expected Shipping Date"
+msgstr "Fecha prevista de envio"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-accessories-archiver-minus"
+msgstr "terp-accessories-archiver-minus"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "March"
+msgstr "Marzo"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_stock_inventory_line_split
+#: model:ir.model,name:stock.model_stock_inventory_line_split
+#: view:stock.inventory:0
+#: view:stock.inventory.line:0
+msgid "Split inventory lines"
+msgstr "Lineas de inventario dividido"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Physical Inventory"
+msgstr "Inventario Físico"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_SELECT_FONT"
+msgstr "STOCK_SELECT_FONT"
+
+#. module: stock
+#: help:stock.location,chained_company_id:0
+msgid ""
+"The company the Picking List containing the chained move will belong to "
+"(leave empty to use the default company determination rules"
+msgstr ""
+"The company the Picking List containing the chained move will belong to "
+"(leave empty to use the default company determination rules"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_PASTE"
+msgstr "STOCK_PASTE"
+
+#. module: stock
+#: view:stock.move.split:0
+msgid "Lot number"
+msgstr "Número de lote"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_locations_partner
+msgid "Partner Locations"
+msgstr "Ubicaciones de empresas"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Do not Found Partial data of Stock Move Line :%s' %(move.id))\n"
+"                product_qty = partial_data.get('product_qty',0.0)\n"
+"                move_product_qty[move.id] = product_qty\n"
+"                product_uom = partial_data.get('product_uom',False)\n"
+"                product_price = partial_data.get('product_price',0.0)\n"
+"                product_currency = "
+"partial_data.get('product_currency',False)\n"
+"                prodlot_id = partial_data.get('prodlot_id"
+msgstr ""
+"Do not Found Partial data of Stock Move Line :%s' %(move.id))\n"
+"                product_qty = partial_data.get('product_qty',0.0)\n"
+"                move_product_qty[move.id] = product_qty\n"
+"                product_uom = partial_data.get('product_uom',False)\n"
+"                product_price = partial_data.get('product_price',0.0)\n"
+"                product_currency = "
+"partial_data.get('product_currency',False)\n"
+"                prodlot_id = partial_data.get('prodlot_id"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+msgid "Total quantity"
+msgstr "Cantidad Total"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_ZOOM_FIT"
+msgstr "STOCK_ZOOM_FIT"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.move_consume
+#: view:stock.move.consume:0
+msgid "Consume Move"
+msgstr "Movimiento Consumo"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_7
+msgid "European Customers"
+msgstr "Clientes europeos"
+
+#. module: stock
+#: help:stock.location,chained_delay:0
+msgid "Delay between original move and chained move in days"
+msgstr "Retraso entre movimiento original y movimiento cambiado en días"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-calendar"
+msgstr "terp-calendar"
+
+#. module: stock
+#: view:stock.fill.inventory:0
+msgid "Import current product inventory from the following location"
+msgstr "Importación de producto de inventario a otra ubicación"
+
+#. module: stock
+#: help:stock.location,chained_auto_packing:0
+msgid ""
+"This is used only if you select a chained location type.\n"
+"The 'Automatic Move' value will create a stock move after the current one "
+"that will be validated automatically. With 'Manual Operation', the stock "
+"move has to be validated by a worker. With 'Automatic No Step Added', the "
+"location is replaced in the original move."
+msgstr ""
+"This is used only if you select a chained location type.\n"
+"The 'Automatic Move' value will create a stock move after the current one "
+"that will be validated automatically. With 'Manual Operation', the stock "
+"move has to be validated by a worker. With 'Automatic No Step Added', the "
+"location is replaced in the original move."
+
+#. module: stock
+#: view:stock.production.lot:0
+msgid "Downstream Traceability"
+msgstr "Trazabilidad hacia abajo"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Packing List:"
+msgstr "Lista Albaranes:"
+
+#. module: stock
+#: help:product.template,property_stock_production:0
+msgid ""
+"For the current product, this stock location will be used, instead of the "
+"default one, as the source location for stock moves generated by production "
+"orders"
+msgstr ""
+"For the current product, this stock location will be used, instead of the "
+"default one, as the source location for stock moves generated by production "
+"orders"
+
+#. module: stock
+#: help:stock.move,price_unit:0
+msgid ""
+"Technical field used to record the product cost set by the user during a "
+"picking confirmation (when average price costing method is used)"
+msgstr ""
+"Technical field used to record the product cost set by the user during a "
+"picking confirmation (when average price costing method is used)"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is in draft state."
+msgstr "esta en estado borrador."
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid ""
+"There is no stock output account defined ' \\n                               "
+"             'for this product: \"%s\" (id: %d)"
+msgstr ""
+"No existe cuanta de salida de inventario definida ' \\n                      "
+"                      'para este producto: \"%s\" (id: %d)"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_MEDIA_RECORD"
+msgstr "STOCK_MEDIA_RECORD"
+
+#. module: stock
+#: field:stock.location,chained_auto_packing:0
+msgid "Chaining Type"
+msgstr "Chaining Tipo"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "To be refunded/invoiced"
+msgstr "Para ser reembolsado/facturado"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_shop0
+msgid "Shop 1"
+msgstr "Compra 1"
+
+#. module: stock
+#: field:report.stock.inventory,value:0
+#: field:report.stock.move,value:0
+msgid "Total Value"
+msgstr "Valor Total"
+
+#. module: stock
+#: view:stock.change.standard.price:0
+#: view:stock.fill.inventory:0
+#: view:stock.inventory.merge:0
+#: view:stock.invoice.onshipping:0
+#: view:stock.location.product:0
+#: view:stock.move:0
+#: view:stock.move.track:0
+#: view:stock.picking:0
+#: view:stock.split.into:0
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Ready"
+msgstr "Listo"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Calendar View"
+msgstr "Vista calendario"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Additional Info"
+msgstr "Información Adicional"
+
+#. module: stock
+#: report:stock.inventory.move:0
+msgid "Stock Inventory"
+msgstr "Inventario"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_YES"
+msgstr "STOCK_YES"
+
+#. module: stock
+#: field:stock.location.product,from_date:0
+msgid "From"
+msgstr "De"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "You may only return pickings that are Confirmed, Available or Done!"
+msgstr "Solo puede regresar albaranes confirmados, disponibles o realizados!"
+
+#. module: stock
+#: view:stock.picking:0
+#: field:stock.picking,invoice_state:0
+msgid "Invoice Control"
+msgstr "Control factura"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_production_lot_revision
+msgid "Production lot revisions"
+msgstr "Revisiones de lote de producción"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Internal Picking List"
+msgstr "Lista Albaranes Internos"
+
+#. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.move,state:0
+#: selection:stock.picking,state:0
+msgid "Waiting"
+msgstr "Esperando"
+
+#. module: stock
+#: view:stock.move:0
+#: selection:stock.move.split.lines,action:0
+#: view:stock.picking:0
+msgid "Split"
+msgstr "Dividir"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Search Stock Picking"
+msgstr "Buscar Albarán de inventario"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Company is not specified in Location"
+msgstr "No hay compania especificada en esta ubicación"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-report"
+msgstr "terp-report"
+
+#. module: stock
+#: view:report.stock.move:0
+#: field:stock.partial.move,type:0
+msgid "Type"
+msgstr "Tipo"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_5
+msgid "Generic IT Suppliers"
+msgstr "Proveedores TI genéricos"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_FILE"
+msgstr "STOCK_FILE"
+
+#. module: stock
+#: field:stock.inventory,date:0
+#: field:stock.move,create_date:0
+#: field:stock.production.lot,date:0
+#: field:stock.tracking,date:0
+msgid "Creation Date"
+msgstr "Fecha Creación"
+
+#. module: stock
+#: field:report.stock.lines.date,id:0
+msgid "Inventory Line Id"
+msgstr "Id línea de inventario"
+
+#. module: stock
+#: help:stock.location,address_id:0
+msgid "Address of  customer or supplier."
+msgstr "Dirección de cliente o proveedor."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-gdu-smart-failing"
+msgstr "terp-gdu-smart-failing"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_EDIT"
+msgstr "STOCK_EDIT"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_CONNECT"
+msgstr "STOCK_CONNECT"
+
+#. module: stock
+#: view:report.stock.move:0
+#: field:report.stock.move,picking_id:0
+msgid "Packing"
+msgstr "Albaran"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_GO_DOWN"
+msgstr "STOCK_GO_DOWN"
+
+#. module: stock
+#: selection:report.stock.inventory,location_type:0
+#: field:res.partner,property_stock_customer:0
+#: selection:stock.location,usage:0
+msgid "Customer Location"
+msgstr "Ubicación Cliente"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_OK"
+msgstr "STOCK_OK"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Invalid action !"
+msgstr "Acción Inválida !"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-emblem-important"
+msgstr "terp-emblem-important"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_replacement
+msgid "Stock Replacement"
+msgstr "Reemplazo de inventario"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "General Informations"
+msgstr "Información general"
+
+#. module: stock
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "¡XML inválido para la definición de la vista!"
+
+#. module: stock
+#: view:stock.tracking:0
+msgid "Downstream traceability"
+msgstr "Trazabilidad hacia abajo"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_company
+msgid "OpenERP S.A."
+msgstr "OpenERP S.A."
+
+#. module: stock
+#: help:stock.incoterms,active:0
+msgid ""
+"By unchecking the active field, you may hide an INCOTERM without deleting it."
+msgstr "No check como activo, puede ocultar el INCOTERM sin eliminarlo."
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+#: field:stock.picking,date:0
+msgid "Order Date"
+msgstr "Fecha Orden"
+
+#. module: stock
+#: field:stock.location,location_id:0
+msgid "Parent Location"
+msgstr "Ubicación padre"
+
+#. module: stock
+#: help:stock.picking,state:0
+msgid ""
+"* Draft: not confirmed yet and will not be scheduled until confirmed\n"
+"* Confirmed: still waiting for the availability of products\n"
+"* Available: products reserved, simply waiting for confirmation.\n"
+"* Waiting: waiting for another move to proceed before it becomes "
+"automatically available (e.g. in Make-To-Order flows)\n"
+"* Done: has been processed, can't be modified or cancelled anymore\n"
+"* Cancelled: has been cancelled, can't be confirmed anymore"
+msgstr ""
+"* Draft: not confirmed yet and will not be scheduled until confirmed\n"
+"* Confirmed: still waiting for the availability of products\n"
+"* Available: products reserved, simply waiting for confirmation.\n"
+"* Waiting: waiting for another move to proceed before it becomes "
+"automatically available (e.g. in Make-To-Order flows)\n"
+"* Done: has been processed, can't be modified or cancelled anymore\n"
+"* Cancelled: has been cancelled, can't be confirmed anymore"
+
+#. module: stock
+#: help:stock.location,company_id:0
+msgid "Let this field empty if this location is shared between all companies"
+msgstr ""
+"Deje este campo vacio si la ubicación es compartida entre todas las companias"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Please provide a positive quantity to scrap!"
+msgstr "Coloque una cantidad positiva de desperdicio o scrap!"
+
+#. module: stock
+#: field:stock.location,chained_delay:0
+msgid "Chaining Lead Time"
+msgstr "Tiempo espera encadenado"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Cannot deliver products which are already delivered !"
+msgstr "No puede enviar productos que ya fueron enviados!"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_UNINDENT"
+msgstr "STOCK_UNINDENT"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_invoice_onshipping
+msgid "Stock Invoice Onshipping"
+msgstr "Facturación sobre envio"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-face-plain"
+msgstr "terp-face-plain"
+
+#. module: stock
+#: selection:report.stock.inventory,location_type:0
+#: field:res.partner,property_stock_supplier:0
+#: selection:stock.location,usage:0
+msgid "Supplier Location"
+msgstr "Ubicación proveedor"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "were scrapped"
+msgstr "fueron desechados"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_FIND"
+msgstr "STOCK_FIND"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Partial"
+msgstr "Parcial"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "September"
+msgstr "Septiembre"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_HELP"
+msgstr "STOCK_HELP"
+
+#. module: stock
+#: help:stock.picking,backorder_id:0
+msgid ""
+"If this picking was split this field links to the picking that contains the "
+"other part that has been processed already."
+msgstr ""
+"Si este albaran fue dividido este campo lo relaciona con el albaran que "
+"contiene la otra parte que fue procesada."
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_inventory
+msgid "Stock Statistics"
+msgstr "Estadísticas inventario"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#, python-format
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: stock
+#: field:product.product,track_production:0
+msgid "Track Manufacturing Lots"
+msgstr "Lote de seguimiento de producción"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_inventory_merge.py:0
+#, python-format
+msgid ""
+"Please select multiple physical inventories to merge in the list view."
+msgstr ""
+"Por favor seleccione multiples inventarios físicos para mezclarlos en esta "
+"vista."
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid ""
+"Variation Account is not specified for Product Category: %s' % "
+"(product_obj.categ_id.name)))\n"
+"        move_ids = []\n"
+"        loc_ids = location_obj.search(cr, uid,[('usage','=','internal"
+msgstr ""
+"Variation Account is not specified for Product Category: %s' % "
+"(product_obj.categ_id.name)))\n"
+"        move_ids = []\n"
+"        loc_ids = location_obj.search(cr, uid,[('usage','=','internal"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_UNDO"
+msgstr "STOCK_UNDO"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-gnome-cpu-frequency-applet+"
+msgstr "terp-gnome-cpu-frequency-applet+"
+
+#. module: stock
+#: selection:report.stock.move,type:0
+#: selection:stock.location,chained_picking_type:0
+#: selection:stock.picking,type:0
+msgid "Sending Goods"
+msgstr "Envio Mercancias"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Cancel Availability"
+msgstr "Cancelar disponibilidad"
+
+#. module: stock
+#: help:stock.move,date_expected:0
+msgid "Scheduled date for the processing of this move"
+msgstr "Fecha programada para el procesamiento de este movimiento"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-gtk-media-pause"
+msgstr "terp-gtk-media-pause"
+
+#. module: stock
+#: field:stock.inventory,move_ids:0
+msgid "Created Moves"
+msgstr "Movimientos creados"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-stock_format-scientific"
+msgstr "terp-stock_format-scientific"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_GO_BACK"
+msgstr "STOCK_GO_BACK"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_14
+msgid "Shelf 2"
+msgstr "Plataforma 2"
+
+#. module: stock
+#: selection:stock.picking,invoice_state:0
+msgid "To Be Invoiced"
+msgstr "Para facturar"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_PRINT"
+msgstr "STOCK_PRINT"
+
+#. module: stock
+#: field:stock.report.tracklots,tracking_id:0
+msgid "Tracking lot"
+msgstr "Lote de seguimiento"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-go-today"
+msgstr "terp-go-today"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid ""
+"There is no stock input account defined ' \\n                                "
+"            'for this product: \"%s\" (id: %d)"
+msgstr ""
+"No existe cuenta de entrada de inventario definida ' \\n                     "
+"                       'para este producto: \"%s\" (id: %d)"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Back Orders"
+msgstr "Ordenes pendientes"
+
+#. module: stock
+#: view:product.product:0
+#: view:product.template:0
+msgid "Counter-Part Locations Properties"
+msgstr "Propiedades de las ubicaciones parte recíproca"
+
+#. module: stock
+#: view:stock.location:0
+msgid "Localization"
+msgstr "Localización"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Delivered Qty"
+msgstr "Ctdad Enviada"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.track_line
+#: view:stock.inventory.line.split:0
+#: view:stock.move.split:0
+msgid "Split in lots"
+msgstr "Dividir en lotes"
+
+#. module: stock
+#: view:stock.move.split:0
+msgid "Production Lot Numbers"
+msgstr "Números de lote de producción"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_JUSTIFY_FILL"
+msgstr "STOCK_JUSTIFY_FILL"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,date:0
+#: field:report.stock.move,date:0
+#: view:stock.inventory:0
+#: report:stock.inventory.move:0
+#: view:stock.move:0
+#: field:stock.move,date:0
+#: field:stock.partial.move,date:0
+#: field:stock.partial.picking,date:0
+#: view:stock.picking:0
+msgid "Date"
+msgstr "Fecha"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Extended Filters..."
+msgstr "Filtros extendidos..."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-administration"
+msgstr "terp-administration"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_CANCEL"
+msgstr "STOCK_CANCEL"
+
+#. module: stock
+#: field:stock.warehouse,lot_stock_id:0
+msgid "Location Stock"
+msgstr "Ubicación stock"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_APPLY"
+msgstr "STOCK_APPLY"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_inventory_merge.py:0
+#, python-format
+msgid "Merging is only allowed on draft inventories."
+msgstr "La unión es solo posible en inventarios en estado borrador."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-gtk-go-back-rtl"
+msgstr "terp-gtk-go-back-rtl"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_dashboard_stock
+msgid "Dashboard"
+msgstr "Tablero"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_track
+msgid "Track moves"
+msgstr "Movimientos seguimiento"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-crm"
+msgstr "terp-crm"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_STRIKETHROUGH"
+msgstr "STOCK_STRIKETHROUGH"
+
+#. module: stock
+#: field:stock.incoterms,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: stock
+#: view:stock.inventory.line.split:0
+msgid "Lots Number"
+msgstr "Número Lotes"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.open_board_warehouse
+#: model:ir.ui.menu,name:stock.menu_board_warehouse
+msgid "Warehouse Dashboard"
+msgstr "Tablero Inventario"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-mail-"
+msgstr "terp-mail-"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You can not remove a lot line !"
+msgstr "No puede borrar una linea del lote !"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_scrap
+#: view:stock.move:0
+#: view:stock.move.scrap:0
+#: view:stock.picking:0
+msgid "Scrap Products"
+msgstr "Productos Desperdicio/Chatarra"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_PREFERENCES"
+msgstr "STOCK_PREFERENCES"
+
+#. module: stock
+#: view:stock.inventory.line.split:0
+#: view:stock.move.consume:0
+#: view:stock.move.scrap:0
+#: view:stock.move.split:0
+#: view:stock.picking:0
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_stock_return_picking
+#: model:ir.model,name:stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Albarán devolución"
+
+#. module: stock
+#: model:ir.actions.report.xml,name:stock.report_location_overview_all
+msgid "Inventory (with child locations)"
+msgstr "Inventario (con ubicaciones hijas)"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Split in production lots"
+msgstr "Dividir en lotes de producción"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_inventory_merge
+msgid "Merge Inventory"
+msgstr "Mezclar/Unir inventario"
+
+#. module: stock
+#: view:product.template:0
+msgid "Information"
+msgstr "Información"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Shipping Address :"
+msgstr "Dirección Envio :"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "Provide the quantities of the returned products."
+msgstr "Provee las cantidades de productos regresados."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_MISSING_IMAGE"
+msgstr "STOCK_MISSING_IMAGE"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_REMOVE"
+msgstr "STOCK_REMOVE"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-call-start"
+msgstr "terp-call-start"
+
+#. module: stock
+#: view:stock.change.standard.price:0
+msgid "Cost Price"
+msgstr "Precio Costo"
+
+#. module: stock
+#: view:product.product:0
+#: field:product.product,valuation:0
+msgid "Inventory Valuation"
+msgstr "Valoración Inventario"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Create Invoice"
+msgstr "Creación Factura"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Process Later"
+msgstr "Procesar Después"
+
+#. module: stock
+#: help:res.partner,property_stock_supplier:0
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for goods you receive from the current partner"
+msgstr ""
+"Esta ubicación de stock será utilizada, en lugar de la ubicación por "
+"defecto, como la ubicación de origen para recibir mercancías desde esta "
+"empresa"
+
+#. module: stock
+#: selection:stock.picking,invoice_state:0
+msgid "Not from Picking"
+msgstr "No a partir de albarán"
+
+#. module: stock
+#: field:stock.warehouse,partner_address_id:0
+msgid "Owner Address"
+msgstr "Dirección dueño"
+
+#. module: stock
+#: field:stock.location,parent_right:0
+msgid "Right Parent"
+msgstr "Padre derecho"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_JUSTIFY_LEFT"
+msgstr "STOCK_JUSTIFY_LEFT"
+
+#. module: stock
+#: field:report.stock.move,day_diff1:0
+msgid "Planned Lead Time (Days)"
+msgstr "Retraso Previsto (Días)"
+
+#. module: stock
+#: field:stock.change.standard.price,new_price:0
+msgid "Price"
+msgstr "Precio"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Search Inventory"
+msgstr "Búsqueda de inventario"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_report_tracklots
+msgid "Stock report by tracking lots"
+msgstr "Reporte de inventario por lotes de seguimiento"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"There is no stock input account defined for this product or its category: "
+"\"%s\" (id: %d)"
+msgstr ""
+"No existe cuenta de ingreso de inventario definida para este producto o su "
+"categoría: \"%s\" (id: %d)"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "January"
+msgstr "Enero"
+
+#. module: stock
+#: field:stock.production.lot,ref:0
+msgid "Internal Reference"
+msgstr "Referencia Interna"
+
+#. module: stock
+#: help:stock.production.lot,prefix:0
+msgid ""
+"Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL "
+"[INT_REF]"
+msgstr ""
+"Prefijo opcional que se antepone cuando mostramos el número de serie: "
+"PREFIX/SERIAL [INT_REF]"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_HARDDISK"
+msgstr "STOCK_HARDDISK"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
+#: model:ir.model,name:stock.model_stock_fill_inventory
+#: view:stock.fill.inventory:0
+msgid "Import Inventory"
+msgstr "Importar Inventario"
+
+#. module: stock
+#: field:stock.incoterms,name:0
+#: field:stock.move,name:0
+#: field:stock.warehouse,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: stock
+#: view:product.product:0
+msgid "Stocks"
+msgstr "Stocks"
+
+#. module: stock
+#: model:ir.module.module,description:stock.module_meta_information
+msgid ""
+"OpenERP Inventory Management module can manage multi-warehouses, multi and "
+"structured stock locations.\n"
+"Thanks to the double entry management, the inventory controlling is powerful "
+"and flexible:\n"
+"* Moves history and planning,\n"
+"* Different inventory methods (FIFO, LIFO, ...)\n"
+"* Stock valuation (standard or average price, ...)\n"
+"* Robustness faced with Inventory differences\n"
+"* Automatic reordering rules (stock level, JIT, ...)\n"
+"* Bar code supported\n"
+"* Rapid detection of mistakes through double entry system\n"
+"* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+"* Dashboard for warehouse that includes:\n"
+"    * Products to receive in delay (date < = today)\n"
+"    * Procurement in exception\n"
+"    * Graph : Number of Receive products vs planned (bar graph on week par "
+"day)\n"
+"    * Graph : Number of Delivery products vs planned (bar graph on week par "
+"day)\n"
+"    "
+msgstr ""
+"OpenERP Inventory Management module can manage multi-warehouses, multi and "
+"structured stock locations.\n"
+"Thanks to the double entry management, the inventory controlling is powerful "
+"and flexible:\n"
+"* Moves history and planning,\n"
+"* Different inventory methods (FIFO, LIFO, ...)\n"
+"* Stock valuation (standard or average price, ...)\n"
+"* Robustness faced with Inventory differences\n"
+"* Automatic reordering rules (stock level, JIT, ...)\n"
+"* Bar code supported\n"
+"* Rapid detection of mistakes through double entry system\n"
+"* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+"* Dashboard for warehouse that includes:\n"
+"    * Products to receive in delay (date < = today)\n"
+"    * Procurement in exception\n"
+"    * Graph : Number of Receive products vs planned (bar graph on week par "
+"day)\n"
+"    * Graph : Number of Delivery products vs planned (bar graph on week par "
+"day)\n"
+"    "
+
+#. module: stock
+#: help:product.template,property_stock_inventory:0
+msgid ""
+"For the current product, this stock location will be used, instead of the "
+"default one, as the source location for stock moves generated when you do an "
+"inventory"
+msgstr ""
+"For the current product, this stock location will be used, instead of the "
+"default one, as the source location for stock moves generated when you do an "
+"inventory"
+
+#. module: stock
+#: view:report.stock.lines.date:0
+msgid "Stockable"
+msgstr "Almacenable"
+
+#. module: stock
+#: selection:product.product,valuation:0
+msgid "Real Time (automated)"
+msgstr "Tiempo Real (automatico)"
+
+#. module: stock
+#: help:stock.move,tracking_id:0
+msgid "Logistical shipping unit: pallet, box, pack ..."
+msgstr "Unidad de envio logística: paleta, caja, paquete ..."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-locked"
+msgstr "terp-locked"
+
+#. module: stock
+#: view:stock.change.standard.price:0
+msgid "_Apply"
+msgstr "_Aplicar"
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+#: report:stock.inventory.move:0
+#: report:stock.picking.list:0
+msgid "]"
+msgstr "]"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+msgid "Total value"
+msgstr "Valor Total"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-personal"
+msgstr "terp-personal"
+
+#. module: stock
+#: help:stock.location,chained_journal_id:0
+msgid ""
+"Inventory Journal in which the chained move will be written, if the Chaining "
+"Type is not Transparent (no journal is used if left empty)"
+msgstr ""
+"Diario de inventario en el cual la cadena de movimientos serán escritos, si "
+"el tipo de cadena no es transparente(ningun diario es usado si deja vacio)"
+
+#. module: stock
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
+msgstr "Reglas no soportadas por objetos osv_memory !"
+
+#. module: stock
+#: view:board.board:0
+#: model:ir.actions.act_window,name:stock.action_incoming_product_board
+msgid "Incoming Product"
+msgstr "Productos Entrantes"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Creation"
+msgstr "Creación"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-accessories-archiver"
+msgstr "terp-accessories-archiver"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#, python-format
+msgid "Cost"
+msgstr "Costo"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_COPY"
+msgstr "STOCK_COPY"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
+#: model:ir.ui.menu,name:stock.menu_warehouse_config
+msgid "Warehouse Management"
+msgstr "Gestión de inventario"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento stock"
+
+#. module: stock
+#: field:product.category,property_stock_account_output_categ:0
+#: field:product.template,property_stock_account_output:0
+#: field:stock.change.standard.price,stock_account_output:0
+msgid "Stock Output Account"
+msgstr "Cuenta salida stock"
+
+#. module: stock
+#: selection:stock.location,chained_auto_packing:0
+msgid "Automatic No Step Added"
+msgstr "Mov. automático, paso no añadido"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Product "
+msgstr "Producto "
+
+#. module: stock
+#: view:stock.location.product:0
+msgid "Stock Location Analysis"
+msgstr "Análisis de Ubicaciones de stock"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_CDROM"
+msgstr "STOCK_CDROM"
+
+#. module: stock
+#: help:stock.move,date:0
+msgid ""
+"Move date: scheduled date until move is done, then date of actual move "
+"processing"
+msgstr ""
+"Fecha movimiento: fecha prevista hasta que el movimiento este realizado,"
+
+#. module: stock
+#: field:report.stock.lines.date,date:0
+msgid "Latest Inventory Date"
+msgstr "Fecha de inventario última"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+#: view:stock.inventory:0
+#: view:stock.move:0
+#: view:stock.picking:0
+#: view:stock.production.lot:0
+msgid "Group By..."
+msgstr "Agrupado por..."
+
+#. module: stock
+#: view:stock.location:0
+msgid "Chained Locations"
+msgstr "Ubicaciones encadenadas"
+
+#. module: stock
+#: model:stock.location,name:stock.location_inventory
+msgid "Inventory loss"
+msgstr "Pérdidas de inventario"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Document"
+msgstr "Documento"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Input Picking List"
+msgstr "Lista Movimiento Entrantes"
+
+#. module: stock
+#: field:stock.move,product_uom:0
+msgid "Unit of Measure"
+msgstr "Unidad de medida"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_REFRESH"
+msgstr "STOCK_REFRESH"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Products: "
+msgstr "Productos: "
+
+#. module: stock
+#: help:product.product,track_production:0
+msgid ""
+"Forces to specify a Production Lot for all moves containing this product and "
+"generated by a Manufacturing Order"
+msgstr ""
+"Forza a especificar un Lote de Producción para todos los movimientos "
+"contenidos en este producto y generados por una Orden de Producción"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_STOP"
+msgstr "STOCK_STOP"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.track_line_old
+#: view:stock.move.track:0
+msgid "Tracking a move"
+msgstr "Seguimiento de movimiento"
+
+#. module: stock
+#: view:product.product:0
+msgid "Update"
+msgstr "Actualizar"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Set to Draft"
+msgstr "Poner en borrador"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_journal_form
+#: model:ir.ui.menu,name:stock.menu_action_stock_journal_form
+msgid "Stock Journals"
+msgstr "Diarios de inventario"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-gtk-go-back-ltr"
+msgstr "terp-gtk-go-back-ltr"
+
+#. module: stock
+#: selection:report.stock.move,type:0
+msgid "Others"
+msgstr "Otros"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Could not find any difference between standard price and new price!"
+msgstr ""
+"No se encontra diferencia entre el Precio Estandar y el nuevo precio!"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_partial_picking
+msgid "Partial Picking"
+msgstr "Movimientos parciales"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_scrapped
+#: field:stock.move,scrapped:0
+msgid "Scrapped"
+msgstr "Desperdiciado"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Products "
+msgstr "Productos "
+
+#. module: stock
+#: field:product.product,track_incoming:0
+msgid "Track Incoming Lots"
+msgstr "Lotes seguimiento entrada"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_DIALOG_WARNING"
+msgstr "STOCK_DIALOG_WARNING"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-mail-replied"
+msgstr "terp-mail-replied"
+
+#. module: stock
+#: view:board.board:0
+msgid "Warehouse board"
+msgstr "Tablero Almacen"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_inventory_form
+#: model:ir.ui.menu,name:stock.menu_action_inventory_form
+msgid "Physical Inventories"
+msgstr "Inventarios físicos"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_CONVERT"
+msgstr "STOCK_CONVERT"
+
+#. module: stock
+#: field:stock.move,note:0
+#: view:stock.picking:0
+#: field:stock.picking,note:0
+msgid "Notes"
+msgstr "Notas"
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+msgid "Value"
+msgstr "Valor"
+
+#. module: stock
+#: field:report.stock.move,type:0
+#: field:stock.location,chained_picking_type:0
+#: field:stock.picking,type:0
+msgid "Shipping Type"
+msgstr "Tipo de envio"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You can only delete draft moves."
+msgstr "Se puede solo eliminar movimientos borrador."
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: model:ir.actions.act_window,name:stock.act_product_location_open
+#: model:ir.ui.menu,name:stock.menu_stock_products_menu
+#: view:stock.inventory:0
+#: view:stock.picking:0
+#, python-format
+msgid "Products"
+msgstr "Productos"
+
+#. module: stock
+#: selection:stock.location,chained_location_type:0
+msgid "None"
+msgstr "Ninguno"
+
+#. module: stock
+#: view:stock.change.standard.price:0
+msgid "Change Price"
+msgstr "Cambiar Precio"
+
+#. module: stock
+#: field:stock.picking,move_type:0
+msgid "Delivery Method"
+msgstr "Método entrega"
+
+#. module: stock
+#: help:report.stock.move,location_dest_id:0
+#: help:stock.move,location_dest_id:0
+#: help:stock.picking,location_dest_id:0
+msgid "Location where the system will stock the finished products."
+msgstr "Ubocación donde el sistema colocará los productos finales."
+
+#. module: stock
+#: help:product.category,property_stock_variation:0
+msgid ""
+"When real-time inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr ""
+"Cuando la valoración de inventario en tiempo-real está activa en el "
+"producto, esta cuenta llevará el valor de los productos."
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"There is no stock output account defined for this product or its category: "
+"\"%s\" (id: %d)"
+msgstr ""
+"No existe cuanta de salida de inventario definida para este producto o su "
+"categoría: \"%s\" (id: %d)"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-partner"
+msgstr "terp-partner"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_ITALIC"
+msgstr "STOCK_ITALIC"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Operation forbidden"
+msgstr "Operación Prohibida"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-stock"
+msgstr "terp-stock"
+
+#. module: stock
+#: help:stock.picking,min_date:0
+msgid "Expected date for the picking to be processed"
+msgstr "Fecha prevista para que el movimiento sea procesado"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "P&L Qty"
+msgstr "P&L Ctdad"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-folder-green"
+msgstr "terp-folder-green"
+
+#. module: stock
+#: view:stock.production.lot:0
+#: field:stock.production.lot,revisions:0
+msgid "Revisions"
+msgstr "Revisiones"
+
+#. module: stock
+#: help:product.product,valuation:0
+msgid ""
+"If real-time valuation is enabled for a product, the system will "
+"automatically write journal entries corresponding to stock moves.The "
+"inventory variation account set on the product category will represent the "
+"current inventory value, and the stock input and stock output account will "
+"hold the counterpart moves for incoming and outgoing products."
+msgstr ""
+"If real-time valuation is enabled for a product, the system will "
+"automatically write journal entries corresponding to stock moves.The "
+"inventory variation account set on the product category will represent the "
+"current inventory value, and the stock input and stock output account will "
+"hold the counterpart moves for incoming and outgoing products."
+
+#. module: stock
+#: help:report.stock.move,location_id:0
+#: help:stock.move,location_id:0
+msgid ""
+"Sets a location if you produce at a fixed location. This can be a partner "
+"location if you subcontract the manufacturing operations."
+msgstr ""
+"Sets a location if you produce at a fixed location. This can be a partner "
+"location if you subcontract the manufacturing operations."
+
+#. module: stock
+#: view:stock.invoice.onshipping:0
+msgid "Create"
+msgstr "Crear"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Dates"
+msgstr "Fechas"
+
+#. module: stock
+#: field:stock.move,priority:0
+msgid "Priority"
+msgstr "Prioridad"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Source"
+msgstr "Origen"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#: model:ir.actions.report.xml,name:stock.report_location_overview
+#: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
+#: model:ir.model,name:stock.model_stock_inventory
+#: selection:report.stock.inventory,location_type:0
+#: field:stock.inventory.line,inventory_id:0
+#: report:stock.inventory.move:0
+#: selection:stock.location,usage:0
+#, python-format
+msgid "Inventory"
+msgstr "Inventario"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_picking
+#: field:stock.move,picking_id:0
+msgid "Picking List"
+msgstr "Lista Movimientos"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"The combination of serial number and internal reference must be unique !"
+msgstr ""
+"La combinación del número de serie y la referencia interna debe ser unica !"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#, python-format
+msgid "Currency in which Unit Cost is expressed"
+msgstr "Moneda en la cual el costo unitario es expresado"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_ups
+msgid "Stock ups"
+msgstr "Stock ups"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Cancel Inventory"
+msgstr "Cancelar el inventario"
+
+#. module: stock
+#: field:stock.move.split.lines,name:0
+#: field:stock.move.split.lines.exist,name:0
+msgid "Tracking serial"
+msgstr "Seguimiento Series"
+
+#. module: stock
+#: code:addons/stock/report/report_stock.py:0
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Error !"
+msgstr "Error !"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_replacement_result
+msgid "Stock Replacement result"
+msgstr "Resultado del reemplazo de stock"
+
+#. module: stock
+#: selection:stock.location,chained_location_type:0
+msgid "Fixed Location"
+msgstr "Ubicaciones fijas"
+
+#. module: stock
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+"especial!"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-stock_align_left_24"
+msgstr "terp-stock_align_left_24"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-folder-orange"
+msgstr "terp-folder-orange"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-accessories-archiver+"
+msgstr "terp-accessories-archiver+"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-purchase"
+msgstr "terp-purchase"
+
+#. module: stock
+#: help:stock.production.lot,name:0
+msgid "Unique serial number, will be displayed as: PREFIX/SERIAL [INT_REF]"
+msgstr ""
+"El número de serie único, debe ser mostrado como: PREFIX/SERIAL [INT_REF]"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "July"
+msgstr "Julio"
+
+#. module: stock
+#: view:report.stock.lines.date:0
+msgid "Consumable"
+msgstr "Consumible"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_COLOR_PICKER"
+msgstr "STOCK_COLOR_PICKER"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_DND"
+msgstr "STOCK_DND"
+
+#. module: stock
+#: model:ir.actions.report.xml,name:stock.report_product_history
+msgid "Stock Level Forecast"
+msgstr "Previsión Niveles stock"
+
+#. module: stock
+#: model:account.journal,name:stock.stock_journal
+#: model:ir.model,name:stock.model_stock_journal
+#: field:report.stock.move,stock_journal:0
+#: view:stock.journal:0
+#: field:stock.journal,name:0
+#: field:stock.picking,stock_journal_id:0
+msgid "Stock Journal"
+msgstr "Diario de inventario"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_CLEAR"
+msgstr "STOCK_CLEAR"
+
+#. module: stock
+#: selection:report.stock.inventory,location_type:0
+#: selection:stock.location,usage:0
+msgid "Procurement"
+msgstr "Abastecimiento"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-folder-yellow"
+msgstr "terp-folder-yellow"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_4
+msgid "Maxtor Suppliers"
+msgstr "Proveedores Maxtor"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_change_standard_price.py:0
+#, python-format
+msgid "Active ID is not set in Context"
+msgstr "ID activo no esta seteado en el contexto"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Force Availability"
+msgstr "Forzar disponibilidad"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.move_scrap
+#: view:stock.move.scrap:0
+msgid "Scrap Move"
+msgstr "Movimiento Chatarra/Despedicio"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_reception_picking_move
+#: model:ir.ui.menu,name:stock.menu_action_pdct_in
+#: view:stock.move:0
+msgid "Receive Products"
+msgstr "Recibir Productos"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_out_picking_move
+#: model:ir.actions.act_window,name:stock.action_partial_move
+#: model:ir.ui.menu,name:stock.menu_action_pdct_out
+msgid "Deliver Products"
+msgstr "Enviar Productos"
+
+#. module: stock
+#: view:stock.location.product:0
+msgid "View Stock of Products"
+msgstr "Ver stock de productos"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Internal Picking list"
+msgstr "Lista movimiento internos"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_GO_UP"
+msgstr "STOCK_GO_UP"
+
+#. module: stock
+#: view:report.stock.move:0
+#: field:report.stock.move,month:0
+msgid "Month"
+msgstr "Mes"
+
+#. module: stock
+#: help:stock.picking,date_done:0
+msgid "Date of Completion"
+msgstr "Fechas de completación"
+
+#. module: stock
+#: help:stock.tracking,active:0
+msgid ""
+"By unchecking the active field, you may hide a pack without deleting it."
+msgstr ""
+"By unchecking the active field, you may hide a pack without deleting it."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-dolar_ok!"
+msgstr "terp-dolar_ok!"
+
+#. module: stock
+#: view:stock.inventory.merge:0
+msgid "Yes"
+msgstr "Si"
+
+#. module: stock
+#: field:stock.inventory,inventory_line_id:0
+msgid "Inventories"
+msgstr "Inventarios"
+
+#. module: stock
+#: view:report.stock.move:0
+msgid "Todo"
+msgstr "Todo"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,company_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,company_id:0
+#: field:stock.inventory,company_id:0
+#: field:stock.inventory.line,company_id:0
+#: field:stock.location,company_id:0
+#: field:stock.move,company_id:0
+#: field:stock.picking,company_id:0
+#: field:stock.production.lot,company_id:0
+#: field:stock.production.lot.revision,company_id:0
+#: field:stock.warehouse,company_id:0
+msgid "Company"
+msgstr "Compania"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_PROPERTIES"
+msgstr "STOCK_PROPERTIES"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-go-year"
+msgstr "terp-go-year"
+
+#. module: stock
+#: field:stock.location,stock_real:0
+msgid "Real Stock"
+msgstr "Stock real"
+
+#. module: stock
+#: view:stock.fill.inventory:0
+msgid "Fill Inventory"
+msgstr "Rellenar Inventario"
+
+#. module: stock
+#: help:product.category,property_stock_account_input_categ:0
+msgid ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"incoming stock moves will be posted in this account. This is the default "
+"value for all products in this category, it can also directly be set on each "
+"product."
+msgstr ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"incoming stock moves will be posted in this account. This is the default "
+"value for all products in this category, it can also directly be set on each "
+"product."
+
+#. module: stock
+#: field:stock.production.lot.revision,date:0
+msgid "Revision Date"
+msgstr "Fecha de revisión"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,prodlot_id:0
+#: view:stock.move:0
+#: field:stock.move.split.lines,lot_id:0
+#: field:stock.move.split.lines.exist,lot_id:0
+#: report:stock.picking.list:0
+msgid "Lot"
+msgstr "Lote"
+
+#. module: stock
+#: view:stock.move.split:0
+msgid "Production Lot Number"
+msgstr "Número de lote de producción"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-gtk-jump-to-rtl"
+msgstr "terp-gtk-jump-to-rtl"
+
+#. module: stock
+#: field:stock.move,product_uos_qty:0
+msgid "Quantity (UOS)"
+msgstr "Cantidad (UdV)"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_MEDIA_STOP"
+msgstr "STOCK_MEDIA_STOP"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Set Available"
+msgstr "Cambiar a disponible"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Contact Address :"
+msgstr "Dirección del contacto :"
+
+#. module: stock
+#: field:stock.move,backorder_id:0
+msgid "Back Order"
+msgstr "Orden Pendiente"
+
+#. module: stock
+#: field:stock.production.lot,name:0
+msgid "Serial Number"
+msgstr "Número Serie"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_DND_MULTIPLE"
+msgstr "STOCK_DND_MULTIPLE"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#, python-format
+msgid "New picking invoices"
+msgstr "Nuevo facturas de movimiento"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_SPELL_CHECK"
+msgstr "STOCK_SPELL_CHECK"
+
+#. module: stock
+#: field:stock.incoterms,active:0
+#: field:stock.location,active:0
+#: field:stock.tracking,active:0
+msgid "Active"
+msgstr "Activo"
+
+#. module: stock
+#: model:ir.module.module,shortdesc:stock.module_meta_information
+msgid "Inventory Management"
+msgstr "Almacenes y logística"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-idea"
+msgstr "terp-idea"
+
+#. module: stock
+#: view:product.template:0
+msgid "Properties"
+msgstr "Propiedades"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Error, no partner !"
+msgstr "Error, no partner !"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_splitinto.py:0
+#, python-format
+msgid ""
+"The current move line is already assigned to a pack, please remove it first "
+"if you really want to change it ' \\n            #                        "
+"'for this product: \"%s\" (id: %d)"
+msgstr ""
+"The current move line is already assigned to a pack, please remove it first "
+"if you really want to change it ' \\n            #                        "
+"'for this product: \"%s\" (id: %d)"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_incoterms_tree
+#: model:ir.model,name:stock.model_stock_incoterms
+#: view:stock.incoterms:0
+msgid "Incoterms"
+msgstr "Incoterms"
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+#: report:stock.inventory.move:0
+msgid "Total:"
+msgstr "Total:"
+
+#. module: stock
+#: help:stock.incoterms,name:0
+msgid ""
+"Incoterms are series of sales terms.They are used to divide transaction "
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
+msgstr ""
+"Incoterms are series of sales terms.They are used to divide transaction "
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
+
+#. module: stock
+#: help:stock.fill.inventory,recursive:0
+msgid ""
+"If checked, products contained in child locations of selected location will "
+"be included as well."
+msgstr ""
+"If checked, products contained in child locations of selected location will "
+"be included as well."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_ZOOM_OUT"
+msgstr "STOCK_ZOOM_OUT"
+
+#. module: stock
+#: field:stock.move.track,tracking_prefix:0
+msgid "Tracking prefix"
+msgstr "Prefijo de seguimiento"
+
+#. module: stock
+#: field:stock.inventory,name:0
+msgid "Inventory Reference"
+msgstr "Referencia de inventario"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Internal picking"
+msgstr "Movimiento interno"
+
+#. module: stock
+#: view:stock.location.product:0
+msgid "Open Product"
+msgstr "Abrir producto"
+
+#. module: stock
+#: field:stock.location.product,to_date:0
+msgid "To"
+msgstr "Para"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Process"
+msgstr "Procesar"
+
+#. module: stock
+#: field:stock.production.lot.revision,name:0
+msgid "Revision Name"
+msgstr "Nombre de revisión"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_warehouse
+#: model:ir.ui.menu,name:stock.menu_stock_root
+#: view:stock.warehouse:0
+msgid "Warehouse"
+msgstr "Gestión Inventario"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_SELECT_COLOR"
+msgstr "STOCK_SELECT_COLOR"
+
+#. module: stock
+#: view:stock.location.product:0
+msgid ""
+"(Keep empty to open the current situation. Adjust HH:MM:SS to 00:00:00 to "
+"filter all resources of the day for the 'From' date and 23:59:59 for the "
+"'To' date)"
+msgstr ""
+"(Keep empty to open the current situation. Adjust HH:MM:SS to 00:00:00 to "
+"filter all resources of the day for the 'From' date and 23:59:59 for the "
+"'To' date)"
+
+#. module: stock
+#: view:product.category:0
+msgid "Accounting Stock Properties"
+msgstr "Propiedades contables del stock"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_NO"
+msgstr "STOCK_NO"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree_out
+msgid "Customers Packings"
+msgstr "Albaranes de cliente"
+
+#. module: stock
+#: selection:report.stock.inventory,state:0
+#: view:report.stock.move:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: view:stock.move:0
+#: selection:stock.move,state:0
+#: view:stock.picking:0
+#: selection:stock.picking,state:0
+msgid "Done"
+msgstr "Realizado"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_change_standard_price
+#: model:ir.model,name:stock.model_stock_change_standard_price
+#: view:stock.change.standard.price:0
+msgid "Change Standard Price"
+msgstr "Cambiar precio estandar"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_locations_virtual
+msgid "Virtual Locations"
+msgstr "Ubicaciones virtuales"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_GOTO_FIRST"
+msgstr "STOCK_GOTO_FIRST"
+
+#. module: stock
+#: field:stock.inventory,date_done:0
+msgid "Date done"
+msgstr "Fecha realización"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Please put a partner on the picking list if you want to generate invoice."
+msgstr ""
+"Por favor ponga una empresa en el movimiento si desea generar la factura."
+
+#. module: stock
+#: selection:stock.move,priority:0
+msgid "Not urgent"
+msgstr "No urgente"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-stock_format-default"
+msgstr "terp-stock_format-default"
+
+#. module: stock
+#: view:stock.move:0
+msgid "To Do"
+msgstr "Por hacer"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_CLOSE"
+msgstr "STOCK_CLOSE"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_warehouse_form
+#: model:ir.ui.menu,name:stock.menu_action_warehouse_form
+msgid "Warehouses"
+msgstr "Inventarios"
+
+#. module: stock
+#: field:stock.journal,user_id:0
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-check"
+msgstr "terp-check"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-camera_test"
+msgstr "terp-camera_test"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_inventory_report
+#: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
+#: view:report.stock.inventory:0
+msgid "Inventory Analysis"
+msgstr "Análisis de inventario"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_SORT_DESCENDING"
+msgstr "STOCK_SORT_DESCENDING"
+
+#. module: stock
+#: field:stock.invoice.onshipping,journal_id:0
+msgid "Destination Journal"
+msgstr "Diario Destino"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_stock_tracking_lot_2_stock_report_tracklots
+#: model:stock.location,name:stock.stock_location_stock
+msgid "Stock"
+msgstr "Stock"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: model:ir.model,name:stock.model_product_product
+#: model:ir.ui.menu,name:stock.menu_stock_product
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,product_id:0
+#: field:report.stock.lines.date,product_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,product_id:0
+#: field:stock.inventory.line,product_id:0
+#: field:stock.inventory.line.split,product_id:0
+#: report:stock.inventory.move:0
+#: view:stock.move:0
+#: field:stock.move,product_id:0
+#: field:stock.move.consume,product_id:0
+#: field:stock.move.scrap,product_id:0
+#: field:stock.move.split,product_id:0
+#: view:stock.production.lot:0
+#: field:stock.production.lot,product_id:0
+#: field:stock.report.prodlots,product_id:0
+#: field:stock.report.tracklots,product_id:0
+#, python-format
+msgid "Product"
+msgstr "Producto"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_HOME"
+msgstr "STOCK_HOME"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "Invoicing"
+msgstr "Facturación"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Please provide Proper Quantity !"
+msgstr "Sírvase proporcionar una cantidad adecuada !"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You are moving %.2f products but only %.2f available in this lot."
+msgstr ""
+"Esta miviendo %.2f productos pero solo %.2f esta disponible en este lote."
+
+#. module: stock
+#: field:stock.move,product_uos:0
+msgid "Product UOS"
+msgstr "UdV del producto"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Received Qty"
+msgstr "Ctdad. Recibida"
+
+#. module: stock
+#: field:stock.location,posz:0
+msgid "Height (Z)"
+msgstr "Altura (Z)"
+
+#. module: stock
+#: field:stock.ups,weight:0
+msgid "Lot weight"
+msgstr "Peso Lote"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_consume
+#: view:stock.move.consume:0
+msgid "Consume Products"
+msgstr "Productos de consumo"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: field:stock.inventory.line,product_uom:0
+#: field:stock.move.consume,product_uom:0
+#: field:stock.move.scrap,product_uom:0
+#, python-format
+msgid "Product UOM"
+msgstr "UdM Producto"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You cannot remove the picking which is in %s state !"
+msgstr "Usted no puede borrar el movimiento que esta en estado %s !"
+
+#. module: stock
+#: field:stock.picking,address_id:0
+msgid "Address"
+msgstr "Dirección"
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+msgid "Variants"
+msgstr "Variantes"
+
+#. module: stock
+#: field:stock.location,posx:0
+msgid "Corridor (X)"
+msgstr "Pasillo (X)"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_suppliers
+msgid "Suppliers"
+msgstr "Proveedores"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_JUMP_TO"
+msgstr "STOCK_JUMP_TO"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_INDENT"
+msgstr "STOCK_INDENT"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-tools"
+msgstr "terp-tools"
+
+#. module: stock
+#: report:lot.stock.overview:0
+msgid "Location Overview"
+msgstr "Vista General de Ubicaciones"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_stock_location_product
+#: model:ir.model,name:stock.model_stock_location_product
+msgid "Products by Location"
+msgstr "Productos por ubicación"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_DIALOG_INFO"
+msgstr "STOCK_DIALOG_INFO"
+
+#. module: stock
+#: field:stock.fill.inventory,recursive:0
+msgid "Include children"
+msgstr "Include children"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_components
+msgid "Shelf 1"
+msgstr "Plataforma 1"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-sale"
+msgstr "terp-sale"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Order"
+msgstr "Orden"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_ADD"
+msgstr "STOCK_ADD"
+
+#. module: stock
+#: field:stock.tracking,name:0
+msgid "Pack Reference"
+msgstr "Paquete Referencia"
+
+#. module: stock
+#: view:report.stock.move:0
+#: field:report.stock.move,location_id:0
+#: field:stock.move,location_id:0
+msgid "Source Location"
+msgstr "Ubicación Origen"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-gtk-stop"
+msgstr "terp-gtk-stop"
+
+#. module: stock
+#: view:product.template:0
+msgid "Accounting Entries"
+msgstr "Asientos contables"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Unit Of Measure"
+msgstr "Unidad de medida"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_MEDIA_PAUSE"
+msgstr "STOCK_MEDIA_PAUSE"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_intermediatelocation0
+msgid "Internal Shippings"
+msgstr "Envios Internos"
+
+#. module: stock
+#: field:stock.change.standard.price,enable_stock_in_out_acc:0
+msgid "Enable Related Account"
+msgstr "Habilitar Cuenta Relacionada"
+
+#. module: stock
+#: view:product.product:0
+#: view:stock.inventory.line.split:0
+#: view:stock.move.split:0
+msgid "Lots"
+msgstr "Lotes"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "New pack"
+msgstr "Nuevo paquete"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Destination"
+msgstr "Destino"
+
+#. module: stock
+#: selection:stock.picking,move_type:0
+msgid "All at once"
+msgstr "Todo junto"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Quantities, UoMs, Products and Locations cannot be modified on stock moves "
+"that have already been processed (except by the Administrator)"
+msgstr ""
+"Quantities, UoMs, Products and Locations cannot be modified on stock moves "
+"that have already been processed (except by the Administrator)"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Productions"
+msgstr "Producciones futuras"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "To Invoice"
+msgstr "A facturar"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "Return lines"
+msgstr "Lineas De retorno"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_lines_date
+#: view:report.stock.lines.date:0
+msgid "Dates of Inventories"
+msgstr "Fechas de inventarios"
+
+#. module: stock
+#: view:report.stock.move:0
+msgid "Total incoming quantity"
+msgstr "Total cantidad entrante"
+
+#. module: stock
+#: field:report.stock.move,product_qty_out:0
+msgid "Out Qty"
+msgstr "Ctdad. Salida"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_PRINT_PREVIEW"
+msgstr "STOCK_PRINT_PREVIEW"
+
+#. module: stock
+#: field:stock.production.lot,move_ids:0
+msgid "Moves for this production lot"
+msgstr "Movimientos para este lote de producción"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
+#, python-format
+msgid "Message !"
+msgstr "Mensaje !"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Put in current pack"
+msgstr "Poner en el paquete"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Lot Inventory"
+msgstr "Regularización de inventario"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Reason"
+msgstr "Razón"
+
+#. module: stock
+#: field:stock.location,icon:0
+msgid "Icon"
+msgstr "Icono"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "UserError"
+msgstr "UserError"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_ZOOM_IN"
+msgstr "STOCK_ZOOM_IN"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-go-week"
+msgstr "terp-go-week"
+
+#. module: stock
+#: view:stock.inventory.line.split:0
+#: view:stock.move.consume:0
+#: view:stock.move.scrap:0
+#: view:stock.move.split:0
+#: view:stock.move.track:0
+#: view:stock.split.into:0
+msgid "Ok"
+msgstr "Aceptar"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_8
+msgid "Non European Customers"
+msgstr "Clientes no europeos"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/stock_splitinto.py:0
+#, python-format
+msgid "Error!"
+msgstr "Error!"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"There is no inventory variation account defined on the product category: "
+"\"%s\" (id: %d)"
+msgstr ""
+"No existe cuenta de variación de inventario definida en la categoria del "
+"producto: \"%s\" (id: %d)"
+
+#. module: stock
+#: view:stock.inventory.merge:0
+msgid "Do you want to merge theses inventories ?"
+msgstr "Desea unir/mezclar estos inventarios ?"
+
+#. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: selection:stock.move,state:0
+#: selection:stock.picking,state:0
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: stock
+#: field:stock.location,chained_location_type:0
+msgid "Chained Location Type"
+msgstr "Tipo ubicaciones encadenadas"
+
+#. module: stock
+#: help:stock.picking,move_type:0
+msgid "It specifies goods to be delivered all at once or by direct delivery"
+msgstr ""
+"Especifica que los bienes se entregarán todos a la vez o por envio directo"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#, python-format
+msgid "This picking list does not require invoicing."
+msgstr "Esta lista de movimientos no require facturación ."
+
+#. module: stock
+#: selection:report.stock.move,type:0
+#: selection:stock.location,chained_picking_type:0
+#: selection:stock.picking,type:0
+msgid "Getting Goods"
+msgstr "Obtener Bienes"
+
+#. module: stock
+#: help:stock.location,chained_location_type:0
+msgid ""
+"Determines whether this location is chained to another location, i.e. any "
+"incoming product in this location \n"
+"should next go to the chained location. The chained location is determined "
+"according to the type :\n"
+"* None: No chaining at all\n"
+"* Customer: The chained location will be taken from the Customer Location "
+"field on the Partner form of the Partner that is specified in the Picking "
+"list of the incoming products.\n"
+"* Fixed Location: The chained location is taken from the next field: Chained "
+"Location if Fixed."
+msgstr ""
+"Determines whether this location is chained to another location, i.e. any "
+"incoming product in this location \n"
+"should next go to the chained location. The chained location is determined "
+"according to the type :\n"
+"* None: No chaining at all\n"
+"* Customer: The chained location will be taken from the Customer Location "
+"field on the Partner form of the Partner that is specified in the Picking "
+"list of the incoming products.\n"
+"* Fixed Location: The chained location is taken from the next field: Chained "
+"Location if Fixed."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_MEDIA_PLAY"
+msgstr "STOCK_MEDIA_PLAY"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_inventory_merge.py:0
+#, python-format
+msgid "Warning"
+msgstr "Warning"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is done."
+msgstr "esta realizado."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_OPEN"
+msgstr "STOCK_OPEN"
+
+#. module: stock
+#: help:res.partner,property_stock_customer:0
+msgid ""
+"This stock location will be used, instead of the default one, as the "
+"destination location for goods you send to this partner"
+msgstr ""
+"Esta ubicación de stock será utilizada, en lugar de la ubicación por "
+"defecto, como la ubicación de destino para enviar mercancías a esta empresa"
+
+#. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.move,state:0
+#: view:stock.picking:0
+#: selection:stock.picking,state:0
+msgid "Confirmed"
+msgstr "Confirmado"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_ups_final
+msgid "Stock ups final"
+msgstr "Stock ups final"
+
+#. module: stock
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Error ! Usted no puede crear menus recursivos."
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Confirm"
+msgstr "Confirmado"
+
+#. module: stock
+#: help:stock.location,icon:0
+msgid "Icon show in  hierarchical tree view"
+msgstr "Icon show in  hierarchical tree view"
+
+#. module: stock
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "¡Error! No se pueden crear compañías recursivas."
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
+#: view:stock.inventory.merge:0
+msgid "Merge inventories"
+msgstr "Mezclar/Unir inventarios"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-go-home"
+msgstr "terp-go-home"
+
+#. module: stock
+#: field:product.product,location_id:0
+#: view:stock.location:0
+msgid "Stock Location"
+msgstr "Ubicación de inventario"
+
+#. module: stock
+#: help:stock.location,scrap_location:0
+msgid ""
+"Check this box to allow using this location to put scrapped/damaged goods."
+msgstr ""
+"Check este cuadro para permitir usar esta ubicación para poner desperdicio o "
+"bienes dañados."
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_relate_picking
+msgid "Related Picking"
+msgstr "Albarán relacionado"
+
+#. module: stock
+#: view:report.stock.move:0
+msgid "Total outgoing quantity"
+msgstr "Cantidad total de salida"
+
+#. module: stock
+#: field:stock.picking,backorder_id:0
+msgid "Back Order of"
+msgstr "Orden pendiente"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#, python-format
+msgid "Unit Cost for this product line"
+msgstr "Costo Unitario para esta linea de producto"
+
+#. module: stock
+#: model:ir.model,name:stock.model_product_category
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,product_categ_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,categ_id:0
+msgid "Product Category"
+msgstr "Categoría de producto"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.next_id_61
+msgid "Reporting"
+msgstr "Reportes"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid " for the "
+msgstr " for the "
+
+#. module: stock
+#: view:stock.split.into:0
+msgid "Quantity to leave in the current pack"
+msgstr "Quantity to leave in the current pack"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
+#: view:stock.invoice.onshipping:0
+msgid "Create invoice"
+msgstr "Crear factura"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_NETWORK"
+msgstr "STOCK_NETWORK"
+
+#. module: stock
+#: view:report.stock.lines.date:0
+msgid "Non Inv"
+msgstr "No Inv"
+
+#. module: stock
+#: field:stock.inventory.line.split,use_exist:0
+#: field:stock.move.split,use_exist:0
+msgid "Existing Lots"
+msgstr "Lotes existentes"
+
+#. module: stock
+#: help:stock.change.standard.price,new_price:0
+msgid ""
+"If cost price is increased, stock variation account will be debited and "
+"stock output account will be credited with the value = (difference of amount "
+"* quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and "
+"stock input account will be debited."
+msgstr ""
+"If cost price is increased, stock variation account will be debited and "
+"stock output account will be credited with the value = (difference of amount "
+"* quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and "
+"stock input account will be debited."
+
+#. module: stock
+#: field:stock.location,chained_journal_id:0
+msgid "Chaining Journal"
+msgstr "Diario Cadena"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_customers
+msgid "Customers"
+msgstr "Clientes"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is cancelled."
+msgstr "esta cancelada."
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-document-new"
+msgstr "terp-document-new"
+
+#. module: stock
+#: view:stock.inventory.line:0
+msgid "Stock Inventory Lines"
+msgstr "Líneas regularización de inventario"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#, python-format
+msgid "Process Document"
+msgstr "Procesar documento"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Deliveries"
+msgstr "Envios futuros"
+
+#. module: stock
+#: help:product.template,property_stock_account_input:0
+msgid ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"incoming stock moves will be posted in this account. If not set on the "
+"product, the one from the product category is used."
+msgstr ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"incoming stock moves will be posted in this account. If not set on the "
+"product, the one from the product category is used."
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Additional info"
+msgstr "Información Adicional"
+
+#. module: stock
+#: view:stock.move:0
+#: field:stock.move,tracking_id:0
+msgid "Pack"
+msgstr "Paquete"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_location
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,location_id:0
+#: field:stock.fill.inventory,location_id:0
+#: field:stock.inventory.line,location_id:0
+#: report:stock.inventory.move:0
+#: view:stock.location:0
+#: view:stock.move:0
+#: field:stock.move.consume,location_id:0
+#: field:stock.move.scrap,location_id:0
+#: field:stock.picking,location_id:0
+#: report:stock.picking.list:0
+#: field:stock.report.prodlots,location_id:0
+#: field:stock.report.tracklots,location_id:0
+msgid "Location"
+msgstr "Ubicación"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Date Expected"
+msgstr "Fecha esperada"
+
+#. module: stock
+#: field:stock.move,auto_validate:0
+msgid "Auto Validate"
+msgstr "Auto validar"
+
+#. module: stock
+#: model:ir.model,name:stock.model_product_template
+msgid "Product Template"
+msgstr "Plantilla de producto"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "December"
+msgstr "Diciembre"
+
+#. module: stock
+#: selection:stock.location,chained_auto_packing:0
+msgid "Automatic Move"
+msgstr "Movimiento automático"
+
+#. module: stock
+#: field:stock.location,stock_virtual_value:0
+msgid "Virtual Stock Value"
+msgstr "Valor stock virtual"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-mail_delete"
+msgstr "terp-mail_delete"
+
+#. module: stock
+#: help:stock.move,price_currency_id:0
+msgid ""
+"Technical field used to record the currency chosen by the user during a "
+"picking confirmation (when average price costing method is used)"
+msgstr ""
+"Technical field used to record the currency chosen by the user during a "
+"picking confirmation (when average price costing method is used)"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-go-month"
+msgstr "terp-go-month"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_products_moves
+msgid "Products Moves"
+msgstr "Movimientos de producto"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_GOTO_LAST"
+msgstr "STOCK_GOTO_LAST"
+
+#. module: stock
+#: selection:stock.picking,invoice_state:0
+msgid "Invoiced"
+msgstr "Facturado"
+
+#. module: stock
+#: field:stock.move,address_id:0
+msgid "Destination Address"
+msgstr "Dirección destino"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_DIRECTORY"
+msgstr "STOCK_DIRECTORY"
+
+#. module: stock
+#: field:stock.picking,max_date:0
+msgid "Max. Expected Date"
+msgstr "Fecha máxima esperada"
+
+#. module: stock
+#: field:stock.picking,auto_picking:0
+msgid "Auto-Picking"
+msgstr "Movimiento-Automático"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_shop1
+msgid "Shop 2"
+msgstr "Tienda 2"
+
+#. module: stock
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Error ! No puedes crear miembros asociados recursivos"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+#: selection:report.stock.move,type:0
+#: view:stock.location:0
+#: selection:stock.location,chained_picking_type:0
+#: selection:stock.picking,type:0
+msgid "Internal"
+msgstr "Interno"
+
+#. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: selection:stock.move,state:0
+#: selection:stock.picking,state:0
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_JUSTIFY_CENTER"
+msgstr "STOCK_JUSTIFY_CENTER"
+
+#. module: stock
+#: help:report.stock.inventory,state:0
+msgid ""
+"When the stock move is created it is in the 'Draft' state.\n"
+" After that it is set to 'Confirmed' state.\n"
+" If stock is available state is set to 'Avaiable'.\n"
+" When the picking it done the state is 'Done'.              \n"
+"The state is 'Waiting' if the move is waiting for another one."
+msgstr ""
+"When the stock move is created it is in the 'Draft' state.\n"
+" After that it is set to 'Confirmed' state.\n"
+" If stock is available state is set to 'Avaiable'.\n"
+" When the picking it done the state is 'Done'.              \n"
+"The state is 'Waiting' if the move is waiting for another one."
+
+#. module: stock
+#: field:stock.move.split.lines,use_exist:0
+msgid "Existing Lot"
+msgstr "Lote Existencias"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_MEDIA_PREVIOUS"
+msgstr "STOCK_MEDIA_PREVIOUS"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "Please specify at least one non-zero quantity!"
+msgstr "Por favor especifique minimo uno, en la cantidad!"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "weight"
+msgstr "peso"
+
+#. module: stock
+#: help:product.template,property_stock_procurement:0
+msgid ""
+"For the current product, this stock location will be used, instead of the "
+"default one, as the source location for stock moves generated by procurements"
+msgstr ""
+"For the current product, this stock location will be used, instead of the "
+"default one, as the source location for stock moves generated by procurements"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is ready to process."
+msgstr "esta listo para ser procesado."
+
+#. module: stock
+#: help:stock.picking,origin:0
+msgid "Reference of the document that produced this picking."
+msgstr "Referencia del documento que produjo este movimiento."
+
+#. module: stock
+#: field:stock.fill.inventory,set_stock_zero:0
+msgid "Set to zero"
+msgstr "Poner en cero"
+
+#. module: stock
+#: selection:stock.picking,move_type:0
+msgid "Direct Delivery"
+msgstr "Entrega directa"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_REVERT_TO_SAVED"
+msgstr "STOCK_REVERT_TO_SAVED"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#, python-format
+msgid "None of these picking lists require invoicing."
+msgstr "Ninguno de esta lista de movimientos requiere facturación."
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "November"
+msgstr "Noviembre"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
+msgstr ""
+"No existe un diario definido en la categoría del producto: \"%s\" (id: %d)"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Unplanned Qty"
+msgstr "Ctdad. No planeda"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is scheduled"
+msgstr "es planificada"
+
+#. module: stock
+#: field:stock.location,chained_company_id:0
+msgid "Chained Company"
+msgstr "Compania Relacionada"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Check Availability"
+msgstr "Comprobar disponibilidad"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Not Available. Moves are not confirmed."
+msgstr "No Disponible. Movimientos no estan confirmados."
+
+#. module: stock
+#: help:product.product,track_incoming:0
+msgid ""
+"Forces to specify a Production Lot for all moves containing this product and "
+"coming from a Supplier Location"
+msgstr ""
+"Forces to specify a Production Lot for all moves containing this product and "
+"coming from a Supplier Location"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
+msgid "Future Stock Moves"
+msgstr "Movimientos de stock futuros"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-gtk-select-all"
+msgstr "terp-gtk-select-all"
+
+#. module: stock
+#: field:stock.move,move_history_ids2:0
+msgid "Move History (parent moves)"
+msgstr "Historial Movimientos (movimientos padre)"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Extended options..."
+msgstr "Opciones Extendidas..."
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Stock"
+msgstr "Stock Futuro"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#, python-format
+msgid "Error"
+msgstr "Error"
+
+#. module: stock
+#: field:stock.ups.final,xmlfile:0
+msgid "XML File"
+msgstr "Archivo XML"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: model:res.request.link,name:stock.req_link_tracking
+#: field:stock.inventory.line,prod_lot_id:0
+#: report:stock.inventory.move:0
+#: field:stock.move,prodlot_id:0
+#: field:stock.move.split.lines.exist,prodlot_id:0
+#: view:stock.production.lot:0
+#, python-format
+msgid "Production Lot"
+msgstr "Lote de producción"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_traceability
+#: view:stock.move:0
+#: view:stock.picking:0
+#: view:stock.production.lot:0
+#: view:stock.tracking:0
+msgid "Traceability"
+msgstr "Trazabilidad"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "To invoice"
+msgstr "Para facturar"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-mail-message-new"
+msgstr "terp-mail-message-new"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_location_form
+#: model:ir.ui.menu,name:stock.menu_action_location_form
+#: view:stock.picking:0
+msgid "Locations"
+msgstr "Ubicaciones"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "General Information"
+msgstr "Información general"
+
+#. module: stock
+#: field:stock.production.lot,prefix:0
+msgid "Prefix"
+msgstr "Prefijo"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_DISCONNECT"
+msgstr "STOCK_DISCONNECT"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-product"
+msgstr "terp-product"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Moves"
+msgstr "Movimientos"
+
+#. module: stock
+#: view:report.stock.move:0
+#: field:report.stock.move,location_dest_id:0
+#: field:stock.picking,location_dest_id:0
+msgid "Dest. Location"
+msgstr "Ubicación Dest."
+
+#. module: stock
+#: help:stock.move,product_packaging:0
+msgid ""
+"It specifies attributes of packaging like type, quantity of packaging,etc."
+msgstr ""
+"It specifies attributes of packaging like type, quantity of packaging,etc."
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "quantity."
+msgstr "cantidad."
+
+#. module: stock
+#: view:stock.move:0
+msgid "Expected"
+msgstr "Prevista"
+
+#. module: stock
+#: selection:report.stock.inventory,location_type:0
+#: model:stock.location,name:stock.location_production
+#: selection:stock.location,usage:0
+msgid "Production"
+msgstr "Produccíon"
+
+#. module: stock
+#: view:stock.split.into:0
+msgid "Split Move"
+msgstr "Dividir movimiento"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid ""
+"There are no products to return (only lines in Done state and not fully "
+"returned yet can be returned)!"
+msgstr ""
+"There are no products to return (only lines in Done state and not fully "
+"returned yet can be returned)!"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_split
+msgid "Split in Production lots"
+msgstr "Dividir en lotes de producción"
+
+#. module: stock
+#: view:report.stock.inventory:0
+msgid "Real"
+msgstr "Real"
+
+#. module: stock
+#: report:stock.picking.list:0
+#: view:stock.production.lot.revision:0
+#: field:stock.production.lot.revision,description:0
+msgid "Description"
+msgstr "Descripción"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "May"
+msgstr "Mayo"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_DIALOG_AUTHENTICATION"
+msgstr "STOCK_DIALOG_AUTHENTICATION"
+
+#. module: stock
+#: help:product.template,property_stock_account_output:0
+msgid ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"outgoing stock moves will be posted in this account. If not set on the "
+"product, the one from the product category is used."
+msgstr ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"outgoing stock moves will be posted in this account. If not set on the "
+"product, the one from the product category is used."
+
+#. module: stock
+#: view:stock.tracking:0
+msgid "Upstream traceability"
+msgstr "Trazabilidad hacia abajo"
+
+#. module: stock
+#: report:lot.stock.overview_all:0
+msgid "Location Content"
+msgstr "Contenido Ubicación"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Produced Qty"
+msgstr "Ctdad. Producida"
+
+#. module: stock
+#: field:product.category,property_stock_account_input_categ:0
+#: field:product.template,property_stock_account_input:0
+#: field:stock.change.standard.price,stock_account_input:0
+msgid "Stock Input Account"
+msgstr "Cuenta entrada stock"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Picking"
+msgstr "Movimiento"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_report_prodlots
+msgid "Stock report by production lots"
+msgstr "Reporte de inventario por lotes de producción"
+
+#. module: stock
+#: view:stock.location:0
+#: selection:stock.location,chained_location_type:0
+#: view:stock.move:0
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "February"
+msgstr "Febrero"
+
+#. module: stock
+#: view:stock.production.lot:0
+msgid "Production Lot Identification"
+msgstr "Identificación del lote de producción"
+
+#. module: stock
+#: field:stock.location,scrap_location:0
+#: view:stock.move.scrap:0
+msgid "Scrap Location"
+msgstr "Ubocación Desperdicio/Chatarra"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "April"
+msgstr "Abril"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:stock.move:0
+msgid "Future"
+msgstr "Futuro"
+
+#. module: stock
+#: field:stock.invoice.onshipping,invoice_date:0
+msgid "Invoiced date"
+msgstr "Fecha Facturación"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree
+#: view:stock.picking:0
+msgid "Outgoing Deliveries"
+msgstr "Envios Salida"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_output
+msgid "Output"
+msgstr "Salida"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_JUSTIFY_RIGHT"
+msgstr "STOCK_JUSTIFY_RIGHT"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-mrp"
+msgstr "terp-mrp"
+
+#. module: stock
+#: help:stock.location,chained_picking_type:0
+msgid ""
+"Shipping Type of the Picking List that will contain the chained move (leave "
+"empty to automatically detect the type based on the source and destination "
+"locations)."
+msgstr ""
+"Shipping Type of the Picking List that will contain the chained move (leave "
+"empty to automatically detect the type based on the source and destination "
+"locations)."
+
+#. module: stock
+#: selection:stock.move.split.lines,action:0
+msgid "Keep in one lot"
+msgstr "Mantener en un lote"
+
+#. module: stock
+#: view:product.product:0
+msgid "Cost Price:"
+msgstr "Precio Costo:"
+
+#. module: stock
+#: help:stock.move,move_dest_id:0
+msgid "Optional: next stock move when chaining them"
+msgstr "Opcional: next stock move when chaining them"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_MEDIA_NEXT"
+msgstr "STOCK_MEDIA_NEXT"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_REDO"
+msgstr "STOCK_REDO"
+
+#. module: stock
+#: view:report.stock.move:0
+#: field:report.stock.move,year:0
+msgid "Year"
+msgstr "Año"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_locations
+msgid "Physical Locations"
+msgstr "Ubicaciones físicas"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_partial_move
+msgid "Partial Move"
+msgstr "Movimiento Parcial"

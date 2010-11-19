@@ -55,9 +55,9 @@
         'product_view.xml',
         'pricelist_view.xml',
         'partner_view.xml',
-        'company_view.xml',
         'process/product_process.xml'
     ],
+    'test':['test/product_report.yml'],
     'installable': True,
     'active': False,
     'certificate': '0068861431437',

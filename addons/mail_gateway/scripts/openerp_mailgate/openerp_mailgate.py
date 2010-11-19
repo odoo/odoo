@@ -28,7 +28,7 @@ import xmlrpclib
 import email
 
 class rpc_proxy(object):
-    def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):
+    def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='openerp'):
         self.rpc = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (host, port, path), allow_none=True)
         self.user_id = uid
         self.passwd = passwd
@@ -49,11 +49,13 @@ class email_parser(object):
         self.email_default = email_default
 
 
-    def parse(self, message):
+    def parse(self, message, custom_values=None):
+        if custom_values is None:
+            custom_values = {}
         try:
             # pass message as bytes because we don't know its encoding until we parse its headers
             # and hence can't convert it to utf-8 for transport
-            res_id = self.rpc('email.server.tools', 'process_email', self.model, xmlrpclib.Binary(message))
+            res_id = self.rpc('email.server.tools', 'process_email', self.model, xmlrpclib.Binary(message), custom_values)
         except Exception, e:
             logger = logging.getLogger('mail-gateway')
             logger.warning('Failed to process incoming email. Source of the failed mail is available at debug level.', exc_info=True)
@@ -70,9 +72,10 @@ if __name__ == '__main__':
     parser.add_option("-p", "--password", dest="password", help="Password of the user in OpenERP", default='admin')
     parser.add_option("-o", "--model", dest="model", help="Name or ID of crm model", default="crm.lead")
     parser.add_option("-m", "--default", dest="default", help="Default eMail in case of any trouble.", default=None)
-    parser.add_option("-d", "--dbname", dest="dbname", help="Database name (default: terp)", default='terp')
+    parser.add_option("-d", "--dbname", dest="dbname", help="Database name (default: openerp)", default='openerp')
     parser.add_option("--host", dest="host", help="Hostname of the OpenERP Server", default="localhost")
     parser.add_option("--port", dest="port", help="Port of the OpenERP Server", default="8069")
+    parser.add_option("--custom-values", dest="custom_values", help="Add Custom Values to the object", default=None)
 
     (options, args) = parser.parse_args()
 
@@ -82,6 +85,12 @@ if __name__ == '__main__':
 
     msg_txt = sys.stdin.read()
 
-    parser.parse(msg_txt)
+    custom_values = {}
+    try:
+        custom_values = dict(eval(options.custom_values))
+    except:
+        pass
+
+    parser.parse(msg_txt, custom_values)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

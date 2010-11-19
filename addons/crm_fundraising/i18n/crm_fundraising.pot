@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 12:29:52+0000\n"
-"PO-Revision-Date: 2010-08-20 12:29:52+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:55+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,11 +34,6 @@ msgstr ""
 #. module: crm_fundraising
 #: field:crm.fundraising.report,probability:0
 msgid "Avg. Probability"
-msgstr ""
-
-#. module: crm_fundraising
-#: help:crm.fundraising,canal_id:0
-msgid "The channels represent the different communication modes available with the customer. With each commercial opportunity, you can indicate                     the canall which is this opportunity source."
 msgstr ""
 
 #. module: crm_fundraising
@@ -75,11 +70,6 @@ msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
-msgid "This Year"
-msgstr ""
-
-#. module: crm_fundraising
-#: view:crm.fundraising.report:0
 msgid "Cases"
 msgstr ""
 
@@ -92,6 +82,11 @@ msgstr ""
 #: view:crm.fundraising.report:0
 #: field:crm.fundraising.report,day:0
 msgid "Day"
+msgstr ""
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Add Internal Note"
 msgstr ""
 
 #. module: crm_fundraising
@@ -115,9 +110,8 @@ msgid "Amount"
 msgstr ""
 
 #. module: crm_fundraising
-#: selection:crm.fundraising,state:0
-#: selection:crm.fundraising.report,state:0
-msgid "Cancelled"
+#: model:crm.case.categ,name:crm_fundraising.categ_fund4
+msgid "Arts And Culture"
 msgstr ""
 
 #. module: crm_fundraising
@@ -133,12 +127,12 @@ msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
-msgid "My Case"
+msgid "   Month   "
 msgstr ""
 
 #. module: crm_fundraising
-#: field:crm.fundraising,ref:0
-msgid "Reference"
+#: field:crm.fundraising,type_id:0
+msgid "Campaign"
 msgstr ""
 
 #. module: crm_fundraising
@@ -171,6 +165,7 @@ msgid "Partner"
 msgstr ""
 
 #. module: crm_fundraising
+#: model:ir.actions.act_window,name:crm_fundraising.action_report_crm_fundraising
 #: model:ir.ui.menu,name:crm_fundraising.menu_report_crm_fundraising_tree
 msgid "Fundraising Analysis"
 msgstr ""
@@ -182,24 +177,28 @@ msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Estimates"
+msgid "Misc"
 msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
 #: field:crm.fundraising.report,section_id:0
 msgid "Section"
 msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Dates"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
 #: field:crm.fundraising,priority:0
 msgid "Priority"
+msgstr ""
+
+#. module: crm_fundraising
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: crm_fundraising
@@ -214,6 +213,7 @@ msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
+#: view:crm.fundraising.report:0
 msgid "Payment Mode"
 msgstr ""
 
@@ -243,11 +243,10 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
+#: field:crm.fundraising,date_closed:0
 #: selection:crm.fundraising,state:0
-#: view:crm.fundraising.report:0
 #: selection:crm.fundraising.report,state:0
-msgid "Pending"
+msgid "Closed"
 msgstr ""
 
 #. module: crm_fundraising
@@ -276,15 +275,19 @@ msgid "History Information"
 msgstr ""
 
 #. module: crm_fundraising
-#: field:crm.fundraising,date_closed:0
-#: selection:crm.fundraising,state:0
-#: selection:crm.fundraising.report,state:0
-msgid "Closed"
+#: view:crm.fundraising:0
+msgid "Dates"
 msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,partner_name2:0
 msgid "Employee Email"
+msgstr ""
+
+#. module: crm_fundraising
+#: selection:crm.fundraising,state:0
+#: selection:crm.fundraising.report,state:0
+msgid "Cancelled"
 msgstr ""
 
 #. module: crm_fundraising
@@ -295,11 +298,6 @@ msgstr ""
 #. module: crm_fundraising
 #: view:crm.fundraising:0
 msgid "Contact"
-msgstr ""
-
-#. module: crm_fundraising
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: crm_fundraising
@@ -318,10 +316,19 @@ msgid "Number of Days to close the case"
 msgstr ""
 
 #. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "References"
+msgstr ""
+
+#. module: crm_fundraising
 #: view:crm.fundraising.report:0
-#: model:ir.actions.act_window,name:crm_fundraising.action_report_crm_fundraising
 #: model:ir.module.module,description:crm_fundraising.module_meta_information
 msgid "Fundraising"
+msgstr ""
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.action_report_crm_fundraising
+msgid "Have a general overview of all fund raising activities by sorting them with specific criteria such as the estimated revenue, average success probability and delay to close."
 msgstr ""
 
 #. module: crm_fundraising
@@ -330,8 +337,8 @@ msgid "September"
 msgstr ""
 
 #. module: crm_fundraising
-#: selection:crm.fundraising.report,month:0
-msgid "December"
+#: view:crm.fundraising:0
+msgid "Communication"
 msgstr ""
 
 #. module: crm_fundraising
@@ -366,6 +373,16 @@ msgid "Fundraising Stages"
 msgstr ""
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Salesman"
+msgstr ""
+
+#. module: crm_fundraising
+#: field:crm.fundraising,ref:0
+msgid "Reference"
+msgstr ""
+
+#. module: crm_fundraising
 #: field:crm.fundraising,ref2:0
 msgid "Reference 2"
 msgstr ""
@@ -379,12 +396,19 @@ msgid "Category"
 msgstr ""
 
 #. module: crm_fundraising
-#: model:crm.case.categ,name:crm_fundraising.categ_fund4
-msgid "Arts And Culture"
+#: model:ir.actions.act_window,help:crm_fundraising.crm_case_category_act_fund_all1
+msgid "If you need to support your organization or a campaign, with 'Fund Raising' you can track all you fund raising activities. The search list allows you to filter by funds description, email, history and probability of success."
+msgstr ""
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "  Year  "
 msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,planned_cost:0
+#: view:crm.fundraising.report:0
+#: field:crm.fundraising.report,planned_cost:0
 msgid "Planned Costs"
 msgstr ""
 
@@ -411,8 +435,11 @@ msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: crm_fundraising
+#: view:crm.fundraising:0
+#: selection:crm.fundraising,state:0
 #: view:crm.fundraising.report:0
-msgid "7 Days"
+#: selection:crm.fundraising.report,state:0
+msgid "Pending"
 msgstr ""
 
 #. module: crm_fundraising
@@ -452,14 +479,13 @@ msgid "Phone"
 msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
 #: field:crm.fundraising.report,user_id:0
 msgid "User"
 msgstr ""
 
 #. module: crm_fundraising
-#: model:crm.case.resource.type,name:crm_fundraising.type_fund2
-msgid "Cheque"
+#: view:crm.fundraising.report:0
+msgid "#Fundraising"
 msgstr ""
 
 #. module: crm_fundraising
@@ -478,11 +504,6 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: crm_fundraising
-#: model:ir.ui.menu,name:crm_fundraising.menu_crm_fundraising_resource_act
-msgid "Resource Type"
-msgstr ""
-
-#. module: crm_fundraising
 #: view:crm.fundraising.report:0
 msgid "Search"
 msgstr ""
@@ -498,8 +519,13 @@ msgid "January"
 msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "#Fundraising"
+#: model:crm.case.resource.type,name:crm_fundraising.type_fund2
+msgid "Cheque"
+msgstr ""
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_fund_categ_action
+msgid "Manage and define the fund raising categories you want to be maintained in the system."
 msgstr ""
 
 #. module: crm_fundraising
@@ -529,7 +555,7 @@ msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Misc"
+msgid "Estimates"
 msgstr ""
 
 #. module: crm_fundraising
@@ -547,8 +573,8 @@ msgid "Done"
 msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Communication"
+#: selection:crm.fundraising.report,month:0
+msgid "December"
 msgstr ""
 
 #. module: crm_fundraising
@@ -563,6 +589,11 @@ msgstr ""
 #: view:crm.fundraising.report:0
 #: selection:crm.fundraising.report,state:0
 msgid "Open"
+msgstr ""
+
+#. module: crm_fundraising
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: crm_fundraising
@@ -597,7 +628,7 @@ msgid "CRM Fundraising Report"
 msgstr ""
 
 #. module: crm_fundraising
-#: field:crm.fundraising,type_id:0
+#: field:crm.fundraising.report,type_id:0
 msgid "Fundraising Type"
 msgstr ""
 
@@ -605,6 +636,11 @@ msgstr ""
 #: view:crm.fundraising.report:0
 #: field:crm.fundraising.report,amount_revenue_prob:0
 msgid "Est. Rev*Prob."
+msgstr ""
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_fundraising_stage_act
+msgid "Create and manage fund raising activity categories you want to be maintained in the system."
 msgstr ""
 
 #. module: crm_fundraising
@@ -628,13 +664,8 @@ msgid "Employee's Name"
 msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "This Month"
-msgstr ""
-
-#. module: crm_fundraising
-#: model:ir.actions.act_window,name:crm_fundraising.crm_fundraising_resource_act
-msgid "Fundraising Resource Type"
+#: help:crm.fundraising,canal_id:0
+msgid "The channels represent the different communication  modes available with the customer."
 msgstr ""
 
 #. module: crm_fundraising
@@ -646,6 +677,11 @@ msgid "The state is set to 'Draft', when a case is created.                     
 msgstr ""
 
 #. module: crm_fundraising
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0
 msgid "February"
 msgstr ""
@@ -654,11 +690,6 @@ msgstr ""
 #: view:crm.fundraising:0
 #: field:crm.fundraising,name:0
 msgid "Name"
-msgstr ""
-
-#. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Communication history"
 msgstr ""
 
 #. module: crm_fundraising
@@ -677,8 +708,8 @@ msgid "April"
 msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "References"
+#: view:crm.fundraising.report:0
+msgid "My Case(s)"
 msgstr ""
 
 #. module: crm_fundraising
@@ -704,6 +735,7 @@ msgstr ""
 #. module: crm_fundraising
 #: view:crm.fundraising:0
 #: field:crm.fundraising,section_id:0
+#: view:crm.fundraising.report:0
 msgid "Sales Team"
 msgstr ""
 

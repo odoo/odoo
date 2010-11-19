@@ -31,7 +31,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 
 class AccountMoveLine(osv.osv):
     """ Inherit account.move.line in order to add a custom link

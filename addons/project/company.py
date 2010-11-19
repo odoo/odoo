@@ -31,13 +31,5 @@ class res_company(osv.osv):
 "forget to setup the right unit of measure in your employees.",
         ),
     }
-    
-    def write(self, cr, uid, ids,vals, context={}):
-        task_ids=self.pool.get('project.task').search(cr, uid, [('state','in',['open', 'pending'])])
-        if ('project_time_mode_id' in vals) and task_ids:
-            raise osv.except_osv(_('Error !'), _('You cannot modify Project Time Unit as there are open or pending tasks created with current time unit.'))
-        return super(res_company,self).write(cr, uid, ids, vals, context=context)
-
 res_company()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

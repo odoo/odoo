@@ -330,7 +330,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.invoice_line,'l') ]]</para>
-      <blockTable colWidths="170.0,50.0,50.0,50.0,29.0,22.0,51.0,29.0,50.0,21.0" style="Table_Invoice_Line_Content">
+      <blockTable colWidths="170.0,50.0,50.0,50.0,29.0,22.0,51.0,29.0,50.0,8.0" style="Table_Invoice_Line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ l.name ]]</para>
@@ -360,7 +360,7 @@
             <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ o.currency_id.code ]]</para>
+            <para style="terp_default_Right_9">[[ o.currency_id.symbol ]]</para>
           </td>
         </tr>
         <tr>
@@ -437,7 +437,7 @@
           </blockTable>
         </td>
         <td>
-          <blockTable colWidths="120.0,91.0,29.0" style="Table_eclu_Taxes_Total">
+          <blockTable colWidths="120.0,91.0,8.0" style="Table_eclu_Taxes_Total">
             <tr>
               <td>
                 <para style="terp_default_Bold_9">Total (excl. taxes):</para>
@@ -446,14 +446,14 @@
                 <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ o.currency_id.code ]]</para>
+                <para style="terp_default_Right_9">[[ o.currency_id.symbol ]]</para>
               </td>
             </tr>
           </blockTable>
           <para style="terp_default_2">
             <font color="white"> </font>
           </para>
-          <blockTable colWidths="120.0,92.0,28.0" style="Table_Taxes_Total">
+          <blockTable colWidths="120.0,92.0,8.0" style="Table_Taxes_Total">
             <tr>
               <td>
                 <para style="terp_default_Bold_9">Taxes:</para>
@@ -462,14 +462,14 @@
                 <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ o.currency_id.code ]]</para>
+                <para style="terp_default_Right_9">[[ o.currency_id.symbol ]]</para>
               </td>
             </tr>
           </blockTable>
           <para style="terp_default_2">
             <font color="white"> </font>
           </para>
-          <blockTable colWidths="119.0,93.0,28.0" style="Table_Total_Include_Taxes">
+          <blockTable colWidths="119.0,93.0,8.0" style="Table_Total_Include_Taxes">
             <tr>
               <td>
                 <para style="terp_default_Bold_9">Total (inclu. taxes):</para>
@@ -478,7 +478,7 @@
                 <para style="terp_default_Right_9">[[ formatLang(o.amount_total) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ o.currency_id.code ]]</para>
+                <para style="terp_default_Right_9">[[ o.currency_id.symbol ]]</para>
               </td>
             </tr>
           </blockTable>
@@ -488,7 +488,7 @@
     <blockTable colWidths="530.0" style="Table_Main_Table">
       <tr>
         <td>
-          <para style="terp_default_8">[[ format(o.amount_tax or removeParentNode('blockTable')) ]]</para>
+          <para style="terp_default_8">[[ o.amount_tax and formatLang(o.amount_tax, digits=get_digits(dp='Account')) or removeParentNode('blockTable') ]]</para>
           <blockTable colWidths="54.0,58.0,67.0" style="Table_Tax_Header">
             <tr>
               <td>
@@ -516,10 +516,10 @@
                 <para style="terp_default_Centre_8">[[ t.name ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ formatLang(t.base) ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(t.base, digits=get_digits(dp='Account')) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ formatLang(t.amount) or 0.00 ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(t.amount, digits=get_digits(dp='Account')) ]]</para>
               </td>
             </tr>
           </blockTable>

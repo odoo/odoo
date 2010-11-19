@@ -31,7 +31,7 @@ class purchase_report(osv.osv):
     _description = "Purchases Orders"
     _auto = False
     _columns = {
-        'date': fields.date('Order Date', readonly=True),
+        'date': fields.date('Order Date', readonly=True, help="Date on which this document has been created"),
         'name': fields.char('Year',size=64,required=False, readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'state': fields.selection([('draft', 'Request for Quotation'),
@@ -52,11 +52,12 @@ class purchase_report(osv.osv):
         'date_approve':fields.date('Date Approved', readonly=True),
         'expected_date':fields.date('Expected Date', readonly=True),
         'validator' : fields.many2one('res.users', 'Validated By', readonly=True),
+        'product_uom' : fields.many2one('product.uom', 'Product UoM', required=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
         'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
         'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
-        'quantity': fields.float('# of Products', readonly=True),
+        'quantity': fields.float('Quantity', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
@@ -64,6 +65,7 @@ class purchase_report(osv.osv):
         'nbr': fields.integer('# of Lines', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'category_id': fields.many2one('product.category', 'Category', readonly=True)
 
     }
     _order = 'name desc,price_total desc'
@@ -89,6 +91,8 @@ class purchase_report(osv.osv):
                     s.create_uid as user_id,
                     s.company_id as company_id,
                     l.product_id,
+                    t.categ_id as category_id,
+                    l.product_uom as product_uom,
                     s.location_id as location_id,
                     sum(l.product_qty*u.factor) as quantity,
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
@@ -114,12 +118,14 @@ class purchase_report(osv.osv):
                     l.price_unit,
                     s.date_approve,
                     l.date_planned,
+                    l.product_uom,
                     date_trunc('day',s.minimum_planned_date),
                     s.partner_address_id,
                     s.pricelist_id,
                     s.validator,
                     s.dest_address_id,
                     l.product_id,
+                    t.categ_id,
                     s.date_order,
                     to_char(s.date_order, 'YYYY'),
                     to_char(s.date_order, 'MM'),

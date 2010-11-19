@@ -21,10 +21,11 @@
 ##############################################################################
 
 import time
-import mx.DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv
-from tools.translate import _
+import tools
 
 
 class one2many_mod3(fields.one2many):
@@ -35,8 +36,9 @@ class one2many_mod3(fields.one2many):
         for obj in obj.browse(cr, user, ids, context=context):
             res[obj.id] = []
             list_ids = []
-            for item in obj.user_id.child_ids:
-                list_ids.append(item.id)
+            children = obj.pool.get('report_account_analytic.planning')._child_compute(cr, user, [obj.user_id.id], '', [])
+            for u_id in children.get(obj.user_id.id, []):
+                list_ids.append(u_id)
             list_ids.append(obj.user_id.id)
             ids2 = obj.pool.get(self._obj).search(cr, user, ['&',(self._fields_id,'=',obj.id),'|',('user_id','in',list_ids),('user_id','=',False)], limit=self._limit)
             for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
@@ -48,6 +50,35 @@ class one2many_mod3(fields.one2many):
 class report_account_analytic_planning(osv.osv):
     _name = "report_account_analytic.planning"
     _description = "Planning"
+
+    def _child_compute(self, cr, uid, ids, name, args, context=None):
+        if context is None:
+            context = {}
+        obj_dept = self.pool.get('hr.department')
+        obj_user = self.pool.get('res.users')
+        result = {}
+        for user_id in ids:
+            child_ids = []
+            cr.execute('SELECT dept.id FROM hr_department AS dept \
+                        LEFT JOIN hr_employee AS emp ON dept.manager_id = emp.id \
+                        WHERE emp.id IN \
+                            (SELECT emp.id FROM hr_employee \
+                                JOIN resource_resource r ON r.id = emp.resource_id WHERE r.user_id=' + str(user_id) + ') ')
+            mgnt_dept_ids = [x[0] for x in cr.fetchall()]
+            ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)], context=context)
+            if ids_dept:
+                data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'], context=context)
+                childs = map(lambda x: x['member_ids'], data_dept)
+                childs = tools.flatten(childs)
+                childs = obj_user.search(cr, uid, [('id', 'in', childs),('active', '=', True)], context=context)
+                if user_id in childs:
+                    childs.remove(user_id)
+                child_ids.extend(tools.flatten(childs))
+                set = {}
+                map(set.__setitem__, child_ids, [])
+                child_ids = set.keys()
+            result[user_id] = child_ids
+        return result
 
     def _get_total_planned(self, cr, uid, ids, name, args, context=None):
         result = {}
@@ -107,8 +138,8 @@ class report_account_analytic_planning(osv.osv):
         'total_free': fields.function(_get_total_free, method=True, string='Total Free'),
     }
     _defaults = {
-        'date_from': time.strftime('%Y-%m-01'),
-        'date_to': (mx.DateTime.now()+mx.DateTime.RelativeDateTime(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
+        'date_from': lambda *a: time.strftime('%Y-%m-01'),
+        'date_to': lambda *a: (datetime.now()+relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
         'user_id': lambda self, cr, uid, c: uid,
         'state': 'draft',
         'business_days': 20,
@@ -183,7 +214,7 @@ class report_account_analytic_planning_line(osv.osv):
         return result
 
     _columns = {
-        'account_id': fields.many2one('account.analytic.account', 'Analytic account', required=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'planning_id': fields.many2one('report_account_analytic.planning', 'Planning', required=True, ondelete='cascade'),
         'user_id': fields.many2one('res.users', 'User'),
         'amount': fields.float('Quantity', required=True),
@@ -403,7 +434,7 @@ class report_account_analytic_planning_account(osv.osv):
                     SELECT id
                     FROM report_account_analytic_planning_line
                     WHERE planning_id = %s AND account_id=%s
-                )""", (line.planning_id.id,line.account_id.id ))
+                )""", (line.planning_id.id, line.account_id and line.account_id.id or None))
             result[line.id] = cr.fetchall()[0][0] / div * div2
         return result
 
@@ -421,7 +452,7 @@ class report_account_analytic_planning_account(osv.osv):
             cr.execute("""
                 SELECT SUM(unit_amount/uom.factor) FROM account_analytic_line acc
                 LEFT JOIN product_uom uom ON (uom.id = acc.product_uom_id)
-                WHERE acc.date>=%s and acc.date<=%s and acc.account_id=%s""", (line.planning_id.date_from, line.planning_id.date_to, line.account_id.id, ))
+                WHERE acc.date>=%s and acc.date<=%s and acc.account_id=%s""", (line.planning_id.date_from, line.planning_id.date_to, line.account_id and line.account_id.id or None))
             res = cr.fetchall()[0][0]
             if res:
                 result[line.id] = res * div2
@@ -495,9 +526,9 @@ class report_account_analytic_planning_stat(osv.osv):
             if line.user_id:
                 cr.execute('''SELECT sum(acc.unit_amount/uom.factor) FROM account_analytic_line acc
                 LEFT JOIN product_uom uom ON (uom.id = acc.product_uom_id)
-WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.id, line.account_id.id, line.planning_id.date_from, line.planning_id.date_to))
+WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.id, line.account_id and line.account_id.id or None, line.planning_id.date_from, line.planning_id.date_to))
             else:
-                cr.execute('SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s', (line.account_id.id, line.planning_id.date_from, line.planning_id.date_to))
+                cr.execute('SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s', (line.account_id and line.account_id.id or None, line.planning_id.date_from, line.planning_id.date_to))
 
         sum = cr.fetchone()
         if sum and sum[0]:
@@ -532,7 +563,7 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
                     project_id IN (select id from project_project where analytic_account_id=%s) AND
                     date_end>=%s AND
                     date_end<=%s''', (
-                line.account_id.id,
+                line.account_id and line.account_id.id or None,
                 line.planning_id.date_from,
                 line.planning_id.date_to)
             )
@@ -545,7 +576,7 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
         'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
         'user_id': fields.many2one('res.users', 'User'),
         'manager_id': fields.many2one('res.users', 'Manager'),
-        'account_id': fields.many2one('account.analytic.account', 'Account', required=True),
+        'account_id': fields.many2one('account.analytic.account', 'Account'),
         'sum_amount': fields.float('Planned Days', required=True),
         'sum_amount_real': fields.function(_sum_amount_real, method=True, string='Timesheet'),
         'sum_amount_tasks': fields.function(_sum_amount_tasks, method=True, string='Tasks'),

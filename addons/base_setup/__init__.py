@@ -21,7 +21,6 @@
 
 import installer
 import todo
-import gtk_contact_form
 import wizard
 import os
 import base64
@@ -60,25 +59,15 @@ class base_setup_config_choice(osv.osv_memory):
          'config_logo' : _get_image
         }
 
-    def set_default_menu(self, cr, uid, menu, context=None):
-        user = self.pool.get('res.users')\
-                        .browse(cr, uid, uid, context=context)
-
-        user.write({'action_id': menu.id,
-                    'menu_id': menu.id})
-
-    def get_default_menu(self, cr, uid, context=None):
-        actions = self.pool.get('ir.actions.act_window')
-
-        current_menu_id = actions.search(cr, uid, [('name','=','Menu')],
-                                         context=context)
-        assert len(current_menu_id) == 1,\
-               'A given user should only have one menu item'
-        return actions.browse(cr, uid, current_menu_id[0], context=context)
+    def reset_menu(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        menu_id = user._get_menu()
+        user.write({'action_id': False,
+                    'menu_id': menu_id})
+        return self.pool.get('ir.actions.act_window').browse(cr, uid, menu_id, context=context)
 
     def menu(self, cr, uid, ids, context=None):
-        menu = self.get_default_menu(cr, uid, context=context)
-        self.set_default_menu(cr, uid, menu, context=context)
+        menu = self.reset_menu(cr, uid, context=context)
 
         if menu.view_id.id:
             view_id = (menu.view_id.id, menu.view_id.name)
@@ -98,9 +87,7 @@ class base_setup_config_choice(osv.osv_memory):
         }
 
     def config(self, cr, uid, ids, context=None):
-        menu = self.get_default_menu(cr, uid, context=context)
-        self.set_default_menu(cr, uid, menu, context=context)
-
+        self.reset_menu(cr, uid, context=context)
         return self.pool.get('res.config').next(cr, uid, [], context=context)
 
 base_setup_config_choice()

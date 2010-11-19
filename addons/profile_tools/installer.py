@@ -25,15 +25,17 @@ class misc_tools_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     _columns = {
-        'lunch':fields.boolean('Lunch',help='Helps to manage Lunch Orders'),
-        'subscription':fields.boolean('Recurring Documents',help='Helps to add subscription on documents'),
-        'survey':fields.boolean('Survey',help='Manages Custom Surveys'),
-        'idea':fields.boolean('Idea',help='Manages ideas and votes'),
-        'audittrail':fields.boolean('Audit Trail',help="Lets you to track user's operations on specific Objects."),
+        'lunch':fields.boolean('Lunch',help='A simple module to help you to manage Lunch orders.'),
+        'subscription':fields.boolean('Recurring Documents',help='Helps to generate automatically recurring documents.'),
+        'survey':fields.boolean('Survey',help='Allows you to organize surveys.'),
+        'idea':fields.boolean('Ideas Box',help='Promote ideas of the employees, votes and discussion on best ideas.'),
+        'share':fields.boolean('Web Share',help='Allows you to give restricted access to your OpenERP documents to external users, ' \
+            'such as customers, suppliers, or accountants. You can share any OpenERP Menu such as your project tasks, support requests, invoices, etc.'),
+        'pad': fields.boolean('Native pad integration',
+            help="This module creates a tighter integration between a Pad "
+                 "instance of your choosing and your OpenERP Web Client by "
+                 "letting you easily link pads to OpenERP objects via "
+                 "OpenERP attachments."),
     }
-    _defaults = {
-        'lunch': True,
-    }
-
 misc_tools_installer()
 

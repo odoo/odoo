@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="vat1" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">IVA Cobrado (12%)(12.0%)</field>
+      <field name="amount">0.120000</field>
+      <field name="type">percent</field>
+      <field name="account_collected_id" ref="210401"/>
+      <field name="account_paid_id" ref="210401"/>
+      <field name="base_code_id" ref="vat_code_base_due"/>
+      <field name="tax_code_id" ref="vat_code_due_tva"/>
+      <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
+      <field name="ref_tax_code_id" ref="vat_code_payable"/>
+    </record>
+
+    <record id="vat2" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">IVA Pagado (12%)(12.0%)</field>
+      <field name="amount">0.120000</field>
+      <field name="type">percent</field>
+      <field name="account_collected_id" ref="210401"/>
+      <field name="account_paid_id" ref="210401"/>
+      <field name="base_code_id" ref="vat_code_base_due"/>
+      <field name="tax_code_id" ref="vat_code_due_tva"/>
+      <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
+      <field name="ref_tax_code_id" ref="vat_code_payable"/>
+    </record>
+
+    <record id="ret1" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Retencion (8%)(8.0%)</field>
+      <field name="amount">-0.080000</field>
+      <field name="type">percent</field>
+      <field name="account_collected_id" ref="210403"/>
+      <field name="account_paid_id" ref="210403"/>
+      <field name="base_code_id" ref="vat_code_base_due"/>
+      <field name="tax_code_id" ref="vat_code_due_tva"/>
+      <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
+      <field name="ref_tax_code_id" ref="vat_code_payable"/>
+    </record>
+
+    <record id="ret2" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Retencion (30%)(30.0%)</field>
+      <field name="amount">-0.300000</field>
+      <field name="type">percent</field>
+      <field name="account_collected_id" ref="210403"/>
+      <field name="account_paid_id" ref="210403"/>
+      <field name="base_code_id" ref="vat_code_base_due"/>
+      <field name="tax_code_id" ref="vat_code_due_tva"/>
+      <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
+      <field name="ref_tax_code_id" ref="vat_code_payable"/>
+    </record>
+
+
+    <record id="ret3" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Retencion (70%)(70.0%)</field>
+      <field name="amount">-0.700000</field>
+      <field name="type">percent</field>
+      <field name="account_collected_id" ref="210403"/>
+      <field name="account_paid_id" ref="210403"/>
+      <field name="base_code_id" ref="vat_code_base_due"/>
+      <field name="tax_code_id" ref="vat_code_due_tva"/>
+      <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
+      <field name="ref_tax_code_id" ref="vat_code_payable"/>
+    </record>
+
+    <record id="ret4" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Retencion (100%)(100.0%)</field>
+      <field name="amount">-1.00000</field>
+      <field name="type">percent</field>
+      <field name="account_collected_id" ref="210403"/>
+      <field name="account_paid_id" ref="210403"/>
+      <field name="base_code_id" ref="vat_code_base_due"/>
+      <field name="tax_code_id" ref="vat_code_due_tva"/>
+      <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
+      <field name="ref_tax_code_id" ref="vat_code_payable"/>
+    </record>
+
+  </data>
+</openerp>

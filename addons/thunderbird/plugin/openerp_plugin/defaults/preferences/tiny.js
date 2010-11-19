@@ -1,6 +1,9 @@
-
+pref("network.protocol-handler.app.http","/usr/bin/firefox");
+pref("network.protocol-handler.app.https","/usr/bin/firefox");
 pref("extensions.tiny.serverurl", "http://localhost");
 pref("extensions.tiny.serverport", "8069");
+pref("extensions.tiny.webserverurl", "http://localhost:8080");
+pref("extensions.tiny.webserverport", "8080");
 pref("extensions.tiny.serverdbname", "terp");
 pref("extensions.tiny.username","admin");
 pref("extensions.tiny.password","admin");

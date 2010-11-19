@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-
+    <record id="base.user_demo" model="res.users">
+             <field name="groups_id" eval="[(4, ref('marketing.group_marketing_user')),(4, ref('base.group_sale_salesman'))]"/>
+     </record>
 <!-- Demo Data for Product -->
 	<record id="event_product_0" model="product.product">
 		<field name="list_price">68.00</field>
@@ -86,10 +88,43 @@
 		<field name="user_id" ref="base.user_root"/>
 		<field name="mail_auto_registr">True</field>
 		<field name="mail_auto_confirm">True</field>
-		<field name="mail_registr">Thanks for registrering. We will keep you informed of the modalities.</field>
-		<field name="mail_confirm">Thanks for registrering. The conference will begin at 2 PM and will be given by Mister Pinckaers.</field>
+		<field name="mail_registr">Thanks for registration. We will keep you informed of the modalities.</field>
+		<field name="mail_confirm">Thanks for registration. The conference will begin at 2 PM and will be given by Mr. Pinckaers.</field>
 	</record>
     <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
     <function model="event.event" name="button_done" eval="[ref('event_2')]"/>
+
+<!-- Demo data for Event Registration-->
+	<record id="reg_1_1" model="event.registration">
+		<field name="event_id" ref="event_1"/>
+		<field name="partner_id" ref="base.res_partner_asus"/>
+		<field name="partner_invoice_id" ref="base.res_partner_asus"/>
+		<field name="nb_register">5</field>
+		<field name="event_product">Ticket for Opera</field>
+		<field name="unit_price">24.00</field>
+	</record>
+
+	<record id="reg_1_2" model="event.registration">
+		<field name="event_id" ref="event_1"/>
+		<field name="partner_id" ref="base.res_partner_agrolait"/>
+		<field name="partner_invoice_id" ref="base.res_partner_agrolait"/>
+		<field name="nb_register">10</field>
+		<field name="event_product">Ticket for Opera</field>
+		<field name="unit_price">24.00</field>
+	</record>
+
+	 <function model="event.registration" name="check_confirm" eval="[ref('reg_1_2')]"/> 
+
+	<record id="reg_0_1" model="event.registration">
+		<field name="event_id" ref="event_0"/>
+		<field name="partner_id" ref="base.res_partner_c2c"/>
+		<field name="partner_invoice_id" ref="base.res_partner_c2c"/>
+		<field name="nb_register">6</field>
+		<field name="event_product">Ticket for Concert</field>
+		<field name="unit_price">15.50</field>
+	</record>
+
+	 <function model="event.registration" name="check_confirm" eval="[ref('reg_0_1')]"/> 
+
 	</data>
 </openerp>

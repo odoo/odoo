@@ -19,16 +19,16 @@
 #
 ##############################################################################
 
-from mx import DateTime
-from mx.DateTime import now
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 import pooler
 
 from report.interface import report_rml
 from report.interface import toxml
 
-one_week = DateTime.RelativeDateTime(days=7)
+one_week = relativedelta(days=7)
 num2day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
 def to_hour(h):
@@ -38,10 +38,12 @@ class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
         obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
-        start_date = DateTime.strptime(datas['form']['init_date'], '%Y-%m-%d')
-        end_date = DateTime.strptime(datas['form']['end_date'], '%Y-%m-%d')
-        first_monday = start_date - DateTime.RelativeDateTime(days=start_date.day_of_week)
-        last_monday = end_date + DateTime.RelativeDateTime(days=7 - end_date.day_of_week)
+        
+        start_date = datetime.strptime(datas['form']['init_date'], '%Y-%m-%d')
+        end_date = datetime.strptime(datas['form']['end_date'], '%Y-%m-%d')
+        first_monday = start_date - relativedelta(days=start_date.date().weekday())
+        last_monday = end_date + relativedelta(days=7 - end_date.date().weekday())
+        
         if last_monday < first_monday:
             first_monday, last_monday = last_monday, first_monday
 
@@ -67,7 +69,7 @@ class report_custom(report_rml):
                 order by att.name
                 '''
                 for idx in range(7):
-                    cr.execute(sql, (monday.strftime('%Y-%m-%d %H:%M:%S'), (monday + DateTime.RelativeDateTime(days=idx+1)).strftime('%Y-%m-%d %H:%M:%S'), employee_id))
+                    cr.execute(sql, (monday.strftime('%Y-%m-%d %H:%M:%S'), (monday + relativedelta(days=idx+1)).strftime('%Y-%m-%d %H:%M:%S'), employee_id))
                     attendances = cr.dictfetchall()
                     week_wh = {}
                     # Fake sign ins/outs at week ends, to take attendances across week ends into account
@@ -77,11 +79,13 @@ class report_custom(report_rml):
                     if attendances and attendances[-1]['action'] == 'sign_in':
                         attendances.append({'name': n_monday.strftime('%Y-%m-%d %H:%M:%S'), 'action': 'sign_out'})
                     # sum up the attendances' durations
+                    ldt = None
                     for att in attendances:
-                        dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
-                        if att['action'] == 'sign_out':
-                            week_wh[ldt.day_of_week] = week_wh.get(ldt.day_of_week, 0) + (dt - ldt).hours
-                        ldt = dt
+                        dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
+                        if ldt and att['action'] == 'sign_out':
+                            week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + ((dt - ldt).seconds/3600)
+                        else:
+                            ldt = dt
 
                 # Week xml representation
                 week_repr = ['<week>', '<weekstart>%s</weekstart>' % monday.strftime('%Y-%m-%d'), '<weekend>%s</weekend>' % n_monday.strftime('%Y-%m-%d')]

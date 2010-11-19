@@ -21,31 +21,82 @@
 
 
 {
-    'name': 'Stock Location Paths',
+    'name': 'Warehouse Locations Paths',
     'version': '1.0',
     'category': 'Generic Modules/Inventory Control',
     'description': """
-Manages product's path in locations.
+This module supplements the Warehouse application by adding support for per-product
+location paths, effectively implementing Push and Pull inventory flows.
 
-This module may be useful for different purposes:
-* Manages the product in his whole manufacturing chain
-* Manages different default locations by products
-* Define paths within the warehouse to route products based on operations:
+Typically this could be used to:
+* Manage product manufacturing chains
+* Manage default locations per product
+* Define routes within your warehouse according to business needs, such as:
    - Quality Control
    - After Sales Services
-   - Supplier Return
-* Manage products to be rent.
+   - Supplier Returns
+* Help rental management, by generating automated return moves for rented products
+
+Once this module is installed, an additional tab appear on the product form, where you can add
+Push and Pull flow specifications. The demo data of  CPU1 product for that push/pull :
+
+Push flows
+----------
+Push flows are useful when the arrival of certain products in a given location should always
+be followed by a corresponding move to another location, optionally after a certain delay.
+The original Warehouse application already supports such Push flow specifications on the
+Locations themselves, but these cannot be refined per-product.
+
+A push flow specification indicates which location is chained with which location, and with
+what parameters. As soon as a given quantity of products is moved in the source location,
+a chained move is automatically foreseen according to the parameters set on the flow specification
+(destination location, delay, type of move, journal, etc.) The new move can be automatically
+processed, or require a manual confirmation, depending on the parameters.
+
+Pull flows
+----------
+Pull flows are a bit different from Pull flows, in the sense that they are not related to
+the processing of product moves, but rather to the processing of procurement orders.
+What is being pulled is a need, not directly products.
+A classical example of Push flow is when you have an Outlet company, with a parent Company
+that is responsible for the supplies of the Outlet.
+
+  [ Customer ] <- A - [ Outlet ]  <- B -  [ Holding ] <~ C ~ [ Supplier ]
+
+When a new procurement order (A, coming from the confirmation of a Sale Order for example) arrives
+in the Outlet, it is converted into another procurement (B, via a Push flow of type 'move')
+requested from the Holding. When procurement order B is processed by the Holding company, and
+if the product is out of stock, it can be converted into a Purchase Order (C) from the Supplier
+(Push flow of type Purchase). The result is that the procurement order, the need, is pushed
+all the way between the Customer and Supplier.
+
+Technically, Pull flows allow to process procurement orders differently, not only depending on
+the product being considered, but also depending on which location holds the "need" for that
+product (i.e. the destination location of that procurement order).
+
+Use-Case
+--------
+
+You can use the demo data as follow:
+  CPU1: Sell some CPU1 from Shop 1 and run the scheduler
+     - Warehouse: delivery order, Shop 1: reception
+  CPU3:
+     - When receiving the product, it goes to Quality Control location then stored to shelf 2.
+     - When delivering the customer: Pick List -> Packing -> Delivery Order from Gate A
     """,
     'author': 'OpenERP SA',
-    'depends': ['procurement','stock'],
+    'depends': ['procurement','stock','sale'],
     'init_xml': [],
-    'update_xml': ['stock_location_view.xml', 'security/ir.model.access.csv', 'mrp_pull_workflow.xml'],
-    'demo_xml': [],
+    'update_xml': ['stock_location_view.xml', 'security/ir.model.access.csv', 'procurement_pull_workflow.xml'],
+    'demo_xml': [
+        'stock_location_demo_cpu1.xml',
+        'stock_location_demo_cpu3.yml',
+    ],
     'installable': True,
     'test':[
-            'test/stock_location.yml'
-            ],
+#            'test/stock_location_pull_flow.yml',
+#            'test/stock_location_push_flow.yml',
+    ],
     'active': False,
     'certificate': '0046505115101',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

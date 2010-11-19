@@ -1,36 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    	<record id="view_stock_invoice_onshipping" model="ir.ui.view">
+        <record id="view_stock_invoice_onshipping" model="ir.ui.view">
             <field name="name">Stock Invoice Onshipping</field>
             <field name="model">stock.invoice.onshipping</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Create invoices">
-					<separator colspan="4" string="Create invoices" />
-    				<field name="journal_id"/>
-    				<newline/>
-					<field name="group"/>
-					<newline/>
-					<field name="type"/>
-					<newline/>
-					<field name="invoice_date" />
-			   	    <separator string="" colspan="4" />
-					<button special="cancel" string="Cancel" icon='gtk-cancel'/>
-			       	<button name="create_invoice" string="Create Invoices" type="object" icon="gtk-ok"/>
+              <form string="Create invoice">
+                    <separator colspan="4" string="Create invoice" />
+                    <field name="journal_id"/>
+                    <newline/>
+                    <field name="group"/>
+                    <newline/>
+                    <field name="invoice_date" />
+                    <separator string="" colspan="4" />
+                    <button special="cancel" string="_Cancel" icon='gtk-cancel'/>
+                    <button name="create_invoice" string="Create" type="object" icon="terp-gtk-go-back-rtl"/>
              </form>
             </field>
-		</record>
+        </record>
 
-        <record id="action_stock_invoice_onshipping" model="ir.actions.act_window">
-             <field name="name">Create Invoice</field>
-             <field name="res_model">stock.invoice.onshipping</field>
-             <field name="type">ir.actions.act_window</field>
-             <field name="view_type">form</field>
-             <field name="view_mode">tree,form</field>
-             <field name="view_id" ref="view_stock_invoice_onshipping"/>
-             <field name="target">new</field>
-       </record>
-     
+
+        <act_window name="Create invoice"
+            res_model="stock.invoice.onshipping"
+            src_model="stock.picking"
+            key2="client_action_multi"
+            multi="True"
+            view_mode="form"
+            view_type="form"
+            target="new"
+            id="action_stock_invoice_onshipping"/>
     </data>
 </openerp>

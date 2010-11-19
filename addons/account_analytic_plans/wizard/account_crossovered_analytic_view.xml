@@ -8,20 +8,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Crossovered Analytic">
-				<group height="300" width="620">
-				    <group col="4" colspan="6">
-					    <field name="date1"/>
-					    <field name="date2"/>
-					    <field name="ref"/>
-					    <field name="empty_line"/>
-					    <separator colspan="4" string="Analytic Journal"/>
-					    <field name="journal_ids" colspan="4" nolabel="1"/>
-					</group>
-					<separator colspan="4"/>
-				    <group col="2" colspan="4">
-	            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-						<button name="print_report" string="Print" colspan="1" type="object" icon="gtk-print"/>
-					</group>
+			    <group col="4" colspan="6">
+				    <field name="date1"/>
+				    <field name="date2"/>
+				    <field name="ref" groups="analytic.group_analytic_accounting"/>
+				    <field name="empty_line"/>
+				    <separator colspan="4" string="Analytic Journal"/>
+				    <field name="journal_ids" colspan="4" nolabel="1"/>
+				</group>
+				<separator colspan="4"/>
+			    <group col="2" colspan="4">
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+					<button name="print_report" string="Print" colspan="1" type="object" icon="gtk-print"/>
 				</group>
 			</form>
             </field>

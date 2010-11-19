@@ -8,12 +8,12 @@
         res_model="crm.phonecall"
         src_model="res.partner"
         view_mode="calendar,tree,form"
-        context="{'default_partner_id': active_id, 'default_duration': 1.0}"
-        domain="[('partner_id', '=', active_id)]"
+        context="{'search_default_partner_id': [active_id], 'default_duration': 1.0}"
         groups="base.group_extended"
         />
 
-    <act_window
+    <!-- TO CONFIRM: This is fine -->
+    <!-- act_window
             id="act_crm_phonecall_crm_meeting_new"
             name="Meetings"
             res_model="crm.meeting"
@@ -21,7 +21,7 @@
             view_mode="tree,form,calendar,"
             context="{'default_duration': 4.0, 'default_phonecall_id': active_id}"
             domain="[('phonecall_id', '=', active_id)]"
-            view_type="form"/>
+            view_type="form"/-->
 
 <!-- PHONE CALLS (menu)  -->
 
@@ -31,7 +31,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="context">{"search_default_user_id":uid}</field>
+        <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
     </record>
 
@@ -57,7 +57,7 @@
     </record>
 
     <menuitem name="Phone Calls" id="menu_crm_case_phone"
-        groups="base.group_extended"
+        groups="base.group_extended,base.group_sale_salesman"
         parent="base.menu_base_partner" sequence="4" />
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_incoming0">
@@ -67,9 +67,9 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone1'))+')]'"/>
-        <field name="context" eval="'{\'set_editable\':True,\'default_state\':\'open\', \'search_default_current\':1,\'search_default_today\':1, \'default_categ_id\': ' + str(ref('categ_phone1')) +'}'"/>
+        <field name="context" eval="'{\'search_default_section_id\':section_id, \'set_editable\':True,\'default_state\':\'open\', \'search_default_current\':1,\'search_default_today\':1, \'default_categ_id\': ' + str(ref('categ_phone1')) +'}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help">Trace easily all your Inbound calls. The Inbound menu open a search view in editable mode, so you can easily modify or add a new call record. With the actions buttons convert a lead into an opportunity or plan a meeting.</field>
+        <field name="help">The Inbound Calls tool allows you to log your inbound calls on the fly. Each call you get will appear on the partner form for the traceability of every contact you get with a partner. From the call record, you can trigger a request for another call, a meeting or a business opportunity.</field>
 
     </record>
 
@@ -105,9 +105,9 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone2'))+')]'"/>
-        <field name="context" eval="'{\'default_state\':\'open\', \'search_default_current\':1, \'default_categ_id\': ' + str(ref('categ_phone2')) +'}'"/>
+        <field name="context" eval="'{\'search_default_section_id\':section_id, \'default_state\':\'open\', \'search_default_current\':1, \'default_categ_id\': ' + str(ref('categ_phone2')) +'}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help">The Outbound menu open a search view in editable mode, so you can easily modify or plan a new call. Actions buttons allows you to to make you call status evolved for a better follow up of your planned calls. During calls, convert your lead into an opportunity, plan a meeting or canceled it.</field>
+        <field name="help">Outbound Calls lists all the calls to be performed by your sales team. They can record the information about the call on the form view. These information will appear on the partner form for the traceability of every contact you get with a customer. You can import a .CSV file with a list of calls to be done for your sales team.</field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_outgoing0">

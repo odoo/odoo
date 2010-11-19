@@ -19,23 +19,29 @@
 #
 ##############################################################################
 
-from mx import DateTime
-from mx.DateTime import now
 import time
-
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 import netsvc
 import pooler
 
 from report.interface import report_rml
 from report.interface import toxml
 
-one_day = DateTime.RelativeDateTime(days=1)
-month2name = [0, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+from report import report_sxw
+
+one_day = relativedelta(days=1)
+month2name = [0, 'January', 'February', 'March', 'April', 'May', 'Jun', 'July', 'August', 'September', 'October', 'November', 'December']
 
 #def hour2str(h):
 #    hours = int(h)
 #    minutes = int(round((h - hours) * 60, 0))
 #    return '%02dh%02d' % (hours, minutes)
+
+def lengthmonth(year, month):
+    if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
+        return 29
+    return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
 class report_custom(report_rml):
 
@@ -43,7 +49,7 @@ class report_custom(report_rml):
         obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
         if context is None:
             context = {}
-        month = DateTime.DateTime(datas['form']['year'], datas['form']['month'], 1)
+        month = datetime(datas['form']['year'], datas['form']['month'], 1)
         emp_ids = context.get('active_ids', [])
         user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
         if emp_ids:
@@ -74,22 +80,105 @@ class report_custom(report_rml):
                     if attendences and attendences[-1]['action'] == 'sign_in':
                         attendences.append({'name': tomor.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
                     # sum up the attendances' durations
+                    ldt = None
                     for att in attendences:
-                        dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
-                        if att['action'] == 'sign_out':
-                            wh += (dt - ldt).hours
-                        ldt = dt
+                        dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
+                        if ldt and att['action'] == 'sign_out':
+                            wh += (dt - ldt).seconds/60/60
+                        else:
+                            ldt = dt
                     # Week xml representation
 #                    wh = hour2str(wh)
                     today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, round(wh,2))
+                    dy=(today - month).days+1
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
                 user_xml.append(user_repr % '\n'.join(days_xml))
+
+        rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+        rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
+        header_xml = '''
+        <header>
+        <date>%s</date>
+        <company>%s</company>
+        </header>
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+
+        first_date = str(month)
+        som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')
+        eom = som + timedelta(int(dy)-1)
+        day_diff=eom-som
+        date_xml=[]
+        cell=1
+        date_xml.append('<days>')
+        if day_diff.days>=30:
+            date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som.replace(day=x).strftime('%a'),x-som.day+1) for x in range(som.day, lengthmonth(som.year, som.month)+1)]
+        else:
+            if day_diff.days>=(lengthmonth(som.year, som.month)-som.day):
+                date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som.replace(day=x).strftime('%a'),x-som.day+1) for x in range(som.day, lengthmonth(som.year, som.month)+1)]
+            else:
+                date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som.replace(day=x).strftime('%a'),x-som.day+1) for x in range(som.day, eom.day+1)]
+        cell=x-som.day+1
+        day_diff1=day_diff.days-cell+1
+        width_dict={}
+        month_dict={}
+        i=1
+        j=1
+        year=som.year
+        month=som.month
+        month_dict[j]=som.strftime('%B')
+        width_dict[j]=cell
+
+        while day_diff1>0:
+            if month+i<=12:
+                if day_diff1 > lengthmonth(year,i+month): # Not on 30 else you have problems when entering 01-01-2009 for example
+                    som1=datetime.date(year,month+i,1)
+                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som1.replace(day=x).strftime('%a'),cell+x) for x in range(1, lengthmonth(year,i+month)+1)]
+                    i=i+1
+                    j=j+1
+                    month_dict[j]=som1.strftime('%B')
+                    cell=cell+x
+                    width_dict[j]=x
+                else:
+                    som1=datetime.date(year,month+i,1)
+                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som1.replace(day=x).strftime('%a'),cell+x) for x in range(1, eom.day+1)]
+                    i=i+1
+                    j=j+1
+                    month_dict[j]=som1.strftime('%B')
+                    cell=cell+x
+                    width_dict[j]=x
+                day_diff1=day_diff1-x
+            else:
+                years=year+1
+                year=years
+                month=0
+                i=1
+                if day_diff1>=30:
+                    som1=datetime.date(years,i,1)
+                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som1.replace(day=x).strftime('%a'),cell+x) for x in range(1, lengthmonth(years,i)+1)]
+                    i=i+1
+                    j=j+1
+                    month_dict[j]=som1.strftime('%B')
+                    cell=cell+x
+                    width_dict[j]=x
+                else:
+                    som1=datetime.date(years,i,1)
+                    i=i+1
+                    j=j+1
+                    month_dict[j]=som1.strftime('%B')
+                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som1.replace(day=x).strftime('%a'),cell+x) for x in range(1, eom.day+1)]
+                    cell=cell+x
+                    width_dict[j]=x
+                day_diff1=day_diff1-x
+        date_xml.append('</days>')
+        date_xml.append('<cols>3.5cm%s</cols>\n' % (',0.74cm' * (int(dy))))
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
+        %s
+        %s
         </report>
-        ''' % '\n'.join(user_xml)
+        ''' % (header_xml,'\n'.join(user_xml),date_xml)
         return xml
 
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')

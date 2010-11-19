@@ -74,11 +74,17 @@
             <field name="usage">view</field>
             <field name="location_id" ref="stock_location_locations"/>
         </record>
+
+        <record id="journal_delivery" model="stock.journal">
+            <field name="name">Delivery Orders</field>
+        </record>
         <record id="stock_location_output" model="stock.location">
             <field name="name">Output</field>
             <field name="location_id" ref="stock_location_company"/>
             <field name="usage">internal</field>
             <field name="chained_location_type">customer</field>
+            <field name="chained_picking_type">out</field>
+            <field name="chained_journal_id" ref="journal_delivery"/>
         </record>
         <record id="stock_location_stock" model="stock.location">
             <field name="name">Stock</field>
@@ -114,7 +120,13 @@
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_production')]"/>
             <field eval="'stock.location,'+str(location_production)" name="value"/>
         </record>
-        
+
+
+        <record forcecreate="True" id="decimal_shipping_delay" model="decimal.precision">
+            <field name="name">Shipping Delay</field>
+            <field name="digits" eval="2"/>
+        </record>
+
         <!--
     Resource: stock.warehouse
     -->

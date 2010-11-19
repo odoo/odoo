@@ -7,20 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2009-11-17 07:25+0000\n"
 "Last-Translator: SmartWi <kurt@smartwi.net>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:41+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: google_map
-#: model:ir.actions.wizard,name:google_map.wizard_google_map
-msgid "Launch Google Map"
-msgstr "Start Google Map"
+#: view:res.partner:0
+#: view:res.partner.address:0
+msgid "Map"
+msgstr "Kort"
 
 #. module: google_map
 #: constraint:ir.ui.view:0
@@ -28,10 +29,21 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Ugyldig XML for View Architecture!"
 
 #. module: google_map
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: google_map
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Street2 : "
 msgstr "Gade2: "
+
+#. module: google_map
+#: model:ir.actions.wizard,name:google_map.wizard_google_map
+msgid "Launch Google Map"
+msgstr "Start Google Map"
 
 #. module: google_map
 #: model:ir.module.module,description:google_map.module_meta_information
@@ -45,7 +57,6 @@ msgstr ""
 "url henvisningen."
 
 #. module: google_map
-#: view:res.partner:0
-#: view:res.partner.address:0
-msgid "Map"
-msgstr "Kort"
+#: model:ir.model,name:google_map.model_res_partner_address
+msgid "Partner Addresses"
+msgstr ""
