@@ -1361,7 +1361,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tax_tree"/>
-            <field name="domain">[('tax_code_id','=',active_id),('state','&lt;&gt;','draft')]</field>
+            <field name="domain">[('tax_code_id','child_of',[active_id]),('state','&lt;&gt;','draft')]</field>
         </record>
         <record id="ir_open_tax_move_line" model="ir.values">
             <field name="key2">tree_but_open</field>
