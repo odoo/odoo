@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:51+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:51+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:58+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -110,6 +110,7 @@ msgstr ""
 #: field:project.phase,project_id:0
 #: view:project.resource.allocation:0
 #: field:project.resource.allocation,project_id:0
+#: view:project.task:0
 msgid "Project"
 msgstr ""
 
@@ -180,6 +181,11 @@ msgid "Dates"
 msgstr ""
 
 #. module: project_long_term
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,state:0
 msgid "State"
@@ -194,6 +200,11 @@ msgstr ""
 #. module: project_long_term
 #: view:project.compute.phases:0
 msgid "Compute Scheduling of phases for all or specified project"
+msgstr ""
+
+#. module: project_long_term
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: project_long_term
@@ -222,6 +233,12 @@ msgstr ""
 #. module: project_long_term
 #: view:project.compute.tasks:0
 msgid "Compute Scheduling of Task"
+msgstr ""
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
+msgid "To schedule phases of all or a specified project. It then open a gantt view.\n"
+"	           "
 msgstr ""
 
 #. module: project_long_term
@@ -304,6 +321,11 @@ msgstr ""
 #. module: project_long_term
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
+msgstr ""
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.act_project_phase
+msgid "A project can be split into the different phases. For each phase, you can define your resources allocation, describe different tasks and link your phase to previous and next ones, add date constraints for the automated scheduling. Use the long term planning in order to planify your available human resources, convert your phases into a series of tasks when you start working on it."
 msgstr ""
 
 #. module: project_long_term
@@ -393,6 +415,11 @@ msgid "Cancel"
 msgstr ""
 
 #. module: project_long_term
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "In Progress"
@@ -422,6 +449,11 @@ msgstr ""
 #. module: project_long_term
 #: field:project.project,resource_calendar_id:0
 msgid "Working Time"
+msgstr ""
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Current"
 msgstr ""
 
 #. module: project_long_term
@@ -512,6 +544,7 @@ msgstr ""
 #: model:ir.model,name:project_long_term.model_project_phase
 #: view:project.phase:0
 #: field:project.resource.allocation,phase_id:0
+#: view:project.task:0
 #: field:project.task,phase_id:0
 msgid "Project Phase"
 msgstr ""

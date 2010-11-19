@@ -277,10 +277,10 @@ class hr_payslip(osv.osv):
                 if ((fiscal_year['date_start'] <= slip.date) and (fiscal_year['date_stop'] >= slip.date)):
                     year_exist = True
             if not year_exist:
-                raise osv.except_osv(_('Warning !'), _('Fiscal Year is not defined for slip date %s'%slip.date))
+                raise osv.except_osv(_('Warning !'), _('Fiscal Year is not defined for slip date %s') % slip.date)
             search_periods = period_pool.search(cr, uid, [('date_start','<=',slip.date),('date_stop','>=',slip.date)], context=context)
             if not search_periods:
-                raise osv.except_osv(_('Warning !'), _('Period is not defined for slip date %s'%slip.date))
+                raise osv.except_osv(_('Warning !'), _('Period is not defined for slip date %s') % slip.date)
             period_id = search_periods[0]
             name = 'Payment of Salary to %s' % (slip.employee_id.name)
             move = {
@@ -428,10 +428,10 @@ class hr_payslip(osv.osv):
             partner_id = False
 
             if not slip.employee_id.bank_account_id:
-                raise osv.except_osv(_('Integrity Error !'), _('Please defined bank account for %s !' % (slip.employee_id.name)))
+                raise osv.except_osv(_('Integrity Error !'), _('Please defined bank account for %s !') % (slip.employee_id.name))
 
             if not slip.employee_id.bank_account_id.partner_id:
-                raise osv.except_osv(_('Integrity Error !'), _('Please defined partner in bank account for %s !' % (slip.employee_id.name)))
+                raise osv.except_osv(_('Integrity Error !'), _('Please defined partner in bank account for %s !') % (slip.employee_id.name))
 
             partner = slip.employee_id.bank_account_id.partner_id
             partner_id = slip.employee_id.bank_account_id.partner_id.id
@@ -450,10 +450,10 @@ class hr_payslip(osv.osv):
                     if ((fiscal_year['date_start'] <= slip.date) and (fiscal_year['date_stop'] >= slip.date)):
                         year_exist = True
                 if not year_exist:
-                    raise osv.except_osv(_('Warning !'), _('Fiscal Year is not defined for slip date %s'%slip.date))
+                    raise osv.except_osv(_('Warning !'), _('Fiscal Year is not defined for slip date %s') % slip.date)
                 search_periods = period_pool.search(cr,uid,[('date_start','<=',slip.date),('date_stop','>=',slip.date)], context=context)
                 if not search_periods:
-                    raise osv.except_osv(_('Warning !'), _('Period is not defined for slip date %s'%slip.date))
+                    raise osv.except_osv(_('Warning !'), _('Period is not defined for slip date %s') % slip.date)
                 period_id = search_periods[0]
 
             move = {

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:33+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:33+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:15+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -45,6 +45,11 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
 msgid "Force to use a specific product"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
+msgid "This lists show you every task work you can invoice to the customer. Select the lines in order to generate the invoices automatically."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -148,6 +153,19 @@ msgid "Random Timesheets Lines"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: view:random.timesheet.lines:0
+#: field:random.timesheet.lines,user_id:0
+#: field:report.random.timesheet,user_id:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
 msgid "Project"
 msgstr ""
@@ -186,6 +204,11 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
+msgid "OpenERP allows you to create default invoicing types. You could need to regularly make discounts based on a specific contract or agreement with a customer. From this menu, you can create additional default types of invoicing that will speed up your invoicing."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -264,12 +287,6 @@ msgid "hr.timesheet.analytic.cost.ledger"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
-#, python-format
-msgid "Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n%s"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
 msgid "Final Invoice"
 msgstr ""
@@ -295,6 +312,11 @@ msgstr ""
 #: field:report.account.analytic.line.to.invoice,account_id:0
 #: field:report.analytic.account.close,name:0
 msgid "Analytic account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -332,6 +354,11 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,customer_name:0
 msgid "Name"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -408,13 +435,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
 #: model:ir.ui.menu,name:hr_timesheet_invoice.hr_timesheet_invoice_factor_view
 msgid "Types of Invoicing"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
-#, python-format
-msgid "Please fill in the partner and pricelist field '\n"
-"                        'in the analytic account:\n%s"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -495,16 +515,8 @@ msgid "Currency"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:random.timesheet.lines:0
-#: field:random.timesheet.lines,user_id:0
-#: field:report.random.timesheet,user_id:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,user_id:0
-#: field:report_timesheet.account,user_id:0
-#: field:report_timesheet.account.date,user_id:0
-#: field:report_timesheet.invoice,user_id:0
-#: field:report_timesheet.user,user_id:0
-msgid "User"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -678,6 +690,13 @@ msgid "Credit"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid "Please fill in the partner and pricelist field in the analytic account:\n"
+"%s"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Error"
@@ -795,6 +814,13 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
 msgid "Billing Data"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n"
+"%s"
 msgstr ""
 
 #. module: hr_timesheet_invoice

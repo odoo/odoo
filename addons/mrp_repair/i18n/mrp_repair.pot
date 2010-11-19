@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:43+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:43+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:43+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:43+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -211,8 +211,18 @@ msgid "Repairs order"
 msgstr ""
 
 #. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid "Repair orders allows you to organize your reparations on the products. On a repair order, you can detail the components you remove, add or replace and record the time you spent on the different operations. The repair order uses the warranty date on the production lot in order to know if you have to invoice the reparation to the customer or not."
+msgstr ""
+
+#. module: mrp_repair
 #: report:repair.order:0
 msgid "Repair Order N° :"
+msgstr ""
+
+#. module: mrp_repair
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: mrp_repair
@@ -244,6 +254,11 @@ msgstr ""
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
+msgstr ""
+
+#. module: mrp_repair
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: mrp_repair
@@ -559,6 +574,11 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
+msgstr ""
+
+#. module: mrp_repair
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: mrp_repair
