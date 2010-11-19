@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47:03+0000\n"
-"PO-Revision-Date: 2010-10-18 17:47:03+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:15+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -73,6 +73,11 @@ msgid "Location used by Destination Location to supply"
 msgstr ""
 
 #. module: stock_location
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
@@ -121,6 +126,11 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
+msgstr ""
+
+#. module: stock_location
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: stock_location
@@ -268,6 +278,11 @@ msgid "Is the destination location that needs supplying"
 msgstr ""
 
 #. module: stock_location
+#: sql_constraint:stock.warehouse.orderpoint:0
+msgid "Qty Multiple must be greater than zero."
+msgstr ""
+
+#. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr ""
@@ -335,6 +350,11 @@ msgstr ""
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
+msgstr ""
+
+#. module: stock_location
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: stock_location

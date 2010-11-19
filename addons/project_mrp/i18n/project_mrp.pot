@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:52+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:52+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:59+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: project_mrp
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -44,8 +49,8 @@ msgid "Product type is service, then its creates the task."
 msgstr ""
 
 #. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_procuretask0
-msgid "if product type is 'service' then it creates the task."
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: project_mrp
@@ -102,5 +107,15 @@ msgstr ""
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
+msgstr ""
+
+#. module: project_mrp
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
 msgstr ""
 

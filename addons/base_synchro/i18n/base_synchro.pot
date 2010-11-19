@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:19+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:19+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:48+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,6 +52,11 @@ msgid "Field Name"
 msgstr ""
 
 #. module: base_synchro
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: base_synchro
 #: field:base.synchro.obj,synchronize_date:0
 msgid "Latest Synchronization"
 msgstr ""
@@ -72,8 +77,8 @@ msgid "_Close"
 msgstr ""
 
 #. module: base_synchro
-#: view:base.synchro:0
-msgid "Transfer Data To Server"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: base_synchro
@@ -198,7 +203,7 @@ msgstr ""
 #. module: base_synchro
 #: model:ir.actions.act_window,name:base_synchro.action_base_synchro_server_tree
 #: model:ir.ui.menu,name:base_synchro.synchro_server_tree_menu_id
-msgid "Synchronized Servers"
+msgid "Servers to be synchronized"
 msgstr ""
 
 #. module: base_synchro
@@ -223,6 +228,7 @@ msgstr ""
 
 #. module: base_synchro
 #: model:ir.ui.menu,name:base_synchro.next_id_62
+#: model:ir.ui.menu,name:base_synchro.synch_config
 msgid "Synchronization"
 msgstr ""
 
@@ -296,5 +302,15 @@ msgstr ""
 #: field:base.synchro,server_url:0
 #: field:base.synchro.server,server_url:0
 msgid "Server URL"
+msgstr ""
+
+#. module: base_synchro
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: base_synchro
+#: view:base.synchro:0
+msgid "Transfer Data To Server"
 msgstr ""
 

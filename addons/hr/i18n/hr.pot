@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:28+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:28+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:05+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -248,6 +248,11 @@ msgid "Job Description"
 msgstr ""
 
 #. module: hr
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
 msgstr ""
@@ -278,6 +283,11 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
+msgstr ""
+
+#. module: hr
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: hr
@@ -405,6 +415,11 @@ msgid "hr.department"
 msgstr ""
 
 #. module: hr
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
 msgstr ""
@@ -418,6 +433,11 @@ msgstr ""
 #: field:hr.employee,category_ids:0
 #: field:hr.employee.category,name:0
 msgid "Category"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid "Here you can manage your work force by creating employees and assigning them specific properties in the system. Maintain all employee related information and keep track of anything that needs to be recorded for them. The personal information tab will help you maintain their identity data. The Categories tab gives you the opportunity to assign them related employee categories depending on their position and activities within the company. A category can be a seniority level within the company or a department. The Timesheets tab allows to assign them a specific timesheet and analytic journal where they will be able to enter time through the system. In the note tab, you can enter text data that should be recorded for a specific employee."
 msgstr ""
 
 #. module: hr
@@ -448,6 +468,11 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Status"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid "Your Company's Departments Structure is used to manage all documents related to employees by departments: expenses and timesheet validation, leaves management, recruitements, etc."
 msgstr ""
 
 #. module: hr
@@ -731,6 +756,11 @@ msgstr ""
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid "JJob Positions is used to define jobs and their requirements. You can attach a survey to a job position. This survey will be used in the recruitment process to evaluate the applicants for this job position."
 msgstr ""
 
 #. module: hr

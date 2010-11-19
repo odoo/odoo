@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:33+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:33+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:14+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,8 +44,8 @@ msgid "Group By..."
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
+msgid "Employees can encode their time spent on the different projects. A project is an analytic account and the time spent on a project generate costs on the analytic account. This feature allows to record at the same time the attendance and the timesheet."
 msgstr ""
 
 #. module: hr_timesheet
@@ -99,9 +99,8 @@ msgid "Sign in"
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "avril"
+#: view:hr.sign.in.project:0
+msgid "Employees can encode their time spent on the different projects they are assigned on. A  project is an analytic account and the time spent on a project generates costs on the analytic account. This feature allows to record at the same time the attendance and the timesheet."
 msgstr ""
 
 #. module: hr_timesheet
@@ -196,10 +195,25 @@ msgid "Sat"
 msgstr ""
 
 #. module: hr_timesheet
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sun"
+msgstr ""
+
+#. module: hr_timesheet
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid "Working Hours allows you to log your working hours by project every day."
 msgstr ""
 
 #. module: hr_timesheet
@@ -209,8 +223,8 @@ msgid "Print"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
-msgid "Sign Out By Project"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: hr_timesheet
@@ -347,6 +361,13 @@ msgid "Error: The default UOM and the purchase UOM must be in the same category.
 msgstr ""
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid "Analytic journal is not defined for employee %s \n"
+"Define an employee for the selected user and assign an analytic journal!"
+msgstr ""
+
+#. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "(Keep empty for current time)"
 msgstr ""
@@ -422,12 +443,6 @@ msgid "October"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid "No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet."
-msgstr ""
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
@@ -500,6 +515,11 @@ msgid "février"
 msgstr ""
 
 #. module: hr_timesheet
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
 msgstr ""
@@ -513,6 +533,12 @@ msgstr ""
 #: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
+msgstr ""
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "avril"
 msgstr ""
 
 #. module: hr_timesheet
@@ -595,19 +621,13 @@ msgid "Analytic line"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "This Wizard will make Sign In/Out By Project"
+#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
+msgid "Sign Out By Project"
 msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid "Analytic journal is not defined for employee %s \nDefine an employee for the selected user and assign an analytic journal!"
 msgstr ""
 
 #. module: hr_timesheet
@@ -621,6 +641,13 @@ msgstr ""
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "April"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid "No analytic account defined on the project.\n"
+"Please set one or we can not automatically fill the timesheet."
 msgstr ""
 
 #. module: hr_timesheet
