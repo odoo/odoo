@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<record id="ir_cron_ping_scheduler" model="ir.cron">
+			<field name="name">Maintenance Update Scheduler</field>
+			<field eval="True" name="active" />
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">weeks</field>
+			<field name="numbercall">-1</field>
+			<field eval="True" name="doall" />
+			<field eval="'maintenance.contract'" name="model" />
+			<field eval="'send_ping'" name="function" />
+			<field eval="'(None,)'" name="args" />
+		</record>
+    
+    </data>
+</openerp>

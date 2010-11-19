@@ -20,22 +20,35 @@
 ##############################################################################
 
 import urllib
+from tools.safe_eval import safe_eval
 import pooler
 import config
+import release
 
 def send_ping(cr, uid):
     pool = pooler.get_pool(cr.dbname)
     
-    args = urllib.urlencode({
-        'arg0': "coucou",
-    })
-    uo = urllib.urlopen(config.config.get("ping_url"), args)
+    dbuuid = pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+    nbr_users = pool.get("res.users").search(cr, uid, [], count=True)
+    contractosv = pool.get('maintenance.contract')
+    contracts = contractosv.browse(cr, uid, contractosv.search(cr, uid, []))
+    msg = {
+        "dbuuid": dbuuid,
+        "nbr_users": nbr_users,
+        "dbname": cr.dbname,
+        "version": release.version,
+        "contracts": [c.name for c in contracts],
+    }
+    
+    uo = urllib.urlopen(config.config.get("ping_url"),  urllib.urlencode({'arg0': msg,}))
     try:
         submit_result = uo.read()
     finally:
         uo.close()
     
-    return submit_result
+    result = safe_eval(submit_result)
+    
+    return result
 
 
 

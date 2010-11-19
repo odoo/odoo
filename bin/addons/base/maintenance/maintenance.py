@@ -26,6 +26,7 @@ from tools.misc import ustr
 from tools.translate import _
 import tools.maintenance as tm
 import tools.ping
+import datetime
 
 _nlogger = netsvc.Logger()
 _CHAN = __name__.split()[-1]
@@ -95,63 +96,69 @@ class maintenance_contract(osv.osv):
             res[contract.id] = ("unvalid", "valid")[contract.date_stop >= time.strftime('%Y-%m-%d')]
         return res
     
-    def send_ping(self, cr, uid, context={}):
-        tools.ping.send_ping(cr, uid)
+    def check_validity(self, cr, uid, ids, context={}):
+        contract_id = ids[0]
+        contract = self.browse(cr, uid, contract_id)
+        valid = contract.state == "valid"
+        
+        self.send_ping(cr, uid, ids, cron_mode=False, context=context)
+        
+        contract = self.browse(cr, uid, contract_id)
+        valid2 = contract.state == "valid"
+        if not valid and not valid2:
+            raise osv.except_osv("Contract validation error",
+                                 "Please check your maintenance contract name and validity.")
+    
+    def send_ping(self, cr, uid, ids, cron_mode=True, context={}):
+        try:
+            result = tools.ping.send_ping(cr, uid)
+        except:
+            if cron_mode:
+                pass # if ping fails that's bad but we don't want it to interfere
+            else:
+                raise osv.except_osv("Error", "Error during communication with the maintenance server.")
+        
+        contracts = result["validity_dates"]
+        for contract in contracts:
+            c_id = self.search(cr, uid, [("name","=",contract)])[0]
+            date_from = contracts[contract][0]
+            date_to = contracts[contract][1]
+            valid = datetime.date.today() >= datetime.datetime.strptime(date_from, '%Y-%m-%d').date() \
+                and datetime.date.today() <= datetime.datetime.strptime(date_to, '%Y-%m-%d').date()
+            self.write(cr, uid, c_id, {
+                "date_start": date_from,
+                "date_stop": date_to,
+                "state": "valid" if valid else "unvalid",
+            })
+        
+        if cron_mode:
+            cronosv = self.pool.get("ir.cron")
+            sched_id = cronosv.search(cr, uid, [("name","=","Maintenance Update Scheduler")])[0]
+            cronosv.write(cr, uid, sched_id, {
+                "interval_type": result["interval_type"],
+                "interval_number": result["interval_number"],
+            })
+        
+        return True
 
     _columns = {
-        'name' : fields.char('Contract ID', size=384, required=True, readonly=True),
+        'name' : fields.char('Contract ID', size=384, required=True),
         'date_start' : fields.date('Starting Date', readonly=True),
         'date_stop' : fields.date('Ending Date', readonly=True),
-        'state' : fields.function(_valid_get, method=True, string="State", type="selection", selection=[('valid', 'Valid'),('unvalid', 'Unvalid')], readonly=True),
-        'kind' : fields.char('Kind', size=64, required=True, readonly=True),
+        'state' : fields.function(_valid_get, method=True, string="State", type="selection",
+                                  selection=[('valid', 'Valid'),('unvalid', 'Unvalid')], readonly=True),
+        'kind' : fields.char('Kind', size=64, readonly=True),
     }
+    
+    _defaults = {
+        'state': 'unvalid',
+    }
+    
     _sql_constraints = [
         ('uniq_name', 'unique(name)', "Your maintenance contract is already subscribed in the system !")
     ]
 
 maintenance_contract()
-
-
-class maintenance_contract_wizard(osv.osv_memory):
-    _name = 'maintenance.contract.wizard'
-
-    _columns = {
-        'name' : fields.char('Contract ID', size=384, required=True ),
-        'state' : fields.selection([('draft', 'Draft'),('validated', 'Validated'),('unvalidated', 'Unvalidated')], 'States'),
-    }
-
-    _defaults = {
-        'state' : lambda *a: 'draft',
-    }
-
-    def action_validate(self, cr, uid, ids, context=None):
-        raise Exception("hahaha, this is a dirty exception to make you fail")
-        if not ids:
-            return False
-        contract = self.read(cr, uid, ids, ['name'])[0]
-        
-        try:
-            contract_info = tm.remote_contract(cr, uid, contract['name'])
-        except tm.RemoteContractException, rce:
-            raise osv.except_osv(_('Error'), ustr(rce))
-
-        if contract_info['status'] == "valid":
-
-            self.pool.get('maintenance.contract').create(
-                cr, 
-                uid, {
-                    'name' : contract['name'],
-                    'date_start' : contract_info['date_from'],
-                    'date_stop' : contract_info['date_to'],
-                    'kind' : contract_info['kind'],
-                }
-            )
-
-        return self.write(cr, uid, ids, 
-            {'state' : ['validated' if contract_info['status'] == "valid" else 'unvalidated'] },
-            context=context)
-
-maintenance_contract_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

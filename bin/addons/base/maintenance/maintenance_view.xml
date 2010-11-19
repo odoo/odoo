@@ -22,12 +22,25 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Maintenance Contract">
-                    <group col="6" colspan="4">
-	                    <field name="name"/>
-	                    <field name="date_start"/>
-	                    <field name="date_stop"/>
-	                </group>
-                    <field name="state" colspan="4"/>
+                    <group col="2" colspan="4">
+                        <group col="2">
+                    		<field name="name"/>
+                        </group>
+                        <group col="2">
+                    		<field name="date_start"/>
+                    		<field name="date_stop"/>
+                    	</group>
+                        <group col="2">
+                            <field name="state"/>
+                            <field name="kind"/>
+                        </group>
+                        <group col="2">
+                        	<button name="check_validity" string="Validate" type="object"
+                        	attrs="{'invisible':[('state','in',['valid'])]}"/>
+                        	<button name="check_validity" string="Refresh Validation Dates" type="object"
+                        	attrs="{'invisible':[('state','in',['unvalid'])]}"/>
+                        </group>
+                	</group>
                 </form>
             </field>
         </record>
@@ -66,58 +79,10 @@
             <field name="search_view_id" ref="maintenance_contract_search_view"/>
         </record>
 
-        <menuitem
-            name="Maintenance"
-            id="maintenance"
+        <menuitem name="Maintenance" id="maintenance"
             parent="base.menu_administration" groups="base.group_extended"/>
 
-        <menuitem
-            action="action_maintenance_contract_form"
-            id="menu_maintenance_contract"
-            parent="maintenance"/>
-
-        <record id="maintenance_contract_add_wizard" model="ir.ui.view">
-            <field name="name">maintenance.contract.add.wizard</field>
-            <field name="model">maintenance.contract.wizard</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Add Maintenance Contract" col="2">
-                        <group col="1">
-                        <separator string="Add Maintenance Contract" />
-                        <group states="draft">
-                            <field name="name" width="250" />
-                            <newline />
-                            <field name="state" invisible="1" />
-                        </group>
-                        <group states="validated">
-                            <label string="Maintenance contract added !"/>
-                        </group>
-                        <group states="unvalidated">
-                            <label string="Could you check your contract information ?" />
-                        </group>
-                    </group>
-                    <group colspan="4">
-                        <button type="object" string="_Cancel" icon="gtk-cancel" special="cancel" states="draft"/>
-                        <button type="object" string="_Validate" icon="gtk-apply" name="action_validate" states="draft"/>
-                        <button type="object" string="_Close" icon="gtk-close" special="cancel" states="validated,unvalidated"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_maintenance_contract_add_wizard" model="ir.actions.act_window">
-            <field name="name">Add Maintenance Contract</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">maintenance.contract.wizard</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <menuitem
-            action="action_maintenance_contract_add_wizard"
-            id="menu_maintenance_contract_add"
-            parent="maintenance" />
+        <menuitem action="action_maintenance_contract_form" id="menu_maintenance_contract" parent="maintenance"/>
 
     </data>
 </openerp>
