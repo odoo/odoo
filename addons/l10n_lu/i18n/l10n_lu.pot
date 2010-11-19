@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:38+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:38+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:32+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:32+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,9 +36,8 @@ msgid "Luxembourg"
 msgstr ""
 
 #. module: l10n_lu
-#: code:addons/l10n_lu/wizard/print_vat.py:0
-#, python-format
-msgid "pdf not created !"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: l10n_lu
@@ -87,6 +86,11 @@ msgid "Error ! You can not create recursive Tax Codes."
 msgstr ""
 
 #. module: l10n_lu
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: l10n_lu
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
@@ -109,6 +113,12 @@ msgstr ""
 #. module: l10n_lu
 #: model:account.account.type,name:l10n_lu.account_type_root
 msgid "View"
+msgstr ""
+
+#. module: l10n_lu
+#: code:addons/l10n_lu/wizard/print_vat.py:0
+#, python-format
+msgid "pdf not created !"
 msgstr ""
 
 #. module: l10n_lu
@@ -136,5 +146,10 @@ msgstr ""
 #. module: l10n_lu
 #: model:account.account.type,name:l10n_lu.account_type_creances
 msgid "Créances"
+msgstr ""
+
+#. module: l10n_lu
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

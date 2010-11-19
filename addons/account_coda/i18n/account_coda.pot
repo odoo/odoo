@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:04+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:04+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:18+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -83,6 +83,17 @@ msgid "Log"
 msgstr ""
 
 #. module: account_coda
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: account_coda
+#: code:addons/account_coda/account_coda.py:0
+#, python-format
+msgid "Coda file not found for bank statement !!"
+msgstr ""
+
+#. module: account_coda
 #: help:account.coda.import,awaiting_account:0
 msgid "Set here the default account that will be used, if the partner is found but does not have the bank account, or if he is domiciled"
 msgstr ""
@@ -136,8 +147,8 @@ msgid "Default Payable Account"
 msgstr ""
 
 #. module: account_coda
-#: help:account.coda,name:0
-msgid "Store the detail of bank statements"
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
 msgstr ""
 
 #. module: account_coda
@@ -148,6 +159,18 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Open Statements"
+msgstr ""
+
+#. module: account_coda
+#: help:account.coda,name:0
+msgid "Store the detail of bank statements"
+msgstr ""
+
+#. module: account_coda
+#: code:addons/account_coda/wizard/account_coda_import.py:0
+#, python-format
+msgid "The bank account %s is not defined for the partner %s.\n"
+""
 msgstr ""
 
 #. module: account_coda
@@ -174,6 +197,11 @@ msgstr ""
 #. module: account_coda
 #: field:account.bank.statement,coda_id:0
 msgid "Coda"
+msgstr ""
+
+#. module: account_coda
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: account_coda
@@ -249,9 +277,8 @@ msgid "Coda Import"
 msgstr ""
 
 #. module: account_coda
-#: code:addons/account_coda/wizard/account_coda_import.py:0
-#, python-format
-msgid "The bank account %s is not defined for the partner %s.\n"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: account_coda
