@@ -164,7 +164,7 @@ d[types.InstanceType] = _copy_inst
 
 del d
 
-def deepcopy(x, memo=None, _nil=[]):
+def deepcopy(x, memo=None, _nil=None):
     """Deep copy operation on arbitrary Python objects.
 
     See the module's __doc__ string for more info.
@@ -172,6 +172,8 @@ def deepcopy(x, memo=None, _nil=[]):
 
     if memo is None:
         memo = {}
+    if _nil is None:
+        _nil = {}
 
     d = id(x)
     y = memo.get(d, _nil)

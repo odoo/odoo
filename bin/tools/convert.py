@@ -68,6 +68,18 @@ def _obj(pool, cr, uid, model_str, context=None):
     model = pool.get(model_str)
     return lambda x: model.browse(cr, uid, x, context=context)
 
+def _get_idref(self, cr, uid, model_str, context, idref):
+    idref2 = dict(idref,
+                  time=time,
+                  DateTime=datetime,
+                  timedelta=timedelta,
+                  version=release.major_version,
+                  ref=_ref(self, cr),
+                  pytz=pytz)
+    if len(model_str):
+        idref2['obj'] = _obj(self.pool, cr, uid, model_str, context=context)
+    return idref2
+
 def _fix_multiple_roots(node):
     """
     Surround the children of the ``node`` element of an XML field with a
@@ -90,72 +102,68 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
     if context is None:
         context = {}
     if node.tag in ('field','value'):
-            t = node.get('type','char')
-            f_model = node.get('model', '').encode('utf-8')
-            if node.get('search'):
-                f_search = node.get("search",'').encode('utf-8')
-                f_use = node.get("use",'id').encode('utf-8')
-                f_name = node.get("name",'').encode('utf-8')
-                q = unsafe_eval(f_search, idref)
-                ids = pool.get(f_model).search(cr, uid, q)
-                if f_use != 'id':
-                    ids = map(lambda x: x[f_use], pool.get(f_model).read(cr, uid, ids, [f_use]))
-                _cols = pool.get(f_model)._columns
-                if (f_name in _cols) and _cols[f_name]._type=='many2many':
-                    return ids
-                f_val = False
-                if len(ids):
-                    f_val = ids[0]
-                    if isinstance(f_val, tuple):
-                        f_val = f_val[0]
-                return f_val
-            a_eval = node.get('eval','')
-            if a_eval:
-                idref2 = dict(idref,
-                              time=time,
-                              DateTime=datetime,
-                              timedelta=timedelta,
-                              version=release.major_version,
-                              ref=lambda x: self.id_get(cr, False, x),
-                              pytz=pytz)
-                if len(f_model):
-                    idref2['obj'] = _obj(self.pool, cr, uid, f_model, context=context)
-                try:
-                    return unsafe_eval(a_eval, idref2)
-                except Exception:
-                    logger = logging.getLogger('init')
-                    logger.warning('could not eval(%s) for %s in %s' % (a_eval, node.get('name'), context), exc_info=True)
-                    return ""
-            if t == 'xml':
-                def _process(s, idref):
-                    m = re.findall('[^%]%\((.*?)\)[ds]', s)
-                    for id in m:
-                        if not id in idref:
-                            idref[id]=self.id_get(cr, False, id)
-                    return s % idref
-                _fix_multiple_roots(node)
-                return '<?xml version="1.0"?>\n'\
-                    +_process("".join([etree.tostring(n, encoding='utf-8')
-                                       for n in node]),
-                              idref)
-            if t in ('char', 'int', 'float'):
-                d = node.text
-                if t == 'int':
-                    d = d.strip()
-                    if d == 'None':
-                        return None
-                    else:
-                        return int(d.strip())
-                elif t == 'float':
-                    return float(d.strip())
-                return d
-            elif t in ('list','tuple'):
-                res=[]
-                for n in node.findall('./value'):
-                    res.append(_eval_xml(self,n,pool,cr,uid,idref))
-                if t=='tuple':
-                    return tuple(res)
-                return res
+        t = node.get('type','char')
+        f_model = node.get('model', '').encode('utf-8')
+        if node.get('search'):
+            f_search = node.get("search",'').encode('utf-8')
+            f_use = node.get("use",'id').encode('utf-8')
+            f_name = node.get("name",'').encode('utf-8')
+            idref2 = {}
+            if f_search:
+                idref2 = _get_idref(self, cr, uid, f_model, context, idref)
+            q = unsafe_eval(f_search, idref2)
+            ids = pool.get(f_model).search(cr, uid, q)
+            if f_use != 'id':
+                ids = map(lambda x: x[f_use], pool.get(f_model).read(cr, uid, ids, [f_use]))
+            _cols = pool.get(f_model)._columns
+            if (f_name in _cols) and _cols[f_name]._type=='many2many':
+                return ids
+            f_val = False
+            if len(ids):
+                f_val = ids[0]
+                if isinstance(f_val, tuple):
+                    f_val = f_val[0]
+            return f_val
+        a_eval = node.get('eval','')
+        idref2 = {}
+        if a_eval:
+            idref2 = _get_idref(self, cr, uid, f_model, context, idref)
+            try:
+                return unsafe_eval(a_eval, idref2)
+            except Exception:
+                logger = logging.getLogger('init')
+                logger.warning('could not eval(%s) for %s in %s' % (a_eval, node.get('name'), context), exc_info=True)
+                return ""
+        if t == 'xml':
+            def _process(s, idref):
+                m = re.findall('[^%]%\((.*?)\)[ds]', s)
+                for id in m:
+                    if not id in idref:
+                        idref[id]=self.id_get(cr, False, id)
+                return s % idref
+            _fix_multiple_roots(node)
+            return '<?xml version="1.0"?>\n'\
+                +_process("".join([etree.tostring(n, encoding='utf-8')
+                                   for n in node]),
+                          idref)
+        if t in ('char', 'int', 'float'):
+            d = node.text
+            if t == 'int':
+                d = d.strip()
+                if d == 'None':
+                    return None
+                else:
+                    return int(d.strip())
+            elif t == 'float':
+                return float(d.strip())
+            return d
+        elif t in ('list','tuple'):
+            res=[]
+            for n in node.findall('./value'):
+                res.append(_eval_xml(self,n,pool,cr,uid,idref))
+            if t=='tuple':
+                return tuple(res)
+            return res
     elif node.tag == "getitem":
         for n in node:
             res=_eval_xml(self,n,pool,cr,uid,idref)
@@ -273,11 +281,13 @@ form: module.record_id""" % (xml_id,)
 
     def _tag_delete(self, cr, rec, data_node=None):
         d_model = rec.get("model",'')
-        d_search = rec.get("search",'')
+        d_search = rec.get("search",'').encode('utf-8')
         d_id = rec.get("id",'')
         ids = []
+        
         if d_search:
-            ids = self.pool.get(d_model).search(cr, self.uid, unsafe_eval(d_search))
+            idref = _get_idref(self, cr, self.uid, d_model, context={}, idref={})
+            ids = self.pool.get(d_model).search(cr, self.uid, unsafe_eval(d_search, idref))
         if d_id:
             try:
                 ids.append(self.id_get(cr, d_model, d_id))
@@ -655,7 +665,7 @@ form: module.record_id""" % (xml_id,)
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
         return ('ir.ui.menu', pid)
 
-    def _assert_equals(self, f1, f2, prec = 4):
+    def _assert_equals(self, f1, f2, prec=4):
         return not round(f1 - f2, prec)
 
     def _tag_assert(self, cr, rec, data_node=None):

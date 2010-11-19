@@ -33,6 +33,7 @@ import time
 class groups(osv.osv):
     _name = "res.groups"
     _order = 'name'
+    _description = "Access Groups"
     _columns = {
         'name': fields.char('Group Name', size=64, required=True),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
@@ -234,9 +235,10 @@ class users(osv.osv):
 
     def on_change_company_id(self, cr, uid, ids, company_id):
         return {
-            'value': {
-                'warning' : _("Please keep in mind that data currently displayed may not be relevant after switching to another company. If you have unsaved changes, please make sure to save and close the forms before switching to a different company (you can click on Cancel now)"),
-            }
+                'warning' : {
+                    'title': _("Company Switch Warning"),
+                    'message': _("Please keep in mind that documents currently displayed may not be relevant after switching to another company. If you have unsaved changes, please make sure to save and close all forms before switching to a different company. (You can click on Cancel in the User Preferences now)"),
+                }
         }
 
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
