@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_purchase_double_validation_wizard" model="ir.ui.view">
+            <field name="name">Configure Limit Amount</field>
+            <field name="model">purchase.double.validation.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Limint Amount Configuration">
+                    <field name="limit_amount"/>
+                    <newline/>
+                    <group col="4" colspan="4">
+                        <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" name="set_limit" string="Set Limit Amount" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_purchase_double_validation_wizard" model="ir.actions.act_window">
+            <field name="name">Configure Limit Amount</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.double.validation.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="config_purchase_double_validation_wizard" model="ir.actions.todo">
+            <field name="name">Configure Limit Amount</field>
+            <field name="note">This Configuration step use to setLimit Amount</field>
+            <field name="action_id" ref="action_purchase_double_validation_wizard"/>
+        </record>
+
+        
+    </data>
+</openerp>
