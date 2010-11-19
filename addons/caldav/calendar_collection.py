@@ -37,7 +37,7 @@ class calendar_collection(osv.osv):
     def _get_root_calendar_directory(self, cr, uid, context=None):
         objid = self.pool.get('ir.model.data')
         try:
-            mid = objid._get_id(cr, uid, 'document', 'dir_calendars')
+            mid = objid._get_id(cr, uid, 'caldav', 'document_directory_calendars0')
             if not mid:
                 return False
             root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']

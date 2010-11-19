@@ -272,15 +272,15 @@ class OKButtonProcessor(ButtonProcessor):
             return
         setConnAttribs(server, port, self.mngr)
         if str(NewConn.getitem('_running')) == 'False':
-        	msg = "No server running on host '%s' at port '%d'. Press ignore to still continue with this configuration?"%(server,port)
-         	r=win32ui.MessageBox(msg, "OpenERP Connection", win32con.MB_ABORTRETRYIGNORE | win32con.MB_ICONQUESTION)
-         	if r==3:
-				resetConnAttribs(self.window)
-				return
-         	elif r==4:
-         	 	self.OnClicked(id)
-         	elif r==5:
-         		setConnAttribs(server, port, self.mngr)
+            msg = "No server running on host '%s' at port '%d'. Press ignore to still continue with this configuration?"%(server,port)
+            r=win32ui.MessageBox(msg, "OpenERP Connection", win32con.MB_ABORTRETRYIGNORE | win32con.MB_ICONQUESTION)
+            if r==3:
+                resetConnAttribs(self.window)
+                return
+            elif r==4:
+                self.OnClicked(id)
+            elif r==5:
+                setConnAttribs(server, port, self.mngr)
         win32gui.EndDialog(self.window.hwnd, id)
 
 class DoneButtonProcessor(ButtonProcessor):
@@ -661,7 +661,6 @@ def CreateCase(btnProcessor,*args):
             if not section:
                 win32ui.MessageBox("Documents can not be created.", "Documents Setting", flag_excl)
                 return
-
             hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
             partner_ids=[]
             r = GetSelectedItems(hwndList)
@@ -1412,7 +1411,6 @@ def SerachOpenDocuemnt(txtProcessor,*args):
         txtProcessor.init_done=True
         return
     linktodoc = ""
-
     message_id = None
     try:
         session = win32com.client.Dispatch("MAPI.session")

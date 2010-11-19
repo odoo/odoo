@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:47+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:47+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:52+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,8 +51,18 @@ msgid "Product Life Time"
 msgstr ""
 
 #. module: product_expiry
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: product_expiry
 #: field:product.product,use_time:0
 msgid "Product Use Time"
+msgstr ""
+
+#. module: product_expiry
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: product_expiry
@@ -105,6 +115,11 @@ msgstr ""
 #: view:product.product:0
 #: view:stock.production.lot:0
 msgid "Dates"
+msgstr ""
+
+#. module: product_expiry
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr ""
 
 #. module: product_expiry
@@ -170,5 +185,10 @@ msgstr ""
 #. module: product_expiry
 #: field:product.product,alert_time:0
 msgid "Product Alert Time"
+msgstr ""
+
+#. module: product_expiry
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

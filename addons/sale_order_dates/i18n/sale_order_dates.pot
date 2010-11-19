@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47:01+0000\n"
-"PO-Revision-Date: 2010-10-18 17:47:01+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:11+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: sale_order_dates
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: sale_order_dates
 #: constraint:ir.ui.view:0
@@ -56,6 +61,11 @@ msgid "Date on which delivery of products is to be made"
 msgstr ""
 
 #. module: sale_order_dates
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: sale_order_dates
 #: help:sale.order,requested_date:0
 msgid "Date on which customer has requested for sales"
 msgstr ""
@@ -63,5 +73,10 @@ msgstr ""
 #. module: sale_order_dates
 #: field:sale.order,requested_date:0
 msgid "Requested Date"
+msgstr ""
+
+#. module: sale_order_dates
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

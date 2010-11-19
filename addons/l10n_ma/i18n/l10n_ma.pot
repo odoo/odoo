@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-11-25 15:53:51+0000\n"
-"PO-Revision-Date: 2009-11-25 15:53:51+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:33+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:33+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,18 +16,43 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_receivable
-msgid "Receivable"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_stocks
-msgid "stocks"
+#: model:ir.module.module,description:l10n_ma.module_meta_information
+msgid "Ce  Module charge le modèle du plan de comptes standard Marocain et permet de générer les états comptables aux normes marocaines (Bilan, CPC (comptes de produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...). L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable Seddik au cours du troisième trimestre 2010"
 msgstr ""
 
 #. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_dettes
-msgid "dettes long terme"
+#: model:account.account.type,name:l10n_ma.cpt_type_imm
+msgid "Immobilisations"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_ach
+msgid "Charges Achats"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_tpl
+msgid "Titres de placement"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_dlt
+msgid "Dettes à long terme"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.journal,name:l10n_ma.journal_vente
+msgid "Journal des Ventes"
+msgstr ""
+
+#. module: l10n_ma
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: l10n_ma
@@ -36,49 +61,23 @@ msgid "Error ! You can not create recursive account templates."
 msgstr ""
 
 #. module: l10n_ma
-#: model:ir.module.module,shortdesc:l10n_ma.module_meta_information
-msgid "Maroc Plan comptable général pour les sociétés"
+#: model:account.account.type,name:l10n_ma.cpt_type_dct
+msgid "Dettes à court terme"
 msgstr ""
 
 #. module: l10n_ma
-#: model:ir.module.module,description:l10n_ma.module_meta_information
-msgid "This is the module to manage the accounting chart for Morocco in Open ERP."
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_tax
-msgid "Tax"
+#: model:account.journal,name:l10n_ma.journal_divers
+msgid "Journal des Opérations Diverses"
 msgstr ""
 
 #. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_cash
-msgid "Cash"
-msgstr ""
-
-#. module: l10n_ma
-#: model:ir.actions.todo,note:l10n_ma.config_call_account_template_morocco
-msgid "Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
-"	This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
-msgstr ""
-
-#. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_immobilisations
-msgid "immobilisations"
-msgstr ""
-
-#. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_payable
-msgid "Payable"
-msgstr ""
-
-#. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_asset
-msgid "Asset"
-msgstr ""
-
-#. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_income
-msgid "Income"
+#: field:l10n.ma.line,report_id:0
+msgid "Report"
 msgstr ""
 
 #. module: l10n_ma
@@ -87,12 +86,123 @@ msgid "Error ! You can not create recursive Tax Codes."
 msgstr ""
 
 #. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_expense
-msgid "Expense"
+#: model:account.account.type,name:l10n_ma.cpt_type_stk
+msgid "Stocks"
 msgstr ""
 
 #. module: l10n_ma
-#: model:account.account.type,name:l10n_ma.account_type_view
-msgid "View"
+#: field:l10n.ma.line,code:0
+msgid "Variable Name"
+msgstr ""
+
+#. module: l10n_ma
+#: field:l10n.ma.line,definition:0
+msgid "Definition"
+msgstr ""
+
+#. module: l10n_ma
+#: model:ir.module.module,shortdesc:l10n_ma.module_meta_information
+msgid "Maroc - Plan Comptable Général"
+msgstr ""
+
+#. module: l10n_ma
+#: field:l10n.ma.line,name:0
+#: field:l10n.ma.report,name:0
+msgid "Name"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_vue
+msgid "Vue"
+msgstr ""
+
+#. module: l10n_ma
+#: field:l10n.ma.report,line_ids:0
+msgid "Lines"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_tax
+msgid "Taxes"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.journal,name:l10n_ma.journal_achat
+msgid "Journal des Achats"
+msgstr ""
+
+#. module: l10n_ma
+#: model:ir.model,name:l10n_ma.model_l10n_ma_line
+msgid "Report Lines for l10n_ma"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.journal,name:l10n_ma.journal_caisse
+msgid "Journal de Caisse"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.journal,name:l10n_ma.journal_banque
+msgid "Journal de Banque"
+msgstr ""
+
+#. module: l10n_ma
+#: model:ir.model,name:l10n_ma.model_l10n_ma_report
+msgid "Report for l10n_ma_kzc"
+msgstr ""
+
+#. module: l10n_ma
+#: field:l10n.ma.report,code:0
+msgid "Code"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_per
+msgid "Charges Personnel"
+msgstr ""
+
+#. module: l10n_ma
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_liq
+msgid "Liquidité"
+msgstr ""
+
+#. module: l10n_ma
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_pdt
+msgid "Produits"
+msgstr ""
+
+#. module: l10n_ma
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_reg
+msgid "Régularisation"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_cre
+msgid "Créances"
+msgstr ""
+
+#. module: l10n_ma
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: l10n_ma
+#: model:account.account.type,name:l10n_ma.cpt_type_aut
+msgid "Charges Autres"
 msgstr ""
 

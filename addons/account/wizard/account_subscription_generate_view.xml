@@ -8,7 +8,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Subscription Compute">
-                    <separator string="Generate entries before:" colspan="4"/>
+                    <separator string="Generate Entries before:" colspan="4"/>
+                    <label string ="Automatically generate entries based on what has been entered in the  system before a specific date." colspan="4" nolabel="1"/>
+                    <newline/>
                     <field name="date"/>
                 	<separator colspan="4" />
                 	<group colspan="4" col="6">

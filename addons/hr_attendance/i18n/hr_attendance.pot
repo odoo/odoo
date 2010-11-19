@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:28+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:28+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:05+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,12 +33,6 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Today"
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid "You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 msgstr ""
 
 #. module: hr_attendance
@@ -73,8 +67,10 @@ msgid "The sign-out date must be in the past"
 msgstr ""
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
+#: selection:hr.action.reason,action_type:0
+#: view:hr.sign.in.out:0
+#: view:hr.sign.in.out.ask:0
+msgid "Sign in"
 msgstr ""
 
 #. module: hr_attendance
@@ -173,19 +169,24 @@ msgid "Attendance"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "You are now ready to sign in or out of the attendance follow up"
+#: field:hr.attendance.error,max_delay:0
+msgid "Max. Delay (Min)"
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.attendance.error,max_delay:0
-msgid "Max. Delay (Min)"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 msgid "Print"
+msgstr ""
+
+#. module: hr_attendance
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: hr_attendance
@@ -287,6 +288,11 @@ msgid "Sign in / Sign out"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid "Time Tracking functionality aims to manage employee's attendances on the basis of the actions (Sign in/Sign out) performed by them. You can also link this to an attendance machine using OpenERP's webservices features."
+msgstr ""
+
+#. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 msgid "hr.sign.out.ask"
 msgstr ""
@@ -348,10 +354,8 @@ msgid "January"
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Sign in"
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Signed"
 msgstr ""
 
 #. module: hr_attendance
@@ -376,6 +380,11 @@ msgid "Action"
 msgstr ""
 
 #. module: hr_attendance
+#: view:hr.sign.in.out:0
+msgid "If you need your staff to sign in when they arrive at work and sign out again at the end of the day, OpenERP allows you to manage this with this tool. If each employee has been linked to a system user, then they can encode their time with this action button."
+msgstr ""
+
+#. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
 #, python-format
 msgid "No records found for your selection!"
@@ -393,11 +402,21 @@ msgid "Empoyee ID"
 msgstr ""
 
 #. module: hr_attendance
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
+msgstr ""
+
+#. module: hr_attendance
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: hr_attendance
@@ -439,6 +458,13 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to %s with a date anterior to another event !\n"
+"Try to contact the administrator to correct attendances."
+msgstr ""
+
+#. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 #: field:hr.sign.in.out.ask,last_time:0
 msgid "Your last sign out"
@@ -470,6 +496,11 @@ msgstr ""
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
 msgid "Sign Out"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
+msgid "Sign in / Sign out. In some companies, staff have to sign in when they arrive at work and sign out again at the end of the day. If each employee has been linked to a system user, then they can encode their time with this action button."
 msgstr ""
 
 #. module: hr_attendance

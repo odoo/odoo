@@ -24,7 +24,6 @@ from openerp_sxw2rml import sxw2rml
 from StringIO import StringIO
 import base64
 import pooler
-import tools
 import addons
 
 class report_xml(osv.osv):

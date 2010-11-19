@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:16+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:16+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:44+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -180,8 +180,8 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
 msgstr ""
 
 #. module: base_calendar
@@ -215,16 +215,15 @@ msgid "Tue"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr ""
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
-msgstr ""
-
-#. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
 msgstr ""
 
 #. module: base_calendar
@@ -317,10 +316,9 @@ msgid "Secondly"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
 msgstr ""
 
 #. module: base_calendar
@@ -463,6 +461,11 @@ msgid "Reminder details"
 msgstr ""
 
 #. module: base_calendar
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.attendee,parent_ids:0
 msgid "Delegrated From"
 msgstr ""
@@ -497,6 +500,11 @@ msgstr ""
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Event Detail"
+msgstr ""
+
+#. module: base_calendar
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: base_calendar
@@ -912,8 +920,10 @@ msgid "June"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
 msgstr ""
 
 #. module: base_calendar
@@ -1168,6 +1178,11 @@ msgid "Tuesday"
 msgstr ""
 
 #. module: base_calendar
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.alarm,action:0
 msgid "Procedure"
 msgstr ""
@@ -1266,9 +1281,8 @@ msgid "Month"
 msgstr ""
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: view:calendar.event:0
-msgid "Invite People"
+#: selection:base_calendar.invite.attendee,type:0
+msgid "External Email"
 msgstr ""
 
 #. module: base_calendar
@@ -1325,6 +1339,12 @@ msgstr ""
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_values
 msgid "ir.values"
+msgstr ""
+
+#. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+#: view:calendar.event:0
+msgid "Invite People"
 msgstr ""
 
 #. module: base_calendar
@@ -1543,8 +1563,8 @@ msgid "Duration"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base_calendar.invite.attendee,type:0
-msgid "External Email"
+#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
+msgid "Create specific calendar alarms that can be assigned to calendar events or meetings."
 msgstr ""
 
 #. module: base_calendar
