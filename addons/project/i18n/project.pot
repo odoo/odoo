@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:49+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:49+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:55+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,11 @@ msgstr ""
 #. module: project
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: project
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: project
@@ -418,8 +423,8 @@ msgid "Done by"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-msgid "Planning"
+#: model:ir.actions.act_window,help:project.open_task_type_form
+msgid "Define here the steps that will be used on the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress of the resolution of a task or an issue."
 msgstr ""
 
 #. module: project
@@ -434,11 +439,6 @@ msgstr ""
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "_Cancel"
-msgstr ""
-
-#. module: project
-#: view:project.task.delegate:0
-msgid "_Delegate"
 msgstr ""
 
 #. module: project
@@ -462,6 +462,11 @@ msgid " (copy)"
 msgstr ""
 
 #. module: project
+#: field:project.task,user_id:0
+msgid "Responsible"
+msgstr ""
+
+#. module: project
 #: help:project.installer,hr_timesheet_sheet:0
 msgid "Tracks and helps employees encode and validate timesheets and attendances."
 msgstr ""
@@ -480,6 +485,11 @@ msgstr ""
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluate Task"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid "Date Stop: %(date)s"
 msgstr ""
 
 #. module: project
@@ -523,6 +533,11 @@ msgid "From draft state, it will come into the open state."
 msgstr ""
 
 #. module: project
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
@@ -539,9 +554,8 @@ msgid "Percent of tasks closed according to the total of tasks todo."
 msgstr ""
 
 #. module: project
-#: view:project.task.delegate:0
-#: field:project.task.delegate,new_task_description:0
-msgid "New Task Description"
+#: model:ir.actions.act_window,help:project.action_view_task
+msgid "A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to antoher user. If you delegate a task to another user, you get a new task in pending state, which will be re-opened when you have to review the work achieved. If you install the project_timesheet module, tasks works can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed."
 msgstr ""
 
 #. module: project
@@ -735,6 +749,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
 #: view:report.project.task.user:0
 msgid "Tasks Analysis"
 msgstr ""
@@ -771,8 +786,8 @@ msgid "Project"
 msgstr ""
 
 #. module: project
-#: view:project.task.reevaluate:0
-msgid "_Evaluate"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: project
@@ -1059,6 +1074,11 @@ msgid "Implements and tracks the concepts and task types defined in the SCRUM me
 msgstr ""
 
 #. module: project
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr ""
+
+#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
@@ -1180,9 +1200,8 @@ msgid "Reactivate Project"
 msgstr ""
 
 #. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
-msgid "Urgent"
+#: view:project.task.delegate:0
+msgid "_Delegate"
 msgstr ""
 
 #. module: project
@@ -1260,6 +1279,11 @@ msgid "State"
 msgstr ""
 
 #. module: project
+#: model:ir.actions.act_window,help:project.action_project_task_user_tree
+msgid "This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc."
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:0
 #, python-format
 msgid "Task '%s' set in progress"
@@ -1287,6 +1311,11 @@ msgid "Done"
 msgstr ""
 
 #. module: project
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.project:0
@@ -1303,6 +1332,11 @@ msgstr ""
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
 #: selection:project.vs.hours,state:0
 msgid "Open"
+msgstr ""
+
+#. module: project
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: project
@@ -1352,8 +1386,9 @@ msgid "Current Activity"
 msgstr ""
 
 #. module: project
-#: field:project.task,user_id:0
-msgid "Responsible"
+#: view:project.task.delegate:0
+#: field:project.task.delegate,new_task_description:0
+msgid "New Task Description"
 msgstr ""
 
 #. module: project
@@ -1385,6 +1420,11 @@ msgid "Very Low"
 msgstr ""
 
 #. module: project
+#: view:project.task:0
+msgid "Planning"
+msgstr ""
+
+#. module: project
 #: field:project.project,warn_manager:0
 #: field:project.task.close,manager_warn:0
 msgid "Warn Manager"
@@ -1411,6 +1451,11 @@ msgid "Re-evaluate Task"
 msgstr ""
 
 #. module: project
+#: view:project.task.reevaluate:0
+msgid "_Evaluate"
+msgstr ""
+
+#. module: project
 #: help:project.installer,project_long_term:0
 msgid "Enables long-term projects tracking, including multiple-phase projects and resource allocation handling."
 msgstr ""
@@ -1423,6 +1468,11 @@ msgstr ""
 #. module: project
 #: field:project.installer,project_timesheet:0
 msgid "Bill Time on Tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid "A project contains a set of tasks or issues that will be performed by your resources assigned on it. A project can be put into a hierarchy, as a child of a Parent Project. This allows you to  design large project structure with different phases spread over the project duration cycle. Each user can set his default project in his own preferences, in order to filter automatically the tasks or issues he usually works on."
 msgstr ""
 
 #. module: project
@@ -1445,8 +1495,9 @@ msgid "Your Task Title"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-msgid "Scheduling"
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "Urgent"
 msgstr ""
 
 #. module: project
@@ -1712,7 +1763,7 @@ msgstr ""
 
 #. module: project
 #: view:project.project:0
-msgid "Date Stop: %(date_stop)s"
+msgid "Scheduling"
 msgstr ""
 
 #. module: project

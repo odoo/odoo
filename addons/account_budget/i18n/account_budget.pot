@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:03+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:03+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:17+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,9 +37,8 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
-msgid "Printed at:"
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid "A budget is a forecast of your company's income and expenses expected for a period in the future. With a budget, a company is able to carefully look at how much money they are taking in during a given period, and figure out the best way to divide it among various categories. By keeping  track of where your money goes, you may be less likely to overspend, and more likely to meet your financial goals. Forecast a budget by detailing the expected revenue per analytic account and monitor its evolution based on the actuals realised during that period."
 msgstr ""
 
 #. module: account_budget
@@ -50,6 +49,11 @@ msgstr ""
 #. module: account_budget
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
+msgstr ""
+
+#. module: account_budget
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: account_budget
@@ -78,7 +82,6 @@ msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "at"
 msgstr ""
 
@@ -89,7 +92,6 @@ msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "Currency:"
 msgstr ""
 
@@ -135,10 +137,25 @@ msgid "Description"
 msgstr ""
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "Currency"
+msgstr ""
+
+#. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "Total :"
+msgstr ""
+
+#. module: account_budget
 #: field:account.budget.post,company_id:0
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
+msgstr ""
+
+#. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "to"
 msgstr ""
 
 #. module: account_budget
@@ -227,6 +244,11 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account_budget.account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget
 msgid "Budget"
+msgstr ""
+
+#. module: account_budget
+#: report:account.budget:0
+msgid "Printed at:"
 msgstr ""
 
 #. module: account_budget
@@ -327,6 +349,11 @@ msgid "Select Dates Period"
 msgstr ""
 
 #. module: account_budget
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
@@ -364,7 +391,6 @@ msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "Budget :"
 msgstr ""
 
@@ -395,6 +421,11 @@ msgid "Budget Lines"
 msgstr ""
 
 #. module: account_budget
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
@@ -418,5 +449,10 @@ msgstr ""
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
+msgstr ""
+
+#. module: account_budget
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

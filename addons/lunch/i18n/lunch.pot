@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:39+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:39+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:37+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,6 +66,11 @@ msgstr ""
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "March"
+msgstr ""
+
+#. module: lunch
+#: report:lunch.order:0
+msgid "Total :"
 msgstr ""
 
 #. module: lunch
@@ -145,6 +150,11 @@ msgid "Search Lunch Order"
 msgstr ""
 
 #. module: lunch
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: lunch
 #: field:lunch.order,state:0
 msgid "State"
 msgstr ""
@@ -160,8 +170,18 @@ msgid "Box Amount by User"
 msgstr ""
 
 #. module: lunch
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: lunch
 #: field:lunch.cashmove,create_date:0
 msgid "Creation Date"
+msgstr ""
+
+#. module: lunch
+#: report:lunch.order:0
+msgid "Name/Date"
 msgstr ""
 
 #. module: lunch
@@ -349,7 +369,6 @@ msgstr ""
 
 #. module: lunch
 #: view:lunch.cashmove:0
-#: report:lunch.order:0
 #: field:lunch.order,date:0
 msgid "Date"
 msgstr ""
@@ -364,11 +383,6 @@ msgstr ""
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "October"
-msgstr ""
-
-#. module: lunch
-#: report:lunch.order:0
-msgid "Total:"
 msgstr ""
 
 #. module: lunch
@@ -413,6 +427,11 @@ msgstr ""
 #. module: lunch
 #: view:lunch.order.confirm:0
 msgid "Cancel"
+msgstr ""
+
+#. module: lunch
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: lunch
@@ -488,7 +507,6 @@ msgstr ""
 #. module: lunch
 #: field:lunch.cashbox,name:0
 #: field:lunch.category,name:0
-#: report:lunch.order:0
 #: field:lunch.product,name:0
 #: field:report.lunch.order,box_name:0
 msgid "Name"
