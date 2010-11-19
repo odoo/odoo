@@ -35,6 +35,7 @@ import workflow
 import ir_rule
 import wizard
 import ir_config_parameter
+import osv_memory_autovacuum
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

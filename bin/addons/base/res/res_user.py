@@ -33,6 +33,7 @@ import time
 class groups(osv.osv):
     _name = "res.groups"
     _order = 'name'
+    _description = "Access Groups"
     _columns = {
         'name': fields.char('Group Name', size=64, required=True),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
@@ -264,7 +265,7 @@ class users(osv.osv):
     ]
 
     _sql_constraints = [
-        ('login_key', 'UNIQUE (login)',  _('You can not have two users with the same login !'))
+        ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
 
     def _get_email_from(self, cr, uid, ids, context=None):

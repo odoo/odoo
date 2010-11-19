@@ -463,11 +463,13 @@ class configmanager(object):
 
         # try to create the directories and write the file
         try:
-            if not os.path.exists(os.path.dirname(self.rcfile)):
+            rc_exists = os.path.exists(self.rcfile)
+            if not rc_exists and not os.path.exists(os.path.dirname(self.rcfile)):
                 os.makedirs(os.path.dirname(self.rcfile))
             try:
                 p.write(file(self.rcfile, 'w'))
-                os.chmod(self.rcfile, 0600)
+                if not rc_exists:
+                    os.chmod(self.rcfile, 0600)
             except IOError:
                 sys.stderr.write("ERROR: couldn't write the config file\n")
 

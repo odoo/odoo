@@ -33,6 +33,8 @@ without flatten, one could further edit the resulting form.
 with flatten, everything is turned into text.
 """
 
+from __future__ import with_statement
+
 import os
 import tempfile
 
@@ -58,7 +60,7 @@ trailer
 %%EOF
 """
 
-def output_field( f ):
+def output_field(f):
     return "\xfe\xff" + "".join( [ "\x00"+c for c in f ] )
 
 def extract_keys(lines):
@@ -99,7 +101,7 @@ def extract_keys_from_pdf(filename):
     finally:
         try:
             os.remove(tmp_file)
-        except:
+        except Exception:
             pass # nothing to do
     return extract_keys(lines)
 
@@ -113,7 +115,7 @@ def fill_pdf(infile, outfile, fields):
     finally:
         try:
             os.remove(tmp_file)
-        except:
+        except Exception:
             pass # nothing to do
 
 def testfill_pdf(infile, outfile):

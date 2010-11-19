@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 OpenERP S.A. http://www.openerp.com
+#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,5 +19,18 @@
 #
 ##############################################################################
 
-from test_osv import *
-from test_translate import *
+from osv import osv
+from osv.orm import orm_memory
+
+class osv_memory_autovacuum(osv.osv_memory):
+    _name = 'osv_memory.autovacuum'
+
+    def power_on(self, cr, uid, context=None):
+        for model in self.pool.obj_list():
+            obj = self.pool.get(model)
+            if isinstance(obj, orm_memory):
+                obj.vaccum(cr, uid)
+        return True
+
+osv_memory_autovacuum()
+
