@@ -30,7 +30,7 @@
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],
-    'update_xml': ['account_sequence_data.xml','account_sequence.xml'],
+    'update_xml': ['account_sequence_data.xml','account_sequence.xml',],
     'demo_xml': ['account_sequence_minimal.xml'],
     'installable': True,
     'active': False,
