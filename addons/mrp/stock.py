@@ -31,7 +31,7 @@ class StockMove(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Production', select=True),
     }
     
-    def _action_explode(self, cr, uid, move, context={}):
+    def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
         @param move: Stock moves
         @return: True
@@ -41,6 +41,8 @@ class StockMove(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
         wf_service = netsvc.LocalService("workflow")
+        if not context:
+            context = {}
         if move.product_id.supply_method == 'produce' and move.product_id.procure_method == 'make_to_order':
             bis = bom_obj.search(cr, uid, [
                 ('product_id','=',move.product_id.id),
@@ -48,7 +50,7 @@ class StockMove(osv.osv):
                 ('type','=','phantom')])
             if bis:
                 factor = move.product_qty
-                bom_point = bom_obj.browse(cr, uid, bis[0])
+                bom_point = bom_obj.browse(cr, uid, bis[0], context=context)
                 res = bom_obj._bom_explode(cr, uid, bom_point, factor, [])
                 dest = move.product_id.product_tmpl_id.property_stock_production.id
                 state = 'confirmed'
@@ -124,9 +126,11 @@ class StockMove(osv.osv):
         @return: Scraped lines
         """  
         res = []
+        if not context:
+            context = {}
         production_obj = self.pool.get('mrp.production')
         wf_service = netsvc.LocalService("workflow")
-        for move in self.browse(cr, uid, ids):
+        for move in self.browse(cr, uid, ids, context=context):
             new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, context=context)
             self.write(cr, uid, [move.id], {'prodlot_id': False, 'tracking_id': False})
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
@@ -170,7 +174,9 @@ class spilt_in_production_lot(osv.osv_memory):
         """  
         production_obj = self.pool.get('mrp.production')
         move_obj = self.pool.get('stock.move')  
-        res = []      
+        res = []
+        if not context:
+            context = {}      
         for move in move_obj.browse(cr, uid, move_ids, context=context):
             new_moves = super(spilt_in_production_lot, self).split(cr, uid, ids, move_ids, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])

@@ -33,6 +33,8 @@ class account_analytic_account(osv.osv):
     def _analysis_all(self, cr, uid, ids, fields, arg, context=None):
         dp = 2
         res = dict([(i, {}) for i in ids])
+        if context is None:
+            context = {}
 
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
         accounts = self.browse(cr, uid, ids, context=context)
@@ -251,6 +253,8 @@ class account_analytic_account(osv.osv):
     def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res_final = {}
+        if context is None:
+            context = {}
         child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
         for i in child_ids:
             res[i] =  {}
@@ -269,7 +273,7 @@ class account_analytic_account(osv.osv):
                     GROUP BY account_analytic_line.account_id", (child_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id][name] = round(sum,2)
-        data = self._compute_level_tree(cr, uid, ids, child_ids, res, [name], context)
+        data = self._compute_level_tree(cr, uid, ids, child_ids, res, [name], context=context)
         for i in data:
             res_final[i] = data[i][name]
         return res_final
@@ -277,6 +281,8 @@ class account_analytic_account(osv.osv):
     def _total_cost_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res_final = {}
+        if context is None:
+            context = {}
         child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
 
         for i in child_ids:
@@ -303,6 +309,8 @@ class account_analytic_account(osv.osv):
 
     def _remaining_hours_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
+        if context is None:
+            context = {}
         for account in self.browse(cr, uid, ids, context=context):
             if account.quantity_max != 0:
                 res[account.id] = account.quantity_max - account.hours_quantity
@@ -314,6 +322,8 @@ class account_analytic_account(osv.osv):
 
     def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
+        if context is None:
+            context = {}
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = account.hours_quantity - account.hours_qtt_non_invoiced
             if res[account.id] < 0:
@@ -324,7 +334,9 @@ class account_analytic_account(osv.osv):
 
     def _revenue_per_hour_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        if context is None:
+            context = {}
+        for account in self.browse(cr, uid, ids, context=context):
             if account.hours_qtt_invoiced == 0:
                 res[account.id]=0.0
             else:
@@ -335,7 +347,9 @@ class account_analytic_account(osv.osv):
 
     def _real_margin_rate_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        if context is None:
+            context = {}
+        for account in self.browse(cr, uid, ids, context=context):
             if account.ca_invoiced == 0:
                 res[account.id]=0.0
             elif account.total_cost != 0.0:
@@ -348,7 +362,9 @@ class account_analytic_account(osv.osv):
 
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        if context is None:
+            context = {}
+        for account in self.browse(cr, uid, ids, context=context):
             if account.amount_max != 0:
                 res[account.id] = account.amount_max - account.ca_invoiced
             else:
@@ -359,7 +375,9 @@ class account_analytic_account(osv.osv):
 
     def _real_margin_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        if context is None:
+            context = {}
+        for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = account.ca_invoiced + account.total_cost
         for id in ids:
             res[id] = round(res.get(id, 0.0),2)
@@ -367,7 +385,9 @@ class account_analytic_account(osv.osv):
 
     def _theorical_margin_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        if context is None:
+            context = {}
+        for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = account.ca_theorical + account.total_cost
         for id in ids:
             res[id] = round(res.get(id, 0.0),2)
@@ -430,6 +450,8 @@ class account_analytic_account_summary_user(osv.osv):
 
     def _unit_amount(self, cr, uid, ids, name, arg, context=None):
         res = {}
+        if context is None:
+            context = {}
         account_obj = self.pool.get('account.analytic.account')
         cr.execute('SELECT MAX(id) FROM res_users')
         max_user = cr.fetchone()[0]
@@ -596,6 +618,8 @@ class account_analytic_account_summary_month(osv.osv):
 
     def _unit_amount(self, cr, uid, ids, name, arg, context=None):
         res = {}
+        if context is None:
+            context = {}
         account_obj = self.pool.get('account.analytic.account')
         account_ids = [int(str(int(x))[:-6]) for x in ids]
         month_ids = [int(str(int(x))[-6:]) for x in ids]

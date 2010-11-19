@@ -42,10 +42,10 @@ class base_setup_config_choice(osv.osv_memory):
         file_data = tools.file_open(path,'rb').read()
         return base64.encodestring(file_data)
 
-    def get_users(self, cr, uid, context={}):
+    def get_users(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         user_ids = user_obj.search(cr, uid, [])
-        users = user_obj.browse(cr, uid, user_ids)
+        users = user_obj.browse(cr, uid, user_ids, context=context)
         user_str = '\n'.join(map(lambda x: '    - %s :\n\t\tLogin : %s \n\t\tPassword : %s' % (x.name, x.login, x.password), users))
         return _('The following users have been installed : \n')+ user_str
 

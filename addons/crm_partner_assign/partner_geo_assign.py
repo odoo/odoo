@@ -71,6 +71,8 @@ class res_partner(osv.osv):
         'partner_weight': lambda *args: 0
     }
     def geo_localize(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner.address:
                 continue
@@ -94,7 +96,7 @@ class crm_lead(osv.osv):
         'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
-    def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context={}):
+    def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context=None):
         """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -109,6 +111,8 @@ class crm_lead(osv.osv):
 
     def assign_partner(self, cr, uid, ids, context=None):
         ok = False
+        if not context:
+            context = {}
         for part in self.browse(cr, uid, ids, context=context):
             if not part.country_id:
                 continue

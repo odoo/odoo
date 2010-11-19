@@ -30,8 +30,10 @@ class stock_picking(osv.osv):
 
     def _cal_weight(self, cr, uid, ids, name, args, context=None):
         res = {}
+        if not context:
+            context = {}
         uom_obj = self.pool.get('product.uom')
-        for picking in self.browse(cr, uid, ids, context):
+        for picking in self.browse(cr, uid, ids, context=context):
             total_weight = total_weight_net = 0.00
 
             for move in picking.move_lines:
@@ -75,6 +77,9 @@ class stock_picking(osv.osv):
         carrier_obj = self.pool.get('delivery.carrier')
         grid_obj = self.pool.get('delivery.grid')
         invoice_line_obj = self.pool.get('account.invoice.line')
+        
+        if not context:
+            context = {}
 
         result = super(stock_picking, self).action_invoice_create(cursor, user,
                 ids, journal_id=journal_id, group=group, type=type,
@@ -137,8 +142,10 @@ class stock_move(osv.osv):
 
     def _cal_move_weight(self, cr, uid, ids, name, args, context=None):
         res = {}
+        if not context:
+            context = {}
         uom_obj = self.pool.get('product.uom')
-        for move in self.browse(cr, uid, ids, context):
+        for move in self.browse(cr, uid, ids, context=context):
             weight = weight_net = 0.00
             if move.product_id.weight > 0.00:
                 converted_qty = move.product_qty

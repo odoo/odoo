@@ -174,8 +174,8 @@ class crm_lead2partner(osv.osv_memory):
         contact_id = False
         rec_ids = context and context.get('active_ids', [])
 
-        for data in self.browse(cr, uid, ids):
-            for lead in lead_obj.browse(cr, uid, rec_ids):
+        for data in self.browse(cr, uid, ids, context=context):
+            for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
                 if data.action == 'create':
                     partner_id = partner_obj.create(cr, uid, {
                         'name': lead.partner_name or lead.contact_name or lead.name,
@@ -229,7 +229,7 @@ class crm_lead2partner(osv.osv_memory):
         if not context:
             context = {}
 
-        partner_ids = self._create_partner(cr, uid, ids, context)
+        partner_ids = self._create_partner(cr, uid, ids, context=context)
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])

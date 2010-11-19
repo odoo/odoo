@@ -143,7 +143,7 @@ class document_directory(osv.osv):
         _parent(dir_id, path)
         return path
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from document_directory where id in ('+','.join(map(str,ids))+')')
@@ -186,6 +186,8 @@ class document_directory(osv.osv):
            This function can be overriden by inherited classes ;)
            @param dbro The browse object, if caller already has it
         """
+        if not context:
+            context = {}
         if dbro is None:
             dbro = self.browse(cr, uid, ids, context=context)
 
@@ -235,9 +237,11 @@ class document_directory(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default ={}
+        if not context:
+            context = {}
         name = self.read(cr, uid, [id])[0]['name']
         default.update({'name': name+ " (copy)"})
-        return super(document_directory,self).copy(cr, uid, id, default, context)
+        return super(document_directory,self).copy(cr, uid, id, default, context=context)
 
     def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
         name=vals.get('name',False)

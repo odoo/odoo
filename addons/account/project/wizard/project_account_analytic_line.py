@@ -29,7 +29,9 @@ class project_account_analytic_line(osv.osv_memory):
          'to_date': fields.date('To'),
      }
 
-     def action_open_window(self, cr, uid, ids, context={}):
+     def action_open_window(self, cr, uid, ids, context=None):
+          if context is None:
+            context = {}
           mod_obj =self.pool.get('ir.model.data')
           domain = []
           data = self.read(cr, uid, ids, [])[0]

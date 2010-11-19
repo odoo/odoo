@@ -106,7 +106,7 @@ def _links_get(self, cr, uid, context=None):
     @param context: A standard dictionary for contextual values
     @return: list of dictionary which contain object and name and id.
     """
-
+    if not context: context = {}
     obj = self.pool.get('res.request.link')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
@@ -222,7 +222,7 @@ class calendar_attendee(osv.osv):
             name += ':'
         return (name or '') + (email and ('MAILTO:' + email) or '')
 
-    def _compute_data(self, cr, uid, ids, name, arg, context):
+    def _compute_data(self, cr, uid, ids, name, arg, context=None):
         """
         Compute data on function fields for attendee values .
         @param cr: the current row, from the database cursor,
@@ -234,6 +234,7 @@ class calendar_attendee(osv.osv):
         """
         name = name[0]
         result = {}
+        if not context: context = {}
         for attdata in self.browse(cr, uid, ids, context=context):
             id = attdata.id
             result[id] = {}
@@ -300,7 +301,7 @@ class calendar_attendee(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: list of dictionary which contain object and name and id.
         """
-
+        if not context: context = {}
         obj = self.pool.get('res.request.link')
         ids = obj.search(cr, uid, [])
         res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
@@ -314,6 +315,7 @@ class calendar_attendee(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: list of dictionary which contain code and name and id.
         """
+        if not context: context = {}
         obj = self.pool.get('res.lang')
         ids = obj.search(cr, uid, [])
         res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
@@ -649,7 +651,7 @@ true, it will allow you to hide the event alarm information without removing it.
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
 
         model_obj = self.pool.get(model)
-        for data in model_obj.browse(cr, uid, ids, context):
+        for data in model_obj.browse(cr, uid, ids, context=context):
 
             basic_alarm = data.alarm_id
             cal_alarm = data.base_calendar_alarm_id
@@ -719,7 +721,7 @@ true, it will allow you to hide the event alarm information without removing it.
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
         model_obj = self.pool.get(model)
-        for datas in model_obj.browse(cr, uid, ids, context):
+        for datas in model_obj.browse(cr, uid, ids, context=context):
             alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', datas.id)])
             if alarm_ids:
                 alarm_obj.unlink(cr, uid, alarm_ids)
@@ -794,7 +796,7 @@ class calendar_alarm(osv.osv):
                 delta = timedelta(minutes=vals['trigger_duration'])
             trigger_date = dtstart + (vals['trigger_occurs'] == 'after' and delta or -delta)
             vals['trigger_date'] = trigger_date
-        res = super(calendar_alarm, self).create(cr, uid, vals, context)
+        res = super(calendar_alarm, self).create(cr, uid, vals, context=context)
         return res
 
     def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
@@ -1593,6 +1595,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @return: True
         """
         res = False
+        if not context: context = {}
         for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
             event_id = event_datas['id']
             if isinstance(event_id, (int, long)):
@@ -1685,7 +1688,7 @@ class calendar_todo(osv.osv):
     _inherit = "calendar.event"
     _description = "Calendar Task"
 
-    def _get_date(self, cr, uid, ids, name, arg, context):
+    def _get_date(self, cr, uid, ids, name, arg, context=None):
         """
         Get Date
         @param self: The object pointer
@@ -1697,11 +1700,12 @@ class calendar_todo(osv.osv):
         """
 
         res = {}
+        if not context: context = {}
         for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = event.date_start
         return res
 
-    def _set_date(self, cr, uid, id, name, value, arg, context):
+    def _set_date(self, cr, uid, id, name, value, arg, context=None):
         """
         Set Date
         @param self: The object pointer

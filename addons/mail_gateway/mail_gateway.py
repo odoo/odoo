@@ -69,13 +69,15 @@ class mailgate_thread(osv.osv):
     def message_new(self, cr, uid, msg, context):
         raise Exception, _('Method is not implemented')
 
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
+    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
         raise Exception, _('Method is not implemented')
 
     def message_followers(self, cr, uid, ids, context=None):
         """ Get a list of emails of the people following this thread
         """
         res = {}
+        if not context:
+            context = {}
         if isinstance(ids, (str, int, long)):
             ids = [long(ids)]
         for thread in self.browse(cr, uid, ids, context=context):
@@ -179,7 +181,7 @@ class mailgate_message(osv.osv):
     '''
     Mailgateway Message
     '''
-    def open_document(self, cr, uid, ids, context):
+    def open_document(self, cr, uid, ids, context=None):
         """ To Open Document
         @param self: The object pointer.
         @param cr: A database cursor
@@ -188,9 +190,11 @@ class mailgate_message(osv.osv):
         @param context: A standard dictionary
         """
         action_data = False
+        if not context:
+            context = {}
         if ids:
             message_id = ids[0]
-            mailgate_data = self.browse(cr, uid, message_id)
+            mailgate_data = self.browse(cr, uid, message_id, context=context)
             model = mailgate_data.model
             res_id = mailgate_data.res_id
 
@@ -204,7 +208,7 @@ class mailgate_message(osv.osv):
                     })
         return action_data
 
-    def open_attachment(self, cr, uid, ids, context):
+    def open_attachment(self, cr, uid, ids, context=None):
         """ To Open attachments
         @param self: The object pointer.
         @param cr: A database cursor
@@ -213,8 +217,10 @@ class mailgate_message(osv.osv):
         @param context: A standard dictionary
         """
         action_data = False
+        if not context:
+            context = {}
         action_pool = self.pool.get('ir.actions.act_window')
-        message_pool = self.browse(cr ,uid, ids)[0]
+        message_pool = self.browse(cr ,uid, ids, context=context)[0]
         action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
         if action_ids:
             action_data = action_pool.read(cr, uid, action_ids[0], context=context)
@@ -317,6 +323,8 @@ class mailgate_tool(osv.osv_memory):
         """
         if isinstance(res_ids, (int, long)):
             res_ids = [res_ids]
+        if not context:
+            context = {}
 
         msg_pool = self.pool.get('mailgate.message')
         for res_id in res_ids:
@@ -350,6 +358,8 @@ class mailgate_tool(osv.osv_memory):
         @param email_error: Default Email address in case of any Problem
         """
         model_pool = self.pool.get(model)
+        if not context:
+            context = {}
 
         for res in model_pool.browse(cr, uid, res_ids, context=context):
             message_followers = model_pool.message_followers(cr, uid, [res.id])[res.id]
@@ -403,7 +413,7 @@ class mailgate_tool(osv.osv_memory):
         def create_record(msg):
             att_ids = []
             if hasattr(model_pool, 'message_new'):
-                res_id = model_pool.message_new(cr, uid, msg, context)
+                res_id = model_pool.message_new(cr, uid, msg, context=context)
                 if custom_values:
                     model_pool.write(cr, uid, [res_id], custom_values, context=context)
             else:

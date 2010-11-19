@@ -35,7 +35,7 @@ class report_custom(report_rml):
     def __init__(self, name, table, tmpl, xsl):
         report_rml.__init__(self, name, table, tmpl, xsl)
 
-    def create_xml(self, cr, uid, ids, datas, context={}):
+    def create_xml(self, cr, uid, ids, datas, context=None):
         service = netsvc.LocalService("object_proxy")
 
         lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', ids, ['obj_price','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])

@@ -30,10 +30,11 @@ class account_move(osv.osv):
     }
 
     def post(self, cr, uid, ids, context=None):
+        if not context: context = {}
         obj_sequence = self.pool.get('ir.sequence')
         res = super(account_move, self).post(cr, uid, ids, context=context)
         seq_no = False
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             if line.journal_id.internal_sequence:
                 seq_no = obj_sequence.get_id(cr, uid, line.journal_id.internal_sequence.id, context=context)
             if seq_no:

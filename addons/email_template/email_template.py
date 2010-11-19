@@ -72,15 +72,17 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
     @return: Computed message (unicode) or u""
     """
     pool = pooler.get_pool(cursor.dbname)
+    if not context:
+        context = {}
     if message is None:
         message = {}
     #Returns the computed expression
     if message:
         try:
             message = tools.ustr(message)
-            object = pool.get(template.model_int_name).browse(cursor, user, recid, context)
+            object = pool.get(template.model_int_name).browse(cursor, user, recid, context=context)
             env = {
-                'user':pool.get('res.users').browse(cursor, user, user, context),
+                'user':pool.get('res.users').browse(cursor, user, user, context=context),
                 'db':cursor.dbname
                    }
             if template.template_language == 'mako':
@@ -270,9 +272,11 @@ This is useful for CRM leads for example"),
         ('name', 'unique (name)', _('The template name must be unique !'))
     ]
 
-    def create_action(self, cr, uid, ids, context):
+    def create_action(self, cr, uid, ids, context=None):
         vals = {}
-        template_obj = self.browse(cr, uid, ids)[0]
+        if not context:
+            context = {}
+        template_obj = self.browse(cr, uid, ids, context=context)[0]
         src_obj = template_obj.object_name.model
         vals['ref_ir_act_window'] = self.pool.get('ir.actions.act_window').create(cr, uid, {
              'name': template_obj.name,
@@ -299,8 +303,10 @@ This is useful for CRM leads for example"),
         }, context)
         return True
 
-    def unlink_action(self, cr, uid, ids, context):
-        for template in self.browse(cr, uid, ids, context):
+    def unlink_action(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for template in self.browse(cr, uid, ids, context=context):
             try:
                 if template.ref_ir_act_window:
                     self.pool.get('ir.actions.act_window').unlink(cr, uid, template.ref_ir_act_window.id, context)
@@ -309,13 +315,13 @@ This is useful for CRM leads for example"),
             except:
                 raise osv.except_osv(_("Warning"), _("Deletion of Record failed"))
 
-    def delete_action(self, cr, uid, ids, context):
-        self.unlink_action(cr, uid, ids, context)
+    def delete_action(self, cr, uid, ids, context=None):
+        self.unlink_action(cr, uid, ids, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
-        self.unlink_action(cr, uid, ids, context)
-        return super(email_template, self).unlink(cr, uid, ids, context)
+        self.unlink_action(cr, uid, ids, context=context)
+        return super(email_template, self).unlink(cr, uid, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:

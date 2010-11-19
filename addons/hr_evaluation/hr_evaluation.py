@@ -376,7 +376,7 @@ class hr_evaluation_interview(osv.osv):
         record = self.browse(cr, uid, ids, context=context)
         record = record and record[0]
         context.update({'survey_id': record.survey_id.id, 'response_id': [record.response.id], 'response_no':0,})
-        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
+        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 
 hr_evaluation_interview()

@@ -41,7 +41,8 @@ class account_cashbox_line(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
-        for obj in self.browse(cr, uid, ids):
+        context = context or {}
+        for obj in self.browse(cr, uid, ids, context=context):
             res[obj.id] = obj.pieces * obj.number
         return res
 
@@ -76,7 +77,8 @@ class account_cash_statement(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
-        for statement in self.browse(cr, uid, ids):
+        context = context or {}
+        for statement in self.browse(cr, uid, ids, context=context):
             amount_total = 0.0
 
             if statement.journal_id.type not in('cash'):
@@ -96,7 +98,8 @@ class account_cash_statement(osv.osv):
         @return: Dictionary of values.
         """
         res ={}
-        for statement in self.browse(cr, uid, ids):
+        context = context or {}
+        for statement in self.browse(cr, uid, ids, context=context):
             amount_total = 0.0
             for line in statement.ending_details_ids:
                 amount_total += line.pieces * line.number
@@ -111,7 +114,8 @@ class account_cash_statement(osv.osv):
         @return: Dictionary of values.
         """
         res2={}
-        for statement in self.browse(cr, uid, ids):
+        context = context or {}
+        for statement in self.browse(cr, uid, ids, context=context):
             encoding_total=0.0
             for line in statement.line_ids:
                encoding_total += line.amount
@@ -119,6 +123,7 @@ class account_cash_statement(osv.osv):
         return res2
 
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
+        context = context or {}
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
         res = {}
@@ -152,6 +157,7 @@ class account_cash_statement(osv.osv):
         return res
 
     def _get_company(self, cr, uid, context=None):
+        context = context or {}
         user_pool = self.pool.get('res.users')
         company_pool = self.pool.get('res.company')
         user = user_pool.browse(cr, uid, uid, context=context)
@@ -160,7 +166,7 @@ class account_cash_statement(osv.osv):
             company_id = company_pool.search(cr, uid, [])
         return company_id and company_id[0] or False
 
-    def _get_cash_open_box_lines(self, cr, uid, context={}):
+    def _get_cash_open_box_lines(self, cr, uid, context=None):
         res = []
         curr = [1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
@@ -173,14 +179,14 @@ class account_cash_statement(osv.osv):
         if journal_ids:
             results = self.search(cr, uid, [('journal_id', 'in', journal_ids),('state', '=', 'confirm')], context=context)
             if results:
-                cash_st = self.browse(cr, uid, results, context)[0]
+                cash_st = self.browse(cr, uid, results, context=context)[0]
                 for cash_line in cash_st.ending_details_ids:
                     for r in res:
                         if cash_line.pieces == r['pieces']:
                             r['number'] = cash_line.number
         return res
 
-    def _get_default_cash_close_box_lines(self, cr, uid, context={}):
+    def _get_default_cash_close_box_lines(self, cr, uid, context=None):
         res = []
         curr = [1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
@@ -191,7 +197,7 @@ class account_cash_statement(osv.osv):
             res.append(dct)
         return res
 
-    def _get_cash_close_box_lines(self, cr, uid, context={}):
+    def _get_cash_close_box_lines(self, cr, uid, context=None):
         res = []
         curr = [1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
@@ -202,11 +208,11 @@ class account_cash_statement(osv.osv):
             res.append((0, 0, dct))
         return res
 
-    def _get_cash_open_close_box_lines(self, cr, uid, context={}):
+    def _get_cash_open_close_box_lines(self, cr, uid, context=None):
         res = {}
         start_l = []
         end_l = []
-        starting_details = self._get_cash_open_box_lines(cr, uid, context)
+        starting_details = self._get_cash_open_box_lines(cr, uid, context=context)
         ending_details = self._get_default_cash_close_box_lines(cr, uid, context)
         for start in starting_details:
             start_l.append((0, 0, start))
@@ -240,6 +246,7 @@ class account_cash_statement(osv.osv):
      }
 
     def create(self, cr, uid, vals, context=None):
+        context = context or {}
         sql = [
                 ('journal_id', '=', vals.get('journal_id', False)),
                 ('state', '=', 'open')
@@ -248,7 +255,7 @@ class account_cash_statement(osv.osv):
         if open_jrnl:
             raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
 
-        if self.pool.get('account.journal').browse(cr, uid, vals['journal_id']).type == 'cash':
+        if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
             open_close = self._get_cash_open_close_box_lines(cr, uid, context)
             if vals.get('starting_details_ids', False):
                 for start in vals.get('starting_details_ids'):

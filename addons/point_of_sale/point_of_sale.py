@@ -96,14 +96,16 @@ class pos_order(osv.osv):
                 res[rec.id] = res[rec.id] + rec.amount_tax
         return res
 
-    def _get_date_payment2(self, cr, uid, ids, context, *a):
+    def _get_date_payment2(self, cr, uid, ids, context=None, *a):
         # Todo need to check this function
         """ Find payment Date
         @param field_names: Names of fields.
         @return: Dictionary of values """
         res = {}
         val = None
-        for order in self.browse(cr, uid, ids):
+        if not context:
+            context = {}
+        for order in self.browse(cr, uid, ids, context=context):
             cr.execute("SELECT date_payment FROM pos_order WHERE id = %s", (order.id,))
             date_p = cr.fetchone()
             date_p = date_p and date_p[0] or None
@@ -120,12 +122,14 @@ class pos_order(osv.osv):
                 res[order.id] = val
         return res
 
-    def _get_date_payment(self, cr, uid, ids, context, *a):
+    def _get_date_payment(self, cr, uid, ids, context=None, *a):
         """ Find  Validation Date
         @return: Dictionary of values """
         res = {}
         val = None
-        for order in self.browse(cr, uid, ids):
+        if not context:
+            context = {}
+        for order in self.browse(cr, uid, ids, context=context):
             cr.execute("SELECT date_validation FROM pos_order WHERE id = %s", (order.id,))
             date_p = cr.fetchone()
             date_p = date_p and date_p[0] or None
@@ -153,6 +157,8 @@ class pos_order(osv.osv):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         res = {}
+        if not context:
+            context = {}
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
                 'amount_paid': 0.0,
@@ -409,6 +415,8 @@ class pos_order(osv.osv):
         property_obj = self.pool.get("ir.property")
         move_obj=self.pool.get('stock.move')
         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
+        if not context:
+            context = {}
         orders = self.browse(cr, uid, ids, context=context)
         for order in orders:
             if not order.picking_id:
@@ -554,6 +562,8 @@ class pos_order(osv.osv):
 
     def add_product(self, cr, uid, order_id, product_id, qty, context=None):
         """Create a new order line the order"""
+        if not context:
+            context = {}
         line_obj = self.pool.get('pos.order.line')
         values = self.read(cr, uid, order_id, ['partner_id', 'pricelist_id'])
 
@@ -576,6 +586,8 @@ class pos_order(osv.osv):
     def refund(self, cr, uid, ids, context=None):
         """Create a copy of order  for refund order"""
         clone_list = []
+        if not context:
+            context = {}
         line_obj = self.pool.get('pos.order.line')
 
         for order in self.browse(cr, uid, ids, context=context):
@@ -604,6 +616,8 @@ class pos_order(osv.osv):
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')
         inv_ids = []
+        if not context:
+            context = {}
 
         for order in self.pool.get('pos.order').browse(cr, uid, ids, context=context):
             if order.invoice_id:
@@ -855,6 +869,8 @@ class pos_order(osv.osv):
 
     def cancel_picking(self, cr, uid, ids, context=None):
         stock_picking_obj = self.pool.get('stock.picking')
+        if not context:
+            context = {}
         for order in self.browse(cr, uid, ids, context=context):
             for picking in order.pickings:
                 stock_picking_obj.unlink(cr, uid, [picking.id], context=context)
@@ -864,6 +880,8 @@ class pos_order(osv.osv):
     def action_payment(self, cr, uid, ids, context=None):
         vals = {'state': 'payment'}
         sequence_obj = self.pool.get('ir.sequence')
+        if not context:
+            context = {}
         for pos in self.browse(cr, uid, ids, context=context):
             create_contract_nb = False
             for line in pos.lines:
@@ -918,9 +936,11 @@ account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
-    def _get_statement_journal(self, cr, uid, ids, context, *a):
+    def _get_statement_journal(self, cr, uid, ids, context=None, *a):
         res = {}
-        for line in self.browse(cr, uid, ids):
+        if not context:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.statement_id and line.statement_id.journal_id and line.statement_id.journal_id.name or None
         return res
     _columns= {
@@ -937,6 +957,8 @@ class pos_order_line(osv.osv):
 
     def _get_amount(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
+        if not context:
+            context = {}
         for line in self.browse(cr, uid, ids, context=context):
             price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
             res[line.id] = price
@@ -944,6 +966,8 @@ class pos_order_line(osv.osv):
 
     def _amount_line_ttc(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0.0)
+        if not context:
+            context = {}
         account_tax_obj = self.pool.get('account.tax')
         self.price_by_product_multi(cr, uid, ids)
         for line in self.browse(cr, uid, ids, context=context):
@@ -963,6 +987,8 @@ class pos_order_line(osv.osv):
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
+        if not context:
+            context = {}
         self.price_by_product_multi(cr, uid, ids)
         for line in self.browse(cr, uid, ids, context=context):
             if line.discount!=0.0:
@@ -971,12 +997,14 @@ class pos_order_line(osv.osv):
                 res[line.id] = line.price_unit * line.qty
         return res
 
-    def _amount_line_all(self, cr, uid, ids, field_names, arg, context):
+    def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
         res = dict([(i, {}) for i in ids])
+        if not context:
+            context = {}
         account_tax_obj = self.pool.get('account.tax')
 
         self.price_by_product_multi(cr, uid, ids)
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             for f in field_names:
                 if f == 'price_subtotal':
                     if line.discount != 0.0:
@@ -1141,11 +1169,15 @@ class pos_order_line(osv.osv):
         }
 
     def create(self, cr, user, vals, context=None):
+        if not context:
+            context = {}
         if vals.get('product_id'):
             return super(pos_order_line, self).create(cr, user, vals, context=context)
         return False
 
     def write(self, cr, user, ids, values, context=None):
+        if not context:
+            context = {}
         if 'product_id' in values and not values['product_id']:
             return False
         return super(pos_order_line, self).write(cr, user, ids, values, context=context)

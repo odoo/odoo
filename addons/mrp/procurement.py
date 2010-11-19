@@ -50,6 +50,8 @@ class procurement_order(osv.osv):
         return True
     
     def get_phantom_bom_id(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.move_id and procurement.move_id.product_id.supply_method=='produce' \
                  and procurement.move_id.product_id.procure_method=='make_to_order':
@@ -60,20 +62,24 @@ class procurement_order(osv.osv):
                     return phantom_bom_id 
         return False
     
-    def action_produce_assign_product(self, cr, uid, ids, context={}):
+    def action_produce_assign_product(self, cr, uid, ids, context=None):
         """ This is action which call from workflow to assign production order to procurements
         @return: True
         """
+        if not context:
+            context = {}
         procurement_obj = self.pool.get('procurement.order')
         res = procurement_obj.make_mo(cr, uid, ids, context=context)
         res = res.values()
         return len(res) and res[0] or 0
     
-    def make_mo(self, cr, uid, ids, context={}):
+    def make_mo(self, cr, uid, ids, context=None):
         """ Make Manufacturing(production) order from procurement
         @return: New created Production Orders procurement wise 
         """
         res = {}
+        if not context:
+            context = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         production_obj = self.pool.get('mrp.production')
         move_obj = self.pool.get('stock.move')

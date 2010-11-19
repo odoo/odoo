@@ -46,27 +46,31 @@ AVAILABLE_PRIORITIES = [
 class crm_case(object):
     """A simple python class to be used for common functions """
 
-    def _get_default_partner_address(self, cr, uid, context):
+    def _get_default_partner_address(self, cr, uid, context=None):
         """Gives id of default address for current user
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
         """
+        if not context:
+            context = {}
         if not context.get('portal', False):
             return False
         return self.pool.get('res.users').browse(cr, uid, uid, context).address_id.id
 
-    def _get_default_partner(self, cr, uid, context):
+    def _get_default_partner(self, cr, uid, context=None):
         """Gives id of partner for current user
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
         """
+        if not context:
+            context = {}
         if not context.get('portal', False):
             return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if not user.address_id:
             return False
         return user.address_id.partner_id.id
@@ -100,7 +104,7 @@ class crm_case(object):
                 })
         return super(osv.osv, self).copy(cr, uid, id, default, context=context)
     
-    def _get_default_email(self, cr, uid, context):
+    def _get_default_email(self, cr, uid, context=None):
         """Gives default email address for current user
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -109,29 +113,31 @@ class crm_case(object):
         """
         if not context.get('portal', False):
             return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if not user.address_id:
             return False
         return user.address_id.email
 
-    def _get_default_user(self, cr, uid, context):
+    def _get_default_user(self, cr, uid, context=None):
         """Gives current user id
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
         """
-        if context.get('portal', False):
+        if context and context.get('portal', False):
             return False
         return uid
 
-    def _get_section(self, cr, uid, context):
+    def _get_section(self, cr, uid, context=None):
         """Gives section id for current User
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
         """
+        if not context:
+            context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.context_section_id.id or False
 
@@ -147,7 +153,7 @@ class crm_case(object):
             context = {}
         stage_pool = self.pool.get('crm.case.stage')
         model = self._name
-        for case in self.browse(cr, uid, ids, context):
+        for case in self.browse(cr, uid, ids, context=context):
             next_stage = False
             data = {}
             domain = [('object_id.model', '=', model)]
@@ -181,7 +187,7 @@ class crm_case(object):
             context = {}
         stage_pool = self.pool.get('crm.case.stage')
         model = self._name
-        for case in self.browse(cr, uid, ids, context):
+        for case in self.browse(cr, uid, ids, context=context):
             prev_stage = False
             data = {}
             domain = [('object_id.model', '=', model)]
@@ -236,7 +242,7 @@ class crm_case(object):
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'phone': address.phone}}
 
-    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
         mailgate_pool = self.pool.get('mailgate.thread')
         return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
@@ -356,7 +362,7 @@ class crm_case(object):
         self._action(cr, uid, cases, 'draft')
         return True
 
-    def remind_partner(self, cr, uid, ids, context={}, attach=False):
+    def remind_partner(self, cr, uid, ids, context=None, attach=False):
 
         """
         @param self: The object pointer
@@ -369,7 +375,7 @@ class crm_case(object):
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
-    def remind_user(self, cr, uid, ids, context={}, attach=False,destination=True):
+    def remind_user(self, cr, uid, ids, context=None, attach=False,destination=True):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -378,7 +384,9 @@ class crm_case(object):
         @param context: A standard dictionary for contextual values
 
         """
-        for case in self.browse(cr, uid, ids):
+        if not context:
+            context = {}
+        for case in self.browse(cr, uid, ids, context=context):
             if not case.section_id.reply_to:
                 raise osv.except_osv(_('Error!'), ("Reply To is not specified in the sales team"))
             if not case.email_from:
@@ -420,7 +428,7 @@ class crm_case(object):
                 self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
         return True
 
-    def _check(self, cr, uid, ids=False, context={}):
+    def _check(self, cr, uid, ids=False, context=None):
         """
         Function called by the scheduler to process cases for date actions
         Only works on not done and cancelled cases
@@ -438,10 +446,10 @@ class crm_case(object):
                     time.strftime('%Y-%m-%d %H:%M:%S')))
 
         ids2 = map(lambda x: x[0], cr.fetchall() or [])
-        cases = self.browse(cr, uid, ids2, context)
+        cases = self.browse(cr, uid, ids2, context=context)
         return self._action(cr, uid, cases, False, context=context)
 
-    def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
+    def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
         if not context:
             context = {}
         context['state_to'] = state_to
@@ -461,6 +469,8 @@ class crm_case(object):
         """ Get a list of emails of the people following this thread
         """
         res = {}
+        if not context:
+            context = {}
         for case in self.browse(cr, uid, ids, context=context):
             l=[]
             if case.email_cc:
@@ -515,8 +525,8 @@ class crm_case_section(osv.osv):
     _description = "Sales Teams"
     _order = "complete_name"
 
-    def get_full_name(self, cr, uid, ids, field_name, arg, context={}):
-        return  dict(self.name_get(cr, uid, ids, context))
+    def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
+        return  dict(self.name_get(cr, uid, ids, context=context))
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
@@ -546,7 +556,7 @@ class crm_case_section(osv.osv):
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')
     ]
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
 
         """
         Checks for recursion level for sales team

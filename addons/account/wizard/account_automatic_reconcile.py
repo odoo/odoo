@@ -42,10 +42,14 @@ class account_automatic_reconcile(osv.osv_memory):
         'allow_write_off': fields.boolean('Allow write off')
     }
 
-    def _get_reconciled(self, cr, uid, context={}):
+    def _get_reconciled(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         return context.get('reconciled', 0)
 
-    def _get_unreconciled(self, cr, uid, context={}):
+    def _get_unreconciled(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         return context.get('unreconciled', 0)
 
     _defaults = {
@@ -175,7 +179,7 @@ class account_automatic_reconcile(osv.osv_memory):
                     if allow_write_off:
                         move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
                     else:
-                        move_line_obj.reconcile_partial(cr, uid, line_ids, 'manual', context={})
+                        move_line_obj.reconcile_partial(cr, uid, line_ids, 'manual', context=context)
 
             # get the list of partners who have more than one unreconciled transaction
             cr.execute(

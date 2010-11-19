@@ -44,7 +44,7 @@ class document_directory_content(osv.osv):
     _name = 'document.directory.content'
     _description = 'Directory Content'
     _order = "sequence"
-    def _extension_get(self, cr, uid, context={}):
+    def _extension_get(self, cr, uid, context=None):
         cr.execute('select code,name from document_directory_content_type where active')
         res = cr.fetchall()
         return res
@@ -110,9 +110,11 @@ class document_directory_content(osv.osv):
         return True
     
     def process_read(self, cr, uid, node, context=None):
+        if not context:
+            context = {}
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id)
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id, context=context)
         srv = netsvc.Service._services['report.'+report.report_name]
         ctx = node.context.context.copy()
         ctx.update(node.dctx)

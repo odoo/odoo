@@ -39,7 +39,7 @@ class payment_mode(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
 
-    def suitable_bank_types(self, cr, uid, payment_code=None, context={}):
+    def suitable_bank_types(self, cr, uid, payment_code=None, context=None):
         """Return the codes of the bank type that are suitable
         for the given payment type code"""
         if not payment_code:
@@ -67,6 +67,7 @@ class payment_order(osv.osv):
         if not ids:
             return {}
         res = {}
+        if not context: context = {}
         for order in self.browse(cursor, user, ids, context=context):
             if order.line_ids:
                 res[order.id] = reduce(lambda x, y: x + y.amount, order.line_ids, 0.0)
@@ -127,6 +128,7 @@ class payment_order(osv.osv):
         return True
 
     def copy(self, cr, uid, id, default={}, context=None):
+        if not context: context = {}
         default.update({
             'state': 'draft',
             'line_ids': [],
@@ -267,10 +269,11 @@ class payment_line(osv.osv):
                     line.amount_currency, context=ctx)
         return res
 
-    def _get_currency(self, cr, uid, context):
+    def _get_currency(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         currency_obj = self.pool.get('res.currency')
-        user = user_obj.browse(cr, uid, uid)
+        if not context: context = {}
+        user = user_obj.browse(cr, uid, uid, context=context)
 
         if user.company_id:
             return user.company_id.currency_id.id
@@ -284,7 +287,7 @@ class payment_line(osv.osv):
         date = False
 
         if context.get('order_id') and context['order_id']:
-            order = payment_order_obj.browse(cr, uid, context['order_id'], context)
+            order = payment_order_obj.browse(cr, uid, context['order_id'], context=context)
             if order.date_prefered == 'fixed':
                 date = order.date_scheduled
             else:
@@ -407,13 +410,14 @@ class payment_line(osv.osv):
 
     def onchange_partner(self, cr, uid, ids, partner_id, payment_type, context=None):
         data = {}
+        if not context: context = {}
         partner_zip_obj = self.pool.get('res.partner.zip')
         partner_obj = self.pool.get('res.partner')
         payment_mode_obj = self.pool.get('payment.mode')
         data['info_partner'] = data['bank_id'] = False
 
         if partner_id:
-            part_obj = partner_obj.browse(cr, uid, partner_id)
+            part_obj = partner_obj.browse(cr, uid, partner_id, context=context)
             partner = part_obj.name or ''
 
             if part_obj.address:

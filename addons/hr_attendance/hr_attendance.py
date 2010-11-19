@@ -67,7 +67,7 @@ class hr_attendance(osv.osv):
         'employee_id': _employee_get,
     }
 
-    def _altern_si_so(self, cr, uid, ids):
+    def _altern_si_so(self, cr, uid, ids, context=None):
         for id in ids:
             sql = '''
             SELECT action, name

@@ -29,7 +29,7 @@ from tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
-        result = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
+        result = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context=context)
         if result.get('value', False):
             try:
                 d = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')

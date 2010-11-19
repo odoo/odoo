@@ -45,8 +45,10 @@ class purchase_order(osv.osv):
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
+        if not context:
+            context = {}
         cur_obj=self.pool.get('res.currency')
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
@@ -65,9 +67,11 @@ class purchase_order(osv.osv):
 
     def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context=None):
         if not value: return False
+        if not context:
+            context = {}
         if type(ids)!=type([]):
             ids=[ids]
-        for po in self.browse(cr, uid, ids, context):
+        for po in self.browse(cr, uid, ids, context=context):
             cr.execute("""update purchase_order_line set
                     date_planned=%s
                 where
@@ -77,6 +81,8 @@ class purchase_order(osv.osv):
 
     def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context=None):
         res={}
+        if not context:
+            context = {}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
             res[purchase.id] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -90,6 +96,8 @@ class purchase_order(osv.osv):
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
         res = {}
+        if not context:
+            context = {}
         for purchase in self.browse(cursor, user, ids, context=context):
             tot = 0.0
             if purchase.invoice_id and purchase.invoice_id.state not in ('draft','cancel'):
@@ -102,6 +110,8 @@ class purchase_order(osv.osv):
 
     def _shipped_rate(self, cr, uid, ids, name, arg, context=None):
         if not ids: return {}
+        if not context:
+            context = {}
         res = {}
         for id in ids:
             res[id] = [0.0,0.0]
@@ -130,12 +140,16 @@ class purchase_order(osv.osv):
 
     def _get_order(self, cr, uid, ids, context=None):
         result = {}
+        if not context:
+            context = {}
         for line in self.pool.get('purchase.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
         return result.keys()
 
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
+        if not context:
+            context = {}
         for purchase in self.browse(cursor, user, ids, context=context):
             if purchase.invoice_id.reconciled:
                 res[purchase.id] = purchase.invoice_id.reconciled
@@ -239,7 +253,7 @@ class purchase_order(osv.osv):
 
         return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
 
-    def button_dummy(self, cr, uid, ids, context={}):
+    def button_dummy(self, cr, uid, ids, context=None):
         return True
 
     def onchange_dest_address_id(self, cr, uid, ids, adr_id):
@@ -265,14 +279,16 @@ class purchase_order(osv.osv):
         fiscal_position = part.property_account_position and part.property_account_position.id or False
         return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
-    def wkf_approve_order(self, cr, uid, ids, context={}):
+    def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
         return True
 
     #TODO: implement messages system
-    def wkf_confirm_order(self, cr, uid, ids, context={}):
+    def wkf_confirm_order(self, cr, uid, ids, context=None):
         todo = []
-        for po in self.browse(cr, uid, ids):
+        if not context:
+            context = {}
+        for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
                 raise osv.except_osv(_('Error !'),_('You can not confirm purchase order without Purchase Order Lines.'))
             for line in po.order_line:
@@ -386,8 +402,10 @@ class purchase_order(osv.osv):
                     return True
         return False
 
-    def action_cancel(self, cr, uid, ids, context={}):
-        for purchase in self.browse(cr, uid, ids):
+    def action_cancel(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for purchase in self.browse(cr, uid, ids, context=context):
             for pick in purchase.picking_ids:
                 if pick.state not in ('draft','cancel'):
                     raise osv.except_osv(
@@ -460,7 +478,7 @@ class purchase_order(osv.osv):
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return picking_id
 
-    def copy(self, cr, uid, id, default=None,context={}):
+    def copy(self, cr, uid, id, default=None,context=None):
         if not default:
             default = {}
         default.update({
@@ -474,7 +492,7 @@ class purchase_order(osv.osv):
         return super(purchase_order, self).copy(cr, uid, id, default, context)
 
 
-    def do_merge(self, cr, uid, ids, context):
+    def do_merge(self, cr, uid, ids, context=None):
         """
         To merge similar type of purchase orders.
         Orders will only be merged if:
@@ -493,6 +511,8 @@ class purchase_order(osv.osv):
          @return: new purchase order id
 
         """
+        if not context:
+            context = {}
         wf_service = netsvc.LocalService("workflow")
         def make_key(br, fields):
             list_key = []
@@ -515,7 +535,7 @@ class purchase_order(osv.osv):
 
         new_orders = {}
 
-        for porder in [order for order in self.browse(cr, uid, ids) if order.state == 'draft']:
+        for porder in [order for order in self.browse(cr, uid, ids, context=context) if order.state == 'draft']:
             order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id'))
             new_order = new_orders.setdefault(order_key, ({}, []))
             new_order[1].append(porder.id)
@@ -629,7 +649,7 @@ class purchase_order_line(osv.osv):
     _name = 'purchase.order.line'
     _description = 'Purchase Order Line'
 
-    def copy_data(self, cr, uid, id, default=None,context={}):
+    def copy_data(self, cr, uid, id, default=None,context=None):
         if not default:
             default = {}
         default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
@@ -708,8 +728,8 @@ class purchase_order_line(osv.osv):
             res['value']['price_unit'] = 0.0
         return res
 
-    def action_confirm(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state': 'confirmed'}, context)
+    def action_confirm(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
         return True
 
 purchase_order_line()
@@ -720,7 +740,7 @@ class procurement_order(osv.osv):
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
     }
 
-    def action_po_assign(self, cr, uid, ids, context={}):
+    def action_po_assign(self, cr, uid, ids, context=None):
         """ This is action which call from workflow to assign purchase order to procurements
         @return: True
         """
@@ -728,12 +748,12 @@ class procurement_order(osv.osv):
         res = res.values()
         return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
 
-    def make_po(self, cr, uid, ids, context={}):
+    def make_po(self, cr, uid, ids, context=None):
         """ Make purchase order from procurement
         @return: New created Purchase Orders procurement wise
         """
         res = {}
-        company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
+        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
         partner_obj = self.pool.get('res.partner')
         uom_obj = self.pool.get('product.uom')
         pricelist_obj = self.pool.get('product.pricelist')

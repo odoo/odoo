@@ -65,10 +65,12 @@ class auction_dates(osv.osv):
         name = [(r['id'], '['+r['auction1']+'] '+ r['name']) for r in reads]
         return name
 
-    def _get_invoice(self, cr, uid, ids, name, arg, context={}):
+    def _get_invoice(self, cr, uid, ids, name, arg, context=None):
         lots_obj = self.pool.get('auction.lots')
         result = {}
-        for data in self.browse(cr, uid, ids):
+        if not context:
+            context={}
+        for data in self.browse(cr, uid, ids, context=context):
             buyer_inv_ids = []
             seller_inv_ids = []
             result[data.id] = {
@@ -76,7 +78,7 @@ class auction_dates(osv.osv):
                 'buyer_invoice_history': seller_inv_ids,
             }
             lots_ids = lots_obj.search(cr, uid, [('auction_id','=',data.id)])
-            for lot in lots_obj.browse(cr, uid, lots_ids):
+            for lot in lots_obj.browse(cr, uid, lots_ids, context=context):
                 if lot.ach_inv_id:
                     buyer_inv_ids.append(lot.ach_inv_id.id)
                 if lot.sel_inv_id:

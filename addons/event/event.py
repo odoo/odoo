@@ -141,6 +141,8 @@ class event_event(osv.osv):
         """
         register_pool = self.pool.get('event.registration')
         res = {}
+        if not context:
+            context = {}
         for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = {}
             for field in fields:
@@ -246,7 +248,7 @@ class event_event(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
     }
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
         """
         Checks for recursion level for event
         """
@@ -259,8 +261,8 @@ class event_event(osv.osv):
             level -= 1
         return True
 
-    def _check_closing_date(self, cr, uid, ids):
-        for event in self.browse(cr, uid, ids):
+    def _check_closing_date(self, cr, uid, ids, context=None):
+        for event in self.browse(cr, uid, ids, context=context):
             if event.date_end < event.date_begin:
                 return False
         return True

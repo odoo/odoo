@@ -50,7 +50,7 @@ class auction_lots_auction_move(osv.osv_memory):
         auction_lot_history_obj = self.pool.get('auction.lot.history')
         auction_lots_obj = self.pool.get('auction.lots')
         rec_ids =  auction_lots_obj.browse(cr, uid, context.get('active_ids', []))
-        for current in self.browse(cr, uid, ids, context):
+        for current in self.browse(cr, uid, ids, context=context):
             if not (current.auction_id and len(context.get('active_ids', []))):
                 return {}
 

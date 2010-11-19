@@ -72,7 +72,7 @@ class email_server(osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
-    def check_duplicate(self, cr, uid, ids):
+    def check_duplicate(self, cr, uid, ids, context=None):
 	# RFC *-* Why this limitation? why not in SQL constraint?
         vals = self.read(cr, uid, ids, ['user', 'password'])[0]
         cr.execute("select count(id) from email_server where user=%s and password=%s", (vals['user'], vals['password']))
@@ -95,12 +95,14 @@ class email_server(osv.osv):
 
         return {'value':{'port':port}}
 
-    def set_draft(self, cr, uid, ids, context={}):
+    def set_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids , {'state':'draft'})
         return True
     
-    def button_confirm_login(self, cr, uid, ids, context={}):
-        for server in self.browse(cr, uid, ids, context):
+    def button_confirm_login(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for server in self.browse(cr, uid, ids, context=context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             context.update({'server_id': server.id, 'server_type': server.type})
             count = 0
@@ -135,20 +137,22 @@ class email_server(osv.osv):
                 logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
         return True
 
-    def button_fetch_mail(self, cr, uid, ids, context={}):
+    def button_fetch_mail(self, cr, uid, ids, context=None):
         self.fetch_mail(cr, uid, ids, context=context)
         return True
 
-    def _fetch_mails(self, cr, uid, ids=False, context={}):
+    def _fetch_mails(self, cr, uid, ids=False, context=None):
         if not ids:
             ids = self.search(cr, uid, [])
         return self.fetch_mail(cr, uid, ids, context=context)
 
-    def fetch_mail(self, cr, uid, ids, context={}):
+    def fetch_mail(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         email_tool = self.pool.get('email.server.tools')
         action_pool = self.pool.get('ir.actions.server')
         context.update({'get_server': True})
-        for server in self.browse(cr, uid, ids, context):
+        for server in self.browse(cr, uid, ids, context=context):
             count = 0
             try:
                 if server.type == 'imap':

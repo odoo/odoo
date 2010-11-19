@@ -160,7 +160,7 @@ def get_attribute_mapping(cr, uid, calname, context=None):
     type_id = type_obj.search(cr, uid, domain)
     fids = field_obj.search(cr, uid, [('type_id', '=', type_id[0])])
     res = {}
-    for field in field_obj.browse(cr, uid, fids):
+    for field in field_obj.browse(cr, uid, fids, context=context):
         attr = field.name.name
         res[attr] = {}
         res[attr]['field'] = field.field_id.name

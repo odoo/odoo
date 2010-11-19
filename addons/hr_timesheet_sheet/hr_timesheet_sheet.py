@@ -348,8 +348,10 @@ class hr_timesheet_sheet(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', context=c)
     }
 
-    def _sheet_date(self, cr, uid, ids, forced_user_id=False):
-        for sheet in self.browse(cr, uid, ids):
+    def _sheet_date(self, cr, uid, ids, forced_user_id=False, context=None):
+        if not context:
+            context = {}
+        for sheet in self.browse(cr, uid, ids, context=context):
             new_user_id = forced_user_id or sheet.user_id and sheet.user_id.id
             if new_user_id:
                 cr.execute('SELECT id \
@@ -361,8 +363,10 @@ class hr_timesheet_sheet(osv.osv):
                     return False
         return True
 
-    def _date_current_check(self, cr, uid, ids):
-        for sheet in self.browse(cr, uid, ids):
+    def _date_current_check(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for sheet in self.browse(cr, uid, ids, context=context):
             if sheet.date_current < sheet.date_from or sheet.date_current > sheet.date_to:
                 return False
         return True

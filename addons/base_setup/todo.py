@@ -65,7 +65,7 @@ class base_setup_company(osv.osv_memory):
         company_id = companies.search(cr, uid, [], limit=1, order="id")
         if not company_id or 'company_id' not in fields_list:
             return defaults
-        company = companies.browse(cr, uid, company_id[0])
+        company = companies.browse(cr, uid, company_id[0], context=context)
         defaults['company_id'] = company.id
 
         if not self._show_company_data(cr, uid, context=context):

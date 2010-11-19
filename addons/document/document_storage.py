@@ -439,7 +439,7 @@ class document_storage(osv.osv):
         """
         if context is None:
             context = {}
-        boo = self.browse(cr, uid, id, context)
+        boo = self.browse(cr, uid, id, context=context)
         if not boo.online:
             raise IOError(errno.EREMOTE, 'medium offline')
         
@@ -542,7 +542,7 @@ class document_storage(osv.osv):
         """
         if not context:
             context = {}
-        boo = self.browse(cr, uid, id, context)
+        boo = self.browse(cr, uid, id, context=context)
         if fil_obj:
             ira = fil_obj
         else:
@@ -688,6 +688,8 @@ class document_storage(osv.osv):
             
             @return the dict of values that can safely be be stored in the db.
         """
+        if not context:
+            context = {}
         sbro = self.browse(cr, uid, file_node.storage_id, context=context)
         assert sbro, "The file #%d didn't provide storage" % file_node.file_id
 
@@ -730,6 +732,8 @@ class document_storage(osv.osv):
                     file should move to.
             @return the dict of values that can safely be be stored in the db.
         """
+        if not context:
+            context = {}
         sbro = self.browse(cr, uid, file_node.storage_id, context=context)
         assert sbro, "The file #%d didn't provide storage" % file_node.file_id
 

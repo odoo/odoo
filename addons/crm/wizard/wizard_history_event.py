@@ -24,7 +24,9 @@ import wizard
 import pooler
 import time
 
-def _open_history_event(self, cr, uid, data, context): 
+def _open_history_event(self, cr, uid, data, context=None):
+    if not context:
+        context = {} 
     pool = pooler.get_pool(cr.dbname)
     data_obj = pool.get('ir.model.data')
     result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_filter')
@@ -35,7 +37,7 @@ def _open_history_event(self, cr, uid, data, context):
     res = ''    
     if data.get('model',False) and data.get('ids',False):           
         model_obj = pooler.get_pool(cr.dbname).get(data['model'])
-        res = model_obj.browse(cr,uid,data['ids'])
+        res = model_obj.browse(cr, uid, data['ids'], context=context)
         if len(res):
             res = res[0].name       
     return {

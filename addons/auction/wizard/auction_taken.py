@@ -45,7 +45,7 @@ class auction_taken(osv.osv_memory):
           if not context:
               context={}
           lot_obj = self.pool.get('auction.lots')
-          for current in self.browse(cr, uid, ids, context):
+          for current in self.browse(cr, uid, ids, context=context):
               for lot in current.lot_ids:
                   lot_obj.write(cr, uid, lot.id, {'state':'taken_away', 'ach_emp': True})
               return {'lot_ids': []}

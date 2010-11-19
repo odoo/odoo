@@ -35,8 +35,9 @@ class module(osv.osv):
         'file_graph': fields.binary('Relationship Graph'),
             }
 
-    def _get_graphical_representation(self, cr, uid, model_ids, level=1, context={}):
+    def _get_graphical_representation(self, cr, uid, model_ids, level=1, context=None):
         obj_model = self.pool.get('ir.model')
+        if not context: context = {}
         if level == 0:
             return tuple()
         relation = []
@@ -86,7 +87,7 @@ class module(osv.osv):
             )
         return res
 
-    def _get_module_objects(self, cr, uid, module, context={}):
+    def _get_module_objects(self, cr, uid, module, context=None):
         obj_model = self.pool.get('ir.model')
         obj_mod_data = self.pool.get('ir.model.data')
         obj_ids = []
@@ -99,6 +100,7 @@ class module(osv.osv):
         return obj_ids
 
     def get_relation_graph(self, cr, uid, module_name, context=None):
+        if not context: context = {}
         object_ids = self._get_module_objects(cr, uid, module_name, context=context)
         if not object_ids:
             return {'module_file': False}

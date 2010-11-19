@@ -73,23 +73,26 @@ def _format_iban(string):
 class res_partner_bank(osv.osv):
     _inherit = "res.partner.bank"
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         #overwrite to format the iban number correctly
+        if not context: context = {}
         if 'iban' in vals and vals['iban']:
             vals['iban'] = _format_iban(vals['iban'])
         return super(res_partner_bank, self).create(cr, uid, vals, context)
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         #overwrite to format the iban number correctly
+        if not context: context = {}
         if 'iban' in vals and vals['iban']:
             vals['iban'] = _format_iban(vals['iban'])
         return super(res_partner_bank, self).write(cr, uid, ids, vals, context)
 
-    def check_iban(self, cr, uid, ids):
+    def check_iban(self, cr, uid, ids, context=None):
         '''
         Check the IBAN number
         '''
-        for bank_acc in self.browse(cr, uid, ids):
+        if not context: context = {}
+        for bank_acc in self.browse(cr, uid, ids, context=context):
             if not bank_acc.iban:
                 continue
             iban = _format_iban(bank_acc.iban)
@@ -109,7 +112,7 @@ class res_partner_bank(osv.osv):
                 return False
         return True
 
-    def _construct_constraint_msg(self, cr, uid, ids):
+    def _construct_constraint_msg(self, cr, uid, ids, context=None):
 
         def default_iban_check(iban_cn):
             return iban_cn[0] in string.ascii_lowercase and iban_cn[1] in string.ascii_lowercase
@@ -123,16 +126,18 @@ class res_partner_bank(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         to_check_ids = []
-        for id in self.browse(cr, uid, ids):
+        if not context: context = {}
+        for id in self.browse(cr, uid, ids, context=context):
             if id.state=='iban':
                 res.append((id.id,id.iban))
             else:
                 to_check_ids.append(id.id)
-        res += super(res_partner_bank, self).name_get(cr, uid, to_check_ids, context)
+        res += super(res_partner_bank, self).name_get(cr, uid, to_check_ids, context=context)
         return res
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
     #overwrite the search method in order to search not only on bank type == basic account number but also on type == iban
+        if not context: context = {}
         res = super(res_partner_bank,self).search(cr, uid, args, offset, limit, order, context=context, count=count)
         if filter(lambda x:x[0]=='acc_number' ,args):
             #get the value of the search
@@ -151,6 +156,7 @@ class res_partner_bank(osv.osv):
         This function returns the bank account number computed from the iban account number, thanks to the mapping_list dictionary that contains the rules associated to its country.
         '''
         res = {}
+        if not context: context = {}
         mapping_list = {
          #TODO add rules for others countries
             'be': lambda x: x[4:],
@@ -158,7 +164,7 @@ class res_partner_bank(osv.osv):
             'ch': lambda x: x[9:],
             'gb': lambda x: x[14:],
         }
-        for record in self.browse(cr, uid, ids, context):
+        for record in self.browse(cr, uid, ids, context=context):
             if not record.iban:
                 res[record.id] = False
                 continue

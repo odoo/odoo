@@ -245,7 +245,7 @@ class hr_holidays(osv.osv):
                     self.holidays_cancel(cr, uid, list_ids)
                     self.unlink(cr, uid, list_ids)
 
-    def _check_date(self, cr, uid, ids):
+    def _check_date(self, cr, uid, ids, context=None):
         for rec in self.read(cr, uid, ids, ['number_of_days_temp', 'date_from','date_to', 'type']):
             if rec['number_of_days_temp'] < 0:
                 return False

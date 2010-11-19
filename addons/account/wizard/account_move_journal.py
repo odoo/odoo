@@ -29,10 +29,12 @@ class account_move_journal(osv.osv_memory):
     _name = "account.move.journal"
     _description = "Move journal"
 
-    def _get_period(self, cr, uid, context={}):
+    def _get_period(self, cr, uid, context=None):
         """
         Return  default account period value
         """
+        if context is None:
+            context = {}
         account_period_obj = self.pool.get('account.period')
         ids = account_period_obj.find(cr, uid, context=context)
         period_id = False
@@ -40,12 +42,14 @@ class account_move_journal(osv.osv_memory):
             period_id = ids[0]
         return period_id
 
-    def _get_journal(self, cr, uid, context={}):
+    def _get_journal(self, cr, uid, context=None):
         """
         Return journal based on the journal type
         """
 
         journal_id = False
+        if context is None:
+            context = {}
 
         journal_pool = self.pool.get('account.journal')
         if context.get('journal_type', False):

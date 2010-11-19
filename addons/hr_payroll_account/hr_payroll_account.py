@@ -104,16 +104,18 @@ class payroll_register(osv.osv):
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
     }
 
-    def compute_sheet(self, cr, uid, ids, context={}):
+    def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
         wf_service = netsvc.LocalService("workflow")
-        vals = self.browse(cr, uid, ids)[0]
+        if not context:
+            context = {}
+        vals = self.browse(cr, uid, ids, context=context)[0]
         emp_ids = emp_pool.search(cr, uid, [])
 
-        for emp in emp_pool.browse(cr, uid, emp_ids):
+        for emp in emp_pool.browse(cr, uid, emp_ids, context=context):
             old_slips = slip_pool.search(cr, uid, [('employee_id','=', emp.id), ('date','=',vals.date)])
             if old_slips:
                 slip_pool.write(cr, uid, old_slips, {'register_id':ids[0]})
@@ -151,10 +153,10 @@ class contrib_register(osv.osv):
     _inherit = 'hr.contibution.register'
     _description = 'Contribution Register'
 
-    def _total_contrib(self, cr, uid, ids, field_names, arg, context={}):
+    def _total_contrib(self, cr, uid, ids, field_names, arg, context=None):
         line_pool = self.pool.get('hr.contibution.register.line')
         period_id = self.pool.get('account.period').search(cr,uid,[('date_start','<=',time.strftime('%Y-%m-%d')),('date_stop','>=',time.strftime('%Y-%m-%d'))])[0]
-        fiscalyear_id = self.pool.get('account.period').browse(cr, uid, period_id).fiscalyear_id
+        fiscalyear_id = self.pool.get('account.period').browse(cr, uid, period_id, context=context).fiscalyear_id
         res = {}
         for cur in self.browse(cr, uid, ids):
             current = line_pool.search(cr, uid, [('period_id','=',period_id),('register_id','=',cur.id)])

@@ -30,7 +30,7 @@ class account_move_line_reconcile_select(osv.osv_memory):
                             domain = [('reconcile', '=', 1)], required=True),
     }
 
-    def action_open_window(self, cr, uid, ids, context={}):
+    def action_open_window(self, cr, uid, ids, context=None):
         """
         This function Open  account move line window for reconcile on given account id
         @param cr: the current row, from the database cursor,
@@ -39,6 +39,8 @@ class account_move_line_reconcile_select(osv.osv_memory):
         @return: dictionary of  Open  account move line window for reconcile on given account id
 
          """
+        if context is None:
+            context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         return {
             'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data['account_id'],

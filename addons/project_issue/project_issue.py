@@ -486,8 +486,8 @@ class project(osv.osv):
         'reply_to' : fields.char('Reply-To Email Address', size=256)
     }
 
-    def _check_escalation(self, cr, uid, ids):
-         project_obj = self.browse(cr, uid, ids[0])
+    def _check_escalation(self, cr, uid, ids, context=None):
+         project_obj = self.browse(cr, uid, ids[0], context=context)
          if project_obj.project_escalation_id:
              if project_obj.project_escalation_id.id == project_obj.id:
                  return False

@@ -33,7 +33,9 @@ class account_subscription_generate(osv.osv_memory):
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
     }
-    def action_generate(self, cr, uid, ids, context={}):
+    def action_generate(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
         moves_created=[]

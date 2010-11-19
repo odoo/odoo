@@ -28,7 +28,9 @@ class hr_employee_category(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
+        if not context:
+            context = {}
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
@@ -37,8 +39,10 @@ class hr_employee_category(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.name_get(cr, uid, ids, context)
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        if not context:
+            context = {}
+        res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
     _name = "hr.employee.category"
@@ -51,6 +55,8 @@ class hr_employee_category(osv.osv):
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from hr_employee_category where id IN %s', (tuple(ids), ))
@@ -80,13 +86,17 @@ class hr_job(osv.osv):
 
     def _no_of_employee(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for job in self.browse(cr, uid, ids, context):
+        if not context:
+            context = {}
+        for job in self.browse(cr, uid, ids, context=context):
             res[job.id] = len(job.employee_ids or [])
         return res
 
     def _no_of_recruitement(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for job in self.browse(cr, uid, ids, context):
+        if not context:
+            context = {}
+        for job in self.browse(cr, uid, ids, context=context):
             res[job.id] = job.expected_employees - job.no_of_employee
         return res
 
@@ -165,16 +175,20 @@ class hr_employee(osv.osv):
 
     def onchange_company(self, cr, uid, ids, company, context=None):
         address_id = False
+        if not context:
+            context = {}
         if company:
-            company_id = self.pool.get('res.company').browse(cr,uid,company)
+            company_id = self.pool.get('res.company').browse(cr, uid, company, context=context)
             address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['default'])
             address_id = address and address['default'] or False
         return {'value': {'address_id' : address_id}}
 
     def onchange_user(self, cr, uid, ids, user_id, context=None):
         work_email = False
+        if not context:
+            context = {}
         if user_id:
-            work_email = self.pool.get('res.users').browse(cr, uid, user_id).user_email
+            work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).user_email
         return {'value': {'work_email' : work_email}}
 
     def _get_photo(self, cr, uid, context=None):
@@ -189,6 +203,8 @@ class hr_employee(osv.osv):
 
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
+        if not context:
+            context = {}
         while len(ids):
             cr.execute('SELECT DISTINCT parent_id FROM hr_employee WHERE id IN %s AND parent_id!=id',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
@@ -198,6 +214,8 @@ class hr_employee(osv.osv):
         return True
 
     def _check_department_id(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         for emp in self.browse(cr, uid, ids, context=context):
             if emp.department_id.manager_id and emp.id == emp.department_id.manager_id.id:
                 return False

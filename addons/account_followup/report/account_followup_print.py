@@ -58,7 +58,7 @@ class report_rappel(report_sxw.rml_parse):
         movelines = moveline_obj.read(self.cr, self.uid, movelines)
         return movelines
 
-    def _get_text(self, partner, followup_id, context={}):
+    def _get_text(self, partner, followup_id, context=None):
         fp_obj = pooler.get_pool(self.cr.dbname).get('account_followup.followup')
         fp_line = fp_obj.browse(self.cr, self.uid, followup_id).followup_line
         li_delay = []

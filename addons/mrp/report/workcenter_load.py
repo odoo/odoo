@@ -101,7 +101,7 @@ class report_custom(report_int):
             return dates
         return {}
 
-    def create(self, cr, uid, ids, datas, context={}):
+    def create(self, cr, uid, ids, datas, context=None):
         assert len(ids), 'You should provide some ids!'
         colors = choice_colors(len(ids))
         cr.execute(

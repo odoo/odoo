@@ -131,13 +131,15 @@ class hr_contract(osv.osv):
     allowas to configure different Salary structure
     """
 
-    def compute_basic(self, cr, uid, ids, context={}):
+    def compute_basic(self, cr, uid, ids, context=None):
         res = {}
+        if not context:
+            context = {}
         ids += context.get('employee_structure', [])
 
         slip_line_pool = self.pool.get('hr.payslip.line')
 
-        for contract in self.browse(cr, uid, ids, context):
+        for contract in self.browse(cr, uid, ids, context=context):
             all_per = 0.0
             ded_per = 0.0
             all_fix = 0.0
@@ -246,7 +248,9 @@ class hr_contract(osv.osv):
         return False
 
     def _calculate_salary(self, cr, uid, ids, field_names, arg, context=None):
-        res = self.compute_basic(cr, uid, ids, context)
+        if not context:
+            context = {}
+        res = self.compute_basic(cr, uid, ids, context=context)
         vals = {}
         for rs in self.browse(cr, uid, ids, context=context):
             allow = 0.0
@@ -342,6 +346,8 @@ class payroll_register(osv.osv):
         deduction = 0.0
         net = 0.0
         grows = 0.0
+        if not context:
+            context = {}
         for register in self.browse(cr, uid, ids, context=context):
             for slip in register.line_ids:
                 allounce += slip.allounce
@@ -607,7 +613,9 @@ class contrib_register(osv.osv):
     _name = 'hr.contibution.register'
     _description = 'Contribution Register'
 
-    def _total_contrib(self, cr, uid, ids, field_names, arg, context={}):
+    def _total_contrib(self, cr, uid, ids, field_names, arg, context=None):
+        if not context:
+            context = {}
         line_pool = self.pool.get('hr.contibution.register.line')
 
         res = {}
@@ -773,8 +781,10 @@ class company_contribution(osv.osv):
             res = line_pool.browse(cr, uid, ids, context=context)[0].value
         return res
 
-    def compute(self, cr, uid, id, value, context={}):
-        contrib = self.browse(cr, uid, id, context)
+    def compute(self, cr, uid, id, value, context=None):
+        if not context:
+            context = {}
+        contrib = self.browse(cr, uid, id, context=context)
         if contrib.amount_type == 'fix':
             return contrib.contribute_per
         elif contrib.amount_type == 'per':
@@ -990,7 +1000,9 @@ class hr_payslip(osv.osv):
         self.write(cr, uid, ids, {'paid':True, 'state':'done'}, context=context)
         return True
 
-    def verify_sheet(self, cr, uid, ids, context={}):
+    def verify_sheet(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         register_pool = self.pool.get('company.contribution')
         register_line_pool = self.pool.get('hr.contibution.register.line')
 
@@ -1425,9 +1437,11 @@ class hr_employee(osv.osv):
 
     def _calculate_salary(self, cr, uid, ids, field_names, arg, context=None):
         vals = {}
+        if not context:
+            context = {}
         slip_line_pool = self.pool.get('hr.payslip.line')
 
-        for employee in self.browse(cr, uid, ids, context):
+        for employee in self.browse(cr, uid, ids, context=context):
             if not employee.contract_id:
                 vals[employee.id] = {'basic':0.0, 'gross':0.0, 'net':0.0, 'advantages_gross':0.0, 'advantages_net':0.0}
                 continue

@@ -245,7 +245,7 @@ class process_process(osv.osv):
 
         return dict(name=name, resource=resource, state=state, perm=perm, notes=notes, nodes=nodes, transitions=transitions)
 
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
         """ Deep copy the entire process.
         """
 
@@ -309,7 +309,7 @@ class process_node(osv.osv):
         'flow_start': lambda *args: False,
     }
 
-    def copy_data(self, cr, uid, id, default=None, context={}):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         default.update({
@@ -366,11 +366,11 @@ class process_transition_action(osv.osv):
         'state': lambda *args: 'dummy',
     }
 
-    def copy_data(self, cr, uid, id, default=None, context={}):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
 
-        state = self.pool.get('process.transition.action').browse(cr, uid, [id], context)[0].state
+        state = self.pool.get('process.transition.action').browse(cr, uid, [id], context=context)[0].state
         if state:
             default['state'] = state
 

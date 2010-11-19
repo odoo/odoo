@@ -326,7 +326,7 @@ class project_scrum_meeting(osv.osv):
     def button_send_to_master(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        meeting_id = self.browse(cr, uid, ids)[0]
+        meeting_id = self.browse(cr, uid, ids, context=context)[0]
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
             res = self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
             if not res:
@@ -339,7 +339,7 @@ class project_scrum_meeting(osv.osv):
         if context is None:
             context = {}
         context.update({'button_send_product_owner': True})
-        meeting_id = self.browse(cr, uid, ids)[0]
+        meeting_id = self.browse(cr, uid, ids, context=context)[0]
         if meeting_id.sprint_id.product_owner_id.user_email:
             res = self.email_send(cr,uid,ids,meeting_id.sprint_id.product_owner_id.user_email)
             if not res:

@@ -29,6 +29,8 @@ class hr_employee(osv.osv):
 
     def _get_latest_contract(self, cr, uid, ids, field_name, args, context=None):
         res = {}
+        if not context:
+            context = {}
         obj_contract = self.pool.get('hr.contract')
         for emp in self.browse(cr, uid, ids, context=context):
             contract_ids = obj_contract.search(cr, uid, [('employee_id','=',emp.id),], order='date_start', context=context)

@@ -159,14 +159,16 @@ class questionnaire(osv.osv):
     _name="crm_profiling.questionnaire"
     _description= "Questionnaire"
 
-    def build_form(self, cr, uid, data, context):
+    def build_form(self, cr, uid, data, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param data: Get Data
             @param context: A standard dictionary for contextual values """
-
+        
+        if not context:
+            context = {}
         query = """
         select name, id
         from crm_profiling_question
@@ -210,7 +212,7 @@ class partner(osv.osv):
                                 "partner","answer","Answers"),
         }
 
-    def _questionnaire_compute(self, cr, uid, data, context):
+    def _questionnaire_compute(self, cr, uid, data, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -219,6 +221,8 @@ class partner(osv.osv):
             @param context: A standard dictionary for contextual values """
 
         temp = []
+        if not context:
+            context = {}
         for x in data['form']:
             if x.startswith("quest_form") and data['form'][x] != 0 :
                 temp.append(data['form'][x])
@@ -228,7 +232,7 @@ class partner(osv.osv):
         for x in cr.fetchall():
             temp.append(x[0])
 
-        self.write(cr, uid, [data['id']], {'answers_ids':[[6, 0, temp]]}, context)
+        self.write(cr, uid, [data['id']], {'answers_ids':[[6, 0, temp]]}, context=context)
         return {}
 
 

@@ -170,7 +170,7 @@ class email_template_send_wizard(osv.osv_memory):
     def sav_to_drafts(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        mailid = self.save_to_mailbox(cr, uid, ids, context)
+        mailid = self.save_to_mailbox(cr, uid, ids, context=context)
         if self.pool.get('email_template.mailbox').write(cr, uid, mailid, {'folder':'drafts'}, context):
             return {'type':'ir.actions.act_window_close' }
 

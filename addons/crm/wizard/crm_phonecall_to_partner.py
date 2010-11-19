@@ -138,8 +138,8 @@ class crm_phonecall2partner(osv.osv_memory):
 
         rec_ids = context and context.get('active_ids', [])
 
-        for data in self.browse(cr, uid, ids):
-            for phonecall in phonecall_obj.browse(cr, uid, rec_ids):
+        for data in self.browse(cr, uid, ids, context=context):
+            for phonecall in phonecall_obj.browse(cr, uid, rec_ids, context=context):
                 if data.action == 'create':
                     partner_id = partner_obj.create(cr, uid, {
                         'name': phonecall.name or phonecall.name,
@@ -181,7 +181,7 @@ class crm_phonecall2partner(osv.osv_memory):
         if not context:
             context = {}
 
-        partner_ids = self._create_partner(cr, uid, ids, context)
+        partner_ids = self._create_partner(cr, uid, ids, context=context)
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])

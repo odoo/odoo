@@ -40,7 +40,7 @@ fields_rep = {
   'module_file': {'string': 'Save report', 'type': 'binary', 'required': True},
 }
 
-def get_detail(self, cr, uid, datas, context={}):
+def get_detail(self, cr, uid, datas, context=None):
     data = pooler.get_pool(cr.dbname).get('module.quality.detail').browse(cr, uid, datas['id'])
     if not data.detail:
         raise wizard.except_wizard(_('Warning'), _('No report to save!'))

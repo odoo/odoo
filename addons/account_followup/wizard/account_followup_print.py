@@ -214,8 +214,8 @@ class account_followup_print_all(osv.osv_memory):
         if data['email_conf']:
             msg_sent = ''
             msg_unsent = ''
-            data_user = user_obj.browse(cr, uid, uid)
-            move_lines = line_obj.browse(cr, uid, data['partner_ids'])
+            data_user = user_obj.browse(cr, uid, uid, context=context)
+            move_lines = line_obj.browse(cr, uid, data['partner_ids'], context=context)
             partners = []
             dict_lines = {}
             for line in move_lines:
@@ -223,7 +223,7 @@ class account_followup_print_all(osv.osv_memory):
                 dict_lines[line.name.id] =line
             for partner in partners:
                 ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
-                data_lines = move_obj.browse(cr, uid, ids_lines)
+                data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
                 followup_data = dict_lines[partner.id]
                 dest = False
                 if partner.address:

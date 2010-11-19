@@ -170,7 +170,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
     def name_get(self, cr, uid, ids, context=None):
         return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
 
-    def _constraint_unique(self, cursor, user, ids):
+    def _constraint_unique(self, cursor, user, ids, context=None):
         """
         This makes sure that you dont give personal 
         users two accounts with same ID (Validated in sql constaints)
@@ -209,10 +209,12 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         
         @return: SMTP server object or Exception
         """
+        if not context:
+            context = {}
         #Type cast ids to integer
         if type(ids) == list:
             ids = ids[0]
-        this_object = self.browse(cursor, user, ids, context)
+        this_object = self.browse(cursor, user, ids, context=context)
         if this_object:
             if this_object.smtpserver and this_object.smtpport: 
                 try:
@@ -256,7 +258,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                                  _("Reason: %s") % error
                                  )
     
-    def do_approval(self, cr, uid, ids, context={}):
+    def do_approval(self, cr, uid, ids, context=None):
         #TODO: Check if user has rights
         self.write(cr, uid, ids, {'state':'approved'}, context=context)
 #        wf_service = netsvc.LocalService("workflow")
@@ -266,8 +268,10 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         This method should now wrap smtp_connection
         """
         #This function returns a SMTP server object
+        if not context:
+            context = {}
         logger = netsvc.Logger()
-        core_obj = self.browse(cursor, user, id, context)
+        core_obj = self.browse(cursor, user, id, context=context)
         if core_obj.smtpserver and core_obj.smtpport and core_obj.state == 'approved':
             try:
                 serv = self.get_outgoing_server(cursor, user, id, context)

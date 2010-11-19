@@ -31,7 +31,9 @@ import pooler
 
 class phonecall2meeting(wizard.interface):
 
-    def _makeMeeting(self, cr, uid, data, context):
+    def _makeMeeting(self, cr, uid, data, context=None):
+        if not context:
+            context = {}
         pool = pooler.get_pool(cr.dbname)
         phonecall_case_obj = pool.get('crm.phonecall')                   
         data_obj = pool.get('ir.model.data')

@@ -35,6 +35,8 @@ class calendar_collection(osv.osv):
     }
     
     def _get_root_calendar_directory(self, cr, uid, context=None):
+        if not context:
+            context = {}
         objid = self.pool.get('ir.model.data')
         try:
             mid = objid._get_id(cr, uid, 'document', 'dir_calendars')
@@ -50,6 +52,8 @@ class calendar_collection(osv.osv):
         return False
 
     def get_node_class(self, cr, uid, ids, dbro=None, dynamic=False, context=None):
+        if not context:
+            context = {}
         if dbro is None:
             dbro = self.browse(cr, uid, ids, context=context)
 
@@ -70,6 +74,8 @@ class calendar_collection(osv.osv):
         return False
 
     def get_schedule_inbox_URL(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         calendar_obj = self.pool.get('basic.calendar')
 
         calendar_ids = calendar_obj.search(cr, uid, [
