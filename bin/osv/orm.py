@@ -403,7 +403,7 @@ class orm_template(object):
         """Override this method to do specific things when a view on the object is opened."""
         pass
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, orderby=False, context=None):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         raise NotImplementedError(_('The read_group method is not implemented on this object !'))
 
     def _field_create(self, cr, context=None):
@@ -2200,7 +2200,7 @@ class orm(orm_template):
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
     __logger = logging.getLogger('orm')
     __schema = logging.getLogger('orm.schema')
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, orderby=False, context=None):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
 
