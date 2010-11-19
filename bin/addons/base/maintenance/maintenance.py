@@ -111,34 +111,38 @@ class maintenance_contract(osv.osv):
     
     def send_ping(self, cr, uid, ids, cron_mode=True, context={}):
         try:
-            result = tools.ping.send_ping(cr, uid)
+            try:
+                result = tools.ping.send_ping(cr, uid)
+            except:
+                raise osv.except_osv("Error", "Error during communication with the maintenance server.")
+            
+            contracts = result["validity_dates"]
+            for contract in contracts:
+                c_id = self.search(cr, uid, [("name","=",contract)])[0]
+                date_from = contracts[contract][0]
+                date_to = contracts[contract][1]
+                valid = datetime.date.today() >= datetime.datetime.strptime(date_from, '%Y-%m-%d').date() \
+                    and datetime.date.today() <= datetime.datetime.strptime(date_to, '%Y-%m-%d').date()
+                self.write(cr, uid, c_id, {
+                    "date_start": date_from,
+                    "date_stop": date_to,
+                    "state": "valid" if valid else "unvalid",
+                })
+            
+            if cron_mode:
+                modosv = self.pool.get("ir.model.data")
+                sched_id = modosv.get_object_reference(cr, uid, "base", "ir_cron_ping_scheduler")[1]
+                cronosv = self.pool.get("ir.cron")
+                cronosv.write(cr, uid, sched_id, {
+                    "interval_type": result["interval_type"],
+                    "interval_number": result["interval_number"],
+                })
         except:
             if cron_mode:
-                pass # if ping fails that's bad but we don't want it to interfere
+                return False # if ping fails we don't want it to interfere
             else:
-                raise osv.except_osv("Error", "Error during communication with the maintenance server.")
-        
-        contracts = result["validity_dates"]
-        for contract in contracts:
-            c_id = self.search(cr, uid, [("name","=",contract)])[0]
-            date_from = contracts[contract][0]
-            date_to = contracts[contract][1]
-            valid = datetime.date.today() >= datetime.datetime.strptime(date_from, '%Y-%m-%d').date() \
-                and datetime.date.today() <= datetime.datetime.strptime(date_to, '%Y-%m-%d').date()
-            self.write(cr, uid, c_id, {
-                "date_start": date_from,
-                "date_stop": date_to,
-                "state": "valid" if valid else "unvalid",
-            })
-        
-        if cron_mode:
-            cronosv = self.pool.get("ir.cron")
-            sched_id = cronosv.search(cr, uid, [("name","=","Maintenance Update Scheduler")])[0]
-            cronosv.write(cr, uid, sched_id, {
-                "interval_type": result["interval_type"],
-                "interval_number": result["interval_number"],
-            })
-        
+                raise
+            
         return True
 
     _columns = {
