@@ -50,121 +50,71 @@ def GetConn():
     d=Dispatch("Python.OpenERP.XMLRpcConn")
     return d
 class Configuration:
-    def Init(self, application):
-        self.mngr = None
-
-    def Close(self):
-        self.mngr = None
-        self.close()
-        win32ui.MessageBox("Configuration","Configuration")
 
     def OnClick(self, button, cancel):
         import win32ui
         try:
-            self.mngr = manager.GetManager()
-            self.mngr.ShowManager()
+            mngr = manager.GetManager()
+            mngr.ShowManager()
         except Exception,e:
             win32ui.MessageBox("Fail to Initialize dialog.\n"+str(e),"OpenERP Configuration", win32con.MB_ICONERROR)
         return cancel
 #
 class ViewPartners:
-    def Init(self, application):
-        self.mngr = None
-        self.data = None
-        self.outlook = None
-        self.ex= None
-
-    def Close(self):
-        self.mngr = None
-        self.data = None
-        self.outlook = None
-        self.ex= None
-        self.close()
-        win32ui.MessageBox("ViewPartners","ViewPartners")
-
     def OnClick(self, button, cancel):
         from win32com.client import Dispatch
         import win32con
-        self.mngr = manager.GetManager()
-        self.data = self.mngr.LoadConfig()
-        self.outlook = Dispatch("Outlook.Application")
-        self.ex = self.outlook.ActiveExplorer()
-        if self.ex:
-            is_login = str(data['login'])
-            if is_login == 'False':
-                win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
-            elif self.ex.Selection.Count == 1 or ex.Selection.Count == 0:
-                self.mngr = manager.GetManager()
-                self.mngr.ShowManager("IDD_VIEW_PARTNER_DIALOG")
-            elif self.ex.Selection.Count > 1:
-                win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Open Contact",win32con.MB_ICONINFORMATION)
-        return cancel
-#
-class OpenPartner:
-    def Init(self, application):
-        self.mngr = None
-        self.data = None
-        self.outlook = None
-        self.ex= None
-
-    def Close(self):
-        self.mngr = None
-        self.data = None
-        self.outlook = None
-        self.ex= None
-        self.close()
-        win32ui.MessageBox("OpenPartner","OpenPartner")
-
-    def OnClick(self, button, cancel):
-        import win32ui
-        from manager import ustr
-        self.mngr = manager.GetManager()
-        self.data = self.mngr.LoadConfig()
-        self.outlook = Dispatch("Outlook.Application")
-        self.ex = self.outlook.ActiveExplorer()
+        mngr = manager.GetManager()
+        data = mngr.LoadConfig()
+        outlook = Dispatch("Outlook.Application")
+        ex = outlook.ActiveExplorer()
         if ex:
             is_login = str(data['login'])
             if is_login == 'False':
                 win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
-            elif self.ex.Selection.Count == 1:
-                self.mngr = manager.GetManager()
-                self.mngr.ShowManager("IDD_OPEN_PARTNER_DIALOG")
-            elif self.ex.Selection.Count == 0:
+            elif ex.Selection.Count == 1 or ex.Selection.Count == 0:
+                mngr = manager.GetManager()
+                mngr.ShowManager("IDD_VIEW_PARTNER_DIALOG")
+            elif ex.Selection.Count > 1:
+                win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Open Contact",win32con.MB_ICONINFORMATION)
+        return cancel
+#
+class OpenPartner:
+    def OnClick(self, button, cancel):
+        import win32ui
+        mngr = manager.GetManager()
+        data = mngr.LoadConfig()
+        outlook = Dispatch("Outlook.Application")
+        ex = outlook.ActiveExplorer()
+        if ex:
+            is_login = str(data['login'])
+            if is_login == 'False':
+                win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
+            elif ex.Selection.Count == 1:
+                mngr = manager.GetManager()
+                mngr.ShowManager("IDD_OPEN_PARTNER_DIALOG")
+            elif ex.Selection.Count == 0:
                 win32ui.MessageBox("No mail selected to push to OpenERP","Push to OpenERP",win32con.MB_ICONINFORMATION)
-            elif self.ex.Selection.Count > 1:
+            elif ex.Selection.Count > 1:
                 win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Push to OpenERP",win32con.MB_ICONINFORMATION)
         return cancel
 #
 class OpenDocument:
-    def Init(self, application):
-        self.mngr = None
-        self.data = None
-        self.outlook = None
-        self.ex= None
-
-    def Close(self):
-        self.mngr = None
-        self.data = None
-        self.outlook = None
-        self.ex= None
-        self.close()
-        win32ui.MessageBox("OpenDocument","OpenDocument")
-
     def OnClick(self, button, cancel):
         from win32com.client import Dispatch
         import win32con
-        self.mngr = manager.GetManager()
-        self.data = self.mngr.LoadConfig()
-        self.outlook = Dispatch("Outlook.Application")
-        self.ex = self.outlook.ActiveExplorer()
-        if self.ex:
+        mngr = manager.GetManager()
+        data = mngr.LoadConfig()
+        outlook = Dispatch("Outlook.Application")
+        ex = outlook.ActiveExplorer()
+        if ex:
             is_login = str(data['login'])
             if is_login == 'False':
                 win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
-            elif self.ex.Selection.Count == 1 or ex.Selection.Count == 0:
-                self.mngr = manager.GetManager()
-                self.mngr.ShowManager("IDD_OPEN_DOCUEMNT_DIALOG")
-            elif self.ex.Selection.Count > 1:
+            elif ex.Selection.Count == 1 or ex.Selection.Count == 0:
+                mngr = manager.GetManager()
+                mngr.ShowManager("IDD_OPEN_DOCUEMNT_DIALOG")
+            elif ex.Selection.Count > 1:
                 win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Open Document",win32con.MB_ICONINFORMATION)
         return cancel
 #

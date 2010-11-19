@@ -104,10 +104,9 @@ class OpenERPManager:
         self.application_directory = os.path.dirname(this_filename)
         self.windows_data_directory = self.LocateDataDirectory()
         self.data_directory = self.windows_data_directory
-        self.default_objects = [('Partners','res.partner',''),('Partner Address','res.partner.address',''), \
-                               ('Account Invoices','account.invoice',''), ('Accounts','account.account',''), \
-                               ('Projects', 'project.project',''),('Sale Orders','sale.order',''), \
-                               ('Project Tasks','project.task',''), ('Products', 'product.product', '')]
+        self.default_objects = [('Partners','res.partner',''),('Account Invoices','account.invoice',''), \
+                                ('Products', 'product.product',''),('Sale Orders','sale.order',''), \
+                               ('Leads','crm.lead','')]
 
         self.config=self.LoadConfig()
 
