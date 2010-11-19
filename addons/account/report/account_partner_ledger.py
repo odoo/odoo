@@ -179,8 +179,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             " " + RECONCILE_TAG + " "\
             "AND " + self.init_query + "  ",
             (partner.id, tuple(move_state), tuple(self.account_ids)))
-        res = self.cr.fetchall()
-        return res
+        return self.cr.fetchall()
 
     def _sum_debit_partner(self, partner):
         move_state = ['draft','posted']
