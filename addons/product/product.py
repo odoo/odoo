@@ -430,7 +430,7 @@ class product_product(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
-        'ean13': fields.char('EAN13', size=13),
+        'ean13': fields.char('EAN13', size=14),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
@@ -450,20 +450,29 @@ class product_product(osv.osv):
         for partner in self.browse(cr, uid, ids):
             if not partner.ean13:
                 continue
-            if len(partner.ean13) <> 13:
+            if len(partner.ean13) not in [13,14,8]:
                 return False
             try:
                 int(partner.ean13)
             except:
                 return False
-            sum=0
-            for i in range(12):
+            oddsum=0
+            evensum=0
+            total=0
+            eanvalue=partner.ean13
+            reversevalue = eanvalue[::-1]
+            finalean=reversevalue[1:]
+
+            for i in range(len(finalean)):
                 if is_pair(i):
-                    sum += int(partner.ean13[i])
+                    oddsum += int(finalean[i])
                 else:
-                    sum += 3 * int(partner.ean13[i])
-            check = int(math.ceil(sum / 10.0) * 10 - sum)
-            if check != int(partner.ean13[12]):
+                    evensum += int(finalean[i])
+            total=(oddsum * 3) + evensum
+
+            check = int(10 - math.ceil(total % 10.0))
+
+            if check != int(partner.ean13[-1]):
                 return False
         return True
 
