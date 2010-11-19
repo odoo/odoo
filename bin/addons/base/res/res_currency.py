@@ -101,12 +101,12 @@ class res_currency(osv.osv):
         if from_currency['rate'] == 0 or to_currency['rate'] == 0:
             date = context.get('date', time.strftime('%Y-%m-%d'))
             if from_currency['rate'] == 0:
-                currency_name = from_currency.name
+                currency_symbol = from_currency.symbol
             else:
-                currency_name = to_currency.name
+                currency_symbol = to_currency.symbol
             raise osv.except_osv(_('Error'), _('No rate found \n' \
                     'for the currency: %s \n' \
-                    'at the date: %s') % (currency_name, date))
+                    'at the date: %s') % (currency_symbol, date))
         rate = to_currency.rate/from_currency.rate
         if account and (account.currency_mode=='average') and account.currency_id:
             q = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
