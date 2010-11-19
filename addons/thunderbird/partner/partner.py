@@ -209,8 +209,10 @@ class thunderbird_partner(osv.osv_memory):
         msg = dictcreate.get('message')
         msg = self.pool.get('email.server.tools').parse_message(msg)
         message_id = msg.get('message-id')
-        refs =  msg.get('references')
-        references = refs.split()
+        refs =  msg.get('references',False)
+        references = False
+        if refs:
+            references = refs.split()
         msg_pool = self.pool.get('mailgate.message')
         model = ''
         res_id = 0
@@ -223,9 +225,10 @@ class thunderbird_partner(osv.osv_memory):
             else:
                 if references :
                     msg_ids = msg_pool.search(cr, uid, [('message_id','in',references)])
-                    msg = msg_pool.browse(cr, uid, msg_ids[0])
-                    model = msg.model
-                    res_id = msg.res_id
+                    if msg_ids and len(msg_ids):
+                        msg = msg_pool.browse(cr, uid, msg_ids[0])
+                        model = msg.model
+                        res_id = msg.res_id
         return (model,res_id)
 
 
