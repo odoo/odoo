@@ -233,10 +233,9 @@
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['draft','done'])]}">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
-                                    <field name="hours" widget="float_time" />
+                                    <field name="hours" widget="float_time" sum="Spent Hours"/>
                                     <field name="user_id" />
                                     <field name="date" />
-                                    <field name="hours" widget="float_time" sum="Spent Hours"/>
                                 </tree>
                             </field>
                             <newline/>
