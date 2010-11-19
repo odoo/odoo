@@ -146,7 +146,6 @@ class partner_vat_list(osv.osv_memory):
         obj_fyear = self.pool.get('account.fiscalyear')
         obj_addr = self.pool.get('res.partner.address')
         obj_vat_lclient = self.pool.get('vat.listing.clients')
-        obj_model_data = self.pool.get('ir.model.data')
 
         seq_controlref = obj_sequence.get(cursor, user, 'controlref')
         seq_declarantnum = obj_sequence.get(cursor, user, 'declarantnum')
