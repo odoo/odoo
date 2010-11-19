@@ -327,7 +327,8 @@
     <paraStyle name="Table index 1" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica"/>
     <paraStyle name="Table" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Table index heading" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="16.0" leading="20" spaceBefore="12.0" spaceAfter="6.0"/>
-  <paraStyle name="terp_default_Right_1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P9b" fontName="Helvetica-Bold" fontSize="8.5" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <images/>
   </stylesheet>
   <story>
@@ -656,7 +657,7 @@
           <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][2]) ]] [[ company.currency_id.symbol ]]</para>
         </td>
        <td>
-          <para style="terp_default_Right_9"></para>
+          <para style="terp_default_Right_9">[[ p.property_account_receivable.currency_id and formatLang(sum_currency_amount_account(p.property_account_receivable), digits=get_digits(dp='Account')) + p.property_account_receivable.currency_id.symbol or '' ]]</para>
         </td>
         </tr>
     </blockTable>
@@ -689,7 +690,7 @@
             <para style="terp_default_Right_9">[[ formatLang((line['progress'])) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9"><font>[[ (line['currency_id']==None or line['amount_currency']==None) and removeParentNode('font') ]] [[ formatLang(line['amount_currency'] ) ]] [[ line['currency_code'] or '' ]]</font></para>
+            <para style="terp_default_Right_9"><font>[[ (p.property_account_receivable.currency_id and formatLang(line['amount_currency'])) or removeParentNode('font') ]] [[  line['currency_code'] or '']] </font></para>
           </td>
         </tr>
       </blockTable>
