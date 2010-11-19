@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:38+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:38+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:29+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -50,6 +50,11 @@ msgid "France"
 msgstr ""
 
 #. module: l10n_fr
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_asset
 msgid "Asset"
 msgstr ""
@@ -76,8 +81,8 @@ msgid "Report for l10n_fr"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_2
-msgid "Zone Euro"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: l10n_fr
@@ -98,6 +103,11 @@ msgstr ""
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_payable
 msgid "Payable"
+msgstr ""
+
+#. module: l10n_fr
+#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_2
+msgid "Zone Euro"
 msgstr ""
 
 #. module: l10n_fr
@@ -172,6 +182,11 @@ msgid "Comptes spéciaux"
 msgstr ""
 
 #. module: l10n_fr
+#: sql_constraint:l10n.fr.report:0
+msgid "The code report must be unique !"
+msgstr ""
+
+#. module: l10n_fr
 #: field:account.bilan.report,fiscalyear_id:0
 #: field:account.cdr.report,fiscalyear_id:0
 msgid "Fiscal Year"
@@ -190,6 +205,11 @@ msgstr ""
 #. module: l10n_fr
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_4
 msgid "Hors Euro"
+msgstr ""
+
+#. module: l10n_fr
+#: sql_constraint:l10n.fr.line:0
+msgid "The variable name must be unique !"
 msgstr ""
 
 #. module: l10n_fr
@@ -247,5 +267,10 @@ msgstr ""
 #. module: l10n_fr
 #: field:l10n.fr.line,code:0
 msgid "Variable Name"
+msgstr ""
+
+#. module: l10n_fr
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

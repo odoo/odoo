@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-15 18:44:59+0000\n"
-"PO-Revision-Date: 2010-11-15 18:44:59+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:03+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1153,17 +1153,9 @@ msgid "Date on which purchase order has been approved"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order.group:0
-msgid " Please note that: \n"
-" \n"
-"   Orders will only be merged if: \n"
-"   * Purchase Orders are in draft \n"
-"   * Purchase Orders belong to the same supplier \n"
-"   * Purchase Orders are have same stock location, same pricelist \n"
-" \n"
-"    Lines will only be merged if: \n"
-"   * Order lines are exactly the same except for the product,quantity and unit \n"
-" "
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting"
 msgstr ""
 
 #. module: purchase
@@ -1413,12 +1405,6 @@ msgid "Qty"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Waiting"
-msgstr ""
-
-#. module: purchase
 #: field:purchase.order,partner_address_id:0
 msgid "Address"
 msgstr ""
@@ -1498,6 +1484,20 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "April"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.group:0
+msgid " Please note that: \n"
+" \n"
+" Orders will only be merged if: \n"
+" * Purchase Orders are in draft \n"
+" * Purchase Orders belong to the same supplier \n"
+" * Purchase Orders are have same stock location, same pricelist \n"
+" \n"
+" Lines will only be merged if: \n"
+" * Order lines are exactly the same except for the product,quantity and unit \n"
+" "
 msgstr ""
 
 #. module: purchase
