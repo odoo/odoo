@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:50+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:50+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:57+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -86,6 +86,13 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,day_open:0
 msgid "Days to Open"
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:0
+#, python-format
+msgid "You cannot escalate this issue.\n"
+"The relevant Project has not configured the Escalation Project!"
 msgstr ""
 
 #. module: project_issue
@@ -178,8 +185,13 @@ msgid "If any issue is escalated from the current Project, it will be listed und
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,date_deadline:0
-msgid "Deadline"
+#: view:project.issue:0
+msgid "Extra Info"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
+msgid "This report on the project issues allows you to analyse the quality of your support or after-sales services. You can track the issues per age. You can analyse the time required to open or close an issue, the number of email to exchange and the time spent on average by issues."
 msgstr ""
 
 #. module: project_issue
@@ -199,6 +211,11 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0
 msgid "Previous"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid "Issues such as system bugs, client complains, material breakdowns are collected here. You can define the stages assigned to the resolution of the issue on the project. (analysis, development, done) Using the mailgateway module, the issues can be integrated to an email address (example: support@mycompany.com)"
 msgstr ""
 
 #. module: project_issue
@@ -241,6 +258,11 @@ msgstr ""
 #: view:project.issue.report:0
 #: field:project.issue.report,priority:0
 msgid "Priority"
+msgstr ""
+
+#. module: project_issue
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: project_issue
@@ -391,6 +413,11 @@ msgid "The channels represent the different communication modes available with t
 msgstr ""
 
 #. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_version_action
+msgid "You can use the issues tracker in OpenERP to handle bugs in the software development project, to handle claims in after-sales services, etc. Define here the different versions of your products on which you can work on issues."
+msgstr ""
+
+#. module: project_issue
 #: code:addons/project_issue/project_issue.py:0
 #, python-format
 msgid "Tasks"
@@ -446,6 +473,11 @@ msgid "Feature Requests"
 msgstr ""
 
 #. module: project_issue
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: project_issue
 #: field:project.issue,write_date:0
 msgid "Update Date"
 msgstr ""
@@ -471,12 +503,6 @@ msgstr ""
 #. module: project_issue
 #: model:crm.case.categ,name:project_issue.bug_categ
 msgid "Maintenance"
-msgstr ""
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
-#, python-format
-msgid "You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!"
 msgstr ""
 
 #. module: project_issue
@@ -549,6 +575,11 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "June"
+msgstr ""
+
+#. module: project_issue
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: project_issue
@@ -759,6 +790,11 @@ msgid "Description"
 msgstr ""
 
 #. module: project_issue
+#: field:project.issue,section_id:0
+msgid "Sales Team"
+msgstr ""
+
+#. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "May"
 msgstr ""
@@ -780,16 +816,16 @@ msgid "Employee's Name"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Emails"
-msgstr ""
-
-#. module: project_issue
 #: help:project.issue,state:0
 msgid "The state is set to 'Draft', when a case is created.                                  \n"
 "If the case is in progress the state is set to 'Open'.                                  \n"
 "When the case is over, the state is set to 'Done'.                                  \n"
 "If the case needs to be reviewed then the state is set to 'Pending'."
+msgstr ""
+
+#. module: project_issue
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: project_issue
@@ -879,8 +915,8 @@ msgid "High"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,section_id:0
-msgid "Sales Team"
+#: field:project.issue,date_deadline:0
+msgid "Deadline"
 msgstr ""
 
 #. module: project_issue

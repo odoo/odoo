@@ -1726,7 +1726,12 @@ class account_tax(osv.osv):
         if not context:
             context = {}
         ids = []
-        ids = self.search(cr, user, args, limit=limit, context=context)
+        if name:
+            ids = self.search(cr, user, [('description', '=', name)] + args, limit=limit, context=context)
+            if not ids:
+                ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, user, args, limit=limit, context=context or {})
         return self.name_get(cr, user, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
