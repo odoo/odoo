@@ -485,7 +485,7 @@ class actions_server(osv.osv):
         for field in fields:
             try:
                 obj = getattr(obj, field)
-            except Exception,e :
+            except Exception:
                 logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (field))
 
         return obj
@@ -506,7 +506,7 @@ class actions_server(osv.osv):
         for field in fields:
             try:
                 obj = getattr(obj, field)
-            except Exception,e :
+            except Exception:
                 logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (field))
 
         return obj
@@ -514,7 +514,6 @@ class actions_server(osv.osv):
     def merge_message(self, cr, uid, keystr, action, context=None):
         if context is None:
             context = {}
-        logger = netsvc.Logger()
         def merge(match):
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
