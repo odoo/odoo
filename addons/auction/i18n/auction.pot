@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:08+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:08+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:26+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -219,6 +219,11 @@ msgid "Total Price"
 msgstr ""
 
 #. module: auction
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: auction
 #: constraint:hr.attendance:0
 msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
@@ -382,6 +387,11 @@ msgid "June"
 msgstr ""
 
 #. module: auction
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr ""
+
+#. module: auction
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
@@ -424,12 +434,6 @@ msgstr ""
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice_buyer
 msgid "Make Invoice for Buyer"
-msgstr ""
-
-#. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:0
-#, python-format
-msgid "Two different buyers for the same invoice !\nPlease correct this problem before invoicing"
 msgstr ""
 
 #. module: auction
@@ -689,6 +693,11 @@ msgstr ""
 #: selection:report.auction.adjudication,state:0
 #: selection:report.object.encoded,state:0
 msgid "Draft"
+msgstr ""
+
+#. module: auction
+#: sql_constraint:account.account:0
+msgid "The code of the account must be unique per company !"
 msgstr ""
 
 #. module: auction
@@ -1282,6 +1291,11 @@ msgid "Priority"
 msgstr ""
 
 #. module: auction
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: auction
 #: view:board.board:0
 msgid "Latest objects"
 msgstr ""
@@ -1562,6 +1576,13 @@ msgstr ""
 #. module: auction
 #: view:board.board:0
 msgid "Auction manager "
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_lots_invoice.py:0
+#, python-format
+msgid "Two different buyers for the same invoice !\n"
+"Please correct this problem before invoicing"
 msgstr ""
 
 #. module: auction
@@ -2125,6 +2146,11 @@ msgstr ""
 #. module: auction
 #: model:ir.model,name:auction.model_report_object_encoded
 msgid "Object encoded"
+msgstr ""
+
+#. module: auction
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: auction

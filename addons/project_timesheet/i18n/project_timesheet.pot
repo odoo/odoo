@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:54+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:54+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:02+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,8 +22,10 @@ msgid "No employee defined for user \"%s\". You must create one."
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Tasks by User"
+#: code:addons/project_timesheet/project_timesheet.py:0
+#, python-format
+msgid "No journal defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
 msgstr ""
 
 #. module: project_timesheet
@@ -49,11 +51,6 @@ msgstr ""
 #. module: project_timesheet
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
-msgid "report.timesheet.task.user"
 msgstr ""
 
 #. module: project_timesheet
@@ -83,6 +80,11 @@ msgid "Month"
 msgstr ""
 
 #. module: project_timesheet
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "March"
 msgstr ""
@@ -108,13 +110,15 @@ msgid "May"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "June"
+#: code:addons/project_timesheet/project_timesheet.py:0
+#, python-format
+msgid "No product and product category property account defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.module.module,shortdesc:project_timesheet.module_meta_information
-msgid "Project Timesheet"
+#: selection:report.timesheet.task.user,month:0
+msgid "June"
 msgstr ""
 
 #. module: project_timesheet
@@ -124,8 +128,8 @@ msgid "User"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "This Year"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: project_timesheet
@@ -144,9 +148,8 @@ msgid "Complete Your Timesheet."
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:0
-#, python-format
-msgid "No journal defined on the related employee.\nFill in the timesheet tab of the employee form."
+#: view:project.project:0
+msgid "Invoiceable"
 msgstr ""
 
 #. module: project_timesheet
@@ -165,8 +168,8 @@ msgid "October"
 msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
+#: view:report.timesheet.task.user:0
+msgid "This Year"
 msgstr ""
 
 #. module: project_timesheet
@@ -201,7 +204,14 @@ msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
+msgid "Tasks by User"
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:0
+#, python-format
+msgid "No product defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
 msgstr ""
 
 #. module: project_timesheet
@@ -225,9 +235,13 @@ msgid "Encode how much time u spent on your task"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:0
-#, python-format
-msgid "No product defined on the related employee.\nFill in the timesheet tab of the employee form."
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr ""
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
 msgstr ""
 
 #. module: project_timesheet
@@ -249,6 +263,7 @@ msgstr ""
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
 #: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
+#: view:report.timesheet.task.user:0
 msgid "Task Hours Per Month"
 msgstr ""
 
@@ -268,8 +283,8 @@ msgid "After task is completed, Create its invoice."
 msgstr ""
 
 #. module: project_timesheet
-#: view:project.project:0
-msgid "Invoiceble"
+#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
 msgstr ""
 
 #. module: project_timesheet
@@ -278,9 +293,8 @@ msgid "Date"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:0
-#, python-format
-msgid "No product and product category property account defined on the related employee.\nFill in the timesheet tab of the employee form."
+#: model:ir.module.module,shortdesc:project_timesheet.module_meta_information
+msgid "Project Timesheet"
 msgstr ""
 
 #. module: project_timesheet
@@ -302,5 +316,10 @@ msgstr ""
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "This Month"
+msgstr ""
+
+#. module: project_timesheet
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

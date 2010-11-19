@@ -473,7 +473,7 @@ class payroll_register(osv.osv):
 
             for slip in reg.line_ids:
                 if not slip.employee_id.bank_account_id:
-                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee' % (slip.employee_id.name)))
+                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
                 pline = {
                     'advice_id':pid,
                     'name':slip.employee_id.bank_account_id.acc_number,
@@ -1261,7 +1261,7 @@ class hr_payslip(osv.osv):
             paid_leave = 0.0
             for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
                 if not hday.holiday_status_id.head_id:
-                    raise osv.except_osv(_('Error !'), _('Please check configuration of %s, payroll head is missing' % (hday.holiday_status_id.name)))
+                    raise osv.except_osv(_('Error !'), _('Please check configuration of %s, payroll head is missing') % (hday.holiday_status_id.name))
 
                 res = {
                     'slip_id':slip.id,
@@ -1448,7 +1448,7 @@ class hr_employee(osv.osv):
                 try:
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
                 amount = 0.0
                 if line.amount_type == 'per':
                     amount = amt * line.amount
