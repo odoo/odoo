@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:06+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:06+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:22+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,11 @@ msgstr ""
 #: model:ir.module.module,description:analytic.module_meta_information
 msgid "Module for defining analytic accounting object.\n"
 "    "
+msgstr ""
+
+#. module: analytic
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: analytic
@@ -82,6 +87,11 @@ msgid "Pending"
 msgstr ""
 
 #. module: analytic
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
 msgstr ""
@@ -101,6 +111,11 @@ msgstr ""
 #: field:account.analytic.account,company_id:0
 #: field:account.analytic.line,company_id:0
 msgid "Company"
+msgstr ""
+
+#. module: analytic
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: analytic
@@ -207,6 +222,11 @@ msgid "View"
 msgstr ""
 
 #. module: analytic
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Partner"
 msgstr ""
@@ -224,5 +244,10 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
+msgstr ""
+
+#. module: analytic
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

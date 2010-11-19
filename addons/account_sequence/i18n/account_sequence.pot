@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* pad
+#	* account_sequence
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:45+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:45+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:21+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,66 +15,52 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: pad
+#. module: account_sequence
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
-#. module: pad
+#. module: account_sequence
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
 
-#. module: pad
-#: code:addons/pad/web/editors.py:0
-#, python-format
-msgid "Ok"
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
 msgstr ""
 
-#. module: pad
-#: code:addons/pad/web/editors.py:0
-#, python-format
-msgid "Name"
+#. module: account_sequence
+#: field:account.move,internal_sequence_number:0
+msgid "Internal Sequence Number"
 msgstr ""
 
-#. module: pad
-#: help:res.company,pad_index:0
-msgid "The root URL of the company's pad instance"
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_journal
+msgid "Journal"
 msgstr ""
 
-#. module: pad
-#: model:ir.model,name:pad.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: pad
+#. module: account_sequence
 #: sql_constraint:ir.module.module:0
 msgid "The name of the module must be unique !"
 msgstr ""
 
-#. module: pad
-#: field:res.company,pad_index:0
-msgid "Pad root URL"
+#. module: account_sequence
+#: model:ir.module.module,shortdesc:account_sequence.module_meta_information
+msgid "Entries Sequence Numbering"
 msgstr ""
 
-#. module: pad
-#: code:addons/pad/web/editors.py:0
-#: view:res.company:0
-#, python-format
-msgid "Pad"
+#. module: account_sequence
+#: field:account.journal,internal_sequence:0
+msgid "Internal Sequence"
 msgstr ""
 
-#. module: pad
-#: model:ir.module.module,shortdesc:pad.module_meta_information
-msgid "Enhanced support for (Ether)Pad attachments"
-msgstr ""
-
-#. module: pad
+#. module: account_sequence
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
-#. module: pad
+#. module: account_sequence
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
 msgstr ""

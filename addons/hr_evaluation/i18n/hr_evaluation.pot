@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:29+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:29+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:07+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -171,9 +171,8 @@ msgid "July"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid "You cannot change state, because some appraisal in waiting answer or draft state"
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
 msgstr ""
 
 #. module: hr_evaluation
@@ -182,13 +181,38 @@ msgid "Ending Date"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_next:0
-msgid "After the Date of Start"
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
+msgid "Each employee can be assigned to an evaluation plan. These plans define the frequency and the way you manage your periodic personnal evaluation. You will be able to define steps and attach interview forms to each step. OpenERP manages all kind of evaluations: bottom-up, top-down, self evaluation and final evaluation by the manager."
+msgstr ""
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid "\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(employee_name)s,\n"
+"\n"
+"I am doing an evaluation regarding %(eval_name)s.\n"
+"\n"
+"Kindly submit your response.\n"
+"\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
 msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Send to Employees"
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "After the Date of Start"
 msgstr ""
 
 #. module: hr_evaluation
@@ -217,12 +241,6 @@ msgid "Periodic Evaluations"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid "''Regarding ''"
-msgstr ""
-
-#. module: hr_evaluation
 #: view:hr.evaluation.reminder:0
 msgid "Send evaluation reminder"
 msgstr ""
@@ -235,6 +253,17 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(date)s: Current Date"
+msgstr ""
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid "Regarding "
+msgstr ""
+
+#. module: hr_evaluation
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: hr_evaluation
@@ -440,6 +469,11 @@ msgid "Check this box if you want to wait that all preceding phases are finished
 msgstr ""
 
 #. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid "Interview Requests are generated automatically by OpenERP according to employees evaluation plan. Each user receives automatic emails and requests to perform evaluation of their collegues periodically."
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Evaluation Data"
 msgstr ""
@@ -534,26 +568,6 @@ msgstr ""
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "October"
-msgstr ""
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid "''\n"
-"Date : %(date)s\n"
-"\n"
-"Dear %(employee_name)s,\n"
-"\n"
-"I am doing an evaluation regarding %(eval_name)s.\n"
-"\n"
-"Kindly submit your response.\n"
-"\n"
-"\n"
-"Thanks,\n"
-"--\n"
-"%(user_signature)s\n"
-"\n"
-"        ''"
 msgstr ""
 
 #. module: hr_evaluation
@@ -679,6 +693,11 @@ msgid "Cancel"
 msgstr ""
 
 #. module: hr_evaluation
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr ""
@@ -781,6 +800,11 @@ msgid "Evaluation Plan"
 msgstr ""
 
 #. module: hr_evaluation
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "February"
 msgstr ""
@@ -828,6 +852,12 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(user_signature)s: User name"
+msgstr ""
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid "You cannot change state, because some appraisal in waiting answer or draft state"
 msgstr ""
 
 #. module: hr_evaluation

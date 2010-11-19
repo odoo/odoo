@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:18+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:18+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:47+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,11 @@ msgstr ""
 #. module: base_report_designer
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: base_report_designer
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: base_report_designer
@@ -81,6 +86,11 @@ msgid "title"
 msgstr ""
 
 #. module: base_report_designer
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr ""
+
+#. module: base_report_designer
 #: field:base.report.file.sxw,report_id:0
 #: field:base.report.sxw,report_id:0
 msgid "Report"
@@ -92,13 +102,13 @@ msgid "base.report.rml.save"
 msgstr ""
 
 #. module: base_report_designer
-#: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
-msgid "Report Designer"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
-msgid "This is the template of your requested report.\nSave it as a .SXW file and open it with OpenOffice.\nDon't forget to install the OpenERP SA OpenOffice package to modify it.\nOnce it is modified, re-upload it in OpenERP using this wizard."
+#: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
+msgid "Report Designer"
 msgstr ""
 
 #. module: base_report_designer
@@ -159,6 +169,14 @@ msgid "Configuration Progress"
 msgstr ""
 
 #. module: base_report_designer
+#: view:base.report.file.sxw:0
+msgid "This is the template of your requested report.\n"
+"Save it as a .SXW file and open it with OpenOffice.\n"
+"Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
+"Once it is modified, re-upload it in OpenERP using this wizard."
+msgstr ""
+
+#. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Skip"
 msgstr ""
@@ -184,6 +202,11 @@ msgid "OpenObject Report Designer Plug-in"
 msgstr ""
 
 #. module: base_report_designer
+#: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr ""
+
+#. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_report_designer_installer
 msgid "OpenERP Report Designer Installation"
 msgstr ""
@@ -196,8 +219,8 @@ msgid "Cancel"
 msgstr ""
 
 #. module: base_report_designer
-#: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: base_report_designer
