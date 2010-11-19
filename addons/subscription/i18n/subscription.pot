@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47:05+0000\n"
-"PO-Revision-Date: 2010-10-18 17:47:05+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:17+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,19 +22,13 @@ msgid "Source Document"
 msgstr ""
 
 #. module: subscription
-#: help:subscription.document,active:0
-msgid "If the active field is set to true, it will allow you to hide the subscription document without removing it."
-msgstr ""
-
-#. module: subscription
 #: field:subscription.document,model:0
 msgid "Object"
 msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid "Please provide another source document.\nThis one does not exist !"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: subscription
@@ -50,12 +44,6 @@ msgstr ""
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Search Subscription"
-msgstr ""
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid "You cannot modify the Object linked to the Document Type!\nCreate another Document instead !"
 msgstr ""
 
 #. module: subscription
@@ -95,11 +83,6 @@ msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: subscription
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Weeks"
 msgstr ""
@@ -107,6 +90,11 @@ msgstr ""
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Today"
+msgstr ""
+
+#. module: subscription
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: subscription
@@ -175,6 +163,11 @@ msgid "Number of documents"
 msgstr ""
 
 #. module: subscription
+#: help:subscription.document,active:0
+msgid "If the active field is set to False, it will allow you to hide the subscription document without removing it."
+msgstr ""
+
+#. module: subscription
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
@@ -188,6 +181,13 @@ msgstr ""
 #: field:subscription.document,name:0
 #: field:subscription.subscription,name:0
 msgid "Name"
+msgstr ""
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "You cannot modify the Object linked to the Document Type!\n"
+"Create another Document instead !"
 msgstr ""
 
 #. module: subscription
@@ -261,6 +261,11 @@ msgid "Description or Summary of Subscription"
 msgstr ""
 
 #. module: subscription
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 #: view:subscription.document:0
 #: field:subscription.document.fields,document_id:0
@@ -327,6 +332,13 @@ msgid "Invoice"
 msgstr ""
 
 #. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "Please provide another source document.\n"
+"This one does not exist !"
+msgstr ""
+
+#. module: subscription
 #: field:subscription.document.fields,value:0
 msgid "Default Value"
 msgstr ""
@@ -335,5 +347,10 @@ msgstr ""
 #: view:subscription.subscription:0
 #: field:subscription.subscription,doc_lines:0
 msgid "Documents created"
+msgstr ""
+
+#. module: subscription
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
