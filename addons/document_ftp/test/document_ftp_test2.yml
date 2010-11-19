@@ -271,6 +271,19 @@
         for i in range(0, 200):
             ftp.delete('test-name%s.txt' %i)
         ftp.close()
+ 
+-
+    I delete the "test.txt" and "test-renamed.txt" file        
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
+        # TODO speed
+        ftp.delete('test.txt')
+        ftp.delete('test-renamed.txt')
+        ftp.close()  
+              
 -
     I remove the 'Test-Folder2'
 -
