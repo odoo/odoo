@@ -167,8 +167,6 @@
         partner_categ_pool = self.pool.get('res.partner.category')
         partner_pool =  self.pool.get('res.partner')
         
-        attach_ids = attach_pool.search(cr, uid, [('name','=','File of pat1')]) 
-        attach_pool.unlink(cr, uid, attach_ids)
         self.unlink(cr, uid, [ref('dir_tests2')])
         self.unlink(cr, uid, [ref('dir_respart1')])
         attach_pool.unlink(cr, uid, [ref('file_test1')])
