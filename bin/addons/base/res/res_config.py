@@ -113,8 +113,9 @@ class res_config_configurable(osv.osv_memory):
         current_user_menu = self.pool.get('res.users')\
             .browse(cr, uid, uid).menu_id
         # return the action associated with the menu
-        return {'menu_reload':True, 'type': 'object'}
-        
+        return self.pool.get(current_user_menu.type)\
+            .read(cr, uid, current_user_menu.id)
+
     def start(self, cr, uid, ids, context=None):
         ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
         for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
@@ -392,7 +393,7 @@ class res_config_installer(osv.osv_memory):
             cr, uid,
             modules.search(cr, uid, [('name','in',to_install)]),
             'to install', ['uninstalled'], context=context)
-        cr.commit() #TOFIX: after remove this statement, installation wizard is fail 
+        cr.commit() #TOFIX: after remove this statement, installation wizard is fail
         pooler.restart_pool(cr.dbname, update_module=True)
 res_config_installer()
 
