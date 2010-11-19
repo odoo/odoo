@@ -340,7 +340,7 @@
                 <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o)) ]]</u></para></td>
                 <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o)) ]]</u></para></td>
                 <td><para style="P9b"><u>[[formatLang(sum_balance_account(o)) ]] [[ company.currency_id.symbol ]]</u></para></td>
-               <td><para style="P9b"><u>[[ o.currency_id and sum_currency_amount_account(o) +o.currency_id.symbol or '' ]]</u></para></td>
+               <td><para style="P9b"><u><font>[[ (o.currency_id and formatLang(sum_currency_amount_account(o))) or removeParentNode('font') ]] [[  o.currency_id.symbol or '']]</font></u></para></td>
               </tr>
           </blockTable>
       </td>
