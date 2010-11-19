@@ -718,7 +718,6 @@ class account_voucher(osv.osv):
                 sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
                 move_line['amount_currency'] = company_currency <> current_currency and sign * line.amount or 0.0
                 master_line = move_line_pool.create(cr, uid, move_line)
-                test_ids.append('master_line')
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
                     rec_list_ids.append(rec_ids)
@@ -749,16 +748,18 @@ class account_voucher(osv.osv):
                 move_line['account_id'] = account_id
                 move_line_pool.create(cr, uid, move_line)
 
+            voucher = self.browse(cr, uid, ids)[0]
+
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
-                    if 'write_off' in context and context['write_off']['writeoff_acc_id']:
-                        writeoff_account_id = context['write_off']['writeoff_acc_id']
-                        writeoff_journal_id = context['write_off']['writeoff_journal_id']
-                        comment = context['write_off']['comment']
-                        self.pool.get('account.move.line').reconcile(cr, uid, rec_ids, 'manual', writeoff_account_id, writeoff_period_id, writeoff_journal_id, context)
-                    else:
-                        self.pool.get('account.move.line').reconcile_partial(cr, uid, rec_ids, 'manual', context)
-
+                    for line in voucher.line_ids:
+                        if line.amount_unreconciled != line.amount:
+                            if 'write_off' in context and context['write_off']['writeoff_acc_id']:
+                                writeoff_account_id = context['write_off']['writeoff_acc_id']
+                                writeoff_journal_id = context['write_off']['writeoff_journal_id']
+                                comment = context['write_off']['comment']
+                                self.pool.get('account.move.line').reconcile(cr, uid, rec_ids, 'manual', writeoff_account_id, writeoff_period_id, writeoff_journal_id, context)
+                    self.pool.get('account.move.line').reconcile_partial(cr, uid, rec_ids, 'manual', context)
             self.write(cr, uid, [inv.id], {
                 'move_id': move_id,
                 'state': 'posted',
