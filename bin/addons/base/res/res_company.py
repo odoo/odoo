@@ -203,16 +203,16 @@ class res_company(osv.osv):
         return """
 <header>
 <pageTemplate>
-    <frame id="first" x1="22.0" y1="22.0" width="1080" height="700"/>
+    <frame id="first" x1="28.0" y1="57.0" width="772" height="481"/>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
         <setFont name="DejaVu Sans" size="8"/>
-        <drawString x="25" y="725"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+        <drawString x="25" y="555"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawString x="490" y="725">[[ company.partner_id.name ]]</drawString>
+        <drawString x="382" y="555">[[ company.partner_id.name ]]</drawString>
         <stroke color="#000000"/>
-        <lines>25 720 1085 720</lines>
+        <lines>25 550 808 550</lines>
     </pageGraphics>
     </pageTemplate>
 </header>"""
