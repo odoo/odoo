@@ -147,9 +147,11 @@ if tools.config["translate_out"]:
     sys.exit(0)
 
 if tools.config["translate_in"]:
+    context = {'overwrite': tools.config["overwrite_existing_translations"]}
     tools.trans_load(tools.config["db_name"], 
                      tools.config["translate_in"], 
-                     tools.config["language"])
+                     tools.config["language"],
+                     context=context)
     sys.exit(0)
 
 #----------------------------------------------------------------------------------
