@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:19+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:19+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:48+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,11 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,email:0
 msgid "E-mail"
+msgstr ""
+
+#. module: base_setup
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: base_setup
@@ -91,8 +96,10 @@ msgid "Helps you handle your accounting needs, if you are not an accountant, we 
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid "You can start configuring the system or connect directly to the database as an administrator."
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
+""
 msgstr ""
 
 #. module: base_setup
@@ -138,6 +145,11 @@ msgid "Lets you install various interesting but non-essential tools like Survey,
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid "You can start configuring the system or connect directly to the database as an administrator."
+msgstr ""
+
+#. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
 msgstr ""
@@ -158,13 +170,13 @@ msgid "title"
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
+#: field:base.setup.installer,knowledge:0
+msgid "Knowledge Management"
 msgstr ""
 
 #. module: base_setup
-#: field:base.setup.installer,knowledge:0
-msgid "Knowledge Management"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: base_setup
@@ -180,6 +192,11 @@ msgstr ""
 #. module: base_setup
 #: help:base.setup.installer,point_of_sale:0
 msgid "Helps you get the most out of your points of sales with fast sale encoding, simplified payment mode encoding, automatic picking lists generation and more."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
 msgstr ""
 
 #. module: base_setup
@@ -416,8 +433,7 @@ msgid "base.setup.config"
 msgstr ""
 
 #. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

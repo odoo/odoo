@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:06+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:06+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:22+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,11 +18,6 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation transactions"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Form view not available for Payment Lines"
 msgstr ""
 
 #. module: account_voucher
@@ -107,6 +102,11 @@ msgid "Account voucher unreconcile"
 msgstr ""
 
 #. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid "When you sell products to a customer, you can give him a sales receipt or an invoice. When the sales receipt is confirmed, it creates journal items automatically and you can record the customer payment related to this sales receipt."
+msgstr ""
+
+#. module: account_voucher
 #: view:account.voucher:0
 msgid "Pay Bill"
 msgstr ""
@@ -172,6 +172,11 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,narration:0
 msgid "Notes"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
+msgid "Sales payment allows you to register the payments you receive from your customers. In order to record a payment, you must enter the customer, the payment method (=the journal) and the payment amount. OpenERP will propose to you automatically the reconciliation of this payment with the open invoices or sales receipts."
 msgstr ""
 
 #. module: account_voucher
@@ -282,8 +287,8 @@ msgid "You have to configure account base code and account tax code on the '%s' 
 msgstr ""
 
 #. module: account_voucher
-#: report:voucher.print:0
-msgid "Account :"
+#: selection:account.voucher,pay_now:0
+msgid "Pay Later or Group Funds"
 msgstr ""
 
 #. module: account_voucher
@@ -315,6 +320,11 @@ msgid "Period"
 msgstr ""
 
 #. module: account_voucher
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,state:0
 msgid "State"
@@ -323,6 +333,11 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.module.module,shortdesc:account_voucher.module_meta_information
 msgid "Accounting Voucher Entries"
+msgstr ""
+
+#. module: account_voucher
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: account_voucher
@@ -421,6 +436,11 @@ msgid "Pay Directly"
 msgstr ""
 
 #. module: account_voucher
+#: view:account.voucher:0
+msgid "Voucher Items"
+msgstr ""
+
+#. module: account_voucher
 #: field:account.statement.from.invoice,line_ids:0
 #: field:account.statement.from.invoice.lines,line_ids:0
 msgid "Invoices"
@@ -448,8 +468,8 @@ msgid "Payable and Receivables"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-msgid "Pay Later or Group Funds"
+#: report:voucher.print:0
+msgid "Account :"
 msgstr ""
 
 #. module: account_voucher
@@ -479,6 +499,11 @@ msgstr ""
 #: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "PRO-FORMA"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
+msgid "The supplier payment form allows you to track the payment you do to your suppliers. When you select a supplier, the payment method and an amount for the payment, OpenERP will propose to reconcile your payment with the open supplier invoices or bills."
 msgstr ""
 
 #. module: account_voucher
@@ -523,6 +548,11 @@ msgid "Post"
 msgstr ""
 
 #. module: account_voucher
+#: view:account.voucher:0
+msgid "Extended Filters..."
+msgstr ""
+
+#. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Number:"
@@ -553,11 +583,6 @@ msgstr ""
 #: selection:account.voucher.line,type:0
 #: report:voucher.cash_receipt.drcr:0
 msgid "Credit"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Extended options..."
 msgstr ""
 
 #. module: account_voucher
@@ -637,8 +662,8 @@ msgid "Invoice"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Voucher Items"
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
 msgstr ""
 
 #. module: account_voucher
@@ -652,6 +677,11 @@ msgstr ""
 #. module: account_voucher
 #: selection:account.voucher,state:0
 msgid "Pro-forma"
+msgstr ""
+
+#. module: account_voucher
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: account_voucher
@@ -708,9 +738,8 @@ msgid "Canceled"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:0
-#, python-format
-msgid "Please change partner and try again !"
+#: view:account.voucher:0
+msgid "Vendor Invoices and Outstanding transactions"
 msgstr ""
 
 #. module: account_voucher
@@ -786,12 +815,6 @@ msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:0
-#, python-format
-msgid "Invalid Error !"
-msgstr ""
-
-#. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
 msgstr ""
@@ -799,11 +822,6 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Vendor Invoices and Outstanding transactions"
 msgstr ""
 
 #. module: account_voucher
