@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:39+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:39+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:37+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,11 +30,6 @@ msgstr ""
 #: view:mailgate.message:0
 #: field:mailgate.message,email_from:0
 msgid "From"
-msgstr ""
-
-#. module: mail_gateway
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: mail_gateway
@@ -89,8 +84,8 @@ msgid "Details"
 msgstr ""
 
 #. module: mail_gateway
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: mail_gateway
@@ -111,6 +106,11 @@ msgstr ""
 #. module: mail_gateway
 #: view:mailgate.message:0
 msgid "Email Followers"
+msgstr ""
+
+#. module: mail_gateway
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: mail_gateway
@@ -149,6 +149,11 @@ msgid "Email Gateway System"
 msgstr ""
 
 #. module: mail_gateway
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: mail_gateway
 #: field:mailgate.message,date:0
 msgid "Date"
 msgstr ""
@@ -164,6 +169,11 @@ msgid "Partner Name"
 msgstr ""
 
 #. module: mail_gateway
+#: model:ir.actions.act_window,name:mail_gateway.action_view_mailgate_thread
+msgid "Mailgateway Threads"
+msgstr ""
+
+#. module: mail_gateway
 #: code:addons/mail_gateway/mail_gateway.py:0
 #, python-format
 msgid "Opportunity"
@@ -175,6 +185,12 @@ msgstr ""
 #: view:mailgate.message:0
 #: field:res.partner,emails:0
 msgid "Emails"
+msgstr ""
+
+#. module: mail_gateway
+#: code:addons/mail_gateway/mail_gateway.py:0
+#, python-format
+msgid "Stage"
 msgstr ""
 
 #. module: mail_gateway
@@ -198,6 +214,7 @@ msgid "Mailgateway Message"
 msgstr ""
 
 #. module: mail_gateway
+#: model:ir.actions.act_window,name:mail_gateway.action_view_mail_message
 #: field:mailgate.thread,message_ids:0
 msgid "Messages"
 msgstr ""
@@ -326,13 +343,12 @@ msgid "Owner"
 msgstr ""
 
 #. module: mail_gateway
-#: model:ir.actions.act_window,name:mail_gateway.action_view_mailgate_thread
-msgid "Mailgateway Threads"
+#: code:addons/mail_gateway/mail_gateway.py:0
+#, python-format
+msgid "Changed Stage to: "
 msgstr ""
 
 #. module: mail_gateway
-#: model:ir.actions.act_window,name:mail_gateway.action_view_mail_message
-#: model:ir.ui.menu,name:mail_gateway.menu_email_gateway_form
 #: view:mailgate.message:0
 msgid "Message"
 msgstr ""
@@ -341,6 +357,11 @@ msgstr ""
 #: view:mailgate.message:0
 #: field:mailgate.message,name:0
 msgid "Subject"
+msgstr ""
+
+#. module: mail_gateway
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: mail_gateway

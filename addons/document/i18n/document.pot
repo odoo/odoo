@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:25+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:25+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:59+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -282,6 +282,11 @@ msgid "Type"
 msgstr ""
 
 #. module: document
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: document
 #: help:document.directory,ressource_type_id:0
 msgid "Select an object here and there will be one folder per record of that resource."
 msgstr ""
@@ -542,9 +547,19 @@ msgid "Security"
 msgstr ""
 
 #. module: document
+#: help:document.directory,ressource_id:0
+msgid "Along with Parent Model, this ID attaches this folder to a specific record of Parent Model."
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
+msgstr ""
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
 msgstr ""
 
 #. module: document
@@ -580,6 +595,11 @@ msgstr ""
 #: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
+msgstr ""
+
+#. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid "If you put an object here, this directory template will appear bellow all of these objects. Such directories are \"attached\" to the specific model or record, just like attachments. Don't put a parent directory if you select a parent model."
 msgstr ""
 
 #. module: document
@@ -644,14 +664,14 @@ msgid "Expression"
 msgstr ""
 
 #. module: document
-#: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
-msgid "Creator"
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
 msgstr ""
 
 #. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
+#: field:document.directory,create_uid:0
+#: field:document.storage,create_uid:0
+msgid "Creator"
 msgstr ""
 
 #. module: document
@@ -673,6 +693,11 @@ msgid "Prefix"
 msgstr ""
 
 #. module: document
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
 msgstr ""
@@ -680,6 +705,11 @@ msgstr ""
 #. module: document
 #: field:report.document.user,datas_fname:0
 msgid "File Name"
+msgstr ""
+
+#. module: document
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: document
@@ -775,6 +805,11 @@ msgid "Users that did not inserted documents since one month"
 msgstr ""
 
 #. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid "The Documents repository gives you access to all attachments, such as mails, project documents, invoices etc."
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
 msgstr ""
@@ -849,6 +884,11 @@ msgid "Name"
 msgstr ""
 
 #. module: document
+#: sql_constraint:document.storage:0
+msgid "The storage path must be unique!"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr ""
@@ -886,6 +926,11 @@ msgid "Mime Type"
 msgstr ""
 
 #. module: document
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
 msgstr ""
@@ -904,6 +949,11 @@ msgstr ""
 #. module: document
 #: selection:document.storage,type:0
 msgid "Internal File storage"
+msgstr ""
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
 msgstr ""
 
 #. module: document
@@ -940,5 +990,10 @@ msgstr ""
 #. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
+msgstr ""
+
+#. module: document
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 

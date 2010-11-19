@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:57+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:57+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:06+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,13 +21,18 @@ msgid "If empty, this is a generic holiday for the company. If a resource is set
 msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Friday"
+#: selection:resource.resource,resource_type:0
+msgid "Material"
 msgstr ""
 
 #. module: resource
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: resource
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: resource
@@ -76,8 +81,8 @@ msgid "Sunday"
 msgstr ""
 
 #. module: resource
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: resource
@@ -97,8 +102,8 @@ msgid "Resources"
 msgstr ""
 
 #. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup manager"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: resource
@@ -126,8 +131,8 @@ msgid "Company"
 msgstr ""
 
 #. module: resource
-#: selection:resource.resource,resource_type:0
-msgid "Material"
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
 msgstr ""
 
 #. module: resource
@@ -162,6 +167,11 @@ msgid "Search Working Period Leaves"
 msgstr ""
 
 #. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid "Resources allows you to create and manage resources that should be involved in a specific project phase. It also allows you to set their efficiency level and workload based on their weekly working hours"
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar.leaves,date_to:0
 msgid "End Date"
 msgstr ""
@@ -173,6 +183,7 @@ msgstr ""
 
 #. module: resource
 #: model:ir.module.module,shortdesc:resource.module_meta_information
+#: model:ir.ui.menu,name:resource.menu_resource_config
 #: view:resource.calendar.leaves:0
 #: field:resource.calendar.leaves,resource_id:0
 #: view:resource.resource:0
@@ -230,6 +241,11 @@ msgid "Define the schedule of resource"
 msgstr ""
 
 #. module: resource
+#: field:resource.calendar.attendance,hour_to:0
+msgid "Work to"
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar.attendance,hour_from:0
 msgid "Work from"
 msgstr ""
@@ -240,8 +256,8 @@ msgid "Code"
 msgstr ""
 
 #. module: resource
-#: field:resource.calendar.attendance,hour_to:0
-msgid "Work to"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: resource
@@ -255,6 +271,11 @@ msgid "Tuesday"
 msgstr ""
 
 #. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup manager"
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar.leaves,calendar_id:0
 #: field:resource.resource,calendar_id:0
 msgid "Working time"
@@ -262,6 +283,7 @@ msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
 msgstr ""
 
@@ -310,5 +332,10 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
+msgstr ""
+
+#. module: resource
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

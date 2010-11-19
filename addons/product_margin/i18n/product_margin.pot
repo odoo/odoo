@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:48+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:48+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:53+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,8 +42,8 @@ msgid "Turnorder - Standard price"
 msgstr ""
 
 #. module: product_margin
-#: field:product.margin,to_date:0
-msgid "To"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: product_margin
@@ -147,6 +147,11 @@ msgid "Total Cost"
 msgstr ""
 
 #. module: product_margin
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: product_margin
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
@@ -229,6 +234,11 @@ msgid "Total margin * 100 / Turnover"
 msgstr ""
 
 #. module: product_margin
+#: field:product.margin,to_date:0
+msgid "To"
+msgstr ""
+
+#. module: product_margin
 #: view:product.product:0
 msgid "Analysis Criteria"
 msgstr ""
@@ -286,6 +296,11 @@ msgstr ""
 #. module: product_margin
 #: help:product.product,sale_num_invoiced:0
 msgid "Sum of Quantity in Customer Invoices"
+msgstr ""
+
+#. module: product_margin
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: product_margin

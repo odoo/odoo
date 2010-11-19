@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47:00+0000\n"
-"PO-Revision-Date: 2010-10-18 17:47:00+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:10+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,11 @@ msgstr ""
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Note"
+msgstr ""
+
+#. module: sale_layout
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: sale_layout
@@ -73,6 +78,16 @@ msgstr ""
 #. module: sale_layout
 #: view:sale.order:0
 msgid "Seq."
+msgstr ""
+
+#. module: sale_layout
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: sale_layout
+#: view:sale.order:0
+msgid "UoM"
 msgstr ""
 
 #. module: sale_layout
@@ -216,8 +231,13 @@ msgid "Your Reference"
 msgstr ""
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Sales order lines"
+#: report:sale.order.layout:0
+msgid "Quotation Date"
+msgstr ""
+
+#. module: sale_layout
+#: report:sale.order.layout:0
+msgid "TVA :"
 msgstr ""
 
 #. module: sale_layout
@@ -231,8 +251,8 @@ msgid "States"
 msgstr ""
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "TVA :"
+#: view:sale.order:0
+msgid "Sales order lines"
 msgstr ""
 
 #. module: sale_layout
@@ -246,8 +266,8 @@ msgid "Extra Info"
 msgstr ""
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "UoM"
+#: report:sale.order.layout:0
+msgid "Taxes :"
 msgstr ""
 
 #. module: sale_layout
@@ -266,8 +286,8 @@ msgid "Price"
 msgstr ""
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Taxes :"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: sale_layout
