@@ -32,7 +32,7 @@
             <field name="type">tree</field>
             <field name="inherit_id" ref="account.view_move_tree"/>
             <field name="arch" type="xml">
-                <field name="ref" position="after">
+                <field name="ref" position="before">
                     <field name="internal_sequence_number"/>
                 </field>
             </field>
@@ -44,7 +44,7 @@
             <field name="inherit_id" ref="account.view_account_move_filter"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name='ref']" position="after">
+                <xpath expr="//field[@name='ref']" position="before">
                     <field name="internal_sequence_number"/>
                 </xpath>
             </data>
