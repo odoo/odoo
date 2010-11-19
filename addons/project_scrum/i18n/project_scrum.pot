@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:53+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:53+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:01+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -45,6 +45,11 @@ msgstr ""
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "What did you do since the last meeting?"
+msgstr ""
+
+#. module: project_scrum
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: project_scrum
@@ -172,6 +177,11 @@ msgid "Spent hours"
 msgstr ""
 
 #. module: project_scrum
+#: model:ir.actions.act_window,help:project_scrum.action_meeting_form
+msgid "The scrum agile methodology is used in software development projects. In this methodology, a daily meeting is organized by the scrum master with his team in order to detect the difficulties the team faced/will face."
+msgstr ""
+
+#. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:0
 #, python-format
 msgid "Please provide email address for product owner defined on sprint."
@@ -200,17 +210,6 @@ msgstr ""
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Start Task"
-msgstr ""
-
-#. module: project_scrum
-#: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:0
-#, python-format
-msgid "is converted into Task %d.\"%(task_id,))\n"
-"                self.log(cr, uid, backlog.id, message)\n"
-"            if data['state_open'] and backlog.state == \"draft\":\n"
-"                backlog_obj.write(cr, uid, backlog.id, {'state':'open'})\n"
-"            sprint = sprint_obj.browse(cr, uid, data['sprint_id'], context=context)\n"
-"            message = _('Product Backlog"
 msgstr ""
 
 #. module: project_scrum
@@ -339,17 +338,16 @@ msgid "Responsible user who can work on task"
 msgstr ""
 
 #. module: project_scrum
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: project_scrum
 #: view:project.scrum.product.backlog:0
 #: field:project.scrum.product.backlog,state:0
 #: view:project.scrum.sprint:0
 #: field:project.scrum.sprint,state:0
 msgid "State"
-msgstr ""
-
-#. module: project_scrum
-#: code:addons/project_scrum/wizard/project_scrum_email.py:0
-#, python-format
-msgid "Hello  , \nI am sending you Scrum Meeting : %s for the Sprint  '%s' of Project '%s'"
 msgstr ""
 
 #. module: project_scrum
@@ -460,6 +458,13 @@ msgstr ""
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.dblc_proj2
 msgid "View project's tasks"
+msgstr ""
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_email.py:0
+#, python-format
+msgid "Hello  , \n"
+"I am sending you Scrum Meeting : %s for the Sprint  '%s' of Project '%s'"
 msgstr ""
 
 #. module: project_scrum
@@ -600,6 +605,11 @@ msgid "Note"
 msgstr ""
 
 #. module: project_scrum
+#: model:ir.actions.act_window,help:project_scrum.action_sprint_all_tree
+msgid "The scrum agile methodology is used in software development projects. In this methodology, a sprint is a short period of time (one month) on which the team implement a list of product backlogs. The sprint review is organized when the team presents his work to the customer and product owner."
+msgstr ""
+
+#. module: project_scrum
 #: selection:project.scrum.product.backlog,state:0
 #: selection:project.scrum.sprint,state:0
 msgid "Draft"
@@ -707,6 +717,11 @@ msgid "Merge"
 msgstr ""
 
 #. module: project_scrum
+#: model:ir.actions.act_window,help:project_scrum.action_product_backlog_form
+msgid "The scrum agile methodology is used in software development projects. The Product Backlog is the list of features to be implemented. A product backlog can be planified in a sprint of developement and can be split into several tasks. The product backlog is managed by the product owner of the project."
+msgstr ""
+
+#. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.action_sprint_backlog_open
 msgid "View sprint backlog"
 msgstr ""
@@ -783,6 +798,11 @@ msgstr ""
 #: view:project.scrum.sprint:0
 #: field:project.scrum.sprint,effective_hours:0
 msgid "Effective hours"
+msgstr ""
+
+#. module: project_scrum
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: project_scrum

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47:01+0000\n"
-"PO-Revision-Date: 2010-10-18 17:47:01+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:11+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,8 @@ msgid "Newly created"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid "%s (Shared)"
+#: view:share.wizard:0
+msgid "Existing External Users"
 msgstr ""
 
 #. module: share
@@ -37,13 +36,23 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: share
-#: field:share.wizard,user_type:0
-msgid "Users to share with"
+#: view:share.wizard:0
+msgid "Who would you want to share this data with?"
 msgstr ""
 
 #. module: share
-#: view:share.wizard:0
-msgid "Who would you want to share this data with?"
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "Dear,\n"
+"\n"
+""
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "You may use your existing login and password to view it. As a reminder, your login is %s.\n"
+""
 msgstr ""
 
 #. module: share
@@ -57,6 +66,11 @@ msgid "Next"
 msgstr ""
 
 #. module: share
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: share
 #: help:share.wizard,action_id:0
 msgid "The action that opens the screen containing the data you wish to share."
 msgstr ""
@@ -64,7 +78,7 @@ msgstr ""
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
 #, python-format
-msgid "Sharing access could not be setup"
+msgid "Please specify \"share_root_url\" in context"
 msgstr ""
 
 #. module: share
@@ -95,14 +109,8 @@ msgid "You may use the following login and password to get access to this protec
 msgstr ""
 
 #. module: share
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid "This additional data has been automatically added to your current access.\n"
+#: view:res.groups:0
+msgid "Regular groups only (no share groups"
 msgstr ""
 
 #. module: share
@@ -122,14 +130,12 @@ msgstr ""
 
 #. module: share
 #: view:share.wizard:0
-msgid "Existing External Users"
+msgid "Share wizard: step 1"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#: field:share.wizard.result.line,login:0
-#, python-format
-msgid "Username"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: share
@@ -155,35 +161,45 @@ msgid "Users"
 msgstr ""
 
 #. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "This username (%s) already exists, perhaps data has already been shared with this person.\n"
+"You may want to try selecting existing shared users instead."
+msgstr ""
+
+#. module: share
 #: field:share.wizard,new_users:0
 msgid "New users"
 msgstr ""
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
+#: field:share.wizard.result.line,login:0
 #, python-format
-msgid "To access it, you can go to the following URL:\n    %s"
+msgid "Username"
 msgstr ""
 
 #. module: share
-#: model:ir.model,name:share.model_res_groups
-msgid "res.groups"
-msgstr ""
-
-#. module: share
-#: selection:share.wizard,user_type:0
-msgid "Existing external users"
-msgstr ""
-
-#. module: share
-#: view:share.wizard:0
-msgid "New Users (please provide one e-mail address per line below)"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
 #, python-format
-msgid "Please specify \"share_root_url\" in server configuration or in context"
+msgid "%s (Shared)"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "This additional data has been automatically added to your current access.\n"
+""
+msgstr ""
+
+#. module: share
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: share
@@ -225,9 +241,8 @@ msgid "Password"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid "This username (%s) already exists, perhaps data has already been shared with this person.\nYou may want to try selecting existing shared users instead."
+#: field:share.wizard,user_type:0
+msgid "Users to share with"
 msgstr ""
 
 #. module: share
@@ -247,20 +262,18 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid "You may use your existing login and password to view it. As a reminder, your login is %s.\n"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: share
-#: view:share.wizard:0
-msgid "Share wizard: step 1"
+#: model:ir.model,name:share.model_res_groups
+msgid "Access Groups"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid "Sorry, the current screen and filter you are trying to share are not supported at the moment.\nYou may want to try a simpler filter."
+#: model:ir.model,name:share.model_share_wizard_user
+msgid "share.wizard.user"
 msgstr ""
 
 #. module: share
@@ -269,8 +282,8 @@ msgid "Please select the action that opens the screen containing the data you wa
 msgstr ""
 
 #. module: share
-#: view:res.groups:0
-msgid "Regular groups only (no share groups"
+#: selection:share.wizard,user_type:0
+msgid "Existing external users"
 msgstr ""
 
 #. module: share
@@ -303,9 +316,8 @@ msgid "Optionally, you may specify an additional domain restriction that will be
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid "Dear,\n\n"
+#: view:share.wizard:0
+msgid "New Users (please provide one e-mail address per line below)"
 msgstr ""
 
 #. module: share
@@ -330,6 +342,13 @@ msgid "Domain"
 msgstr ""
 
 #. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "Sorry, the current screen and filter you are trying to share are not supported at the moment.\n"
+"You may want to try a simpler filter."
+msgstr ""
+
+#. module: share
 #: field:share.wizard,access_mode:0
 msgid "Access Mode"
 msgstr ""
@@ -337,6 +356,13 @@ msgstr ""
 #. module: share
 #: view:share.wizard:0
 msgid "Access info"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "To access it, you can go to the following URL:\n"
+"    %s"
 msgstr ""
 
 #. module: share
@@ -367,8 +393,9 @@ msgid "share.wizard.result.line"
 msgstr ""
 
 #. module: share
-#: model:ir.model,name:share.model_share_wizard_user
-msgid "share.wizard.user"
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "Sharing access could not be setup"
 msgstr ""
 
 #. module: share

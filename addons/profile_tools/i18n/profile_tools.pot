@@ -4,21 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:48+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:48+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:54+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: profile_tools
-#: field:misc_tools.installer,idea:0
-msgid "Ideas Box"
-msgstr ""
 
 #. module: profile_tools
 #: help:misc_tools.installer,idea:0
@@ -31,38 +26,13 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr ""
 
 #. module: profile_tools
-#: field:misc_tools.installer,progress:0
-msgid "Configuration Progress"
-msgstr ""
-
-#. module: profile_tools
-#: help:misc_tools.installer,subscription:0
-msgid "Helps to generate automatically recurring documents."
-msgstr ""
-
-#. module: profile_tools
-#: field:misc_tools.installer,lunch:0
-msgid "Lunch"
+#: help:misc_tools.installer,share:0
+msgid "Allows you to give restricted access to your OpenERP documents to external users, such as customers, suppliers, or accountants. You can share any OpenERP Menu such as your project tasks, support requests, invoices, etc."
 msgstr ""
 
 #. module: profile_tools
 #: model:ir.actions.act_window,name:profile_tools.action_misc_tools_installer
 msgid "Tools Configuration"
-msgstr ""
-
-#. module: profile_tools
-#: field:misc_tools.installer,config_logo:0
-msgid "Image"
-msgstr ""
-
-#. module: profile_tools
-#: view:misc_tools.installer:0
-msgid "title"
-msgstr ""
-
-#. module: profile_tools
-#: field:misc_tools.installer,subscription:0
-msgid "Recurring Documents"
 msgstr ""
 
 #. module: profile_tools
@@ -76,18 +46,8 @@ msgid "misc_tools.installer"
 msgstr ""
 
 #. module: profile_tools
-#: field:misc_tools.installer,share:0
-msgid "Share Data / Portals"
-msgstr ""
-
-#. module: profile_tools
-#: help:misc_tools.installer,survey:0
-msgid "Allows you to organize surveys."
-msgstr ""
-
-#. module: profile_tools
-#: field:misc_tools.installer,survey:0
-msgid "Survey"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: profile_tools
@@ -96,8 +56,25 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: profile_tools
-#: help:misc_tools.installer,share:0
-msgid "This module allows you to easily give restricted access of any filtered list of objects to any customer or supplier.Just click on the share icon to give access to your customers on their project's tasks, support requests, invoices, etc."
+#: model:ir.module.module,description:profile_tools.module_meta_information
+msgid "Installs tools for lunch,survey,subscription and audittrail\n"
+"    module\n"
+"    "
+msgstr ""
+
+#. module: profile_tools
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: profile_tools
+#: field:misc_tools.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
+
+#. module: profile_tools
+#: help:misc_tools.installer,survey:0
+msgid "Allows you to organize surveys."
 msgstr ""
 
 #. module: profile_tools
@@ -106,9 +83,57 @@ msgid "Miscellaneous Tools"
 msgstr ""
 
 #. module: profile_tools
-#: model:ir.module.module,description:profile_tools.module_meta_information
-msgid "Installs tools for lunch,survey,subscription and audittrail\n"
-"    module\n"
-"    "
+#: help:misc_tools.installer,pad:0
+msgid "This module creates a tighter integration between a Pad instance of your choosing and your OpenERP Web Client by letting you easily link pads to OpenERP objects via OpenERP attachments."
+msgstr ""
+
+#. module: profile_tools
+#: field:misc_tools.installer,lunch:0
+msgid "Lunch"
+msgstr ""
+
+#. module: profile_tools
+#: field:misc_tools.installer,idea:0
+msgid "Ideas Box"
+msgstr ""
+
+#. module: profile_tools
+#: help:misc_tools.installer,subscription:0
+msgid "Helps to generate automatically recurring documents."
+msgstr ""
+
+#. module: profile_tools
+#: field:misc_tools.installer,subscription:0
+msgid "Recurring Documents"
+msgstr ""
+
+#. module: profile_tools
+#: field:misc_tools.installer,survey:0
+msgid "Survey"
+msgstr ""
+
+#. module: profile_tools
+#: field:misc_tools.installer,config_logo:0
+msgid "Image"
+msgstr ""
+
+#. module: profile_tools
+#: view:misc_tools.installer:0
+msgid "title"
+msgstr ""
+
+#. module: profile_tools
+#: field:misc_tools.installer,share:0
+msgid "Web Share"
+msgstr ""
+
+#. module: profile_tools
+#: field:misc_tools.installer,pad:0
+msgid "Native pad integration"
+msgstr ""
+
+#. module: profile_tools
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

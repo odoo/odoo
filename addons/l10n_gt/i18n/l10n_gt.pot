@@ -6,14 +6,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-04 01:35:54+0000\n"
-"PO-Revision-Date: 2010-11-04 01:35:54+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:30+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:30+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_gt
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: l10n_gt
+#: model:account.account.type,name:l10n_gt.cuenta_vista
+msgid "Vista"
+msgstr ""
 
 #. module: l10n_gt
 #: model:account.account.type,name:l10n_gt.cuenta_cxp
@@ -36,18 +46,13 @@ msgid "Agrega una nomenclatura contable para Guatemala. También icluye impuesto
 msgstr ""
 
 #. module: l10n_gt
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: l10n_gt
-#: model:account.account.type,name:l10n_gt.cuenta_gastos
-msgid "Gastos"
-msgstr ""
-
-#. module: l10n_gt
-#: model:account.account.type,name:l10n_gt.cuenta_vista
-msgid "Vista"
+#: model:account.account.type,name:l10n_gt.cuenta_capital
+msgid "Capital"
 msgstr ""
 
 #. module: l10n_gt
@@ -61,8 +66,8 @@ msgid "Ingresos"
 msgstr ""
 
 #. module: l10n_gt
-#: model:account.account.type,name:l10n_gt.cuenta_activo
-msgid "Activo"
+#: model:account.account.type,name:l10n_gt.cuenta_gastos
+msgid "Gastos"
 msgstr ""
 
 #. module: l10n_gt
@@ -71,16 +76,17 @@ msgid "Generar la nomenclatura contable a partir de un modelo.  Deberá seleccio
 msgstr ""
 
 #. module: l10n_gt
-#: model:account.account.type,name:l10n_gt.cuenta_capital
-msgid "Capital"
+#: constraint:account.tax.code.template:0
+msgid "Error ! You can not create recursive Tax Codes."
 msgstr ""
 
 #. module: l10n_gt
 #: model:ir.module.module,shortdesc:l10n_gt.module_meta_information
-msgid "Guatemala - minimal"
+msgid "Guatemala - Plan contable general"
 msgstr ""
 
 #. module: l10n_gt
 #: model:account.account.type,name:l10n_gt.cuenta_efectivo
 msgid "Efectivo"
 msgstr ""
+
