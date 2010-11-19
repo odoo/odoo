@@ -2,6 +2,7 @@
 <openerp>
     <data>
 
+<<<<<<< TREE
 	<record id="view_account_move_form_inherit" model="ir.ui.view">
 		<field name="name">account.move.form.inherit</field>
 		<field name="model">account.move</field>
@@ -78,4 +79,31 @@
 	</record>
 
 	</data>
+=======
+    <record id="view_account_move_form_inherit" model="ir.ui.view">
+       <field name="name">account.move.form.inherit</field>
+       <field name="model">account.move</field>
+       <field name="type">form</field>
+       <field name="inherit_id" ref="account.view_move_form"/>
+       <field name="arch" type="xml">
+            <field name="to_check" position="after">
+                <field name="internal_sequence_number"/>
+            </field>
+       </field>
+    </record>
+    
+    <record id="view_account_journal_form_inherit" model="ir.ui.view">
+       <field name="name">account.journal.form.inherit</field>
+       <field name="model">account.journal</field>
+       <field name="type">form</field>
+       <field name="inherit_id" ref="account.view_account_journal_form"/>
+       <field name="arch" type="xml">
+            <field name="sequence_id" position="after">
+                <field name="internal_sequence"/>
+            </field>
+       </field>
+    </record>
+
+    </data>
+>>>>>>> MERGE-SOURCE
 </openerp>

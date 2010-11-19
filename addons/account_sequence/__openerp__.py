@@ -30,8 +30,13 @@
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],
+<<<<<<< TREE
     'update_xml': ['account_sequence_data.xml','account_sequence.xml',],
     'demo_xml': ['account_sequence_minimal.xml'],
+=======
+    'update_xml': ['account_sequence_data.xml','account_sequence.xml'],
+    'demo_xml': [],
+>>>>>>> MERGE-SOURCE
     'installable': True,
     'active': False,
     'certificate': '',
