@@ -20,12 +20,13 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
                      </ul>
                        <script type="text/javascript">
                            jQuery(document).ready(function() {
-                               $share = jQuery('#sharing').click(function(){
+                               var $share = jQuery('#sharing').click(function(){
                                    var _domain =  jQuery('#_terp_domain').val();
                                    var _search_domain =  jQuery('#_terp_search_domain').val();
                                    var _context = jQuery('#_terp_context').val();
                                    var _view_name = jQuery('#_terp_string').val();
-                                   window.open(openobject.http.getURL('/share', {domain: _domain, search_domain: _search_domain, context: _context, name: _view_name}));
+                                   openLink(openobject.http.getURL('/share', {domain: _domain, search_domain: _search_domain, context: _context, name: _view_name}));
+                                   return false;
                                });
                            });
                        </script>
