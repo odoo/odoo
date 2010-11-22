@@ -254,8 +254,8 @@ class split_in_production_lot(osv.osv_memory):
                         current_move = move_obj.copy(cr, uid, move.id, default_val)
                         new_move.append(current_move)
 
-                    if context:
-                        self.pool.get('stock.inventory').write(cr, uid, context.get('inventory_id'), {'move_ids': [(4, new_move[0])]})
+                    if context.get('inventory_id'):
+                        inventory_obj.write(cr, uid, context.get('inventory_id'), {'move_ids': [(4, new_move[0])]})
 
                     if quantity_rest == 0:
                         current_move = move.id

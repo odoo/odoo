@@ -37,6 +37,7 @@ class stock_split_into(osv.osv_memory):
         rec_id = context and context.get('active_ids', False)
         move_obj = self.pool.get('stock.move')
         track_obj = self.pool.get('stock.tracking')
+        inventory_obj = self.pool.get('stock.inventory')
         quantity = self.browse(cr, uid, data[0], context).quantity or 0.0
         for move in move_obj.browse(cr, uid, rec_id):
             new_move = []
@@ -74,8 +75,8 @@ class stock_split_into(osv.osv_memory):
                     current_move = move_obj.copy(cr, uid, move.id, default_val)
                     new_move.append(current_move)
 
-            if context:
-                self.pool.get('stock.inventory').write(cr, uid, context.get('inventory_id'), {'move_ids': [(4, new_move[0])]})
+            if context.get('inventory_id'):
+                inventory_obj.write(cr, uid, context.get('inventory_id'), {'move_ids': [(4, new_move[0])]})
 
         return {}
 stock_split_into()
