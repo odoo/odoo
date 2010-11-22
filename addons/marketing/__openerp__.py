@@ -34,7 +34,7 @@
         'security/ir.model.access.csv',
         'marketing_view.xml'
     ],
-    'demo_xml': [],
+    'demo_xml': ['marketing_demo.xml'],
     'installable': True,
     'active': False,
 }

@@ -409,7 +409,7 @@
             <field name="arch" type="xml">
                 <form string="Account Journal">
                     <group colspan="4" col="6">
-                        <field name="name" select="1" colspan="4"/>
+                        <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="type" on_change="onchange_type(type, currency)"/>
                     </group>
@@ -470,6 +470,7 @@
             <field name="help">Create and manage your company's financial journals from this menu. A journal is a business diary in which all financial data related to the day to day business transactions of your company is recorded using double-entry book keeping system. Depending on the nature of its activities and number of daily transactions, a company may keep several  types of specialized journals such as a cash journal, purchases journal, and sales journal.</field>
         </record>
         <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="account_account_menu"/>
+
         <record id="view_account_bank_statement_filter" model="ir.ui.view">
             <field name="name">account.cash.statement.select</field>
             <field name="model">account.bank.statement</field>
@@ -494,6 +495,7 @@
                 </search>
             </field>
         </record>
+
         <record id="view_bank_statement_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
@@ -955,6 +957,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
         <menuitem action="action_tax_form" id="menu_action_tax_form" parent="next_id_27"/>
+
         <record id="action_tax_code_tree" model="ir.actions.act_window">
             <field name="name">Chart of Taxes</field>
             <field name="res_model">account.tax.code</field>
@@ -1422,10 +1425,6 @@
                         <field name="period_id"/>
                     </group>
                     <newline/>
-                    <group col="10" colspan="4">
-                        <field name="journal_id" widget="selection" context="{'journal_id':self, 'visible_id':self or 0, 'normal_view':False}"/>
-                        <field name="period_id" widget="selection" context="{'period_id':self}"/>
-                    </group>
                     <group expand="0" string="Group By..." colspan="12" col="10">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
@@ -2581,6 +2580,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                 </tree>
             </field>
         </record>
+
         <record id="view_bank_statement_form2" model="ir.ui.view">
             <field name="name">account.bank.statement.form</field>
             <field name="model">account.bank.statement</field>
@@ -2595,6 +2595,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                         <field name="period_id" select="1"/>
                         <field name="currency" invisible="1"/>
                     </group>
+
                     <notebook colspan="4">
                         <page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
                             <field colspan="4" name="line_ids" nolabel="1">

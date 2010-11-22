@@ -398,6 +398,7 @@ class mailgate_tool(osv.osv_memory):
 
         model_pool = self.pool.get(model)
         res_id = False
+
         # Create New Record into particular model
         def create_record(msg):
             att_ids = []
@@ -552,6 +553,7 @@ class mailgate_tool(osv.osv_memory):
         if not len(res_ids):
             new_res_id, attachment_ids = create_record(msg)
             res_ids = [new_res_id]
+
         # Store messages
         context.update({'model' : model})
         if hasattr(model_pool, 'history'):

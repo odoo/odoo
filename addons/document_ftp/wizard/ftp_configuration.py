@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
+
 from osv import osv, fields
 from tools import config
 
@@ -26,7 +27,7 @@ class document_ftp_configuration(osv.osv_memory):
     _name='document.ftp.configuration'
     _description = 'Auto Directory Configuration'
     _inherit = 'res.config'
-
+    _rec_name = 'host'
     _columns = {
         'host': fields.char('Address', size=64,
                             help="Server address or IP and port to which users should connect to for DMS access",

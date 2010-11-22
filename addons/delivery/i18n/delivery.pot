@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:24+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:24+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:58+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -180,6 +180,11 @@ msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: delivery
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
 msgstr ""
@@ -192,6 +197,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
+msgstr ""
+
+#. module: delivery
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: delivery
@@ -322,8 +332,8 @@ msgid "Condition"
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid "Create and manage the delivery method(s) you want your sales to be processed with. Each delivery method can be assigned to a pricelist which computes the price of the delivery according to the products sold or delivered."
 msgstr ""
 
 #. module: delivery
@@ -358,6 +368,11 @@ msgid "Complete this field if you plan to invoice the shipping based on picking.
 msgstr ""
 
 #. module: delivery
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: delivery
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
@@ -370,6 +385,16 @@ msgstr ""
 #. module: delivery
 #: view:res.partner:0
 msgid "Sales & Purchases"
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid "The delivery pricelist allows you to compute the cost and sales price of the delivery based on the weight of the products and other criteria. You can define several pricelists for one delivery method, for each region such as countries or a zone in a specific country defined by a zip code range."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
 msgstr ""
 
 #. module: delivery

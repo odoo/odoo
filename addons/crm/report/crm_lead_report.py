@@ -107,7 +107,7 @@ class crm_lead_report(osv.osv):
                     c.partner_id,
                     c.country_id,
                     c.planned_revenue,
-                    c.planned_revenue*(c.probability/100) as probable_revenue,
+                    c.planned_revenue*(c.probability/100) as probable_revenue, 
                     1 as nbr,
                     (SELECT count(id) FROM mailgate_message WHERE model='crm.lead' AND res_id=c.id AND history=True) AS email,
                     date_trunc('day',c.create_date) as create_date,

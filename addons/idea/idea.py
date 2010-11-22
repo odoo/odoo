@@ -33,7 +33,6 @@ class idea_category(osv.osv):
 
     _name = "idea.category"
     _description = "Idea Category"
-    _log_create=True
 
     _columns = {
         'name': fields.char('Category', size=64, required=True),
@@ -304,7 +303,6 @@ class idea_vote(osv.osv):
     _name = 'idea.vote'
     _description = 'Idea Vote'
     _rec_name = 'score'
-    _log_create = True
 
     _columns = {
         'user_id': fields.many2one('res.users', 'User', readonly="True"),

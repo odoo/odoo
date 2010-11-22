@@ -282,8 +282,6 @@ class purchase_order(osv.osv):
             self.log(cr, uid, po.id, message)
 #        current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
-        message = _('confirm Order') + " ' " + po.name
-        self.log(cr,uid,po,message)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
@@ -648,6 +646,11 @@ class purchase_order_line(osv.osv):
             return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
                 'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid, product)
+        if prod.product_tmpl_id.seller_ids:
+            seller_get_id = prod.product_tmpl_id.seller_ids[0].name.id
+        else:
+            seller_get_id = False
+
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
@@ -677,8 +680,15 @@ class purchase_order_line(osv.osv):
                         'date': date_order,
                         })[pricelist]
         dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
-        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
-
+        if seller_get_id == partner_id:
+            prod_suppl_name = self.pool.get('product.product').browse(cr, uid, prod.id).seller_ids[0].product_name
+            prod_suppl_code = self.pool.get('product.product').browse(cr, uid, prod.id).seller_ids[0].product_code
+            if prod_suppl_name == False or prod_suppl_code == False:
+               prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
+            else:
+                prod_name= '[' + prod_suppl_code + '] '+ prod_suppl_name
+        else:
+            prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
 
         res = {'value': {'price_unit': price, 'name': name or prod_name,
             'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),

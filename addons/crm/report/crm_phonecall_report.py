@@ -38,6 +38,7 @@ class crm_phonecall_report(osv.osv):
     _name = "crm.phonecall.report"
     _description = "Phone calls by user and section"
     _auto = False
+    
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
@@ -52,7 +53,7 @@ class crm_phonecall_report(osv.osv):
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
+        'day': fields.char('Day', size=128, readonly=True), 
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'duration': fields.float('Duration', digits=(16,2),readonly=True, group_operator="avg"),
         'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),

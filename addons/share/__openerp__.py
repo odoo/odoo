@@ -41,6 +41,7 @@
 
     """,
     'website': 'http://www.openerp.com',
+    'demo_xml': ['share_demo.xml'],
     'data': [
         'security/share_security.xml',
         'share_view.xml',
