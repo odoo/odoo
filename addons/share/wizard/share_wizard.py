@@ -99,16 +99,12 @@ class share_create(osv.osv_memory):
             for new_user in wizard_data.new_users.split('\n'):
                 # attempt to show more user-friendly msg than default constraint error
                 existing = user_obj.search(cr, 1, [('login', '=', new_user)])
-                password = generate_random_pass()
-                if wizard_data.share_root_url:
-                    wizard_data.share_root_url = wizard_data.share_root_url + '/openerp/login?db=%s'%(cr.dbname) + '&user=%s'%(new_user) + '&password=%s'%(password)
-                    self.write(cr, 1, [uid], {'share_root_url': wizard_data.share_root_url})
                 if existing:
                     raise osv.except_osv(_('User already exists'),
                                          _('This username (%s) already exists, perhaps data has already been shared with this person.\nYou may want to try selecting existing shared users instead.'))
                 user_id = user_obj.create(cr, 1, {
                         'login': new_user,
-                        'password': password,
+                        'password': generate_random_pass(),
                         'name': new_user,
                         'user_email': new_user,
                         'groups_id': [(6,0,[group_id])],
