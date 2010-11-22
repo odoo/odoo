@@ -130,7 +130,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         res = self.cr.dictfetchall()
         account_sum = 0.0
         for l in res:
-            account_sum += l['debit'] - l['credit']
+            account_sum += l['credit']-l['debit']
             l['progress'] = account_sum
         return res
 
