@@ -95,7 +95,7 @@ class account_cash_statement(osv.osv):
         @param arg: User defined arguments
         @return: Dictionary of values.
         """
-        res ={}
+        res = {}
         for statement in self.browse(cr, uid, ids):
             amount_total = 0.0
             for line in statement.ending_details_ids:
@@ -110,7 +110,7 @@ class account_cash_statement(osv.osv):
         @param arg: User defined arguments
         @return: Dictionary of values.
         """
-        res2={}
+        res2 = {}
         for statement in self.browse(cr, uid, ids):
             encoding_total=0.0
             for line in statement.line_ids:
@@ -297,7 +297,6 @@ class account_cash_statement(osv.osv):
         """
         res = {}
         balance_start = 0.0
-
         if not journal_id:
             res.update({
                 'balance_start': balance_start
@@ -311,8 +310,7 @@ class account_cash_statement(osv.osv):
         statement.balance_end_real = statement.balance_end
         if statement.balance_end != statement.balance_end_cash:
             return False
-        else:
-            return True
+        return True
 
     def _user_allow(self, cr, uid, statement_id, context=None):
         return True
