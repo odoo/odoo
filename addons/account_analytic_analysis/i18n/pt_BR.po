@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-02 20:34+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-19 09:22+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:32+0000\n"
+"X-Launchpad-Export-Date: 2010-11-20 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -50,7 +50,7 @@ msgstr "Calculado utilizando a fórmula: quantidade máxima - total de horas"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
 #, python-format
 msgid "AccessError"
-msgstr ""
+msgstr "Erro de acesso"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -63,6 +63,11 @@ msgid "Last Invoice Date"
 msgstr "Data da Última fatura"
 
 #. module: account_analytic_analysis
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "Date of the last invoice created for this analytic account."
 msgstr "Data da última fatura criada para esta conta analítica."
@@ -70,7 +75,7 @@ msgstr "Data da última fatura criada para esta conta analítica."
 #. module: account_analytic_analysis
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Erro! Você não pode criar um Menu recursivo."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -88,6 +93,11 @@ msgid "Real Margin Rate (%)"
 msgstr "Taxa Real de Margem"
 
 #. module: account_analytic_analysis
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
@@ -99,7 +109,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
 msgid "Billing"
-msgstr ""
+msgstr "Cobrança"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -175,7 +185,7 @@ msgstr "report_account_analytic"
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours Summary by User"
-msgstr ""
+msgstr "Resumo de Horas por Usuário"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
@@ -186,7 +196,7 @@ msgstr "Valor Faturado"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
-msgstr ""
+msgstr "Você tentou burlar uma regra de acesso (Tipo de documento: %s)."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
@@ -291,6 +301,11 @@ msgstr "Todos os Lançamentos Não Faturados"
 #: field:account.analytic.account,hours_quantity:0
 msgid "Hours Tot"
 msgstr "Total de Horas"
+
+#. module: account_analytic_analysis
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0

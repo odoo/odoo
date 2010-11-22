@@ -25,7 +25,6 @@ import sys
 import chilkat
 import os
 from manager import ustr
-import win32ui
 import email
 cemail = chilkat.CkEmail()
 dt = chilkat.SYSTEMTIME()
@@ -34,7 +33,6 @@ def generateEML(mail):
     body = mail.Body.encode("utf-8")
     recipients = mail.Recipients
     sender_email = mail.SenderEmailAddress
-    sender_name = mail.SenderEmailAddress
     attachments=mail.Attachments
 
     cemail = chilkat.CkEmail()
@@ -69,7 +67,6 @@ def generateEML(mail):
         att_file = os.path.join(attachments_folder_path, fn)
         if os.path.exists(att_file):
             os.remove(att_file)
-        f1  = att_file
         attachments[i].SaveAsFile(att_file)
         contentType = cemail.addFileAttachment(att_file)
         if (contentType == None ):
@@ -93,4 +90,4 @@ def generateEML(mail):
     if (success == False):
         print cemail.lastErrorText()
         sys.exit()
-    return new_mail
+    return new_mail, eml_path
