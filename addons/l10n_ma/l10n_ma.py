@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -20,12 +20,7 @@
 #
 ##############################################################################
 
-from mx import DateTime
-import time
-
 from osv import fields, osv
-import pooler
-
 
 class l10n_ma_report(osv.osv):
     _name = 'l10n.ma.report'

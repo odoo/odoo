@@ -8,5 +8,8 @@
             <field name="code">account.journal</field>
             <field name="number_next">1</field>
         </record>
+        
+        <function eval="('default', False, 'internal_sequence', [('account.journal', False)], internal_sequence_journal, True, False, False, False, True)" id="internal_seq_default_set" model="ir.values" name="set"/>
+        
     </data>
 </openerp>
