@@ -91,14 +91,23 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Add Publisher Warranty Contract" col="2">
-                    <group col="1">
-                        <separator string="Add Publisher Warranty Contract" />
-                        <field name="name" width="250" />
+                	<field name="state" invisible="1"/>
+                	<group states="draft">
+	                    <group col="1">
+	                        <separator string="Add Publisher Warranty Contract" />
+	                        <field name="name" width="250" />
+	                    </group>
+	                    <group colspan="4">
+	                        <button type="object" string="Cancel" icon="gtk-cancel" special="cancel"/>
+	                        <button type="object" string="Validate" icon="gtk-apply" name="action_validate"/>
+	                    </group>
                     </group>
-                    <group colspan="4">
-                        <button type="object" string="_Cancel" icon="gtk-cancel" special="cancel"/>
-                        <button type="object" string="_Validate" icon="gtk-apply" name="action_validate"/>
-                    </group>
+                	<group states="finished">
+	                    <label string="The contract was correctly added." colspan="4" />
+	                    <group colspan="4">
+	                    	<button type="object" string="Ok" icon="gtk-apply" special="cancel"/>
+	                    </group>
+                	</group>
                 </form>
             </field>
         </record>
@@ -116,6 +125,19 @@
             action="action_publisher_warranty_contract_add_wizard"
             id="menu_publisher_warranty_contract_add"
             parent="publisher_warranty" />
+            
+        <record id="publisher_warranty_res_log_act_window" model="ir.actions.act_window">
+            <field name="name">Notifications</field>
+            <field name="res_model">res.log</field>
+            <field name="view_type">form</field>
+            <field name="context">{'search_default_my': 1}</field>
+            <field name="domain">[('res_model','=','Maintenance Notifications')]</field>
+        </record>
+        
+        <menuitem
+            action="publisher_warranty_res_log_act_window"
+            id="menu_publisher_warranty_res_log"
+            parent="publisher_warranty"/>
 
     </data>
 </openerp>

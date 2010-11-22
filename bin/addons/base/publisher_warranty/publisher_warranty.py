@@ -18,11 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+"""
+Module to handle publisher warranty contracts as well as notifications from
+OpenERP.
+"""
 
 from osv import osv, fields
 import logging
 from tools.translate import _
-import tools.maintenance as tm
 import urllib
 from tools.safe_eval import safe_eval
 import pooler
@@ -32,9 +35,18 @@ import release
 _logger = logging.getLogger(__name__)
 
 class publisher_warranty_contract(osv.osv):
+    """
+    Osv representing a publisher warranty contract.
+    """
     _name = "publisher_warranty.contract"
 
     def _get_valid_contracts(self, cr, uid):
+        """
+        Return the list of the valid contracts encoded in the system.
+        
+        @return: A list of contracts
+        @rtype: list of publisher_warranty.contract browse records
+        """
         return [contract for contract in self.browse(cr, uid, self.search(cr, uid, []))
                 if contract.state == 'valid']
     
@@ -57,18 +69,27 @@ class publisher_warranty_contract(osv.osv):
         valid_contract = valid_contracts[0]
         
         try:
-            rc = tm.remote_contract(cr, uid, valid_contract.name)
-                
             origin = 'client'
             dbuuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-            crm_case_id = rc.submit_6({
-                'contract_name': valid_contract.name,
+            
+            msg = {'contract_name': valid_contract.name,
                 'tb': tb,
                 'explanations': explanations,
                 'remarks': remarks,
                 'origin': origin,
                 'dbname': cr.dbname,
-                'dbuuid': dbuuid})
+                'dbuuid': dbuuid}
+            
+            uo = urllib.urlopen(config.get("publisher_warranty_url"),
+                                    urllib.urlencode({'arg0': msg, "action": "send",}))
+            try:
+                submit_result = uo.read()
+            finally:
+                uo.close()
+            
+            result = safe_eval(submit_result)
+            
+            crm_case_id = result
             
             if not crm_case_id:
                 return False
@@ -83,6 +104,10 @@ class publisher_warranty_contract(osv.osv):
         return True
     
     def check_validity(self, cr, uid, ids, context={}):
+        """
+        Check the validity of a publisher warranty contract. This method just call send_ping() but checks
+        some more things, so it can be called from a user interface.
+        """
         contract_id = ids[0]
         contract = self.browse(cr, uid, contract_id)
         state = contract.state
@@ -97,6 +122,13 @@ class publisher_warranty_contract(osv.osv):
                                  _("Please check your publisher warranty contract name and validity."))
     
     def send_ping(self, cr, uid, ids, cron_mode=True, context={}):
+        """
+        Send a message to OpenERP's publisher warranty server to check the validity of
+        the contracts, get notifications, etc...
+        
+        @param cron_mode: If true, catch all exceptions (appropriate for usage in a cron).
+        @type cron_mode: boolean
+        """
         try:
             try:
                 result = send_ping(cr, uid)
@@ -124,6 +156,14 @@ class publisher_warranty_contract(osv.osv):
                     "interval_type": result["interval_type"],
                     "interval_number": result["interval_number"],
                 })
+            
+            self.pool.get('res.log').create(cr, uid,
+                    {
+                        'name': result["message"],
+                        'res_model': "Maintenance Notifications",
+                    },
+                    context=context
+            )
         except:
             _logger.debug("Exception while interpreting the result of a ping", exc_info=1)
             if cron_mode:
@@ -166,10 +206,18 @@ class maintenance_contract(osv.osv_memory):
 maintenance_contract()
 
 class publisher_warranty_contract_wizard(osv.osv_memory):
+    """
+    A wizard osv to help people entering a publisher warranty contract.
+    """
     _name = 'publisher_warranty.contract.wizard'
 
     _columns = {
         'name' : fields.char('Contract Name', size=256, required=True ),
+        'state' : fields.selection([("draft", "Draft"), ("finished", "Finished")])
+    }
+    
+    _defaults = {
+        "state": "draft",
     }
 
     def action_validate(self, cr, uid, ids, context=None):
@@ -191,11 +239,17 @@ class publisher_warranty_contract_wizard(osv.osv_memory):
         
         contract_osv.check_validity(cr, uid, [contract_id])
         
-        return {'type': 'ir.actions.act_window_close'}
+        self.write(cr, uid, ids, {"state": "finished"})
+        
+        return True
+
 
 publisher_warranty_contract_wizard()
 
 def send_ping(cr, uid):
+    """
+    Utility method to send a publisher warranty ping.
+    """
     pool = pooler.get_pool(cr.dbname)
     
     dbuuid = pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
