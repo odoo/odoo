@@ -220,12 +220,12 @@ class split_in_production_lot(osv.osv_memory):
         """
         if context is None:
             context = {}
-
+        inventory_id = context.get('inventory_id', False)
         prodlot_obj = self.pool.get('stock.production.lot')
         inventory_obj = self.pool.get('stock.inventory')
         move_obj = self.pool.get('stock.move')
         new_move = []
-        for data in self.browse(cr, uid, ids):
+        for data in self.browse(cr, uid, ids, context=context):
             for move in move_obj.browse(cr, uid, move_ids):
                 move_qty = move.product_qty
                 quantity_rest = move.product_qty
@@ -254,8 +254,8 @@ class split_in_production_lot(osv.osv_memory):
                         current_move = move_obj.copy(cr, uid, move.id, default_val)
                         new_move.append(current_move)
 
-                    if context.get('inventory_id'):
-                        inventory_obj.write(cr, uid, context.get('inventory_id'), {'move_ids': [(4, new_move[0])]})
+                    if inventory_id:
+                        inventory_obj.write(cr, uid, inventory_id, {'move_ids': [(4, new_move[0])]}, context=context)
 
                     if quantity_rest == 0:
                         current_move = move.id
