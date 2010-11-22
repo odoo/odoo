@@ -48,6 +48,7 @@ class account_journal(osv.osv):
     _columns = {
         'internal_sequence': fields.many2one('ir.sequence', 'Internal Sequence'),
     }
+
 account_journal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,60 +1,29 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* report_analytic_planning
+# French translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2008-10-13 16:52+0000\n"
-"Last-Translator: Olivier (Open ERP) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-17 21:05+0000\n"
+"Last-Translator: swinter <Unknown>\n"
+"Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:45+0000\n"
+"X-Launchpad-Export-Date: 2010-11-19 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "To:"
-msgstr "A:"
-
-#. module: project_planning
-#: view:report_account_analytic.planning:0
-msgid "Planning by Account"
-msgstr "Planning par Compte"
-
-#. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Summary by project"
-msgstr "Résumé par projet"
-
-#. module: project_planning
-#: field:report_account_analytic.planning.line,amount_unit:0
-msgid "Qty UoM"
-msgstr "Qté UoM"
-
-#. module: project_planning
-#: field:report_account_analytic.planning,user_id:0
-msgid "Responsible"
-msgstr "responsible"
-
-#. module: project_planning
-#: model:ir.model,name:project_planning.model_report_account_analytic_planning_stat
-msgid "Planning stat"
-msgstr "Planning statistiques"
-
-#. module: project_planning
-#: field:report_account_analytic.planning,state:0
-msgid "Status"
-msgstr "État"
-
-#. module: project_planning
-#: field:report_account_analytic.planning.line,account_id:0
-msgid "Analytic account"
-msgstr "Compte analytique"
+#: help:report_account_analytic.planning.account,tasks:0
+#: help:report_account_analytic.planning.user,tasks:0
+msgid ""
+"This value is given by the sum of work remaining to do on the task for this "
+"planning, expressed in days."
+msgstr ""
 
 #. module: project_planning
 #: constraint:ir.actions.act_window:0
@@ -62,43 +31,21 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: project_planning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
-
-#. module: project_planning
 #: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_form
+#: model:ir.ui.menu,name:project_planning.menu_board_planning
 #: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning_stat
 msgid "Planning Statistics"
 msgstr "Statistiques des Plannings"
 
 #. module: project_planning
-#: model:ir.model,name:project_planning.model_report_account_analytic_planning_stat_account
-msgid "Planning account stat"
-msgstr "Planning par compte"
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_line
+#: view:report_account_analytic.planning.line:0
+msgid "Planning Line"
+msgstr "Ligne de planning"
 
 #. module: project_planning
-#: field:report_account_analytic.planning.stat,sum_amount:0
-msgid "Planned hours"
-msgstr "Heures planifiées"
-
-#. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Real"
-msgstr "Réel"
-
-#. module: project_planning
-#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_my_form
-#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning_stat_my
-msgid "My Planning Statistics"
-msgstr "Mes Statistiques de Planning"
-
-#. module: project_planning
-#: model:ir.module.module,description:project_planning.module_meta_information
-msgid "Planning on analytic accounts."
+#: view:report_account_analytic.planning:0
+msgid "Total Unallocated Time"
 msgstr ""
 
 #. module: project_planning
@@ -107,222 +54,250 @@ msgid "Planning Name"
 msgstr "Nom du planning"
 
 #. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Quantities"
-msgstr "Quantités"
+#: view:board.board:0
+msgid "My Project's planning"
+msgstr ""
 
 #. module: project_planning
-#: rml:report_account_analytic.planning.print:0
+#: field:report_account_analytic.planning.account,timesheet:0
+#: report:report_account_analytic.planning.print:0
+#: field:report_account_analytic.planning.stat,sum_amount_real:0
+#: field:report_account_analytic.planning.user,timesheet:0
+msgid "Timesheet"
+msgstr "Feuille de temps"
+
+#. module: project_planning
+#: model:ir.module.module,shortdesc:project_planning.module_meta_information
+msgid "Planning Management Module"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning.stat,account_id:0
+msgid "Account"
+msgstr "Compte"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_project_task
+msgid "Task"
+msgstr "Tâche"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+#: view:report_account_analytic.planning.line:0
+msgid "Notes"
+msgstr "Remarques"
+
+#. module: project_planning
+#: field:account.analytic.account,planning_ids:0
+#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_form
+#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning
+msgid "Plannings"
+msgstr "Plannings"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Project"
+msgstr ""
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Start Task"
+msgstr "Démarrer la tâche"
+
+#. module: project_planning
+#: selection:report_account_analytic.planning,state:0
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+#: view:report_account_analytic.planning.line:0
+msgid "Total Planned (in Days)"
+msgstr ""
+
+#. module: project_planning
+#: constraint:report_account_analytic.planning:0
+msgid ""
+"Invalid planning ! Planning dates can't overlap for the same responsible. "
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning,planning_account:0
+msgid "Planning By Account"
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Time without"
+msgstr ""
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Current Plannings"
+msgstr ""
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Compte analytique"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Reset to Draft"
+msgstr "Repasser au statut 'Brouillon'"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Extra Info"
+msgstr "Informations supplémentaires"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr "Total Plannifié"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,timesheet:0
+#: help:report_account_analytic.planning.user,timesheet:0
+msgid ""
+"This value is given by the sum of all work encoded in the timesheet(s) "
+"between the 'Date From' and 'Date To' of the planning."
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,plan_open:0
+#: field:report_account_analytic.planning.user,plan_open:0
+msgid "Time Allocation without Tasks"
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "From"
+msgstr "De"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,account_id:0
+#: field:report_account_analytic.planning.line,account_id:0
+msgid "Analytic account"
+msgstr "Compte Analytique"
+
+#. module: project_planning
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: project_planning
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,plan_open:0
+msgid ""
+"This value is given by the sum of time allocation with the checkbox "
+"'Assigned in Taks' set to FALSE, expressed in days."
+msgstr ""
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Miscelleanous"
+msgstr "Divers"
+
+#. module: project_planning
+#: help:res.company,planning_time_mode_id:0
+msgid "This will set the unit of measure used in plannings."
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
 msgid "HR Planning"
 msgstr "Planning RH"
 
 #. module: project_planning
-#: field:report_account_analytic.planning.stat,sum_amount_real:0
-#: field:report_account_analytic.planning.stat.account,sum_amount_real:0
-#: field:report_account_analytic.planning.stat.user,sum_amount_real:0
-msgid "Timesheet"
-msgstr "Feuille de présence"
+#: field:report_account_analytic.planning.account,tasks:0
+#: field:report_account_analytic.planning.user,tasks:0
+msgid "Remaining Tasks"
+msgstr "Tâches Restantes"
 
 #. module: project_planning
-#: model:ir.model,name:project_planning.model_report_account_analytic_planning_line
+#: view:account.analytic.account:0
+#: model:ir.actions.report.xml,name:project_planning.report_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning
+#: model:ir.ui.menu,name:project_planning.next_id_85
+#: field:project.task,planning_line_id:0
 #: view:report_account_analytic.planning:0
-msgid "Planning Line"
-msgstr "Ligne de planning"
-
-#. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Responsible:"
-msgstr "Responsable:"
-
-#. module: project_planning
-#: field:report_account_analytic.planning.line,amount:0
-msgid "Quantity"
-msgstr "Quantité"
-
-#. module: project_planning
-#: view:report_account_analytic.planning:0
-msgid "Quantities by Account"
-msgstr "Quantités par Compte"
-
-#. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "From:"
-msgstr "De:"
-
-#. module: project_planning
-#: view:report_account_analytic.planning:0
-msgid "Time by Account"
-msgstr "Temps par COmpte"
-
-#. module: project_planning
-#: field:report_account_analytic.planning,date_to:0
-msgid "End Date"
-msgstr "Date de fin"
+#: field:report_account_analytic.planning.account,planning_id:0
+#: field:report_account_analytic.planning.line,planning_id:0
+#: field:report_account_analytic.planning.stat,planning_id:0
+#: field:report_account_analytic.planning.user,planning_id:0
+msgid "Planning"
+msgstr "Planning"
 
 #. module: project_planning
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: project_planning
-#: view:report_account_analytic.planning:0
-msgid "Time by User"
-msgstr "Temps par Utilisateur"
-
-#. module: project_planning
-#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_my_manager_form
-#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning_stat_my_manager
-msgid "Planning Statistics of My Projects"
-msgstr "Statistiques des Plannings de mes Projets"
-
-#. module: project_planning
-#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_form_current
-#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning_current
-msgid "Current Planning"
 msgstr ""
 
 #. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Summary by user"
-msgstr "Résumé par utilisateur"
-
-#. module: project_planning
 #: view:report_account_analytic.planning:0
-msgid "Analysis"
-msgstr "Analyses"
-
-#. module: project_planning
-#: field:report_account_analytic.planning.line,user_id:0
-#: rml:report_account_analytic.planning.print:0
-#: field:report_account_analytic.planning.stat,user_id:0
-#: field:report_account_analytic.planning.stat.user,user_id:0
-msgid "User"
-msgstr "Utilisateur"
-
-#. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Project"
-msgstr "Projet"
-
-#. module: project_planning
-#: view:report_account_analytic.planning:0
-msgid "Total Timesheet"
-msgstr "Total des feuilles de présence"
-
-#. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Details of user's time by projects"
-msgstr "Détails du temps d'utilisateur par projets"
-
-#. module: project_planning
-#: model:ir.model,name:project_planning.model_report_account_analytic_planning_stat_user
-msgid "Planning user stat"
-msgstr "Planning par utilisateur"
-
-#. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-#: field:report_account_analytic.planning.stat.account,quantity:0
-#: field:report_account_analytic.planning.stat.user,quantity:0
-msgid "Planned"
-msgstr "Planifié"
-
-#. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "Analyse planifiée"
-
-#. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "["
-msgstr "["
-
-#. module: project_planning
-#: field:report_account_analytic.planning,line_ids:0
-msgid "Planning lines"
-msgstr "Ligne planifiées"
-
-#. module: project_planning
-#: model:ir.module.module,shortdesc:project_planning.module_meta_information
-msgid "Analytic planning - Reporting"
+msgid "Time Encoding"
 msgstr ""
 
 #. module: project_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "]"
-msgstr "]"
-
-#. module: project_planning
-#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_form_my
-#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning_my2
-msgid "My Planning"
+#: field:report_account_analytic.planning.user,free:0
+msgid "Unallocated Time"
 msgstr ""
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_user_ids:0
-msgid "Planning by user"
-msgstr "Planning par utilisateur"
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
+#: view:report_account_analytic.planning:0
+msgid "Planning by Account"
+msgstr "Planning par Compte"
 
 #. module: project_planning
-#: field:report_account_analytic.planning.line,note:0
-msgid "Note"
-msgstr "Note"
+#: help:report_account_analytic.planning.user,plan_open:0
+msgid ""
+"This value is given by the sum of time allocation without task(s) linked, "
+"expressed in days."
+msgstr ""
 
 #. module: project_planning
-#: rml:report_account_analytic.planning.print:0
+#: view:report_account_analytic.planning:0
+msgid "Delegate"
+msgstr "Déléguer"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr ""
+
+#. module: project_planning
+#: help:report_account_analytic.planning,business_days:0
+msgid ""
+"Set here the number of working days within this planning for one person full "
+"time"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning,planning_user_ids:0
+msgid "Planning By User"
+msgstr ""
+
+#. module: project_planning
+#: model:ir.actions.act_window,name:project_planning.act_task_of_lines
+#: view:report_account_analytic.planning:0
 #: field:report_account_analytic.planning.stat,sum_amount_tasks:0
 msgid "Tasks"
 msgstr "Tâches"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_account_ids:0
-msgid "Planning by account"
-msgstr "Planning par compte"
-
-#. module: project_planning
 #: view:report_account_analytic.planning:0
-msgid "Quantities by User"
-msgstr "Quantités par Utilisateur"
-
-#. module: project_planning
-#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_form_current_my
-#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning_current_my
-msgid "My Current Planning"
+msgid "Planning By Account (in Days)"
 msgstr ""
-
-#. module: project_planning
-#: field:report_account_analytic.planning.stat.account,account_id:0
-msgid "Analytic Account"
-msgstr "Compte analytique"
-
-#. module: project_planning
-#: field:report_account_analytic.planning.stat,manager_id:0
-msgid "Manager"
-msgstr "Gestionnaire"
-
-#. module: project_planning
-#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_form
-#: model:ir.actions.report.xml,name:project_planning.report_planning
-#: model:ir.model,name:project_planning.model_report_account_analytic_planning
-#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning
-#: model:ir.ui.menu,name:project_planning.next_id_85
-#: model:ir.ui.menu,name:project_planning.planning_main
-#: view:report_account_analytic.planning:0
-#: field:report_account_analytic.planning.line,planning_id:0
-#: field:report_account_analytic.planning.stat,planning_id:0
-#: field:report_account_analytic.planning.stat.account,planning_id:0
-#: field:report_account_analytic.planning.stat.user,planning_id:0
-msgid "Planning"
-msgstr "Planning"
-
-#. module: project_planning
-#: selection:report_account_analytic.planning,state:0
-msgid "Done"
-msgstr "Terminé"
-
-#. module: project_planning
-#: view:report_account_analytic.planning:0
-msgid "Total Planned"
-msgstr "Total Plannifié"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,date_from:0
@@ -330,17 +305,268 @@ msgid "Start Date"
 msgstr "Date de début"
 
 #. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Total Planned Tasks"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning,total_free:0
+msgid "Total Free"
+msgstr ""
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,plan_tasks:0
+msgid ""
+"This value is given by the sum of time allocation with the checkbox "
+"'Assigned in Taks' set to TRUE expressed in days."
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "tasks"
+msgstr "tâches"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,amount_unit:0
+msgid "Qty UoM"
+msgstr "Qté UoM"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,note:0
+msgid "Note"
+msgstr "Remarque"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+#: selection:report_account_analytic.planning,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: project_planning
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Erreur! Vous ne pouvez pas créer de menu récursif."
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+msgid "Planning Lines"
+msgstr ""
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Pending"
+msgstr "En attente"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.stat,sum_amount:0
+msgid "Planned Days"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning,state:0
+msgid "Status"
+msgstr "Statut"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,holiday:0
+msgid ""
+"This value is given by the total of validated leaves into the 'Date From' "
+"and 'Date To' of the planning."
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,user_id:0
+#: report:report_account_analytic.planning.print:0
+#: field:report_account_analytic.planning.stat,user_id:0
+#: field:report_account_analytic.planning.user,user_id:0
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Remaining Tasks"
+msgstr ""
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,amount_in_base_uom:0
+msgid "Quantity in base uom"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning.user,plan_tasks:0
+msgid "Time Planned on Tasks"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,amount:0
+msgid "Quantity"
+msgstr "Quantité"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: field:report_account_analytic.planning,line_ids:0
+msgid "Planning lines"
+msgstr ""
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+#: selection:report_account_analytic.planning,state:0
+msgid "Done"
+msgstr "Terminé"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Planning By User (in Days)"
+msgstr ""
+
+#. module: project_planning
 #: view:report_account_analytic.planning.stat:0
 msgid "Planning statistics"
 msgstr "Statistiques du planning"
 
 #. module: project_planning
+#: view:report_account_analytic.planning:0
 #: selection:report_account_analytic.planning,state:0
 msgid "Open"
-msgstr "Ouvert"
+msgstr "Ouvrir"
 
 #. module: project_planning
-#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_form_new
-#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning_new
-msgid "New Planning"
-msgstr "Nouveau Planning"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_user
+#: view:report_account_analytic.planning:0
+msgid "Planning by User"
+msgstr ""
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Information"
+msgstr "Informations"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,business_days:0
+msgid "Business Days"
+msgstr "Jour Ouvrés"
+
+#. module: project_planning
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
+"spécial !"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Reactivate"
+msgstr "Ré-activer"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,user_id:0
+#: report:report_account_analytic.planning.print:0
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_stat
+msgid "Planning stat"
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "To"
+msgstr "À"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,plan_tasks:0
+msgid "Time Allocation of Tasks"
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Summary by user"
+msgstr "Résumé par utilisateur"
+
+#. module: project_planning
+#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
+msgid ""
+"With its commun system for scheduling all resources of a company (people and "
+"materials), OpenERP allows you to encode then compute automatically tasks "
+"and phases scheduling, track resources allocation and availibility."
+msgstr ""
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Time Allocation without Tasks"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning.user,holiday:0
+msgid "Leaves"
+msgstr "Congés"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Time Allocation of Tasks"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning,date_to:0
+msgid "End Date"
+msgstr "Date de Fin"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Remaining tasks"
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Summary by project"
+msgstr "Résumé par projet"
+
+#. module: project_planning
+#: field:res.company,planning_time_mode_id:0
+msgid "Planning Time Unit"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,task_ids:0
+msgid "Planning Tasks"
+msgstr ""
+
+#. module: project_planning
+#: field:report_account_analytic.planning.stat,manager_id:0
+msgid "Manager"
+msgstr "Responsable"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,plan_tasks:0
+msgid ""
+"This value is given by the sum of time allocation with task(s) linked, "
+"expressed in days."
+msgstr ""

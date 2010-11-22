@@ -15,11 +15,11 @@ class l10n_chart_it_servabit_report_libroIVA_credito(report_sxw.rml_parse):
         })
 
     def get_company(self,fiscal_year):
-	    #print 'COMP = ',fiscal_year
+        #print 'COMP = ',fiscal_year
         return ""
 
     def get_periods(self,fiscal_year):
-	    #print 'Fiscal year id:',fiscal_year.id
+        #print 'Fiscal year id:',fiscal_year.id
         obj=pooler.get_pool(self.cr.dbname).get('account.fiscalyear')
         fy=obj.browse(self.cr,self.uid,fiscal_year.id)
         #print 'Periods = ',fy.period_ids
@@ -34,7 +34,7 @@ class l10n_chart_it_servabit_report_libroIVA_credito(report_sxw.rml_parse):
         self.cr.execute("""
                         SELECT id FROM account_invoice
                         WHERE (state='open' OR state='paid') AND period_id="""+str(period.id)+""" AND (type='out_invoice' OR type='out_refund')
-        				""")
+                        """)
         ids=self.cr.fetchall()
         #print 'IDS = ',
         if ids:
@@ -52,9 +52,9 @@ class l10n_chart_it_servabit_report_libroIVA_credito(report_sxw.rml_parse):
             for invoice in invoices:
                 d={'periodo': period.name}
                 d['protocollo']=invoice.number
-        	#print 'PARTNER ',invoice.partner_id.name
+            #print 'PARTNER ',invoice.partner_id.name
             causale=invoice.partner_id.name
-        	#print 'CAUSALE = ',causale
+            #print 'CAUSALE = ',causale
             d['causale']=causale
             d['numero']=invoice.reference
             d['data_doc']=invoice.date_invoice

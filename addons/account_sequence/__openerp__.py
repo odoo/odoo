@@ -31,7 +31,7 @@
     'depends': ['account'],
     'init_xml': [],
     'update_xml': ['account_sequence_data.xml','account_sequence.xml'],
-    'demo_xml': ['account_sequence_minimal.xml'],
+    'demo_xml': [],
     'installable': True,
     'active': False,
     'certificate': '',
