@@ -35,6 +35,7 @@ class account_move(osv.osv):
         res = super(account_move, self).post(cr, uid, ids, context=context)
         seq_no = False
         for line in self.browse(cr, uid, ids, context=context):
+            # Todo: if there is not internal seq defined on journal raise error ?
             if line.journal_id.internal_sequence:
                 seq_no = obj_sequence.get_id(cr, uid, line.journal_id.internal_sequence.id, context=context)
             if seq_no:
@@ -49,6 +50,7 @@ class account_journal(osv.osv):
     _columns = {
         'internal_sequence': fields.many2one('ir.sequence', 'Internal Sequence'),
     }
+
 account_journal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
