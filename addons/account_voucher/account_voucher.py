@@ -30,7 +30,7 @@ from tools.translate import _
 class account_move_line(osv.osv):
     _inherit = 'account.move.line'
 
-    def _unreconciled(self, cr, uid, ids, prop, unknow_none, context=None):
+    def _unreconciled(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.debit - line.credit
@@ -71,7 +71,7 @@ class account_voucher(osv.osv):
         res = journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
         return res and res[0] or False
 
-    def _get_tax(self, cr, uid, context=None):
+    def _get_tax(self, cr, uid, context={}):
         journal_pool = self.pool.get('account.journal')
         journal_id = context.get('journal_id', False)
         if not journal_id:
@@ -207,14 +207,14 @@ class account_voucher(osv.osv):
         'tax_id': _get_tax,
     }
 
-    def compute_tax(self, cr, uid, ids, context=None):
+    def compute_tax(self, cr, uid, ids, context={}):
         tax_pool = self.pool.get('account.tax')
         partner_pool = self.pool.get('res.partner')
         position_pool = self.pool.get('account.fiscal.position')
         voucher_line_pool = self.pool.get('account.voucher.line')
         voucher_pool = self.pool.get('account.voucher')
 
-        for voucher in voucher_pool.browse(cr, uid, ids, context=context):
+        for voucher in voucher_pool.browse(cr, uid, ids, context):
             voucher_amount = 0.0
             for line in voucher.line_ids:
                 voucher_amount += line.untax_amount or line.amount
@@ -304,10 +304,10 @@ class account_voucher(osv.osv):
             due_date = terms[-1][0]
             default.update({
                 'date_due':due_date
-        })
+            })
         return {'value':default}
 
-    def onchange_journal_voucher(self, cr, uid, ids, line_ids=False, tax_id=False, price=0.0, partner_id=False, journal_id=False, ttype=False, context=None):
+    def onchange_journal_voucher(self, cr, uid, ids, line_ids=False, tax_id=False, price=0.0, partner_id=False, journal_id=False, ttype=False, context={}):
         """price
         Returns a dict that contains new values and context
 
@@ -318,11 +318,12 @@ class account_voucher(osv.osv):
         @return: Returns a dict which contains new values, and context
         """
         default = {
-            'value': {},
+            'value':{},
         }
 
         if not partner_id or not journal_id:
             return default
+
         partner_pool = self.pool.get('res.partner')
         journal_pool = self.pool.get('account.journal')
 
@@ -345,6 +346,7 @@ class account_voucher(osv.osv):
 
         vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, context)
         default['value'].update(vals.get('value'))
+
         return default
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, context=None):
@@ -469,7 +471,7 @@ class account_voucher(osv.osv):
 
         return default
 
-    def onchange_date(self, cr, user, ids, date, context=None):
+    def onchange_date(self, cr, user, ids, date, context={}):
         """
         @param date: latest value from user input for field date
         @param args: other arguments
@@ -486,7 +488,7 @@ class account_voucher(osv.osv):
             }
         }
 
-    def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, context=None):
+    def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, context={}):
         if not journal_id:
             return False
         journal_pool = self.pool.get('account.journal')
@@ -508,14 +510,14 @@ class account_voucher(osv.osv):
         self.action_move_line_create(cr, uid, ids, context=context)
         return True
 
-    def action_cancel_draft(self, cr, uid, ids, context=None):
+    def action_cancel_draft(self, cr, uid, ids, context={}):
         wf_service = netsvc.LocalService("workflow")
         for voucher_id in ids:
             wf_service.trg_create(uid, 'account.voucher', voucher_id, cr)
         self.write(cr, uid, ids, {'state':'draft'})
         return True
 
-    def cancel_voucher(self, cr, uid, ids, context=None):
+    def cancel_voucher(self, cr, uid, ids, context={}):
         reconcile_pool = self.pool.get('account.move.reconcile')
         move_pool = self.pool.get('account.move')
 
@@ -566,6 +568,7 @@ class account_voucher(osv.osv):
         return {'value':res}
 
     def action_move_line_create(self, cr, uid, ids, context=None):
+
         def _get_payment_term_lines(term_id, amount):
             term_pool = self.pool.get('account.payment.term')
             if term_id and amount:
@@ -645,6 +648,7 @@ class account_voucher(osv.osv):
                 line_total = line_total - currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.tax_amount)
             elif inv.type == 'purchase':
                 line_total = line_total + currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.tax_amount)
+
             for line in inv.line_ids:
                 if not line.amount:
                     continue
@@ -712,6 +716,7 @@ class account_voucher(osv.osv):
                 else:
                     account_id = inv.partner_id.property_account_payable.id
                 move_line['account_id'] = account_id
+
                 move_line_pool.create(cr, uid, move_line)
 
             self.write(cr, uid, [inv.id], {
@@ -788,7 +793,7 @@ class account_voucher_line(osv.osv):
         'name': ''
     }
 
-    def onchange_move_line_id(self, cr, user, ids, move_line_id, context=None):
+    def onchange_move_line_id(self, cr, user, ids, move_line_id, context={}):
         """
         Returns a dict that contains new values and context
 
@@ -914,6 +919,7 @@ class account_bank_statement_line(osv.osv):
         'amount_reconciled': fields.function(_amount_reconciled,
             string='Amount reconciled', method=True, type='float'),
         'voucher_id': fields.many2one('account.voucher', 'Payment'),
+
     }
 
     def unlink(self, cr, uid, ids, context=None):
