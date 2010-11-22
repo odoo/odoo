@@ -63,7 +63,6 @@ class stock_invoice_onshipping(osv.osv_memory):
 
 
     _columns = {
-#        'journal_id': fields.many2one('account.journal', 'Destination Journal', required=True,selection=_get_journal_id),
         'journal_id': fields.selection(_get_journal_id, 'Destination Journal',required=True),
         'group': fields.boolean("Group by partner"),
         'invoice_date': fields.date('Invoiced date'),
@@ -86,7 +85,7 @@ class stock_invoice_onshipping(osv.osv_memory):
             raise osv.except_osv(_('Warning !'), _('None of these picking lists require invoicing.'))
         return res
 
-    
+
 
     def create_invoice(self, cr, uid, ids, context=None):
         if context is None:
