@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:16+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:16+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:44+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -119,8 +119,18 @@ msgid "Partner Function"
 msgstr ""
 
 #. module: base_contact
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: base_contact
 #: field:res.partner.job,state:0
 msgid "State"
+msgstr ""
+
+#. module: base_contact
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: base_contact
@@ -367,6 +377,11 @@ msgstr ""
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Photo"
+msgstr ""
+
+#. module: base_contact
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: base_contact

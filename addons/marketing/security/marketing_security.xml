@@ -5,11 +5,6 @@
         <field name="name">Marketing / User</field>
     </record>
     
-   <record id="base.user_demo" model="res.users">
-        <field eval="[(4, ref('marketing.group_marketing_user'))]" name="groups_id"/>
-   </record>
-    
-    
     <record id="marketing.group_marketing_manager" model="res.groups">
         <field name="name">Marketing / Manager</field>
     </record>

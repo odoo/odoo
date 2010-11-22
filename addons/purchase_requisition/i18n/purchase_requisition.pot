@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:55+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:55+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:04+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,6 +40,11 @@ msgstr ""
 #: view:purchase.requisition:0
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid "A purchase requisition is a step before the request for quotation. In a purchase requisition (or purchase tender), you can record the products you need to buy and trigger the creation of RfQs to supplier. After the negotiation, once you have reviewed all the supplier's offers, you can validate some and cancel others."
 msgstr ""
 
 #. module: purchase_requisition
@@ -141,8 +146,8 @@ msgid "Request a Quotation"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Create Quotation"
+#: selection:purchase.requisition,exclusive:0
+msgid "Multiple Requisitions"
 msgstr ""
 
 #. module: purchase_requisition
@@ -266,6 +271,11 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: purchase_requisition
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "["
 msgstr ""
@@ -308,6 +318,11 @@ msgid "Reference"
 msgstr ""
 
 #. module: purchase_requisition
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
 msgid "Warehouse"
 msgstr ""
@@ -328,8 +343,8 @@ msgid "Purchase Requisition (exclusive)"
 msgstr ""
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,exclusive:0
-msgid "Multiple Requisitions"
+#: view:purchase.requisition.partner:0
+msgid "Create Quotation"
 msgstr ""
 
 #. module: purchase_requisition
@@ -371,6 +386,11 @@ msgstr ""
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Unassigned"
+msgstr ""
+
+#. module: purchase_requisition
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: purchase_requisition
