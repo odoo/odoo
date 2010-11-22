@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-18 13:37+0000\n"
+"PO-Revision-Date: 2010-11-20 19:57+0000\n"
 "Last-Translator: Grzegorz Grzelak (Cirrus.pl) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-19 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-11-21 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -69,7 +69,7 @@ msgstr "Pozostało"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Please define sequence on invoice journal"
-msgstr ""
+msgstr "Zdefiniuj numeracjędla dziennika faktur"
 
 #. module: account
 #: constraint:account.period:0
@@ -159,7 +159,7 @@ msgstr "Odnośnik"
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Choose Fiscal Year "
-msgstr ""
+msgstr "Wybierz rok podatkowy "
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -189,6 +189,9 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
+"Określa typ dziennika analitycznego. Jeśli będzie potrzebne utworzenie "
+"zapisów analitycznych (np. dla faktur), to OpenERP będzie szukał dziennika "
+"tego samego typu."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -199,7 +202,7 @@ msgstr "Szablony podatków"
 #. module: account
 #: view:account.invoice.report:0
 msgid "supplier"
-msgstr ""
+msgstr "dostawca"
 
 #. module: account
 #: model:account.journal,name:account.refund_expenses_journal
@@ -218,6 +221,8 @@ msgid ""
 "No period defined for this date: %s !\n"
 "Please create a fiscal year."
 msgstr ""
+"Nie zdefiniowano okresu dla tej daty: %s !\n"
+"Utwórz rok podatkowy."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
@@ -248,6 +253,7 @@ msgstr ""
 #, python-format
 msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
 msgstr ""
+"Faktura '%s' została zapłacona cześciowo: %s%s z %s%s (pozostało %s%s)"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0

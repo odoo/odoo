@@ -31,11 +31,11 @@ class l10n_chart_it_servabit_report_libroIVA_debito(report_sxw.rml_parse):
         obj=pooler.get_pool(self.cr.dbname).get('account.invoice')
         # Selezione tutte le fatture emesse nel periodo
         self.cr.execute("""
-        				SELECT id FROM account_invoice
-        				WHERE (state='open' OR state='paid') AND
-        						period_id="""+str(period.id)+"""
-        						AND (type='in_invoice' OR type='in_refund')
-        				""")
+                        SELECT id FROM account_invoice
+                        WHERE (state='open' OR state='paid') AND
+                                period_id="""+str(period.id)+"""
+                                AND (type='in_invoice' OR type='in_refund')
+                        """)
         ids=self.cr.fetchall()
         #print 'IDS = ',
         if ids:
@@ -53,19 +53,19 @@ class l10n_chart_it_servabit_report_libroIVA_debito(report_sxw.rml_parse):
             for invoice in invoices:
                 d={'periodo': period.name}
                 d['protocollo']=invoice.number
-        	#print 'PARTNER ',invoice.partner_id.name
-        	causale=invoice.partner_id.name
-        	#print 'CAUSALE = ',causale
-        	d['causale']=causale
-        	d['numero']=invoice.reference
-        	d['data_doc']=invoice.date_invoice
-        	for tax in invoice.tax_line:
-        	    #print '\tTAX: ',tax
-        	    d['aliquota']=tax.tax_code_id.name
-        	    d['imponibile']=tax.base
-        	    d['imposta']=tax.amount
-        	    res.append(d)
-        	    d={'periodo':'', 'protocollo':'', 'causale':'', 'numero':'', 'data_doc':'', }
+            #print 'PARTNER ',invoice.partner_id.name
+            causale=invoice.partner_id.name
+            #print 'CAUSALE = ',causale
+            d['causale']=causale
+            d['numero']=invoice.reference
+            d['data_doc']=invoice.date_invoice
+            for tax in invoice.tax_line:
+                #print '\tTAX: ',tax
+                d['aliquota']=tax.tax_code_id.name
+                d['imponibile']=tax.base
+                d['imposta']=tax.amount
+                res.append(d)
+                d={'periodo':'', 'protocollo':'', 'causale':'', 'numero':'', 'data_doc':'', }
         return res
 
 report_sxw.report_sxw('report.l10n_it.report.libroIVA_debito','account.report_libroiva', 'l10n_it/report/libroIVA_debito.rml', parser=l10n_chart_it_servabit_report_libroIVA_debito,header=False)
