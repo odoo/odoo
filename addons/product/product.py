@@ -30,19 +30,19 @@ from tools.translate import _
 def is_pair(x):
     return not x%2
 
-def check_ean(ean_code):
-    if not ean_code:
+def check_ean(eancode):
+    if not eancode:
         return True
-    if len(ean_code) not in [13,14,8]:
+    if len(eancode) not in [13,14,8]:
         return False
     try:
-        int(ean_code)
+        int(eancode)
     except:
         return False
     oddsum=0
     evensum=0
     total=0
-    eanvalue=ean_code
+    eanvalue=eancode
     reversevalue = eanvalue[::-1]
     finalean=reversevalue[1:]
 
@@ -55,7 +55,7 @@ def check_ean(ean_code):
 
     check = int(10 - math.ceil(total % 10.0))
 
-    if check != int(ean_code[-1]):
+    if check != int(eancode[-1]):
         return False
     return True
 #----------------------------------------------------------
@@ -481,7 +481,8 @@ class product_product(osv.osv):
 
     def _check_ean_key(self, cr, uid, ids):
         for partner in self.browse(cr, uid, ids):
-            res = check_ean(partner.ean13)
+            eancheck = partner.ean13
+            res = check_ean( eancheck )
         return res
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
@@ -614,7 +615,8 @@ class product_packaging(osv.osv):
 
     def _check_ean_key_r(self, cr, uid, ids):
         for partner in self.browse(cr, uid, ids):
-            res = check_ean(partner.ean)
+            eancheckp = partner.ean
+            res = check_ean(eancheckp)
         return res
 
     _constraints = [(_check_ean_key_r, 'Error: Invalid ean code', ['ean'])]
