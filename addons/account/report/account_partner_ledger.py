@@ -28,6 +28,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
         super(third_party_ledger, self).__init__(cr, uid, name, context=context)
+        self.init_bal_sum = 0.0
         self.localcontext.update({
             'time': time,
             'lines': self.lines,
