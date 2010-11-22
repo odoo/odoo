@@ -30,12 +30,11 @@ class ShareWizardController(openerp.controllers.SecuredController):
 
         share_wiz_id = rpc.RPCProxy('ir.ui.menu').search(
             [('name','=', 'Share Wizard')])
-        context.update({
-            'active_ids': share_wiz_id,
-            'active_id': share_wiz_id[0],
-            '_terp_view_name': 'Share Wizard',
-            'share_root_url': share_root_url
-        })
+        context.update(
+            active_ids=share_wiz_id,
+            active_id=share_wiz_id[0],
+            _terp_view_name='Share Wizard',
+            share_root_url=share_root_url)
         sharing_view_id = rpc.RPCProxy(share_model).create({
             'domain': str(domain),
             'action_id':action_id
