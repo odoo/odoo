@@ -21,6 +21,7 @@
 
 from lxml import etree
 
+import tools
 from tools.translate import _
 from osv import fields, osv
 
@@ -48,7 +49,7 @@ class project_task_delegate(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         task_pool = self.pool.get('project.task')
         task = task_pool.browse(cr, uid, record_id, context=context)
-        task_name = (task.name).encode('utf-8')
+        task_name =tools.ustr(task.name)
 
         if 'name' in fields:
             if task_name.startswith(_('CHECK: ')):
@@ -104,7 +105,7 @@ class project_task_delegate(osv.osv_memory):
         task_id = context.get('active_id', False)
         task_pool = self.pool.get('project.task')
         delegate_data = self.read(cr, uid, ids, context=context)[0]
-        delegate_data['name'] = (delegate_data['name']).decode('utf-8')
+        delegate_data['name'] = tools.ustr(delegate_data['name'])
         task_pool.do_delegate(cr, uid, task_id, delegate_data, context=context)
         return {}
 
