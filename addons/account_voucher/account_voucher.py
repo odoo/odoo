@@ -694,10 +694,6 @@ class account_voucher(osv.osv):
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
                     rec_list_ids.append(rec_ids)
-            writeoff_account_id = False
-            writeoff_journal_id = False
-            writeoff_period_id = inv.period_id.id,
-            comment = False
 
             if not currency_pool.is_zero(cr, uid, inv.currency_id, line_total):
                 diff = line_total
@@ -722,19 +718,6 @@ class account_voucher(osv.osv):
 
                 move_line_pool.create(cr, uid, move_line)
 
-            voucher = self.browse(cr, uid, ids)[0]
-
-            for rec_ids in rec_list_ids:
-                if len(rec_ids) >= 2:
-                    for line in voucher.line_ids:
-                        if line.amount_unreconciled != line.amount:
-                            if 'write_off' in context and context['write_off']['writeoff_acc_id']:
-                                writeoff_account_id = context['write_off']['writeoff_acc_id']
-                                writeoff_journal_id = context['write_off']['writeoff_journal_id']
-                                comment = context['write_off']['comment']
-                                self.pool.get('account.move.line').reconcile(cr, uid, rec_ids, 'manual', writeoff_account_id, writeoff_period_id, writeoff_journal_id, context)
-                            else:
-                                self.pool.get('account.move.line').reconcile_partial(cr, uid, rec_ids, 'manual', context)
             self.write(cr, uid, [inv.id], {
                 'move_id': move_id,
                 'state': 'posted',
