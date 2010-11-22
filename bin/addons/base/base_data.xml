@@ -1044,7 +1044,7 @@
         </record>
 
         <assert id="main_company" model="res.company">
-            <test expr="currency_id.code == 'eur'.upper()"/>
+            <test expr="currency_id.name == 'eur'.upper()"/>
             <test expr="name">OpenERP S.A.</test>
         </assert>
 
@@ -1170,7 +1170,7 @@
             <field name="currency_id" ref="COP"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-        
+
         <record id="CZK" model="res.currency">
             <field name="name">Kč</field>
             <field name="code">CZK</field>
@@ -1213,7 +1213,7 @@
             <field name="currency_id" ref="HUF"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-        
+
         <record id="IDR" model="res.currency">
             <field name="name">Rs</field>
             <field name="code">IDR</field>
@@ -1290,7 +1290,7 @@
             <field name="currency_id" ref="PLN"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-        
+
         <record id="SEK" model="res.currency">
             <field name="name">kr</field>
             <field name="code">SEK</field>
@@ -1304,7 +1304,7 @@
             <field name="currency_id" ref="SEK"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-        
+
         <record id="GBP" model="res.currency">
             <field name="name">GBP</field>
             <field name="code">GBP</field>
@@ -1326,7 +1326,7 @@
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
-        </record>        
+        </record>
         <record id="rateARS" model="res.currency.rate">
             <field name="rate">5.0881</field>
             <field name="currency_id" ref="ARS"/>
