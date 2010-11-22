@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:27+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:27+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:03+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,8 +48,8 @@ msgid "Minimum Registrations"
 msgstr ""
 
 #. module: event
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: model:ir.model,name:event.model_event_confirm_registration
+msgid "Confirmation for Event Registration"
 msgstr ""
 
 #. module: event
@@ -210,6 +210,11 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: event
+#: view:event.registration:0
+msgid "Send New Email"
+msgstr ""
+
+#. module: event
 #: field:event.event,reply_to:0
 msgid "Reply-To"
 msgstr ""
@@ -279,11 +284,9 @@ msgid "Extra Info"
 msgstr ""
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
-msgid "Registration"
+#: code:addons/event/wizard/event_make_invoice.py:0
+#, python-format
+msgid "Customer Invoices"
 msgstr ""
 
 #. module: event
@@ -373,8 +376,13 @@ msgid "Warning !"
 msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "Send New Email"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid "Event is the low-level object used by meeting and others documents that have to be synchronized with mobile or calendar applications through caldav. Most of the users should work on the Calendar menu, and not on the list of events."
 msgstr ""
 
 #. module: event
@@ -412,6 +420,11 @@ msgstr ""
 #. module: event
 #: field:event.registration,tobe_invoiced:0
 msgid "To be Invoiced"
+msgstr ""
+
+#. module: event
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: event
@@ -475,11 +488,6 @@ msgid "Event Organization"
 msgstr ""
 
 #. module: event
-#: model:ir.model,name:event.model_event_confirm_registration
-msgid "Event Registraion"
-msgstr ""
-
-#. module: event
 #: view:event.registration:0
 msgid "History Information"
 msgstr ""
@@ -501,9 +509,11 @@ msgid "Error: UOS must be in a different category than the UOM"
 msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
-#, python-format
-msgid "Registration is set as Cannot be invoiced"
+#: view:event.event:0
+#: view:event.registration:0
+#: field:event.registration.badge,registration_id:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
+msgid "Registration"
 msgstr ""
 
 #. module: event
@@ -695,6 +705,11 @@ msgstr ""
 #. module: event
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: event
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: event
@@ -895,6 +910,12 @@ msgid "Invoice"
 msgstr ""
 
 #. module: event
+#: view:report.event.registration:0
+#: field:report.event.registration,year:0
+msgid "Year"
+msgstr ""
+
+#. module: event
 #: code:addons/event/event.py:0
 #, python-format
 msgid "Cancel"
@@ -916,6 +937,11 @@ msgstr ""
 #: code:addons/event/event.py:0
 #, python-format
 msgid "Open"
+msgstr ""
+
+#. module: event
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: event
@@ -1102,9 +1128,9 @@ msgid "Country"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
-msgid "Year"
+#: code:addons/event/wizard/event_make_invoice.py:0
+#, python-format
+msgid "Registration is set as Cannot be invoiced"
 msgstr ""
 
 #. module: event

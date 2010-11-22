@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:23+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:23+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11:56+0000\n"
+"PO-Revision-Date: 2010-11-18 16:11:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -56,11 +56,6 @@ msgstr ""
 #. module: crm_helpdesk
 #: field:crm.helpdesk,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Cases"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -174,6 +169,11 @@ msgstr ""
 #: view:crm.helpdesk.report:0
 #: field:crm.helpdesk.report,priority:0
 msgid "Priority"
+msgstr ""
+
+#. module: crm_helpdesk
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -527,6 +527,11 @@ msgid "Open"
 msgstr ""
 
 #. module: crm_helpdesk
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Helpdesk Support Tree"
 msgstr ""
@@ -570,6 +575,11 @@ msgid "Reply"
 msgstr ""
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
+msgid "Create and manage helpdesk categories to better manage and classify your support request."
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
 msgid "Description"
 msgstr ""
@@ -577,6 +587,11 @@ msgstr ""
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
 msgid "May"
+msgstr ""
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
+msgid "'Helpdesk and Support' allows you to track your interventions. Select a customer, add notes and categorize interventions with partners if necessary and assign a priority level. Depending on your need, you may consider using the issues system of OpenERP to manage your support activities."
 msgstr ""
 
 #. module: crm_helpdesk
@@ -590,6 +605,11 @@ msgid "# Emails"
 msgstr ""
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.action_report_crm_helpdesk
+msgid "Have a general overview of all support requests by sorting them with specific criteria such as the processing time, number of requests answered, emails sent and costs."
+msgstr ""
+
+#. module: crm_helpdesk
 #: help:crm.helpdesk,canal_id:0
 msgid "The channels represent the different communication  modes available with the customer."
 msgstr ""
@@ -600,6 +620,11 @@ msgid "The state is set to 'Draft', when a case is created.                     
 "If the case is in progress the state is set to 'Open'.                                  \n"
 "When the case is over, the state is set to 'Done'.                                  \n"
 "If the case needs to be reviewed then the state is set to 'Pending'."
+msgstr ""
+
+#. module: crm_helpdesk
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: crm_helpdesk

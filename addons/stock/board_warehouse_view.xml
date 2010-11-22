@@ -13,7 +13,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','in',('confirmed','assigned')),'|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
-            <field name="view_id" ref="stock.view_move_tree_reception_picking_board"/>
+            <field name="view_id" ref="stock.view_move_tree_reception_picking"/>
         </record>
 
         <record id="action_outgoing_product_board" model="ir.actions.act_window">
@@ -23,7 +23,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','in',('confirmed','assigned')),'|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
-            <field name="view_id" ref="stock.view_move_tree_reception_picking_board"/>
+            <field name="view_id" ref="stock.view_move_tree_reception_picking"/>
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_incoming_product_delay">

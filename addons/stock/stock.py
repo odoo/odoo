@@ -577,8 +577,8 @@ class stock_picking(osv.osv):
             return res
         cr.execute("""select
                 picking_id,
-                min(date),
-                max(date)
+                min(date_expected),
+                max(date_expected)
             from
                 stock_move
             where
@@ -586,8 +586,8 @@ class stock_picking(osv.osv):
             group by
                 picking_id""",(tuple(ids),))
         for pick, dt1, dt2 in cr.fetchall():
-            res[pick]['min_date'] = dt1
-            res[pick]['max_date'] = dt2
+                res[pick]['min_date'] = dt1
+                res[pick]['max_date'] = dt2
         return res
 
     def create(self, cr, user, vals, context=None):
@@ -1372,7 +1372,7 @@ class stock_production_lot(osv.osv):
         return ids
 
     _columns = {
-        'name': fields.char('Serial Number', size=64, required=True, help="Unique serial number, will be displayed as: PREFIX/SERIAL [INT_REF]"),
+        'name': fields.char('Production Lot', size=64, required=True, help="Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"),
         'ref': fields.char('Internal Reference', size=256, help="Internal reference number in case it differs from the manufacturer's serial number"),
         'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL [INT_REF]"),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
@@ -1610,7 +1610,7 @@ class stock_move(osv.osv):
         warning = {}
         if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
             warning = {
-                'title': _('Bad Lot Assignation !'),
+                'title': _('Insufficient Stock in Lot !'),
                 'message': _('You are moving %.2f products but only %.2f available in this lot.') % (product_qty, prodlot.stock_available or 0.0)
             }
         return {'warning': warning}
@@ -2398,7 +2398,7 @@ class stock_inventory(osv.osv):
         'date_done': fields.datetime('Date done'),
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', states={'done': [('readonly', True)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
-        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('cancel','Cancelled')), 'State', readonly=True, select=True),
+        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('confirm','Confirmed'),('cancel','Cancelled')), 'State', readonly=True, select=True),
         'company_id': fields.many2one('res.company','Company',required=True,select=True),
     }
     _defaults = {
@@ -2416,6 +2416,13 @@ class stock_inventory(osv.osv):
         return self.pool.get('stock.move').create(cr, uid, move_vals)
 
     def action_done(self, cr, uid, ids, context=None):
+        move_obj = self.pool.get('stock.move')
+        for inv in self.browse(cr, uid, ids, context=context):
+            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
+            self.write(cr, uid, [inv.id], {'state':'done'}, context=context)
+        return True
+
+    def action_confirm(self, cr, uid, ids, context=None):
         """ Finishes the inventory and writes its finished date
         @return: True
         """
@@ -2444,7 +2451,6 @@ class stock_inventory(osv.osv):
                         'prodlot_id': lot_id,
                         'date': inv.date,
                         'date': inv.date,
-                        'state': 'done'
                     }
                     if change > 0:
                         value.update( {
@@ -2466,7 +2472,7 @@ class stock_inventory(osv.osv):
                     move_ids.append(self._inventory_line_hook(cr, uid, line, value))
             message = _('Inventory') + " '" + inv.name + "' "+ _("is done.")
             self.log(cr, uid, inv.id, message)
-            self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S'), 'move_ids': [(6, 0, move_ids)]})
+            self.write(cr, uid, [inv.id], {'state': 'confirm', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S'), 'move_ids': [(6, 0, move_ids)]})
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):

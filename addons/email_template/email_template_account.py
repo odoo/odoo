@@ -372,7 +372,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                 return True
             else:
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Account not approved") % id)
-                return {'error_msg':"Mail from Account %s failed. Probable Reason:Account not approved"% id}
+                return {'nodestroy':True,'error_msg':"Mail from Account %s failed. Probable Reason:Account not approved"% id}
 
     def extracttime(self, time_as_string):
         """
