@@ -290,7 +290,9 @@ class share_create(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         result_obj = self.pool.get('share.wizard.result.line')
         share_root_url = wizard_data.share_root_url
-        format_url = '%(login)s' in share_root_url and '%(password)s' in share_root_url
+        format_url = '%(login)s' in share_root_url\
+                 and '%(password)s' in share_root_url\
+                 and '%(dbname)s' in share_root_url
         existing_passwd_str = _('*usual password*')
         if wizard_data.user_type == 'new':
             for email in wizard_data.new_users.split('\n'):
@@ -298,7 +300,8 @@ class share_create(osv.osv_memory):
                 password = user_obj.read(cr, 1, user_id[0], ['password'])['password']
                 share_url = share_root_url % \
                         {'login': email,
-                         'password': password} if format_url else share_root_url
+                         'password': password,
+                         'dbname': cr.dbname} if format_url else share_root_url
                 result_obj.create(cr, uid, {
                         'share_wizard_id': wizard_data.id,
                         'login': email,
@@ -309,8 +312,9 @@ class share_create(osv.osv_memory):
             # existing users
             for user in wizard_data.user_ids:
                 share_url = share_root_url % \
-                        {'login': email, 
-                         'password': ''} if format_url else share_root_url
+                        {'login': email,
+                         'password': '',
+                         'dbame': cr.dbname} if format_url else share_root_url
                 result_obj.create(cr, uid, {
                         'share_wizard_id': wizard_data.id,
                         'login': user.user_id.login,

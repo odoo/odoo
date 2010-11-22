@@ -1,3 +1,5 @@
+import urlparse
+
 from openobject.tools import expose, ast
 from openerp.controllers import actions
 from openerp.utils import rpc
@@ -26,7 +28,11 @@ class ShareWizardController(openerp.controllers.SecuredController):
 
         action_id = action_id[0]
         share_model =  'share.wizard'
-        share_root_url = cherrypy.request.base
+
+        scheme, netloc, _, _, _ = urlparse.urlsplit(cherrypy.request.base)
+        share_root_url = urlparse.urlunsplit((
+            scheme, netloc, '/openerp/login',
+            'db=%(dbname)s&user=%(login)s&password=%(password)s', ''))
 
         share_wiz_id = rpc.RPCProxy('ir.ui.menu').search(
             [('name','=', 'Share Wizard')])
