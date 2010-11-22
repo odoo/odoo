@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import openobject.templating
 
-class SidebarTemplateEditor(openobject.templating.TemplateEditor):
+class ShareActionEditor(openobject.templating.TemplateEditor):
     templates = ['/openerp/widgets/templates/sidebar.mako']
     ADD_SHARE_BUTTON = u'id="sidebar"'
 
@@ -20,14 +20,14 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
                      </ul>
                        <script type="text/javascript">
                            jQuery(document).ready(function() {
-                               jQuery('#sharing').click(function() {
+                               jQuery("#sharing").click(function() {
                                    jQuery(this).attr(
-                                       'href',
+                                       "href",
                                        openobject.http.getURL('/share', {
-                                           context: jQuery('#_terp_context').val(),
-                                           domain: jQuery('#_terp_domain').val(),
-                                           name: jQuery('#_terp_string').val(),
-                                           search_domain: jQuery('#_terp_search_domain').val(),
+                                           context: jQuery("#_terp_context").val(),
+                                           domain: jQuery("#_terp_domain").val(),
+                                           name: jQuery("#_terp_string").val(),
+                                           search_domain: jQuery("#_terp_search_domain").val(),
                                    }));
                                });
                            });
@@ -37,7 +37,7 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
         return output
 
     def edit(self, template, template_text):
-        output = super(SidebarTemplateEditor, self).edit(template, template_text)
+        output = super(ShareActionEditor, self).edit(template, template_text)
 
         output = self.insert_share_link(output)
         return output

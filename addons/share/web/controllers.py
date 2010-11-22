@@ -7,7 +7,7 @@ import cherrypy
 
 
 
-class Piratepad(openerp.controllers.SecuredController):
+class ShareWizardController(openerp.controllers.SecuredController):
     _cp_path = "/share"
     
     @expose()
