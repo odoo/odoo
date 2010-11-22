@@ -71,12 +71,12 @@
 
         'res/ir_property_view.xml',
         'security/base_security.xml',
-        'maintenance/maintenance_view.xml',
+        'publisher_warranty/publisher_warranty_view.xml',
 
         'security/ir.model.access.csv',
         'res/res_widget_view.xml',
         'res/res_widget_data.xml',
-        'maintenance/maintenance_data.xml',
+        'publisher_warranty/publisher_warranty_data.xml',
     ],
     'demo_xml': [
         'base_demo.xml',

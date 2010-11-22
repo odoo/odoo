@@ -95,11 +95,11 @@ class configmanager(object):
             'maintenance_db': 'tiny_belgium',
             'maintenance_login': 'maintenance',
             'maintenance_password': 'maintenance',
-            'ping_url': 'http://tiny.my.odoo.com:8069/phonehome.php',
+            'publisher_warranty_url': 'http://www.openerp.com/publisher-warranty',
         }
         
         self.blacklist_for_save = set(['maintenance_server', 'maintenance_db',
-            'maintenance_login', 'maintenance_password', "ping_url"])
+            'maintenance_login', 'maintenance_password', "publisher_warranty_url"])
 
         self.misc = {}
         self.config_file = fname
