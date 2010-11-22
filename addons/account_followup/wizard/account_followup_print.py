@@ -319,13 +319,12 @@ class account_followup_print_all(osv.osv_memory):
                     "WHERE id=%s",
                     (to_update[id]['level'],
                     date, int(id),))
-
+        data.update({'date': context['date']})
         datas = {
              'ids': [],
              'model': 'account_followup.followup',
              'form': data
         }
-
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account_followup.followup.print',
