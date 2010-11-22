@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="publisher_warranty_contract_tree_view" model="ir.ui.view">
+            <field name="name">publisher_warranty.contract.tree</field>
+            <field name="model">publisher_warranty.contract</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Publisher Warranty Contract">
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="publisher_warranty_contract_form_view" model="ir.ui.view">
+            <field name="name">publisher_warranty.contract.form</field>
+            <field name="model">publisher_warranty.contract</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Publisher Warranty Contract">
+                    <group col="2" colspan="4">
+                        <group col="2">
+                    		<field name="name"/>
+                        </group>
+                        <group col="2">
+                    		<field name="date_start"/>
+                    		<field name="date_stop"/>
+                    	</group>
+                        <group col="2">
+                            <field name="state"/>
+                            <field name="kind"/>
+                        </group>
+                        <group col="2">
+                        	<button name="check_validity" string="Validate" type="object"
+                        	attrs="{'invisible':[('state','in',['valid', 'terminated', 'canceled'])]}"/>
+                        	<button name="check_validity" string="Refresh Validation Dates" type="object"
+                        	attrs="{'invisible':[('state','in',['unvalidated'])]}"/>
+                        </group>
+                	</group>
+                </form>
+            </field>
+        </record>
+
+        <record id="publisher_warranty_contract_search_view" model="ir.ui.view">
+            <field name="name">publisher_warranty.contract.search</field>
+            <field name="model">publisher_warranty.contract</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Publisher Warranty Contract">
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="publisher_warranty_contract_view_calendar" model="ir.ui.view">
+            <field name="name">publisher_warranty.contract.calendar</field>
+            <field name="model">publisher_warranty.contract</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar string="Maintenance Contract" date_start="date_start" color="state">
+                    <field name="name"/>
+                    <field name="state"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="action_publisher_warranty_contract_form" model="ir.actions.act_window">
+            <field name="name">Publisher Warranty Contracts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">publisher_warranty.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="search_view_id" ref="publisher_warranty_contract_search_view"/>
+        </record>
+
+        <menuitem name="Publisher Warranty" id="publisher_warranty"
+            parent="base.menu_administration" groups="base.group_extended"/>
+
+        <menuitem action="action_publisher_warranty_contract_form" id="menu_publisher_warranty_contract" parent="publisher_warranty"/>
+
+
+        <record id="publisher_warranty_contract_add_wizard" model="ir.ui.view">
+            <field name="name">publisher_warranty.contract.add.wizard</field>
+            <field name="model">publisher_warranty.contract.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Add Publisher Warranty Contract" col="2">
+                    <group col="1">
+                        <separator string="Add Publisher Warranty Contract" />
+                        <field name="name" width="250" />
+                    </group>
+                    <group colspan="4">
+                        <button type="object" string="_Cancel" icon="gtk-cancel" special="cancel"/>
+                        <button type="object" string="_Validate" icon="gtk-apply" name="action_validate"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_publisher_warranty_contract_add_wizard" model="ir.actions.act_window">
+            <field name="name">Add Publisher Warranty Contract</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">publisher_warranty.contract.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            action="action_publisher_warranty_contract_add_wizard"
+            id="menu_publisher_warranty_contract_add"
+            parent="publisher_warranty" />
+
+    </data>
+</openerp>
