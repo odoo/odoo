@@ -33,10 +33,12 @@ class sale_order_line(osv.osv):
                 return super(sale_order_line, self)._amount_line(cr, uid, ids, field_name, arg, context)
         return res
     
-    def invoice_line_create(self, cr, uid, ids, context={}):
+    def invoice_line_create(self, cr, uid, ids, context=None):
         new_ids = []
         list_seq = []
-        for line in self.browse(cr, uid, ids, context):
+        if not context:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
             if line.layout_type == 'article':
                 new_ids.append(line.id)
                 list_seq.append(line.sequence)
@@ -78,6 +80,8 @@ class sale_order_line(osv.osv):
         return {}
 
     def create(self, cr, user, vals, context=None):
+        if not context:
+            context = {}
         if vals.has_key('layout_type'):
             if vals['layout_type'] == 'line':
                 vals['name'] = ' '
@@ -88,6 +92,8 @@ class sale_order_line(osv.osv):
         return super(sale_order_line, self).create(cr, user, vals, context)
 
     def write(self, cr, user, ids, vals, context=None):
+        if not context:
+            context = {}
         if vals.has_key('layout_type'):
             if vals['layout_type'] == 'line':
                 vals['name'] = ' '
@@ -96,9 +102,11 @@ class sale_order_line(osv.osv):
         return super(sale_order_line, self).write(cr, user, ids, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
+        if not context:
+            context = {}
         if default is None:
             default = {}
-        default['layout_type'] = self.browse(cr, uid, id).layout_type
+        default['layout_type'] = self.browse(cr, uid, id, context=context).layout_type
         return super(sale_order_line, self).copy(cr, uid, id, default, context)
 
     _order = "order_id, sequence asc"

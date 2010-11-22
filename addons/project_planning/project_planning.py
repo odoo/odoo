@@ -82,7 +82,9 @@ class report_account_analytic_planning(osv.osv):
 
     def _get_total_planned(self, cr, uid, ids, name, args, context=None):
         result = {}
-        for plan in self.browse(cr, uid, ids, context):
+        if not context:
+            context = {}
+        for plan in self.browse(cr, uid, ids, context=context):
             plan_hrs=0.0
             for p in plan.planning_user_ids:
                 if not p.plan_open : p.plan_open = 0.0
@@ -93,7 +95,9 @@ class report_account_analytic_planning(osv.osv):
 
     def _get_total_free(self, cr, uid, ids, name, args, context=None):
         result = {}
-        for plan in self.browse(cr, uid, ids, context):
+        if not context:
+            context = {}
+        for plan in self.browse(cr, uid, ids, context=context):
             total_free = 0.0
             for p in plan.planning_user_ids:
                 if  p.free:
@@ -186,7 +190,7 @@ class report_account_analytic_planning_line(osv.osv):
             context = {}
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['user_id', 'planning_id', 'note'], context)
+        reads = self.read(cr, uid, ids, ['user_id', 'planning_id', 'note'], context=context)
         res = []
         for record in reads:
             name = '['+record['planning_id'][1]

@@ -35,6 +35,8 @@ class pos_receipt(osv.osv_memory):
         @param context: A standard dictionary
         @return: New arch of view with new columns.
         """
+        if not context:
+            context = {}
         order_lst = self. pool.get('pos.order').browse(cr, uid, context['active_id'], context=context)
 
     def print_report(self, cr, uid, ids, context=None):
@@ -46,6 +48,8 @@ class pos_receipt(osv.osv_memory):
         @param context: A standard dictionary
         @return : retrun report
         """
+        if not context:
+            context = {}
         datas = {'ids': context.get('active_ids', [])}
         return {
             'type': 'ir.actions.report.xml',

@@ -35,7 +35,7 @@ class stock_partial_picking(osv.osv_memory):
         pick_obj = self.pool.get('stock.picking')
         if not context:
             context={}
-        for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
+        for pick in pick_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             need_product_cost = (pick.type == 'in')
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):
@@ -157,14 +157,15 @@ class stock_partial_picking(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which of fields with values.
         """
-
+        if not context:
+            context = {}
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         pick_obj = self.pool.get('stock.picking')
         if not context:
             context={}
         if 'date' in fields:
             res.update({'date': time.strftime('%Y-%m-%d %H:%M:%S')})
-        for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
+        for pick in pick_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             need_product_cost = (pick.type == 'in')
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):
@@ -188,7 +189,7 @@ class stock_partial_picking(osv.osv_memory):
                         res['move%s_product_currency'%(m.id)] = currency
         return res
 
-    def do_partial(self, cr, uid, ids, context):
+    def do_partial(self, cr, uid, ids, context=None):
         """ Makes partial moves and pickings done.
         @param self: The object pointer.
         @param cr: A database cursor
@@ -199,11 +200,11 @@ class stock_partial_picking(osv.osv_memory):
         """
         pick_obj = self.pool.get('stock.picking')
         picking_ids = context.get('active_ids', False)
-        partial = self.browse(cr, uid, ids[0], context)
+        partial = self.browse(cr, uid, ids[0], context=context)
         partial_datas = {
             'delivery_date' : partial.date
         }
-        for pick in pick_obj.browse(cr, uid, picking_ids):
+        for pick in pick_obj.browse(cr, uid, picking_ids, context=context):
             need_product_cost = (pick.type == 'in')
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):

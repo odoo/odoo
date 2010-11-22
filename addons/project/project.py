@@ -52,6 +52,8 @@ class project(osv.osv):
     _inherits = {'account.analytic.account': "analytic_account_id"}
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        if not context:
+            context = {}
         if user == 1:
             return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
         if context and context.has_key('user_prefence') and context['user_prefence']:
@@ -65,6 +67,8 @@ class project(osv.osv):
 
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         res = {}
+        if not context:
+            context = {}
         for m in self.browse(cr, uid, ids, context=context):
             res[m.id] = (m.parent_id and (m.parent_id.name + '/') or '') + m.name
         return res
@@ -73,6 +77,8 @@ class project(osv.osv):
         partner_obj = self.pool.get('res.partner')
         if not part:
             return {'value':{'contact_id': False, 'pricelist_id': False}}
+        if not context:
+            context = {}
         addr = partner_obj.address_get(cr, uid, [part], ['contact'])
         pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
         pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
@@ -83,6 +89,8 @@ class project(osv.osv):
         progress = {}
         if not ids:
             return res
+        if not context:
+            context = {}
         cr.execute('''SELECT
                 project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
             FROM
@@ -167,22 +175,28 @@ class project(osv.osv):
     }
 
     # TODO: Why not using a SQL contraints ?
-    def _check_dates(self, cr, uid, ids):
-         for leave in self.read(cr, uid, ids, ['date_start', 'date']):
+    def _check_dates(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for leave in self.read(cr, uid, ids, ['date_start', 'date'], context=context):
              if leave['date_start'] and leave['date']:
                  if leave['date_start'] > leave['date']:
                      return False
-         return True
+        return True
 
     _constraints = [
         (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
     ]
 
     def set_template(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         res = self.setActive(cr, uid, ids, value=False, context=context)
         return res
 
     def set_done(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         task_obj = self.pool.get('project.task')
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', 'not in', ('cancelled', 'done'))])
         task_obj.write(cr, uid, task_ids, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
@@ -193,6 +207,8 @@ class project(osv.osv):
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         task_obj = self.pool.get('project.task')
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', '!=', 'done')])
         task_obj.write(cr, uid, task_ids, {'state': 'cancelled', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
@@ -200,14 +216,20 @@ class project(osv.osv):
         return True
 
     def set_pending(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         return True
 
     def reset_project(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         res = self.setActive(cr, uid, ids, value=True, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The project '%s' has been opened.") % name
@@ -307,6 +329,8 @@ class task(osv.osv):
     _date_name = "date_start"
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        if not context:
+            context = {}
         obj_project = self.pool.get('project.project')
         for domain in args:
             if domain[0] == 'project_id' and (not isinstance(domain[2], str)):
@@ -325,6 +349,8 @@ class task(osv.osv):
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
         project_obj = self.pool.get('project.project')
         res = {}
+        if not context:
+            context = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
         for task in self.browse(cr, uid, ids, context=context):
@@ -355,6 +381,8 @@ class task(osv.osv):
 
     def copy_data(self, cr, uid, id, default={}, context=None):
         default = default or {}
+        if not context:
+            context = {}
         default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
         if not default.get('remaining_hours', False):
             default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
@@ -365,6 +393,8 @@ class task(osv.osv):
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     def _check_dates(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         task = self.read(cr, uid, ids[0], ['date_start', 'date_end'])
         if task['date_start'] and task['date_end']:
              if task['date_start'] > task['date_end']:
@@ -373,6 +403,8 @@ class task(osv.osv):
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
+        if not context:
+            context = {}
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = True
             if task.project_id:
@@ -450,8 +482,10 @@ class task(osv.osv):
 
     _order = "sequence, priority, date_start, id"
 
-    def _check_recursion(self, cr, uid, ids):
-        obj_task = self.browse(cr, uid, ids[0])
+    def _check_recursion(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        obj_task = self.browse(cr, uid, ids[0], context=context)
         parent_ids = [x.id for x in obj_task.parent_ids]
         children_ids = [x.id for x in obj_task.child_ids]
 
@@ -483,10 +517,12 @@ class task(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
+        if not context:
+            context = {}
 
         # read uom as admin to avoid access rights issues, e.g. for portal/share users,
         # this should be safe (no context passed to avoid side-effects)
-        obj_tm = users_obj.browse(cr, 1, uid).company_id.project_time_mode_id
+        obj_tm = users_obj.browse(cr, 1, uid, context=context).company_id.project_time_mode_id
         tm = obj_tm and obj_tm.name or 'Hours'
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
@@ -516,6 +552,8 @@ class task(osv.osv):
         # This action open wizard to send email to partner or project manager after close task.
         project_id = len(ids) and ids[0] or False
         if not project_id: return False
+        if not context:
+            context = {}
         task = self.browse(cr, uid, project_id, context=context)
         project = task.project_id
         res = self.do_close(cr, uid, [project_id], context=context)
@@ -641,17 +679,17 @@ class task(osv.osv):
             'description': delegate_data['new_task_description'] or '',
             'child_ids': [],
             'work_ids': []
-        }, context)
+        }, context=context)
         newname = delegate_data['prefix'] or ''
         self.write(cr, uid, [task.id], {
             'remaining_hours': delegate_data['planned_hours_me'],
             'planned_hours': delegate_data['planned_hours_me'] + (task.effective_hours or 0.0),
             'name': newname,
-        }, context)
+        }, context=context)
         if delegate_data['state'] == 'pending':
             self.do_pending(cr, uid, [task.id], context)
         else:
-            self.do_close(cr, uid, [task.id], context)
+            self.do_close(cr, uid, [task.id], context=context)
         user_pool = self.pool.get('res.users')
         delegate_user = user_pool.browse(cr, uid, delegate_data['user_id'], context=context)
         message = _("The task '%s' has been delegated to %s.") % (delegate_data['name'], delegate_user.name)
@@ -714,11 +752,13 @@ class project_work(osv.osv):
             cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
-    def write(self, cr, uid, ids,vals,context={}):
+    def write(self, cr, uid, ids, vals, context=None):
+        if not context:
+            context = {}
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'hours' in vals:
-            for work in self.browse(cr, uid, ids, context):
+            for work in self.browse(cr, uid, ids, context=context):
                 cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours',0.0), work.hours, work.task_id.id))
         return super(project_work,self).write(cr, uid, ids, vals, context)
 

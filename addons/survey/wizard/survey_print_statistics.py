@@ -42,6 +42,8 @@ class survey_print_statistics(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return: Dictionary value for created survey statistics report
         """
+        if not context:
+            context = {}
         datas = {'ids': context.get('active_ids', [])}
         res = self.read(cr, uid, ids, ['survey_ids'], context)
         res = res and res[0] or {}

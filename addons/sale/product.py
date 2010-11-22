@@ -33,8 +33,8 @@ class product_product(osv.osv):
             pricelist_ids = pricelist_obj.search(cr, uid, [('type', '=', 'purchase')])
         else:
             pricelist_ids = pricelist_obj.search(cr, uid, [('type', '=', 'sale')])
-        pricelist_browse = pricelist_obj.browse(cr, uid, pricelist_ids)
-        for product in self.browse(cr, uid, ids, context):
+        pricelist_browse = pricelist_obj.browse(cr, uid, pricelist_ids, context=context)
+        for product in self.browse(cr, uid, ids, context=context):
             result[product.id] = ""
             for pricelist in pricelist_browse:
                 for version in pricelist.version_id:

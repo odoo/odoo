@@ -56,6 +56,8 @@ class survey_print(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for print survey form.
         """
+        if not context:
+            context = {}
 
         datas = {'ids' : self.read(cr, uid, ids, [], context)[0]['survey_ids']}
         res = self.read(cr, uid, ids, ['survey_title', 'orientation', 'paper_size',\

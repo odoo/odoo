@@ -28,6 +28,8 @@ class stock_move(osv.osv):
     }
 
     def _create_chained_picking(self, cr, uid, pick_name, picking, ptype, move, context=None):
+        if not context:
+            context = {}
         res = super(stock_move, self)._create_chained_picking(cr, uid, pick_name, picking, ptype, move, context=context)
         if picking.sale_id:
             self.pool.get('stock.picking').write(cr, uid, [res], {'sale_id': picking.sale_id.id})
@@ -181,9 +183,11 @@ class stock_picking(osv.osv):
                     })
         return result
 
-    def action_cancel(self, cr, uid, ids, context={}):
+    def action_cancel(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         res = super(stock_picking, self).action_cancel(cr, uid, ids, context=context)
-        for pick in self.browse(cr, uid, ids, context):
+        for pick in self.browse(cr, uid, ids, context=context):
             call_ship_end = True
             if pick.sale_id:
                 for picks in pick.sale_id.picking_ids:
@@ -191,7 +195,7 @@ class stock_picking(osv.osv):
                         call_ship_end = False
                         break
                 if call_ship_end:
-                    self.pool.get('sale.order').action_ship_end(cr, uid, [pick.sale_id.id], context)
+                    self.pool.get('sale.order').action_ship_end(cr, uid, [pick.sale_id.id], context=context)
         return res
 
 stock_picking()

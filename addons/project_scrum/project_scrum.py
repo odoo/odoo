@@ -352,7 +352,7 @@ class project_scrum_meeting(osv.osv):
         if context is None:
             context = {}
         email_from = tools.config.get('email_from', False)
-        meeting_id = self.browse(cr,uid,ids)[0]
+        meeting_id = self.browse(cr, uid, ids, context=context)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         user_email = email_from or user.address_id.email  or email_from
         body = _('Hello ') + meeting_id.sprint_id.scrum_master_id.name + ",\n" + " \n" +_('I am sending you Daily Meeting Details of date')+ ' %s ' % (meeting_id.date)+ _('for the Sprint')+ ' %s\n' % (meeting_id.sprint_id.name)

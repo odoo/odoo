@@ -30,10 +30,10 @@ class stock_replacement(osv.osv_memory):
     _name = "stock.replacement"
     _description = "Stock Replacement"
 
-    def get_composant(self, cr, uid, ids, context = {}):
+    def get_composant(self, cr, uid, ids, context=None):
         return {}
 
-    def replace_composant(self, cr, uid, ids, context = {}):
+    def replace_composant(self, cr, uid, ids, context=None):
         """ To open a new wizard that acknowledge, a replacement task
         @return: It returns the replacement acknowledgement form
         """

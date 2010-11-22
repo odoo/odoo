@@ -44,7 +44,7 @@ class stock_inventory_merge(osv.osv_memory):
             _('Please select multiple physical inventories to merge in the list view.'))
         return res    
         
-    def do_merge(self, cr, uid, ids, context):
+    def do_merge(self, cr, uid, ids, context=None):
         """ To merge selected Inventories.
         @param self: The object pointer.
         @param cr: A database cursor
@@ -56,6 +56,8 @@ class stock_inventory_merge(osv.osv_memory):
         invent_obj = self.pool.get('stock.inventory')
         invent_line_obj = self.pool.get('stock.inventory.line')
         invent_lines = {}
+        if not context:
+            context = {}
         for inventory in invent_obj.browse(cr, uid, context['active_ids'], context=context):
             if inventory.state == "done":
                 raise osv.except_osv(_('Warning'),

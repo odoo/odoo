@@ -35,7 +35,7 @@ class procurement_compute_all(osv.osv_memory):
          'automatic': lambda *a: False,
     }
 
-    def _procure_calculation_all(self, cr, uid, ids, context):
+    def _procure_calculation_all(self, cr, uid, ids, context=None):
         """
         @param self: The object pointer.
         @param cr: A database cursor
@@ -44,12 +44,14 @@ class procurement_compute_all(osv.osv_memory):
         @param context: A standard dictionary
         """
         proc_obj = self.pool.get('procurement.order')
-        for proc in self.browse(cr, uid, ids):
+        if not context:
+            context = {}
+        for proc in self.browse(cr, uid, ids, context=context):
             proc_obj.run_scheduler(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname,\
                     context=context)
         return {}
 
-    def procure_calculation(self, cr, uid, ids, context):
+    def procure_calculation(self, cr, uid, ids, context=None):
         """
         @param self: The object pointer.
         @param cr: A database cursor
@@ -57,6 +59,8 @@ class procurement_compute_all(osv.osv_memory):
         @param ids: List of IDs selected
         @param context: A standard dictionary
         """
+        if not context:
+            context = {}
         threaded_calculation = threading.Thread(target=self._procure_calculation_all, args=(cr, uid, ids, context))
         threaded_calculation.start()
         return {}

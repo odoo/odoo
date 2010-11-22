@@ -59,6 +59,8 @@ class ReportXML(osv.osv):
 
     def unlink(self, cursor, user, ids, context=None):
         """Delete report and unregister it"""
+        if not context:
+            context = {}
         trans_obj = self.pool.get('ir.translation')
         trans_ids = trans_obj.search(
             cursor,
@@ -81,6 +83,8 @@ class ReportXML(osv.osv):
 
     def create(self, cursor, user, vals, context=None):
         "Create report and register it"
+        if not context:
+            context = {}
         res = super(ReportXML, self).create(cursor, user, vals, context)
         if vals.get('report_type','') == 'webkit':
             # I really look forward to virtual functions :S
@@ -95,6 +99,8 @@ class ReportXML(osv.osv):
         "Edit report and manage it registration"
         if isinstance(ids, (int, long)):
             ids = [ids,]
+        if not context:
+            context = {}
         for rep in self.browse(cr, uid, ids, context=context):
             if rep.report_type != 'webkit':
                 continue

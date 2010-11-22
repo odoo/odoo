@@ -31,6 +31,8 @@ class stock_period_createlines(osv.osv_memory):
     _name = "stock.period.createlines"
 
     def _get_new_period_start(self, cr, uid, context=None):
+        if not context:
+            context = {}
         cr.execute("select max(date_stop) from stock_period")
         result = cr.fetchone()
         last_date = result and result[0] or False
@@ -53,6 +55,8 @@ class stock_period_createlines(osv.osv_memory):
     }
     
     def create_stock_periods(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         interval = context.get('interval',0)
         name = context.get('name','Daily')
         period_obj = self.pool.get('stock.period')

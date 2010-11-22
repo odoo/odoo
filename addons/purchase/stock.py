@@ -35,6 +35,8 @@ class stock_move(osv.osv):
         on the purchase order in case the valuation data was not directly specified during picking
         confirmation.
         """
+        if not context:
+            context = {}
         reference_amount, reference_currency_id = super(stock_move, self)._get_reference_accounting_values_for_valuation(cr, uid, move, context=context)
         if move.product_id.cost_method != 'average' or not move.price_unit:
             # no average price costing or cost not specified during picking validation, we will 
@@ -118,9 +120,11 @@ class stock_partial_picking(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which of fields with values.
         """
+        if not context:
+            context = {}
         pick_obj = self.pool.get('stock.picking')
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
-        for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
+        for pick in pick_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             has_product_cost = (pick.type == 'in' and pick.purchase_id)
             for m in pick.move_lines:
                 if has_product_cost and m.product_id.cost_method == 'average' and m.purchase_line_id:
@@ -142,9 +146,11 @@ class stock_partial_move(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which of fields with values.
         """
+        if not context:
+            context = {}
         res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
         move_obj = self.pool.get('stock.move')
-        for m in move_obj.browse(cr, uid, context.get('active_ids', [])):
+        for m in move_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if m.picking_id.type == 'in' and m.product_id.cost_method == 'average' \
                 and m.purchase_line_id and m.picking_id.purchase_id:
                     # We use the original PO unit purchase price as the basis for the cost, expressed

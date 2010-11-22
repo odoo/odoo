@@ -237,6 +237,8 @@ class purchase_order(osv.osv):
     _order = "name desc"
 
     def unlink(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         purchase_orders = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for s in purchase_orders:
@@ -604,8 +606,10 @@ class purchase_order(osv.osv):
 purchase_order()
 
 class purchase_order_line(osv.osv):
-    def _amount_line(self, cr, uid, ids, prop, arg,context):
+    def _amount_line(self, cr, uid, ids, prop, arg, context=None):
         res = {}
+        if not context:
+            context = {}
         cur_obj=self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids, context=context):
@@ -649,9 +653,11 @@ class purchase_order_line(osv.osv):
     _name = 'purchase.order.line'
     _description = 'Purchase Order Line'
 
-    def copy_data(self, cr, uid, id, default=None,context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
+        if not context:
+            context = {}
         default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
@@ -729,6 +735,8 @@ class purchase_order_line(osv.osv):
         return res
 
     def action_confirm(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
         return True
 
@@ -744,6 +752,8 @@ class procurement_order(osv.osv):
         """ This is action which call from workflow to assign purchase order to procurements
         @return: True
         """
+        if not context:
+            context = {}
         res = self.make_po(cr, uid, ids, context=context)
         res = res.values()
         return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
@@ -753,6 +763,8 @@ class procurement_order(osv.osv):
         @return: New created Purchase Orders procurement wise
         """
         res = {}
+        if not context:
+            context = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
         partner_obj = self.pool.get('res.partner')
         uom_obj = self.pool.get('product.uom')
@@ -760,7 +772,7 @@ class procurement_order(osv.osv):
         prod_obj = self.pool.get('product.product')
         acc_pos_obj = self.pool.get('account.fiscal.position')
         po_obj = self.pool.get('purchase.order')
-        for procurement in self.browse(cr, uid, ids):
+        for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
             seller_qty = procurement.product_id.seller_qty

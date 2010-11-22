@@ -54,6 +54,8 @@ class stock_production_lot(osv.osv):
     }
     # Assign dates according to products data
     def create(self, cr, uid, vals, context=None):
+        if not context:
+            context = {}
         newid = super(stock_production_lot, self).create(cr, uid, vals, context=context)
         obj = self.browse(cr, uid, newid, context=context)
         towrite = []

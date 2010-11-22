@@ -230,7 +230,9 @@ class project_issue(crm.crm_case, osv.osv):
             }),
     }
 
-    def _get_project(self, cr, uid, context):
+    def _get_project(self, cr, uid, context=None):
+        if not context:
+            context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.context_project_id:
             return user.context_project_id.id
@@ -300,6 +302,8 @@ class project_issue(crm.crm_case, osv.osv):
 
 
     def _convert(self, cr, uid, ids, xml_id, context=None):
+        if not context:
+            context = {}
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)
         categ_id = False
@@ -310,9 +314,13 @@ class project_issue(crm.crm_case, osv.osv):
         return True
 
     def convert_to_feature(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         return self._convert(cr, uid, ids, 'feature_request_categ', context=context)
 
     def convert_to_bug(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
     def next_type(self, cr, uid, ids, *args):
@@ -344,7 +352,7 @@ class project_issue(crm.crm_case, osv.osv):
         result = {}
         if not task_id:
             return {'value':{}}
-        task = self.pool.get('project.task').browse(cr, uid, task_id, context)
+        task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
         return {'value':{'assigned_to': task.user_id.id,}}
 
     def case_escalate(self, cr, uid, ids, *args):
@@ -370,7 +378,7 @@ class project_issue(crm.crm_case, osv.osv):
         self._history(cr, uid, cases, _('Escalate'))
         return True
 
-    def message_new(self, cr, uid, msg, context):
+    def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
 
@@ -378,7 +386,8 @@ class project_issue(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-
+        if not context:
+            context = {}
         mailgate_pool = self.pool.get('email.server.tools')
 
         subject = msg.get('subject') or _('No Title')
@@ -400,7 +409,7 @@ class project_issue(crm.crm_case, osv.osv):
         if res:
             vals.update(res)
         context.update({'state_to' : 'draft'})
-        res = self.create(cr, uid, vals, context)
+        res = self.create(cr, uid, vals, context=context)
         self.convert_to_bug(cr, uid, [res], context=context)
 
         attachents = msg.get('attachments', [])
@@ -487,6 +496,8 @@ class project(osv.osv):
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
+         if not context:
+            context = {}
          project_obj = self.browse(cr, uid, ids[0], context=context)
          if project_obj.project_escalation_id:
              if project_obj.project_escalation_id.id == project_obj.id:

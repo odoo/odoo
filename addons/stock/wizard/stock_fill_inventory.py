@@ -67,7 +67,7 @@ class stock_fill_inventory(osv.osv_memory):
             ids = ids[0]
         else:
              return {}    
-        fill_inventory = self.browse(cr, uid, ids)
+        fill_inventory = self.browse(cr, uid, ids, context=context)
         res = {}
         res_location = {}
         if fill_inventory.recursive :
@@ -86,7 +86,7 @@ class stock_fill_inventory(osv.osv_memory):
         for location in res_location.keys():
             res = res_location[location]
             for product_id in res.keys():
-                prod = product_obj.browse(cr, uid, [product_id])[0]
+                prod = product_obj.browse(cr, uid, [product_id], context=context)[0]
                 uom = prod.uom_id.id
                 context.update(uom=uom, compute_child=False)
                 amount = stock_location_obj._product_get(cr, uid,

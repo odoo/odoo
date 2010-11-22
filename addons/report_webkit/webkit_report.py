@@ -320,6 +320,8 @@ class WebKitParser(report_sxw):
     def create(self, cursor, uid, ids, data, context=None):
         """We override the create function in order to handle generator
            Code taken from report openoffice. Thanks guys :) """
+        if not context:
+            context = {}
         pool = pooler.get_pool(cursor.dbname)
         ir_obj = pool.get('ir.actions.report.xml')
         report_xml_ids = ir_obj.search(cursor, uid,

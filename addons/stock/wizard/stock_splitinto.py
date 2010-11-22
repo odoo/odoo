@@ -34,12 +34,14 @@ class stock_split_into(osv.osv_memory):
     }
 
     def split(self, cr, uid, data, context=None):
+        if not context:
+            context = {}
         rec_id = context and context.get('active_ids', False)
         move_obj = self.pool.get('stock.move')
         track_obj = self.pool.get('stock.tracking')
 
-        quantity = self.browse(cr, uid, data[0], context).quantity or 0.0
-        for move in move_obj.browse(cr, uid, rec_id):
+        quantity = self.browse(cr, uid, data[0], context=context).quantity or 0.0
+        for move in move_obj.browse(cr, uid, rec_id, context=context):
             quantity_rest = move.product_qty - quantity
             #if move.tracking_id :
             #    raise osv.except_osv(_('Error!'),  _('The current move line is already assigned to a pack, please remove it first if you really want to change it ' \

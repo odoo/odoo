@@ -40,6 +40,8 @@ class subscription_document(osv.osv):
     }
     
     def write(self, cr, uid, ids, vals, context=None):
+        if not context:
+            context = {}
         if 'model' in vals:
             raise osv.except_osv(_('Error !'),_('You cannot modify the Object linked to the Document Type!\nCreate another Document instead !'))
         return super(subscription_document, self).write(cr, uid, ids, vals, context=context)
@@ -91,7 +93,9 @@ class subscription_subscription(osv.osv):
         'state': lambda *a: 'draft'
     }
 
-    def set_process(self, cr, uid, ids, context={}):
+    def set_process(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         for row in self.read(cr, uid, ids):
             mapping = {'name':'name','interval_number':'interval_number','interval_type':'interval_type','exec_init':'numbercall','date_init':'nextcall'}
             res = {'model':'subscription.subscription', 'args': repr([[row['id']]]), 'function':'model_copy', 'priority':6, 'user_id':row['user_id'] and row['user_id'][0]}
@@ -101,7 +105,9 @@ class subscription_subscription(osv.osv):
             self.write(cr, uid, [row['id']], {'cron_id':id, 'state':'running'})
         return True
 
-    def model_copy(self, cr, uid, ids, context={}):
+    def model_copy(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         for row in self.read(cr, uid, ids):
             if not row.get('cron_id',False):
                 continue
@@ -136,14 +142,18 @@ class subscription_subscription(osv.osv):
             self.write(cr, uid, [row['id']], {'state':state})
         return True
 
-    def set_done(self, cr, uid, ids, context={}):
+    def set_done(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         res = self.read(cr,uid, ids, ['cron_id'])
         ids2 = [x['cron_id'][0] for x in res if x['id']]
         self.pool.get('ir.cron').write(cr, uid, ids2, {'active':False})
         self.write(cr, uid, ids, {'state':'done'})
         return True
 
-    def set_draft(self, cr, uid, ids, context={}):
+    def set_draft(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         self.write(cr, uid, ids, {'state':'draft'})
         return True
 subscription_subscription()

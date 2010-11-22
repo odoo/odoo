@@ -26,15 +26,17 @@ class procurement_compute(osv.osv_memory):
     _name = 'procurement.order.compute'
     _description = 'Compute Procurement'
 
-    def _procure_calculation_procure(self, cr, uid, ids, context):
+    def _procure_calculation_procure(self, cr, uid, ids, context=None):
         try:
+            if not context:
+                context = {}
             proc_obj = self.pool.get('procurement.order')
             proc_obj._procure_confirm(cr, uid, use_new_cursor=cr.dbname, context=context)
         finally:
             pass
         return {}
 
-    def procure_calculation(self, cr, uid, ids, context):
+    def procure_calculation(self, cr, uid, ids, context=None):
         """
          @param self: The object pointer.
          @param cr: A database cursor
@@ -42,6 +44,8 @@ class procurement_compute(osv.osv_memory):
          @param ids: List of IDs selected
          @param context: A standard dictionary
         """
+        if not context:
+            context = {}
         threaded_calculation = threading.Thread(target=self._procure_calculation_procure, args=(cr, uid, ids, context))
         threaded_calculation.start()
         return {}

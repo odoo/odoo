@@ -60,6 +60,8 @@ class pos_order(osv.osv):
     _order = "date_order, create_date desc"
 
     def unlink(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         for rec in self.browse(cr, uid, ids, context=context):
             for rec_statement in rec.statement_ids:
                 if (rec_statement.statement_id and rec_statement.statement_id.state == 'confirm') or rec.state == 'done':
@@ -70,6 +72,8 @@ class pos_order(osv.osv):
         """ Changed price list on_change of partner_id"""
         if not part:
             return {'value': {}}
+        if not context:
+            context = {}
         pricelist = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_product_pricelist.id
         return {'value': {'pricelist_id': pricelist}}
 
@@ -77,6 +81,8 @@ class pos_order(osv.osv):
         """ Calculates amount_tax of order line
         @param field_names: Names of fields.
         @return: Dictionary of values """
+        if not context:
+            context = {}
         cr.execute("""
             SELECT
                 p.id,
@@ -122,14 +128,12 @@ class pos_order(osv.osv):
                 res[order.id] = val
         return res
 
-    def _get_date_payment(self, cr, uid, ids, context=None, *a):
+    def _get_date_payment(self, cr, uid, ids, context, *a):
         """ Find  Validation Date
         @return: Dictionary of values """
         res = {}
         val = None
-        if not context:
-            context = {}
-        for order in self.browse(cr, uid, ids, context=context):
+        for order in self.browse(cr, uid, ids):
             cr.execute("SELECT date_validation FROM pos_order WHERE id = %s", (order.id,))
             date_p = cr.fetchone()
             date_p = date_p and date_p[0] or None
@@ -199,6 +203,8 @@ class pos_order(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
+        if not context:
+            context = {}
         default.update({
             'state': 'draft',
             'partner_id': False,
@@ -293,6 +299,8 @@ class pos_order(osv.osv):
         @param name: Names of fields.
         @return: pricelist ID
         """
+        if not context:
+            context = {}
         pricelist = self.pool.get('product.pricelist').search(cr, uid, [('name', '=', 'Public Pricelist')], context=context)
         return pricelist and pricelist[0] or False
 
@@ -341,6 +349,8 @@ class pos_order(osv.osv):
         """ Test all amount is paid for this order
         @return: True
         """
+        if not context:
+            context = {}
         for order in self.browse(cr, uid, ids, context=context):
             if order.lines and not order.amount_total:
                 return True
@@ -506,6 +516,8 @@ class pos_order(osv.osv):
         """ Changes order state to cancel
         @return: True
         """
+        if not context:
+            context = {}
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         self.cancel_picking(cr, uid, ids, context=context)
         return True
@@ -516,6 +528,8 @@ class pos_order(osv.osv):
         statement_line_obj = self.pool.get('account.bank.statement.line')
         prod_obj = self.pool.get('product.product')
         property_obj = self.pool.get('ir.property')
+        if not context:
+            context = {}
         curr_c = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
         curr_company = curr_c.id
         order = self.browse(cr, uid, order_id, context=context)
@@ -678,6 +692,8 @@ class pos_order(osv.osv):
         account_tax_obj = self.pool.get('account.tax')
         res_obj=self.pool.get('res.users')
         property_obj=self.pool.get('ir.property')
+        if not context:
+            context = {}
         period = account_period_obj.find(cr, uid, context=context)[0]
 
         for order in self.browse(cr, uid, ids, context=context):
@@ -904,10 +920,14 @@ class pos_order(osv.osv):
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
 
     def action_done(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         for order in self.browse(cr, uid, ids, context=context):
             if not order.journal_entry:
                 self.create_account_move(cr, uid, ids, context=None)
@@ -936,11 +956,9 @@ account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
-    def _get_statement_journal(self, cr, uid, ids, context=None, *a):
+    def _get_statement_journal(self, cr, uid, ids, context, *a):
         res = {}
-        if not context:
-            context = {}
-        for line in self.browse(cr, uid, ids, context=context):
+        for line in self.browse(cr, uid, ids):
             res[line.id] = line.statement_id and line.statement_id.journal_id and line.statement_id.journal_id.name or None
         return res
     _columns= {
@@ -1137,6 +1155,8 @@ class pos_order_line(osv.osv):
             return {'value': {'notice': 'No Discount', 'price_ded': price * discount * 0.01 or 0.0}}
 
     def onchange_qty(self, cr, uid, ids, discount, qty, price, context=None):
+        if not context:
+            context = {}
         subtotal = qty * price
         if discount:
             subtotal = subtotal - (subtotal * discount / 100)

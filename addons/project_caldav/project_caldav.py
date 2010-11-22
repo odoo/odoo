@@ -82,6 +82,8 @@ class project_task(osv.osv):
 
 
     def import_cal(self, cr, uid, data, data_id=None, context=None):
+        if not context:
+            context = {}
         todo_obj = self.pool.get('basic.calendar.todo')
         vals = todo_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
@@ -91,7 +93,7 @@ class project_task(osv.osv):
             context = {}
         ids = []
         for val in vals:
-            obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+            obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.project_time_mode_id
             if not val.get('planned_hours', False):
                 # 'Computes duration' in days
                 plan = 0.0

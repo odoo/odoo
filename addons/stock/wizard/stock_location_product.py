@@ -29,7 +29,7 @@ class stock_location_product(osv.osv_memory):
         'to_date': fields.datetime('To'), 
     }
 
-    def action_open_window(self, cr, uid, ids, context):
+    def action_open_window(self, cr, uid, ids, context=None):
         """ To open location wise product information specific to given duration
          @param self: The object pointer.
          @param cr: A database cursor

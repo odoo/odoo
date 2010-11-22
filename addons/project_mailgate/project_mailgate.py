@@ -38,6 +38,8 @@ class project_tasks(osv.osv):
 #        @param cr: the current row, from the database cursor,
 #        @param uid: the current user’s ID for security checks
 #        """
+        if not context:
+            context = {}
         mailgate_obj = self.pool.get('email.server.tools')
         subject = msg.get('subject')
         body = msg.get('body')
@@ -95,11 +97,13 @@ class project_tasks(osv.osv):
 
     def message_followers(self, cr, uid, ids, context=None):
         res = []
+        if not context:
+            context = {}
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
             select = ids
-        for task in self.browse(cr, uid, select):
+        for task in self.browse(cr, uid, select, context=context):
             user_email = (task.user_id and task.user_id.address_id and task.user_id.address_id.email) or False
             res += [(user_email, False, False, task.priority)]
         if isinstance(ids, (str, int, long)):

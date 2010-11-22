@@ -192,6 +192,8 @@ class mrp_repair(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
+        if not context:
+            context = {}
         default.update({
             'state':'draft',
             'repaired':False,

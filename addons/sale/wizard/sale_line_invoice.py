@@ -26,7 +26,7 @@ import netsvc
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
     _description = "Sale OrderLine Make_invoice"
-    def make_invoices(self, cr, uid, ids, context):
+    def make_invoices(self, cr, uid, ids, context=None):
         """
              To make invoices.
 
@@ -80,7 +80,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
         sales_order_line_obj = self.pool.get('sale.order.line')
         sales_order_obj = self.pool.get('sale.order')
         wf_service = netsvc.LocalService('workflow')
-        for line in sales_order_line_obj.browse(cr, uid, context['active_ids']):
+        for line in sales_order_line_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
                 if not line.order_id.id in invoices:
                     invoices[line.order_id.id] = []
@@ -98,7 +98,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                     (order_id,invoice_id) values (%s,%s)', (order.id, res))
 
             flag = True
-            data_sale = sales_order_obj.browse(cr, uid, line.order_id.id)
+            data_sale = sales_order_obj.browse(cr, uid, line.order_id.id, context=context)
             for line in data_sale.order_line:
                 if not line.invoiced:
                     flag = False

@@ -52,7 +52,9 @@ class process_process(osv.osv):
         'active' : lambda *a: True,
     }
 
-    def search_by_model(self, cr, uid, res_model, context):
+    def search_by_model(self, cr, uid, res_model, context=None):
+        if not context:
+            context = {}
         pool = pooler.get_pool(cr.dbname)
         model_ids = (res_model or None) and pool.get('ir.model').search(cr, uid, [('model', '=', res_model)])
 
@@ -62,7 +64,7 @@ class process_process(osv.osv):
         # search all processes
         res = pool.get('process.process').search(cr, uid, domain)
         if res:
-            res = pool.get('process.process').browse(cr, uid, res, context)
+            res = pool.get('process.process').browse(cr, uid, res, context=context)
             for process in res:
                 result.append((process.id, process.name))
             return result
@@ -70,18 +72,20 @@ class process_process(osv.osv):
         # else search process nodes
         res = pool.get('process.node').search(cr, uid, domain)
         if res:
-            res = pool.get('process.node').browse(cr, uid, res, context)
+            res = pool.get('process.node').browse(cr, uid, res, context=context)
             for node in res:
                 if (node.process_id.id, node.process_id.name) not in result:
                     result.append((node.process_id.id, node.process_id.name))
 
         return result
 
-    def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
+    def graph_get(self, cr, uid, id, res_model, res_id, scale, context=None):
+        if not context:
+            context = {}
 
         pool = pooler.get_pool(cr.dbname)
 
-        process = pool.get('process.process').browse(cr, uid, [id], context)[0]
+        process = pool.get('process.process').browse(cr, uid, [id], context=context)[0]
 
         name = process.name
         resource = None
@@ -95,13 +99,13 @@ class process_process(osv.osv):
             states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
 
         if res_id:
-            current_object = pool.get(res_model).browse(cr, uid, [res_id], context)[0]
-            current_user = pool.get('res.users').browse(cr, uid, [uid], context)[0]
+            current_object = pool.get(res_model).browse(cr, uid, [res_id], context=context)[0]
+            current_user = pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
             expr_context = Env(current_object, current_user)
             resource = current_object.name
             if 'state' in current_object:
                 state = states.get(current_object.state, 'N/A')
-            perm = pool.get(res_model).perm_read(cr, uid, [res_id], context)[0]
+            perm = pool.get(res_model).perm_read(cr, uid, [res_id], context=context)[0]
 
         notes = process.note or "N/A"
         nodes = {}
@@ -188,7 +192,7 @@ class process_process(osv.osv):
 
             nodes[nid]['res'] = resource = {'id': ref_id, 'model': ref_model}
 
-            refobj = pool.get(ref_model).browse(cr, uid, [ref_id], context)[0]
+            refobj = pool.get(ref_model).browse(cr, uid, [ref_id], context=context)[0]
             fields = pool.get(ref_model).fields_get(cr, uid, context=context)
 
             # check for directory_id from inherited from document module
@@ -251,9 +255,12 @@ class process_process(osv.osv):
 
         if not default:
             default = {}
+        
+        if not context:
+            context = {}
 
         pool = pooler.get_pool(cr.dbname)
-        process = pool.get('process.process').browse(cr, uid, [id], context)[0]
+        process = pool.get('process.process').browse(cr, uid, [id], context=context)[0]
 
         nodes = {}
         transitions = {}
@@ -312,11 +319,13 @@ class process_node(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
+        if not context:
+            context = {}
         default.update({
             'transition_in': [],
             'transition_out': []
         })
-        return super(process_node, self).copy_data(cr, uid, id, default, context)
+        return super(process_node, self).copy_data(cr, uid, id, default, context=context)
 
 process_node()
 
@@ -369,6 +378,9 @@ class process_transition_action(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
+            
+        if not context:
+            context = {}
 
         state = self.pool.get('process.transition.action').browse(cr, uid, [id], context=context)[0].state
         if state:

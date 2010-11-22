@@ -41,6 +41,8 @@ class pos_box_out(osv.osv_memory):
              @return :Return of operation of product
         """
         product_obj = self.pool.get('product.product')
+        if not context:
+            context = {}
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         ids = product_obj.search(cr, uid, ['&', ('expense_pdt', '=', True), '|', ('company_id', '=', company_id), ('company_id', '=', None)], context=context)
         res = product_obj.read(cr, uid, ids, ['id', 'name'], context=context)
@@ -75,6 +77,8 @@ class pos_box_out(osv.osv_memory):
         product_obj = self.pool.get('product.template')
         productp_obj = self.pool.get('product.product')
         res_obj = self.pool.get('res.users')
+        if not context:
+            context = {}
         for data in  self.read(cr, uid, ids, context=context):
             curr_company = res_obj.browse(cr, uid, uid, context=context).company_id.id
             statement_id = statement_obj.search(cr, uid, [('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')], context=context)
