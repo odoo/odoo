@@ -539,37 +539,6 @@ class account_voucher(osv.osv):
         self.write(cr, uid, ids, res)
         return True
 
-    def do_check(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        voucher = self.browse(cr, uid, ids, context=context)[0]
-        debit= credit = 0.0
-        if voucher.line_dr_ids:
-            for line in voucher.line_dr_ids:
-                debit += line.amount_original
-        if voucher.line_cr_ids:
-            for line in voucher.line_cr_ids:
-                credit += line.amount_original
-        if (voucher.amount + debit) != credit:
-            model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'view_account_voucher_pay_writeoff')], context=context)
-            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-            context.update({'voucher_id': ids[0]})
-            return {
-                'name': _('Information addendum'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'account.voucher.pay.writeoff',
-                'views': [(resource_id, 'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'nodestroy': True
-            }
-        else:
-            self.action_move_line_create(cr, uid, ids, context=context)
-            return True
-
     def unlink(self, cr, uid, ids, context=None):
         for t in self.read(cr, uid, ids, ['state'], context=context):
             if t['state'] not in ('draft', 'cancel'):
@@ -767,6 +736,9 @@ class account_voucher(osv.osv):
                 'number': name,
             })
             move_pool.post(cr, uid, [move_id], context={})
+            for rec_ids in rec_list_ids:
+                if len(rec_ids) >= 2:
+                    move_line_pool.reconcile_partial(cr, uid, rec_ids)
         return True
 
     def copy(self, cr, uid, id, default={}, context=None):
