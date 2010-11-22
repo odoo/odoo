@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-16 08:09+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-22 00:53+0000\n"
+"Last-Translator: Thorsten Vocks <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-17 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-11-22 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -37,7 +37,7 @@ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
 msgid "Invoicing"
-msgstr "Rechnungsstellung"
+msgstr "Offene Posten Buchhaltung"
 
 #. module: base_setup
 #: field:base.setup.company,name:0
@@ -48,6 +48,11 @@ msgstr "Unternehmensname"
 #: field:base.setup.company,email:0
 msgid "E-mail"
 msgstr "E-Mail"
+
+#. module: base_setup
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.company,account_no:0
@@ -103,13 +108,10 @@ msgstr ""
 "Zahlungen & Rechnungsausgleich. "
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid ""
-"You can start configuring the system or connect directly to the database as "
-"an administrator."
-msgstr ""
-"Sie können Ihr System jetzt entweder über den Assistenten vorkonfigurieren "
-"oder sofort mit der Arbeit auf dieser Datenbank beginnen."
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
+msgstr "Folgende Benutzer wurden installiert : \n"
 
 #. module: base_setup
 #: field:base.setup.company,progress:0
@@ -158,6 +160,15 @@ msgstr ""
 "Applikationen, wie z.B. Umfragen, Vorschlagswesen etc."
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid ""
+"You can start configuring the system or connect directly to the database as "
+"an administrator."
+msgstr ""
+"Sie können Ihr System jetzt entweder über den Assistenten vorkonfigurieren "
+"oder sofort mit der Arbeit auf dieser Datenbank beginnen."
+
+#. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
 msgstr "Reports & Auswertungen"
@@ -178,14 +189,14 @@ msgid "title"
 msgstr "Bezeichnung"
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
-msgstr "Verwende direkt"
-
-#. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
 msgstr "Knowledge & Dokumente"
+
+#. module: base_setup
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #. module: base_setup
 #: help:base.setup.installer,product_expiry:0
@@ -214,6 +225,11 @@ msgid ""
 msgstr ""
 "Applikation für Ihren Point of Sales mit Schnellerfassung von Verkäufen, "
 "vereinfachter Zahlungserfassung und Warenabgabe, u.a. Anwendungen."
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
+msgstr ""
 
 #. module: base_setup
 #: help:base.setup.installer,hr:0
@@ -261,13 +277,13 @@ msgid ""
 "IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
 msgstr ""
 "Dieser Satz wird am unteren Ende Ihrer Berichte erscheinen. Wir empfehlen "
-"hier die gestzlich vorgesehen Angaben zu machen zB: IBAN: BE74 1262 0121 "
+"hier die gesetzlich vorgesehen Angaben zu machen zB: IBAN: BE74 1262 0121 "
 "6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
 
 #. module: base_setup
 #: field:base.setup.company,street2:0
 msgid "Street 2"
-msgstr "Strasse"
+msgstr "Strasse 2"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_installer
@@ -282,7 +298,7 @@ msgstr "Land"
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_base_setup
 msgid "Setup"
-msgstr "Einrichtung"
+msgstr "Installation"
 
 #. module: base_setup
 #: field:base.setup.installer,account_accountant:0
@@ -410,7 +426,7 @@ msgstr "Nahrung & Genuss"
 #. module: base_setup
 #: field:base.setup.installer,mrp:0
 msgid "Manufacturing"
-msgstr "Fertigung"
+msgstr "Stücklisten & Fertigungsaufträge"
 
 #. module: base_setup
 #: view:base.setup.company:0
@@ -501,10 +517,9 @@ msgid "base.setup.config"
 msgstr ""
 
 #. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
-msgstr "Folgende Benutzer wurden installiert : \n"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #~ msgid ""
 #~ "You can start configuring the system or connect directly to the database "
