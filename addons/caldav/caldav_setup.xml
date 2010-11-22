@@ -51,7 +51,7 @@
             <field name="name">users</field>
         </record>
         <record id="document_directory_dctx_0" model="document.directory.dctx">
-            <field model="document.directory" name="dir_id" ref="document.dir_calendars"/>
+            <field model="document.directory" name="dir_id" ref="document_directory_users0"/>
             <field name="field">user_id</field>
             <field name="expr">res_id</field>
         </record>
@@ -60,7 +60,7 @@
             <field eval="1" name="resource_find_all"/>
             <field name="user_id" eval="False"/>
             <field name="company_id" ref="base.main_company"/>
-            <field model="document.directory" name="parent_id" ref="document.dir_calendars"/>
+            <field model="document.directory" name="parent_id" ref="document_directory_users0"/>
             <field name="storage_id" ref="document.storage_default"/>
             <field name="type">directory</field>
             <field eval="[(6,0,[])]" name="group_ids"/>
