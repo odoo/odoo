@@ -151,7 +151,7 @@ class node_file(node_acl_mixin, nodes.node_file):
         return ''
 
     def get_dav_props(self, cr):
-        return self._get_dav_props_hlpr(cr, nodes.node_dir, 
+        return self._get_dav_props_hlpr(cr, nodes.node_file, 
                 None, 'file_id', self.file_id)
                 #'document.webdav.dir.property', 'dir_id', self.dir_id)
 
@@ -162,11 +162,11 @@ class node_database(nodes.node_database):
         return ('collection', 'DAV:')
 
     def get_dav_props(self, cr):
-        return self._get_dav_props_hlpr(cr, nodes.node_dir,
+        return self._get_dav_props_hlpr(cr, nodes.node_database,
                 'document.webdav.dir.property', 'dir_id', False)
 
     def get_dav_eprop(self, cr, ns, prop):
-        return self._get_dav_eprop_hlpr(cr, nodes.node_dir, ns, prop,
+        return self._get_dav_eprop_hlpr(cr, nodes.node_database, ns, prop,
                 'document.webdav.dir.property', 'dir_id', False)
 
 class node_res_obj(node_acl_mixin, nodes.node_res_obj):
