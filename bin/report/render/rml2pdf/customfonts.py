@@ -22,6 +22,13 @@
 from reportlab import rl_config
 import os
 
+"""This module allows the mapping of some system-available TTF fonts to
+the reportlab engine.
+
+This file could be customized per distro (although most Linux/Unix ones)
+should have the same filenames, only need the code below).
+"""
+
 CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Helvetica',"DejaVu Sans Bold", "DejaVuSans-Bold.ttf", 'bold'),
         ('Helvetica',"DejaVu Sans Oblique", "DejaVuSans-Oblique.ttf", 'italic'),
@@ -43,23 +50,49 @@ CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Courier',"FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
         ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),]
 
-def SearchFontPath(font_file):    
+__foundFonts = []
+
+def FindCustomFonts():
+    """Fill the __foundFonts list with those filenames, whose fonts
+       can be found in the reportlab ttf font path.
+       
+       This process needs only be done once per loading of this module,
+       it is cached. But, if the system admin adds some font in the
+       meanwhile, the server must be restarted eventually.
+    """
+    dirpath =  []
+    global __foundFonts
     for dirname in rl_config.TTFSearchPath:
-        for root, dirs, files in os.walk(os.path.abspath(dirname)):
-            for file_name in files:
-                filename = os.path.join(root, file_name)
-                extension = os.path.splitext(filename)[1]
-                if extension.lower() in ['.ttf']:
-                      if file_name==font_file:
-                            return True
-    return False
+        abp = os.path.abspath(dirname)
+        if os.path.isdir(abp):
+            dirpath.append(abp)
+        
+    for k, (name, font, fname, mode) in enumerate(CustomTTFonts):
+        if fname in __foundFonts:
+            continue
+        for d in dirpath:
+            if os.path.exists(os.path.join(d, fname)):
+                print "found font %s in %s" % (fname, d)
+                __foundFonts.append(fname)
+                break
+                
+    # print "Found fonts:", __foundFonts
+
 
 def SetCustomFonts(rmldoc):
+    """ Map some font names to the corresponding TTF fonts
+    
+        The ttf font may not even have the same name, as in
+        Times -> Liberation Serif.
+        This function is called once per report, so it should
+        avoid system-wide processing (cache it, instead).
+    """
+    if not len(__foundFonts):
+        FindCustomFonts()
+    global __foundFonts
     for name, font, fname, mode in CustomTTFonts:
-        if SearchFontPath(fname):
-            rmldoc.setTTFontMapping(name, font,filename, mode)
+        if fname in __foundFonts:
+            rmldoc.setTTFontMapping(name, font, fname, mode)
     return True
-
-
 
 #eof
