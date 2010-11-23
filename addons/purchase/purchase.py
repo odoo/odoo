@@ -662,7 +662,7 @@ class purchase_order_line(osv.osv):
             date_order = time.strftime('%Y-%m-%d')
         qty = qty or 1.0
         seller_delay = 0
-        seller_get_id = False
+
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
         for s in prod.seller_ids:
             if s.name.id == partner_id:

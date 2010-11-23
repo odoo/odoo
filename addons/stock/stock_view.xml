@@ -872,7 +872,6 @@
                                     <field name="state"/>
                                     <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
                                     <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
-                                    <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
                                 </tree>
                                 <form string="Stock Moves">
                                     <group colspan="2" col="4">
@@ -938,6 +937,7 @@
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                                 <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" states="done" type="action" icon="terp-gtk-go-back-rtl"/>
+                                <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -1159,6 +1159,7 @@
                                 <group colspan="1" states="done">
                                     <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl"/>
                                 </group>
+                                <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
                             </group>
                         </page>
                         <page string="Additional Info" groups="base.group_extended,base.group_multi_company">

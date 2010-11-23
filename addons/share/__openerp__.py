@@ -49,6 +49,7 @@
         'wizard/share_wizard_view.xml'
     ],
     'installable': True,
+    'web': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

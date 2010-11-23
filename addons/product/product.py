@@ -33,7 +33,7 @@ def is_pair(x):
 def check_ean(eancode):
     if not eancode:
         return True
-    if len(eancode) not in [13]:
+    if len(eancode) <> 13:
         return False
     try:
         int(eancode)
@@ -480,9 +480,8 @@ class product_product(osv.osv):
         return False
 
     def _check_ean_key(self, cr, uid, ids):
-        for partner in self.browse(cr, uid, ids):
-            eancheck = partner.ean13
-            res = check_ean( eancheck )
+        for product in self.browse(cr, uid, ids):
+            res = check_ean(product.ean13)
         return res
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
@@ -613,14 +612,12 @@ class product_packaging(osv.osv):
     }
 
 
-    def _check_ean_key_r(self, cr, uid, ids):
-        for partner in self.browse(cr, uid, ids):
-            eancheckp = partner.ean
-            res = check_ean(eancheckp)
+    def _check_ean_key(self, cr, uid, ids):
+        for pack in self.browse(cr, uid, ids):
+            res = check_ean(pack.ean)
         return res
 
-    _constraints = [(_check_ean_key_r, 'Error: Invalid ean code', ['ean'])]
-
+    _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean'])]
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
