@@ -31,6 +31,7 @@ import cStringIO
 import utils
 import color
 import os
+import logging
 from lxml import etree
 import base64
 from reportlab.platypus.doctemplate import ActionFlowable
@@ -909,7 +910,11 @@ def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
     try:
         from customfonts import SetCustomFonts
         SetCustomFonts(r)
+    except ImportError:
+        # means there is no custom fonts mapping in this system.
+        pass
     except Exception:
+        logging.getLogger('report').warning('Cannot set font mapping', exc_info=True)
         pass
     fp = cStringIO.StringIO()
     r.render(fp)

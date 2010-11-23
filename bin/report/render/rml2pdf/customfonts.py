@@ -21,6 +21,7 @@
 
 from reportlab import rl_config
 import os
+import logging
 
 """This module allows the mapping of some system-available TTF fonts to
 the reportlab engine.
@@ -61,6 +62,7 @@ def FindCustomFonts():
        meanwhile, the server must be restarted eventually.
     """
     dirpath =  []
+    log = logging.getLogger('report.fonts')
     global __foundFonts
     for dirname in rl_config.TTFSearchPath:
         abp = os.path.abspath(dirname)
@@ -72,7 +74,7 @@ def FindCustomFonts():
             continue
         for d in dirpath:
             if os.path.exists(os.path.join(d, fname)):
-                # print "found font %s in %s" % (fname, d)
+                log.debug("Found font %s in %s as %s", fname, d, name)
                 __foundFonts.append(fname)
                 break
                 
