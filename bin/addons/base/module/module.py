@@ -98,9 +98,9 @@ class module(osv.osv):
         for m in mlist:
             mnames[m.name] = m.id
             res[m.id] = {
-                'menus_by_module':'',
-                'reports_by_module':'',
-                'views_by_module': ''
+                'menus_by_module':[],
+                'reports_by_module':[],
+                'views_by_module': []
             }
         view_id = model_data_obj.search(cr,uid,[('module','in', mnames.keys()),
             ('model','in',('ir.ui.view','ir.actions.report.xml','ir.ui.menu'))])
@@ -109,26 +109,18 @@ class module(osv.osv):
             try:
                 key = data_id['model']
                 if key=='ir.ui.view':
-                    try:
-                        v = view_obj.browse(cr,uid,data_id.res_id)
-                        aa = v.inherit_id and '* INHERIT ' or ''
-                        res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
-                    except Exception:
-                        self.__logger.debug(
-                            'Unknown error while browsing ir.ui.view[%s]',
-                            data_id.res_id, exc_info=True)
+                    v = view_obj.browse(cr,uid,data_id.res_id)
+                    aa = v.inherit_id and '* INHERIT ' or ''
+                    res[mnames[data_id.module]]['views_by_module'].append(aa + v.name + '('+v.type+')')
                 elif key=='ir.actions.report.xml':
-                    res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
+                    res[mnames[data_id.module]]['reports_by_module'].append(report_obj.browse(cr,uid,data_id.res_id).name)
                 elif key=='ir.ui.menu':
-                    try:
-                        m = menu_obj.browse(cr,uid,data_id.res_id)
-                        res[mnames[data_id.module]]['menus_by_module'] += m.complete_name + '\n'
-                    except Exception:
-                        self.__logger.debug(
-                            'Unknown error while browsing ir.ui.menu[%s]',
-                            data_id.res_id, exc_info=True)
-            except KeyError:
+                    res[mnames[data_id.module]]['menus_by_module'].append(menu_obj.browse(cr,uid,data_id.res_id).complete_name)
+            except KeyError, e:
                 pass
+        for key, value in res.iteritems() :
+            for k, v in res[key].iteritems() :
+                res[key][k] = "\n".join(sorted(v))
         return res
 
     _columns = {
