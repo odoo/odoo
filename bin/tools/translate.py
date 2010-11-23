@@ -369,14 +369,16 @@ def trans_parse_xsl(de):
     return res
 
 def trans_parse_rml(de):
+    import lxml
     res = []
     for n in de:
-        for m in [j for j in n if j.text]:
-            string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.text)]
-            for s in string_list:
-                if s:
-                    res.append(s.encode("utf8"))
-        res.extend(trans_parse_rml(n))
+        if not isinstance(n,lxml.etree._Comment): # if child is comment element
+            for m in [j for j in n if j.text and not isinstance(j,lxml.etree._Comment)]: # if grandchild is comment element
+                string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.text)]
+                for s in string_list:
+                    if s:
+                        res.append(s.encode("utf8"))
+            res.extend(trans_parse_rml(n))
     return res
 
 def trans_parse_view(de):
