@@ -25,6 +25,7 @@ Miscelleanous tools used by OpenERP.
 """
 
 import inspect
+import subprocess
 import logging
 import os
 import re
@@ -141,27 +142,24 @@ def exec_pg_command(name, *args):
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
     args2 = (os.path.basename(prog),) + args
-    return os.spawnv(os.P_WAIT, prog, args2)
+    
+    return subprocess.call(args2, executable=prog)
 
 def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    if os.name == "nt":
-        cmd = '"' + prog + '" ' + ' '.join(args)
-    else:
-        cmd = prog + ' ' + ' '.join(args)
-    return os.popen2(cmd, 'b')
+    pop = subprocess.Popen(args, executable=prog, shell=True, bufsize= -1,
+          stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+    return (pop.stdin, pop.stdout)
 
 def exec_command_pipe(name, *args):
     prog = find_in_path(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    if os.name == "nt":
-        cmd = '"'+prog+'" '+' '.join(args)
-    else:
-        cmd = prog+' '+' '.join(args)
-    return os.popen2(cmd, 'b')
+    pop = subprocess.Popen(args, executable=prog, shell=True, bufsize= -1,
+          stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+    return (pop.stdin, pop.stdout)
 
 #----------------------------------------------------------
 # File paths
