@@ -45,13 +45,103 @@ class Text2(xml.dom.minidom.Text):
         data = data.replace(">", "&gt;")
         writer.write(data)
 
-def createText2Node(doc, data):
-    if not isinstance(data, StringTypes):
-        raise TypeError, "node contents must be a string"
-    t = Text2()
-    t.data = data
-    t.ownerDocument = doc
-    return t
+class Prop2xml(object):
+    """ A helper class to convert property structs to DAV:XML
+    
+        Written to generalize the use of _prop_child(), a class is 
+        needed to hold some persistent data accross the recursions 
+        of _prop_elem_child().
+    """
+    
+    def __init__(self, doc, namespaces, nsnum):
+        """ Init the structure
+        @param doc the xml doc element
+        @param namespaces a dict of namespaces
+        @param nsnum the next namespace number to define
+        """
+        self.doc = doc
+        self.namespaces = namespaces
+        self.nsnum = nsnum
+
+    def createText2Node(self, data):
+        if not isinstance(data, StringTypes):
+            raise TypeError, "node contents must be a string"
+        t = Text2()
+        t.data = data
+        t.ownerDocument = self.doc
+        return t
+
+    def _prop_child(self, xnode, ns, prop, value):
+        """Append a property xml node to xnode, with <prop>value</prop>
+
+           And a little smarter than that, it will consider namespace and
+           also allow nested properties etc.
+
+           :param ns the namespace of the <prop/> node
+           :param prop the name of the property
+           :param value the value. Can be:
+                    string: text node
+                    tuple ('elem', 'ns') for empty sub-node <ns:elem />
+                    tuple ('elem', 'ns', sub-elems) for sub-node with elements
+                    tuple ('elem', 'ns', sub-elems, {attrs}) for sub-node with 
+                            optional elements and attributes
+                    list, of above tuples
+        """
+        if ns == 'DAV:':
+            ns_prefix = 'D:'
+        else:
+            ns_prefix="ns"+str(self.namespaces.index(ns))+":"
+
+        pe = self.doc.createElement(ns_prefix+str(prop))
+        if hasattr(value, '__class__') and value.__class__.__name__ == 'Element':
+            pe.appendChild(value)
+        else:
+            if ns == 'DAV:' and prop=="resourcetype" and isinstance(value, int):
+                # hack, to go..
+                if value == 1:
+                    ve = self.doc.createElement("D:collection")
+                    pe.appendChild(ve)
+            else:
+                self._prop_elem_child(pe, ns, value, ns_prefix)
+
+            xnode.appendChild(pe)
+
+    def _prop_elem_child(self, pnode, pns, v, pns_prefix):
+
+        if isinstance(v, list):
+            for vit in v:
+                self._prop_elem_child(pnode, pns, vit, pns_prefix)
+        elif isinstance(v,tuple):
+            need_ns = False
+            if v[1] == pns:
+                ns_prefix = pns_prefix
+            elif v[1] == 'DAV:':
+                ns_prefix = 'D:'
+            elif v[1] in self.namespaces:
+                ns_prefix="ns"+str(self.namespaces.index(v[1]))+":"
+            else:
+                ns_prefix="ns"+str(self.nsnum)+":"
+                need_ns = True
+
+            ve = self.doc.createElement(ns_prefix+v[0])
+            if need_ns:
+                ve.setAttribute("xmlns:ns"+str(self.nsnum), v[1])
+            if len(v) > 2 and v[2] is not None:
+                if isinstance(v[2], (list, tuple)):
+                    # support nested elements like:
+                    # ( 'elem', 'ns:', [('sub-elem1', 'ns1'), ...]
+                    self._prop_elem_child(ve, v[1], v[2], ns_prefix)
+                else:
+                    vt = self.createText2Node(tools.ustr(v[2]))
+                    ve.appendChild(vt)
+            if len(v) > 3 and v[3]:
+                assert isinstance(v[3], dict)
+                for ak, av in v[3].items():
+                    ve.setAttribute(ak, av)
+            pnode.appendChild(ve)
+        else:
+            ve = self.createText2Node(tools.ustr(v))
+            pnode.appendChild(ve)
 
 
 super_mk_prop_response = PROPFIND.mk_prop_response
@@ -73,78 +163,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
         re.setAttribute("xmlns:ns"+str(nsnum),nsname)
         nsnum=nsnum+1
 
-    def _prop_child(xnode, ns, prop, value):
-        """Append a property xml node to xnode, with <prop>value</prop>
-
-           And a little smarter than that, it will consider namespace and
-           also allow nested properties etc.
-
-           :param ns the namespace of the <prop/> node
-           :param prop the name of the property
-           :param value the value. Can be:
-                    string: text node
-                    tuple ('elem', 'ns') for empty sub-node <ns:elem />
-                    tuple ('elem', 'ns', sub-elems) for sub-node with elements
-                    tuple ('elem', 'ns', sub-elems, {attrs}) for sub-node with 
-                            optional elements and attributes
-                    list, of above tuples
-        """
-        if ns == 'DAV:':
-            ns_prefix = 'D:'
-        else:
-            ns_prefix="ns"+str(namespaces.index(ns))+":"
-
-        pe=doc.createElement(ns_prefix+str(prop))
-        if hasattr(value, '__class__') and value.__class__.__name__ == 'Element':
-            pe.appendChild(value)
-        else:
-            if ns == 'DAV:' and prop=="resourcetype" and isinstance(value, int):
-                # hack, to go..
-                if value == 1:
-                    ve=doc.createElement("D:collection")
-                    pe.appendChild(ve)
-            else:
-                _prop_elem_child(pe, ns, value, ns_prefix)
-
-            xnode.appendChild(pe)
-
-    def _prop_elem_child(pnode, pns, v, pns_prefix):
-
-        if isinstance(v, list):
-            for vit in v:
-                _prop_elem_child(pnode, pns, vit, pns_prefix)
-        elif isinstance(v,tuple):
-            need_ns = False
-            if v[1] == pns:
-                ns_prefix = pns_prefix
-            elif v[1] == 'DAV:':
-                ns_prefix = 'D:'
-            elif v[1] in namespaces:
-                ns_prefix="ns"+str(namespaces.index(v[1]))+":"
-            else:
-                ns_prefix="ns"+str(nsnum)+":"
-                need_ns = True
-
-            ve=doc.createElement(ns_prefix+v[0])
-            if need_ns:
-                ve.setAttribute("xmlns:ns"+str(nsnum), v[1])
-            if len(v) > 2 and v[2] is not None:
-                if isinstance(v[2], (list, tuple)):
-                    # support nested elements like:
-                    # ( 'elem', 'ns:', [('sub-elem1', 'ns1'), ...]
-                    _prop_elem_child(ve, v[1], v[2], ns_prefix)
-                else:
-                    vt=createText2Node(doc,tools.ustr(v[2]))
-                    ve.appendChild(vt)
-            if len(v) > 3 and v[3]:
-                assert isinstance(v[3], dict)
-                for ak, av in v[3].items():
-                    ve.setAttribute(ak, av)
-            pnode.appendChild(ve)
-        else:
-            ve=createText2Node(doc, tools.ustr(v))
-            pnode.appendChild(ve)
-
+    propgen = Prop2xml(doc, namespaces, nsnum)
     # write href information
     uparts=urlparse.urlparse(uri)
     fileloc=uparts[2]
@@ -180,7 +199,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
         for p,v in good_props[ns].items():
             if v is None:
                 continue
-            _prop_child(gp, ns, p, v)
+            propgen._prop_child(gp, ns, p, v)
 
     ps.appendChild(gp)
     re.appendChild(ps)
