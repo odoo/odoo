@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-
+############################################################################9
 #
 # Copyright P. Christeas <p_christ@hol.gr> 2008,2009
 # Copyright OpenERP SA, 2010 (http://www.openerp.com )
@@ -14,7 +14,7 @@
 #
 # This program is Free Software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
+# as published by the Free Software Foundation; either version 3
 # of the License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -43,6 +43,7 @@ import addons
 from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
 from DAV.propfind import PROPFIND
 # from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
+from redirect import RedirectHTTPHandler
 
 khtml_re = re.compile(r' KHTML/([0-9\.]+) ')
 
@@ -452,6 +453,26 @@ try:
 except Exception, e:
     logger = netsvc.Logger()
     logger.notifyChannel('webdav', netsvc.LOG_ERROR, 'Cannot launch webdav: %s' % e)
+
+
+def init_well_known():
+    reps = RedirectHTTPHandler.redirect_paths
+
+    num_svcs = config.get_misc('http-well-known', 'num_services', '0')
+
+    for nsv in range(1, int(num_svcs)+1):
+        uri = config.get_misc('http-well-known', 'service_%d' % nsv, False)
+        path = config.get_misc('http-well-known', 'path_%d' % nsv, False)
+        if not (uri and path):
+            continue
+        reps['/'+uri] = path
+
+    if int(num_svcs):
+        if http_server.reg_http_service(HTTPDir('/.well-known', RedirectHTTPHandler)):
+            logging.getLogger("web-services").info("Registered HTTP redirect handler at /.well-known" )
+
+
+init_well_known()
 
 #eof
 
