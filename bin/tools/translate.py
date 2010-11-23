@@ -317,7 +317,9 @@ class TinyPoFile(object):
         self.first = False
 
         if name is None:
-            self.warn('Missing "#:" formated comment for the following source:\n\t%s' % (source,))
+            if not fuzzy:
+                self.warn('Missing "#:" formated comment at line %d for the following source:\n\t%s', 
+                        self.cur_line(), source[:30])
             return self.next()
         return type, name, res_id, source, trad
 
