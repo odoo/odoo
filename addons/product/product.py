@@ -30,6 +30,34 @@ from tools.translate import _
 def is_pair(x):
     return not x%2
 
+def check_ean(eancode):
+    if not eancode:
+        return True
+    if len(eancode) <> 13:
+        return False
+    try:
+        int(eancode)
+    except:
+        return False
+    oddsum=0
+    evensum=0
+    total=0
+    eanvalue=eancode
+    reversevalue = eanvalue[::-1]
+    finalean=reversevalue[1:]
+
+    for i in range(len(finalean)):
+        if is_pair(i):
+            oddsum += int(finalean[i])
+        else:
+            evensum += int(finalean[i])
+    total=(oddsum * 3) + evensum
+
+    check = int(10 - math.ceil(total % 10.0))
+
+    if check != int(eancode[-1]):
+        return False
+    return True
 #----------------------------------------------------------
 # UOM
 #----------------------------------------------------------
@@ -452,25 +480,9 @@ class product_product(osv.osv):
         return False
 
     def _check_ean_key(self, cr, uid, ids):
-        for partner in self.browse(cr, uid, ids):
-            if not partner.ean13:
-                continue
-            if len(partner.ean13) <> 13:
-                return False
-            try:
-                int(partner.ean13)
-            except:
-                return False
-            sum=0
-            for i in range(12):
-                if is_pair(i):
-                    sum += int(partner.ean13[i])
-                else:
-                    sum += 3 * int(partner.ean13[i])
-            check = int(math.ceil(sum / 10.0) * 10 - sum)
-            if check != int(partner.ean13[12]):
-                return False
-        return True
+        for product in self.browse(cr, uid, ids):
+            res = check_ean(product.ean13)
+        return res
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
@@ -599,6 +611,13 @@ class product_packaging(osv.osv):
         'length': fields.float('Length', help='The length of the package'),
     }
 
+
+    def _check_ean_key(self, cr, uid, ids):
+        for pack in self.browse(cr, uid, ids):
+            res = check_ean(pack.ean)
+        return res
+
+    _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean'])]
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
