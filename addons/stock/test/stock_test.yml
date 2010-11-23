@@ -247,6 +247,7 @@
   I confirm the Inventory for HP CD writers.
 - 
   !python {model: stock.inventory}: |
+   self.action_confirm(cr,uid,[ref('stock_inventory_physicalinventoy0')])
    self.action_done(cr,uid,[ref('stock_inventory_physicalinventoy0')])
 - 
   I create stock.fill.inventory .
