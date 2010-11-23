@@ -79,7 +79,6 @@ class add_product(osv.osv_memory):
         this = self.browse(cr, uid, ids[0], context)
         order_obj.add_product(cr, uid, record_id, this.product_id.id, this.quantity, context=context)
 
-        obj = order_obj.browse(cr, uid, record_id, context=context)
         order_obj.write(cr, uid, [record_id], {'state': 'done'}, context=context)
         return {
             'name': _('Make Payment'),
