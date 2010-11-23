@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-15 18:44+0000\n"
-"PO-Revision-Date: 2010-11-16 13:25+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-22 06:56+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-17 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -599,7 +599,7 @@ msgstr "Счет будет выставлен"
 #. module: purchase
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
@@ -1004,7 +1004,7 @@ msgstr "Объединить заказ на закупку"
 #. module: purchase
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Невозможно создать рекурсивную категорию."
+msgstr "Ошибка ! Нельзя создать зацикленные меню."
 
 #. module: purchase
 #: view:board.board:0
@@ -1256,20 +1256,10 @@ msgid "Date on which purchase order has been approved"
 msgstr "Дата на которую заказ на закупку был утвержден"
 
 #. module: purchase
-#: view:purchase.order.group:0
-msgid ""
-" Please note that: \n"
-" \n"
-"   Orders will only be merged if: \n"
-"   * Purchase Orders are in draft \n"
-"   * Purchase Orders belong to the same supplier \n"
-"   * Purchase Orders are have same stock location, same pricelist \n"
-" \n"
-"    Lines will only be merged if: \n"
-"   * Order lines are exactly the same except for the product,quantity and "
-"unit \n"
-" "
-msgstr ""
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting"
+msgstr "В ожидании"
 
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
@@ -1326,7 +1316,7 @@ msgstr "Позиции заказа на закупку"
 #. module: purchase
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
-msgstr "Размер поля не может быть меньше 1 !"
+msgstr "Размер поля никогда не может быть меньше 1 !"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1529,12 +1519,6 @@ msgid "Qty"
 msgstr "Кол-во"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Waiting"
-msgstr "В ожидании"
-
-#. module: purchase
 #: field:purchase.order,partner_address_id:0
 msgid "Address"
 msgstr "Адрес"
@@ -1617,6 +1601,22 @@ msgstr "Март"
 #: selection:purchase.report,month:0
 msgid "April"
 msgstr "Апрель"
+
+#. module: purchase
+#: view:purchase.order.group:0
+msgid ""
+" Please note that: \n"
+" \n"
+" Orders will only be merged if: \n"
+" * Purchase Orders are in draft \n"
+" * Purchase Orders belong to the same supplier \n"
+" * Purchase Orders are have same stock location, same pricelist \n"
+" \n"
+" Lines will only be merged if: \n"
+" * Order lines are exactly the same except for the product,quantity and unit "
+"\n"
+" "
+msgstr ""
 
 #. module: purchase
 #: field:purchase.report,product_uom:0
