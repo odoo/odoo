@@ -165,17 +165,13 @@ class procurement_order(osv.osv):
         """
         return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids))
 
-    def check_move_done(self, cr, uid, ids, context={}):
+    def check_move_done(self, cr, uid, ids, context=None):
         """ Checks if move is done or not.
         @return: True or False.
         """
-        res = True
-        for proc in self.browse(cr, uid, ids, context):
-             if proc.move_id:
-                 if not proc.move_id.state=='done':
-                      res = False
-        return res
-
+        if not context:
+            context = {}
+        return all(not procurement.move_id or procurement.move_id.state == 'done' for procurement in self.browse(cr, uid, ids, context=context))
     #
     # This method may be overrided by objects that override procurement.order
     # for computing their own purpose

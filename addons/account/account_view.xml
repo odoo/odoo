@@ -79,7 +79,7 @@
             <field name="view_mode">tree,form,search</field>
             <field name="help">Define your company's fiscal year depending on the period you have chosen to follow. A fiscal year is a 1 year period over which a company budgets its spending. It may run over any period of 12 months. The fiscal year is referred to by the date in which it ends. For example, if a company's fiscal year ends November 30, 2011, then everything between December 1, 2010 and November 30, 2011  would be referred to as FY 2011. Not using the actual calendar year gives many companies an advantage, allowing them to close their books at a time which is most convenient for them.</field>
         </record>
-        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_accounting"/>
+        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_accounting" sequence="8" />
         <menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
 
         <!--
@@ -357,7 +357,7 @@
             <field name="help">Here you can personalize and create each view of your financial journals by selecting the fields you want to appear and the sequence they will appear.</field>
         </record>
 
-        <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_low_level"/>
+        <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_journals"/>
 
         <!--
     # Account Journal
@@ -469,7 +469,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help">Create and manage your company's financial journals from this menu. A journal is a business diary in which all financial data related to the day to day business transactions of your company is recorded using double-entry book keeping system. Depending on the nature of its activities and number of daily transactions, a company may keep several  types of specialized journals such as a cash journal, purchases journal, and sales journal.</field>
         </record>
-        <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="account_account_menu"/>
+        <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="menu_journals"/>
 
         <record id="view_account_bank_statement_filter" model="ir.ui.view">
             <field name="name">account.cash.statement.select</field>
@@ -749,7 +749,7 @@
             <field name="search_view_id" ref="view_account_type_search"/>
             <field name="help">An account type is a name or code given to an account that indicates its purpose. For example, the account type could be linked to an asset account, expense account or payable account. From this view, you can create and manage the account types you need to be used for your company management.</field>
         </record>
-        <menuitem action="action_account_type_form" groups="base.group_extended,group_account_manager" id="menu_action_account_type_form" parent="menu_low_level"/>
+        <menuitem action="action_account_type_form" groups="base.group_extended,group_account_manager" sequence="6" id="menu_action_account_type_form" parent="account_account_menu"/>
         <!--
     Entries
     -->
@@ -863,7 +863,7 @@
             <field name="help">A tax code is a reference of a tax that will be taken out of a gross income depending on the country and sometimes industry sector. OpenERP allows you to define and manage them from this menu.</field>
         </record>
        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_accounting"/>
-       <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="menu_low_level" sequence="12"/>
+       <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12"/>
 
 
         <!--
@@ -1236,6 +1236,7 @@
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="domain">[('account_id', 'child_of', active_id)]</field>
+            <field name="context">{'account_id':active_id}</field>
         </record>
 
         <record id="ir_account_move_line_select" model="ir.values">
@@ -2257,6 +2258,7 @@
                         <field name="chart_template_id"/>
                         <field name="type"/>
                         <field name="type_tax_use"/>
+                        <field name="price_include"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Tax Definition">
