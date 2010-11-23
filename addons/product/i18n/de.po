@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-22 00:53+0000\n"
-"Last-Translator: Thorsten Vocks <Unknown>\n"
+"PO-Revision-Date: 2010-11-22 07:54+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-22 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -34,8 +35,8 @@ msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
 msgstr ""
-"Fehler ! Sie können nicht die Basispreisliste fälschlicherweise als Andere "
-"Preisliste in Preislisteneintrag zuweisen."
+"Fehler ! Sie können nicht die Basispreisliste fälschlicherweise als "
+"alternative Preisliste in einem Preislisteneintrag zuweisen."
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
@@ -240,8 +241,8 @@ msgid ""
 "Determines if the product can be visible in the list of product within a "
 "selection from a sale order line."
 msgstr ""
-"Bestimme ob das Produkt sichtbar ist in der Suchliste nach Produkten bei der "
-"Erstellung von Verkaufsaufträgen."
+"Bestimme ob das Produkt sichtbar sein soll in der Suchliste nach Produkten "
+"bei der Erstellung von Verkaufsaufträgen."
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
@@ -251,7 +252,7 @@ msgstr "Standard öffentliche Preisliste"
 #. module: product
 #: selection:product.template,cost_method:0
 msgid "Standard Price"
-msgstr "Einstandspreis"
+msgstr "Standardpreis"
 
 #. module: product
 #: model:product.pricelist.type,name:product.pricelist_type_sale
@@ -306,8 +307,8 @@ msgid ""
 "procurement request."
 msgstr ""
 "'Disponiere vom Lager' - wenn Produkt benötigt wird, wird der verfügbare "
-"Lagerbestand verwendet oder auf neue Lieferungen gewartet.\r\n"
-"'Disponiere von Auftrag' - wenn Produkt benötigt wird, wird  entweder ein "
+"Lagerbestand verwendet oder auf neue Lieferungen gewartet. 'Disponiere von "
+"Auftrag' - wenn Produkt benötigt wird, wird  entweder ein "
 "Beschaffungsauftrag oder ein Fertigungsauftrag erzeugt."
 
 #. module: product
@@ -746,9 +747,10 @@ msgid ""
 "management. For example, in food industries, you will manage a stock of ham "
 "but invoice in Kg. Keep empty to use the default UOM."
 msgstr ""
-"Benutzt von Unternehmen, die zwei verschiedene Mengeneinheiten benötigen bei "
-"der Erstellung von Rechnung und Lieferschein. Zum Beispiel in der Branche "
-"Nahrung & Genuss. Trage keinen Wert ein, um die Standard UoM zu benutzen."
+"Benutzt von Unternehmen, die zwei verschiedene Mengeneinheiten bei der "
+"Erstellung von Rechnung und Lieferschein benötigen . Zum Beispiel in der "
+"Branche Nahrung & Genuss. Trage keinen Wert ein, um die Standard ME zu "
+"benutzen."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -909,7 +911,7 @@ msgid ""
 "Product's cost for accounting stock valuation. It is the base price for the "
 "supplier price."
 msgstr ""
-"Einstandspreis für die Bestandsbewertung. Hierbei handelt es sich i.d.R. um "
+"Produktpreis für die Bestandsbewertung. Hierbei handelt es sich i.d.R. um "
 "den Nettoeinkaufspreis beim Lieferanten."
 
 #. module: product
@@ -989,7 +991,7 @@ msgstr "Priorität"
 #: view:product.price_list:0
 msgid "Calculate Product Price per unit base on pricelist version."
 msgstr ""
-"Berechne Einstandspreis pro Mengeneinheit (ME) basierend auf einer "
+"Berechne Angebotspreis je Produkt pro Mengeneinheit (ME) basierend auf einer "
 "vorhandenen Preisliste."
 
 #. module: product
@@ -1136,10 +1138,10 @@ msgid ""
 "at the end of the year), Average Price: the cost price is recomputed at each "
 "reception of products."
 msgstr ""
-"Einstandspreis: Die Preisbewertung (Feld: Einstandspreis) für Bestände ist "
-"fest und kann periodisch neu berechnet werden (z.B. am Ende des Jahres). "
-"Durchschnittspreis: Der Bewertungspreis (Feld: Einstandspreis) wird "
-"permanent automatisch nach jedem Zugang von Produkten neu berechnet."
+"Standardpreis: Die Preisbewertung für Bestände ist fest und kann periodisch "
+"neu berechnet werden (z.B. am Ende des Jahres). Durchschnittspreis: Der "
+"Bewertungspreis (Feld: Preisbewertung) wird permanent automatisch nach jedem "
+"Zugang von Produkten neu berechnet."
 
 #. module: product
 #: help:product.category,sequence:0
@@ -1160,7 +1162,7 @@ msgid ""
 "selection from a purchase order line."
 msgstr ""
 "Bestimme ob das Produkt in der Produktauswahl sichtbar sein soll, z.B.  bei "
-"der Durchführung einer Bestellung."
+"der Durchführung einer Bestellung im Dialog der Produktauswahl."
 
 #. module: product
 #: field:product.template,weight_net:0
@@ -1409,7 +1411,7 @@ msgstr ""
 "Durchschnittliche Produktionszeit für dieses Produkt. Diese Angabe wird "
 "lediglich für die Fertigungsauftragsplanung benötigt. Wenn es sich um eine "
 "mehrstufige Stückliste handelt, bezieht sich die Angabe dann auf die Ebene "
-"der innerhalb einer Stückliste, in der sich dieses Produkt befindet.Mehrere "
+"innerhalb einer Stückliste, in der sich dieses Produkt befindet. Mehrere "
 "Produktionszeiten für Baugruppen werden dann über die Fertigungsstufen und "
 "Beschaffungsaufträge zusammengefasst."
 
@@ -1537,7 +1539,7 @@ msgstr ""
 #. module: product
 #: help:product.template,uom_id:0
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "Standard Mengeneinheit (ME) für alle Bestandsänderungen."
+msgstr "Standard Mengeneinheit (ME) für alle Bestandsbuchungen."
 
 #. module: product
 #: model:product.category,name:product.product_category_misc0
@@ -1753,7 +1755,7 @@ msgstr "Bezeichnung für diese Preisart."
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
 msgstr ""
-"Anzahl an Produkten, die auf eine Palette oder Box gepackt werden kann."
+"Anzahl an Produkten, die auf eine Palette, Box o.ä. gepackt werden kann."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1772,7 +1774,8 @@ msgstr ""
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
 msgid "This product is configured with example of push/pull flows"
-msgstr "Dieses Produkte wurden konfiguriert mit Beispielen (push/poll)"
+msgstr ""
+"Dieses Produkte wurden konfiguriert mit Beispielen für push/poll Workflows"
 
 #. module: product
 #: field:product.packaging,length:0
@@ -1782,7 +1785,7 @@ msgstr "Länge"
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
 msgid "Length / Distance"
-msgstr "Länge"
+msgstr "Länge /Entfernung"
 
 #. module: product
 #: model:product.template,name:product.product_product_0_product_template
@@ -2146,7 +2149,7 @@ msgid ""
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
 "Setzt den Preis \n"
-"gerundet wird nach Rabatt und vor Aufschlag\n"
+"gerundet wird dabei nach Rabatt und vor einem Aufschlag\n"
 "Um Preise wie z.B. 9,99 zu erzielen: runden 10, Aufschlag -0,01"
 
 #. module: product
