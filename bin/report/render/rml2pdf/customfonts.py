@@ -93,7 +93,7 @@ def SetCustomFonts(rmldoc):
     if not len(__foundFonts):
         FindCustomFonts()
     for name, font, fname, mode in CustomTTFonts:
-        if fname in __foundFonts:
+        if os.path.isabs(fname) or fname in __foundFonts:
             rmldoc.setTTFontMapping(name, font, fname, mode)
     return True
 
