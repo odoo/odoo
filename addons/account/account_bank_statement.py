@@ -47,7 +47,8 @@ class account_bank_statement(osv.osv):
         return res
 
     def _default_journal_id(self, cr, uid, context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         journal_pool = self.pool.get('account.journal')
         journal_type = context.get('journal_type', False)
         journal_id = False
@@ -58,15 +59,13 @@ class account_bank_statement(osv.osv):
         return journal_id
 
     def _default_balance_start(self, cr, uid, context=None):
-        context = context or {}
         cr.execute('select id from account_bank_statement where journal_id=%s order by date desc limit 1', (1,))
         res = cr.fetchone()
         if res:
-            return self.browse(cr, uid, [res[0]], context=context)[0].balance_end
+            return self.browse(cr, uid, res[0], context=context).balance_end
         return 0.0
 
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
-        context = context or {}
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
         res = {}
@@ -105,7 +104,6 @@ class account_bank_statement(osv.osv):
         return False
 
     def _currency(self, cursor, user, ids, name, args, context=None):
-        context = context or {}
         res = {}
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
@@ -198,7 +196,8 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, ids, {}, context=context)
 
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         res_currency_obj = self.pool.get('res.currency')
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
@@ -303,7 +302,6 @@ class account_bank_statement(osv.osv):
         return st_number + '/' + str(st_line.sequence)
 
     def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
-        context = context or {}
         st = self.browse(cr, uid, st_id, context=context)
         if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
             raise osv.except_osv(_('Error !'),

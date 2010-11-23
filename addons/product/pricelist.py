@@ -464,7 +464,7 @@ class product_pricelist_version(osv.osv):
     }
 
     # We desactivate duplicated pricelists, so that dates do not overlap
-    def copy(self, cr, uid, id, default=None,context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
         if not default: default= {}
         default['active'] = False
         return super(product_pricelist_version, self).copy(cr, uid, id, default, context)

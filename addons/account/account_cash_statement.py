@@ -41,7 +41,6 @@ class account_cashbox_line(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
-        context = context or {}
         for obj in self.browse(cr, uid, ids, context=context):
             res[obj.id] = obj.pieces * obj.number
         return res
@@ -77,7 +76,6 @@ class account_cash_statement(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
-        context = context or {}
         for statement in self.browse(cr, uid, ids, context=context):
             amount_total = 0.0
 
@@ -98,7 +96,6 @@ class account_cash_statement(osv.osv):
         @return: Dictionary of values.
         """
         res ={}
-        context = context or {}
         for statement in self.browse(cr, uid, ids, context=context):
             amount_total = 0.0
             for line in statement.ending_details_ids:
@@ -114,7 +111,6 @@ class account_cash_statement(osv.osv):
         @return: Dictionary of values.
         """
         res2={}
-        context = context or {}
         for statement in self.browse(cr, uid, ids, context=context):
             encoding_total=0.0
             for line in statement.line_ids:
@@ -123,7 +119,6 @@ class account_cash_statement(osv.osv):
         return res2
 
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
-        context = context or {}
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
         res = {}
@@ -157,7 +152,6 @@ class account_cash_statement(osv.osv):
         return res
 
     def _get_company(self, cr, uid, context=None):
-        context = context or {}
         user_pool = self.pool.get('res.users')
         company_pool = self.pool.get('res.company')
         user = user_pool.browse(cr, uid, uid, context=context)
@@ -246,7 +240,6 @@ class account_cash_statement(osv.osv):
      }
 
     def create(self, cr, uid, vals, context=None):
-        context = context or {}
         sql = [
                 ('journal_id', '=', vals.get('journal_id', False)),
                 ('state', '=', 'open')

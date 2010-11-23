@@ -94,7 +94,7 @@ class survey(osv.osv):
         self.write(cr, uid, ids, {'state': 'cancel' })
         return True
 
-    def copy(self, cr, uid, id, default=None,context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
 
     def action_print_survey(self, cr, uid, ids, context=None):
@@ -631,7 +631,7 @@ class survey_response(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def copy(self, cr, uid, id, default=None,context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
 
 survey_response()

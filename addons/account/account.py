@@ -902,9 +902,11 @@ class account_period(osv.osv):
             cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if args is None:
             args = []
+        if context is None:
+            context = {}
         ids = []
         if name:
             ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
@@ -1219,7 +1221,8 @@ class account_move(osv.osv):
     # TODO: Check if period is closed !
     #
     def create(self, cr, uid, vals, context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         if 'line_id' in vals and context.get('copy'):
             for l in vals['line_id']:
                 if not l[0]:
@@ -1260,7 +1263,8 @@ class account_move(osv.osv):
         return result
 
     def copy(self, cr, uid, id, default={}, context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         default.update({
             'state':'draft',
             'name':'/',
@@ -1478,7 +1482,6 @@ class account_move_reconcile(osv.osv):
         return True
 
     def name_get(self, cr, uid, ids, context=None):
-        context = context or {}
         if not ids:
             return []
         result = []
@@ -1603,7 +1606,6 @@ class account_tax_code(osv.osv):
 
 
     def name_get(self, cr, uid, ids, context=None):
-        context = context or {}
         if isinstance(ids, (int, long)):
             ids = [ids]
         if not ids:
@@ -1615,7 +1617,6 @@ class account_tax_code(osv.osv):
                 for x in reads]
 
     def _default_company(self, cr, uid, context=None):
-        context = context or {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             return user.company_id.id
@@ -1761,7 +1762,6 @@ class account_tax(osv.osv):
         return res
 
     def _default_company(self, cr, uid, context=None):
-        context = context or {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             return user.company_id.id
@@ -2314,7 +2314,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
     _name = 'account.addtmpl.wizard'
 
     def _get_def_cparent(self, cr, uid, context=None):
-        context = context or {}
         acc_obj=self.pool.get('account.account')
         tmpl_obj=self.pool.get('account.account.template')
         tids=tmpl_obj.read(cr, uid, [context['tmpl_ids']], ['parent_id'])
@@ -2336,7 +2335,8 @@ class account_add_tmpl_wizard(osv.osv_memory):
     }
 
     def action_create(self,cr,uid,ids,context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         acc_obj = self.pool.get('account.account')
         tmpl_obj = self.pool.get('account.account.template')
         data = self.read(cr, uid, ids)
@@ -2384,7 +2384,6 @@ class account_tax_code_template(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-        context = context or {}
         if not ids:
             return []
         if isinstance(ids, (int, long)):
@@ -2464,7 +2463,6 @@ class account_tax_template(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-        context = context or {}
         if not ids:
             return []
         res = []
@@ -2474,7 +2472,6 @@ class account_tax_template(osv.osv):
         return res
 
     def _default_company(self, cr, uid, context=None):
-        context = context or {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             return user.company_id.id
@@ -2602,7 +2599,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     }
 
     def execute(self, cr, uid, ids, context=None):
-        context = context or {}
         obj_multi = self.browse(cr, uid, ids[0])
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')

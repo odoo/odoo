@@ -78,7 +78,7 @@ class purchase_requisition_partner(osv.osv_memory):
             acc_pos_obj = self.pool.get('account.fiscal.position')
             partner_id = data[0]['partner_id']
 
-            supplier_data = partner_obj.browse(cr, uid,[ partner_id], context=context)[0]
+            supplier_data = partner_obj.browse(cr, uid, partner_id, context=context)
 
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             list_line=[]

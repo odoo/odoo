@@ -460,7 +460,7 @@ class purchase_order(osv.osv):
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return picking_id
 
-    def copy(self, cr, uid, id, default=None,context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         default.update({

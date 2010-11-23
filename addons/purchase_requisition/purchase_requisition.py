@@ -107,7 +107,7 @@ class purchase_requisition_line(osv.osv):
         """
         value = {'product_uom_id': ''}
         if product_id:
-            prod = self.pool.get('product.product').browse(cr, uid, [product_id], context=context)[0]
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             value = {'product_uom_id': prod.uom_id.id,'product_qty':1.0}
         return {'value': value}
 

@@ -369,7 +369,7 @@ class crm_case(object):
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
-    def remind_user(self, cr, uid, ids, context=None, attach=False,destination=True):
+    def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,

@@ -35,9 +35,6 @@ class account_fiscal_position(osv.osv):
     }
 
     def map_tax(self, cr, uid, fposition_id, taxes, context=None):
-        if context is None:
-            context = {}
-
         if not taxes:
             return []
         if not fposition_id:
@@ -55,8 +52,6 @@ class account_fiscal_position(osv.osv):
         return result
 
     def map_account(self, cr, uid, fposition_id, account_id, context=None):
-        if context is None:
-            context = {}
         if not fposition_id:
             return account_id
         for pos in fposition_id.account_ids:

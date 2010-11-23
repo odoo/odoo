@@ -89,7 +89,7 @@ class mrp_repair(osv.osv):
         tax = self._amount_tax(cr, uid, ids, field_name, arg, context=context)
         cur_obj = self.pool.get('res.currency')
         for id in ids:
-            repair = self.browse(cr, uid, [id], context=context)[0]
+            repair = self.browse(cr, uid, id, context=context)
             cur = repair.pricelist_id.currency_id
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res

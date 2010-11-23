@@ -59,7 +59,6 @@ class account_analytic_line(osv.osv):
                 order, context=context, count=count)
 
     def _check_company(self, cr, uid, ids, context=None):
-        context = context or {}
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.move_id and not l.account_id.company_id.id == l.move_id.account_id.company_id.id:
@@ -135,7 +134,8 @@ class account_analytic_line(osv.osv):
         }
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         if context.get('account_id', False):
             # account_id in context may also be pointing to an account.account.id
             cr.execute('select name from account_analytic_account where id=%s', (context['account_id'],))

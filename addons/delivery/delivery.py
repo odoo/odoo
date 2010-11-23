@@ -36,7 +36,7 @@ class delivery_carrier(osv.osv):
         if not order_id:
             res = super(delivery_carrier, self).name_get(cr, uid, ids, context=context)
         else:
-            order = self.pool.get('sale.order').browse(cr, uid, [order_id], context=context)[0]
+            order = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
             currency = order.pricelist_id.currency_id.name or ''
             res = [(r['id'], r['name']+' ('+(str(r['price']))+' '+currency+')') for r in self.read(cr, uid, ids, ['name', 'price'], context)]
         return res
@@ -50,7 +50,7 @@ class delivery_carrier(osv.osv):
             order_id=context.get('order_id',False)
             price=False
             if order_id:
-              order = sale_obj.browse(cr, uid, [order_id], context=context)[0]
+              order = sale_obj.browse(cr, uid, order_id, context=context)
               carrier_grid=self.grid_get(cr,uid,[carrier.id],order.partner_shipping_id.id,context)
               if carrier_grid:
                   price=grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)
@@ -70,7 +70,7 @@ class delivery_carrier(osv.osv):
         'active': lambda *args:1
     }
     def grid_get(self, cr, uid, ids, contact_id, context=None):
-        contact = self.pool.get('res.partner.address').browse(cr, uid, [contact_id], context=context)[0]
+        contact = self.pool.get('res.partner.address').browse(cr, uid, contact_id, context=context)
         for carrier in self.browse(cr, uid, ids, context=context):
             for grid in carrier.grids_id:
                 get_id = lambda x: x.id

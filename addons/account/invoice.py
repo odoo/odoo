@@ -187,9 +187,6 @@ class account_invoice(osv.osv):
 
     def _get_invoice_from_line(self, cr, uid, ids, context=None):
         move = {}
-        if context is None:
-            context = {}
-
         for line in self.pool.get('account.move.line').browse(cr, uid, ids, context=context):
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
@@ -204,9 +201,6 @@ class account_invoice(osv.osv):
 
     def _get_invoice_from_reconcile(self, cr, uid, ids, context=None):
         move = {}
-        if context is None:
-            context = {}
-
         for r in self.pool.get('account.move.reconcile').browse(cr, uid, ids, context=context):
             for line in r.line_partial_ids:
                 move[line.move_id.id] = True
@@ -678,8 +672,6 @@ class account_invoice(osv.osv):
         return True
 
     def button_compute(self, cr, uid, ids, context=None, set_total=False):
-        if context is None:
-            context = {}
         self.button_reset_taxes(cr, uid, ids, context)
         for inv in self.browse(cr, uid, ids, context=context):
             if set_total:
@@ -1357,7 +1349,7 @@ class account_invoice_line(osv.osv):
                 # Parse the value_reference field to get the ID of the account.account record
                 account_id = int (my_value[0]["value_reference"].split(",")[1])
                 # Use the ID of the account.account record in the browse for the account.account record
-                app_acc_in = account_obj.browse(cr, uid, [account_id], context=context)[0]
+                app_acc_in = account_obj.browse(cr, uid, account_id, context=context)
             if not exp_pro_id:
                 ex_acc = res.product_tmpl_id.property_account_expense
                 ex_acc_cate = res.categ_id.property_account_expense_categ
@@ -1528,9 +1520,6 @@ class account_invoice_tax(osv.osv):
 
     def _count_factor(self, cr, uid, ids, name, args, context=None):
         res = {}
-        if context is None:
-            context = {}
-
         for invoice_tax in self.browse(cr, uid, ids, context=context):
             res[invoice_tax.id] = {
                 'factor_base': 1.0,
@@ -1597,9 +1586,6 @@ class account_invoice_tax(osv.osv):
     }
     def compute(self, cr, uid, invoice_id, context=None):
         tax_grouped = {}
-        if context is None:
-            context = {}
-
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)

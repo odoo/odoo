@@ -81,7 +81,7 @@ class process_process(osv.osv):
 
         pool = pooler.get_pool(cr.dbname)
 
-        process = pool.get('process.process').browse(cr, uid, [id], context=context)[0]
+        process = pool.get('process.process').browse(cr, uid, id, context=context)
 
         name = process.name
         resource = None
@@ -95,8 +95,8 @@ class process_process(osv.osv):
             states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
 
         if res_id:
-            current_object = pool.get(res_model).browse(cr, uid, [res_id], context=context)[0]
-            current_user = pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
+            current_object = pool.get(res_model).browse(cr, uid, res_id, context=context)
+            current_user = pool.get('res.users').browse(cr, uid, uid, context=context)
             expr_context = Env(current_object, current_user)
             resource = current_object.name
             if 'state' in current_object:
@@ -188,7 +188,7 @@ class process_process(osv.osv):
 
             nodes[nid]['res'] = resource = {'id': ref_id, 'model': ref_model}
 
-            refobj = pool.get(ref_model).browse(cr, uid, [ref_id], context=context)[0]
+            refobj = pool.get(ref_model).browse(cr, uid, ref_id, context=context)
             fields = pool.get(ref_model).fields_get(cr, uid, context=context)
 
             # check for directory_id from inherited from document module
@@ -253,7 +253,7 @@ class process_process(osv.osv):
             default = {}
         
         pool = pooler.get_pool(cr.dbname)
-        process = pool.get('process.process').browse(cr, uid, [id], context=context)[0]
+        process = pool.get('process.process').browse(cr, uid, id, context=context)
 
         nodes = {}
         transitions = {}
@@ -370,7 +370,7 @@ class process_transition_action(osv.osv):
         if not default:
             default = {}
             
-        state = self.pool.get('process.transition.action').browse(cr, uid, [id], context=context)[0].state
+        state = self.pool.get('process.transition.action').browse(cr, uid, id, context=context).state
         if state:
             default['state'] = state
 

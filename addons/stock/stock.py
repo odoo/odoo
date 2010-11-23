@@ -668,7 +668,7 @@ class stock_picking(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        picking_obj = self.browse(cr, uid, [id], context=context)[0]
+        picking_obj = self.browse(cr, uid, id, context=context)
         move_obj=self.pool.get('stock.move')
         if ('name' not in default) or (picking_obj.name=='/'):
             seq_obj_name =  'stock.picking.' + picking_obj.type
@@ -677,7 +677,7 @@ class stock_picking(osv.osv):
             default['backorder_id'] = False
         res=super(stock_picking, self).copy(cr, uid, id, default, context)
         if res:
-            picking_obj = self.browse(cr, uid, [res], context)[0]
+            picking_obj = self.browse(cr, uid, res, context=context)
             for move in picking_obj.move_lines:
                 move_obj.write(cr, uid, [move.id], {'tracking_id': False,'prodlot_id':False})
         return res 

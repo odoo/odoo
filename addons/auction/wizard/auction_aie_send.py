@@ -181,6 +181,7 @@ class auction_lots_send_aie(osv.osv_memory):
         cr.execute('select name,aie_categ from auction_lot_category')
         vals = dict(cr.fetchall())
         cr.close()
+        if context is None: context = {}
     
         service = netsvc.LocalService("object_proxy")
         lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', context.get('active_ids',[]),  ['obj_num','lot_num','obj_desc','bord_vnd_id','lot_est1','lot_est2','artist_id','lot_type','aie_categ'])
