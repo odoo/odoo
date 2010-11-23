@@ -34,6 +34,7 @@ import socket
 import sys
 import threading
 import time
+import warnings
 import zipfile
 from datetime import datetime
 from email.MIMEText import MIMEText
