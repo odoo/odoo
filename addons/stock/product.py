@@ -282,14 +282,15 @@ class product_product(osv.osv):
             uoms = uom_obj.browse(cr, uid, list(set(uoms)), context=context)
         for o in uoms:
             uoms_o[o.id] = o
-        ctx = {'raise-exception': False} #TOCHECK: before change uom of product, stock move line are in old uom.
+        #TOCHECK: before change uom of product, stock move line are in old uom.
+        context.update({'raise-exception': False})
         for amount, prod_id, prod_uom in results:
             amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                     uoms_o[context.get('uom', False) or product2uom[prod_id]], context=ctx)
+                     uoms_o[context.get('uom', False) or product2uom[prod_id]], context=context)
             res[prod_id] += amount
         for amount, prod_id, prod_uom in results2:
             amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                    uoms_o[context.get('uom', False) or product2uom[prod_id]], context=ctx)
+                    uoms_o[context.get('uom', False) or product2uom[prod_id]], context=context)
             res[prod_id] -= amount
         return res
 
