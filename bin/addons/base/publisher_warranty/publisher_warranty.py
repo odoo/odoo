@@ -31,6 +31,7 @@ from tools.safe_eval import safe_eval
 import pooler
 from tools.config import config
 import release
+import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -71,6 +72,7 @@ class publisher_warranty_contract(osv.osv):
         try:
             origin = 'client'
             dbuuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+            db_create_date = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.create_date')
             
             msg = {'contract_name': valid_contract.name,
                 'tb': tb,
@@ -78,7 +80,8 @@ class publisher_warranty_contract(osv.osv):
                 'remarks': remarks,
                 'origin': origin,
                 'dbname': cr.dbname,
-                'dbuuid': dbuuid}
+                'dbuuid': dbuuid,
+                'db_create_date': db_create_date}
             
             uo = urllib.urlopen(config.get("publisher_warranty_url"),
                                     urllib.urlencode({'arg0': msg, "action": "send",}))
@@ -161,6 +164,7 @@ class publisher_warranty_contract(osv.osv):
                     {
                         'name': result["message"],
                         'res_model': "Maintenance Notifications",
+                        "read": True,
                     },
                     context=context
             )
@@ -172,6 +176,14 @@ class publisher_warranty_contract(osv.osv):
                 raise
             
         return True
+    
+    def get_last_user_message(self, cr, uid, context={}):
+        ids = self.pool.get('res.log').search(cr, uid, [("res_model", "=", "Maintenance Notifications")]
+                                        , order="create_date desc", limit=1)
+        if not ids:
+            return False
+        to_return = self.pool.get('res.log').browse(cr, uid, ids[0]).name
+        return to_return
 
     _columns = {
         'name' : fields.char('Contract Name', size=384, required=True),
@@ -253,6 +265,7 @@ def send_ping(cr, uid):
     pool = pooler.get_pool(cr.dbname)
     
     dbuuid = pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+    db_create_date = pool.get('ir.config_parameter').get_param(cr, uid, 'database.create_date')
     nbr_users = pool.get("res.users").search(cr, uid, [], count=True)
     contractosv = pool.get('publisher_warranty.contract')
     contracts = contractosv.browse(cr, uid, contractosv.search(cr, uid, []))
@@ -260,6 +273,7 @@ def send_ping(cr, uid):
         "dbuuid": dbuuid,
         "nbr_users": nbr_users,
         "dbname": cr.dbname,
+        "db_create_date": db_create_date,
         "version": release.version,
         "contracts": [c.name for c in contracts],
     }

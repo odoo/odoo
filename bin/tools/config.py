@@ -91,15 +91,10 @@ class configmanager(object):
             'static_http_url_prefix': None,
             'secure_cert_file': 'server.cert',
             'secure_pkey_file': 'server.pkey',
-            'maintenance_server': 'http://tiny.my.odoo.com:8069/xmlrpc/',
-            'maintenance_db': 'tiny_belgium',
-            'maintenance_login': 'maintenance',
-            'maintenance_password': 'maintenance',
             'publisher_warranty_url': 'http://www.openerp.com/publisher-warranty',
         }
         
-        self.blacklist_for_save = set(['maintenance_server', 'maintenance_db',
-            'maintenance_login', 'maintenance_password', "publisher_warranty_url"])
+        self.blacklist_for_save = set(["publisher_warranty_url"])
 
         self.misc = {}
         self.config_file = fname

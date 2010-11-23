@@ -23,11 +23,22 @@ A module to store some configuration parameters relative to a whole database.
 """
 
 from osv import osv,fields
+import uuid
+import datetime
+from tools import misc
+
+"""
+A dictionary holding some configuration parameters to be initialized when the database is created.
+"""
+_default_parameters = {
+    "database.uuid": lambda: str(uuid.uuid1()),
+    "database.create_date": lambda: datetime.datetime.now().strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT),
+}
 
 class ir_config_parameter(osv.osv):
     """ An osv to old configuration parameters for a given database.
     
-    To be short, it's just a global dictionnary of strings stored in a table. """
+    To be short, it's just a global dictionary of strings stored in a table. """
     
     _name = 'ir.config_parameter'
     
@@ -41,6 +52,15 @@ class ir_config_parameter(osv.osv):
     _sql_constraints = [
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
+    
+    def init(self, cr):
+        """
+        Initializes the parameters listed in _default_parameters.
+        """
+        for key, func in _default_parameters.iteritems():
+            ids = self.search(cr, 1, [('key','=',key)])
+            if not ids:
+                self.set_param(cr, 1, key, func())
 
     def get_param(self, cr, uid, key, context=None):
         """ Get the value of a parameter.
