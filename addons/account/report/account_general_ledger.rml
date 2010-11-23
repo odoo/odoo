@@ -340,7 +340,7 @@
                 <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o)) ]]</u></para></td>
                 <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o)) ]]</u></para></td>
                 <td><para style="P9b"><u>[[formatLang(sum_balance_account(o)) ]] [[ company.currency_id.symbol ]]</u></para></td>
-               <td><para style="P9b"><u><font>[[ (o.currency_id and formatLang(sum_currency_amount_account(o))) or removeParentNode('font') ]] [[  o.currency_id.symbol or '']]</font></u></para></td>
+                <td><para style="P9b"><u>[[ o.currency_id and sum_currency_amount_account(o) +o.currency_id.symbol or '' ]]</u></para></td>
               </tr>
           </blockTable>
       </td>
@@ -362,7 +362,7 @@
        <td><para style="P4">[[ formatLang(line['debit']) ]]</para></td>
        <td><para style="P4">[[ formatLang(line['credit']) ]]</para></td>
        <td><para style="P4">[[ formatLang(line['progress']) ]] [[ company.currency_id.symbol ]]</para></td>
-	   <td><para style="P4"><font>[[ (line.has_key('currency_id') and line['currency_id']==None or line['amount_currency']==None) and removeParentNode('font') ]] [[  formatLang(line['amount_currency'])]] [[  line['currency_code'] or '']]</font></para></td>
+	   <td><para style="P4"><font>[[ (len(line['cur_id'])==1 and o.currency_id.id==line['currency_id'] and formatLang(line['amount_currency'])) or removeParentNode('font') ]] [[  line['currency_code'] or '']]</font></para></td>
      </tr>
   </blockTable>
   </section>

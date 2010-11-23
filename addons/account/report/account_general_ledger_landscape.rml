@@ -327,7 +327,8 @@
 			<td><para style="P4_content">[[ formatLang(line['debit'], digits=get_digits(dp='Account')) ]]</para></td>
 			<td><para style="P4_content">[[ formatLang(line['credit'], digits=get_digits(dp='Account')) ]]</para></td>
 			<td><para style="P4_content">[[ formatLang(line['progress'], digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para></td>
-			<td><para style="P4_content"><font>[[ (o.currency_id and formatLang(line['amount_currency'])) or removeParentNode('font') ]] [[  line['currency_code'] or '']] </font></para></td>
+			<td>
+			<para style="P4_content"><font>[[ (len(line['cur_id'])==1 and o.currency_id.id==line['currency_id'] and formatLang(line['amount_currency'])) or removeParentNode('font') ]] [[  line['currency_code'] or '']]</font></para></td>
 		</tr>
 	  </blockTable>
 
