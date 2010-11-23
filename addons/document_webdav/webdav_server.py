@@ -28,6 +28,7 @@
 ###############################################################################
 
 
+import logging
 from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
@@ -63,6 +64,7 @@ def OpenDAVConfig(**kw):
 
 class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
+    _logger = logging.getLogger('webdav')
     protocol_version = 'HTTP/1.1'
     _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
                     'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT',
@@ -72,8 +74,9 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
 
     def get_userinfo(self,user,pw):
         return False
+
     def _log(self, message):
-        netsvc.Logger().notifyChannel("webdav",netsvc.LOG_DEBUG,message)
+        self._logger.debug(message)
 
     def handle(self):
         self._init_buffer()
@@ -114,10 +117,10 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         return self.davpath
 
     def log_message(self, format, *args):
-        netsvc.Logger().notifyChannel('webdav', netsvc.LOG_DEBUG_RPC, format % args)
+        self._logger.log(netsvc.logging.DEBUG_RPC,format % args)
 
     def log_error(self, format, *args):
-        netsvc.Logger().notifyChannel('xmlrpc', netsvc.LOG_WARNING, format % args)
+        self._logger.warning(format % args)
 
     def _prep_OPTIONS(self, opts):
         ret = opts
@@ -427,7 +430,7 @@ try:
         conf = OpenDAVConfig(**_dc)
         handler._config = conf
         reg_http_service(HTTPDir(directory,DAVHandler,DAVAuthProvider()))
-        netsvc.Logger().notifyChannel('webdav', netsvc.LOG_INFO, "WebDAV service registered at path: %s/ "% directory)
+        logging.getLogger('webdav').info("WebDAV service registered at path: %s/ "% directory)
         
         if not (config.get_misc('webdav', 'no_root_hack', False)):
             # Now, replace the static http handler with the dav-enabled one.
@@ -451,8 +454,7 @@ try:
                                 (dir_path))
 
 except Exception, e:
-    logger = netsvc.Logger()
-    logger.notifyChannel('webdav', netsvc.LOG_ERROR, 'Cannot launch webdav: %s' % e)
+    logging.getLogger('webdav').error('Cannot launch webdav: %s' % e)
 
 
 def init_well_known():
