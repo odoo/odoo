@@ -512,9 +512,24 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     }
 
     def unlink(self, cr, uid, ids, context=None):
+        group_users = []
         for record in self.read(cr, uid, ids, ['users'], context=context):
             if record['users']:
+                group_users.extend(record['users'])
+        
+        if group_users:
+            group_names = []
+            try:
+                for rec in self.pool.get('res.users').read(cr, uid, group_users, ['name'], context=context):
+                    group_names.append(rec['name'])
+                if len(group_names) >=5:
+                    group_names = group_names[:5]
+                    group_names += '...'
+            except Exception:
                 raise osv.except_osv(_('Warning !'), _('Make sure you have no users linked with the group(s)!'))
+            raise osv.except_osv(_('Warning !'), 
+                        _('Group(s) cannot be deleted, because user(s) %s participate in them!') % \
+                            ', '.join(group_names))
         return super(groups2, self).unlink(cr, uid, ids, context=context)
 
 groups2()
