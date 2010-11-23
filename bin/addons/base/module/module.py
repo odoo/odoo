@@ -40,7 +40,7 @@ class module_category(osv.osv):
     _name = "ir.module.category"
     _description = "Module Category"
 
-    def _module_nbr(self,cr,uid, ids, prop, unknow_none,context):
+    def _module_nbr(self,cr,uid, ids, prop, unknow_none, context):
         cr.execute('SELECT category_id, COUNT(*) \
                       FROM ir_module_module \
                      WHERE category_id IN %(ids)s \
@@ -81,13 +81,13 @@ class module(osv.osv):
                                 'module %s', name, exc_info=True)
         return info
 
-    def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
+    def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for m in self.browse(cr, uid, ids):
             res[m.id] = self.get_module_info(m.name).get('version', '')
         return res
 
-    def _get_views(self, cr, uid, ids, field_name=None, arg=None, context={}):
+    def _get_views(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = {}
         model_data_obj = self.pool.get('ir.model.data')
         view_obj = self.pool.get('ir.ui.view')
@@ -107,7 +107,7 @@ class module(osv.osv):
         for data_id in model_data_obj.browse(cr,uid,view_id,context):
             # We use try except, because views or menus may not exist
             try:
-                key = data_id['model']
+                key = data_id.model
                 if key=='ir.ui.view':
                     v = view_obj.browse(cr,uid,data_id.res_id)
                     aa = v.inherit_id and '* INHERIT ' or ''
@@ -117,8 +117,15 @@ class module(osv.osv):
                 elif key=='ir.ui.menu':
                     res[mnames[data_id.module]]['menus_by_module'].append(menu_obj.browse(cr,uid,data_id.res_id).complete_name)
             except KeyError, e:
+                self.__logger.warning(
+                            'Data not found for reference %s[%s:%s.%s]', data_id.model,
+                            data_id.res_id, data_id.model, data_id.name, exc_info=True)
                 pass
-        for key, value in res.iteritems() :
+            except Exception, e:
+                self.__logger.warning('Unknown error while browsing %s[%s]',
+                            data_id.model, data_id.res_id, exc_info=True)
+                pass
+        for key, value in res.iteritems():
             for k, v in res[key].iteritems() :
                 res[key][k] = "\n".join(sorted(v))
         return res
@@ -171,9 +178,9 @@ class module(osv.osv):
     }
 
     _defaults = {
-        'state': lambda *a: 'uninstalled',
-        'demo': lambda *a: False,
-        'license': lambda *a: 'AGPL-3',
+        'state': 'uninstalled',
+        'demo': False,
+        'license': 'AGPL-3',
         'web': False,
     }
     _order = 'name'
@@ -262,14 +269,14 @@ class module(osv.osv):
             demo = demo or mdemo
         return demo
 
-    def button_install(self, cr, uid, ids, context={}):
+    def button_install(self, cr, uid, ids, context=None):
         return self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
 
-    def button_install_cancel(self, cr, uid, ids, context={}):
+    def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
         return True
 
-    def button_uninstall(self, cr, uid, ids, context={}):
+    def button_uninstall(self, cr, uid, ids, context=None):
         for module in self.browse(cr, uid, ids):
             cr.execute('''select m.state,m.name
                 from
@@ -285,7 +292,7 @@ class module(osv.osv):
         self.write(cr, uid, ids, {'state': 'to remove'})
         return True
 
-    def button_uninstall_cancel(self, cr, uid, ids, context={}):
+    def button_uninstall_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
 
@@ -321,7 +328,7 @@ class module(osv.osv):
         self.button_install(cr, uid, to_install, context=context)
         return True
 
-    def button_upgrade_cancel(self, cr, uid, ids, context={}):
+    def button_upgrade_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
     def button_update_translations(self, cr, uid, ids, context=None):
@@ -414,7 +421,9 @@ class module(osv.osv):
             zimp.load_module(mod.name)
         return res
 
-    def _update_dependencies(self, cr, uid, id, depends=[]):
+    def _update_dependencies(self, cr, uid, id, depends=None):
+        if depends is None:
+            depends = []
         for d in depends:
             cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
 
@@ -538,7 +547,7 @@ class module_dependency(osv.osv):
     _name = "ir.module.module.dependency"
     _description = "Module dependency"
 
-    def _state(self, cr, uid, ids, name, args, context={}):
+    def _state(self, cr, uid, ids, name, args, context=None):
         result = {}
         mod_obj = self.pool.get('ir.module.module')
         for md in self.browse(cr, uid, ids):
