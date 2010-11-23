@@ -45,6 +45,7 @@ import reportlab
 
 import tools
 from tools.safe_eval import safe_eval as eval
+from tools import ustr
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
@@ -131,11 +132,11 @@ def _process_text(self, txt):
                 if isinstance(txt, basestring):
                     result += str2xml(txt)
                 elif (txt is not None) and (txt is not False):
-                    result += unicode(txt)
+                    result += ustr(txt)
         return result
 
 def text_get(node):
-    return ''.join([unicode(n.text) for n in node])
+    return ''.join([ustr(n.text) for n in node])
 
 units = [
     (re.compile('^(-?[0-9\.]+)\s*in$'), reportlab.lib.units.inch),
