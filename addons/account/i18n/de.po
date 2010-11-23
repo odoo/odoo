@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-22 00:51+0000\n"
-"Last-Translator: Thorsten Vocks <Unknown>\n"
+"PO-Revision-Date: 2010-11-22 07:40+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-22 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -147,7 +148,7 @@ msgstr "Bezug"
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Reconcile"
-msgstr "Rechnungsausgleich"
+msgstr "Ausgleich von Offenen Posten"
 
 #. module: account
 #: field:account.bank.statement.line,ref:0
@@ -231,7 +232,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
-msgstr "Auswählen von Rechnungsausgleichsbuchungen"
+msgstr "Auswählen von Offenen Posten"
 
 #. module: account
 #: help:account.model.line,sequence:0
@@ -261,7 +262,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr "Buchungen sind auszuwählen für den Rechnungsausgleich"
+msgstr "Buchungen sind auszuwählen für den Ausgleich von Offenen Posten"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -403,12 +404,12 @@ msgstr "Erzeugt am"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Purchase Refund"
-msgstr "Gutschrift Eingangsrechnung"
+msgstr "Gutschrift Einkauf"
 
 #. module: account
 #: selection:account.journal,type:0
 msgid "Opening/Closing Situation"
-msgstr "Eröffnungs- / Schlussperiode"
+msgstr "Jahreswechsel"
 
 #. module: account
 #: help:account.journal,currency:0
@@ -433,7 +434,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,default_debit_account_id:0
 msgid "Default Debit Account"
-msgstr "Standard Soll Konto"
+msgstr "Standard Sollkonto"
 
 #. module: account
 #: view:account.move:0
@@ -636,8 +637,9 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disable"
 msgstr ""
-"Falls Sie einen Rechnungsausgleich stornieren müssen, prüfen Sie auch alle "
-"vorgelagerten Vorgänge, da diese nicht automatisch mit zurückgesetzt werden."
+"Falls Sie einen Ausgleich von Offenen Posten stornieren müssen, prüfen Sie "
+"auch alle vorgelagerten Vorgänge, da diese nicht automatisch mit "
+"zurückgesetzt werden."
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -702,8 +704,8 @@ msgstr "Journal Periode"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
-"Für den Rechnungsausgleich sollte das Unternehmen bei allen Buchungen "
-"identisch sein"
+"Für den Ausgleich von Offenen Posten sollte das Unternehmen bei allen "
+"Buchungen identisch sein"
 
 #. module: account
 #: constraint:account.account:0
@@ -729,7 +731,7 @@ msgstr "Möchten Sie diese Buchungen erzeugen?"
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
 msgid "Check"
-msgstr "Prüfe"
+msgstr "Schecks"
 
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
@@ -796,7 +798,7 @@ msgstr "Referenz des Partners für diese Rechnung."
 #: view:account.unreconcile.reconcile:0
 #: model:ir.model,name:account.model_account_move_line_unreconcile_select
 msgid "Unreconciliation"
-msgstr "Storno Rechnungsausgleich"
+msgstr "Storno Ausgleich Offene Posten"
 
 #. module: account
 #: constraint:ir.ui.view:0
@@ -925,7 +927,7 @@ msgstr "Bruttobetrag"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Approve"
-msgstr "Geprüft"
+msgstr "Genehmigen und Buchen"
 
 #. module: account
 #: view:account.invoice:0
@@ -952,7 +954,7 @@ msgstr "Erweiterter Filter..."
 #. module: account
 #: selection:account.journal,type:0
 msgid "Sale Refund"
-msgstr "Verkauf Gutschrift"
+msgstr "Gutschrift Verkauf"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingstatemententries0
@@ -1024,7 +1026,7 @@ msgstr "Partner Saldenliste"
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
 msgid "Account Name."
-msgstr "Konto Bezeichnung."
+msgstr "Konto Bezeichnung"
 
 #. module: account
 #: field:account.chart.template,property_reserve_and_surplus_account:0
@@ -1239,7 +1241,7 @@ msgstr "Inbegriffen in Steuergrundlage"
 #: model:ir.actions.act_window,name:account.action_account_entries_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_entries_report_all
 msgid "Entries Analysis"
-msgstr "Statistik Buchungen"
+msgstr "Statistik Finanzbuchungen"
 
 #. module: account
 #: field:account.account,level:0
@@ -1401,7 +1403,7 @@ msgstr "# Stellenanzahl"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Skip 'Draft' State for Manual Entries"
-msgstr "Überspringe Entwurf für händische Buchung"
+msgstr "Überspringe Entwurf bei manuellen Buchungen"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1412,7 +1414,7 @@ msgstr "Eingabe Daten"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total:0
 msgid "Total Without Tax"
-msgstr "Gesamtbetrag (Netto)"
+msgstr "Nettobetrag"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2241,7 +2243,7 @@ msgstr "Zahlungsbedingung"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Steuern Zuordnungen"
+msgstr "Steuerzuordnung"
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -2281,7 +2283,7 @@ msgstr "Aktivieren, wenn Benutzer das Konto ausgleichen dürfen."
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr "Rechnungsausgleich bei Partnern"
+msgstr "Offene Posten Ausgleich bei Partnern"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
@@ -2533,7 +2535,7 @@ msgstr "Bezahlt / OP Ausgleich"
 #: field:account.tax,ref_base_code_id:0
 #: field:account.tax.template,ref_base_code_id:0
 msgid "Refund Base Code"
-msgstr "Gutschrift Steuergrundbetrag"
+msgstr "Gutschrift Steuergrundlage"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_periodic_tree
@@ -3356,7 +3358,7 @@ msgstr "Zentralisierung Gegenkonto"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
 msgid "Reconcilation Process partner by partner"
-msgstr "Rechnungsausgleich Partner für Partner"
+msgstr "Offene Posten Ausgleich Partner für Partner"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3650,7 +3652,7 @@ msgid ""
 "part of it. You can easily generate refunds and reconcile them from the "
 "invoice form."
 msgstr ""
-"Kundengutschriften ermöglichen die Erfassung von Gutschriften durch Ihre "
+"Kundengutschriften ermöglichen die Erfassung von Gutschriften für Ihre "
 "Kunden. Eine Gutschrift ist ein Beleg, der eine Rechnung teilweise oder ganz "
 "storniert. Sie können sehr einfach Gutschriften zu einer vorhandenen "
 "Rechnung erzeugen und gleichzeitig Rechnung und Gutschrift miteinander "
@@ -3842,7 +3844,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.account_account_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
 msgid "Trial Balance"
-msgstr "Entwurf Bilanz und GuV"
+msgstr "Summen und Salden"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
@@ -4762,7 +4764,7 @@ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 #. module: account
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
-msgstr "Nächster Partner für Rechnungsausgleich"
+msgstr "Nächster Partner für Offene Posten Ausgleich"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -4784,7 +4786,7 @@ msgstr "Bilanz"
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
 msgid "Accounting Reports"
-msgstr "Auswertungen Bilanz & GuV"
+msgstr "Bilanz & GuV"
 
 #. module: account
 #: field:account.move,line_id:0
@@ -5050,7 +5052,7 @@ msgstr "Rechnungen der letzten 15 Tage"
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
-msgstr "Jahreswechsel Buchungsjournal"
+msgstr "Journal Eröffnungsbuchungen"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:0
@@ -5293,7 +5295,7 @@ msgstr "Buchungsjournal"
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
 #: model:ir.ui.menu,name:account.menu_wizard_fy_close
 msgid "Generate Opening Entries"
-msgstr "Erstelle Eröffnungsbuchungen"
+msgstr "Erstelle Vortragsbuchungen"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -5386,8 +5388,8 @@ msgid ""
 "Streamlines invoice payment and creates hooks to plug automated payment "
 "systems in."
 msgstr ""
-"Rationalisiert den Vorgang des Rechnungsausgleichs und bietet einen "
-"Ansatzpunkt für die automatische Zahlungsverbuchung."
+"Rationalisiert den Vorgang des Ausgleichs von Offenen Posten und bietet "
+"einen Ansatzpunkt für die automatische Zahlungsverbuchung."
 
 #. module: account
 #: field:account.payment.term.line,value:0
@@ -5446,10 +5448,10 @@ msgid ""
 "Shows you the progress made today on the reconciliation process. Given by \n"
 "Partners Reconciled Today \\ (Remaining Partners + Partners Reconciled Today)"
 msgstr ""
-"Zeigt Ihnen den heutigen Fortschritt bezüglich des Rechnungsausgleichs. Die "
-"Berechnung erfolgt durch \n"
-"Heute ausgeglichener Rechnungsbetrag \\ (Offene Forderungen + Ausgeglichene "
-"Forderungen)"
+"Zeigt Ihnen den heutigen Fortschritt bezüglich des Ausgleichs von Offenen "
+"Posten. Die Berechnung erfolgt durch \n"
+"Heute ausgeglichene Offene Posten \\ (Verbleibende Offene Posten + Heute "
+"ausgeglichene Offene Posten)"
 
 #. module: account
 #: help:account.payment.term.line,value:0
@@ -5633,7 +5635,7 @@ msgstr "Hinweis Steuerzuordnung"
 #: model:ir.actions.act_window,name:account.action_analytic_entries_report
 #: model:ir.ui.menu,name:account.menu_action_analytic_entries_report
 msgid "Analytic Entries Analysis"
-msgstr "Statistik Analytische Buchungen"
+msgstr "Statistik Analysebuchungen"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -5649,8 +5651,8 @@ msgstr ""
 "Kreditkarte oder Onlinekonto erfasst wurden. Beginnen Sie einen neuen "
 "Bankauszug durch die Erfassung eines Eröffnungs- und Endsaldos, bevor Sie "
 "anschließend alle einzelnen Buchungspositionen eingeben. Wenn Sie in der "
-"Spalte Zahlung sind, können Sie dann per F1 das Fenster für den "
-"Rechnungsausgleich öffnen."
+"Spalte Zahlung sind, können Sie dann per F1 das Fenster für den Ausgleich "
+"offener Posten öffnen."
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
@@ -5721,7 +5723,7 @@ msgstr "Oberstes Konto"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Reconciliation Date"
-msgstr "Letztmaliger Rechnungsausgleich"
+msgstr "Letztmaliger Ausgleich Offener Posten"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
@@ -5963,7 +5965,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
 msgid "Reconciliation: Go to Next Partner"
-msgstr "Rechnungsausgleich: Gehe zu nächstem Partner"
+msgstr "Ausgleich Offener Posten: Gehe zu nächstem Partner"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
@@ -5998,7 +6000,7 @@ msgstr ""
 #: selection:account.account.template,type:0
 #: view:account.journal:0
 msgid "Liquidity"
-msgstr "Finanzvermögen"
+msgstr "Finanzmittel"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
@@ -6363,8 +6365,8 @@ msgid ""
 msgstr ""
 "Damit Ihre Rechnung als bezahlt gekennzeichnet werden kann, müssen Sie einen "
 "Ausgleich durch eine Gegenbuchung herbeiführen, welches üblicherweise eine "
-"Zahlung ist. Durch die Funktion des automatisierten Rechnungsausgleichs, "
-"nutzen Sie die OpenERP Automatik für die Suche und den Ausgleich von "
+"Zahlung ist. Durch die Funktion des automatisierten Ausgleichs offener "
+"Posten, nutzen Sie die OpenERP Automatik für die Suche und den Ausgleich von "
 "zusammengehörigen Rechnungen und Zahlungen über eine Prüfung "
 "zuammenpassender Beträge."
 
@@ -6381,7 +6383,7 @@ msgstr "Zu Prüfen"
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr "Buchungen"
+msgstr "Buchungssätze"
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
@@ -6471,9 +6473,9 @@ msgid ""
 "Account Voucher module includes all the basic requirements of Voucher "
 "Entries for Bank, Cash, Sales, Purchase, Expenses, Contra, etc... "
 msgstr ""
-"Das Modul Rechnungsausgleich beinhaltet alle grundsätzlichen Anforderungen "
-"zum Rechnungsausgleich durch gegenseitiges Ausgleichen von Buchungen der "
-"Bank, Kasse, Verkauf, Einkauf, Umbuchungen etc. "
+"Das Modul Offene Posten Buchhaltung beinhaltet alle grundsätzlichen "
+"Anforderungen zum Ausgleich offener Posten durch gegenseitiges Ausgleichen "
+"von Buchungen der Bank, Kasse, Verkauf, Einkauf, Umbuchungen etc. "
 
 #. module: account
 #: view:account.chart.template:0
@@ -6586,7 +6588,7 @@ msgid ""
 "creditors for the past month, past two months, and so on. "
 msgstr ""
 "Die Alterstruktur Auswertung für Kunden ist eine speziellere Auswertung "
-"Ihrer Kunden aufgeteilt in zeitliche Intervalle. Wenn Sie diesen Bericht "
+"Ihrer Debitoren aufgeteilt in zeitliche Intervalle. Wenn Sie diesen Bericht "
 "öffnen, fragt OpenERP nach dem Unternehmen, der Periode und dem "
 "Zeitintervall für die Auswertung (in Tagen). OpenERP berechnet dann eine "
 "Tabelle mit Kundensalden nach Perioden. Wenn Sie eine Intervalle von 30 "
@@ -6676,7 +6678,7 @@ msgstr "Periodenzeitraum"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
 msgid "Monthly Turnover"
-msgstr ""
+msgstr "Monatlicher Umsatz"
 
 #. module: account
 #: view:account.move:0
@@ -6860,7 +6862,7 @@ msgstr "Unbekannter Partner"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Opening Balance"
-msgstr "Eröffnungsbilanz"
+msgstr "Anfangssaldo"
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -6974,8 +6976,8 @@ msgid ""
 "it have been reconciled."
 msgstr ""
 "Dieses Feld zeigt den nächsten Partner an, der automatisch durch das System "
-"im Rahmen des Rechnungsausgleichs auf Basis des letztmaligen "
-"Rechnungsausgleichs vorgeschlagen wird."
+"im Rahmen des Ausgleichs offener Posten auf Basis des letztmaligen "
+"Ausgleichs von offenen Posten vorgeschlagen wird."
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
@@ -7004,7 +7006,7 @@ msgid ""
 msgstr ""
 "Die Ansicht wird normalerweise von Buchhaltern bei der Masseneingabe von "
 "Buchungen eingesetzt. Wenn Sie eine Eingangsrechnung verbuchen wollen, und "
-"mit der Erfassung der Aufwandsbuchung beginnen wird Ihnen in der nächsten "
+"mit der Erfassung der Aufwandsbuchung beginnen, wird Ihnen in der nächsten "
 "Buchungszeile automatisch die Vorsteuer zum Konto gebucht sowie dann in "
 "einer weiteren Zeile als Gegenbuchung das Kreditorenkonto."
 
@@ -7132,8 +7134,8 @@ msgid ""
 "the limit date for the payment of this line."
 msgstr ""
 "Dieses Feld wird genutzt für Kreditoren- und Debitorenbuchungen. Sie können "
-"ein Datum (Enddatum) eingeben, an dem spätestens diese Rechnung bezahlt "
-"werden soll."
+"ein Datum (Fälligkeitsdatum) eingeben, an dem spätestens diese Rechnung "
+"bezahlt werden soll."
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -7178,7 +7180,7 @@ msgstr "Verkauf Eigenschaften"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
 msgid "Manual Reconciliation"
-msgstr "Manueller Ausgleich"
+msgstr "Manueller Kontenausgleich"
 
 #. module: account
 #: report:account.overdue:0
@@ -7195,7 +7197,7 @@ msgstr "An"
 #: field:account.fiscalyear.close,fy_id:0
 #: field:account.fiscalyear.close.state,fy_id:0
 msgid "Fiscal Year to close"
-msgstr "Offenes Geschäftsjahr"
+msgstr "Abzuschliessendes Geschäftsjahr"
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -7839,7 +7841,7 @@ msgstr "Auto Import Bankauszug"
 #: model:ir.actions.act_window,name:account.action_account_journal_view
 #: model:ir.ui.menu,name:account.menu_action_account_journal_view
 msgid "Journal Views"
-msgstr "Journal Ansichten"
+msgstr "Journalansicht"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
@@ -8026,10 +8028,12 @@ msgid ""
 "expense account or payable account. From this view, you can create and "
 "manage the account types you need to be used for your company management."
 msgstr ""
-"Ein Kontotyp ist eine Bezeichnung oder ein Code der für einen Buchhalter "
-"einen Zweck erfüllt. Zum Beispiel, sollte der Kontotyp zu einem Anlagekonto, "
-"Aufwand oder Ertrag verlinkt werden. Aus dieser Perspektiv betrachtet, "
-"können Sie die Kontotypen beenden."
+"Durch die Kontoart soll für einen Buchhalter erkennbar sein, welchen Zweck "
+"ein definiertes Konto dieser Art erfüllt. Zum Beispiel, können Kontoarten "
+"wie  z.B. Anlagekonto, Aufwand oder Ertrag zu einzelnen Konten hinterlegt "
+"werden und somit z.B. bei täglichen Buchungen oder Auswertungen als "
+"Suchhilfe dienen. Hier können Sie konkret die Kontoarten definieren, die Sie "
+"in Ihrem Unternehmen für die Finanzbuchhaltung benötigen."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
@@ -8073,7 +8077,7 @@ msgstr "Kontenplan Analytische Konten"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_configuration_misc
 msgid "Miscellaneous"
-msgstr "Verschiedenes"
+msgstr "Weitere Einstellungen"
 
 #. module: account
 #: help:res.partner,debit:0
@@ -8424,7 +8428,15 @@ msgid ""
 "balance sheet and the income statement (profit and loss account). The annual "
 "accounts of a company are required by law to disclose a certain amount of "
 "information. They have to be certified by an external auditor yearly."
-msgstr "Erzeuge und manage Konten für den Ausgleich, Sie müssen"
+msgstr ""
+"Erstelle und verwalte Konten für die Finanzbuchhaltung. Finanzkonten sind "
+"vorgesehen für die Aufzeichnung aller Geschäftsvorfälle mit Auswirkungen auf "
+"die Vermögens-, Finanz- und Ertragslage eines Unternehmens. Unternehmen sind "
+"i.d.R. verpflichtet diese finanzielle Situation in Form einer Bilanz und "
+"Gewinn- und Verlustrechnung gegenüber Dritten, wie z.B. den Finanzbehörden "
+"oder Anteilseignern und Kapitalgebern darzustellen. Diese Finanzkonten "
+"bilden die Grundlage für den Jahresabschluss und die  Prüfung eines "
+"Unternehmens."
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -8687,7 +8699,12 @@ msgid ""
 "related to this account and the counter-part \"Account receivable\"."
 msgstr ""
 "Diese Ansicht wird durch Finanzbuchhalter genutzt, um Datensätz schnell und "
-"korrekt nach OpenERP zu übertragen"
+"korrekt nach OpenERP zu übertragen.Wenn Sie eine Kundenrechnung buchen "
+"wollen, wählen Sie einfach das Journal und die Periode in der Suche aus. "
+"Danach beginnen Sie dann neue Buchungen in dieser Tabellenansicht zu "
+"erstellen. OpenERP bietet dann die automatische Erstellung von "
+"Steuerbuchungen für das Erlöskonto, sowie der Gegenbuchung auf dem "
+"Debitorenkonto."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:0
@@ -8962,8 +8979,8 @@ msgstr ""
 "Eine Periode repräsentiert als Abrechnungsperiode ein definiertes "
 "Zeitintervall für die Buchung von Geschäftsvorfällen. Monatliche Perioden "
 "sind der Normalfall, aber in Abhängigkeit von betrieblichen oder "
-"landesspezifischen Besonderheiten kann auch ein anderes Periodintervall z.B. "
-"Quartal vorgegeben werden. Der Abschluss einer Periode ermöglicht keine "
+"landesspezifischen Besonderheiten kann auch ein anderes Periodenintervall, "
+"z.B. Quartal vorgegeben werden. Der Abschluss einer Periode ermöglicht keine "
 "weiteren Buchungen innerhalb dieses Zeitraums. Die Buchungen sollten dann in "
 "der nächsten freien Periode vorgenommen werden. Schliessen Sie eine Periode "
 "wenn Sie definitiv keine weiteren Buchungen in diesem Zeitraum tätigen "
@@ -9184,7 +9201,7 @@ msgstr "April"
 #. module: account
 #: view:account.move.line.reconcile.select:0
 msgid "Open for Reconciliation"
-msgstr "Öffnen für Rechnungsausgleich"
+msgstr "Öffnen für Ausgleich offener Posten"
 
 #. module: account
 #: field:account.account,parent_left:0
@@ -9263,7 +9280,7 @@ msgstr "Entferne Buchung"
 #: selection:account.account.template,type:0
 #: selection:account.entries.report,type:0
 msgid "Regular"
-msgstr "Umsatzsteuer (19%)"
+msgstr "Sachkonto"
 
 #. module: account
 #: view:account.account:0
@@ -9479,8 +9496,8 @@ msgid ""
 "processed."
 msgstr ""
 "Diese Abbildung zeigt die Gesamtzahl der Partner, die heute bei dem Prozess "
-"des Rechnungsausgleichs bearbeitet wurden. Der aktuelle Partner wird dabei "
-"so gezählt, als ob er bereits verarbeitet wäre."
+"des Ausgleichs von offenen Posten bearbeitet wurden. Der aktuelle Partner "
+"wird dabei so gezählt, als ob er bereits verarbeitet wäre."
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -9507,7 +9524,7 @@ msgstr "Beleg Entwurf"
 msgid ""
 "Manual or automatic creation of payment entries according to the statements"
 msgstr ""
-"Händische oder automatische Buchung der Rechnungsausgleiche durch "
+"Manuelle oder automatische Buchung der Ausgleiche von offenen Posten durch "
 "Zahlungserfassung im Bankauszug"
 
 #. module: account
@@ -9739,7 +9756,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing_billing
 msgid "Billing"
-msgstr "Abrechnung"
+msgstr "Zahlungserinnerungen"
 
 #. module: account
 #: model:account.journal,name:account.check_journal
