@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-14 07:57+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-22 07:36+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
 msgid "Parent Directory"
-msgstr ""
+msgstr "Directory padre"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -29,7 +29,7 @@ msgstr ""
 #. module: document
 #: field:document.directory,resource_field:0
 msgid "Name field"
-msgstr ""
+msgstr "Nome campo"
 
 #. module: document
 #: view:board.board:0
@@ -78,7 +78,7 @@ msgstr "Tipo di Contenuto della Cartella"
 #. module: document
 #: view:document.directory:0
 msgid "Resources"
-msgstr ""
+msgstr "Risorse"
 
 #. module: document
 #: field:document.directory,file_ids:0
@@ -124,6 +124,9 @@ msgid ""
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
 "to the current record, in dynamic folders"
 msgstr ""
+"Espressione python usata per interpretare il campo.\n"
+"E' possibile usare \"dir_id\" per dir. corrente, \"res_id\", \"res_model\" "
+"come riferimento al record corrente, nelle cartelle dinamiche."
 
 #. module: document
 #: view:report.document.user:0
@@ -165,7 +168,7 @@ msgstr "Cartelle"
 #. module: document
 #: field:document.configuration,sale_order:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Ordine di Vendita"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_user
@@ -175,7 +178,7 @@ msgstr "Dettaglio files per utente"
 #. module: document
 #: field:document.configuration,project:0
 msgid "Project"
-msgstr ""
+msgstr "Progetto"
 
 #. module: document
 #: code:addons/document/document_storage.py:0
@@ -191,12 +194,12 @@ msgstr ""
 #. module: document
 #: field:document.directory,resource_find_all:0
 msgid "Find all resources"
-msgstr ""
+msgstr "Trova tutte le risorse"
 
 #. module: document
 #: selection:document.directory,type:0
 msgid "Folders per resource"
-msgstr ""
+msgstr "Cartelle per risorsa"
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -218,7 +221,7 @@ msgstr "Partner"
 #. module: document
 #: view:board.board:0
 msgid "Files by Users"
-msgstr ""
+msgstr "Files per utenti"
 
 #. module: document
 #: field:process.node,directory_id:0
@@ -230,7 +233,7 @@ msgstr "Cartella Documenti"
 #: code:addons/document/document_directory.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "Errore convalida"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
@@ -264,7 +267,7 @@ msgstr ""
 #. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
-msgstr ""
+msgstr "Modello risorsa"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -287,6 +290,11 @@ msgstr "Tipo Di Contenuto"
 #: field:document.storage,type:0
 msgid "Type"
 msgstr "Tipo"
+
+#. module: document
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "L'ID certificato del modulo deve essere unico!"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -343,7 +351,7 @@ msgstr "XML non valido per Visualizzazione Architettura!"
 #: model:ir.actions.act_window,name:document.open_board_document_manager
 #: model:ir.ui.menu,name:document.menu_reports_document_manager
 msgid "Document Dashboard"
-msgstr ""
+msgstr "Dashboard documenti"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -448,7 +456,7 @@ msgstr "Dicembre"
 #. module: document
 #: field:document.configuration,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Immagine"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -541,7 +549,7 @@ msgstr "Allegato"
 #. module: document
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Errore! Non è possibile creare un menù ricorsivo."
 
 #. module: document
 #: field:document.storage,online:0
@@ -563,10 +571,22 @@ msgid "Security"
 msgstr "Sicurezza"
 
 #. module: document
+#: help:document.directory,ressource_id:0
+msgid ""
+"Along with Parent Model, this ID attaches this folder to a specific record "
+"of Parent Model."
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
 msgstr "Agosto"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr "Una directory non può essere padre di sè stessa!"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -602,6 +622,15 @@ msgstr "Novembre"
 #: field:ir.attachment,db_datas:0
 msgid "Data"
 msgstr "Dati"
+
+#. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid ""
+"If you put an object here, this directory template will appear bellow all of "
+"these objects. Such directories are \"attached\" to the specific model or "
+"record, just like attachments. Don't put a parent directory if you select a "
+"parent model."
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -662,23 +691,18 @@ msgstr "Sola lettura"
 #. module: document
 #: field:document.directory.dctx,expr:0
 msgid "Expression"
-msgstr ""
+msgstr "Espressione"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr "Il nome directory deve essere unico!"
 
 #. module: document
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Autore"
-
-#. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
-"Se metti un oggetto qui, questo modello di directory comparirà sotto tutti "
-"questi oggetti. Non mettere una directory padre se selezioni un modello di "
-"partner."
 
 #. module: document
 #: view:board.board:0
@@ -699,6 +723,11 @@ msgid "Prefix"
 msgstr "Prefisso"
 
 #. module: document
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "La regola deve avere almento un diritto di accesso spuntato!"
+
+#. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
 msgstr "Ora ultimo invio"
@@ -709,6 +738,11 @@ msgid "File Name"
 msgstr "Nome File"
 
 #. module: document
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "La dimensione del campo non può mai essere minore di 1!"
+
+#. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
 msgstr "ID Risorsa"
@@ -716,7 +750,7 @@ msgstr "ID Risorsa"
 #. module: document
 #: selection:document.storage,type:0
 msgid "External file storage"
-msgstr ""
+msgstr "Archivio file esterno"
 
 #. module: document
 #: constraint:ir.model:0
@@ -780,7 +814,7 @@ msgstr "Reportistica"
 #. module: document
 #: field:document.configuration,product:0
 msgid "Product"
-msgstr ""
+msgstr "Prodotto"
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -804,9 +838,18 @@ msgid "Users that did not inserted documents since one month"
 msgstr "Utenti che non inviano documenti da un mese"
 
 #. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"The Documents repository gives you access to all attachments, such as mails, "
+"project documents, invoices etc."
+msgstr ""
+"Il \"deposito\" documenti fornisce l'accesso a tutti gli allegati, come: "
+"email, documentazione di progetto, fatture ecc."
+
+#. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
+msgstr "Per ogni voce, dei files virtuali compariranno in questa cartella."
 
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
@@ -886,6 +929,11 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: document
+#: sql_constraint:document.storage:0
+msgid "The storage path must be unique!"
+msgstr "Il percorso di memorizzazione deve essere unico!"
+
+#. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr "Campi"
@@ -929,6 +977,11 @@ msgid "Mime Type"
 msgstr "Tipo MIME"
 
 #. module: document
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
+msgstr "Le regole non sono supportate per gli oggetti: osv_memory!"
+
+#. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
 msgstr "Sequenza"
@@ -947,13 +1000,18 @@ msgstr "Il nome file deve essere unico!"
 #. module: document
 #: selection:document.storage,type:0
 msgid "Internal File storage"
-msgstr ""
+msgstr "Deposito file interno"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr "La Directory deve avere un padre o un deposito"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
-msgstr ""
+msgstr "Struttura delle directory"
 
 #. module: document
 #: view:board.board:0
@@ -984,6 +1042,11 @@ msgstr ""
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Tipo di documento"
+
+#. module: document
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #~ msgid ""
 #~ "This wizard will automatically configure the document management system "
@@ -1110,6 +1173,14 @@ msgstr "Tipo di documento"
 
 #~ msgid "All Users files (This month)"
 #~ msgstr "Tutti i file degli utenti (Mese attuale)"
+
+#~ msgid ""
+#~ "If you put an object here, this directory template will appear bellow all of "
+#~ "these objects. Don't put a parent directory if you select a parent model."
+#~ msgstr ""
+#~ "Se metti un oggetto qui, questo modello di directory comparirà sotto tutti "
+#~ "questi oggetti. Non mettere una directory padre se selezioni un modello di "
+#~ "partner."
 
 #~ msgid ""
 #~ "This is a complete document management system:\n"

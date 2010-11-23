@@ -13,7 +13,7 @@
             <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
         </record>
 
-        <record id="pos_cash_journal" model="account.journal">
+        <!-- <record id="pos_cash_journal" model="account.journal">
             <field name="name">Cash Journal</field>
             <field name="code">CAJ</field>
             <field name="type">cash</field>
@@ -24,6 +24,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
         </record>
+        -->
 
         <record id="pos_bankcard_journal" model="account.journal">
             <field name="name">Bancontact Journal</field>

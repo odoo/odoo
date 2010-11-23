@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-20 07:19+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-22 19:44+0000\n"
+"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:47+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
@@ -38,10 +38,17 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
-msgid "Printed at:"
-msgstr "Utskriven vid"
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"A budget is a forecast of your company's income and expenses expected for a "
+"period in the future. With a budget, a company is able to carefully look at "
+"how much money they are taking in during a given period, and figure out the "
+"best way to divide it among various categories. By keeping  track of where "
+"your money goes, you may be less likely to overspend, and more likely to "
+"meet your financial goals. Forecast a budget by detailing the expected "
+"revenue per analytic account and monitor its evolution based on the actuals "
+"realised during that period."
+msgstr ""
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -52,6 +59,11 @@ msgstr "Bekräfta"
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
 msgstr "Validera användare"
+
+#. module: account_budget
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
@@ -79,7 +91,6 @@ msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "at"
 msgstr ""
 
@@ -90,7 +101,6 @@ msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "Currency:"
 msgstr ""
 
@@ -138,10 +148,25 @@ msgid "Description"
 msgstr ""
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "Currency"
+msgstr ""
+
+#. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "Total :"
+msgstr ""
+
+#. module: account_budget
 #: field:account.budget.post,company_id:0
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
+msgstr ""
+
+#. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "to"
 msgstr ""
 
 #. module: account_budget
@@ -231,6 +256,11 @@ msgstr ""
 #: model:ir.model,name:account_budget.model_crossovered_budget
 msgid "Budget"
 msgstr ""
+
+#. module: account_budget
+#: report:account.budget:0
+msgid "Printed at:"
+msgstr "Utskriven vid"
 
 #. module: account_budget
 #: code:addons/account_budget/account_budget.py:0
@@ -330,6 +360,11 @@ msgid "Select Dates Period"
 msgstr ""
 
 #. module: account_budget
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
@@ -374,7 +409,6 @@ msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "Budget :"
 msgstr ""
 
@@ -405,6 +439,11 @@ msgid "Budget Lines"
 msgstr ""
 
 #. module: account_budget
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
@@ -429,3 +468,61 @@ msgstr ""
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
 msgstr ""
+
+#. module: account_budget
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#~ msgid ""
+#~ "This module allows accountants to manage analytic and crossovered budgets.\n"
+#~ "\n"
+#~ "Once the Master Budgets and the Budgets defined (in Financial\n"
+#~ "Management/Budgets/), the Project Managers can set the planned amount on "
+#~ "each\n"
+#~ "Analytic Account.\n"
+#~ "\n"
+#~ "The accountant has the possibility to see the total of amount planned for "
+#~ "each\n"
+#~ "Budget and Master Budget in order to ensure the total planned is not\n"
+#~ "greater/lower than what he planned for this Budget/Master Budget. Each list "
+#~ "of\n"
+#~ "record can also be switched to a graphical view of it.\n"
+#~ "\n"
+#~ "Three reports are available:\n"
+#~ "    1. The first is available from a list of Budgets. It gives the "
+#~ "spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+#~ "\n"
+#~ "    2. The second is a summary of the previous one, it only gives the "
+#~ "spreading, for the selected Budgets, of the Analytic Accounts.\n"
+#~ "\n"
+#~ "    3. The last one is available from the Analytic Chart of Accounts. It "
+#~ "gives the spreading, for the selected Analytic Accounts, of the Master "
+#~ "Budgets per Budgets.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "This module allows accountants to manage analytic and crossovered budgets.\n"
+#~ "\n"
+#~ "Once the Master Budgets and the Budgets defined (in Financial\n"
+#~ "Management/Budgets/), the Project Managers can set the planned amount on "
+#~ "each\n"
+#~ "Analytic Account.\n"
+#~ "\n"
+#~ "The accountant has the possibility to see the total of amount planned for "
+#~ "each\n"
+#~ "Budget and Master Budget in order to ensure the total planned is not\n"
+#~ "greater/lower than what he planned for this Budget/Master Budget. Each list "
+#~ "of\n"
+#~ "record can also be switched to a graphical view of it.\n"
+#~ "\n"
+#~ "Three reports are available:\n"
+#~ "    1. The first is available from a list of Budgets. It gives the "
+#~ "spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+#~ "\n"
+#~ "    2. The second is a summary of the previous one, it only gives the "
+#~ "spreading, for the selected Budgets, of the Analytic Accounts.\n"
+#~ "\n"
+#~ "    3. The last one is available from the Analytic Chart of Accounts. It "
+#~ "gives the spreading, for the selected Analytic Accounts, of the Master "
+#~ "Budgets per Budgets.\n"
+#~ "\n"

@@ -568,6 +568,7 @@ class mailgate_tool(osv.osv_memory):
                             message_id = msg.get('message-id'),
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = attachments.items(),
+                            email_date = msg.get('date'),
                             context = context)
         else:
             self.history(cr, uid, model, res_ids, msg, attachment_ids, context=context)
