@@ -150,15 +150,6 @@ class publisher_warranty_contract(osv.osv):
                     "state": state,
                 })
             
-            if cron_mode and result["interval_type"] and result["interval_number"]:
-                modosv = self.pool.get("ir.model.data")
-                sched_id = modosv.get_object_reference(cr, uid, "base", "ir_cron_ping_scheduler")[1]
-                cronosv = self.pool.get("ir.cron")
-                cronosv.write(cr, uid, sched_id, {
-                    "interval_type": result["interval_type"],
-                    "interval_number": result["interval_number"],
-                })
-            
             for message in result["messages"]:
                 self.pool.get('res.log').create(cr, uid,
                         {
