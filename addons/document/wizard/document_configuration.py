@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,22 +15,24 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import osv, fields
+
 class document_configuration(osv.osv_memory):
 
     _name='document.configuration'
     _description = 'Auto Directory Configuration'
-    _inherit = 'res.config'   
+    _inherit = 'res.config'
 
     _columns = {
         'sale_order' : fields.boolean('Sale Order', help="Auto directory configuration for Sale Orders and Quotation with report."),
         'product' : fields.boolean('Product', help="Auto directory configuration for Products."),
         'project': fields.boolean('Project', help="Auto directory configuration for Projects."),
     }
-    
+
 
     def execute(self, cr, uid, ids, context=None):
         conf_id = ids and ids[0] or False
@@ -58,7 +60,7 @@ class document_configuration(osv.osv_memory):
                 quta_dir_id = data_pool.browse(cr, uid, dir_data_id, context=context).res_id
             else:
                 quta_dir_id = data_pool.create(cr, uid, {'name': 'Sale Quotations'})
-            
+
             dir_pool.write(cr, uid, [quta_dir_id], {
                 'type':'ressource',
                 'ressource_type_id': mid[0],
@@ -86,7 +88,7 @@ class document_configuration(osv.osv_memory):
                     'include_name': 1,
                     'directory_id': quta_dir_id,
                 })
-            
+
 
         if conf.product and self.pool.get('product.product'):
             # Product
@@ -95,12 +97,12 @@ class document_configuration(osv.osv_memory):
                 product_dir_id = data_pool.browse(cr, uid, dir_data_id, context=context).res_id
             else:
                 product_dir_id = data_pool.create(cr, uid, {'name': 'Products'})
-            
+
             mid = model_pool.search(cr, uid, [('model','=','product.product')])
             dir_pool.write(cr, uid, [product_dir_id], {
                 'type':'ressource',
                 'ressource_type_id': mid[0],
-            })           
+            })
 
         if conf.project and self.pool.get('account.analytic.account'):
             # Project
@@ -109,12 +111,12 @@ class document_configuration(osv.osv_memory):
                 project_dir_id = data_pool.browse(cr, uid, dir_data_id, context=context).res_id
             else:
                 project_dir_id = data_pool.create(cr, uid, {'name': 'Projects'})
-            
+
             mid = model_pool.search(cr, uid, [('model','=','account.analytic.account')])
             dir_pool.write(cr, uid, [project_dir_id], {
                 'type':'ressource',
                 'ressource_type_id': mid[0],
                 'domain': '[]',
                 'ressource_tree': 1
-        })        
+        })
 document_configuration()
