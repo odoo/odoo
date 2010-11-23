@@ -366,7 +366,7 @@ class audittrail_objects_proxy(osv_pool):
                     lines.append(line)
 
                 self.create_log_line(cr, uid, log_id, model, lines)
-
+            cr.commit()
             cr.close()
             return res
 
