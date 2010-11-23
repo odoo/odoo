@@ -31,7 +31,7 @@ class account_sequence_installer(osv.osv_memory):
     
     def _get_internal_sequence(self, cr, uid, context):
         obj_sequence = self.pool.get('ir.sequence')
-        seq_id = obj_sequence.search(cr, uid, [('name','=', 'Internal Sequence Journal')])
+        seq_id = obj_sequence.search(cr, uid, [('name', '=', 'Internal Sequence Journal')])
         for seq in obj_sequence.browse(cr, uid, seq_id):
             if seq.id:
                 return seq.id
@@ -43,20 +43,20 @@ class account_sequence_installer(osv.osv_memory):
         res =  super(account_sequence_installer, self).execute(cr, uid, ids, context=context)
         jou_obj = self.pool.get('account.journal')
         obj_sequence = self.pool.get('ir.sequence')
-        journal_ids = jou_obj.search(cr, uid, [('type','in',['sale','sale_refund','purchase','purchase_refund','cash', 'bank', 'general','situation'])])
+        journal_ids = jou_obj.search(cr, uid, [('type', 'in', ['sale', 'sale_refund', 'purchase', 'purchase_refund', 'cash', 'bank', 'general', 'situation'])])
         
         for line in self.browse(cr, uid, ids):
             for journal in jou_obj.browse(cr, uid, journal_ids):
                 if not journal.internal_sequence:
-                    seq_id = obj_sequence.search(cr, uid, [('name','=', line.internal_sequence.name)])
+                    seq_id = obj_sequence.search(cr, uid, [('name', '=', line.internal_sequence.name)])
                     for seq in obj_sequence.browse(cr, uid, seq_id):
                         if seq.id:
                             jou_obj.write(cr, uid, [journal.id], {'internal_sequence': seq.id})
         return res
     
     _defaults = {
-         'internal_sequence': _get_internal_sequence
-         }
+        'internal_sequence': _get_internal_sequence
+    }
 
 account_sequence_installer()
 
