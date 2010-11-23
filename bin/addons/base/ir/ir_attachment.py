@@ -114,11 +114,11 @@ class ir_attachment(osv.osv):
         'url': fields.char('Url', size=512, oldname="link"),
         'type': fields.selection(
                 [ ('url','URL'), ('binary','Binary'), ],
-                'Type', help="Binary File or external URL", required=True),
+                'Type', help="Binary File or external URL", required=True, change_default=True),
 
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company', change_default=True),
     }
     
     _defaults = {
